@@ -1,0 +1,7 @@
+export default function {{PlaceholderComponent}}() {
+  return (
+    <div>
+      <p>Let your <i>imagination</i> run wild with this template</p>
+    </div>
+  );
+}

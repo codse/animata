@@ -1,0 +1,26 @@
+---
+title: {{Title}}
+description: {{Description}}
+---
+
+<ComponentPreview name="{{StoryPath}}--docs" />
+
+# Installation
+
+1. Create a new file called `{{Filename}}.tsx` inside the `components/animata/{{TypePath}}` directory.
+
+   macOS/Linux:
+   ```bash
+   mkdir -p components/animata/{{TypePath}} && touch components/animata/{{TypePath}}/{{Filename}}.tsx
+   ```
+
+   windows:
+   ```bash
+   mkdir components\animata\{{TypePath}} && type null > components\animata\{{TypePath}}\{{Filename}}.tsx
+   ```
+
+2. Open the newly created file and add the following code:
+
+```jsx file=<rootDir>/animata/{{TypePath}}/{{Filename}}.tsx
+
+```
