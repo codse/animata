@@ -7,7 +7,7 @@ export default function ReminderCard() {
         <div className="text-md mx-8 flex items-center gap-1 rounded-xl bg-blue-100 px-3 py-1 tracking-tight text-blue-600">
           <Clock className="inline-block h-4 w-4" />
           <span className="">Tomorrow at 10:00 AM</span>
-          <ChevronRight className="ease-slow inline-block h-4 w-4 transition-all duration-500 group-hover:translate-x-1 group-hover:scale-110" />
+          <ChevronRight className="inline-block h-4 w-4 transition-all duration-500 ease-slow group-hover:translate-x-1 group-hover:scale-110" />
         </div>
       </div>
       <h4 className="text-lg font-semibold text-gray-800">
