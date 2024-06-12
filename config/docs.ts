@@ -75,6 +75,10 @@ const sidebarNav: SidebarNavItem[] = [
     items: createLinks("card"),
   },
   {
+    title: "Progress",
+    items: createLinks("progress"),
+  },
+  {
     title: "Bento grid",
     items: createLinks("bento-grid"),
   },
