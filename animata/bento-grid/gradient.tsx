@@ -62,7 +62,7 @@ export default function Gradient() {
           className="sm:col-span-1 sm:row-span-2"
           gradient="from-cyan-900 via-60% via-sky-600 to-indigo-600"
         >
-          <div className="group relative flex cursor-pointer flex-col justify-end bg-zinc-950 text-2xl tracking-tight text-gray-100 md:text-4xl">
+          <div className="group relative flex cursor-pointer flex-col justify-end rounded-md bg-zinc-950 p-2 text-2xl tracking-tight text-gray-100 md:text-4xl">
             <div className="font-light">Get</div>
             <div className="-mt-2 font-bold">Gradients</div>
             <div className="flex h-6 w-6 items-center justify-center rounded-full border bg-white transition-all duration-700 group-hover:rotate-[360deg] md:h-8 md:w-8">
