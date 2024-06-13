@@ -16,6 +16,11 @@ interface SwapTextProps extends React.ComponentPropsWithoutRef<"div"> {
    * Whether the component should toggle on hover as well as click.
    */
   supportsHover?: boolean;
+
+  /**
+   * The class name for the text.
+   */
+  textClassName?: string;
 }
 
 export default function SwapText({
@@ -23,6 +28,7 @@ export default function SwapText({
   finalText,
   className,
   supportsHover = true,
+  textClassName,
   // The rest of the props are passed to the container div.
   ...props
 }: SwapTextProps) {
@@ -34,7 +40,10 @@ export default function SwapText({
   return (
     <div {...props} className={cn("relative overflow-hidden", className)}>
       <div
-        className={cn("group cursor-pointer select-none text-3xl font-bold")}
+        className={cn(
+          "group cursor-pointer select-none text-3xl font-bold",
+          textClassName,
+        )}
         onClick={() => setActive((current) => !current)}
       >
         <span

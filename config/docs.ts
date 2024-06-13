@@ -82,6 +82,14 @@ const sidebarNav: SidebarNavItem[] = [
     title: "Bento grid",
     items: createLinks("bento-grid"),
   },
+  {
+    title: "Widgets",
+    items: createLinks("widget"),
+  },
+  {
+    title: "Graphs",
+    items: createLinks("graphs"),
+  },
 ]
   .filter((category) => category.items.length > 0)
   .sort((a, b) => {
