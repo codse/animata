@@ -58,14 +58,14 @@ const config = {
         sm: "calc(var(--radius) - 4px)",
       },
       boxShadow: {
-        'glow': '0 0 20px rgba(255, 204, 112, 0.7), 0 0 40px rgba(200, 80, 192, 0.5), 0 0 60px rgba(65, 88, 208, 0.3)',
+        glow: "0 0 20px rgba(255, 204, 112, 0.7), 0 0 40px rgba(200, 80, 192, 0.5), 0 0 60px rgba(65, 88, 208, 0.3)",
       },
       filter: {
-        'blur-20': 'blur(20px)',
-        'blur-25': 'blur(25px)',
+        "blur-20": "blur(20px)",
+        "blur-25": "blur(25px)",
       },
       brightness: {
-        150: '1.5',
+        150: "1.5",
       },
       keyframes: {
         "accordion-down": {
@@ -106,6 +106,16 @@ const config = {
           "66%": { transform: "scale(0.8)" },
           "100%": { transform: "scale(1)" },
         },
+        "blink-red": {
+          "0%, 100%": {
+            backgroundColor: "rgba(239, 68, 68, 0.7)",
+            boxShadow: "0 0 30px 10px rgba(239, 68, 68, 0.5)",
+          },
+          "50%": {
+            backgroundColor: "rgba(239, 68, 68, 0.5)",
+            boxShadow: "0 0 30px 10px rgba(239, 68, 68, 1)",
+          },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -114,6 +124,7 @@ const config = {
         "marquee-vertical": "marquee-y var(--duration) linear infinite",
         "bg-position": "bg-position 3s infinite alternate",
         "pop-blob": "pop-blob 4s infinite",
+        "blink-red": "blink-red 1s infinite linear",
       },
       transitionTimingFunction: {
         slow: "cubic-bezier(.405, 0, .025, 1)",
