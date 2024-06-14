@@ -1,5 +1,5 @@
 import { Meta, StoryObj } from "@storybook/react";
-import CardStack from "@/animata/card/cardstack";
+import CardStack from "@/animata/card/card-stack";
 
 const meta = {
   title: "Card/CardStack",

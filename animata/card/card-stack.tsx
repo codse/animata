@@ -7,7 +7,6 @@ export interface CardStackProps {
   name: string;
   designation: string;
   content: React.ReactNode;
-  
 }
 
 const CardStack = ({
@@ -40,7 +39,7 @@ const CardStack = ({
         <div
           key={card.id}
           className={cn(
-            "absolute flex h-60 w-60 flex-col justify-between rounded-3xl border border-neutral-200 bg-white p-4 shadow-xl shadow-black/[0.1] transition-transform dark:border-white/[0.1] dark:bg-black dark:shadow-white/[0.05] md:h-60 md:w-96",
+            "absolute flex h-60 w-60 flex-col justify-between rounded-3xl border border-neutral-200 bg-white p-4 shadow-xl shadow-black/10 transition-transform dark:border-white/10 dark:bg-black dark:shadow-white/5 md:h-60 md:w-96",
           )}
           style={{
             transform: `translateY(${index * -offset}px) scale(${
