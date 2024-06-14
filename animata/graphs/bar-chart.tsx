@@ -1,9 +1,9 @@
 import { cn } from "@/lib/utils";
 import { useEffect, useRef, useState } from "react";
 
-interface HistogramProps {
+interface BarChartProps {
   /**
-   * The items to display in the histogram.
+   * The items to display in the BarChart.
    */
   items: {
     progress: number;
@@ -13,18 +13,18 @@ interface HistogramProps {
   }[];
 
   /**
-   * The height of the histogram.
+   * The height of the BarChart.
    */
   height?: number;
 
   className?: string;
 }
 
-export default function Histogram({
+export default function BarChart({
   items,
   className,
   height: providedHeight,
-}: HistogramProps) {
+}: BarChartProps) {
   const [{ height }, setSize] = useState({
     height: providedHeight ?? 12,
   });

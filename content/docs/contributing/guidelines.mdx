@@ -1,0 +1,68 @@
+---
+title: Code guidelines
+date: 2024-06-14
+description: Guidelines for contributing to Animata.
+---
+
+## Component Generation
+
+Use `yarn animata:new` for creating new components. This command will add some default files.
+
+## File Naming
+
+All file names should use lower `kebab-case`.
+
+## Image Usage
+
+- Use [Unsplash](https://unsplash.com) for images.
+- Use [radiux icon](https://www.radix-ui.com/icons) or [lucide icon](https://lucide.dev/icons/) for icons.
+- If you need specific SVGs, use [flaticon.com](https://flaticon.com) and copy the SVG. Make sure to add the credits in the documentation for the icon.
+
+## Imports
+
+All imports should be `absolute`, i.e., use `@animata/...` instead of relative imports like `./` or `../`. I have added `import issue` in the comments for such issues.
+
+## "use client" Directive
+
+If you are using React hooks, make sure to add the `use client` directive at the top level of your component file.
+
+## Plugins
+
+Install [Tailwind's VSCode plugin](https://tailwindcss.com/docs/editor-setup) for a better development experience.
+
+## Event Handlers
+
+If you are taking an event handler as a prop, make sure to use the `onXXX` naming convention. For example, if you are passing an onClick event to a button, give it a sensible name like `onLikeButtonPress`.
+
+## Default Props
+
+Make sure to use reasonable defaults in the props. The component should render something by default.
+
+## Conditional Classes
+
+Use `cn` for writing conditional classes. For example:
+
+`cn({
+  'visible': shouldShow,
+  'invisible': !shouldShow
+});`
+
+## Responsiveness
+
+Ensure that the components are responsive and look good at different sizes.
+
+## Helper Functions
+
+Move helper functions out of the component. Do not write all the helper logic inside the render function. You can and should move them out of the component.
+
+## Breaking Down Logic
+
+You can break down the logic into smaller hooks/components and compose them. Feel free to create custom hooks and smaller components, but make sure they are all in a single file.
+
+## Opacity and Fractional Properties
+
+You can change the opacity of colors by using the opacity syntax, e.g., `text-green-500/10`. Also, you can use fractional height, width, and position properties like `h-1/2` for 50% height, `w-1/3` for 33% width, `top-1/4` for 25% top, etc.
+
+## Color Usage
+
+Do not use custom colors unless needed. Tailwind already provides a wide range of colors which we can use.
