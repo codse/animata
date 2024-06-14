@@ -14,11 +14,26 @@ export default function MobileDetail() {
       label: "Battery",
       value: 25,
       max: 100,
-      icon: <BatteryMedium size={10} />,
+      icon: <BatteryMedium size={10} color="#a29b9c" />,
     },
-    { label: "Volume", value: 50, max: 100, icon: <Volume1 size={10} /> },
-    { label: "Ram", value: 75, max: 100, icon: <Cpu size={10} /> },
-    { label: "Storage", value: 90, max: 100, icon: <Database size={10} /> },
+    {
+      label: "Volume",
+      value: 50,
+      max: 100,
+      icon: <Volume1 size={10} color="#a29b9c" />,
+    },
+    {
+      label: "Ram",
+      value: 75,
+      max: 100,
+      icon: <Cpu size={10} color="#a29b9c" />,
+    },
+    {
+      label: "Storage",
+      value: 90,
+      max: 100,
+      icon: <Database size={10} color="#a29b9c" />,
+    },
   ];
 
   return (
@@ -38,8 +53,12 @@ export default function MobileDetail() {
                   {bar.icon && (
                     <div className="absolute left-1 top-1">{bar.icon}</div>
                   )}
-                  <p className="text-[9px] font-bold">{bar.label}</p>
-                  <p className="text-[10px] font-bold">{percentage}%</p>
+                  <p className="text-[9px] font-bold text-[#a29b9c]">
+                    {bar.label}
+                  </p>
+                  <p className="text-[10px] font-bold text-[#a29b9c]">
+                    {percentage}%
+                  </p>
                 </div>
               </div>
             </div>
