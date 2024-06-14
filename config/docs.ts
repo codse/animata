@@ -75,10 +75,10 @@ const sidebarNav: SidebarNavItem[] = [
     items: createLinks("card"),
   },
   {
-
     title: "Icon",
     items: createLinks("icon"),
-
+  },
+  {
     title: "Progress",
     items: createLinks("progress"),
   },
@@ -93,6 +93,10 @@ const sidebarNav: SidebarNavItem[] = [
   {
     title: "Graphs",
     items: createLinks("graphs"),
+  },
+  {
+    title: "Overlay",
+    items: createLinks("overlay"),
   },
 ]
   .filter((category) => category.items.length > 0)
