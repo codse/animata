@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import { ReactNode } from "react";
+import { ReactNode, useEffect, useState } from "react";
 
 interface DonutChartProps {
   size: number;
@@ -24,9 +24,22 @@ export default function DonutChart({
   className,
   children,
 }: DonutChartProps) {
+  const [shouldUseValue, setShouldUseValue] = useState(false);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      // This is a hack to force the animation to run for the first time.
+      // We can use framer-motion to achieve this but just keeping it simple for now.
+      setShouldUseValue(true);
+    }, 250);
+    return () => clearTimeout(timeout);
+  }, []);
+
   const radius = size / 2 - Math.max(progressWidth, circleWidth);
   const circumference = Math.PI * radius * 2;
-  const percentage = circumference * ((100 - progress) / 100);
+  const percentage = shouldUseValue
+    ? circumference * ((100 - progress) / 100)
+    : circumference;
 
   return (
     <div className={className}>

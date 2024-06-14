@@ -19,17 +19,17 @@ export const Primary: Story = {
     rings: [
       {
         progress: 10,
-        trackClassName: "text-white/10",
+        trackClassName: "text-rose-600/10",
         progressClassName: "text-rose-600",
       },
       {
         progress: 60,
-        trackClassName: "text-white/20",
+        trackClassName: "text-lime-500/20",
         progressClassName: "text-lime-500",
       },
       {
         progress: 40,
-        trackClassName: "text-white/30",
+        trackClassName: "text-teal-400/30",
         progressClassName: "text-teal-400",
       },
     ],
