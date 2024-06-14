@@ -1,6 +1,7 @@
 ---
 title: {{Title}}
 description: {{Description}}
+author: yourTwitterUsername
 ---
 
 <ComponentPreview name="{{StoryPath}}--docs" />
@@ -24,3 +25,11 @@ description: {{Description}}
 ```jsx file=<rootDir>/animata/{{TypePath}}/{{Filename}}.tsx
 
 ```
+
+# Built by
+
+   Add your github like here. [codse](https://github.com/codse)
+
+# Credits
+
+   Add appropriate credits here.
