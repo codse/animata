@@ -30,17 +30,19 @@ export default function FlightWidget() {
   }, []);
 
   return (
-    <div className="flex h-48 w-48 text-black">
-      <div className="z-10 flex h-full w-1/4 flex-col rounded-l-3xl bg-gradient-to-b from-blue-100 to-blue-300">
-        <img
-          src="https://seeklogo.com/images/A/air-canada-logo-A0180CCDB8-seeklogo.com.png"
-          className="mx-auto my-4 h-6 w-6"
-        />
-        <div className="mt-20 w-full -rotate-90 transform text-lg font-semibold tracking-widest text-red-700">
-          AIR&nbsp;CANADA
+    <div className="relative h-48 w-48 text-black">
+      <div className="absolute -left-[70px] top-[71px] z-10 flex h-1/4 w-full -rotate-90 items-center justify-evenly rounded-t-3xl bg-gradient-to-b from-blue-100 to-blue-300">
+        <div className="text-lg font-semibold tracking-widest text-red-700">
+          AIR CANADA
+        </div>
+        <div>
+          <img
+            src="https://seeklogo.com/images/A/air-canada-logo-A0180CCDB8-seeklogo.com.png"
+            className="h-6 w-6 rotate-90"
+          />
         </div>
       </div>
-      <div className="relative h-full w-3/4 rounded-3xl rounded-l bg-gradient-to-b from-blue-100 to-teal-100 p-2 text-sm">
+      <div className="absolute right-0 h-full w-3/4 rounded-3xl rounded-l bg-gradient-to-b from-blue-100 to-teal-100 p-2 text-sm">
         <div className="absolute -left-2 -top-2 z-10 h-4 w-4 rounded-full bg-white"></div>
         <div className="flex justify-around pb-2">
           <div className="flex flex-col text-2xl font-medium">
