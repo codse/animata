@@ -8,7 +8,7 @@ interface DonutChartProps {
   progressClassName?: string;
   circleWidth?: number;
   progressWidth?: number;
-  lineCap?: "round" | "butt";
+  rounded?: boolean;
   className?: string;
   children?: ReactNode;
 }
@@ -20,7 +20,7 @@ export default function DonutChart({
   trackClassName = "text-black/10",
   circleWidth = 16,
   progressWidth = 16,
-  lineCap = "round",
+  rounded = true,
   className,
   children,
 }: DonutChartProps) {
@@ -56,7 +56,7 @@ export default function DonutChart({
           stroke="currentColor"
           className={cn("duration-500", progressClassName)}
           stroke-width={`${progressWidth}px`}
-          stroke-linecap={lineCap}
+          stroke-linecap={rounded ? "round" : "butt"}
           fill="transparent"
           stroke-dasharray={`${circumference}px`}
           stroke-dashoffset={`${percentage}px`}
