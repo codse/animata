@@ -10,9 +10,9 @@ function Progress() {
         <p className="text-sm font-semibold text-gray-500">Chris Dixon</p>
         <p className="text-lg font-bold text-black">Read Write Own</p>
       </div>
-      <div className="mt-1 flex w-20 items-center justify-around rounded-full border-2 border-gray-200 p-1">
+      <div className="mt-1 flex w-20 items-center justify-around rounded-full border-2 border-orange-400 p-1">
         <BookOpen size={20} color="orange" className="top-4" />
-        <p className="text-lg font-bold text-black">30%</p>
+        <p className="text-sm font-bold text-black">30%</p>
       </div>
       <div className="mt-2 flex flex-wrap justify-center gap-1">
         {days.map((day, index) => (

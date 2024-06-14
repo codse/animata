@@ -1,5 +1,5 @@
 import { Meta, StoryObj } from "@storybook/react";
-import Progress from "./Progress";
+import Progress from "@/animata/widget/Progress";
 
 const meta = {
   title: "Widget/ Progress",
