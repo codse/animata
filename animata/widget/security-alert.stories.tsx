@@ -11,13 +11,8 @@ const meta = {
 } satisfies Meta<typeof SecurityAlert>;
 
 export default meta;
-
 type Story = StoryObj<typeof meta>;
 
 export const Primary: Story = {
-  args: {
-    riskValue: "153 320",
-    time: "30s",
-    numberOfIssue: 2,
-  },
+  args: {},
 };
