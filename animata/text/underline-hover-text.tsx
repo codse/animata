@@ -14,11 +14,11 @@ export interface UnderlineHoverTextProps {
 
 const UnderlineHoverText: React.FC<UnderlineHoverTextProps> = ({
   text,
-  textColor = "text-white",
-  hoverTextColor = "hover:text-black",
-  hoverColor = "hover:after:bg-green-300",
-  fontSize = "text-4xl",
-  fontWeight = "font-bold",
+  textColor = "text-gray-900",
+  hoverTextColor = "hover:text-white",
+  hoverColor = "hover:after:bg-indigo-500",
+  fontSize = "text-2xl",
+  fontWeight = "font-medium",
   className,
 }) => {
   return (
@@ -28,7 +28,7 @@ const UnderlineHoverText: React.FC<UnderlineHoverTextProps> = ({
         fontSize,
         textColor,
         fontWeight,
-        "after:absolute after:bottom-0 after:left-0 after:h-1 after:w-full after:rounded-2xl after:bg-blue-500",
+        "after:absolute after:bottom-0 after:left-0 after:h-1 after:w-full after:rounded-2xl after:bg-gray-300",
         "after:transition-all after:duration-300",
         hoverTextColor,
         "hover:after:h-full",
