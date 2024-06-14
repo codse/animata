@@ -1,5 +1,5 @@
+import DeliveryCard from "@/animata/widget/delivery-card";
 import { Meta, StoryObj } from "@storybook/react";
-import DeliveryCard from "./delivery-card";
 
 const meta = {
   title: "Widget/Delivery Card",
