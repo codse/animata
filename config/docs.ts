@@ -98,6 +98,14 @@ const sidebarNav: SidebarNavItem[] = [
     title: "Button",
     items: createLinks("button"),
   },
+  {
+    title: "Carousel",
+    items: createLinks("carousel"),
+  },
+  {
+    title: "Hero",
+    items: createLinks("hero"),
+  },
 ]
   .filter((category) => category.items.length > 0)
   .sort((a, b) => {
