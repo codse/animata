@@ -34,10 +34,10 @@ export function SiteFooter() {
       </div>
 
       <div className="mb-8 flex flex-col gap-6 px-4 sm:flex-row">
-        <div className="flex flex-row gap-1 sm:flex-col sm:gap-0">
+        <div className="group flex flex-row gap-1 sm:flex-col sm:gap-0">
           <p className="text-muted-foreground">Open source</p>
           <div className="flex gap-1">
-            <Icons.logo className="h-6 w-6" />
+            <Icons.logo className="h-6 w-6 origin-[top_center] animate-[swing] transition-all duration-1000 ease-in-out direction-alternate repeat-infinite" />
             <span>animata</span>
           </div>
         </div>
