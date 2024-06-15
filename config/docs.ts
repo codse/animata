@@ -63,8 +63,8 @@ const sidebarNav: SidebarNavItem[] = [
     items: createLinks("layout"),
   },
   {
-    title: "List item",
-    items: createLinks("list-item"),
+    title: "List",
+    items: createLinks("list"),
   },
   {
     title: "Container",
