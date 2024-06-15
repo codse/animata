@@ -106,6 +106,11 @@ const config = {
           "80%": { width: "128px", height: "240px" },
           "100%": { width: "80px", height: "80px" },
         },
+        swing: {
+          "0%": { transform: "rotate(0deg)" },
+          "50%": { transform: "rotate(30deg)" },
+          "100%": { transform: "rotate(-30deg)" },
+        },
         "content-blur": {
           "0%": { filter: "blur(0.3rem)" },
           "100%": { filter: "blur(0)" },
