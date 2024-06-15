@@ -22,13 +22,13 @@ author: yourTwitterUsername
 
 2. Open the newly created file and add the following code:
 
-```jsx file=<rootDir>/animata/{{TypePath}}/{{Filename}}.tsx
+   ```jsx file=<rootDir>/animata/{{TypePath}}/{{Filename}}.tsx
 
-```
+   ```
 
 # Built by
 
-   Add your github like here. [codse](https://github.com/codse)
+   Add your github like this. [codse](https://github.com/codse)
 
 # Credits
 
