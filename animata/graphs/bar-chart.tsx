@@ -37,6 +37,17 @@ export default function BarChart({
     });
   }, [providedHeight]);
 
+  const [shouldUseValue, setShouldUseValue] = useState(false);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      // This is a hack to force the animation to run for the first time.
+      // We can use framer-motion to achieve this but just keeping it simple for now.
+      setShouldUseValue(true);
+    }, 250);
+    return () => clearTimeout(timeout);
+  }, []);
+
   return (
     <div
       ref={containerRef}
@@ -48,7 +59,7 @@ export default function BarChart({
     >
       {items.map((item, index) => {
         const clampedProgress = Math.min(100, Math.max(0, item.progress));
-        const barHeight = (clampedProgress / 100) * height;
+        const barHeight = shouldUseValue ? (clampedProgress / 100) * height : 0;
         return (
           <div
             className={cn(
@@ -57,7 +68,10 @@ export default function BarChart({
             )}
             key={`bar_${index}`}
           >
-            <div style={{ height: barHeight }} className={cn(item.className)} />
+            <div
+              style={{ height: barHeight }}
+              className={cn("transition-all duration-200", item.className)}
+            />
           </div>
         );
       })}
