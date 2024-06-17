@@ -1,8 +1,8 @@
-import RevealImageListItem from "@/animata/list-item/reveal-image-list-item";
+import RevealImageListItem from "@/animata/list/reveal-image";
 import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
-  title: "List item/Reveal image list item",
+  title: "List/Reveal image",
   component: RevealImageListItem,
   parameters: {
     layout: "centered",

@@ -1,12 +1,12 @@
-import '@/styles/globals.css';
-import { Metadata, Viewport } from 'next';
+import "@/styles/globals.css";
+import { Metadata, Viewport } from "next";
 
-import { ThemeProvider } from '@/components/providers';
-import { SiteFooter } from '@/components/site-footer';
-import { SiteHeader } from '@/components/site-header';
-import { TailwindIndicator } from '@/components/tailwind-indicator';
-import { siteConfig } from '@/config/site';
-import { cn } from '@/lib/utils';
+import { ThemeProvider } from "@/components/providers";
+import { SiteFooter } from "@/components/site-footer";
+import { SiteHeader } from "@/components/site-header";
+import { TailwindIndicator } from "@/components/tailwind-indicator";
+import { siteConfig } from "@/config/site";
+import { cn } from "@/lib/utils";
 
 interface AppLayoutProps {
   children: React.ReactNode;
@@ -20,25 +20,25 @@ export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
   description: siteConfig.description,
   keywords: [
-    'Animation',
-    'Interactive',
-    'shadcn ui',
-    'Next.js',
-    'React',
-    'Tailwind CSS',
-    'Server Components',
-    'Radix UI',
+    "Animation",
+    "Interactive",
+    "shadcn ui",
+    "Next.js",
+    "React",
+    "Tailwind CSS",
+    "Server Components",
+    "Radix UI",
   ],
   authors: [
     {
-      name: 'codse',
-      url: 'https://codse.com',
+      name: "codse",
+      url: "https://codse.com",
     },
   ],
-  creator: 'Codse Team',
+  creator: "Codse Team",
   openGraph: {
-    type: 'website',
-    locale: 'en_US',
+    type: "website",
+    locale: "en_US",
     url: siteConfig.url,
     title: siteConfig.name,
     description: siteConfig.description,
@@ -53,24 +53,24 @@ export const metadata: Metadata = {
     ],
   },
   twitter: {
-    card: 'summary_large_image',
+    card: "summary_large_image",
     title: siteConfig.name,
     description: siteConfig.description,
     images: [siteConfig.ogImage],
-    creator: '@xcodse',
+    creator: "@xcodse",
   },
   icons: {
-    icon: '/favicon.ico',
-    shortcut: '/favicon-16x16.png',
-    apple: '/apple-touch-icon.png',
+    icon: "/favicon.ico",
+    shortcut: "/favicon-16x16.png",
+    apple: "/apple-touch-icon.png",
   },
   manifest: `${siteConfig.url}/site.webmanifest`,
 };
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: '(prefers-color-scheme: light)', color: 'white' },
-    { media: '(prefers-color-scheme: dark)', color: 'black' },
+    { media: "(prefers-color-scheme: light)", color: "white" },
+    { media: "(prefers-color-scheme: dark)", color: "black" },
   ],
 };
 
@@ -84,7 +84,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
       <html lang="en" suppressHydrationWarning>
         <head />
         <body
-          className={cn('min-h-screen bg-background font-sans antialiased')}
+          className={cn("min-h-screen bg-background font-sans antialiased")}
         >
           <ThemeProvider
             attribute="class"

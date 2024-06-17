@@ -1,16 +1,16 @@
-[data-theme='light'] {
+[data-theme="light"] {
   display: block;
 }
 
-[data-theme='dark'] {
+[data-theme="dark"] {
   display: none;
 }
 
-.dark [data-theme='light'] {
+.dark [data-theme="light"] {
   display: none;
 }
 
-.dark [data-theme='dark'] {
+.dark [data-theme="dark"] {
   display: block;
 }
 
@@ -27,7 +27,7 @@
 }
 
 .line {
-  @apply px-4 min-h-[1rem] py-0.5 w-full inline-block;
+  @apply inline-block min-h-[1rem] w-full px-4 py-0.5;
 }
 
 pre [data-line-numbers] .line {
@@ -35,7 +35,7 @@ pre [data-line-numbers] .line {
 }
 
 pre [data-line-numbers] > .line::before {
-  @apply text-zinc-50/40 text-xs;
+  @apply text-xs text-zinc-50/40;
   counter-increment: line;
   content: counter(line);
   display: inline-block;
@@ -53,7 +53,7 @@ pre .line-highlighted span {
 }
 
 pre .word--highlighted {
-  @apply rounded-md bg-zinc-700/50 border-zinc-700/70 p-1;
+  @apply rounded-md border-zinc-700/70 bg-zinc-700/50 p-1;
 }
 
 .dark pre .word--highlighted {
@@ -61,7 +61,7 @@ pre .word--highlighted {
 }
 
 [data-rehype-pretty-code-title] {
-  @apply mt-2 pt-6 px-4 text-sm font-medium;
+  @apply mt-2 px-4 pt-6 text-sm font-medium;
 }
 
 [data-rehype-pretty-code-title] + pre {
@@ -73,9 +73,13 @@ pre .word--highlighted {
 }
 
 .steps > h3 {
-  @apply mt-8 mb-4 text-base font-semibold;
+  @apply mb-4 mt-8 text-base font-semibold;
 }
 
 .mdx > p:first-child {
   @apply mt-4;
+}
+
+.mdx h1 {
+  @apply my-4;
 }
