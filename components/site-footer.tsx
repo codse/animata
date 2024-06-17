@@ -1,6 +1,7 @@
 import Marquee from "@/animata/container/marquee";
 import AnimatedGradientText from "@/animata/text/animated-gradient-text";
-import { builtWith } from "@/components/icons";
+import { Icons, builtWith } from "@/components/icons";
+import Image from "next/image";
 
 export function SiteFooter() {
   return (
@@ -31,18 +32,25 @@ export function SiteFooter() {
           </AnimatedGradientText>
         </div>
       </div>
-      <div className="flex flex-col items-center gap-4 md:h-24 md:w-1/2 md:flex-row">
-        <div>
+
+      <div className="mb-8 flex flex-col gap-6 px-4 sm:flex-row">
+        <div className="group flex flex-row gap-1 sm:flex-col sm:gap-0">
           <p className="text-muted-foreground">Open source</p>
-          <div>animata</div>
+          <div className="flex gap-1">
+            <Icons.logo className="h-6 w-6 origin-[top_center] animate-[swing] transition-all duration-1000 ease-in-out direction-alternate repeat-infinite" />
+            <span>animata</span>
+          </div>
         </div>
-        <div>
+        <div className="flex flex-row gap-1 sm:flex-col sm:gap-0">
           <p className="text-muted-foreground">Maintained by</p>
-          <div>codse</div>
+          <div className="flex gap-1">
+            <Image src="/codse.webp" width={24} height={24} alt="codse" />
+            <span>codse</span>
+          </div>
         </div>
-        <div>
+        <div className="flex flex-row gap-1 sm:flex-col sm:gap-0">
           <p className="text-muted-foreground">With love from</p>
-          <div>🇳🇵Nepal</div>
+          <span>🇳🇵Nepal</span>
         </div>
       </div>
     </footer>

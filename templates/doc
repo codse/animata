@@ -1,6 +1,7 @@
 ---
 title: {{Title}}
 description: {{Description}}
+author: YourTwitterUsername
 ---
 
 <ComponentPreview name="{{StoryPath}}--docs" />
@@ -21,6 +22,12 @@ description: {{Description}}
 
 2. Open the newly created file and add the following code:
 
-```jsx file=<rootDir>/animata/{{TypePath}}/{{Filename}}.tsx
+   ```jsx file=<rootDir>/animata/{{TypePath}}/{{Filename}}.tsx
 
-```
+   ```
+
+
+# Credits
+
+   Built by [Your name](https://github.com/YourGithubUsername)
+   ...Add appropriate credits here.
