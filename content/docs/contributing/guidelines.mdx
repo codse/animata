@@ -15,12 +15,12 @@ All file names should use lower `kebab-case`.
 ## Image Usage
 
 - Use [Unsplash](https://unsplash.com) for images.
-- Use [radiux icon](https://www.radix-ui.com/icons) or [lucide icon](https://lucide.dev/icons/) for icons.
-- If you need specific SVGs, use [flaticon.com](https://flaticon.com) and copy the SVG. Make sure to add the credits in the documentation for the icon.
+- Use [radix icon](https://www.radix-ui.com/icons) or [lucide icon](https://lucide.dev/icons/) for icons.
+- If you need specific SVGs, use [svgrepo.com](https://svgrepo.com) and copy the SVG. Make sure to add the credits in the documentation for the icon.
 
 ## Imports
 
-All imports should be `absolute`, i.e., use `@animata/...` instead of relative imports like `./` or `../`. I have added `import issue` in the comments for such issues.
+All imports should be `absolute`, i.e., use `@animata/...` instead of relative imports like `./` or `../`.
 
 ## "use client" Directive
 
@@ -42,10 +42,12 @@ Make sure to use reasonable defaults in the props. The component should render s
 
 Use `cn` for writing conditional classes. For example:
 
-`cn({
+```tsx
+cn({
   'visible': shouldShow,
   'invisible': !shouldShow
-});`
+});
+```
 
 ## Responsiveness
 
@@ -66,3 +68,21 @@ You can change the opacity of colors by using the opacity syntax, e.g., `text-gr
 ## Color Usage
 
 Do not use custom colors unless needed. Tailwind already provides a wide range of colors which we can use.
+
+## PR review
+
+Make sure to self-review the PRs thoroughly before submitting them. Check for any linting errors, console logs, and unnecessary code.
+
+## PR description
+
+Add a detailed description of the changes you have made in the PR. It should be clear and concise.
+
+## Labels
+
+If the component requires interaction from user like `hover` or `click` then add the `requires interaction` label to the component followed by `click` or `hover` whichever is applicable in the metadata section.
+
+```mdx
+---
+labels: ["requires interaction", "click"]
+---
+```

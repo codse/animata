@@ -17,8 +17,7 @@ type Story = StoryObj<typeof meta>;
 export const Primary: Story = {
   args: {
     text: "> yarn add @animata/awesomeness",
-    cursor: true,
-    erase: true,
+    repeat: true,
     grow: false,
   },
   render: (props) => (
@@ -31,8 +30,7 @@ export const Primary: Story = {
 export const Quote: Story = {
   args: {
     text: "The following excerpt from Carl Sagan's book Pale Blue Dot was inspired by an image taken, at Sagan's suggestion, by Voyager 1 on 14 February 1990. As the spacecraft was departing our planetary neighborhood for the fringes of the solar system, it turned it around for one last look at its home planet.",
-    cursor: true,
-    erase: true,
+    repeat: true,
     delay: 16,
     alwaysVisibleCount: 0,
   },

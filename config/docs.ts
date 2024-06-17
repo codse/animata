@@ -87,7 +87,7 @@ const sidebarNav: SidebarNavItem[] = [
     items: createLinks("bento-grid"),
   },
   {
-    title: "Widgets",
+    title: "Widget",
     items: createLinks("widget"),
   },
   {
@@ -105,6 +105,10 @@ const sidebarNav: SidebarNavItem[] = [
   {
     title: "Hero",
     items: createLinks("hero"),
+  },
+  {
+    title: "Scroll",
+    items: createLinks("scroll"),
   },
 ]
   .filter((category) => category.items.length > 0)
@@ -126,7 +130,7 @@ export const docsConfig: DocsConfig = {
     },
     {
       title: "Components",
-      href: sidebarNav[0].items?.[0]?.href,
+      href: sidebarNav[1].items?.[0]?.href,
     },
     {
       title: "Contributing",
