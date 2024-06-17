@@ -62,3 +62,120 @@ export const Primary: Story = {
     );
   },
 };
+
+export const WithFilledBackground: Story = {
+  args: {
+    items: [
+      {
+        label: "A",
+        containerClassName: "bg-cyan-300",
+        progress: 45,
+        className: "bg-cyan-600",
+      },
+      {
+        label: "B",
+        containerClassName: "bg-cyan-300",
+        progress: 25,
+        className: "bg-cyan-600",
+      },
+      {
+        label: "C",
+        containerClassName: "bg-cyan-300",
+        progress: 15,
+        className: "bg-cyan-600",
+      },
+      {
+        label: "B",
+        containerClassName: "bg-cyan-300",
+        progress: 10,
+        className: "bg-cyan-600",
+      },
+      {
+        label: "C",
+        containerClassName: "bg-cyan-300",
+        progress: 15,
+        className: "bg-cyan-600",
+      },
+      {
+        label: "D",
+        containerClassName: "bg-cyan-300",
+        progress: 30,
+        className: "bg-cyan-600",
+      },
+      {
+        label: "B",
+        containerClassName: "bg-cyan-300",
+        progress: 10,
+        className: "bg-cyan-600",
+      },
+      {
+        label: "B",
+        containerClassName: "bg-cyan-300",
+        progress: 10,
+        className: "bg-cyan-600",
+      },
+      {
+        label: "C",
+        containerClassName: "bg-cyan-300",
+        progress: 85,
+        className: "bg-cyan-600",
+      },
+      {
+        label: "D",
+        progress: 90,
+        containerClassName: "bg-cyan-300",
+        className: "bg-cyan-600",
+      },
+      {
+        label: "E",
+        progress: 15,
+        containerClassName: "bg-cyan-300",
+        className: "bg-cyan-600",
+      },
+      {
+        label: "E",
+        containerClassName: "bg-cyan-300",
+        progress: 70,
+        className: "bg-cyan-600",
+      },
+      {
+        label: "A",
+        containerClassName: "bg-cyan-300",
+        progress: 45,
+        className: "bg-cyan-600",
+      },
+      {
+        label: "B",
+        containerClassName: "bg-cyan-300",
+        progress: 10,
+        className: "bg-cyan-600",
+      },
+      {
+        label: "C",
+        containerClassName: "bg-cyan-300",
+        progress: 15,
+        className: "bg-cyan-600",
+      },
+      {
+        label: "B",
+        containerClassName: "bg-cyan-300",
+        progress: 10,
+        className: "bg-cyan-600",
+      },
+    ],
+    height: 4 * 12, // h-12 * 4
+  },
+  render: (args) => {
+    return (
+      <>
+        <strong className="text-blue-500">Bar chart</strong>
+        <div className="group rounded border border-blue-100 bg-white p-2">
+          {/** The height & width are important */}
+          <div className="border-bottom relative box-border h-12 w-52 border-zinc-300">
+            <BarChart {...args} />
+          </div>
+        </div>
+      </>
+    );
+  },
+};

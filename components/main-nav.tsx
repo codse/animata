@@ -1,12 +1,12 @@
-'use client';
+"use client";
 
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 
-import { Icons } from '@/components/icons';
-import { docsConfig } from '@/config/docs';
-import { siteConfig } from '@/config/site';
-import { cn } from '@/lib/utils';
+import { Icons } from "@/components/icons";
+import { docsConfig } from "@/config/docs";
+import { siteConfig } from "@/config/site";
+import { cn } from "@/lib/utils";
 
 export function MainNav() {
   const pathname = usePathname();
@@ -14,7 +14,9 @@ export function MainNav() {
   return (
     <div className="mr-4 hidden md:flex">
       <Link href="/" className="mr-6 flex items-center space-x-2">
-        <Icons.logo className="h-6 w-6" />
+        <span className="origin-[top_center] animate-[swing] transition-all duration-1000 ease-in-out direction-alternate repeat-[2]">
+          <Icons.logo className="h-6 w-6" />
+        </span>
         <span className="hidden font-bold sm:inline-block">
           {siteConfig.name}
         </span>
@@ -24,14 +26,16 @@ export function MainNav() {
           if (!item.href) {
             return null;
           }
-          
+
           return (
             <Link
               key={item.href}
               href={item.href}
               className={cn(
-                'transition-colors hover:text-foreground/80',
-                pathname === item.href ? 'text-foreground' : 'text-foreground/60'
+                "transition-colors hover:text-foreground/80",
+                pathname === item.href
+                  ? "text-foreground"
+                  : "text-foreground/60",
               )}
             >
               {item.title}

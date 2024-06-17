@@ -8,7 +8,7 @@ interface WaveRevealProps {
   text: string;
 
   /**
-   * Additional classes to apply
+   * Additional classes for the container
    */
   className?: string;
 

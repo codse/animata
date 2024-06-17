@@ -63,8 +63,8 @@ const sidebarNav: SidebarNavItem[] = [
     items: createLinks("layout"),
   },
   {
-    title: "List item",
-    items: createLinks("list-item"),
+    title: "List",
+    items: createLinks("list"),
   },
   {
     title: "Container",
@@ -87,7 +87,7 @@ const sidebarNav: SidebarNavItem[] = [
     items: createLinks("bento-grid"),
   },
   {
-    title: "Widgets",
+    title: "Widget",
     items: createLinks("widget"),
   },
   {
@@ -97,6 +97,22 @@ const sidebarNav: SidebarNavItem[] = [
   {
     title: "Overlay",
     items: createLinks("overlay"),
+  },
+  {
+    title: "Button",
+    items: createLinks("button"),
+  },
+  {
+    title: "Carousel",
+    items: createLinks("carousel"),
+  },
+  {
+    title: "Hero",
+    items: createLinks("hero"),
+  },
+  {
+    title: "Scroll",
+    items: createLinks("scroll"),
   },
 ]
   .filter((category) => category.items.length > 0)
@@ -118,7 +134,7 @@ export const docsConfig: DocsConfig = {
     },
     {
       title: "Components",
-      href: sidebarNav[0].items?.[0]?.href,
+      href: sidebarNav[1].items?.[0]?.href,
     },
     {
       title: "Contributing",
