@@ -1,8 +1,11 @@
 "use client";
 
-import { cn } from "@/lib/utils";
-import { Circle, Triangle } from "lucide-react";
 import { useEffect, useState } from "react";
+import { cn } from "@/lib/utils";
+import Image from "next/image";
+import { Circle, Triangle } from "lucide-react";
+import Dog from "@/public/dog.png";
+import A from "@/public/A.png";
 
 export default function Clock() {
   const [time, setTime] = useState({
@@ -34,17 +37,15 @@ export default function Clock() {
 
   const Header = () => (
     <div className="flex h-1/4 justify-between p-4">
-      <div className="flex">
-        <img
-          src="https://seeklogo.com/images/B/baltimore-orioles-logo-9CE23E31DB-seeklogo.com.png"
-          className="mr-1 h-6 w-6"
-        />
-        <p className="mr-1 font-medium">BAL</p>
+      <div className="flex gap-1">
+        <Image src={Dog} alt="Team Logo" className="h-6 w-6" />
+        <p className="font-medium">XYZ</p>
       </div>
-      <div className="flex">
-        <p className="mr-1 font-medium">CHI</p>
-        <img
-          src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/Chicago_Cubs_Cap_Insignia.svg/519px-Chicago_Cubs_Cap_Insignia.svg.png"
+      <div className="flex gap-1">
+        <p className="font-medium">ABC</p>
+        <Image
+          src={A}
+          alt="Team Name"
           className="h-6 w-6 rounded-full border"
         />
       </div>
@@ -70,8 +71,8 @@ export default function Clock() {
   return (
     <div className="h-48 w-52 rounded-3xl bg-zinc-800 text-white">
       <Header />
-      <div className="flex h-[55%] items-center justify-center">
-        <div className="mr-2 flex">
+      <div className="flex h-[55%] items-center justify-center gap-2">
+        <div className="flex">
           <Time time={time.hoursTens} />
           <Time time={time.hoursOnes} />
         </div>
@@ -81,8 +82,11 @@ export default function Clock() {
         </div>
       </div>
       <div className="flex h-1/5 items-center justify-around rounded-b-3xl bg-black py-7 font-medium text-white">
-        <div className="flex items-center">
-          <Triangle fill="white" size={6} className="mr-1" /> 6<sup>th</sup>
+        <div className="flex items-center gap-1">
+          <Triangle fill="white" size={6} />
+          <p>
+            6<sup>th</sup>
+          </p>
         </div>
         <div className="flex flex-col items-center justify-center">
           <div className="relative h-3 w-3">
@@ -96,7 +100,7 @@ export default function Clock() {
             <Circle size={8} color="grey" />
           </div>
         </div>
-        <div className="">2-1</div>
+        <div>2-1</div>
       </div>
     </div>
   );
