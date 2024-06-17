@@ -72,7 +72,7 @@ function SmoothEffect({
         return (
           <span
             key={wordIndex}
-            className={cn("transition-opacity duration-100", {
+            className={cn("transition-opacity duration-300 ease-in-out", {
               "opacity-100": wordIndex < index,
               "opacity-0": wordIndex >= index + alwaysVisibleCount,
             })}

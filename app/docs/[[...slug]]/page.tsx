@@ -9,9 +9,7 @@ import Balancer from "react-wrap-balancer";
 
 import { Mdx } from "@/components/mdx-components";
 import { DocsPager } from "@/components/pager";
-import { DashboardTableOfContents } from "@/components/toc";
 import { badgeVariants } from "@/components/ui/badge";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { siteConfig } from "@/config/site";
 import { getTableOfContents } from "@/lib/toc";
 import { absoluteUrl, cn } from "@/lib/utils";
@@ -87,7 +85,7 @@ export default async function DocPage({ params }: DocPageProps) {
   const toc = await getTableOfContents(doc.body.raw);
 
   return (
-    <main className="relative py-6 lg:gap-10 lg:py-8 xl:grid xl:grid-cols-[1fr_300px]">
+    <main className="relative py-6">
       <div className="mx-auto w-full min-w-0">
         <div className="mb-4 flex items-center space-x-1 text-sm text-muted-foreground">
           <div className="overflow-hidden text-ellipsis whitespace-nowrap">
@@ -159,7 +157,7 @@ export default async function DocPage({ params }: DocPageProps) {
         </div>
         <DocsPager doc={doc} />
       </div>
-      {doc.toc && (
+      {/* {doc.toc && (
         <div className="hidden text-sm xl:block">
           <div className="sticky top-16 -mt-10 pt-4">
             <ScrollArea className="pb-10">
@@ -169,7 +167,7 @@ export default async function DocPage({ params }: DocPageProps) {
             </ScrollArea>
           </div>
         </div>
-      )}
+      )} */}
     </main>
   );
 }
