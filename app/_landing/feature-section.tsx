@@ -21,7 +21,7 @@ function BentoCard({
 
 function FeatureSection() {
   return (
-    <div className="p-4">
+    <div className="container p-4">
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-3 sm:grid-rows-3">
         <BentoCard className="bg-gray-200 dark:bg-zinc-900 sm:col-span-2">
           <h4 className="text-md font-bold">Free &amp; Open source</h4>
