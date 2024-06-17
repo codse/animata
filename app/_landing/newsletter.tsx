@@ -19,7 +19,7 @@ export function NewsletterInput() {
   );
 }
 
-function NewsletterSection() {
+export default function NewsletterSection() {
   return (
     <section className="w-full bg-gray-50 py-12 dark:bg-gray-900 md:py-24 lg:py-32">
       <div className="container px-4 md:px-6">
@@ -38,5 +38,3 @@ function NewsletterSection() {
     </section>
   );
 }
-
-export default NewsletterSection;

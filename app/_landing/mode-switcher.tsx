@@ -2,7 +2,7 @@ import { motion, useMotionValue, useSpring } from "framer-motion";
 import { MoonIcon, SunIcon } from "lucide-react";
 import { useTheme } from "next-themes";
 
-const ModeSwitcher = () => {
+export default function ModeSwitcher() {
   const { setTheme, theme } = useTheme();
   const rotate = useMotionValue(theme === "dark" ? 180 : 0);
   const spring = useSpring(rotate, {
@@ -38,6 +38,4 @@ const ModeSwitcher = () => {
       </div>
     </motion.div>
   );
-};
-
-export default ModeSwitcher;
+}

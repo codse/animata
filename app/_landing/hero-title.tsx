@@ -9,7 +9,7 @@ const titleFont = Anaheim({
   weight: ["400"],
 });
 
-function HeroTitle() {
+export default function HeroTitle() {
   return (
     <div className="group relative inline-block">
       <motion.span
@@ -48,5 +48,3 @@ function HeroTitle() {
     </div>
   );
 }
-
-export default HeroTitle;

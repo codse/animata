@@ -11,7 +11,7 @@ const titleFont = Anaheim({
   weight: ["400"],
 });
 
-function HeroExamples() {
+export default function HeroExamples() {
   return (
     <div className="flex flex-1 flex-col items-center justify-center gap-4">
       <div className="flex flex-row gap-4">
@@ -83,5 +83,3 @@ function HeroExamples() {
     </div>
   );
 }
-
-export default HeroExamples;

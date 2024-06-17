@@ -9,7 +9,7 @@ import HeroTitle from "./hero-title";
 import HeroExamples from "./hero-examples";
 import { NewsletterInput } from "./newsletter";
 
-function Hero() {
+export default function Hero() {
   return (
     <div className="container mx-auto flex h-[90vh] max-w-7xl flex-col items-center justify-center gap-4 md:flex-row">
       <div className="flex flex-1 flex-col items-center justify-center py-8 md:items-start md:py-24">
@@ -49,5 +49,3 @@ function Hero() {
     </div>
   );
 }
-
-export default Hero;

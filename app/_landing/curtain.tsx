@@ -10,7 +10,7 @@ const titleFont = Anaheim({
 
 let hasLoaded = false;
 
-function Curtain() {
+export default function Curtain() {
   useEffect(() => {
     hasLoaded = true;
   }, []);
@@ -42,5 +42,3 @@ function Curtain() {
     </div>
   );
 }
-
-export default Curtain;

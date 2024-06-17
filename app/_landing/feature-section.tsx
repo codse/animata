@@ -19,7 +19,7 @@ function BentoCard({
   );
 }
 
-function FeatureSection() {
+export default function FeatureSection() {
   return (
     <div className="container p-4">
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-3 sm:grid-rows-3">
@@ -59,5 +59,3 @@ function FeatureSection() {
     </div>
   );
 }
-
-export default FeatureSection;
