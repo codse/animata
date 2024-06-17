@@ -30,6 +30,7 @@
     "@radix-ui/react-tabs": "^1.0.4",
     "@radix-ui/react-tooltip": "^1.0.7",
     "@rehype-pretty/transformers": "^0.13.2",
+    "@supabase/supabase-js": "^2.43.5",
     "chalk": "^5.3.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
