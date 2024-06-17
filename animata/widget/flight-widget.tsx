@@ -43,7 +43,7 @@ export default function FlightWidget() {
         </div>
       </div>
       <div className="absolute right-0 h-full w-3/4 rounded-3xl rounded-l bg-gradient-to-b from-blue-100 to-teal-100 p-2 text-sm">
-        <div className="absolute -left-2 -top-2 z-10 h-4 w-4 rounded-full bg-white"></div>
+        <div className="absolute -left-1.5 -top-2 z-10 h-4 w-4 rounded-full bg-white"></div>
         <div className="flex justify-around pb-2">
           <div className="flex flex-col text-2xl font-medium">
             <p>TOR</p>
@@ -66,7 +66,7 @@ export default function FlightWidget() {
         <div className="flex pl-2 font-bold">
           <p>{formattedTime}</p>
         </div>
-        <div className="absolute -bottom-2 -left-2 z-10 h-4 w-4 rounded-full bg-white"></div>
+        <div className="absolute -bottom-2 -left-1.5 z-10 h-4 w-4 rounded-full bg-white"></div>
       </div>
     </div>
   );
