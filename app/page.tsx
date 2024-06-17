@@ -1,6 +1,6 @@
 "use client";
 
-import Curtain from "./_landing/Curtain";
+import Curtain from "./_landing/curtain";
 import FeatureSection from "./_landing/feature-section";
 import Hero from "./_landing/hero";
 
