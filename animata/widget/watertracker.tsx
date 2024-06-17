@@ -3,9 +3,12 @@ import { useEffect, useState } from "react";
 import { Droplet } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-export default function Watertracker() {
+interface Watertracker {
+  dailyGoal: number;
+}
+
+export default function Watertracker({ dailyGoal }: Watertracker) {
   const [waterIntake, setWaterIntake] = useState(1500);
-  const dailyGoal = 3000;
   const [initialLoad, setInitialLoad] = useState(true);
 
   useEffect(() => {
