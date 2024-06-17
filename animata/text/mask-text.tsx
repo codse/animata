@@ -1,7 +1,9 @@
-import { useMousePosition } from "@/hooks/use-mouse-position";
-import { useState } from "react";
+"use client";
+
+import { useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
+import { useMousePosition } from "@/hooks/use-mouse-position";
 
 interface MaskTextProps extends React.HTMLAttributes<HTMLDivElement> {
   revealText: string;
@@ -13,14 +15,15 @@ export default function MaskText({
   className,
 }: MaskTextProps) {
   const [isHovered, setIsHovered] = useState(false);
-  const { x, y } = useMousePosition();
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { x, y } = useMousePosition(containerRef);
   const size = isHovered ? 300 : 50;
 
   const common =
     "flex h-full w-full items-center justify-center text-5xl font-bold leading-snug";
 
   return (
-    <div className={cn("relative h-screen", className)}>
+    <div className={cn("relative h-screen", className)} ref={containerRef}>
       <motion.div
         className={cn(common, "absolute bg-black text-white")}
         style={{
