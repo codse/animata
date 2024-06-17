@@ -26,7 +26,8 @@ export default function NewsletterSection() {
         <div className="flex flex-col items-center space-y-4 text-center">
           <div className="space-y-2">
             <h2 className="text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">
-              Stay Updated
+              Exclusive <span className="text-primary">Updates</span> - In Your
+              Inbox
             </h2>
             <p className="mx-auto max-w-[700px] text-gray-500 dark:text-gray-400 md:text-xl">
               Subscribe to our newsletter and never miss our updates
