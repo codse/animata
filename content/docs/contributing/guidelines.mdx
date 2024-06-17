@@ -42,10 +42,12 @@ Make sure to use reasonable defaults in the props. The component should render s
 
 Use `cn` for writing conditional classes. For example:
 
-`cn({
+```tsx
+cn({
   'visible': shouldShow,
   'invisible': !shouldShow
-});`
+});
+```
 
 ## Responsiveness
 
@@ -74,3 +76,13 @@ Make sure to self-review the PRs thoroughly before submitting them. Check for an
 ## PR description
 
 Add a detailed description of the changes you have made in the PR. It should be clear and concise.
+
+## Labels
+
+If the component requires interaction from user like `hover` or `click` then add the `requires interaction` label to the component followed by `click` or `hover` whichever is applicable in the metadata section.
+
+```mdx
+---
+labels: ["requires interaction", "click"]
+---
+```
