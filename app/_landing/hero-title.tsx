@@ -1,0 +1,52 @@
+import { motion } from "framer-motion";
+import { Anaheim } from "next/font/google";
+
+import WaveReveal from "@/animata/text/wave-reveal";
+import { cn } from "@/lib/utils";
+
+const titleFont = Anaheim({
+  subsets: ["latin"],
+  weight: ["400"],
+});
+
+function HeroTitle() {
+  return (
+    <div className="group relative inline-block">
+      <motion.span
+        initial={{
+          opacity: 0,
+        }}
+        animate={{
+          opacity: 1,
+        }}
+        transition={{ duration: "2s", delay: 0.5, type: "spring" }}
+        className="absolute -left-3 -top-1 inline-block -rotate-12 rounded-full bg-lime-200 px-2 py-1 text-sm font-bold uppercase text-lime-600 transition-all ease-slow group-hover:z-10 group-hover:rotate-0 group-hover:bg-lime-300"
+      >
+        FREE
+      </motion.span>
+
+      <motion.span
+        initial={{
+          opacity: 0,
+        }}
+        animate={{
+          opacity: 1,
+        }}
+        transition={{ duration: "2s", delay: 1, type: "spring" }}
+        className="absolute -right-9 -top-1 inline-block rotate-12 rounded-full bg-lime-200 px-2 py-1 text-sm font-bold uppercase text-lime-600 transition-all ease-slow group-hover:z-10 group-hover:rotate-0 group-hover:bg-lime-300"
+      >
+        Open source
+      </motion.span>
+      <WaveReveal
+        text="animata"
+        className={cn(
+          "select-none px-0 text-6xl uppercase text-blue-700 transition-opacity group-hover:opacity-50 md:px-0",
+          titleFont.className,
+        )}
+        direction="up"
+      />
+    </div>
+  );
+}
+
+export default HeroTitle;
