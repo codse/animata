@@ -90,6 +90,12 @@ const config = {
           "0%": { filter: "blur(0.3rem)" },
           "100%": { filter: "blur(0)" },
         },
+        "pop-blob": {
+          "0%": { transform: "scale(1)" },
+          "33%": { transform: "scale(1.2)" },
+          "66%": { transform: "scale(0.8)" },
+          "100%": { transform: "scale(1)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -97,6 +103,7 @@ const config = {
         "marquee-horizontal": "marquee-x var(--duration) infinite linear",
         "marquee-vertical": "marquee-y var(--duration) linear infinite",
         "bg-position": "bg-position 3s infinite alternate",
+        "pop-blob": "pop-blob 4s infinite",
       },
       transitionTimingFunction: {
         slow: "cubic-bezier(.405, 0, .025, 1)",
