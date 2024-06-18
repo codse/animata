@@ -1,7 +1,8 @@
 "use client";
 
+import AnimatedGradientText from "@/animata/text/animated-gradient-text";
 import BoldCopy from "@/animata/text/bold-copy";
-import { useState } from "react";
+import { cn } from "@/lib/utils";
 import Curtain from "./_landing/curtain";
 import FeatureSection from "./_landing/feature-section";
 import Hero from "./_landing/hero";
@@ -15,7 +16,7 @@ const Thunder = () => {
       viewBox="0 0 200 200"
       className="h-40 w-40 animate-bounce"
     >
-      <g clip-path="url(#cs_clip_1_misc-4)">
+      <g clipPath="url(#cs_clip_1_misc-4)">
         <mask
           id="cs_mask_1_misc-4"
           style={{ maskType: "alpha" }}
@@ -48,10 +49,10 @@ const Thunder = () => {
           height="260"
           x="33.5"
           y="16.5"
-          color-interpolation-filters="sRGB"
+          colorInterpolationFilters="sRGB"
           filterUnits="userSpaceOnUse"
         >
-          <feFlood flood-opacity="0" result="BackgroundImageFix"></feFlood>
+          <feFlood floodOpacity="0" result="BackgroundImageFix"></feFlood>
           <feBlend
             in="SourceGraphic"
             in2="BackgroundImageFix"
@@ -70,8 +71,8 @@ const Thunder = () => {
           y2="181.5"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#FFE500"></stop>
-          <stop offset="1" stop-color="#07FFE1"></stop>
+          <stop stopColor="#FFE500"></stop>
+          <stop offset="1" stopColor="#07FFE1"></stop>
         </linearGradient>
         <clipPath id="cs_clip_1_misc-4">
           <path fill="#fff" d="M0 0H200V200H0z"></path>
@@ -120,7 +121,7 @@ const Thunder = () => {
 
 const HighlightExpand = () => {
   return (
-    <span className="absolute z-0 h-full w-1 bg-blue-300 transition-all group-hover:w-full dark:bg-lime-300" />
+    <span className="absolute -bottom-[1px] z-0 h-0.5 w-full bg-blue-300 transition-all ease-slow group-hover:h-full dark:bg-lime-300" />
   );
 };
 
@@ -128,7 +129,7 @@ const Highlight = ({ children }: { children: React.ReactNode }) => {
   return (
     <span className="group relative inline-block">
       <HighlightExpand />
-      <span className="relative px-0.5 font-mono transition-colors group-hover:text-blue-900 dark:group-hover:text-lime-900">
+      <span className="relative px-0.5 transition-colors group-hover:text-blue-900 dark:group-hover:text-lime-900">
         {children}
       </span>
     </span>
@@ -152,12 +153,19 @@ const faq = [
       "Animata is completely free and open-source. You can use it in both personal and commercial projects.",
   },
   {
-    question: "Why does it matter?",
-    answer:
-      "Small animations can significantly enhance the user experience by making websites more engaging and enjoyable. Animata offers a diverse collection of animations, effects, and interactions to elevate your projects effortlessly.",
+    question: "Why should I care?",
+    answer: (
+      <span>
+        Small animations can significantly enhance the user experience by making
+        websites more engaging and enjoyable. Animata offers a diverse
+        collection of <Highlight>animations</Highlight>,{" "}
+        <Highlight>effects</Highlight>, and <Highlight>interactions</Highlight>{" "}
+        to elevate your projects effortlessly.
+      </span>
+    ),
   },
   {
-    question: "I can create these animations myself. Why should I use Animata?",
+    question: "I can make these myself. Why should I use this?",
     answer:
       "While you certainly can create animations yourself, using Animata saves you time and effort. Plus, you can learn from our implementations and even contribute to improving them.",
   },
@@ -167,33 +175,53 @@ const faq = [
       "Animata is developed by a passionate team of developers who love animations. We study the best interactions from top websites and bring them to you, saving you hours of development time.",
   },
   {
-    question: "Sounds amazing, where do I sign up?",
+    question: "Sounds amazing, how do I use it?",
     answer:
       "Animata will be available by the end of June. Enter your email below to be notified as soon as we go live.",
   },
 ];
 
-function FaqSection() {
-  const [activeIndex, setActiveIndex] = useState(0);
+function FaqItem({ index }: { index: number }) {
+  const item = faq[index];
+  const count = (
+    <BoldCopy
+      text={String(index + 1)}
+      className="w-fit bg-transparent px-0 md:px-0"
+      textClassName="text-md md:text-xl"
+      backgroundTextClassName="text-2xl md:text-5xl"
+    />
+  );
+
   return (
-    <section id="faq" className="mx-auto max-w-5xl">
-      <BoldCopy text="FAQ" />
-      {faq.map((item, index) => {
-        return (
-          <div className="flex flex-row" key={`question-${index}`}>
-            <h3
-              className="flex flex-1 flex-shrink-0 flex-wrap"
-              onClick={() => setActiveIndex(index)}
-            >
-              <BoldCopy
-                text={String(index + 1)}
-                className="w-fit bg-transparent"
-              />
-              {item.question}
-            </h3>
-            <div className="flex-1">{item.answer}</div>
-          </div>
-        );
+    <div
+      key={`question-${index}`}
+      className={cn({
+        "mb-4": index !== faq.length - 1,
+      })}
+    >
+      <h3 className="relative flex flex-shrink-0 flex-wrap items-center gap-4">
+        {count}
+        <span className="inline-block w-3/4 text-lg font-medium md:text-xl">
+          {item.question}
+        </span>
+      </h3>
+      <div className="flex gap-4">
+        <div className="invisible h-0">{count}</div>
+        <div className="text-muted-foreground">{item.answer}</div>
+      </div>
+    </div>
+  );
+}
+
+function FaqSection() {
+  return (
+    <section id="faq" className="relative mx-auto max-w-5xl">
+      <BoldCopy
+        text="FAQ"
+        className="mb-4 border border-gray-200 dark:border-zinc-800"
+      />
+      {faq.map((_, index) => {
+        return <FaqItem key={`item-${index}`} index={index} />;
       })}
     </section>
   );
@@ -204,7 +232,7 @@ export default function IndexPage() {
     <div
       style={{
         backgroundImage:
-          "linear-gradient(#444cf722 1px, transparent 1px), linear-gradient(to right, #444cf722 1px, transparent 1px)",
+          "linear-gradient(#444cf715 1px, transparent 1px), linear-gradient(to right, #444cf715 1px, transparent 1px)",
         backgroundSize: "55px 55px",
       }}
       className="bg-background"
@@ -217,13 +245,13 @@ export default function IndexPage() {
         <NewsletterSection />
       </div>
       <div className="flex w-full items-center justify-center">
-        <span className="text-4xl font-black uppercase text-yellow-500">
+        <AnimatedGradientText className="from-yellow-500 via-lime-500 to-green-500 text-5xl font-black uppercase">
           Copy
-        </span>
+        </AnimatedGradientText>
         <Thunder />
-        <span className="text-4xl font-black uppercase text-blue-500">
+        <AnimatedGradientText className="from-blue-500 via-violet-500 to-purple-500 text-5xl font-black uppercase">
           Paste
-        </span>
+        </AnimatedGradientText>
       </div>
       <Curtain />
     </div>

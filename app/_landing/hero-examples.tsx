@@ -17,13 +17,22 @@ const titleFont = Anaheim({
 
 const Egg = () => {
   return (
-    <svg
+    <motion.svg
       xmlns="http://www.w3.org/2000/svg"
       fill="none"
       viewBox="0 0 200 200"
       className="absolute h-auto max-h-[500px] w-full max-w-[500px] opacity-25 dark:opacity-100"
+      initial={{
+        scale: 0.3,
+      }}
+      animate={{
+        scale: [0.3, 1],
+      }}
+      transition={{
+        duration: 0.3,
+      }}
     >
-      <g clip-path="url(#cs_clip_1_misc-9)">
+      <g clipPath="url(#cs_clip_1_misc-9)">
         <mask
           id="cs_mask_1_misc-9"
           style={{ maskType: "alpha" }}
@@ -71,10 +80,10 @@ const Egg = () => {
           height="412.095"
           x="-77.372"
           y="-94.144"
-          color-interpolation-filters="sRGB"
+          colorInterpolationFilters="sRGB"
           filterUnits="userSpaceOnUse"
         >
-          <feFlood flood-opacity="0" result="BackgroundImageFix"></feFlood>
+          <feFlood floodOpacity="0" result="BackgroundImageFix"></feFlood>
           <feBlend
             in="SourceGraphic"
             in2="BackgroundImageFix"
@@ -93,8 +102,8 @@ const Egg = () => {
           y2="200"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#0E6FFF"></stop>
-          <stop offset="1" stop-color="#00F0FF"></stop>
+          <stop stopColor="#0E6FFF"></stop>
+          <stop offset="1" stopColor="#00F0FF"></stop>
         </linearGradient>
         <clipPath id="cs_clip_1_misc-9">
           <path fill="#fff" d="M0 0H200V200H0z"></path>
@@ -137,7 +146,7 @@ const Egg = () => {
           ></feBlend>
         </filter>
       </defs>
-    </svg>
+    </motion.svg>
   );
 };
 
@@ -157,6 +166,7 @@ export default function HeroExamples() {
           translateY: [-100, 0],
         }}
         transition={{
+          delay: 0.2,
           duration: 0.2,
         }}
         className="relative rounded-full"
@@ -188,7 +198,7 @@ export default function HeroExamples() {
             opacity: [0, 1],
           }}
           transition={{
-            delay: 0.1,
+            delay: 0.4,
             duration: 0.3,
           }}
           className="flex h-24 flex-1 items-center justify-center overflow-hidden rounded-xl border border-gray-200 bg-gray-50 shadow-xl dark:border-gray-600 dark:bg-gray-900"
@@ -209,7 +219,7 @@ export default function HeroExamples() {
             opacity: [0, 1],
           }}
           transition={{
-            delay: 0.15,
+            delay: 0.45,
             duration: 0.3,
           }}
           className="h-24 w-24 overflow-hidden rounded-xl border border-gray-200 bg-gray-50 shadow-xl dark:border-gray-600 dark:bg-gray-900"
@@ -230,7 +240,7 @@ export default function HeroExamples() {
           opacity: [0, 1],
         }}
         transition={{
-          delay: 0.2,
+          delay: 0.5,
           duration: 0.2,
         }}
         className="relative overflow-hidden"
