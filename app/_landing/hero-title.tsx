@@ -40,9 +40,10 @@ export default function HeroTitle() {
       <WaveReveal
         text="animata"
         className={cn(
-          "select-none px-0 text-6xl uppercase text-blue-700 transition-opacity group-hover:opacity-50 md:px-0",
+          "select-none px-0 text-7xl uppercase text-blue-700 transition-opacity delay-1000 dark:text-blue-500 md:px-0 md:text-8xl",
           titleFont.className,
         )}
+        letterClassName="delay-500"
         direction="up"
       />
     </div>

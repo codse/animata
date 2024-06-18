@@ -21,8 +21,8 @@ function BentoCard({
 
 export default function FeatureSection() {
   return (
-    <div className="container p-4">
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-3 sm:grid-rows-3">
+    <div className="p-4">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-3 sm:grid-rows-2">
         <BentoCard className="bg-gray-200 dark:bg-zinc-900 sm:col-span-2">
           <h4 className="text-md font-bold">Free &amp; Open source</h4>
           <div className="font-sm text-gray-500">
@@ -39,7 +39,7 @@ export default function FeatureSection() {
           </div>
         </BentoCard>
 
-        <BentoCard className="bg-gray-200 dark:bg-zinc-900 sm:col-span-1 sm:row-span-2">
+        <BentoCard className="bg-gray-200 dark:bg-zinc-900">
           <h4 className="text-md font-bold">Regular updates</h4>
           <div className="font-sm text-gray-500">
             We are constantly adding new animations and effects to the library.
@@ -47,12 +47,24 @@ export default function FeatureSection() {
           </div>
         </BentoCard>
 
-        <BentoCard className="bg-gray-200 dark:bg-zinc-900 sm:col-span-2 sm:row-span-2">
+        <BentoCard className="bg-gray-200 dark:bg-zinc-900">
           <h4 className="text-md font-bold">Save time</h4>
           <div className="font-sm text-gray-500">
             No longer wasting hours looking for the <i>inspiration</i> or trying
             to write everything from scratch. Just copy, paste, and see it in
             action.
+          </div>
+        </BentoCard>
+
+        <BentoCard className="bg-gray-200 dark:bg-zinc-900">
+          <h4 className="text-md font-bold">Light weight</h4>
+          <div className="font-sm text-gray-500">
+            Most of the effects are lightweight and just built with CSS without
+            dependency on{" "}
+            <span className="underline decoration-wavy">
+              external libraries
+            </span>
+            .
           </div>
         </BentoCard>
       </div>

@@ -1,18 +1,12 @@
-import Link from "next/link";
-
-import { Icons } from "@/components/icons";
 import { PageHeaderDescription } from "@/components/page-header";
-import { buttonVariants } from "@/components/ui/button";
-import { siteConfig } from "@/config/site";
-import { cn } from "@/lib/utils";
-import HeroTitle from "./hero-title";
 import HeroExamples from "./hero-examples";
+import HeroTitle from "./hero-title";
 import { NewsletterInput } from "./newsletter";
 
 export default function Hero() {
   return (
-    <div className="container mx-auto flex h-[90vh] max-w-7xl flex-col items-center justify-center gap-4 md:flex-row">
-      <div className="flex flex-1 flex-col items-center justify-center py-8 md:items-start md:py-24">
+    <div className="mx-auto flex min-h-[80vh] max-w-7xl flex-col items-center justify-center gap-8 md:flex-row">
+      <div className="flex flex-1 flex-col items-center justify-center md:items-start">
         <HeroTitle />
         <PageHeaderDescription className="mb-4 md:text-left">
           Hand-crafted ✍️ interaction animations and effects from around the

@@ -11,6 +11,10 @@ const titleFont = Anaheim({
 });
 
 export function SiteFooter() {
+  if (Date.now() > 1) {
+    return null;
+  }
+
   return (
     <footer className="py-6 md:px-8 md:py-0">
       <div

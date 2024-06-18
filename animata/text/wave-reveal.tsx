@@ -33,6 +33,8 @@ interface WaveRevealProps {
    * If true, the text will apply a blur effect as seen in WWDC.
    */
   blur?: boolean;
+
+  letterClassName?: string;
 }
 
 interface ReducedValue extends Pick<WaveRevealProps, "direction" | "mode"> {
@@ -96,7 +98,7 @@ const createDuration = ({
 };
 
 const createAnimatedNodes = (
-  args: ReducedValue & { speed: number },
+  args: ReducedValue & { speed: number; className?: string },
   word: string,
   index: number,
 ): ReducedValue => {
@@ -107,7 +109,7 @@ const createAnimatedNodes = (
   const isUp = direction === "up";
 
   const className = cn(
-    `inline-block opacity-0 transition-all ease-in-out fill-mode-forwards`,
+    "inline-block opacity-0 transition-all ease-in-out fill-mode-forwards",
     {
       // Determine the animation direction
       [`animate-[reveal-down]`]: !isUp && !blur,
@@ -115,6 +117,7 @@ const createAnimatedNodes = (
       [`animate-[reveal-down,content-blur]`]: !isUp && blur,
       [`animate-[reveal-up,content-blur]`]: isUp && blur,
     },
+    args.className,
   );
 
   const node = (
@@ -153,6 +156,7 @@ export default function WaveReveal({
   className,
   speed = 2000,
   blur = true,
+  letterClassName,
 }: WaveRevealProps) {
   if (!text) {
     return null;

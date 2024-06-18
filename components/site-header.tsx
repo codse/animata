@@ -1,3 +1,4 @@
+"use client";
 import Link from "next/link";
 
 import { CommandMenu } from "@/components/command-menu";
@@ -8,9 +9,11 @@ import { ModeToggle } from "@/components/mode-toggle";
 import { buttonVariants } from "@/components/ui/button";
 import { siteConfig } from "@/config/site";
 import { cn } from "@/lib/utils";
+import { usePathname } from "next/navigation";
 
 export function SiteHeader() {
-  if (true) {
+  const pathname = usePathname();
+  if (pathname === "/") {
     return null;
   }
 

@@ -26,7 +26,7 @@ export default function ModeSwitcher() {
           setTheme("dark");
         }}
       >
-        <MoonIcon className="h-[1.2rem] w-[1.2rem] transition-all group-hover:scale-125 group-active:scale-100" />
+        <MoonIcon className="h-[2rem] w-[2rem] transition-all group-hover:scale-125 group-active:scale-100" />
       </div>
       <div
         onClick={() => {
@@ -34,7 +34,7 @@ export default function ModeSwitcher() {
         }}
         className="group col-start-2 row-start-2 flex h-24 w-24 items-center justify-center"
       >
-        <SunIcon className="h-[1.2rem] w-[1.2rem] transition-all group-hover:scale-125 group-active:scale-100" />
+        <SunIcon className="h-[2rem] w-[2rem] text-yellow-300 transition-all group-hover:scale-125 group-active:scale-100" />
       </div>
     </motion.div>
   );
