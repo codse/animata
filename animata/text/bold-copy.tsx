@@ -8,9 +8,13 @@ const tourney = Tourney({
 export default function BoldCopy({
   text = "animata",
   className,
+  textClassName,
+  backgroundTextClassName,
 }: {
   text: string;
   className?: string;
+  textClassName?: string;
+  backgroundTextClassName?: string;
 }) {
   if (!text?.length) {
     return null;
@@ -20,13 +24,14 @@ export default function BoldCopy({
     <div
       className={cn(
         "group relative flex items-center justify-center bg-background px-2 py-2 md:px-6 md:py-4",
+        tourney.className,
         className,
       )}
     >
       <div
         className={cn(
           "text-4xl font-bold uppercase text-foreground/15 transition-all group-hover:opacity-50 md:text-8xl",
-          tourney.className,
+          backgroundTextClassName,
         )}
       >
         {text}
@@ -34,7 +39,7 @@ export default function BoldCopy({
       <div
         className={cn(
           "text-md absolute font-bold uppercase text-foreground md:text-3xl",
-          tourney.className,
+          textClassName,
         )}
       >
         {text}
