@@ -47,7 +47,7 @@ export default function ClockWithPhoto() {
           className="absolute left-0 top-0 z-20 mt-2 h-48 w-44 p-2"
         />
       </div>
-      <div className="absolute right-0 top-0 z-10 h-full w-2/4 items-center justify-center text-8xl font-semibold tracking-tighter text-white">
+      <div className="absolute right-0 top-0 z-10 flex h-full w-2/4 flex-col items-center justify-center text-8xl font-semibold tracking-tighter text-white">
         <div className="flex">
           <div>{time.hoursTens}</div>
           <div>{time.hoursOnes}</div>
