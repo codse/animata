@@ -1,5 +1,8 @@
+"use client";
+
 import { cn } from "@/lib/utils";
 import { Mic } from "lucide-react";
+import { useEffect, useState } from "react";
 
 interface IconRippleProps extends React.HTMLAttributes<HTMLDivElement> {
   /**
@@ -40,12 +43,32 @@ export default function IconRipple({
     left: `-${inset}`,
     right: `-${inset}`,
   };
+
+  const [hovering, setHovering] = useState(false);
+  const [animate, setAnimate] = useState(false);
+
+  useEffect(() => {
+    let timeout: NodeJS.Timeout;
+    if (hovering) {
+      setAnimate(true);
+    } else {
+      timeout = setTimeout(() => setAnimate(false), 500);
+    }
+    return () => clearTimeout(timeout);
+  }, [hovering]);
+
   return (
-    <div className={cn("relative flex items-center justify-center")}>
+    <div
+      className={cn("relative flex items-center justify-center")}
+      onMouseEnter={() => setHovering(true)}
+      onMouseLeave={() => setHovering(false)}
+    >
       <Icon size={iconSize} color={iconColor} />
       <div
         className={cn(
-          `absolute -inset-4 rounded-full border-2 hover:animate-ping`,
+          "absolute -inset-4 rounded-full border-2 transition-all duration-1000",
+          animate ? "animate-ping" : "opacity-100",
+          // hovering || animate ? "opacity-90" : "opacity-100",
         )}
         style={{ ...customBorderStyle, ...insetStyle }}
       />

@@ -78,7 +78,7 @@ const sidebarNav: SidebarNavItem[] = [
 
     title: "Icon",
     items: createLinks("icon"),
-
+  },{
     title: "Progress",
     items: createLinks("progress"),
   },
