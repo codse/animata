@@ -75,9 +75,7 @@ export function ComponentPreview({
   return (
     <div className={cn("group relative", className)} {...props}>
       <div
-        className={cn(
-          "preview relative w-full max-w-full !overflow-hidden transition-all duration-300 ease-in-out",
-        )}
+        className={cn("preview relative w-full max-w-full !overflow-hidden")}
         style={{
           height: `${minHeight}px`,
         }}
