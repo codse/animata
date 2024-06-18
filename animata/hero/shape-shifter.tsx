@@ -24,31 +24,53 @@ const images: { src: string; alt: string; className?: string }[] = [
   },
 ];
 
-export default function ShapeShifter() {
+const placeholderChildren = (
+  /* Marquee is optional and can be replaced with a different component like video. */
+  <Marquee
+    className="absolute inset-0 [--gap:2px]"
+    applyMask={false}
+    pauseOnHover
+  >
+    {images.map((image, index) => (
+      /* Use `next/image` and remove the line below. */
+      /* eslint-disable-next-line @next/next/no-img-element */
+      <img key={`image_${index}`} {...image} alt={image.alt ?? ""} />
+    ))}
+  </Marquee>
+);
+
+export default function ShapeShifter({
+  prefix = "Shape",
+  suffix = "Shifter",
+  className,
+  containerClassName,
+  children,
+}: {
+  className?: string;
+  containerClassName?: string;
+  children?: React.ReactNode;
+  prefix?: React.ReactNode;
+  suffix?: React.ReactNode;
+}) {
   return (
-    <div className="text-md group flex min-h-96 w-full min-w-fit flex-col items-center justify-center gap-3 font-bold transition-all md:flex-row md:text-xl">
-      <div>Shape</div>
+    <div
+      className={cn(
+        "text-md group flex min-h-96 w-full min-w-fit flex-col items-center justify-center gap-3 font-bold transition-all md:flex-row md:text-xl",
+        containerClassName,
+      )}
+    >
+      <div>{prefix}</div>
       <div
         className={cn(
           "relative animate-[shape-shift] overflow-hidden bg-black p-0 transition-all ease-in-out direction-alternate repeat-infinite group-hover:[animation-play-state:paused]",
+          className,
         )}
         // Magic number based on length of images.
         style={{ animationDuration: "8s" }}
       >
-        {/* Marquee is optional and can be replaced with a different component like video. */}
-        <Marquee
-          className="absolute inset-0 [--gap:2px]"
-          applyMask={false}
-          pauseOnHover
-        >
-          {images.map((image, index) => (
-            /* Use `next/image` and remove the line below. */
-            /* eslint-disable-next-line @next/next/no-img-element */
-            <img key={`image_${index}`} {...image} alt={image.alt ?? ""} />
-          ))}
-        </Marquee>
+        {children ?? placeholderChildren}
       </div>
-      <div>Shifter</div>
+      <div>{suffix}</div>
     </div>
   );
 }

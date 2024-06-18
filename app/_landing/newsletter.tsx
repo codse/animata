@@ -1,7 +1,7 @@
 import { Loader2 } from "lucide-react";
 
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import useNewsletterSubscription from "@/hooks/use-newsletter-subscription";
 
 export function NewsletterInput() {
@@ -46,7 +46,7 @@ export function NewsletterInput() {
 
 export default function NewsletterSection() {
   return (
-    <section className="w-full bg-gray-50 py-12 dark:bg-gray-900 md:py-24 lg:py-32">
+    <section className="w-full py-12 md:py-24 lg:py-32">
       <div className="container px-4 md:px-6">
         <div className="flex flex-col items-center space-y-4 text-center">
           <div className="space-y-2">
