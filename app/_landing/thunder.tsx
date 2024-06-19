@@ -4,7 +4,7 @@ export default function Thunder() {
       xmlns="http://www.w3.org/2000/svg"
       fill="none"
       viewBox="0 0 200 200"
-      className="h-40 w-40 animate-bounce"
+      className="h-24 w-24 animate-bounce md:h-40 md:w-40"
     >
       <g clipPath="url(#cs_clip_1_misc-4)">
         <mask

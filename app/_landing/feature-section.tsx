@@ -249,7 +249,7 @@ export default function FeatureSection() {
 
         <RemountOnMouseIn className="flex flex-1 flex-col justify-end">
           <WaveReveal
-            className="justify-start self-end px-0 text-sm font-bold text-blue-500 md:px-0 md:text-sm"
+            className="justify-start self-end px-0 pt-4 text-sm font-bold text-blue-500 md:px-0 md:pt-0 md:text-sm"
             text="Copy. Paste. Animate."
             blur={false}
           />
@@ -263,7 +263,7 @@ export default function FeatureSection() {
         </div>
       </BentoCard>
 
-      <BentoCard className="font- flex flex-col items-center justify-center bg-white text-5xl font-black uppercase text-yellow-500 shadow-sm dark:bg-zinc-900 dark:text-yellow-400 md:col-span-2 lg:col-span-2">
+      <BentoCard className="flex flex-col items-center justify-center bg-white text-center text-4xl font-black uppercase text-yellow-500 shadow-sm dark:bg-zinc-900 dark:text-yellow-400 md:col-span-2 md:text-5xl lg:col-span-2">
         <span>
           Free <span className="inline-block rotate-6 text-lg">&amp;</span>
         </span>
