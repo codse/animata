@@ -60,8 +60,7 @@ export function ComponentPreview({
   ...props
 }: ComponentPreviewProps) {
   const [minHeight, setMinHeight] = React.useState<number>(350);
-  const [minHeight, setMinHeight] = React.useState<number>(200);
-  
+
   const { theme } = useTheme();
 
   React.useEffect(() => {
