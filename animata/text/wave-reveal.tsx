@@ -43,6 +43,7 @@ interface ReducedValue extends Pick<WaveRevealProps, "direction" | "mode"> {
   length: number;
   speed: number;
   blur?: boolean;
+  className?: string;
 }
 
 const Word = ({
@@ -94,7 +95,7 @@ const createDuration = ({
   index,
   speed,
 }: Pick<ReducedValue, "offset" | "speed"> & { index: number }) => {
-  return `calc(sin((${offset + index + 1} / 12) * 45deg) * ${speed}ms)`;
+  return `calc((${offset + index + 1} / 12) * ${speed}ms)`;
 };
 
 const createAnimatedNodes = (
