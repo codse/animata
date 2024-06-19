@@ -1,7 +1,9 @@
 "use client";
 import { useState } from "react";
 
-import { supabaseClient } from "@/db/client";
+const url =
+  process.env.NEXT_PUBLIC_SUPABASE_URL + "/rest/v1/prelaunch_subscribers";
+const apiKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
 export default function useNewsletterSubscription() {
   const initialState = {
@@ -26,15 +28,24 @@ export default function useNewsletterSubscription() {
       });
       return;
     }
+
     setState({ ...state, isLoading: true });
+    const data = { email: state.email };
+
     try {
-      const response = await supabaseClient
-        .from("prelaunch_subscribers")
-        .insert({
-          email: state.email,
-        });
-      const { status, error } = response;
-      if (status >= 200 && status < 300) {
+      const response = await fetch(url, {
+        method: "POST",
+        // @ts-ignore
+        headers: {
+          apikey: apiKey,
+          Authorization: "Bearer " + apiKey,
+          "Content-Type": "application/json",
+          Prefer: "return=minimal",
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (response.status >= 200 && response.status < 300) {
         // Email added successfully
         setState({
           ...initialState,
@@ -43,7 +54,8 @@ export default function useNewsletterSubscription() {
         });
         return;
       }
-      if (status === 409) {
+
+      if (response.status === 409) {
         // Already subscribed
         setState({
           ...initialState,
@@ -51,13 +63,13 @@ export default function useNewsletterSubscription() {
         });
         return;
       }
-      if (error) {
-        // Some other error
-        setState({
-          ...initialState,
-          error: error.message,
-        });
-      }
+
+      // Other errors
+      const errorData = await response.json();
+      setState({
+        ...initialState,
+        error: errorData.message || "An unknown error occurred",
+      });
     } catch (error) {
       setState({
         ...initialState,
