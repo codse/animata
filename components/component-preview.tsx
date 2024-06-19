@@ -60,12 +60,14 @@ export function ComponentPreview({
   ...props
 }: ComponentPreviewProps) {
   const [minHeight, setMinHeight] = React.useState<number>(350);
+  const [minHeight, setMinHeight] = React.useState<number>(200);
+  
   const { theme } = useTheme();
 
   React.useEffect(() => {
     const eventListener = (event: MessageEvent) => {
       if (event.data.type === "animata-set-height") {
-        setMinHeight(event.data.height + 40);
+        setMinHeight(event.data.height);
       }
     };
     window.addEventListener("message", eventListener);
@@ -79,7 +81,7 @@ export function ComponentPreview({
       <div
         className={cn("preview relative w-full max-w-full !overflow-hidden")}
         style={{
-          height: `${minHeight}px`,
+          height: `${Math.max(200, minHeight)}px`,
         }}
       >
         <React.Suspense
@@ -94,7 +96,7 @@ export function ComponentPreview({
             src={`${process.env.NEXT_PUBLIC_STORYBOOK_URL}/iframe.html?globals=backgrounds.grid:!false;theme:${theme ?? localStorage.getItem("theme")};backgrounds.value:!transparent&viewMode=docs&id=${name}&site:docs=true`}
             className="w-full"
             style={{
-              height: `${minHeight}px`,
+              height: `${Math.max(200, minHeight)}px`,
             }}
           />
         </React.Suspense>

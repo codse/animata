@@ -21,7 +21,7 @@ const BentoCard = ({
 
 export default function Three() {
   return (
-    <div className="w-screen p-4">
+    <div className="p-4">
       <div className="grid grid-cols-1 grid-rows-1 gap-3 sm:grid-cols-2 sm:grid-rows-2">
         <BentoCard className="bg-blue-300 sm:row-span-2">
           <div className="flex flex-col">Grocery List</div>

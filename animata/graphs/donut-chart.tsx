@@ -57,9 +57,9 @@ export default function DonutChart({
           cy={size / 2}
           fill="transparent"
           stroke="currentColor"
-          stroke-width={`${circleWidth}px`}
-          stroke-dasharray={`10px 0`}
-          stroke-dashoffset="0px"
+          strokeWidth={`${circleWidth}px`}
+          strokeDasharray={`10px 0`}
+          strokeDashoffset="0px"
           className={cn("duration-500", trackClassName)}
         />
         <circle
@@ -68,11 +68,11 @@ export default function DonutChart({
           cy={size / 2}
           stroke="currentColor"
           className={cn("duration-500", progressClassName)}
-          stroke-width={`${progressWidth}px`}
-          stroke-linecap={rounded ? "round" : "butt"}
+          strokeWidth={`${progressWidth}px`}
+          strokeLinecap={rounded ? "round" : "butt"}
           fill="transparent"
-          stroke-dasharray={`${circumference}px`}
-          stroke-dashoffset={`${percentage}px`}
+          strokeDasharray={`${circumference}px`}
+          strokeDashoffset={`${percentage}px`}
         />
       </svg>
       {children}
