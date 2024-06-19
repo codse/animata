@@ -20,8 +20,8 @@ export default function Hero() {
           </span>{" "}
           into your project.
         </PageHeaderDescription>
-        <PageHeaderDescription className="mb-2 md:text-left">
-          Subscribe to our newsletter and never miss our updates.
+        <PageHeaderDescription className="mb-1 mt-12 text-sm font-medium opacity-60 md:text-left">
+          Join the community for early access and updates.
         </PageHeaderDescription>
         <NewsletterInput />
         {/* <div className="mb-6 mt-3 flex items-start gap-4">

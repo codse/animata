@@ -26,7 +26,7 @@ export function NewsletterInput() {
         />
         <Button type="submit" disabled={isLoading}>
           {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-          {isLoading ? "Please wait" : "Subscribe"}
+          {isLoading ? "Please wait" : "Request access"}
         </Button>
       </form>
       <p className="text-xs text-gray-500 dark:text-gray-400">
@@ -46,18 +46,12 @@ export function NewsletterInput() {
 
 export default function NewsletterSection() {
   return (
-    <section className="w-full py-12 md:py-24 lg:py-32">
+    <section className="py-18 w-full md:py-24 lg:py-32">
       <div className="container px-4 md:px-6">
-        <div className="flex flex-col items-center space-y-4 text-center">
-          <div className="space-y-2">
-            <h2 className="text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">
-              Exclusive <span className="text-primary">Updates</span> - In Your
-              Inbox
-            </h2>
-            <p className="mx-auto max-w-[700px] text-gray-500 dark:text-gray-400 md:text-xl">
-              Subscribe to our newsletter and never miss our updates
-            </p>
-          </div>
+        <div className="flex flex-col items-center text-center" id="join">
+          <p className="mb-1 mt-12 max-w-[750px] text-center text-sm font-medium text-foreground opacity-60">
+            Be among the first to use Animata.
+          </p>
           <NewsletterInput />
         </div>
       </div>

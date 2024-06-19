@@ -15,6 +15,9 @@ export default function ModeSwitcher() {
       style={{
         rotate: spring,
       }}
+      initial={{
+        rotate: 0,
+      }}
       onClick={() => {
         rotate.set(rotate.get() + 180);
       }}

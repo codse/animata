@@ -43,7 +43,13 @@ function CardStack() {
   );
 }
 
-export default function Cycling({ className }: { className?: string }) {
+export default function Cycling({
+  className,
+  title = "Cycling",
+}: {
+  className?: string;
+  title?: string;
+}) {
   return (
     <div
       className={cn(
@@ -60,7 +66,7 @@ export default function Cycling({ className }: { className?: string }) {
 
         <div className="flex-1 text-right">
           <span className="block text-xl font-bold uppercase text-gray-400">
-            Cycling
+            {title}
           </span>
           <span className="-mt-1 block text-sm text-gray-300">2h 30m</span>
         </div>

@@ -243,7 +243,7 @@ export default function HeroExamples() {
           delay: 0.5,
           duration: 0.2,
         }}
-        className="relative overflow-hidden"
+        className="relative"
       >
         <RemountOnMouseIn
           duration={3000}

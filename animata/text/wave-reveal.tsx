@@ -172,6 +172,7 @@ export default function WaveReveal({
     mode,
     speed: speed ?? 60,
     blur,
+    className: letterClassName,
   });
 
   return (
