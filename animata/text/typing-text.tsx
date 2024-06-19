@@ -44,6 +44,15 @@ interface TypingTextProps {
    * Looks better for multiple words.
    */
   smooth?: boolean;
+
+  /**
+   * Time to wait before starting the next cycle of typing
+   * Applies only when `repeat` is true.
+   *
+   * @default 1000
+   *
+   */
+  waitTime?: number;
 }
 
 function Blinker() {
@@ -72,7 +81,7 @@ function SmoothEffect({
         return (
           <span
             key={wordIndex}
-            className={cn("transition-opacity duration-100", {
+            className={cn("transition-opacity duration-300 ease-in-out", {
               "opacity-100": wordIndex < index,
               "opacity-0": wordIndex >= index + alwaysVisibleCount,
             })}
@@ -110,6 +119,30 @@ enum TypingDirection {
   Backward = -1,
 }
 
+function CursorWrapper({
+  visible,
+  children,
+  waiting,
+}: {
+  visible?: boolean;
+  waiting?: boolean;
+  children: ReactNode;
+}) {
+  const [on, setOn] = useState(true);
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setOn((prev) => !prev);
+    }, 100);
+    return () => clearInterval(interval);
+  }, []);
+
+  if (!visible || (!on && !waiting)) {
+    return null;
+  }
+
+  return children;
+}
+
 function Type({
   text,
   repeat,
@@ -119,6 +152,7 @@ function Type({
   className,
   alwaysVisibleCount,
   smooth,
+  waitTime = 1000,
 }: TypingTextProps) {
   const [index, setIndex] = useState(0);
 
@@ -155,7 +189,6 @@ function Type({
 
   useEffect(() => {
     let timeout: NodeJS.Timeout;
-    const waitTime = 1000;
 
     if (index >= total && repeat) {
       timeout = setTimeout(() => {
@@ -163,13 +196,13 @@ function Type({
       }, waitTime);
     }
 
-    if (index <= 0) {
+    if (index <= 0 && repeat) {
       timeout = setTimeout(() => {
         setDirection(1);
       }, waitTime);
     }
     return () => clearTimeout(timeout);
-  }, [index, total, repeat]);
+  }, [index, total, repeat, waitTime]);
 
   const waitingNextCycle = index === total || index === 0;
 
@@ -194,7 +227,12 @@ function Type({
             alwaysVisibleCount={alwaysVisibleCount ?? 1}
           />
         )}
-        {(index % 4 || waitingNextCycle) && cursor && !smooth ? cursor : ""}
+        <CursorWrapper
+          waiting={waitingNextCycle}
+          visible={Boolean(!smooth && cursor)}
+        >
+          {cursor}
+        </CursorWrapper>
       </div>
     </div>
   );
@@ -209,11 +247,13 @@ export default function TypingText({
   grow = false,
   alwaysVisibleCount = 1,
   smooth = false,
+  waitTime,
 }: TypingTextProps) {
   return (
     <Type
       key={text}
       delay={delay ?? 32}
+      waitTime={waitTime ?? 1000}
       grow={grow}
       repeat={repeat}
       text={text}

@@ -21,7 +21,7 @@ const BentoCard = ({
 
 export default function Nine() {
   return (
-    <div className="w-screen p-4">
+    <div className="p-4">
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-4 sm:grid-rows-3">
         <BentoCard className="bg-amber-300">
           <div className="flex flex-col">Add Widget</div>

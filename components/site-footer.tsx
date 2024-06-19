@@ -1,25 +1,45 @@
 import Marquee from "@/animata/container/marquee";
 import AnimatedGradientText from "@/animata/text/animated-gradient-text";
 import { Icons, builtWith } from "@/components/icons";
+import { cn } from "@/lib/utils";
+import { Anaheim } from "next/font/google";
 import Image from "next/image";
 
+const titleFont = Anaheim({
+  subsets: ["latin"],
+  weight: ["400"],
+});
+
 export function SiteFooter() {
+  if (Date.now() > 1) {
+    return null;
+  }
+
   return (
     <footer className="py-6 md:px-8 md:py-0">
-      <div className="px-4 md:invisible md:px-0 md:text-3xl">Built using</div>
+      <div
+        className={cn(
+          "px-4 md:invisible md:px-0 md:text-3xl",
+          titleFont.className,
+        )}
+      >
+        Built using
+      </div>
       <div
         title="Built using"
         className="w-max-full group relative flex h-24 w-full items-center justify-center"
       >
         <Marquee
           repeat={10}
-          className="items-center transition-all duration-500 [--duration:30s] [--gap:3rem] md:group-hover:blur-sm"
+          className={cn(
+            "items-center transition-all duration-500 [--duration:30s] [--gap:3rem] md:group-hover:blur-sm",
+          )}
         >
           {Object.keys(builtWith).map((name) => {
             return (
               <div
                 key={name}
-                className="tracking-bold text-5xl font-light uppercase text-black/70 dark:text-white/70 md:text-6xl"
+                className="text-5xl font-black uppercase tracking-wide text-blue-500/70 dark:text-white/70 md:text-6xl"
               >
                 {name}
               </div>
@@ -27,7 +47,7 @@ export function SiteFooter() {
           })}
         </Marquee>
         <div className="absolute opacity-0 transition-opacity delay-75 duration-500 md:group-hover:opacity-100">
-          <AnimatedGradientText className="text-3xl font-black">
+          <AnimatedGradientText className={cn("text-3xl", titleFont.className)}>
             Built using
           </AnimatedGradientText>
         </div>

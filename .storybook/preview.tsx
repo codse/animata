@@ -11,6 +11,7 @@ import { baseComponents } from "../components/mdx-base-components";
 import { ReloadButton } from "../components/reload-button";
 import { useMutationObserver } from "../hooks/use-mutation-observer";
 import "../styles/globals.css";
+import "../styles/storybook.css";
 
 import { withThemeByClassName } from "@storybook/addon-themes";
 import { addons } from "@storybook/manager-api";
@@ -33,7 +34,7 @@ const Wrapper = ({ children }) => {
   const nodeRef = React.useRef(isEmbedded ? document.body : null);
   const callbackRef = React.useRef(() => {
     const height = document.querySelector(".embedded")?.clientHeight ?? 0;
-    const padding = 32;
+    const padding = 0;
     window.parent.postMessage(
       {
         type: "animata-set-height",

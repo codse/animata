@@ -25,6 +25,11 @@ interface CounterProps {
    * The delay in milliseconds before the counter starts counting.
    */
   delay?: number;
+
+  /**
+   * Additional classes for the counter.
+   */
+  className?: string;
 }
 
 export const Formatter = {
@@ -41,6 +46,7 @@ export default function Counter({
   targetValue,
   direction = "up",
   delay = 0,
+  className,
 }: CounterProps) {
   const ref = useRef<HTMLSpanElement>(null);
   const isGoingUp = direction === "up";
@@ -70,5 +76,5 @@ export default function Counter({
     });
   }, [springValue, format]);
 
-  return <span ref={ref} className={cn("text-4xl font-bold")} />;
+  return <span ref={ref} className={cn("text-4xl font-bold", className)} />;
 }
