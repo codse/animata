@@ -26,12 +26,12 @@ export default function IndexPage() {
         <FAQSection />
         <NewsletterSection />
       </div>
-      <div className="flex w-full items-center justify-center">
-        <AnimatedGradientText className="from-yellow-500 via-lime-500 to-green-500 text-5xl font-black uppercase">
+      <div className="flex w-full items-center justify-center px-2">
+        <AnimatedGradientText className="from-yellow-500 via-lime-500 to-green-500 text-4xl font-black uppercase md:text-5xl">
           Copy
         </AnimatedGradientText>
         <Thunder />
-        <AnimatedGradientText className="from-blue-500 via-violet-500 to-purple-500 text-5xl font-black uppercase">
+        <AnimatedGradientText className="from-blue-500 via-violet-500 to-purple-500 text-4xl font-black uppercase md:text-5xl">
           Paste
         </AnimatedGradientText>
       </div>

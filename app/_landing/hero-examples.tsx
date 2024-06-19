@@ -204,7 +204,10 @@ export default function HeroExamples() {
           className="flex h-24 flex-1 items-center justify-center overflow-hidden rounded-xl border border-gray-200 bg-gray-50 shadow-xl dark:border-gray-600 dark:bg-gray-900"
         >
           <div className={titleFont.className}>
-            <MirrorText className="text-3xl md:text-4xl" text="Awesomeness" />
+            <MirrorText
+              className="text-xl sm:text-3xl md:text-4xl"
+              text="Awesomeness"
+            />
           </div>
         </motion.div>
 

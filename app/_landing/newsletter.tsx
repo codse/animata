@@ -20,7 +20,7 @@ export function NewsletterInput() {
         <Input
           type="email"
           placeholder="Enter your email"
-          className="max-w-lg flex-1"
+          className="max-w-lg flex-1 bg-background"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
