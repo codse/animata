@@ -60,7 +60,6 @@ export function ComponentPreview({
   ...props
 }: ComponentPreviewProps) {
   const [minHeight, setMinHeight] = React.useState<number>(350);
-
   const { theme } = useTheme();
 
   React.useEffect(() => {
@@ -92,7 +91,7 @@ export function ComponentPreview({
           }
         >
           <iframe
-            src={`${process.env.NEXT_PUBLIC_STORYBOOK_URL}/iframe.html?globals=backgrounds.grid:!false;theme:${theme};backgrounds.value:!transparent&viewMode=docs&id=${name}&site:docs=true`}
+            src={`${process.env.NEXT_PUBLIC_STORYBOOK_URL}/iframe.html?globals=backgrounds.grid:!false;theme:${theme ?? localStorage.getItem("theme")};backgrounds.value:!transparent&viewMode=docs&id=${name}&site:docs=true`}
             className="w-full"
             style={{
               height: `${minHeight}px`,

@@ -27,13 +27,10 @@ const MdxContainer = (props: any) => {
       return null;
     }
 
-    return sp.get("globals")?.includes("light") ||
-      sp.get("globals")?.includes("undefined")
-      ? "theme:light"
-      : "theme:dark";
+    return sp.get("globals")?.includes("light") ? "theme:light" : "theme:dark";
   })();
 
-  const currentProps = { ...props, key: "container" };
+  const currentProps = { ...props };
   if (!forced) {
     currentProps.theme = isDark ? themes.dark : themes.light;
   } else {
@@ -42,7 +39,7 @@ const MdxContainer = (props: any) => {
 
   return (
     <MDXProvider components={baseComponents}>
-      <DocsContainer {...currentProps} />
+      <DocsContainer {...currentProps} key />
     </MDXProvider>
   );
 };
