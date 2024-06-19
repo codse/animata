@@ -12,17 +12,37 @@ import { ReloadButton } from "../components/reload-button";
 import { useMutationObserver } from "../hooks/use-mutation-observer";
 import "../styles/globals.css";
 
-import { withThemeByClassName } from "@storybook/addon-themes";
 import { addons } from "@storybook/manager-api";
+import { useDarkMode } from "storybook-dark-mode";
 
 addons.setConfig({
   theme: themes.dark,
 });
 
-const MdxContainer = (props) => {
+const MdxContainer = (props: any) => {
+  const isDark = useDarkMode();
+  const forced = (() => {
+    const sp = new URLSearchParams(location.search);
+    if (!sp.get("globals")?.includes("theme")) {
+      return null;
+    }
+
+    return sp.get("globals")?.includes("light") ||
+      sp.get("globals")?.includes("undefined")
+      ? "theme:light"
+      : "theme:dark";
+  })();
+
+  const currentProps = { ...props, key: "container" };
+  if (!forced) {
+    currentProps.theme = isDark ? themes.dark : themes.light;
+  } else {
+    currentProps.theme = forced === "theme:dark" ? themes.dark : themes.light;
+  }
+
   return (
     <MDXProvider components={baseComponents}>
-      <DocsContainer {...props} />
+      <DocsContainer {...currentProps} />
     </MDXProvider>
   );
 };
@@ -31,6 +51,7 @@ const isEmbedded = window.location.href.includes("site:docs");
 
 const Wrapper = ({ children }) => {
   const nodeRef = React.useRef(isEmbedded ? document.body : null);
+
   const callbackRef = React.useRef(() => {
     const height = document.querySelector(".embedded")?.clientHeight ?? 0;
     const padding = 32;
@@ -86,7 +107,7 @@ const preview: Preview = {
     },
     darkMode: {
       dark: { ...themes.dark, appBg: "black" },
-      light: { ...themes.normal, appBg: "red" },
+      light: { ...themes.normal, appBg: "light" },
     },
     docs: {
       container: MdxContainer,
@@ -102,16 +123,6 @@ const preview: Preview = {
       },
     },
   },
-
-  decorators: [
-    withThemeByClassName({
-      themes: {
-        light: "",
-        dark: "dark",
-      },
-      defaultTheme: "light",
-    }),
-  ],
 };
 
 export default preview;
