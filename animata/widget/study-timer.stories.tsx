@@ -18,9 +18,9 @@ type Story = StoryObj<typeof StudyTimer>;
 export const Primary: Story = {
   args: {
     segments: [
-      { value: 57, color: "red" },
-      { value: 24, color: "green" },
-      { value: 26, color: "blue" },
+      { value: 57, color: "orange" },
+      { value: 24, color: "pink" },
+      { value: 26, color: "yellow" },
     ],
   },
 };

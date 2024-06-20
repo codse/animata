@@ -16,7 +16,11 @@ const formatTime = (totalMinutes: number) => {
   const minutes = totalMinutes % 60;
   const seconds = (totalMinutes * 60) % 60;
 
-  return `${hours > 0 ? `0${hours}:` : ""}${minutes}:${seconds < 10 ? `0${seconds}` : seconds}`;
+  const formattedHours = hours.toString().padStart(2, "0");
+  const formattedMinutes = minutes.toString().padStart(2, "0");
+  const formattedSeconds = seconds.toString().padStart(2, "0");
+
+  return `${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
 };
 
 const StudyTimer: React.FC<StudyTimerProps> = ({ segments }) => {
