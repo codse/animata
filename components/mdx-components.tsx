@@ -3,7 +3,7 @@
 import { useMDXComponent } from "next-contentlayer/hooks";
 import Image from "next/image";
 import Link from "next/link";
-import * as React from "react";
+import { ComponentProps, HTMLAttributes } from "react";
 import { NpmCommands } from "types/unist";
 
 import { Callout } from "@/components/callout";
@@ -42,7 +42,7 @@ const components = {
     __src__,
     __event__,
     ...props
-  }: React.HTMLAttributes<HTMLPreElement> & {
+  }: HTMLAttributes<HTMLPreElement> & {
     __rawString__?: string;
     __withMeta__?: boolean;
     __src__?: string;
@@ -68,12 +68,9 @@ const components = {
       </>
     );
   },
-  code: ({ className, ...props }: React.HTMLAttributes<HTMLElement>) => (
+  code: ({ className, ...props }: HTMLAttributes<HTMLElement>) => (
     <code
-      className={cn(
-        "relative rounded px-2 py-[0.2rem] font-mono text-sm",
-        className,
-      )}
+      className={cn("relative rounded px-2 py-[0.2rem] font-mono text-sm", className)}
       {...props}
     />
   ),
@@ -83,10 +80,8 @@ const components = {
   ComponentExample,
   ComponentSource,
   AspectRatio,
-  CodeBlockWrapper: ({ ...props }) => (
-    <CodeBlockWrapper className="rounded-md border" {...props} />
-  ),
-  Step: ({ className, ...props }: React.ComponentProps<"h3">) => (
+  CodeBlockWrapper: ({ ...props }) => <CodeBlockWrapper className="rounded-md border" {...props} />,
+  Step: ({ className, ...props }: ComponentProps<"h3">) => (
     <h3
       className={cn(
         "font-heading mt-8 scroll-m-20 text-xl font-semibold tracking-tight",
@@ -96,30 +91,18 @@ const components = {
     />
   ),
   Steps: ({ ...props }) => (
-    <div
-      className="[&>h3]:step steps mb-12 ml-4 border-l pl-8 [counter-reset:step]"
-      {...props}
-    />
+    <div className="[&>h3]:step steps mb-12 ml-4 border-l pl-8 [counter-reset:step]" {...props} />
   ),
-  Tabs: ({ className, ...props }: React.ComponentProps<typeof Tabs>) => (
+  Tabs: ({ className, ...props }: ComponentProps<typeof Tabs>) => (
     <Tabs className={cn("relative mt-6 w-full", className)} {...props} />
   ),
-  TabsList: ({
-    className,
-    ...props
-  }: React.ComponentProps<typeof TabsList>) => (
+  TabsList: ({ className, ...props }: ComponentProps<typeof TabsList>) => (
     <TabsList
-      className={cn(
-        "w-full justify-start rounded-none border-b bg-transparent p-0",
-        className,
-      )}
+      className={cn("w-full justify-start rounded-none border-b bg-transparent p-0", className)}
       {...props}
     />
   ),
-  TabsTrigger: ({
-    className,
-    ...props
-  }: React.ComponentProps<typeof TabsTrigger>) => (
+  TabsTrigger: ({ className, ...props }: ComponentProps<typeof TabsTrigger>) => (
     <TabsTrigger
       className={cn(
         "relative h-9 rounded-none border-b-2 border-b-transparent bg-transparent px-4 pb-3 pt-2 font-semibold text-muted-foreground shadow-none transition-none data-[state=active]:border-b-primary data-[state=active]:text-foreground data-[state=active]:shadow-none",
@@ -128,10 +111,7 @@ const components = {
       {...props}
     />
   ),
-  TabsContent: ({
-    className,
-    ...props
-  }: React.ComponentProps<typeof TabsContent>) => (
+  TabsContent: ({ className, ...props }: ComponentProps<typeof TabsContent>) => (
     <TabsContent
       className={cn(
         "relative [&_h3.font-heading]:text-base [&_h3.font-heading]:font-semibold",
@@ -140,19 +120,13 @@ const components = {
       {...props}
     />
   ),
-  FrameworkDocs: ({
-    className,
-    ...props
-  }: React.ComponentProps<typeof FrameworkDocs>) => (
+  FrameworkDocs: ({ className, ...props }: ComponentProps<typeof FrameworkDocs>) => (
     <FrameworkDocs className={cn(className)} {...props} />
   ),
-  Link: ({ className, ...props }: React.ComponentProps<typeof Link>) => (
-    <Link
-      className={cn("font-medium underline underline-offset-4", className)}
-      {...props}
-    />
+  Link: ({ className, ...props }: ComponentProps<typeof Link>) => (
+    <Link className={cn("font-medium underline underline-offset-4", className)} {...props} />
   ),
-  LinkedCard: ({ className, ...props }: React.ComponentProps<typeof Link>) => (
+  LinkedCard: ({ className, ...props }: ComponentProps<typeof Link>) => (
     <Link
       className={cn(
         "flex w-full flex-col items-center rounded-xl border bg-card p-6 text-card-foreground shadow transition-colors hover:bg-muted/50 sm:p-10",
