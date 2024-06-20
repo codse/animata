@@ -1,92 +1,61 @@
-import React, { useState } from "react";
+import React from "react";
 import { Twitter, Facebook, Instagram, Linkedin, Github } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface ISocialMediaProps {
-  mediaName: string;
-  icon: React.FC<{ size?: number; fill?: string }>;
+  icon: React.ElementType;
   color: string;
   url: string;
 }
 
 export interface SocialMediaIconListProps {
   size?: number;
+  className?: string;
 }
-
-const colorCodes = {
-  twitter: "#1DA1F2",
-  facebook: "#1877F2",
-  instagram: "#E4405F",
-  linkedin: "#0A66C2",
-  github: "#171515",
-};
 
 const socialMediaList: ISocialMediaProps[] = [
   {
-    mediaName: "Twitter",
-    icon: ({ size, fill }) => (
-      <Twitter size={size || 24} fill={fill || "currentColor"} />
-    ),
-    color: colorCodes.twitter,
+    icon: Twitter,
+    color: "hover:fill-[#1DA1F2]",
     url: "https://www.twitter.com/",
   },
   {
-    mediaName: "Facebook",
-    icon: ({ size, fill }) => (
-      <Facebook size={size || 24} fill={fill || "currentColor"} />
-    ),
-    color: colorCodes.facebook,
+    icon: Facebook,
+    color: "hover:fill-[#1877F2]",
     url: "https://www.facebook.com/",
   },
   {
-    mediaName: "Instagram",
-    icon: ({ size, fill }) => (
-      <Instagram size={size || 24} fill={fill || "currentColor"} />
-    ),
-    color: colorCodes.instagram,
+    icon: Instagram,
+    color: "hover:fill-[#DD2A7B]",
     url: "https://www.instagram.com/",
   },
   {
-    mediaName: "LinkedIn",
-    icon: ({ size, fill }) => (
-      <Linkedin size={size || 24} fill={fill || "currentColor"} />
-    ),
-    color: colorCodes.linkedin,
+    icon: Linkedin,
+    color: "hover:fill-[#0077B5]",
     url: "https://www.linkedin.com/",
   },
   {
-    mediaName: "Github",
-    icon: ({ size, fill }) => (
-      <Github size={size || 24} fill={fill || "currentColor"} />
-    ),
-    color: colorCodes.github,
+    icon: Github,
+    color: "hover:fill-[#8D8888]",
     url: "https://www.github.com/",
   },
 ];
 
 const SocialMediaIconList: React.FC<SocialMediaIconListProps> = ({
   size = 24,
+  className,
 }) => {
-  const [hoveredIcon, setHoveredIcon] = useState<string | null>(null);
-
   return (
-    <div className="flex min-h-20 items-center justify-center">
+    <div className={cn("flex min-h-20 items-center justify-center", className)}>
       {socialMediaList.map((config, index) => {
         const Icon = config.icon;
         return (
           <div key={index} className="mx-2">
             <a href={config.url} target="_blank" rel="noopener noreferrer">
-              <span
-                className="flex h-10 w-10 items-center justify-center rounded-md text-white hover:shadow-lg"
-                onMouseEnter={() => setHoveredIcon(config.mediaName)}
-                onMouseLeave={() => setHoveredIcon(null)}
-              >
+              <span className="flex h-10 w-10 items-center justify-center rounded-md text-gray-700 transition-colors duration-300 hover:text-white hover:shadow-lg">
                 <Icon
                   size={size}
-                  fill={
-                    hoveredIcon === config.mediaName
-                      ? config.color
-                      : "currentColor"
-                  }
+                  className={cn("text-current", config.color)}
                 />
               </span>
             </a>
