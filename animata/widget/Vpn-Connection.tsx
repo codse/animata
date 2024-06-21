@@ -1,3 +1,4 @@
+"use client";
 import React, { useState } from "react";
 import { FlagIcon, Shield } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -36,15 +37,17 @@ const SlidingButton: React.FC<SlidingButtonProps> = ({
       ></div>
       <div
         className={cn(
-          "absolute flex h-[60px] w-[110px] flex-col items-center justify-center rounded-2xl border-gray-400 bg-white transition-transform",
-          connected ? "right-0 text-zinc-900" : "left-0 text-gray-500",
+          "absolute flex h-[60px] w-[110px] flex-col items-center justify-center rounded-2xl border-gray-400 bg-white transition-transform duration-1000",
+          connected
+            ? "translate-x-[3.2rem] text-zinc-900"
+            : "-translate-x-1 text-gray-500",
         )}
       >
-        <span className="text-base font-medium tracking-tighter">
+        <span className="select-none text-base font-medium tracking-tighter">
           {connected ? "Connected" : "Disconnected"}
         </span>
         {connected && (
-          <div className="mt-1 flex items-center text-purple-600">
+          <div className="mt-1 flex select-none items-center text-purple-600">
             <Shield size={16} fill="#9333EA" className="mr-1" />
             <span className="text-sm">Secured</span>
           </div>
@@ -64,7 +67,7 @@ const VpnConnection: React.FC<VpnConnectionProps> = ({
     <div className={className}>
       <div
         className={cn(
-          "group flex min-h-52 w-52 flex-col rounded-3xl bg-[#142e68]",
+          "group flex min-h-52 w-52 flex-col rounded-3xl bg-blue-900",
         )}
       >
         <div className="flex items-center p-4">
@@ -75,7 +78,7 @@ const VpnConnection: React.FC<VpnConnectionProps> = ({
         </div>
         <div
           className={cn(
-            "group flex min-h-40 w-52 flex-col rounded-3xl border-4 border-[#142e68] bg-white p-4",
+            "group flex min-h-40 w-52 flex-col rounded-3xl border-4 border-blue-900 bg-white p-4",
           )}
         >
           <div

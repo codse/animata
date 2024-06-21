@@ -1,5 +1,5 @@
 import { Meta, StoryObj } from "@storybook/react";
-import VpnConnection from "@/animata/widget/vpn-connection";
+import VpnConnection from "@/animata/widget/Vpn-Connection";
 
 const meta: Meta<typeof VpnConnection> = {
   title: "Widget/VpnConnection",
