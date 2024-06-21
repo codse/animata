@@ -1,4 +1,4 @@
-import Watertracker from "@/animata/widget/watertracker";
+import Watertracker from "@/animata/widget/water-tracker";
 import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {

@@ -7,7 +7,7 @@ interface WatertrackerProps {
   dailyGoal: number;
 }
 
-export default function WaterTracker({ dailyGoal }: WatertrackerProps) {
+export default function Watertracker({ dailyGoal }: WatertrackerProps) {
   const [waterIntake, setWaterIntake] = useState(1500);
 
   const handleAddWater = () => {
