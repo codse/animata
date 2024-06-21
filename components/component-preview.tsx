@@ -61,7 +61,7 @@ export function ComponentPreview({
 }: ComponentPreviewProps) {
   const [minHeight, setMinHeight] = React.useState<number>(350);
 
-  const { theme } = useTheme();
+  const { resolvedTheme } = useTheme();
 
   React.useEffect(() => {
     const eventListener = (event: MessageEvent) => {
@@ -92,7 +92,7 @@ export function ComponentPreview({
           }
         >
           <iframe
-            src={`${process.env.NEXT_PUBLIC_STORYBOOK_URL}/iframe.html?globals=backgrounds.grid:!false;theme:${theme ?? (typeof localStorage !== "undefined" ? localStorage?.getItem?.("theme") : "")};backgrounds.value:!transparent&viewMode=docs&id=${name}&site:docs=true`}
+            src={`${process.env.NEXT_PUBLIC_STORYBOOK_URL}/iframe.html?globals=backgrounds.grid:!false;theme:${resolvedTheme ?? (typeof localStorage !== "undefined" ? localStorage?.getItem?.("theme") : "")};backgrounds.value:!transparent&viewMode=docs&id=${name}&site:docs=true`}
             className="w-full"
             style={{
               height: `${Math.max(200, minHeight)}px`,

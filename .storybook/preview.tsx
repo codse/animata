@@ -40,7 +40,7 @@ const MdxContainer = (props: any) => {
 
   return (
     <MDXProvider components={baseComponents}>
-      <DocsContainer {...currentProps} key />
+      <DocsContainer {...currentProps} />
     </MDXProvider>
   );
 };
