@@ -27,6 +27,7 @@ yarn-error.log*
 
 # local env files
 .env*.local
+.env
 
 # vercel
 .vercel
@@ -37,6 +38,6 @@ next-env.d.ts
 .contentlayer
 
 *storybook.log
-content/docs/contributing.mdx
+content/docs/contributing/index.mdx
 public/preview
 

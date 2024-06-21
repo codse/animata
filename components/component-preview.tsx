@@ -6,6 +6,7 @@ import { Icons } from "@/components/icons";
 
 import { CopyButton } from "@/components/copy-button";
 import { cn } from "@/lib/utils";
+import { useTheme } from "next-themes";
 
 interface ComponentPreviewProps extends React.HTMLAttributes<HTMLDivElement> {
   name: string;
@@ -60,10 +61,12 @@ export function ComponentPreview({
 }: ComponentPreviewProps) {
   const [minHeight, setMinHeight] = React.useState<number>(350);
 
+  const { theme } = useTheme();
+
   React.useEffect(() => {
     const eventListener = (event: MessageEvent) => {
       if (event.data.type === "animata-set-height") {
-        setMinHeight(event.data.height + 40);
+        setMinHeight(event.data.height);
       }
     };
     window.addEventListener("message", eventListener);
@@ -75,11 +78,9 @@ export function ComponentPreview({
   return (
     <div className={cn("group relative", className)} {...props}>
       <div
-        className={cn(
-          "preview relative w-full max-w-full !overflow-hidden transition-all duration-300 ease-in-out",
-        )}
+        className={cn("preview relative w-full max-w-full !overflow-hidden")}
         style={{
-          height: `${minHeight}px`,
+          height: `${Math.max(200, minHeight)}px`,
         }}
       >
         <React.Suspense
@@ -91,10 +92,10 @@ export function ComponentPreview({
           }
         >
           <iframe
-            src={`${process.env.NEXT_PUBLIC_STORYBOOK_URL}/iframe.html?globals=backgrounds.grid:!false;backgrounds.value:!transparent&viewMode=docs&id=${name}&site:docs=true`}
+            src={`${process.env.NEXT_PUBLIC_STORYBOOK_URL}/iframe.html?globals=backgrounds.grid:!false;theme:${theme ?? (typeof localStorage !== "undefined" ? localStorage?.getItem?.("theme") : "")};backgrounds.value:!transparent&viewMode=docs&id=${name}&site:docs=true`}
             className="w-full"
             style={{
-              height: `${minHeight}px`,
+              height: `${Math.max(200, minHeight)}px`,
             }}
           />
         </React.Suspense>

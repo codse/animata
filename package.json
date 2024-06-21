@@ -12,9 +12,11 @@
     "storybook:build": "storybook build -o public/preview",
     "animata:new": "node ./scripts/create-new.js",
     "animata:sync-doc": "node ./scripts/update-contributing-doc.js",
-    "postinstall": "yarn animata:sync-doc"
+    "postinstall": "yarn animata:sync-doc",
+    "shadcn:add": "npx shadcn-ui@latest add"
   },
   "dependencies": {
+    "@emotion/is-prop-valid": "^1.2.2",
     "@radix-ui/react-accordion": "^1.1.2",
     "@radix-ui/react-alert-dialog": "^1.0.5",
     "@radix-ui/react-aspect-ratio": "^1.0.3",
@@ -92,6 +94,7 @@
     "prettier-plugin-tailwindcss": "^0.6.2",
     "react-docgen": "^7.0.3",
     "storybook": "^8.1.6",
+    "storybook-dark-mode": "^4.0.1",
     "tailwindcss": "^3.4.1",
     "typescript": "^5"
   },
