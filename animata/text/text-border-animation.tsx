@@ -1,13 +1,9 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
-export default function TextButtomBorder({
-  text = "Programming",
-}: {
-  text: string;
-}) {
+export default function TextButtomBorder({ text }: { text: string }) {
   const [isHoveredIn, setIsHoveredIn] = useState(false);
   const [isHoveredout, setIsHoveredOut] = useState(false);
 
@@ -20,29 +16,10 @@ export default function TextButtomBorder({
     setIsHoveredOut(true);
   };
 
-  useEffect(() => {
-    if (!isHoveredIn) {
-      const timeoutId = setTimeout(() => setIsHoveredOut(false), 300);
-
-      return () => clearTimeout(timeoutId);
-    }
-  }, [isHoveredout]);
-
   return (
-    <div
-      className="relative inline-block"
-      onMouseEnter={handleHover}
-      onMouseLeave={handleHoverExit}
-    >
-      <span className="relative z-10 text-5xl font-bold text-black">
-        {text}
-      </span>
-      <svg
-        className="absolute bottom-0 left-0 h-1"
-        width="100%"
-        viewBox="0 0 100 2"
-        preserveAspectRatio="none"
-      >
+    <div onMouseEnter={handleHover} onMouseLeave={handleHoverExit}>
+      <span className="text-5xl font-bold text-black">{text}</span>
+      <svg width="100%" viewBox="0 0 100 2" preserveAspectRatio="none">
         <motion.rect
           width="100"
           height="2"
@@ -63,6 +40,7 @@ export default function TextButtomBorder({
             initial={{ x: "0%" }}
             animate={{ x: "100%" }}
             transition={{ duration: 0.3 }}
+            onAnimationComplete={() => setIsHoveredOut(false)}
           />
         )}
       </svg>
