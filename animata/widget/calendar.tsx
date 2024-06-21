@@ -1,24 +1,16 @@
 import { cn } from "@/lib/utils";
+interface CalendarProps {
+  dates: {
+    title: string;
+    time: string;
+    color: string;
+    bgcolor: string;
+    barcolor: string;
+    datecolor: string;
+  }[];
+}
 
-export default function Calender() {
-  const dates = [
-    {
-      title: "Backlog Updates",
-      time: "10:30-10:45",
-      color: "text-purple-900",
-      bgcolor: "bg-purple-200",
-      barcolor: "bg-purple-900",
-      datecolor: "text-purple-400",
-    },
-    {
-      title: "Review Jade A",
-      time: "12:00-12:45",
-      color: "text-cyan-900",
-      bgcolor: "bg-cyan-200",
-      barcolor: "bg-cyan-900",
-      datecolor: "text-cyan-400",
-    },
-  ];
+export default function Calendar({ dates }: CalendarProps) {
   return (
     <div
       className={cn(
