@@ -3,7 +3,6 @@ import { cn } from "@/lib/utils";
 import { AlarmClockIcon } from "lucide-react";
 import ToggleSwitch from "@/animata/button/toggle-switch";
 import { useState } from "react";
-import WaveReveal from "../text/wave-reveal";
 
 interface AlarmProps {
   alarms: { id?: number; time: string; repetition: string }[];
