@@ -1,5 +1,5 @@
+import ZoomImage from "@/animata/image/zoom-image";
 import { Meta, StoryObj } from "@storybook/react";
-import ZoomImage from "./Zoom-in-out-image";
 
 const meta = {
   title: "Image/Zoom Image",
@@ -8,18 +8,10 @@ const meta = {
     layout: "centered",
   },
   tags: ["autodocs"],
-  argTypes: {
-    zoom: {
-      control: {
-        type: "select",
-        options: ["zoomIn", "zoomOut"],
-      },
-    },
-  },
+  argTypes: {},
 } satisfies Meta<typeof ZoomImage>;
 
 export default meta;
-
 type Story = StoryObj<typeof meta>;
 
 export const Primary: Story = {

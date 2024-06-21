@@ -2,25 +2,28 @@ import { cn } from "@/lib/utils";
 import { ImgHTMLAttributes } from "react";
 
 interface ZoomImageProps extends ImgHTMLAttributes<HTMLImageElement> {
-  shadowSize?: string;
-  shadowColor?: string;
+  zoom: "zoomIn" | "zoomOut";
 }
 
-export default function ShadowImage({
+export default function ZoomImage({
   className,
-  shadowSize = "",
-  shadowColor = "",
+  zoom,
   ...props
 }: ZoomImageProps) {
+  const zoomClass = cn({
+    "scale-125": !zoom,
+    "hover:scale-110": zoom === "zoomIn",
+    "hover:scale-90": zoom === "zoomOut",
+  });
+
   return (
     <div className="flex h-52 w-52 gap-7">
       <img
         alt=""
         {...props}
         className={cn(
-          "mx-auto h-auto max-w-sm cursor-pointer rounded-md shadow-none transition-shadow duration-300",
-          shadowSize,
-          shadowColor,
+          "transition-delay-150 h-full w-full object-contain transition-all duration-300",
+          zoomClass,
           className,
         )}
       />

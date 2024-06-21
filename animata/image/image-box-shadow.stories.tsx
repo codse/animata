@@ -1,18 +1,17 @@
+import ImageBoxShadow from "@/animata/image/image-box-shadow";
 import { Meta, StoryObj } from "@storybook/react";
-import ShadowImage from "./Image-shadow";
 
 const meta = {
-  title: "Image/Shadow Image",
-  component: ShadowImage,
+  title: "Image/Image Box Shadow",
+  component: ImageBoxShadow,
   parameters: {
     layout: "centered",
   },
   tags: ["autodocs"],
   argTypes: {},
-} satisfies Meta<typeof ShadowImage>;
+} satisfies Meta<typeof ImageBoxShadow>;
 
 export default meta;
-
 type Story = StoryObj<typeof meta>;
 
 export const Primary: Story = {
