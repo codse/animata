@@ -6,7 +6,7 @@ export default function ButtonWithIcon({
   text?: string;
 }) {
   return (
-    <div className="group flex h-12 w-40 items-center justify-center gap-1 bg-blue-600 text-lg text-white duration-300 hover:cursor-pointer hover:text-yellow-300">
+    <div className="group flex items-center justify-center gap-1 bg-blue-600 px-10 py-2 text-lg text-white duration-300 hover:cursor-pointer hover:text-yellow-300">
       <span>{text}</span>
       <ArrowTopRightIcon
         height={20}
