@@ -30,7 +30,7 @@ export default function ShiftTabs({ items }: { items: string[] }) {
   return (
     <div className="flex w-full flex-wrap items-center justify-center gap-4">
       {items.map((item, index) => (
-        <Button item={item} index={index} />
+        <Button item={item} index={index} key={`shift_tab_${index}`} />
       ))}
     </div>
   );
