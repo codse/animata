@@ -3,8 +3,8 @@ import { MoonIcon, SunIcon } from "lucide-react";
 import { useTheme } from "next-themes";
 
 export default function ModeSwitcher() {
-  const { setTheme, theme } = useTheme();
-  const rotate = useMotionValue(theme === "dark" ? 180 : 0);
+  const { setTheme, resolvedTheme } = useTheme();
+  const rotate = useMotionValue(resolvedTheme === "dark" ? 180 : 0);
   const spring = useSpring(rotate, {
     stiffness: 100,
     damping: 20,

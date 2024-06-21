@@ -25,9 +25,10 @@ interface WaveRevealProps {
   mode?: "letter" | "word";
 
   /**
-   * Speed of the animation in ms
+   * Duration of the animation
+   * E.g. 2000ms
    */
-  speed?: number;
+  duration?: string;
 
   /**
    * If true, the text will apply a blur effect as seen in WWDC.
@@ -35,15 +36,22 @@ interface WaveRevealProps {
   blur?: boolean;
 
   letterClassName?: string;
+
+  /**
+   * Delay for each letter/word in ms
+   */
+  delay?: number;
 }
 
 interface ReducedValue extends Pick<WaveRevealProps, "direction" | "mode"> {
   nodes: ReactNode[];
   offset: number;
-  length: number;
-  speed: number;
+  duration: number | string;
+  delay: number;
   blur?: boolean;
   className?: string;
+  wordsLength: number;
+  textLength: number;
 }
 
 const Word = ({
@@ -51,15 +59,16 @@ const Word = ({
   word,
   index,
   offset,
-  speed,
+  delay,
+  duration,
   className,
-}: {
+  length,
+}: Pick<ReducedValue, "delay" | "duration" | "offset"> & {
   index: number;
-  offset: number;
-  speed: number;
   className: string;
   isWordMode: boolean;
   word: string;
+  length: number;
 }) => {
   if (isWordMode) {
     return word;
@@ -74,11 +83,13 @@ const Word = ({
             className={cn({
               [className]: !isWordMode,
             })}
+            data-coords={[index, letterIndex, offset, length]}
             style={{
-              animationDuration: createDuration({
+              animationDuration: `${duration}`,
+              animationDelay: createDelay({
                 index: letterIndex,
                 offset,
-                speed,
+                delay,
               }),
             }}
           >
@@ -90,27 +101,40 @@ const Word = ({
   );
 };
 
-const createDuration = ({
+const createDelay = ({
   offset,
   index,
-  speed,
-}: Pick<ReducedValue, "offset" | "speed"> & { index: number }) => {
-  return `calc((${offset + index + 1} / 12) * ${speed}ms)`;
+  delay,
+}: Pick<ReducedValue, "offset" | "delay"> & {
+  index: number;
+}) => {
+  return delay + (index + offset) * 50 + "ms";
 };
 
 const createAnimatedNodes = (
-  args: ReducedValue & { speed: number; className?: string },
+  args: ReducedValue,
   word: string,
   index: number,
 ): ReducedValue => {
-  const { nodes, offset, length, mode, direction, speed, blur } = args;
-  const isLast = index === length - 1;
+  const {
+    nodes,
+    offset,
+    wordsLength,
+    textLength,
+    mode,
+    direction,
+    duration,
+    delay,
+    blur,
+  } = args;
 
   const isWordMode = mode === "word";
   const isUp = direction === "up";
+  const length = isWordMode ? wordsLength : textLength;
+  const isLast = index === length - 1;
 
   const className = cn(
-    "inline-block opacity-0 transition-all ease-in-out fill-mode-forwards",
+    "ease-minor-spring inline-block opacity-0 transition-all fill-mode-forwards",
     {
       // Determine the animation direction
       [`animate-[reveal-down]`]: !isUp && !blur,
@@ -120,24 +144,35 @@ const createAnimatedNodes = (
     },
     args.className,
   );
-
   const node = (
     <span
       key={`word_${index}`}
       className={cn({
         [className]: isWordMode,
       })}
-      style={{
-        animationDuration: createDuration({ index, offset, speed }),
-      }}
+      data-coords={[index, offset, length]}
+      style={
+        isWordMode
+          ? {
+              animationDuration: `${duration}`,
+              animationDelay: createDelay({
+                index,
+                offset,
+                delay,
+              }),
+            }
+          : undefined
+      }
     >
       <Word
         isWordMode={isWordMode}
         word={word}
         index={index}
         offset={offset}
-        speed={speed}
+        duration={duration}
         className={className}
+        length={length}
+        delay={delay}
       />
       {!isLast && " "}
     </span>
@@ -146,7 +181,7 @@ const createAnimatedNodes = (
   return {
     ...args,
     nodes: [...nodes, node],
-    offset: offset + (isWordMode ? index + 1 : word.length),
+    offset: offset + (isWordMode ? 1 : word.length + 1),
   };
 };
 
@@ -155,7 +190,8 @@ export default function WaveReveal({
   direction = "down",
   mode = "letter",
   className,
-  speed = 2000,
+  duration = "2000ms",
+  delay = 0,
   blur = true,
   letterClassName,
 }: WaveRevealProps) {
@@ -168,10 +204,12 @@ export default function WaveReveal({
   const { nodes } = words.reduce<ReducedValue>(createAnimatedNodes, {
     nodes: [],
     offset: 0,
-    length: words.length,
+    wordsLength: words.length,
+    textLength: text.length,
     direction,
     mode,
-    speed: speed ?? 60,
+    duration: duration ?? 60,
+    delay: delay ?? 0,
     blur,
     className: letterClassName,
   });

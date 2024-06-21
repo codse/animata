@@ -20,7 +20,7 @@ export default function Hero() {
           </span>{" "}
           into your project.
         </PageHeaderDescription>
-        <PageHeaderDescription className="mb-1 mt-12 text-sm font-medium opacity-60 md:text-left">
+        <PageHeaderDescription className="md:16 mb-1 mt-24 text-sm font-medium opacity-60 md:text-left">
           Join the community for early access and updates.
         </PageHeaderDescription>
         <NewsletterInput />
