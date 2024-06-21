@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StepBack, StepForward } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 interface ICarouselItem {
   id: number;
   title: string;
@@ -29,10 +29,10 @@ export default function Carousel({ items: initialItems }: ICarouselProps) {
     <div className="carousel-container w-[600px] h-[500px] bg-white border-2 border-gray-200 rounded-2xl p-2 relative overflow-hidden">
       <div onClick={handlePrev} className="navigation-item-left bg-gray-400 h-10 w-10 absolute left-0 top-[50%] translate-y-[-50%] flex justify-center items-center cursor-pointer z-20 bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-40 rounded-lg
 ">
-        <StepBack className="text-gray-800" />
+        <ChevronLeft className="text-gray-800" />
       </div>
       <div onClick={handleNext} className="navigation-item-right bg-gray-300 h-10 w-10 absolute right-0 top-[50%] translate-y-[-50%] flex justify-center items-center cursor-pointer z-20 bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-40 rounded-lg">
-        <StepForward className="text-gray-800" />
+        <ChevronRight className="text-gray-800" />
       </div>{visibleItems.map((item, index) => (
         <div key={item.id}
           className={`absolute z-10 top-[20%] left-[50%] w-[200px] h-[250px] rounded-xl bg-gray-500 animate-fadeIn`}
