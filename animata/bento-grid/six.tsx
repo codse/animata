@@ -21,7 +21,7 @@ const BentoCard = ({
 
 export default function Six() {
   return (
-    <div className="w-screen p-4">
+    <div className="p-4">
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-4 sm:grid-rows-3">
         <BentoCard className="bg-yellow-300 sm:col-span-2">
           <div className="flex flex-col">Grocery List</div>

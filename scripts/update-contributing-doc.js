@@ -2,7 +2,7 @@ import fs from "fs";
 
 function createContributingDoc() {
   const source = fs.readFileSync("CONTRIBUTING.md");
-  const destination = "content/docs/contributing.mdx";
+  const destination = "content/docs/contributing/index.mdx";
 
   const code = `
 ---

@@ -1,30 +1,30 @@
-'use client';
+"use client";
 
-import { useMDXComponent } from 'next-contentlayer/hooks';
-import Image from 'next/image';
-import Link from 'next/link';
-import * as React from 'react';
-import { NpmCommands } from 'types/unist';
+import { useMDXComponent } from "next-contentlayer/hooks";
+import Image from "next/image";
+import Link from "next/link";
+import * as React from "react";
+import { NpmCommands } from "types/unist";
 
-import { Callout } from '@/components/callout';
-import { CodeBlockWrapper } from '@/components/code-block-wrapper';
-import { ComponentExample } from '@/components/component-example';
-import { ComponentPreview } from '@/components/component-preview';
-import { ComponentSource } from '@/components/component-source';
-import { CopyButton } from '@/components/copy-button';
-import { FrameworkDocs } from '@/components/framework-docs';
+import { Callout } from "@/components/callout";
+import { CodeBlockWrapper } from "@/components/code-block-wrapper";
+import { ComponentExample } from "@/components/component-example";
+import { ComponentPreview } from "@/components/component-preview";
+import { ComponentSource } from "@/components/component-source";
+import { CopyButton } from "@/components/copy-button";
+import { FrameworkDocs } from "@/components/framework-docs";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from '@/components/ui/accordion';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { AspectRatio } from '@/components/ui/aspect-ratio';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Event } from '@/lib/events';
-import { cn } from '@/lib/utils';
-import { baseComponents } from './mdx-base-components';
+} from "@/components/ui/accordion";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { AspectRatio } from "@/components/ui/aspect-ratio";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Event } from "@/lib/events";
+import { cn } from "@/lib/utils";
+import { baseComponents } from "./mdx-base-components";
 
 const components = {
   Accordion,
@@ -46,14 +46,14 @@ const components = {
     __rawString__?: string;
     __withMeta__?: boolean;
     __src__?: string;
-    __event__?: Event['name'];
+    __event__?: Event["name"];
   } & NpmCommands) => {
     return (
       <>
         <pre
           className={cn(
-            'mb-4 mt-6 [&_code]:bg-transparent max-h-[650px] overflow-x-auto rounded-lg border bg-zinc-950 py-4 dark:bg-zinc-900',
-            className
+            "mb-4 mt-6 max-h-[650px] overflow-x-auto rounded-lg bg-zinc-800 py-4 [&_code]:bg-transparent",
+            className,
           )}
           {...props}
         />
@@ -62,7 +62,7 @@ const components = {
             value={__rawString__}
             src={__src__}
             event={__event__}
-            className={cn('absolute right-4 top-4', __withMeta__ && 'top-16')}
+            className={cn("absolute right-4 top-4", __withMeta__ && "top-16")}
           />
         )}
       </>
@@ -71,8 +71,8 @@ const components = {
   code: ({ className, ...props }: React.HTMLAttributes<HTMLElement>) => (
     <code
       className={cn(
-        'relative rounded px-2 py-[0.2rem] font-mono text-sm bg-zinc-900 text-white',
-        className
+        "relative rounded bg-zinc-800 px-2 py-[0.2rem] font-mono text-sm text-white",
+        className,
       )}
       {...props}
     />
@@ -86,11 +86,11 @@ const components = {
   CodeBlockWrapper: ({ ...props }) => (
     <CodeBlockWrapper className="rounded-md border" {...props} />
   ),
-  Step: ({ className, ...props }: React.ComponentProps<'h3'>) => (
+  Step: ({ className, ...props }: React.ComponentProps<"h3">) => (
     <h3
       className={cn(
-        'font-heading mt-8 scroll-m-20 text-xl font-semibold tracking-tight',
-        className
+        "font-heading mt-8 scroll-m-20 text-xl font-semibold tracking-tight",
+        className,
       )}
       {...props}
     />
@@ -102,7 +102,7 @@ const components = {
     />
   ),
   Tabs: ({ className, ...props }: React.ComponentProps<typeof Tabs>) => (
-    <Tabs className={cn('relative mt-6 w-full', className)} {...props} />
+    <Tabs className={cn("relative mt-6 w-full", className)} {...props} />
   ),
   TabsList: ({
     className,
@@ -110,8 +110,8 @@ const components = {
   }: React.ComponentProps<typeof TabsList>) => (
     <TabsList
       className={cn(
-        'w-full justify-start rounded-none border-b bg-transparent p-0',
-        className
+        "w-full justify-start rounded-none border-b bg-transparent p-0",
+        className,
       )}
       {...props}
     />
@@ -122,8 +122,8 @@ const components = {
   }: React.ComponentProps<typeof TabsTrigger>) => (
     <TabsTrigger
       className={cn(
-        'relative h-9 rounded-none border-b-2 border-b-transparent bg-transparent px-4 pb-3 pt-2 font-semibold text-muted-foreground shadow-none transition-none data-[state=active]:border-b-primary data-[state=active]:text-foreground data-[state=active]:shadow-none',
-        className
+        "relative h-9 rounded-none border-b-2 border-b-transparent bg-transparent px-4 pb-3 pt-2 font-semibold text-muted-foreground shadow-none transition-none data-[state=active]:border-b-primary data-[state=active]:text-foreground data-[state=active]:shadow-none",
+        className,
       )}
       {...props}
     />
@@ -134,8 +134,8 @@ const components = {
   }: React.ComponentProps<typeof TabsContent>) => (
     <TabsContent
       className={cn(
-        'relative [&_h3.font-heading]:text-base [&_h3.font-heading]:font-semibold',
-        className
+        "relative [&_h3.font-heading]:text-base [&_h3.font-heading]:font-semibold",
+        className,
       )}
       {...props}
     />
@@ -148,15 +148,15 @@ const components = {
   ),
   Link: ({ className, ...props }: React.ComponentProps<typeof Link>) => (
     <Link
-      className={cn('font-medium underline underline-offset-4', className)}
+      className={cn("font-medium underline underline-offset-4", className)}
       {...props}
     />
   ),
   LinkedCard: ({ className, ...props }: React.ComponentProps<typeof Link>) => (
     <Link
       className={cn(
-        'flex w-full flex-col items-center rounded-xl border bg-card p-6 text-card-foreground shadow transition-colors hover:bg-muted/50 sm:p-10',
-        className
+        "flex w-full flex-col items-center rounded-xl border bg-card p-6 text-card-foreground shadow transition-colors hover:bg-muted/50 sm:p-10",
+        className,
       )}
       {...props}
     />
