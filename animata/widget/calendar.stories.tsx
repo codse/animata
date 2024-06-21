@@ -1,5 +1,5 @@
 import { Meta, StoryObj } from "@storybook/react";
-import Calendar from "./calendar";
+import Calendar from "@/animata/widget/calendar";
 
 const meta = {
   title: "Widget/Calendar",
