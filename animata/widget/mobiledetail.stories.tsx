@@ -1,15 +1,15 @@
-import Mobiledetail from "@/animata/widget/mobiledetail";
 import { Meta, StoryObj } from "@storybook/react";
+import MobileDetail from "@/animata/widget/mobile-detail";
 
 const meta = {
-  title: "Widget/Mobiledetail",
-  component: Mobiledetail,
+  title: "Widget/mobile-detail",
+  component: MobileDetail,
   parameters: {
     layout: "centered",
   },
   tags: ["autodocs"],
   argTypes: {},
-} satisfies Meta<typeof Mobiledetail>;
+} satisfies Meta<typeof MobileDetail>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
