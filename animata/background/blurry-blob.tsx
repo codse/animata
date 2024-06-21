@@ -10,7 +10,7 @@ export default function BlurryBlob({
   secondBlobColor,
 }: BlobProps) {
   return (
-    <div className="min-w-screen flex min-h-screen items-center justify-center">
+    <div className="min-h-52 min-w-52 items-center justify-center">
       <div className="relative w-full max-w-lg">
         <div
           className={cn(
