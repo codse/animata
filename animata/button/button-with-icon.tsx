@@ -1,10 +1,14 @@
 import { ArrowTopRightIcon } from "@radix-ui/react-icons";
 
+interface ButtonTitleProps {
+  /**
+   * Button title
+   */
+  text: string;
+}
 export default function ButtonWithIcon({
   text = "Instagram",
-}: {
-  text?: string;
-}) {
+}: ButtonTitleProps) {
   return (
     <div className="group flex items-center justify-center gap-1 bg-blue-600 px-10 py-2 text-lg text-white duration-300 hover:cursor-pointer hover:text-yellow-300">
       <span>{text}</span>
