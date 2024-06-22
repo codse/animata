@@ -3,7 +3,13 @@
 import { motion } from "framer-motion";
 import { useState } from "react";
 
-export default function TextButtomBorder({ text }: { text: string }) {
+interface TextProps {
+  /**
+   * Text to display
+   */
+  text: string;
+}
+export default function TextButtomBorder({ text = "Programming" }: TextProps) {
   const [isHoveredIn, setIsHoveredIn] = useState(false);
   const [isHoveredout, setIsHoveredOut] = useState(false);
 
