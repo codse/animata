@@ -1,6 +1,6 @@
 "use client";
-import React from "react";
 import { cn } from "@/lib/utils";
+import React from "react";
 
 export interface UnderlineHoverTextProps {
   text: string;
@@ -28,8 +28,8 @@ const UnderlineHoverText: React.FC<UnderlineHoverTextProps> = ({
         fontSize,
         textColor,
         fontWeight,
-        "after:absolute after:bottom-0 after:left-0 after:h-1 after:w-full after:rounded-2xl after:bg-gray-300",
-        "after:transition-all after:duration-300",
+        "after:absolute after:bottom-0 after:left-0 after:h-1 after:w-full after:bg-gray-300",
+        "after:transition-all after:duration-150",
         hoverTextColor,
         "hover:after:h-full",
         hoverColor,
