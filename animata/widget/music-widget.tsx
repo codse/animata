@@ -1,50 +1,128 @@
 "use client";
 
+import { absoluteUrl, cn } from "@/lib/utils";
+import {
+  Music,
+  Music2,
+  Music3,
+  Pause,
+  Play,
+  SkipBack,
+  SkipForward,
+} from "lucide-react";
 import { useState } from "react";
-import { cn } from "@/lib/utils";
-import Image from "next/image";
-import { Pause, Play, StepBack, StepForward } from "lucide-react";
-import Music from "@/public/widget/music.jpg";
+
+const songs = [
+  {
+    title: "Never gonna give you up",
+    artist: "Rick Astley",
+  },
+  {
+    title: "It must have been love",
+    artist: "Roxette",
+  },
+  {
+    title: "Take on me",
+    artist: "A-ha",
+  },
+];
 
 export default function MusicWidget() {
+  const [currentSong, setCurrentSong] = useState(0);
   const [play, setPlay] = useState(false);
 
   const handleClick = () => {
     setPlay((prevValue) => !prevValue);
   };
-  return (
-    <div className="h-48 w-48 rounded-3xl bg-gradient-to-bl from-indigo-200 to-indigo-600 py-2 text-white">
-      <div className="flex justify-around px-2 pb-1 pt-2">
-        <div className="flex flex-col">
-          <Image
-            src={Music}
-            alt="Album Pic"
-            className="mb-1 h-20 w-20 rounded-2xl"
-          />
 
-          <p className="font-bold">Tamagotchi</p>
-          <p className="font-semibold text-indigo-300">Young Mito</p>
+  const handleNext = () => {
+    setCurrentSong((prevValue) => (prevValue + 1) % songs.length);
+  };
+
+  const handlePrev = () => {
+    setCurrentSong(
+      (prevValue) => (prevValue - 1 + songs.length) % songs.length,
+    );
+  };
+
+  const song = songs[currentSong];
+  const { title, artist } = song;
+
+  return (
+    <div className="flex h-52 w-52 flex-col rounded-3xl bg-gradient-to-bl from-indigo-200 to-indigo-600 p-4 text-white">
+      <div className="relative flex flex-1 flex-col justify-between">
+        <div className="flex">
+          <div className="flex-1">
+            <img
+              src={absoluteUrl("/widget/music.jpg")}
+              alt="Album Pic"
+              className="h-20 w-20 rounded-2xl"
+            />
+          </div>
+          <div className={cn("flex h-fit w-12 flex-wrap justify-center gap-1")}>
+            <Music2
+              size={16}
+              className={cn("text-white transition-all", {
+                hidden: !play,
+                "delay-500 duration-1000 animate-in zoom-in direction-alternate-reverse repeat-infinite":
+                  play,
+              })}
+            />
+            <Music3
+              size={14}
+              className={cn("text-white transition-all", {
+                hidden: !play,
+                "duration-1000 animate-in zoom-in direction-alternate-reverse repeat-infinite":
+                  play,
+              })}
+            />
+            <Music
+              size={18}
+              className={cn("text-white transition-all", {
+                hidden: !play,
+                "delay-300 duration-1000 animate-in zoom-in direction-alternate-reverse repeat-infinite":
+                  play,
+              })}
+            />
+          </div>
         </div>
-        <div className="mt-2 flex justify-center">
-          <div className="z-10 h-6 w-6 rounded-full bg-white" />
-          <div
-            className={cn(
-              "duration-800 absolute h-6 w-6 animate-ping rounded-full border-2 bg-gray-400 ease-in",
-              `${!play && "hidden"} `,
-            )}
-          />
-        </div>
+        <p
+          title={title}
+          className="line-clamp-1 w-full text-lg font-bold leading-none"
+        >
+          {title}
+        </p>
+        <p
+          title={artist}
+          className="-mt-6 line-clamp-1 text-xs font-semibold leading-none text-indigo-300"
+        >
+          {artist}
+        </p>
       </div>
-      <div className="flex items-center justify-evenly">
-        <StepBack size={25} fill="white" />
+      <div className="mt-2 flex items-center justify-evenly">
+        <SkipBack
+          size={20}
+          className="cursor-pointer fill-white text-white hover:fill-gray-100 hover:text-gray-100 active:fill-gray-200 active:text-gray-200"
+          onClick={handlePrev}
+        />
         <div onClick={handleClick}>
           {!play ? (
-            <Play size={30} fill="white" />
+            <Play
+              size={25}
+              className="cursor-pointer fill-white text-white hover:fill-gray-100 hover:text-gray-100 active:fill-gray-200 active:text-gray-200"
+            />
           ) : (
-            <Pause size={30} fill="white" />
+            <Pause
+              size={25}
+              className="cursor-pointer fill-white text-white hover:fill-gray-100 hover:text-gray-100 active:fill-gray-200 active:text-gray-200"
+            />
           )}
         </div>
-        <StepForward size={25} fill="white" />
+        <SkipForward
+          size={25}
+          className="cursor-pointer fill-white text-white hover:fill-gray-100 hover:text-gray-100 active:fill-gray-200 active:text-gray-200"
+          onClick={handleNext}
+        />
       </div>
     </div>
   );

@@ -1,4 +1,4 @@
-import StudyTimer from "@/animata/widget/study-timer";
+import StudyTimer, { testStudyTimerProps } from "@/animata/widget/study-timer";
 import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
@@ -16,11 +16,5 @@ export default meta;
 type Story = StoryObj<typeof StudyTimer>;
 
 export const Primary: Story = {
-  args: {
-    segments: [
-      { value: 57, color: "orange" },
-      { value: 24, color: "pink" },
-      { value: 26, color: "yellow" },
-    ],
-  },
+  args: testStudyTimerProps,
 };

@@ -134,7 +134,7 @@ const createAnimatedNodes = (
   const isLast = index === length - 1;
 
   const className = cn(
-    "ease-minor-spring inline-block opacity-0 transition-all fill-mode-forwards",
+    "inline-block text-foreground opacity-0 transition-all ease-minor-spring fill-mode-forwards",
     {
       // Determine the animation direction
       [`animate-[reveal-down]`]: !isUp && !blur,

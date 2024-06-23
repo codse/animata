@@ -35,7 +35,7 @@ export default function DonutChart({
     return () => clearTimeout(timeout);
   }, []);
 
-  const radius = size / 2 - Math.max(progressWidth, circleWidth);
+  const radius = size / 2 - Math.max(progressWidth, circleWidth) / 2;
   const circumference = Math.PI * radius * 2;
   const percentage = shouldUseValue
     ? circumference * ((100 - progress) / 100)

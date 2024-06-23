@@ -1,20 +1,19 @@
 import { cn } from "@/lib/utils";
 import { BookOpen } from "lucide-react";
-import React from "react";
 
-function Progress() {
+export default function WeeklyProgress() {
   const days = ["M", "T", "W", "TH", "F", "S", "SU"];
   return (
-    <div className={cn("group min-h-40 w-52 rounded-3xl bg-amber-100 p-3")}>
+    <div className={cn("group size-52 rounded-3xl bg-amber-100 p-4")}>
       <div>
         <p className="text-sm font-semibold text-gray-500">Chris Dixon</p>
         <p className="text-lg font-bold text-black">Read Write Own</p>
       </div>
-      <div className="mt-1 flex w-20 items-center justify-around rounded-full border-2 border-orange-400 p-1">
-        <BookOpen size={20} color="orange" className="top-4" />
+      <div className="mt-1 inline-flex items-center justify-around gap-2 rounded-full border-2 border-gray-300 px-2 py-1">
+        <BookOpen size={20} fill="orange" color="orange" className="top-4" />
         <p className="text-sm font-bold text-black">30%</p>
       </div>
-      <div className="mt-2 flex flex-wrap justify-center gap-1">
+      <div className="mt-2 flex flex-wrap justify-center">
         {days.map((day, index) => (
           <svg
             key={index}
@@ -50,7 +49,7 @@ function Progress() {
                 attributeName="stroke-dashoffset"
                 from="565.48"
                 to="118.692"
-                dur="2s"
+                dur={0.5 + index * 0.1 + "s"}
                 fill="freeze"
               />
             </circle>
@@ -67,7 +66,7 @@ function Progress() {
                 attributeName="opacity"
                 from="0"
                 to="1"
-                dur="2s"
+                dur={0.5 + index * 0.1 + "s"}
                 fill="freeze"
               />
               {day}
@@ -78,5 +77,3 @@ function Progress() {
     </div>
   );
 }
-
-export default Progress;

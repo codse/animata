@@ -2,7 +2,7 @@ import Flightwidget from "@/animata/widget/flight-widget";
 import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
-  title: "Widget/Flightwidget",
+  title: "Widget/Flight widget",
   component: Flightwidget,
   parameters: {
     layout: "centered",

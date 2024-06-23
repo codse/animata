@@ -1,49 +1,45 @@
 "use client";
 import { cn } from "@/lib/utils";
-import React, { useState } from "react";
+import React from "react";
+
 interface SwipeButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  firsttext: string;
-  secondtext: string;
-  borderColor?: string;
+  firstText: string;
+  secondText: string;
   className?: string;
   firstClass?: string;
   secondClass?: string;
 }
 
 export default function SwipeButton({
-  firsttext,
-  secondtext,
-  className,
-  borderColor,
-  firstClass,
-  secondClass,
+  className = "",
+  secondText = "Get access",
+  firstText = "Get access",
+  firstClass = "bg-orange-500 text-white",
+  secondClass = "bg-black text-white",
   ...props
 }: SwipeButtonProps) {
+  const common =
+    "block px-4 py-2   text-2xl font-bold duration-300 ease-in-out";
   return (
     <button
-      style={{ borderColor: borderColor }}
       {...props}
       className={cn(
-        "group relative overflow-hidden rounded-md border-2 font-medium transition duration-500 ease-out",
+        "group relative min-w-fit overflow-hidden rounded-md",
         className,
       )}
     >
       <span
         className={cn(
-          "ease absolute flex h-full w-full translate-y-full items-center justify-center px-2 py-3 text-2xl font-bold duration-500 group-hover:translate-y-0",
+          "absolute inset-0 translate-y-full group-hover:translate-y-0",
+          common,
           secondClass,
         )}
       >
-        {secondtext}
+        {secondText}
       </span>
-      <span
-        className={cn(
-          "ease flex items-center justify-center px-2 py-3 text-2xl font-bold duration-500 group-hover:-translate-y-full",
-          firstClass,
-        )}
-      >
-        {firsttext}
+      <span className={cn("group-hover:-translate-y-full", common, firstClass)}>
+        {firstText}
       </span>
     </button>
   );

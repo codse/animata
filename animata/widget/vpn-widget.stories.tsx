@@ -1,9 +1,9 @@
+import VpnWidget from "@/animata/widget/vpn-widget";
 import { Meta, StoryObj } from "@storybook/react";
-import VpnConnection from "@/animata/widget/Vpn-Connection";
 
-const meta: Meta<typeof VpnConnection> = {
-  title: "Widget/VpnConnection",
-  component: VpnConnection,
+const meta: Meta<typeof VpnWidget> = {
+  title: "Widget/Vpn Widget",
+  component: VpnWidget,
   parameters: {
     layout: "centered",
   },
@@ -21,17 +21,18 @@ type Story = StoryObj<typeof meta>;
 
 export const Primary: Story = {
   args: {
-    userName: "Drammen",
+    userName: "Animata",
     latency: "5ms",
     netSpeed: "10",
   },
 };
 
-export const VpnConnectionStory: Story = {
+export const VpnWidgetStory: Story = {
   args: {
-    userName: "Drammen",
+    userName: "Animata",
     latency: "5ms",
-    netSpeed: "10",
+    netSpeed: "15.75",
     className: "",
+    defaultConnected: true,
   },
 };

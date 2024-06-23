@@ -1,6 +1,5 @@
 "use client";
 import { cn } from "@/lib/utils";
-import React from "react";
 
 interface SpendingItem {
   day: string;
@@ -10,15 +9,40 @@ interface SpendingItem {
 interface SpendingDetailsProps {
   spending: SpendingItem[];
 }
-export default function ExpenseTracker({ spending }: SpendingDetailsProps) {
+export const spendingTrackerProps: SpendingDetailsProps = {
+  spending: [
+    { day: "M", amount: 12000 },
+    { day: "T", amount: 16000 },
+    { day: "W", amount: 42000 },
+    { day: "T", amount: 4000 },
+    { day: "F", amount: 28000 },
+    { day: "Sa", amount: 20000 },
+    { day: "Su", amount: 50000 },
+  ],
+};
+
+export default function ExpenseTracker({
+  spending = spendingTrackerProps.spending,
+}: SpendingDetailsProps) {
   const totalSpending = spending.reduce((acc, item) => acc + item.amount, 0);
 
   return (
-    <div className={cn("group min-h-40 w-52 rounded-3xl bg-gray-800 p-4")}>
-      <div className="flex h-full justify-between">
+    <div
+      className={cn(
+        "flex h-52 w-52 flex-col rounded-3xl border bg-background p-4 dark:border-zinc-700",
+      )}
+    >
+      <h4 className="mb-1 font-semibold text-muted-foreground">
+        {new Date().toLocaleString("default", { month: "long" }).toUpperCase()}{" "}
+        {new Date().getFullYear()}
+      </h4>
+      <div className="group flex flex-1 items-end justify-between">
         {spending.map((item) => (
-          <div key={item.day} className="flex flex-col items-center">
-            <div className="mb-2 text-xs text-white">{item.day}</div>
+          <div
+            key={item.day}
+            className="flex cursor-pointer flex-col items-center transition-opacity hover:!opacity-100 group-hover:opacity-50"
+          >
+            <div className="mb-1 text-xs text-foreground">{item.day}</div>
             <div
               className="h-20 w-3 rounded-full bg-gray-600"
               style={{
@@ -32,14 +56,18 @@ export default function ExpenseTracker({ spending }: SpendingDetailsProps) {
                   height: `${(item.amount / totalSpending) * 100}%`,
                   width: "100%",
                 }}
-              ></div>
+              />
             </div>
           </div>
         ))}
       </div>
-      <div className="mt-2">
-        <p className="text-xs text-gray-400">THIS WEEK SPENDING</p>
-        <p className="text-sm font-bold text-white">RS {totalSpending}</p>
+      <div className="mt-4">
+        <p className="text-xs tracking-wide text-muted-foreground">
+          THIS WEEK SPENDING
+        </p>
+        <p className="text-sm font-bold text-foreground">
+          RS {Intl.NumberFormat().format(totalSpending)}
+        </p>
       </div>
     </div>
   );

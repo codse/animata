@@ -1,21 +1,21 @@
-import Watertracker from "@/animata/widget/water-tracker";
+import ExternalLinkButton from "@/animata/button/external-link-button";
 import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
-  title: "Widget/Watertracker",
-  component: Watertracker,
+  title: "Button/External link",
+  component: ExternalLinkButton,
   parameters: {
     layout: "centered",
   },
   tags: ["autodocs"],
   argTypes: {},
-} satisfies Meta<typeof Watertracker>;
+} satisfies Meta<typeof ExternalLinkButton>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Primary: Story = {
   args: {
-    dailyGoal: 3000,
+    text: "Open Link",
   },
 };

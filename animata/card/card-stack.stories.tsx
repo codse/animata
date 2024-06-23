@@ -1,8 +1,8 @@
-import { Meta, StoryObj } from "@storybook/react";
 import CardStack from "@/animata/card/card-stack";
+import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
-  title: "Card/CardStack",
+  title: "Card/Card Stack",
   component: CardStack,
   parameters: {
     layout: "centered",
