@@ -27,7 +27,7 @@ export default function DiscloseImage({
     "ease-slow duration-mid absolute bg-sky-500 transition-all animate-out fill-mode-forwards";
 
   return (
-    <div className="relative h-52 w-40 overflow-hidden rounded-md bg-yellow-100">
+    <div className="relative h-64 w-52 overflow-hidden rounded-md bg-yellow-100">
       {/* Use `next/image` and remove the line below. */}
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img

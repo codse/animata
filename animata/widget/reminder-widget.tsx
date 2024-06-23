@@ -3,15 +3,19 @@ import { cn } from "@/lib/utils";
 import { BellDot } from "lucide-react";
 import { useState } from "react";
 
+const reminders = [
+  "Passport",
+  "Citizenship",
+  "birth certificate",
+  "License",
+  "key",
+  "mobile",
+  "laptop",
+  "wallet",
+  "watch",
+];
+
 export default function ReminderWidget() {
-  const reminders = [
-    "Passport",
-    "Citizenship",
-    "birth certificate",
-    "Linsence",
-    "key",
-    "mobile",
-  ];
   const [reminder, setReminder] = useState<string[]>(reminders);
 
   const handleCheckboxChange = (data: string) => {
@@ -21,29 +25,31 @@ export default function ReminderWidget() {
         : [...prev, data],
     );
   };
+
   return (
-    <div
-      className={cn("group min-h-40 w-52 rounded-3xl bg-zinc-900 px-4 py-3")}
-    >
+    <div className={cn("group h-80 w-52 rounded-3xl bg-zinc-900 p-4")}>
       <div className="text-md flex items-center justify-between gap-2 font-bold text-blue-400">
         <div className="flex items-center gap-2">
-          <p>Reminder</p>
-          <BellDot color="#60a5fa" size={15} className="mt-1" />
+          <BellDot color="#60a5fa" size={15} />
+          <p className="text-xl">Reminder</p>
         </div>
-        <div className="">
-          <p>{reminder.length}</p>
+        <div className="flex h-4 w-4 items-center justify-center rounded-full bg-zinc-700 text-xs text-blue-400">
+          {reminder.length}
         </div>
       </div>
       <div className="mt-1 overflow-hidden">
         {reminders.map((data) => (
-          <div className="flex items-center gap-3 border-b-[1px] border-gray-700">
+          <div
+            key={`item-${data}`}
+            onClick={() => handleCheckboxChange(data)}
+            className="flex cursor-pointer items-center gap-3 border-b border-gray-700 py-1"
+          >
             <input
               type="checkbox"
-              onChange={() => handleCheckboxChange(data)}
               checked={!reminder.includes(data)}
               className="h-3 w-3 appearance-none rounded-full border-2 border-gray-700 checked:bg-blue-500"
             />
-            <p className="mt-1 bg-transparent pb-2 text-xs font-semibold text-white">
+            <p className="bg-transparent text-xs font-semibold capitalize text-white">
               {data}
             </p>
           </div>

@@ -1,11 +1,10 @@
-import { cn } from "@/lib/utils";
-import { Ban, Loader, Minus, Sun } from "lucide-react";
+import { Ban, Loader, Minus } from "lucide-react";
 
 const getColor = (count: number) => {
   const colors: { [key: number]: string } = {
-    0: "bg-purple-800",
-    1: "bg-pink-500",
-    2: "bg-blue-600",
+    0: "bg-purple-400",
+    1: "bg-pink-400",
+    2: "bg-blue-400",
     3: "bg-gray-600",
   };
   return colors[count];
@@ -24,7 +23,7 @@ export default function StorageWidget() {
   );
 
   return (
-    <div className="h-52 w-52 rounded-3xl bg-zinc-800 p-4 text-gray-400">
+    <div className="size-52 rounded-3xl bg-zinc-800 p-4 text-gray-400">
       <div className="flex justify-between">
         <div>
           <div className="flex items-end gap-1">
@@ -44,7 +43,7 @@ export default function StorageWidget() {
           <Loader className="absolute left-2 top-2" color="white" size={22} />
         </div>
       </div>
-      <div className="my-2 flex gap-1">
+      <div className="flex gap-1">
         {storageData.map((week, i) => (
           <div key={`week-${i}`} className="flex flex-col gap-1">
             {week.map((storageCount, j) => (
@@ -58,9 +57,9 @@ export default function StorageWidget() {
       </div>
       <div className="flex justify-between font-bold text-gray-600">
         <div className="flex gap-1">
-          <p className="text-purple-800">5.90</p>|
-          <p className="text-pink-500">2.15</p>|
-          <p className="text-blue-600">2.59</p>
+          <p className="text-purple-400">5.90</p>|
+          <p className="text-pink-400">2.15</p>|
+          <p className="text-blue-400">2.59</p>
         </div>
         <div className="text-gray-300">GB</div>
       </div>

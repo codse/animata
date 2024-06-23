@@ -76,10 +76,14 @@ pre .word--highlighted {
   @apply mb-4 mt-8 text-base font-semibold;
 }
 
-.mdx > p:first-child {
+.mdx {
   @apply mt-4;
 }
 
-.mdx h1 {
+.mdx > h1 {
+  @apply my-4;
+}
+
+.mdx > h2 {
   @apply my-4;
 }

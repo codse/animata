@@ -11,7 +11,7 @@ import { CodeBlockWrapper } from "@/components/code-block-wrapper";
 import { ComponentExample } from "@/components/component-example";
 import { ComponentPreview } from "@/components/component-preview";
 import { ComponentSource } from "@/components/component-source";
-import { CopyButton } from "@/components/copy-button";
+import { CopyButton, copyToClipboardWithMeta } from "@/components/copy-button";
 import { FrameworkDocs } from "@/components/framework-docs";
 import {
   Accordion,
@@ -41,13 +41,26 @@ const components = {
     __withMeta__,
     __src__,
     __event__,
+    __copyId__,
     ...props
   }: React.HTMLAttributes<HTMLPreElement> & {
+    __copyId__?: string;
     __rawString__?: string;
     __withMeta__?: boolean;
     __src__?: string;
     __event__?: Event["name"];
   } & NpmCommands) => {
+    if (__copyId__ && __rawString__) {
+      return (
+        <div
+          id={`source-${__copyId__}`}
+          onClick={() => {
+            copyToClipboardWithMeta(__rawString__);
+          }}
+        />
+      );
+    }
+
     return (
       <>
         <pre
@@ -161,6 +174,51 @@ const components = {
       {...props}
     />
   ),
+  ComponentList: ({
+    children,
+    className,
+  }: {
+    children: React.ReactNode;
+    className?: string;
+  }) => {
+    return (
+      <div
+        className={cn(
+          "relative grid max-w-full gap-4 sm:grid-cols-2 lg:grid-cols-3",
+          className,
+        )}
+      >
+        {children}
+      </div>
+    );
+  },
+  ComponentListItem: ({
+    children,
+    className,
+    copyId,
+    ...props
+  }: {
+    copyId: string;
+    className?: string;
+    children: React.ReactNode;
+  }) => {
+    return (
+      <div
+        {...props}
+        className={cn(
+          "component-list-item relative flex min-h-72 items-center justify-center rounded-xl border p-4",
+          className,
+        )}
+      >
+        {children}
+        <CopyButton
+          className="visible absolute right-1 top-1 text-zinc-600"
+          proxyId={`source-${copyId}`}
+          value=""
+        />
+      </div>
+    );
+  },
 };
 
 interface MdxProps {
@@ -168,7 +226,20 @@ interface MdxProps {
 }
 
 export function Mdx({ code }: MdxProps) {
-  const Component = useMDXComponent(code);
+  // Fix `process` issue: https://github.com/contentlayerdev/contentlayer/issues/288#issuecomment-1384180362
+  const Component = useMDXComponent(
+    `
+if (typeof process === 'undefined') {
+  globalThis.process = {
+    env: {
+      NEXT_PUBLIC_APP_URL: '${process.env.NEXT_PUBLIC_APP_URL}',
+    },
+  };
+}
+
+${code}
+    `,
+  );
 
   return (
     <div className="mdx">

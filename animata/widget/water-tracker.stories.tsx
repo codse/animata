@@ -1,19 +1,21 @@
+import WaterTracker from "@/animata/widget/water-tracker";
 import { Meta, StoryObj } from "@storybook/react";
-import MobileDetail from "@/animata/widget/mobile-detail";
 
 const meta = {
-  title: "Widget/mobile-detail",
-  component: MobileDetail,
+  title: "Widget/Water Tracker",
+  component: WaterTracker,
   parameters: {
     layout: "centered",
   },
   tags: ["autodocs"],
   argTypes: {},
-} satisfies Meta<typeof MobileDetail>;
+} satisfies Meta<typeof WaterTracker>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Primary: Story = {
-  args: {},
+  args: {
+    dailyGoal: 3000,
+  },
 };

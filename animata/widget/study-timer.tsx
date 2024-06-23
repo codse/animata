@@ -1,6 +1,6 @@
-import React from "react";
-import { GraduationCap, XCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { GraduationCap, XCircle } from "lucide-react";
+import React from "react";
 
 export interface StudyTimerProps {
   segments: Segment[];
@@ -10,6 +10,14 @@ interface Segment {
   value: number;
   color: string;
 }
+
+export const testStudyTimerProps: StudyTimerProps = {
+  segments: [
+    { value: 57, color: "orange" },
+    { value: 24, color: "pink" },
+    { value: 26, color: "yellow" },
+  ],
+};
 
 const formatTime = (totalMinutes: number) => {
   const hours = Math.floor(totalMinutes / 60);
@@ -23,7 +31,9 @@ const formatTime = (totalMinutes: number) => {
   return `${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
 };
 
-const StudyTimer: React.FC<StudyTimerProps> = ({ segments }) => {
+const StudyTimer: React.FC<StudyTimerProps> = ({
+  segments = testStudyTimerProps.segments,
+}) => {
   const totalMinutes = segments.reduce(
     (acc, segment) => acc + segment.value,
     0,
@@ -31,24 +41,24 @@ const StudyTimer: React.FC<StudyTimerProps> = ({ segments }) => {
   const time = formatTime(totalMinutes);
 
   return (
-    <div className="min-h-52 w-64 rounded-3xl bg-zinc-900 p-4 text-white shadow-lg">
+    <div className="relative flex size-52 flex-col gap-1 rounded-3xl bg-zinc-900 p-4 text-white shadow-lg">
       <div className="flex items-center justify-between p-2">
         <button
           className={cn(
-            "relative flex h-12 w-20 items-center justify-center rounded-md p-2",
-            "before:animate-glow before:absolute before:inset-0 before:rounded-3xl before:border-2 before:border-sky-600",
+            "relative flex items-center justify-center px-4 py-2",
+            "duration-1000 before:absolute before:inset-0 before:animate-pulse before:rounded-3xl before:border-2 before:border-sky-600",
           )}
         >
-          <GraduationCap className="text-white" />
+          <GraduationCap size={18} className="text-white" />
         </button>
-        <div className="flex h-6 w-12 cursor-pointer items-center justify-center space-x-0.5 rounded-xl bg-yellow-600 font-bold text-black">
-          <XCircle size={15} className="text-xl" />
-          <span className="text-base font-bold">21</span>
+        <div className="flex cursor-pointer items-center justify-center space-x-0.5 rounded-full bg-yellow-600 px-2 py-1 font-bold text-black">
+          <XCircle size={10} className="fill-black text-yellow-600" />
+          <span className="text-xs font-bold">21</span>
         </div>
       </div>
       <div className="mt-2 p-2">
-        <div className="text-3xl font-bold tracking-wider">{time}</div>
-        <div className="mt-2 flex justify-start space-x-2 overflow-x-auto text-xl">
+        <div className="text-xl font-bold tracking-wider">{time}</div>
+        <div className="flex justify-start space-x-2 overflow-x-auto text-sm">
           {segments.map((segment, index) => (
             <span
               key={index}
@@ -63,16 +73,11 @@ const StudyTimer: React.FC<StudyTimerProps> = ({ segments }) => {
           ))}
         </div>
       </div>
-      <div className="mt-1 flex space-x-0.5">
+      <div className="flex flex-1 space-x-0.5">
         {segments.map((segment, index) => (
           <SegmentBar key={index} segment={segment} totalSum={totalMinutes} />
         ))}
       </div>
-      <div className="mt-1 flex gap-1">
-        <div className="mb-1 h-2 w-2 rounded-full bg-yellow-700" />
-        <div className="h-2 w-2 rounded-full bg-yellow-700" />
-      </div>
-      <div className="h-2 w-2 rounded-full bg-yellow-700" />
     </div>
   );
 };
@@ -85,12 +90,12 @@ const SegmentBar: React.FC<{ segment: Segment; totalSum: number }> = ({
 
   return (
     <div
-      className="h-20 rounded-b-lg rounded-t-lg"
+      className="h-full rounded-b-sm rounded-t-sm"
       style={{
         width: `${widthPercent}%`,
         backgroundColor: segment.color,
       }}
-    ></div>
+    />
   );
 };
 

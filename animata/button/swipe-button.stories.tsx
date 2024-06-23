@@ -1,8 +1,8 @@
+import SwipeButton from "@/animata/button/swipe-button";
 import { Meta, StoryObj } from "@storybook/react";
-import SwipeButton from "./swipe-button";
 
 const meta = {
-  title: "Button/Slide Button",
+  title: "Button/Swipe Button",
   component: SwipeButton,
   parameters: {
     layout: "centered",
@@ -16,10 +16,10 @@ type Story = StoryObj<typeof meta>;
 
 export const Primary: Story = {
   args: {
-    borderColor: "#192de3",
-    secondtext: "Get Passesssssssssss",
-    firsttext: "Get Passessssssssssss",
-    firstClass: "bg-red-500 text-blue-800",
-    secondClass: "bg-black text-white",
+    className: "",
+    secondText: "Get access",
+    firstText: "Get access",
+    firstClass: "bg-orange-500 text-white",
+    secondClass: "bg-red-500 text-white",
   },
 };

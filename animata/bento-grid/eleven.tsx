@@ -1,12 +1,12 @@
 import { cn } from "@/lib/utils";
 
-const BentoCard = ({
+function BentoCard({
   children,
   className,
 }: {
   children: React.ReactNode;
   className?: string;
-}) => {
+}) {
   return (
     <div
       className={cn(
@@ -17,11 +17,11 @@ const BentoCard = ({
       {children}
     </div>
   );
-};
+}
 
 export default function Modern() {
   return (
-    <div className="box-border max-w-full p-4">
+    <div className="box-border w-full max-w-full p-4">
       <div className="grid grid-cols-1 grid-rows-1 gap-2 sm:grid-cols-5 sm:grid-rows-5">
         <div className="sm:col-span-2 sm:row-span-2">
           <BentoCard className="bg-blue-300">

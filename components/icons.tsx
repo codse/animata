@@ -1,3 +1,5 @@
+import { Combine, RectangleHorizontal, TableCellsSplit } from "lucide-react";
+
 type IconProps = React.HTMLAttributes<SVGElement>;
 
 export const Icons = {
@@ -61,6 +63,9 @@ export const Icons = {
       </g>
     </svg>
   ),
+  bento: (props: IconProps) => <TableCellsSplit {...props} />,
+  button: (props: IconProps) => <RectangleHorizontal {...props} />,
+  widget: (props: IconProps) => <Combine {...props} />,
   reactJS: (props: IconProps) => (
     <svg
       width="100%"
