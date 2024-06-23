@@ -48,3 +48,41 @@
     --ring: 240 4.9% 83.9%;
   }
 }
+
+.preview-light {
+  background-image: radial-gradient(#efefef 1px, transparent 1px),
+    radial-gradient(#efefef 1px, transparent 1px);
+  background-size: 20px 20px;
+  background-position:
+    0 0,
+    10px 10px;
+  background-color: #fefefe;
+}
+.preview-dark {
+  background-image: radial-gradient(#6a6a6a 1px, transparent 1px),
+    radial-gradient(#6a6a6a 1px, transparent 1px);
+  background-size: 20px 20px;
+  background-position:
+    0 0,
+    10px 10px;
+}
+
+.component-list-item {
+  @apply preview-light border-zinc-200;
+}
+
+.dark .component-list-item {
+  @apply preview-dark border-zinc-700 bg-zinc-950;
+}
+
+.embedded:not(.dark) {
+  .sbdocs-preview {
+    @apply preview-light;
+  }
+}
+
+.dark {
+  .sbdocs-preview {
+    @apply preview-dark;
+  }
+}

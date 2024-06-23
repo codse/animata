@@ -20,7 +20,7 @@ addons.setConfig({
   theme: themes.dark,
 });
 
-const MdxContainer = (props: any) => {
+const useThemeProps = (props) => {
   const isDark = useDarkMode();
   const forced = (() => {
     const sp = new URLSearchParams(location.search);
@@ -34,13 +34,20 @@ const MdxContainer = (props: any) => {
   const currentProps = { ...props };
   if (!forced) {
     currentProps.theme = isDark ? themes.dark : themes.light;
+    currentProps.isDark = isDark;
   } else {
     currentProps.theme = forced === "theme:dark" ? themes.dark : themes.light;
+    currentProps.isDark = forced === "theme:dark";
   }
 
+  return currentProps;
+};
+
+const MdxContainer = (props: any) => {
+  const currentProps = useThemeProps(props);
   return (
     <MDXProvider components={baseComponents}>
-      <DocsContainer {...currentProps} key />
+      <DocsContainer {...currentProps} />
     </MDXProvider>
   );
 };
@@ -49,6 +56,7 @@ const isEmbedded = window.location.href.includes("site:docs");
 
 const Wrapper = ({ children }) => {
   const nodeRef = React.useRef(isEmbedded ? document.body : null);
+  const theme = useThemeProps({}).isDark ? "dark" : "";
 
   const callbackRef = React.useRef(() => {
     const height = document.querySelector(".embedded")?.clientHeight ?? 0;
@@ -73,7 +81,7 @@ const Wrapper = ({ children }) => {
 
   return (
     <div
-      className={isEmbedded ? "embedded" : ""}
+      className={isEmbedded ? `embedded ${theme}`.trim() : ""}
       style={{ padding: isEmbedded ? 0 : "4rem 20px" }}
     >
       {children}

@@ -24,9 +24,9 @@ export const Primary: Story = {
           <BadgeAlert />
           <span>Priority notifications</span>
         </h4>
-        <p className="break-words text-sm text-foreground/80">
-          You can set up priority notifications to be alerted on your phone or
-          computer for important emails.
+        <p className="break-words text-sm text-black/80">
+          You can set up priority notifications to be alerted on your phone or computer for
+          important emails.
         </p>
       </div>
     ),

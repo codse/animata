@@ -9,18 +9,12 @@ export default function Hero() {
       <div className="flex flex-1 flex-col items-center justify-center md:items-start">
         <HeroTitle />
         <PageHeaderDescription className="mb-4 md:text-left">
-          Hand-crafted ✍️ interaction animations and effects from around the
-          internet 🛜 to{" "}
-          <span className="underline decoration-wavy underline-offset-8">
-            copy
-          </span>{" "}
-          and{" "}
-          <span className="underline decoration-wavy underline-offset-8">
-            paste
-          </span>{" "}
-          into your project.
+          Hand-crafted ✍️ interaction animations and effects from around the internet 🛜 to{" "}
+          <span className="underline decoration-wavy underline-offset-8">copy</span> and{" "}
+          <span className="underline decoration-wavy underline-offset-8">paste</span> into your
+          project.
         </PageHeaderDescription>
-        <PageHeaderDescription className="mb-1 mt-12 text-sm font-medium opacity-60 md:text-left">
+        <PageHeaderDescription className="md:16 mb-1 mt-24 text-sm font-medium opacity-60 md:text-left">
           Join the community for early access and updates.
         </PageHeaderDescription>
         <NewsletterInput />

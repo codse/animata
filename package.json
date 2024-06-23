@@ -7,7 +7,7 @@
     "dev": "next dev",
     "build": "yarn storybook:build && next build",
     "start": "next start",
-    "lint": "next lint",
+    "lint": "npx eslint .",
     "storybook": "storybook dev -p 6006",
     "storybook:build": "storybook build -o public/preview",
     "animata:new": "node ./scripts/create-new.js",

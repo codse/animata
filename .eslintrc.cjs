@@ -18,5 +18,6 @@ module.exports = {
     quotes: ["error", "double"],
     "@typescript-eslint/no-explicit-any": "warn",
     "react/no-unknown-property": ["error", { ignore: ["vaul-drawer-wrapper"] }],
+    "@next/next/no-img-element": "off",
   },
 };

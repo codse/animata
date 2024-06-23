@@ -1,4 +1,4 @@
-import { Node } from 'unist';
+import { Node } from "unist";
 
 export interface UnistNode extends Node {
   type: string;

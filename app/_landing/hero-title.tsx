@@ -43,8 +43,9 @@ export default function HeroTitle() {
           "select-none px-0 text-7xl uppercase text-blue-700 transition-opacity delay-1000 dark:text-blue-500 md:px-0 md:text-8xl",
           titleFont.className,
         )}
-        letterClassName="delay-500"
+        delay={750}
         direction="up"
+        duration="500ms"
       />
     </div>
   );

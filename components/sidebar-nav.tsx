@@ -7,6 +7,7 @@ import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { ChevronDown } from "lucide-react";
 import { useState } from "react";
+import { Icons } from "./icons";
 
 export interface DocsSidebarNavProps {
   items: SidebarNavItem[];
@@ -20,47 +21,53 @@ export function DocsSidebarNav({ items }: DocsSidebarNavProps) {
     <div className="w-full">
       {items.map((item, index) => {
         const isOpen = !closed.has(item.title);
+        const Icon = item.icon && Icons[item.icon as keyof typeof Icons];
         return (
           <div key={index}>
             <Link
               key={index}
               href={item.href ?? (item.items?.[0].href as string)}
+              className="cursor-pointer"
             >
               <h4 className="mb-1 flex items-center gap-1 rounded-md py-1 pr-2 text-sm font-semibold">
-                <ChevronDown
-                  className={cn("transform transition-all hover:opacity-50", {
-                    "-rotate-90": !isOpen,
-                  })}
-                  onClick={() => {
-                    setClosed((prev) => {
-                      const next = new Set(prev);
-                      if (isOpen) {
-                        next.add(item.title);
-                      } else {
-                        next.delete(item.title);
-                      }
-                      return next;
-                    });
-                  }}
-                  size={16}
-                />
+                {Icon ? (
+                  <Icon className="w-4" />
+                ) : (
+                  <ChevronDown
+                    className={cn("transform transition-all hover:opacity-50", {
+                      "-rotate-90": !isOpen,
+                    })}
+                    onClick={() => {
+                      setClosed((prev) => {
+                        const next = new Set(prev);
+                        if (isOpen) {
+                          next.add(item.title);
+                        } else {
+                          next.delete(item.title);
+                        }
+                        return next;
+                      });
+                    }}
+                    size={16}
+                  />
+                )}
                 {item.title}
-                {Boolean(item.items?.length) && index !== 0 && (
+                {Boolean(item.items?.length || item.label) && index !== 0 && (
                   <span className="flex aspect-square items-center justify-center rounded-full bg-gray-200 px-1 py-0.5 text-[10px] leading-none text-[#000000] no-underline">
-                    {item.items?.length}
+                    {item.items?.length || item.label}
                   </span>
                 )}
               </h4>
             </Link>
-            <div
-              className={cn("pb-3 pl-3", {
-                hidden: !isOpen,
-              })}
-            >
-              {item?.items?.length && (
+            {!!item?.items?.length && (
+              <div
+                className={cn("pb-3 pl-3", {
+                  hidden: !isOpen,
+                })}
+              >
                 <DocsSidebarNavItems items={item.items} pathname={pathname} />
-              )}
-            </div>
+              </div>
+            )}
           </div>
         );
       })}
@@ -73,10 +80,7 @@ interface DocsSidebarNavItemsProps {
   pathname: string | null;
 }
 
-export function DocsSidebarNavItems({
-  items,
-  pathname,
-}: DocsSidebarNavItemsProps) {
+export function DocsSidebarNavItems({ items, pathname }: DocsSidebarNavItemsProps) {
   return items?.length ? (
     <div className="grid grid-flow-row auto-rows-max text-sm">
       {items.map((item, index) =>
@@ -88,7 +92,7 @@ export function DocsSidebarNavItems({
               "group flex w-full items-center rounded-md border border-transparent px-2 py-1 hover:underline",
               item.disabled && "cursor-not-allowed opacity-60",
               pathname === item.href
-                ? "font-normal text-foreground"
+                ? "bg-muted font-normal text-foreground"
                 : "text-muted-foreground",
             )}
             target={item.external ? "_blank" : ""}

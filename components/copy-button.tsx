@@ -19,6 +19,7 @@ interface CopyButtonProps extends ButtonProps {
   value: string;
   src?: string;
   event?: Event["name"];
+  proxyId?: string;
 }
 
 export async function copyToClipboardWithMeta(value: string, event?: Event) {
@@ -33,6 +34,7 @@ export function CopyButton({
   className,
   variant = "ghost",
   event,
+  proxyId,
   ...props
 }: CopyButtonProps) {
   const [hasCopied, setHasCopied] = React.useState(false);
@@ -49,6 +51,12 @@ export function CopyButton({
       variant={variant}
       className={cn("relative z-10 h-6 w-6 text-zinc-50 [&_svg]:size-3", className)}
       onClick={() => {
+        if (proxyId) {
+          document.getElementById(proxyId)?.click();
+          setHasCopied(true);
+          return;
+        }
+
         copyToClipboardWithMeta(
           value,
           event
