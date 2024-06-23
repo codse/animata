@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // contentlayer.config.ts
 import {
   ComputedFields,
@@ -35,7 +36,7 @@ const computedFields: ComputedFields = {
     resolve: (doc: any) =>
       ({
         "@context": "https://schema.org",
-        "@type": `BlogPosting`,
+        "@type": "BlogPosting",
         headline: doc.title,
         datePublished: doc.date,
         dateModified: doc.date,
@@ -65,7 +66,7 @@ const LinksProperties = defineNestedType(() => ({
 
 export const Doc = defineDocumentType(() => ({
   name: "Doc",
-  filePathPattern: `docs/**/*.mdx`,
+  filePathPattern: "docs/**/*.mdx",
   contentType: "mdx",
   fields: {
     title: {
@@ -147,16 +148,12 @@ export default makeSource({
   contentDirPath: "./content",
   documentTypes: [Doc],
   mdx: {
-    remarkPlugins: [
-      remarkGfm,
-      // @ts-ignore
-      codeImport,
-    ],
+    remarkPlugins: [remarkGfm, codeImport],
     rehypePlugins: [
       setupCodeSnippet,
       rehypeSlug,
       [
-        // @ts-ignore
+        // @ts-expect-error - `rehypePrettyCode` is not typed
         rehypePrettyCode,
         {
           theme: "github-dark",

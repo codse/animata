@@ -22,7 +22,7 @@ const items = [
 
 export default function BatteryLevel() {
   return (
-    <div className="grid size-52  grid-cols-2 grid-rows-2 justify-evenly rounded-3xl bg-foreground p-4 text-background">
+    <div className="grid size-52 grid-cols-2 grid-rows-2 justify-evenly rounded-3xl bg-foreground p-4 text-background">
       {items.map((item, index) => {
         return (
           <DonutChart

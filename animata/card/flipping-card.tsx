@@ -48,9 +48,7 @@ const CardDetails = ({ title, image, font, index }: CardDetailsProps) => {
         <div className="flex w-full flex-col border-[1px] border-black/15 px-3 py-4 text-sm">
           <span className="border-t-2 border-black pt-1">{font}</span>
 
-          <span className="mt-4 border-b-2 border-black px-1 font-serif text-8xl">
-            {title}
-          </span>
+          <span className="mt-4 border-b-2 border-black px-1 font-serif text-8xl">{title}</span>
           <div className="mt-12 flex items-center justify-between">
             <span>{index}</span>
             <PlusCircle size={18} />

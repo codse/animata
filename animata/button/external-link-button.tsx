@@ -7,9 +7,7 @@ interface ButtonTitleProps {
   text: string;
 }
 
-export default function ExternalLinkButton({
-  text = "Open Link",
-}: ButtonTitleProps) {
+export default function ExternalLinkButton({ text = "Open Link" }: ButtonTitleProps) {
   return (
     <button className="text-md group flex items-center justify-center gap-1 bg-pink-600 px-10 py-2 text-white hover:cursor-pointer hover:text-yellow-300">
       <span>{text}</span>

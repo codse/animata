@@ -51,12 +51,7 @@ export default function Cycling({
   title?: string;
 }) {
   return (
-    <div
-      className={cn(
-        "group flex h-52 w-52 flex-col rounded-3xl bg-zinc-900 p-4",
-        className,
-      )}
-    >
+    <div className={cn("group flex h-52 w-52 flex-col rounded-3xl bg-zinc-900 p-4", className)}>
       <div className="flex justify-between gap-2">
         <div>
           <div className="rounded-full bg-yellow-400/10 p-2">
@@ -65,9 +60,7 @@ export default function Cycling({
         </div>
 
         <div className="flex-1 text-right">
-          <span className="block text-xl font-bold uppercase text-gray-400">
-            {title}
-          </span>
+          <span className="block text-xl font-bold uppercase text-gray-400">{title}</span>
           <span className="-mt-1 block text-sm text-gray-300">2h 30m</span>
         </div>
       </div>

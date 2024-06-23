@@ -57,15 +57,13 @@ export const Primary: Story = {
         name: "Lanna Del Rey",
         image:
           "https://images.unsplash.com/photo-1581092916357-5896ebc48073?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-        description:
-          "Lorem ipsum dolor, sit amet consectetur adipisicing elit. ",
+        description: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. ",
       },
       {
         name: "Paul Logan",
         image:
           "https://images.unsplash.com/photo-1483389127117-b6a2102724ae?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-        description:
-          "Lorem ipsum dolor, sit amet consectetur adipisicing elit. ",
+        description: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. ",
       },
     ],
   },

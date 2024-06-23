@@ -2,8 +2,7 @@
 import { cn } from "@/lib/utils";
 import React from "react";
 
-interface SwipeButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+interface SwipeButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   firstText: string;
   secondText: string;
   className?: string;
@@ -19,15 +18,11 @@ export default function SwipeButton({
   secondClass = "bg-black text-white",
   ...props
 }: SwipeButtonProps) {
-  const common =
-    "block px-4 py-2   text-2xl font-bold duration-300 ease-in-out";
+  const common = "block px-4 py-2   text-2xl font-bold duration-300 ease-in-out";
   return (
     <button
       {...props}
-      className={cn(
-        "group relative min-w-fit overflow-hidden rounded-md",
-        className,
-      )}
+      className={cn("group relative min-w-fit overflow-hidden rounded-md", className)}
     >
       <span
         className={cn(
@@ -38,9 +33,7 @@ export default function SwipeButton({
       >
         {secondText}
       </span>
-      <span className={cn("group-hover:-translate-y-full", common, firstClass)}>
-        {firstText}
-      </span>
+      <span className={cn("group-hover:-translate-y-full", common, firstClass)}>{firstText}</span>
     </button>
   );
 }

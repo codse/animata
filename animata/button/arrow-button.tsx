@@ -3,11 +3,9 @@ import { cn } from "@/lib/utils";
 import { MoveRight } from "lucide-react";
 import React from "react";
 
-interface ArrowButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+interface ArrowButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   text: string;
   textColor?: string;
-  buttonColor?: string;
   buttonOverlayColor?: string;
   borderColor?: string;
   iconColor?: string;
@@ -17,7 +15,6 @@ interface ArrowButtonProps
 export default function ArrowButton({
   text = "Open",
   textColor = "#bf49ff",
-  buttonColor = "transparent",
   buttonOverlayColor = "#bf49ff",
   borderColor = "#c284f9",
   iconColor = "white",

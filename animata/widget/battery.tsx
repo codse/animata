@@ -21,14 +21,7 @@ const Battery = () => {
     <div className="relative size-52 rounded-3xl bg-opacity-25 bg-gradient-to-br from-blue-500 to-blue-200 p-4">
       <div className="relative size-16">
         <svg viewBox="0 0 100 100" className="absolute right-0 size-full">
-          <circle
-            cx={50}
-            cy={50}
-            r={40}
-            stroke="#5d5"
-            strokeWidth={8}
-            fill="none"
-          />
+          <circle cx={50} cy={50} r={40} stroke="#5d5" strokeWidth={8} fill="none" />
           <circle
             ref={circleRef}
             cx={50}
@@ -47,11 +40,7 @@ const Battery = () => {
           <BatteryMediumIcon className="text-slate-200" size={24} />
         </div>
       </div>
-      <div
-        className={cn(
-          "absolute bottom-4 left-4 text-center text-7xl font-light text-white",
-        )}
-      >
+      <div className={cn("absolute bottom-4 left-4 text-center text-7xl font-light text-white")}>
         {batteryLevel}
         <small className="text-sm">%</small>
       </div>

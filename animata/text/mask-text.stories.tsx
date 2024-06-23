@@ -21,8 +21,8 @@ export const Primary: Story = {
       "I'm a selectively skilled full-stack developer with keen enthusiasm for mobile/web application.",
     originalText: (
       <p>
-        I'm a <span className="text-rose-900">selectively skilled</span> product
-        designer with strong focus.
+        I{"&apos;"}m a <span className="text-rose-900">selectively skilled</span> product designer
+        with strong focus.
       </p>
     ),
   },

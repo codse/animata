@@ -22,10 +22,8 @@ const maxScore = 10;
 const lapCount = 5;
 
 const getScore = (lastScore?: GameInfo): GameInfo => {
-  const teamOneScore =
-    (lastScore?.teamOne.score ?? 0) + Math.floor(Math.random() * 3) + 1;
-  const teamTwoScore =
-    (lastScore?.teamTwo.score ?? 0) + Math.floor(Math.random() * 3) + 1;
+  const teamOneScore = (lastScore?.teamOne.score ?? 0) + Math.floor(Math.random() * 3) + 1;
+  const teamTwoScore = (lastScore?.teamTwo.score ?? 0) + Math.floor(Math.random() * 3) + 1;
 
   return {
     lap: (lastScore?.lap ?? 1) + 1,
@@ -35,18 +33,14 @@ const getScore = (lastScore?: GameInfo): GameInfo => {
       name: "NPL",
       score: teamOneScore % maxScore,
       win:
-        teamOneScore >= maxScore
-          ? (lastScore?.teamOne.win ?? 0) + 1
-          : lastScore?.teamOne.win ?? 0,
+        teamOneScore >= maxScore ? (lastScore?.teamOne.win ?? 0) + 1 : lastScore?.teamOne.win ?? 0,
     },
     teamTwo: {
       name: "USA",
       icon: "🇺🇸",
       score: teamTwoScore % maxScore,
       win:
-        teamTwoScore >= maxScore
-          ? (lastScore?.teamTwo.win ?? 0) + 1
-          : lastScore?.teamTwo.win ?? 0,
+        teamTwoScore >= maxScore ? (lastScore?.teamTwo.win ?? 0) + 1 : lastScore?.teamTwo.win ?? 0,
     },
   };
 };
@@ -74,12 +68,7 @@ const Score = ({ score }: { score: string }) => (
 );
 
 const Diamond = ({ style }: { style: string }) => (
-  <div
-    className={cn(
-      "absolute h-1.5 w-1.5 rotate-45 transform bg-gray-500",
-      style,
-    )}
-  />
+  <div className={cn("absolute h-1.5 w-1.5 rotate-45 transform bg-gray-500", style)} />
 );
 
 export default function LiveScore() {
@@ -128,20 +117,12 @@ export default function LiveScore() {
       <Header game={game} />
       <div className="flex w-full flex-1 items-center justify-center gap-2 px-4">
         <div className="flex">
-          <Score
-            score={String(game.teamOne.score).padStart(2, "0").charAt(0)}
-          />
-          <Score
-            score={String(game.teamOne.score).padStart(2, "0").charAt(1)}
-          />
+          <Score score={String(game.teamOne.score).padStart(2, "0").charAt(0)} />
+          <Score score={String(game.teamOne.score).padStart(2, "0").charAt(1)} />
         </div>
         <div className="flex">
-          <Score
-            score={String(game.teamTwo.score).padStart(2, "0").charAt(0)}
-          />
-          <Score
-            score={String(game.teamTwo.score).padStart(2, "0").charAt(1)}
-          />
+          <Score score={String(game.teamTwo.score).padStart(2, "0").charAt(0)} />
+          <Score score={String(game.teamTwo.score).padStart(2, "0").charAt(1)} />
         </div>
       </div>
 

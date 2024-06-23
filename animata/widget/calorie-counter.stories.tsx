@@ -1,6 +1,4 @@
-import CalorieCounter, {
-  testCalorieCounterProps,
-} from "@/animata/widget/calorie-counter";
+import CalorieCounter, { testCalorieCounterProps } from "@/animata/widget/calorie-counter";
 import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {

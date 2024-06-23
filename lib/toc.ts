@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { toc } from "mdast-util-toc";
 import { remark } from "remark";
 import { visit } from "unist-util-visit";
@@ -10,7 +11,7 @@ function flattenNode(node: any) {
     if (!textTypes.includes(node.type)) return;
     p.push(node.value);
   });
-  return p.join(``);
+  return p.join("");
 }
 
 interface Item {
@@ -67,9 +68,7 @@ const getToc = () => (node: any, file: any) => {
 
 export type TableOfContents = Items;
 
-export async function getTableOfContents(
-  content: string,
-): Promise<TableOfContents> {
+export async function getTableOfContents(content: string): Promise<TableOfContents> {
   const result = await remark().use(getToc).process(content);
 
   return result.data;

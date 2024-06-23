@@ -111,22 +111,8 @@ const createDelay = ({
   return delay + (index + offset) * 50 + "ms";
 };
 
-const createAnimatedNodes = (
-  args: ReducedValue,
-  word: string,
-  index: number,
-): ReducedValue => {
-  const {
-    nodes,
-    offset,
-    wordsLength,
-    textLength,
-    mode,
-    direction,
-    duration,
-    delay,
-    blur,
-  } = args;
+const createAnimatedNodes = (args: ReducedValue, word: string, index: number): ReducedValue => {
+  const { nodes, offset, wordsLength, textLength, mode, direction, duration, delay, blur } = args;
 
   const isWordMode = mode === "word";
   const isUp = direction === "up";
@@ -137,10 +123,10 @@ const createAnimatedNodes = (
     "inline-block text-foreground opacity-0 transition-all ease-minor-spring fill-mode-forwards",
     {
       // Determine the animation direction
-      [`animate-[reveal-down]`]: !isUp && !blur,
-      [`animate-[reveal-up]`]: isUp && !blur,
-      [`animate-[reveal-down,content-blur]`]: !isUp && blur,
-      [`animate-[reveal-up,content-blur]`]: isUp && blur,
+      ["animate-[reveal-down]"]: !isUp && !blur,
+      ["animate-[reveal-up]"]: isUp && !blur,
+      ["animate-[reveal-down,content-blur]"]: !isUp && blur,
+      ["animate-[reveal-up,content-blur]"]: isUp && blur,
     },
     args.className,
   );

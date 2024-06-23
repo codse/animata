@@ -8,10 +8,6 @@ import { TailwindIndicator } from "@/components/tailwind-indicator";
 import { siteConfig } from "@/config/site";
 import { cn } from "@/lib/utils";
 
-interface AppLayoutProps {
-  children: React.ReactNode;
-}
-
 export const metadata: Metadata = {
   title: {
     default: siteConfig.name,
@@ -83,9 +79,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
     <>
       <html lang="en" suppressHydrationWarning>
         <head />
-        <body
-          className={cn("min-h-screen bg-background font-sans antialiased")}
-        >
+        <body className={cn("min-h-screen bg-background font-sans antialiased")}>
           <ThemeProvider
             attribute="class"
             defaultTheme="system"

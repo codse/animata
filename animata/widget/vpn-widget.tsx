@@ -16,10 +16,7 @@ interface VpnConnectionProps {
   defaultConnected?: boolean;
 }
 
-function SlidingButton({
-  initialConnected = false,
-  className,
-}: SlidingButtonProps) {
+function SlidingButton({ initialConnected = false, className }: SlidingButtonProps) {
   const [connected, setConnected] = useState(initialConnected);
 
   return (
@@ -47,17 +44,12 @@ function SlidingButton({
           },
         )}
       >
-        <strong className="select-none text-sm">
-          {connected ? "Connected" : "Disconnected"}
-        </strong>
+        <strong className="select-none text-sm">{connected ? "Connected" : "Disconnected"}</strong>
         <span
-          className={cn(
-            "-mt-1 inline-flex select-none items-center gap-1 text-xs font-semibold",
-            {
-              "text-blue-700/50": connected,
-              "text-red-700/50": !connected,
-            },
-          )}
+          className={cn("-mt-1 inline-flex select-none items-center gap-1 text-xs font-semibold", {
+            "text-blue-700/50": connected,
+            "text-red-700/50": !connected,
+          })}
         >
           {connected ? <ShieldCheck size={12} /> : <ShieldBan size={12} />}
           {connected ? "Secured" : "Not Secured"}
@@ -65,13 +57,10 @@ function SlidingButton({
       </div>
       <div className="flex h-12 w-8 items-center justify-center">
         <div
-          className={cn(
-            "h-3 w-3 rounded-full bg-green-500 transition-opacity",
-            {
-              "opacity-0 duration-300": !connected,
-              "opacity-100 group-hover:animate-pulse": connected,
-            },
-          )}
+          className={cn("h-3 w-3 rounded-full bg-green-500 transition-opacity", {
+            "opacity-0 duration-300": !connected,
+            "opacity-100 group-hover:animate-pulse": connected,
+          })}
         />
       </div>
     </div>
@@ -87,26 +76,12 @@ export default function VpnConnection({
 }: VpnConnectionProps) {
   return (
     <div className={className}>
-      <div
-        className={cn(
-          "group flex size-52 flex-col rounded-3xl bg-blue-900 p-0.5",
-        )}
-      >
+      <div className={cn("group flex size-52 flex-col rounded-3xl bg-blue-900 p-0.5")}>
         <div className="flex items-center gap-2 px-4 pb-2 pt-4">
           <FlagIcon size={24} className="fill-yellow-500 text-yellow-500" />
-          <h3
-            className={cn(
-              "text-xl font-semibold tracking-wide text-yellow-500",
-            )}
-          >
-            {userName}
-          </h3>
+          <h3 className={cn("text-xl font-semibold tracking-wide text-yellow-500")}>{userName}</h3>
         </div>
-        <div
-          className={cn(
-            "group flex w-full flex-1 flex-col gap-1 rounded-[22px] bg-white p-3",
-          )}
-        >
+        <div className={cn("group flex w-full flex-1 flex-col gap-1 rounded-[22px] bg-white p-3")}>
           <div
             className={cn(
               "inline-flex max-w-fit items-center justify-center gap-1 rounded-xl bg-green-100 px-2 text-sm font-semibold",
@@ -117,9 +92,7 @@ export default function VpnConnection({
           </div>
           <h2 className={cn("mt-2 text-4xl font-semibold text-zinc-900")}>
             {netSpeed}
-            <sup className={cn("font-bold tracking-tighter text-gray-700/50")}>
-              mb
-            </sup>
+            <sup className={cn("font-bold tracking-tighter text-gray-700/50")}>mb</sup>
           </h2>
           <div className="mt-auto">
             <SlidingButton initialConnected={defaultConnected} />

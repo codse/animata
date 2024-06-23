@@ -30,7 +30,7 @@ export function DocsSidebarNav({ items }: DocsSidebarNavProps) {
               className="cursor-pointer"
             >
               <h4 className="mb-1 flex items-center gap-1 rounded-md py-1 pr-2 text-sm font-semibold">
-                {!!Icon ? (
+                {Icon ? (
                   <Icon className="w-4" />
                 ) : (
                   <ChevronDown
@@ -80,10 +80,7 @@ interface DocsSidebarNavItemsProps {
   pathname: string | null;
 }
 
-export function DocsSidebarNavItems({
-  items,
-  pathname,
-}: DocsSidebarNavItemsProps) {
+export function DocsSidebarNavItems({ items, pathname }: DocsSidebarNavItemsProps) {
   return items?.length ? (
     <div className="grid grid-flow-row auto-rows-max text-sm">
       {items.map((item, index) =>

@@ -57,8 +57,7 @@ export default function StorageWidget() {
       </div>
       <div className="flex justify-between font-bold text-gray-600">
         <div className="flex gap-1">
-          <p className="text-purple-400">5.90</p>|
-          <p className="text-pink-400">2.15</p>|
+          <p className="text-purple-400">5.90</p>|<p className="text-pink-400">2.15</p>|
           <p className="text-blue-400">2.59</p>
         </div>
         <div className="text-gray-300">GB</div>

@@ -14,12 +14,7 @@ export default function NavTabs({ tabs }: { tabs: string[] }) {
   return (
     <div className="flex flex-wrap items-center justify-center gap-4 rounded-md bg-violet-950 p-6">
       {tabs.map((tab) => (
-        <Tab
-          text={tab}
-          selected={selected === tab}
-          setSelected={setSelected}
-          key={tab}
-        />
+        <Tab text={tab} selected={selected === tab} setSelected={setSelected} key={tab} />
       ))}
     </div>
   );

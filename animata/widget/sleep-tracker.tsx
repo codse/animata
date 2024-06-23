@@ -110,11 +110,7 @@ export default function SleepTracker({
         </div>
         <p className="text-gray-600 dark:text-white">Sleep Tracker</p>
       </div>
-      <img
-        className="h-20 w-full rounded-xl object-cover"
-        src={image}
-        alt="Sleep Tracker"
-      />
+      <img className="h-20 w-full rounded-xl object-cover" src={image} alt="Sleep Tracker" />
 
       <div className="graph-container">
         <BarChart className="pt-3" items={items} height={40} />

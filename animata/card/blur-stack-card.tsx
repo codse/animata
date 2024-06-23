@@ -82,27 +82,13 @@ export default function BlueStackCards() {
             >
               <div className="group h-full backdrop-blur-sm">
                 <h2 className="text-xl font-bold">{card.title}</h2>
-                <p className="text-base font-light">
-                  System of colors built out of brand.
-                </p>
+                <p className="text-base font-light">System of colors built out of brand.</p>
                 <div className="my-3 flex flex-col gap-4">
                   <Row color="bg-red-600" title="Red" value="Value: #C80036" />
-                  <Row
-                    color="bg-pink-600"
-                    title="Pink"
-                    value="Value: #FF0080"
-                  />
-                  <Row
-                    color="bg-green-600"
-                    title="Green"
-                    value="Value: #o01212"
-                  />
+                  <Row color="bg-pink-600" title="Pink" value="Value: #FF0080" />
+                  <Row color="bg-green-600" title="Green" value="Value: #o01212" />
 
-                  <Row
-                    color="bg-green-600"
-                    title="Orange"
-                    value="Value: #FF7F3E"
-                  />
+                  <Row color="bg-green-600" title="Orange" value="Value: #FF7F3E" />
                 </div>
               </div>
             </motion.div>

@@ -32,9 +32,7 @@ export default function FlightWidget() {
     <div className="relative flex h-52 w-52 overflow-hidden rounded-3xl text-black">
       <div className="relative w-16 items-center justify-evenly overflow-hidden bg-gradient-to-b from-blue-100 to-blue-300">
         <div className="full absolute bottom-0 left-full flex h-16 w-52 origin-bottom-left -rotate-90 items-center justify-center gap-3 bg-pink-100">
-          <div className="text-lg font-semibold tracking-widest text-red-700">
-            AIR CANADA
-          </div>
+          <div className="text-lg font-semibold tracking-widest text-red-700">AIR CANADA</div>
           <img
             src="https://seeklogo.com/images/A/air-canada-logo-A0180CCDB8-seeklogo.com.png"
             className="h-6 w-6"
@@ -56,18 +54,14 @@ export default function FlightWidget() {
             </div>
           </div>
         </div>
-        <div className="mt-2 font-bold tracking-tight text-teal-500">
-          Flight
-        </div>
+        <div className="mt-2 font-bold tracking-tight text-teal-500">Flight</div>
         <div className="flex items-center justify-between font-bold">
           <p>AC951</p>
           <p className="flex pr-2">
             <Armchair fill="black" /> 1A
           </p>
         </div>
-        <div className="mt-2 font-bold tracking-tight text-teal-500">
-          Date & time
-        </div>
+        <div className="mt-2 font-bold tracking-tight text-teal-500">Date & time</div>
         <div className="flex font-bold">
           <p>{formattedTime}</p>
         </div>

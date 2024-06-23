@@ -1,6 +1,4 @@
-import ExpenseTracker, {
-  spendingTrackerProps,
-} from "@/animata/widget/expense-tracker";
+import ExpenseTracker, { spendingTrackerProps } from "@/animata/widget/expense-tracker";
 import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {

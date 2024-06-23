@@ -16,6 +16,7 @@ interface ComponentPreviewProps extends React.HTMLAttributes<HTMLDivElement> {
   description?: string;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function CodeView({ children }: { children: React.ReactNode }) {
   const [codeString, setCodeString] = React.useState<string | null>(null);
   const codeRef = React.useRef<HTMLDivElement>(null);
@@ -49,16 +50,7 @@ function CodeView({ children }: { children: React.ReactNode }) {
   );
 }
 
-export function ComponentPreview({
-  name,
-  children,
-  className,
-  extractClassName,
-  extractedClassNames,
-  align = "center",
-  description,
-  ...props
-}: ComponentPreviewProps) {
+export function ComponentPreview({ name, className, ...props }: ComponentPreviewProps) {
   const [minHeight, setMinHeight] = React.useState<number>(350);
 
   const { resolvedTheme } = useTheme();

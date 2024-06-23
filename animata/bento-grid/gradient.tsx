@@ -40,9 +40,7 @@ function BentoCard({
             <p className="text-md line-clamp-1 font-bold">{title}</p>
           </div>
         </header>
-        <div className="flex-1 text-sm font-medium text-opacity-80">
-          {description}
-        </div>
+        <div className="flex-1 text-sm font-medium text-opacity-80">{description}</div>
         {children}
       </section>
     </MovingGradient>
@@ -54,11 +52,7 @@ function GetGradient() {
     <BentoCard
       title="Gradient"
       icon={<BarChart size={24} />}
-      description={
-        <span>
-          A gradient is a smooth transition from one color to another.
-        </span>
-      }
+      description={<span>A gradient is a smooth transition from one color to another.</span>}
       className="sm:col-span-1 sm:row-span-2"
       gradient="from-cyan-900 via-60% via-sky-600 to-indigo-600"
     >

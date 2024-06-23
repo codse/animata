@@ -62,9 +62,7 @@ export default function ExpenseTracker({
         ))}
       </div>
       <div className="mt-4">
-        <p className="text-xs tracking-wide text-muted-foreground">
-          THIS WEEK SPENDING
-        </p>
+        <p className="text-xs tracking-wide text-muted-foreground">THIS WEEK SPENDING</p>
         <p className="text-sm font-bold text-foreground">
           RS {Intl.NumberFormat().format(totalSpending)}
         </p>

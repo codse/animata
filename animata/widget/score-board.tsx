@@ -73,18 +73,14 @@ export default function ScoreBoard({
     <div className="group flex size-52 flex-col rounded-3xl border bg-background p-4 shadow-sm shadow-black/15 transition-all duration-700 dark:border-zinc-700">
       <p className="text-base text-foreground">
         Status:
-        <span className="font-semibold text-green-700 dark:text-green-500">
-          {" "}
-          Good{" "}
-        </span>
+        <span className="font-semibold text-green-700 dark:text-green-500"> Good </span>
       </p>
       <div className="w-full flex-1">
         <BarChart height={90} items={items} />
       </div>
       <h5 className="mt-4 text-sm text-muted-foreground">Overall Progress</h5>
       <p className="font-semibold text-foreground">
-        80%{" "}
-        <span className="text-sm text-muted-foreground">(score, progress)</span>
+        80% <span className="text-sm text-muted-foreground">(score, progress)</span>
       </p>
     </div>
   );

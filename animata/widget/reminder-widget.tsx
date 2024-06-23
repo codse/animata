@@ -20,9 +20,7 @@ export default function ReminderWidget() {
 
   const handleCheckboxChange = (data: string) => {
     setReminder((prev) =>
-      prev.includes(data)
-        ? prev.filter((remind) => remind !== data)
-        : [...prev, data],
+      prev.includes(data) ? prev.filter((remind) => remind !== data) : [...prev, data],
     );
   };
 
@@ -49,9 +47,7 @@ export default function ReminderWidget() {
               checked={!reminder.includes(data)}
               className="h-3 w-3 appearance-none rounded-full border-2 border-gray-700 checked:bg-blue-500"
             />
-            <p className="bg-transparent text-xs font-semibold capitalize text-white">
-              {data}
-            </p>
+            <p className="bg-transparent text-xs font-semibold capitalize text-white">{data}</p>
           </div>
         ))}
       </div>

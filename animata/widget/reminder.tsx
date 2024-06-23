@@ -9,22 +9,14 @@ export default function Reminder({ className }: { className?: string }) {
         className,
       )}
     >
-      <p className="text-center text-lg font-semibold text-foreground">
-        Reminder
-      </p>
+      <p className="text-center text-lg font-semibold text-foreground">Reminder</p>
 
       <div className="flex items-center justify-between gap-x-3 p-2">
         <div className="flex flex-1 flex-col items-center justify-center rounded-lg bg-purple-200 p-4 text-3xl font-semibold dark:bg-purple-400">
-          2
-          <p className="border-t border-background pt-2 text-center text-base font-normal">
-            Work
-          </p>
+          2<p className="border-t border-background pt-2 text-center text-base font-normal">Work</p>
         </div>
         <div className="flex flex-1 flex-col items-center justify-center rounded-lg bg-green-200 p-4 text-3xl font-semibold dark:bg-green-400">
-          3
-          <p className="border-t border-background pt-2 text-center text-base font-normal">
-            Home
-          </p>
+          3<p className="border-t border-background pt-2 text-center text-base font-normal">Home</p>
         </div>
       </div>
 

@@ -37,9 +37,7 @@ export default function DonutChart({
 
   const radius = size / 2 - Math.max(progressWidth, circleWidth) / 2;
   const circumference = Math.PI * radius * 2;
-  const percentage = shouldUseValue
-    ? circumference * ((100 - progress) / 100)
-    : circumference;
+  const percentage = shouldUseValue ? circumference * ((100 - progress) / 100) : circumference;
 
   return (
     <div className={className}>
@@ -58,7 +56,7 @@ export default function DonutChart({
           fill="transparent"
           stroke="currentColor"
           strokeWidth={`${circleWidth}px`}
-          strokeDasharray={`10px 0`}
+          strokeDasharray={"10px 0"}
           strokeDashoffset="0px"
           className={cn("duration-500", trackClassName)}
         />

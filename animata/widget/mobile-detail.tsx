@@ -24,32 +24,21 @@ const progressBarsData: ProgressBarData[] = [
     value: 50,
     max: 100,
     icon: (
-      <Volume1
-        size={10}
-        className="text-zinc-400 transition-colors group-hover:text-zinc-300"
-      />
+      <Volume1 size={10} className="text-zinc-400 transition-colors group-hover:text-zinc-300" />
     ),
   },
   {
     label: "Ram",
     value: 75,
     max: 100,
-    icon: (
-      <Cpu
-        size={10}
-        className="text-zinc-400 transition-colors group-hover:text-zinc-300"
-      />
-    ),
+    icon: <Cpu size={10} className="text-zinc-400 transition-colors group-hover:text-zinc-300" />,
   },
   {
     label: "Storage",
     value: 90,
     max: 100,
     icon: (
-      <Database
-        size={10}
-        className="text-zinc-400 transition-colors group-hover:text-zinc-300"
-      />
+      <Database size={10} className="text-zinc-400 transition-colors group-hover:text-zinc-300" />
     ),
   },
 ];
@@ -65,14 +54,9 @@ export default function MobileDetail() {
             key={`item-${bar.label}`}
             className="group relative flex flex-col-reverse overflow-hidden rounded-2xl bg-zinc-800"
           >
-            <div
-              className="w-full bg-stone-700"
-              style={{ height: `${percentage}%` }}
-            />
+            <div className="w-full bg-stone-700" style={{ height: `${percentage}%` }} />
             <div className="absolute inset-0 flex flex-col items-center justify-center">
-              {bar.icon && (
-                <div className="absolute left-2 top-2">{bar.icon}</div>
-              )}
+              {bar.icon && <div className="absolute left-2 top-2">{bar.icon}</div>}
               <p className="text-xs font-bold text-zinc-400 transition-colors group-hover:text-zinc-300">
                 {bar.label}
               </p>

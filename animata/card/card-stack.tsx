@@ -42,22 +42,14 @@ const CardStack = ({
             "absolute flex h-60 w-60 flex-col justify-between rounded-3xl border border-neutral-200 bg-white p-4 shadow-xl shadow-black/10 transition-transform dark:border-white/10 dark:bg-black dark:shadow-white/5 md:h-60 md:w-96",
           )}
           style={{
-            transform: `translateY(${index * -offset}px) scale(${
-              1 - index * scaleFactor
-            })`,
+            transform: `translateY(${index * -offset}px) scale(${1 - index * scaleFactor})`,
             zIndex: cards.length - index,
           }}
         >
-          <div className="font-normal text-gray-700 dark:text-neutral-200">
-            {card.content}
-          </div>
+          <div className="font-normal text-gray-700 dark:text-neutral-200">{card.content}</div>
           <div>
-            <p className="font-medium text-gray-500 dark:text-white">
-              {card.name}
-            </p>
-            <p className="font-normal text-gray-400 dark:text-neutral-200">
-              {card.designation}
-            </p>
+            <p className="font-medium text-gray-500 dark:text-white">{card.name}</p>
+            <p className="font-normal text-gray-400 dark:text-neutral-200">{card.designation}</p>
           </div>
         </div>
       ))}

@@ -43,9 +43,8 @@ interface Direction {
   iconType: ElementType;
 }
 
-function DirectionCard({
-  directionValues = testProps.directionValues,
-}: IDirectionCardProps) {
+const duration = 5000;
+function DirectionCard({ directionValues = testProps.directionValues }: IDirectionCardProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [iconState, setIconState] = useState({
     prevIconType: directionValues[directionValues.length - 1].iconType,
@@ -53,7 +52,6 @@ function DirectionCard({
     nextIconType: directionValues[1].iconType,
   });
   const [progress, setProgress] = useState(0);
-  const [duration, setDuration] = useState(5000);
 
   useEffect(() => {
     //this would change the states based on direction change. Currently set to setInterval.
@@ -92,15 +90,13 @@ function DirectionCard({
       clearInterval(changeDirectionInterval);
       clearInterval(progressInterval);
     };
-  }, [duration, directionValues]);
+  }, [directionValues]);
 
   const currentDirection = directionValues[currentIndex];
 
-  const renderIcon = (
-    IconComponent: ElementType,
-    size = 52,
-    color = "text-gray-300",
-  ) => <IconComponent size={size} className={cn("text-white", color)} />;
+  const renderIcon = (IconComponent: ElementType, size = 52, color = "text-gray-300") => (
+    <IconComponent size={size} className={cn("text-white", color)} />
+  );
   return (
     <div className="direction-card flex size-52 items-start justify-between rounded-3xl bg-black p-4">
       <div className="direction-container flex h-full w-[80%] flex-col items-center justify-center gap-3">
@@ -108,9 +104,7 @@ function DirectionCard({
           {currentDirection.distance}
           <span className="text-opacity-50">m</span>
         </p>
-        <p className="animate-pulse">
-          {renderIcon(iconState.currentIconType, 52, "text-white")}
-        </p>
+        <p className="animate-pulse">{renderIcon(iconState.currentIconType, 52, "text-white")}</p>
         <p className="text-md h-8 w-20 text-ellipsis break-all text-center text-gray-400">
           {currentDirection.to}
         </p>

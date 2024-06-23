@@ -26,17 +26,11 @@ const Marquee = ({ items, reverse, className }: CardProps) => {
         >
           <div className="flex">
             <div className="h-full w-60">
-              <img
-                src={image}
-                alt={name}
-                className="h-full w-full object-cover"
-              />
+              <img src={image} alt={name} className="h-full w-full object-cover" />
             </div>
             <div className="p-4 text-white">
               <span className="mb-1 block text-lg font-bold">{name}</span>
-              <span className="mb-2 block text-sm font-medium leading-loose">
-                Founder of BAC
-              </span>
+              <span className="mb-2 block text-sm font-medium leading-loose">Founder of BAC</span>
               <span className="block text-sm">{description} </span>
             </div>
           </div>
@@ -56,7 +50,7 @@ interface TestimonialProps {
 export default function ScrollingTestimonials({ data }: TestimonialProps) {
   return (
     <>
-      // Note: Slice the data E.g. data.slice(0, 3) to show only 3 items
+      {/* Note: Slice the data E.g. data.slice(0, 3) to show only 3 items */}
       <Marquee items={data} className="[--duration:10s]" />
       <Marquee items={data} reverse={true} className="[--duration:5s]" />
       <Marquee items={data} className="[--duration:15s]" />

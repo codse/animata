@@ -7,13 +7,7 @@ interface SectionItem {
   stretch?: boolean;
 }
 
-function Section({
-  label,
-  value,
-  color,
-  total,
-  stretch,
-}: SectionItem & { total: number }) {
+function Section({ label, value, color, total, stretch }: SectionItem & { total: number }) {
   return (
     <div
       className={cn("relative w-full rounded-md transition-all", color, {
@@ -69,10 +63,7 @@ const items = [
 ];
 
 // Calculate free space
-items[0].value = Math.max(
-  0,
-  total - items.slice(1).reduce((acc, item) => acc + item.value, 0),
-);
+items[0].value = Math.max(0, total - items.slice(1).reduce((acc, item) => acc + item.value, 0));
 
 export default function StorageStatus() {
   return (

@@ -14,11 +14,7 @@ const isDev = process.env.NODE_ENV !== "production";
 
 const createLinks = (category: string) => {
   return allDocs
-    .filter(
-      (doc) =>
-        doc.slug.startsWith(`/docs/${category}`) &&
-        doc.slug !== `/docs/${category}`,
-    )
+    .filter((doc) => doc.slug.startsWith(`/docs/${category}`) && doc.slug !== `/docs/${category}`)
     .map((doc) => ({
       title: doc.title,
       href: doc.slug,

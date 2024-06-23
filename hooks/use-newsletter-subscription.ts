@@ -1,8 +1,7 @@
 "use client";
 import { useState } from "react";
 
-const url =
-  process.env.NEXT_PUBLIC_SUPABASE_URL + "/rest/v1/prelaunch_subscribers";
+const url = process.env.NEXT_PUBLIC_SUPABASE_URL + "/rest/v1/prelaunch_subscribers";
 const apiKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
 export default function useNewsletterSubscription() {
@@ -35,7 +34,7 @@ export default function useNewsletterSubscription() {
     try {
       const response = await fetch(url, {
         method: "POST",
-        // @ts-ignore
+        // @ts-expect-error - Types for custom headers are not defined in fetch types
         headers: {
           apikey: apiKey,
           Authorization: "Bearer " + apiKey,

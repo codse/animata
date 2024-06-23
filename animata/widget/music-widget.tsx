@@ -1,15 +1,7 @@
 "use client";
 
 import { absoluteUrl, cn } from "@/lib/utils";
-import {
-  Music,
-  Music2,
-  Music3,
-  Pause,
-  Play,
-  SkipBack,
-  SkipForward,
-} from "lucide-react";
+import { Music, Music2, Music3, Pause, Play, SkipBack, SkipForward } from "lucide-react";
 import { useState } from "react";
 
 const songs = [
@@ -40,9 +32,7 @@ export default function MusicWidget() {
   };
 
   const handlePrev = () => {
-    setCurrentSong(
-      (prevValue) => (prevValue - 1 + songs.length) % songs.length,
-    );
+    setCurrentSong((prevValue) => (prevValue - 1 + songs.length) % songs.length);
   };
 
   const song = songs[currentSong];
@@ -86,10 +76,7 @@ export default function MusicWidget() {
             />
           </div>
         </div>
-        <p
-          title={title}
-          className="line-clamp-1 w-full text-lg font-bold leading-none"
-        >
+        <p title={title} className="line-clamp-1 w-full text-lg font-bold leading-none">
           {title}
         </p>
         <p

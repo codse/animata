@@ -1,6 +1,4 @@
-import SleepTracker, {
-  testSleepTrackerProps,
-} from "@/animata/widget/sleep-tracker";
+import SleepTracker, { testSleepTrackerProps } from "@/animata/widget/sleep-tracker";
 import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {

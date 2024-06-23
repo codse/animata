@@ -31,13 +31,8 @@ const formatTime = (totalMinutes: number) => {
   return `${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
 };
 
-const StudyTimer: React.FC<StudyTimerProps> = ({
-  segments = testStudyTimerProps.segments,
-}) => {
-  const totalMinutes = segments.reduce(
-    (acc, segment) => acc + segment.value,
-    0,
-  );
+const StudyTimer: React.FC<StudyTimerProps> = ({ segments = testStudyTimerProps.segments }) => {
+  const totalMinutes = segments.reduce((acc, segment) => acc + segment.value, 0);
   const time = formatTime(totalMinutes);
 
   return (
@@ -82,10 +77,7 @@ const StudyTimer: React.FC<StudyTimerProps> = ({
   );
 };
 
-const SegmentBar: React.FC<{ segment: Segment; totalSum: number }> = ({
-  segment,
-  totalSum,
-}) => {
+const SegmentBar: React.FC<{ segment: Segment; totalSum: number }> = ({ segment, totalSum }) => {
   const widthPercent = (segment.value / totalSum) * 100;
 
   return (

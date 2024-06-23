@@ -71,9 +71,7 @@ function EventCard({ date }: { date: CalendarEvent; hides: boolean }) {
       <div className={cn("h-8 w-1 rounded-sm", date.barColor)}></div>
       <div className="flex-col items-center justify-center">
         <h4 className={cn("text-sm font-bold", date.color)}>{date.title}</h4>
-        <p className={cn("whitespace-pre text-xs", date.dateColor)}>
-          {date.time}
-        </p>
+        <p className={cn("whitespace-pre text-xs", date.dateColor)}>{date.time}</p>
       </div>
     </div>
   );
@@ -120,9 +118,7 @@ export default function CalendarEvent({
           ))}
         </>
       ) : (
-        <div className="w-full text-center text-xs font-bold text-gray-500">
-          No more events
-        </div>
+        <div className="w-full text-center text-xs font-bold text-gray-500">No more events</div>
       )}
     </div>
   );

@@ -3,11 +3,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { CircleAlert } from "lucide-react";
 import { useState } from "react";
 
-export default function Modal({
-  modalSize = "lg",
-}: {
-  modalSize?: "sm" | "lg";
-}) {
+export default function Modal({ modalSize = "lg" }: { modalSize?: "sm" | "lg" }) {
   const [isOpen, setIsOpen] = useState(false);
   return (
     <div>
@@ -52,8 +48,8 @@ export default function Modal({
                   Welcome to the modal!
                 </h3>
                 <p className="mb-1 text-center">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
-                  do eiusmod tempor incididunt ut labore et dolore magna.
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+                  incididunt ut labore et dolore magna.
                 </p>
                 <div className="flex gap-2">
                   <button

@@ -5,9 +5,7 @@ interface IGetStartedButtonProps {
   text: string;
 }
 
-export default function GetStartedButton({
-  text = "Get started",
-}: IGetStartedButtonProps) {
+export default function GetStartedButton({ text = "Get started" }: IGetStartedButtonProps) {
   return (
     <div className="min-h-12 w-48">
       <button
