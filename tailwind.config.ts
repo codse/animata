@@ -68,6 +68,10 @@ const config = {
         150: "1.5",
       },
       keyframes: {
+        fill: {
+          "0%": { height: "0%" },
+          "100%": { height: "var(--progress-height)" },
+        },
         "accordion-down": {
           from: { height: "0" },
           to: { height: "var(--radix-accordion-content-height)" },
@@ -122,6 +126,7 @@ const config = {
         },
       },
       animation: {
+        fill: "fill 1s forwards",
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
         "marquee-horizontal": "marquee-x var(--duration) infinite linear",
