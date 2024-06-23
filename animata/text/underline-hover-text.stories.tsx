@@ -1,8 +1,7 @@
-import React from "react";
-import { Meta, StoryFn } from "@storybook/react";
 import UnderlineHoverText, {
   UnderlineHoverTextProps,
 } from "@/animata/text/underline-hover-text";
+import { Meta, StoryFn } from "@storybook/react";
 
 export default {
   title: "text/Underline hover text",
@@ -16,6 +15,7 @@ export default {
     fontWeight: { control: "text" },
     className: { control: "text" },
   },
+  tags: ["autodocs"],
 } satisfies Meta<typeof UnderlineHoverText>;
 
 const Template: StoryFn<UnderlineHoverTextProps> = (args) => (
