@@ -20,11 +20,13 @@ export const CardContainer = ({
     className,
     containerClassName,
     hoverEffect,
+    tiltEffect = true,
 }: {
     children?: React.ReactNode;
     className?: string;
     containerClassName?: string;
     hoverEffect?: boolean;
+    tiltEffect?: boolean;
 }) => {
     const containerRef = useRef<HTMLDivElement>(null);
     const [isMouseEntered, setIsMouseEntered] = useState(false);
@@ -37,7 +39,7 @@ export const CardContainer = ({
         setMousePosition(mousePosition);
         const x = (e.clientX - left - width / 2) / 25;
         const y = (e.clientY - top - height / 2) / 25;
-        containerRef.current.style.transform = `rotateY(${x}deg) rotateX(${y}deg)`;
+        tiltEffect && (containerRef.current.style.transform = `rotateY(${x}deg) rotateX(${y}deg)`);
     };
     const handleMouseEnter = (e: React.MouseEvent<HTMLDivElement>) => {
         setIsMouseEntered(true);
