@@ -21,7 +21,7 @@ export function DocsSidebarNav({ items }: DocsSidebarNavProps) {
     <div className="w-full">
       {items.map((item, index) => {
         const isOpen = !closed.has(item.title);
-        const Icon = item.icon && Icons[item.icon];
+        const Icon = item.icon && Icons[item.icon as keyof typeof Icons];
         return (
           <div key={index}>
             <Link
