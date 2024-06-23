@@ -95,6 +95,10 @@ const sidebarNav: SidebarNavItem[] = [
     items: createLinks("graphs"),
   },
   {
+    title: "Overlay",
+    items: createLinks("overlay"),
+  },
+  {
     title: "Button",
     items: createLinks("button"),
   },
