@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // contentlayer.config.ts
 import {
   ComputedFields,
