@@ -22,7 +22,6 @@ export const Primary: Story = {
     originalText: (
       <p>
         I{"&apos;"}m a <span className="text-rose-900">selectively skilled</span> product designer
-        with strong focus.
       </p>
     ),
   },

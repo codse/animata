@@ -57,7 +57,7 @@ export default function BlueStackCards() {
           <div
             key={`blur_card_${card.id}`}
             className={cn("absolute mx-auto", {
-              "blur-sm": index !== 0,
+              "blur-[2px]": index !== 0,
             })}
             style={{
               transform: `translateY(${index}px) translateX(-${index * 50}px)`,

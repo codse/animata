@@ -24,7 +24,7 @@ const Card = ({ show, reveal }: CardProps) => {
     <div className={cn("group h-60 w-48 [perspective:1000px]")}>
       <div
         className={cn(
-          "relative h-full transition-all delay-75 ease-linear [transform-style:preserve-3d] [transition-duration:1000ms] group-hover:[transform:rotateY(-180deg)]",
+          "relative h-full transition-all delay-75 duration-500 ease-linear [transform-style:preserve-3d] group-hover:[transform:rotateY(-180deg)]",
         )}
       >
         <div className={cn("bg-white", common)}>{show}</div>
