@@ -44,10 +44,7 @@ const createCopy = (source, destination, variables) => {
     encoding: "utf-8",
   });
 
-  const compiled = content.replace(
-    /{{([^{}]*)}}/g,
-    (_, key) => variables[key.trim()],
-  );
+  const compiled = content.replace(/{{([^{}]*)}}/g, (_, key) => variables[key.trim()]);
 
   fs.writeFileSync(destination, compiled, {
     flag: "wx",
@@ -122,41 +119,23 @@ const createCopy = (source, destination, variables) => {
     fs.mkdirSync(`content/docs/${variables.TypePath}`);
   }
 
-  if (
-    fs.existsSync(`animata/${variables.TypePath}/${variables.Filename}.tsx`)
-  ) {
+  if (fs.existsSync(`animata/${variables.TypePath}/${variables.Filename}.tsx`)) {
     console.log(
-      chalk.red(
-        `File "animata/${variables.TypePath}/${variables.Filename}.tsx" already exists.`,
-      ),
+      chalk.red(`File "animata/${variables.TypePath}/${variables.Filename}.tsx" already exists.`),
     );
     return;
   }
 
-  createCopy(
-    "doc",
-    `content/docs/${variables.TypePath}/${variables.Filename}.mdx`,
-    variables,
-  );
+  createCopy("doc", `content/docs/${variables.TypePath}/${variables.Filename}.mdx`, variables);
 
-  createCopy(
-    "component",
-    `animata/${variables.TypePath}/${variables.Filename}.tsx`,
-    variables,
-  );
+  createCopy("component", `animata/${variables.TypePath}/${variables.Filename}.tsx`, variables);
 
-  createCopy(
-    "story",
-    `animata/${variables.TypePath}/${variables.Filename}.stories.tsx`,
-    variables,
-  );
+  createCopy("story", `animata/${variables.TypePath}/${variables.Filename}.stories.tsx`, variables);
 
   if (shouldRegister) {
+    console.log("\n\nYou need to register the new type in the following file:\n");
     console.log(
-      "\n\nYou need to register the new type in the following file:\n",
-    );
-    console.log(
-      `${chalk.green(`config/docs.ts`)} - Add the new entry in ${chalk.blue(chalk.italic("docsConfig.sidebarNav"))}`,
+      `${chalk.green("config/docs.ts")} - Add the new entry in ${chalk.blue(chalk.italic("docsConfig.sidebarNav"))}`,
     );
   }
 })();
