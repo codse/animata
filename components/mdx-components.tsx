@@ -1,11 +1,11 @@
 "use client";
-
 import { ComponentProps, HTMLAttributes } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useMDXComponent } from "next-contentlayer/hooks";
 import { NpmCommands } from "types/unist";
 
+import Modal from "@/animata/overlay/modal";
 import { Callout } from "@/components/callout";
 import { CodeBlockWrapper } from "@/components/code-block-wrapper";
 import { ComponentExample } from "@/components/component-example";
@@ -92,6 +92,7 @@ const components = {
     />
   ),
   Image,
+  Modal,
   Callout,
   ComponentPreview,
   ComponentExample,
@@ -128,6 +129,7 @@ const components = {
       {...props}
     />
   ),
+
   TabsContent: ({ className, ...props }: ComponentProps<typeof TabsContent>) => (
     <TabsContent
       className={cn(
