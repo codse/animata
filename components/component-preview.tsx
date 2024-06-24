@@ -1,12 +1,11 @@
 "use client";
 
 import * as React from "react";
-
-import { Icons } from "@/components/icons";
+import { useTheme } from "next-themes";
 
 import { CopyButton } from "@/components/copy-button";
+import { Icons } from "@/components/icons";
 import { cn } from "@/lib/utils";
-import { useTheme } from "next-themes";
 
 interface ComponentPreviewProps extends React.HTMLAttributes<HTMLDivElement> {
   name: string;
@@ -16,7 +15,7 @@ interface ComponentPreviewProps extends React.HTMLAttributes<HTMLDivElement> {
   description?: string;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+// eslint-disable-next-line unused-imports/no-unused-vars
 function CodeView({ children }: { children: React.ReactNode }) {
   const [codeString, setCodeString] = React.useState<string | null>(null);
   const codeRef = React.useRef<HTMLDivElement>(null);

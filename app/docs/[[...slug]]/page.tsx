@@ -1,11 +1,7 @@
-import { allDocs } from "contentlayer/generated";
-import { notFound } from "next/navigation";
-
-import "@/styles/mdx.css";
-import "@/styles/storybook.css";
-import { ChevronRightIcon, ExternalLinkIcon } from "@radix-ui/react-icons";
 import type { Metadata } from "next";
 import Link from "next/link";
+import { notFound } from "next/navigation";
+import { allDocs } from "contentlayer/generated";
 import Balancer from "react-wrap-balancer";
 
 import { Mdx } from "@/components/mdx-components";
@@ -16,6 +12,10 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { siteConfig } from "@/config/site";
 import { getTableOfContents } from "@/lib/toc";
 import { absoluteUrl, cn } from "@/lib/utils";
+import { ChevronRightIcon, ExternalLinkIcon } from "@radix-ui/react-icons";
+
+import "@/styles/mdx.css";
+import "@/styles/storybook.css";
 
 interface DocPageProps {
   params: {

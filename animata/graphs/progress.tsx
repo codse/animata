@@ -1,5 +1,6 @@
-import { cn } from "@/lib/utils";
 import { useEffect, useRef, useState } from "react";
+
+import { cn } from "@/lib/utils";
 
 export default function Progress({ progress }: { progress: number }) {
   const [width, setWidth] = useState(0);

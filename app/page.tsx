@@ -1,7 +1,9 @@
 "use client";
 
-import AnimatedGradientText from "@/animata/text/animated-gradient-text";
 import { useTheme } from "next-themes";
+
+import AnimatedGradientText from "@/animata/text/animated-gradient-text";
+
 import Curtain from "./_landing/curtain";
 import FAQSection from "./_landing/faq-section";
 import FeatureSection from "./_landing/feature-section";

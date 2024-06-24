@@ -1,12 +1,13 @@
 "use client";
 
-import { SidebarNavItem } from "@/types";
+import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { ChevronDown } from "lucide-react";
 
 import { cn } from "@/lib/utils";
-import { ChevronDown } from "lucide-react";
-import { useState } from "react";
+import { SidebarNavItem } from "@/types";
+
 import { Icons } from "./icons";
 
 export interface DocsSidebarNavProps {

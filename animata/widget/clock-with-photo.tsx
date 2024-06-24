@@ -1,8 +1,9 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 
-import { absoluteUrl, cn } from "@/lib/utils";
 import { useEffect, useState } from "react";
+
+import { absoluteUrl, cn } from "@/lib/utils";
 
 const getTime = () => {
   const now = new Date();

@@ -1,7 +1,8 @@
 "use client";
-import { cn } from "@/lib/utils";
-import { BellDot } from "lucide-react";
 import { useState } from "react";
+import { BellDot } from "lucide-react";
+
+import { cn } from "@/lib/utils";
 
 const reminders = [
   "Passport",

@@ -1,5 +1,6 @@
-import { cn } from "@/lib/utils";
 import { useEffect, useRef, useState } from "react";
+
+import { cn } from "@/lib/utils";
 
 interface BarChartProps {
   /**
@@ -20,11 +21,7 @@ interface BarChartProps {
   className?: string;
 }
 
-export default function BarChart({
-  items,
-  className,
-  height: providedHeight,
-}: BarChartProps) {
+export default function BarChart({ items, className, height: providedHeight }: BarChartProps) {
   const [{ height }, setSize] = useState({
     height: providedHeight ?? 12,
   });
@@ -62,10 +59,7 @@ export default function BarChart({
         const barHeight = shouldUseValue ? (clampedProgress / 100) * height : 0;
         return (
           <div
-            className={cn(
-              "flex h-full flex-1 flex-col-reverse",
-              item.containerClassName,
-            )}
+            className={cn("flex h-full flex-1 flex-col-reverse", item.containerClassName)}
             key={`bar_${index}`}
           >
             <div

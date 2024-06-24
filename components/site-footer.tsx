@@ -1,9 +1,10 @@
-import Marquee from "@/animata/container/marquee";
-import AnimatedGradientText from "@/animata/text/animated-gradient-text";
-import { Icons, builtWith } from "@/components/icons";
-import { cn } from "@/lib/utils";
 import { Anaheim } from "next/font/google";
 import Image from "next/image";
+
+import Marquee from "@/animata/container/marquee";
+import AnimatedGradientText from "@/animata/text/animated-gradient-text";
+import { builtWith, Icons } from "@/components/icons";
+import { cn } from "@/lib/utils";
 
 const titleFont = Anaheim({
   subsets: ["latin"],
@@ -17,12 +18,7 @@ export function SiteFooter() {
 
   return (
     <footer className="py-6 md:px-8 md:py-0">
-      <div
-        className={cn(
-          "px-4 md:invisible md:px-0 md:text-3xl",
-          titleFont.className,
-        )}
-      >
+      <div className={cn("px-4 md:invisible md:px-0 md:text-3xl", titleFont.className)}>
         Built using
       </div>
       <div

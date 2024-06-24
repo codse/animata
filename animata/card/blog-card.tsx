@@ -1,5 +1,6 @@
 "use client";
 import Image from "next/image";
+
 import { CardContainer } from "@/animata/card/card3d";
 interface IBlogCard {
   title: string;

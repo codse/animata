@@ -1,7 +1,8 @@
-import { cn } from "@/lib/utils";
+import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { CircleAlert } from "lucide-react";
-import { useState } from "react";
+
+import { cn } from "@/lib/utils";
 
 export default function Modal({ modalSize = "lg" }: { modalSize?: "sm" | "lg" }) {
   const [isOpen, setIsOpen] = useState(false);

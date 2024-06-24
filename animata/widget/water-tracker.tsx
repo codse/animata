@@ -1,7 +1,8 @@
 "use client";
-import { cn } from "@/lib/utils";
-import { Droplet } from "lucide-react";
 import { useEffect, useState } from "react";
+import { Droplet } from "lucide-react";
+
+import { cn } from "@/lib/utils";
 
 interface WaterTrackerProps {
   dailyGoal: number;

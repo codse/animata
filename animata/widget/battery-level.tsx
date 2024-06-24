@@ -1,5 +1,6 @@
-import DonutChart from "@/animata/graphs/donut-chart";
 import { AppleIcon, Laptop, Phone, Watch } from "lucide-react";
+
+import DonutChart from "@/animata/graphs/donut-chart";
 
 const items = [
   {

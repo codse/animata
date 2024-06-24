@@ -1,13 +1,14 @@
 "use client";
 
-import { motion } from "framer-motion";
 import { Anaheim } from "next/font/google";
+import { motion } from "framer-motion";
 
 import AnimatedGradientText from "@/animata/text/animated-gradient-text";
 import Counter from "@/animata/text/counter";
 import MirrorText from "@/animata/text/mirror-text";
 import TypingText from "@/animata/text/typing-text";
 import RemountOnMouseIn from "@/components/remount-on-mouse-in";
+
 import ModeSwitcher from "./mode-switcher";
 
 const titleFont = Anaheim({
@@ -49,10 +50,7 @@ const Egg = () => {
         </mask>
         <g mask="url(#cs_mask_1_misc-9)">
           <path fill="#fff" d="M200 0H0v200h200V0z"></path>
-          <path
-            fill="url(#paint0_linear_748_4999)"
-            d="M200 0H0v200h200V0z"
-          ></path>
+          <path fill="url(#paint0_linear_748_4999)" d="M200 0H0v200h200V0z"></path>
           <g filter="url(#filter0_f_748_4999)">
             <ellipse
               cx="143.777"
@@ -84,11 +82,7 @@ const Egg = () => {
           filterUnits="userSpaceOnUse"
         >
           <feFlood floodOpacity="0" result="BackgroundImageFix"></feFlood>
-          <feBlend
-            in="SourceGraphic"
-            in2="BackgroundImageFix"
-            result="shape"
-          ></feBlend>
+          <feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"></feBlend>
           <feGaussianBlur
             result="effect1_foregroundBlur_748_4999"
             stdDeviation="40"
@@ -126,24 +120,9 @@ const Egg = () => {
           y="0%"
           filterUnits="objectBoundingBox"
         >
-          <feTurbulence
-            baseFrequency="0.6"
-            numOctaves="5"
-            result="out1"
-            seed="4"
-          ></feTurbulence>
-          <feComposite
-            in="out1"
-            in2="SourceGraphic"
-            operator="in"
-            result="out2"
-          ></feComposite>
-          <feBlend
-            in="SourceGraphic"
-            in2="out2"
-            mode="overlay"
-            result="out3"
-          ></feBlend>
+          <feTurbulence baseFrequency="0.6" numOctaves="5" result="out1" seed="4"></feTurbulence>
+          <feComposite in="out1" in2="SourceGraphic" operator="in" result="out2"></feComposite>
+          <feBlend in="SourceGraphic" in2="out2" mode="overlay" result="out3"></feBlend>
         </filter>
       </defs>
     </motion.svg>
@@ -204,10 +183,7 @@ export default function HeroExamples() {
           className="flex h-24 flex-1 items-center justify-center overflow-hidden rounded-xl border border-gray-200 bg-gray-50 shadow-xl dark:border-gray-600 dark:bg-gray-900"
         >
           <div className={titleFont.className}>
-            <MirrorText
-              className="text-xl sm:text-3xl md:text-4xl"
-              text="Awesomeness"
-            />
+            <MirrorText className="text-xl sm:text-3xl md:text-4xl" text="Awesomeness" />
           </div>
         </motion.div>
 

@@ -1,5 +1,6 @@
-import { cn } from "@/lib/utils";
 import { BookOpen } from "lucide-react";
+
+import { cn } from "@/lib/utils";
 
 export default function WeeklyProgress() {
   const days = ["M", "T", "W", "TH", "F", "S", "SU"];

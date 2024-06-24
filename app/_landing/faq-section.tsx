@@ -1,6 +1,7 @@
 import BoldCopy from "@/animata/text/bold-copy";
-import Highlight from "./highlight";
 import { cn } from "@/lib/utils";
+
+import Highlight from "./highlight";
 
 const faq = [
   {
@@ -22,11 +23,10 @@ const faq = [
     question: "Why should I care?",
     answer: (
       <span>
-        Small animations can significantly enhance the user experience by making
-        websites more engaging and enjoyable. Animata offers a diverse
-        collection of <Highlight>animations</Highlight>,{" "}
-        <Highlight>effects</Highlight>, and <Highlight>interactions</Highlight>{" "}
-        to elevate your projects effortlessly.
+        Small animations can significantly enhance the user experience by making websites more
+        engaging and enjoyable. Animata offers a diverse collection of{" "}
+        <Highlight>animations</Highlight>, <Highlight>effects</Highlight>, and{" "}
+        <Highlight>interactions</Highlight> to elevate your projects effortlessly.
       </span>
     ),
   },
@@ -67,9 +67,7 @@ function FaqItem({ index }: { index: number }) {
     >
       <h3 className="relative flex flex-shrink-0 flex-wrap items-center gap-4">
         {count}
-        <span className="inline-block w-3/4 text-lg font-medium md:text-xl">
-          {item.question}
-        </span>
+        <span className="inline-block w-3/4 text-lg font-medium md:text-xl">{item.question}</span>
       </h3>
       <div className="flex gap-4">
         <div className="invisible h-0">{count}</div>
@@ -82,10 +80,7 @@ function FaqItem({ index }: { index: number }) {
 export default function FAQSection() {
   return (
     <section id="faq" className="relative mx-auto max-w-5xl">
-      <BoldCopy
-        text="FAQ"
-        className="mb-4 border border-gray-200 dark:border-zinc-800"
-      />
+      <BoldCopy text="FAQ" className="mb-4 border border-gray-200 dark:border-zinc-800" />
       {faq.map((_, index) => {
         return <FaqItem key={`item-${index}`} index={index} />;
       })}

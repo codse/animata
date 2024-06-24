@@ -1,8 +1,9 @@
 "use client";
 
-import { cn } from "@/lib/utils";
-import { Circle, Triangle } from "lucide-react";
 import { useEffect, useState } from "react";
+import { Circle, Triangle } from "lucide-react";
+
+import { cn } from "@/lib/utils";
 
 interface Team {
   score: number;

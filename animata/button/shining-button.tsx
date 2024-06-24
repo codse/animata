@@ -1,5 +1,6 @@
-import { cn } from "@/lib/utils";
 import { ArrowRight } from "lucide-react";
+
+import { cn } from "@/lib/utils";
 
 export default function ShiningButton() {
   const label = "See Calendar";

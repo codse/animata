@@ -1,7 +1,7 @@
 "use client";
 
-import { Armchair } from "lucide-react";
 import { useEffect, useState } from "react";
+import { Armchair } from "lucide-react";
 
 const getTime = () => {
   const now = new Date();

@@ -1,3 +1,5 @@
+import { Cabin as Font } from "next/font/google";
+
 import RingChart from "@/animata/graphs/ring-chart";
 import TypingText from "@/animata/text/typing-text";
 import WaveReveal from "@/animata/text/wave-reveal";
@@ -5,25 +7,9 @@ import Cycling from "@/animata/widget/cycling";
 import { Icons } from "@/components/icons";
 import RemountOnMouseIn from "@/components/remount-on-mouse-in";
 import { cn } from "@/lib/utils";
-import { Cabin as Font } from "next/font/google";
 
-function BentoCard({
-  children,
-  className,
-}: {
-  children: React.ReactNode;
-  className?: string;
-}) {
-  return (
-    <div
-      className={cn(
-        "relative h-full w-full rounded-2xl p-6",
-        className,
-      )}
-    >
-      {children}
-    </div>
-  );
+function BentoCard({ children, className }: { children: React.ReactNode; className?: string }) {
+  return <div className={cn("relative h-full w-full rounded-2xl p-6", className)}>{children}</div>;
 }
 
 const textFont = Font({
@@ -127,10 +113,7 @@ function Feather(props: { className?: string }) {
 }
 
 export default function FeatureSection() {
-  const titleClassName = cn(
-    "mb-3 text-2xl font-semibold text-foreground",
-    textFont.className,
-  );
+  const titleClassName = cn("mb-3 text-2xl font-semibold text-foreground", textFont.className);
 
   const descriptionClassName = "text-muted-foreground font-medium";
   return (
@@ -230,15 +213,11 @@ export default function FeatureSection() {
         {/** Code */}
         <div className="mt-3 font-mono text-sm">
           <div className="mt-2 line-clamp-1">
-            <span className="font-medium text-yellow-600 dark:text-yellow-500">
-              import
-            </span>{" "}
+            <span className="font-medium text-yellow-600 dark:text-yellow-500">import</span>{" "}
             <span className="transition-all group-hover:animate-pulse group-hover:text-blue-600 dark:group-hover:text-blue-400">
               BoldCopy
             </span>{" "}
-            <span className="font-medium text-yellow-600 dark:text-yellow-500">
-              from
-            </span>{" "}
+            <span className="font-medium text-yellow-600 dark:text-yellow-500">from</span>{" "}
             &quot;@/animata/components/text/bold-copy&quot;
           </div>
 
@@ -258,8 +237,8 @@ export default function FeatureSection() {
       <BentoCard className="group flex flex-col bg-green-100 dark:bg-zinc-900">
         <h4 className={titleClassName}>Regular updates</h4>
         <div>
-          We are constantly adding new animations and effects to the library.
-          You can subscribe to our newsletter to get notified.
+          We are constantly adding new animations and effects to the library. You can subscribe to
+          our newsletter to get notified.
         </div>
       </BentoCard>
 
@@ -273,42 +252,31 @@ export default function FeatureSection() {
         <h4 className={titleClassName}>Light weight</h4>
 
         <div className={cn(descriptionClassName, "flex gap-2")}>
-          <span>
-            Most of the effects are lightweight, single file, and built with
-            TailwindCSS.
-          </span>
+          <span>Most of the effects are lightweight, single file, and built with TailwindCSS.</span>
           <Feather className="h-20 w-20 text-yellow-500 transition-all duration-1000 ease-slow repeat-infinite group-hover:rotate-[720deg] md:absolute md:bottom-4 md:right-4" />
         </div>
       </BentoCard>
       <BentoCard className="flex flex-col bg-gray-100 p-3 dark:bg-zinc-900 lg:col-span-2 lg:col-start-2">
         <div className="flex-1 p-3">
-          No longer wasting hours 🕕 looking for the inspiration or trying to
-          write everything from scratch 📝.
+          No longer wasting hours 🕕 looking for the inspiration or trying to write everything from
+          scratch 📝.
         </div>
         <div className="rounded-sm bg-gray-50 px-3 py-2 font-mono text-sm text-black dark:bg-zinc-800 dark:text-white">
           <div>
-            <span className="font-semibold text-blue-400 dark:text-blue-200">
-              time.
-            </span>
+            <span className="font-semibold text-blue-400 dark:text-blue-200">time.</span>
             saved = <span className="font-bold text-blue-400">true</span>;
           </div>
           <span className="block">
-            <span className="font-semibold text-blue-400 dark:text-blue-200">
-              frustration
-            </span>
+            <span className="font-semibold text-blue-400 dark:text-blue-200">frustration</span>
             --;
           </span>
           <span className="block">
-            <span className="font-semibold text-blue-400 dark:text-blue-200">
-              happiness
-            </span>
+            <span className="font-semibold text-blue-400 dark:text-blue-200">happiness</span>
             ++;
           </span>
 
           <span className="block">
-            <span className="font-semibold text-blue-400 dark:text-blue-200">
-              productivity
-            </span>
+            <span className="font-semibold text-blue-400 dark:text-blue-200">productivity</span>
             ++;
           </span>
         </div>

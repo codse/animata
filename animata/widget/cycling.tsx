@@ -1,9 +1,10 @@
 "use client";
 
+import { BikeIcon } from "lucide-react";
+
 import Progress from "@/animata/graphs/progress";
 import SwapText from "@/animata/text/swap-text";
 import { cn } from "@/lib/utils";
-import { BikeIcon } from "lucide-react";
 
 function CardStack() {
   const backgroundCards = [

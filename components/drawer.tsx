@@ -1,11 +1,11 @@
-"use client"
+"use client";
 
-import { forwardRef } from "react"
-import { Drawer as DrawerPrimitive } from "vaul"
+import { forwardRef } from "react";
+import { Drawer as DrawerPrimitive } from "vaul";
 
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/utils";
 
-const DrawerTrigger = DrawerPrimitive.Trigger
+const DrawerTrigger = DrawerPrimitive.Trigger;
 
 const DrawerContent = forwardRef<
   React.ElementRef<typeof DrawerPrimitive.Content>,
@@ -17,7 +17,7 @@ const DrawerContent = forwardRef<
       ref={ref}
       className={cn(
         "fixed inset-x-0 bottom-0 z-50 mt-24 h-[96%] rounded-t-[10px] bg-background",
-        className
+        className,
       )}
       {...props}
     >
@@ -25,7 +25,7 @@ const DrawerContent = forwardRef<
       {children}
     </DrawerPrimitive.Content>
   </DrawerPrimitive.Portal>
-))
-DrawerContent.displayName = "DrawerContent"
+));
+DrawerContent.displayName = "DrawerContent";
 
-export { DrawerTrigger, DrawerContent }
+export { DrawerContent, DrawerTrigger };

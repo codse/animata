@@ -1,9 +1,9 @@
 "use client";
 
-import { useMDXComponent } from "next-contentlayer/hooks";
+import { ComponentProps, HTMLAttributes } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ComponentProps, HTMLAttributes } from "react";
+import { useMDXComponent } from "next-contentlayer/hooks";
 import { NpmCommands } from "types/unist";
 
 import { Callout } from "@/components/callout";
@@ -24,6 +24,7 @@ import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Event } from "@/lib/events";
 import { cn } from "@/lib/utils";
+
 import { baseComponents } from "./mdx-base-components";
 
 const components = {

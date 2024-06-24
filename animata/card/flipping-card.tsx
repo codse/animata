@@ -1,6 +1,7 @@
-import { cn } from "@/lib/utils";
 import { PlusCircle } from "lucide-react";
+
 import Marquee from "@/animata/container/marquee";
+import { cn } from "@/lib/utils";
 
 interface CardProps {
   show: React.ReactNode;

@@ -2,8 +2,9 @@
 
 import { useRef, useState } from "react";
 import { motion } from "framer-motion";
-import { cn } from "@/lib/utils";
+
 import { useMousePosition } from "@/hooks/use-mouse-position";
+import { cn } from "@/lib/utils";
 
 interface MaskTextProps extends React.HTMLAttributes<HTMLDivElement> {
   revealText: string;
