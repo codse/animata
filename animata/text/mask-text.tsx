@@ -10,11 +10,15 @@ interface MaskTextProps extends React.HTMLAttributes<HTMLDivElement> {
   revealText: string;
   originalText: React.ReactNode | string;
 }
-export default function MaskText({ revealText, originalText, className }: MaskTextProps) {
+export default function MaskText({
+  revealText = "Hello World!",
+  originalText = "Bye World!",
+  className,
+}: MaskTextProps) {
   const [isHovered, setIsHovered] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const { x, y } = useMousePosition(containerRef);
-  const size = isHovered ? 300 : 50;
+  const size = isHovered ? 500 : 50;
 
   const common = "flex h-full w-full items-center justify-center text-5xl font-bold leading-snug";
 
