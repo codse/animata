@@ -58,7 +58,7 @@ const CardDetails = ({ title, image, font, index }: CardDetailsProps) => {
       }
       reveal={
         <div className="flex w-full flex-col justify-between overflow-hidden py-4 text-sm">
-          <img src={image} className="size-32 px-2" />
+          <img alt="" src={image} className="size-32 px-2" />
           <Marquee className="font-serif text-5xl text-white" applyMask={false}>
             {font.split(" ")[0]}
           </Marquee>
