@@ -11,13 +11,13 @@ interface SpendingDetailsProps {
 }
 export const spendingTrackerProps: SpendingDetailsProps = {
   spending: [
-    { day: "M", amount: 12000 },
-    { day: "T", amount: 16000 },
-    { day: "W", amount: 42000 },
-    { day: "T", amount: 4000 },
-    { day: "F", amount: 28000 },
-    { day: "Sa", amount: 20000 },
-    { day: "Su", amount: 50000 },
+    { day: "M", amount: 700 },
+    { day: "T", amount: 160 },
+    { day: "W", amount: 500 },
+    { day: "T", amount: 300 },
+    { day: "F", amount: 1280 },
+    { day: "Sa", amount: 200 },
+    { day: "Su", amount: 600 },
   ],
 };
 
@@ -32,7 +32,7 @@ export default function ExpenseTracker({
         "flex h-52 w-52 flex-col rounded-3xl border bg-background p-4 dark:border-zinc-700",
       )}
     >
-      <h4 className="mb-1 font-semibold text-muted-foreground">
+      <h4 className="mb-1 text-sm font-semibold text-muted-foreground">
         {new Date().toLocaleString("default", { month: "long" }).toUpperCase()}{" "}
         {new Date().getFullYear()}
       </h4>
@@ -44,7 +44,7 @@ export default function ExpenseTracker({
           >
             <div className="mb-1 text-xs text-foreground">{item.day}</div>
             <div
-              className="h-20 w-3 rounded-full bg-gray-600"
+              className="h-20 w-3 rounded-full bg-gray-300 dark:bg-gray-600"
               style={{
                 position: "relative",
                 overflow: "hidden",
@@ -61,10 +61,10 @@ export default function ExpenseTracker({
           </div>
         ))}
       </div>
-      <div className="mt-4">
+      <div className="mt-3">
         <p className="text-xs tracking-wide text-muted-foreground">THIS WEEK SPENDING</p>
-        <p className="text-sm font-bold text-foreground">
-          RS {Intl.NumberFormat().format(totalSpending)}
+        <p className="text-xl font-black text-foreground">
+          ${Intl.NumberFormat().format(totalSpending)}
         </p>
       </div>
     </div>
