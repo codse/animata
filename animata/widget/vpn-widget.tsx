@@ -1,6 +1,6 @@
 "use client";
-import { useState } from "react";
 import { FlagIcon, ShieldBan, ShieldCheck } from "lucide-react";
+import { useState } from "react";
 
 import { cn } from "@/lib/utils";
 
@@ -45,7 +45,9 @@ function SlidingButton({ initialConnected = false, className }: SlidingButtonPro
           },
         )}
       >
-        <strong className="select-none text-sm">{connected ? "Connected" : "Disconnected"}</strong>
+        <strong className="select-none text-sm text-black">
+          {connected ? "Connected" : "Disconnected"}
+        </strong>
         <span
           className={cn("-mt-1 inline-flex select-none items-center gap-1 text-xs font-semibold", {
             "text-blue-700/50": connected,

@@ -4,14 +4,19 @@ import { cn } from "@/lib/utils";
 
 interface IGetStartedButtonProps {
   text: string;
+  className?: string;
 }
 
-export default function GetStartedButton({ text = "Get started" }: IGetStartedButtonProps) {
+export default function GetStartedButton({
+  text = "Get started",
+  className,
+}: IGetStartedButtonProps) {
   return (
     <div className="min-h-12 w-48">
       <button
         className={cn(
           "group flex h-12 w-40 items-center justify-center gap-3 rounded-lg bg-amber-100 p-2 font-bold transition-colors duration-100 ease-in-out hover:bg-orange-600",
+          className,
         )}
       >
         <span
