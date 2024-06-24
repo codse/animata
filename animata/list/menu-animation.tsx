@@ -4,7 +4,7 @@ interface MenuAnimationProps {
 }
 export default function MenuAnimation({ menuItems }: MenuAnimationProps) {
   return (
-    <div className="flex flex-col overflow-hidden p-4 px-10">
+    <div className="flex flex-col overflow-hidden px-10">
       {menuItems.map((item, index) => (
         <div key={index} className="group flex items-center">
           <div className="relative">
