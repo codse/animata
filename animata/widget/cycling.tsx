@@ -1,9 +1,10 @@
 "use client";
 
+import { BikeIcon } from "lucide-react";
+
 import Progress from "@/animata/graphs/progress";
 import SwapText from "@/animata/text/swap-text";
 import { cn } from "@/lib/utils";
-import { BikeIcon } from "lucide-react";
 
 function CardStack() {
   const backgroundCards = [
@@ -17,7 +18,7 @@ function CardStack() {
   const progress = 30;
 
   return (
-    <div className="relative mt-8">
+    <div className="relative w-full flex-1 place-content-end self-center">
       {backgroundCards.map((card, index) => (
         <div
           key={card}
@@ -43,14 +44,15 @@ function CardStack() {
   );
 }
 
-export default function Cycling({ className }: { className?: string }) {
+export default function Cycling({
+  className,
+  title = "Cycling",
+}: {
+  className?: string;
+  title?: string;
+}) {
   return (
-    <div
-      className={cn(
-        "group min-h-40 w-52 rounded-3xl bg-zinc-900 p-4",
-        className,
-      )}
-    >
+    <div className={cn("group flex h-52 w-52 flex-col rounded-3xl bg-zinc-900 p-4", className)}>
       <div className="flex justify-between gap-2">
         <div>
           <div className="rounded-full bg-yellow-400/10 p-2">
@@ -59,16 +61,14 @@ export default function Cycling({ className }: { className?: string }) {
         </div>
 
         <div className="flex-1 text-right">
-          <span className="block text-xl font-bold uppercase text-gray-400">
-            Cycling
-          </span>
+          <span className="block text-xl font-bold uppercase text-gray-400">{title}</span>
           <span className="-mt-1 block text-sm text-gray-300">2h 30m</span>
         </div>
       </div>
 
       <CardStack />
 
-      <div className="mt-3 flex items-center justify-center gap-2">
+      <div className="mt-1 flex items-center justify-center gap-2">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 47.5 47.5"
@@ -82,7 +82,7 @@ export default function Cycling({ className }: { className?: string }) {
               <path d="M0 38h38V0H0v38Z"></path>
             </clipPath>
           </defs>
-          <g clip-path="url(#a)" transform="matrix(1.25 0 0 -1.25 0 47.5)">
+          <g clipPath="url(#a)" transform="matrix(1.25 0 0 -1.25 0 47.5)">
             <path
               fill="#be1931"
               d="M36.885 25.166c0 5.45-4.418 9.868-9.867 9.868-3.308 0-6.227-1.633-8.018-4.129-1.79 2.496-4.71 4.129-8.017 4.129-5.45 0-9.868-4.418-9.868-9.868 0-.772.098-1.52.266-2.241C2.752 14.413 12.216 5.431 19 2.965c6.783 2.466 16.249 11.448 17.617 19.96.17.721.268 1.469.268 2.241"

@@ -1,16 +1,8 @@
+import { Airplay, BarChart, Cloud, Earth, GitCommit, GitGraph, Heart, Map } from "lucide-react";
+
 import Marquee from "@/animata/container/marquee";
 import { cn } from "@/lib/utils";
 import { Meta, StoryObj } from "@storybook/react";
-import {
-  Airplay,
-  BarChart,
-  Cloud,
-  Earth,
-  GitCommit,
-  GitGraph,
-  Heart,
-  Map,
-} from "lucide-react";
 
 const meta = {
   title: "Container/Marquee",
@@ -72,7 +64,7 @@ export const Primary: Story = {
   },
 
   render: (args) => (
-    <div className="relative flex h-full max-h-96 min-h-72 w-full min-w-72 max-w-xl items-center justify-center overflow-hidden rounded-3xl border">
+    <div className="relative flex h-full max-h-96 min-h-72 w-full min-w-72 max-w-xl items-center justify-center overflow-hidden rounded border bg-background">
       <Marquee {...args}>
         <Content />
       </Marquee>
@@ -83,7 +75,7 @@ export const Primary: Story = {
 export const Vertical: Story = {
   args: { vertical: true },
   render: (args) => (
-    <div className="relative flex h-full max-h-96 min-h-72 w-full min-w-72 max-w-xl items-center justify-center overflow-hidden rounded-md border">
+    <div className="relative flex h-full max-h-96 min-h-72 w-full min-w-72 max-w-xl items-center justify-center overflow-hidden rounded-md border bg-background">
       <Marquee className="items-center" {...args}>
         <Content />
       </Marquee>
@@ -96,7 +88,7 @@ export const Multiple: Story = {
   render: (args) => (
     <div
       className={cn(
-        "relative flex h-full max-h-96 min-h-72 w-full min-w-72 max-w-xl items-center justify-center overflow-hidden rounded-md border",
+        "relative flex h-full max-h-96 min-h-72 w-full min-w-72 max-w-xl items-center justify-center overflow-hidden rounded-md border bg-background",
         {
           "flex-row": args.vertical,
           "flex-col": !args.vertical,

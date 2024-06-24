@@ -1,5 +1,6 @@
-import { cn } from "@/lib/utils";
 import { HtmlHTMLAttributes } from "react";
+
+import { cn } from "@/lib/utils";
 
 interface PhotoBoothProps extends HtmlHTMLAttributes<HTMLDivElement> {
   collections: string[];

@@ -1,5 +1,6 @@
-import { cn } from "@/lib/utils";
 import { ComponentPropsWithoutRef } from "react";
+
+import { cn } from "@/lib/utils";
 
 interface MovingGradientProps extends ComponentPropsWithoutRef<"div"> {
   animated?: boolean;
@@ -15,10 +16,7 @@ export default function MovingGradient({
 }: MovingGradientProps) {
   const backgroundClassName = "pointer-events-none absolute h-full w-full";
   return (
-    <div
-      {...props}
-      className={cn("relative overflow-hidden bg-white", className)}
-    >
+    <div {...props} className={cn("relative overflow-hidden bg-white", className)}>
       <div
         className={cn(
           "bg-size bg-gradient-to-r from-yellow-500 from-30% via-yellow-700 via-50% to-pink-500 to-80% opacity-15",

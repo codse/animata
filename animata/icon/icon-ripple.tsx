@@ -1,5 +1,6 @@
-import { cn } from "@/lib/utils";
 import { Mic } from "lucide-react";
+
+import { cn } from "@/lib/utils";
 
 interface IconRippleProps extends React.HTMLAttributes<HTMLDivElement> {
   /**
@@ -44,9 +45,7 @@ export default function IconRipple({
     <div className={cn("relative flex items-center justify-center")}>
       <Icon size={iconSize} color={iconColor} />
       <div
-        className={cn(
-          `absolute -inset-4 rounded-full border-2 hover:animate-ping`,
-        )}
+        className={cn("absolute -inset-4 rounded-full border-2 hover:animate-ping")}
         style={{ ...customBorderStyle, ...insetStyle }}
       />
     </div>

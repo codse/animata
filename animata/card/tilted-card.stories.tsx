@@ -16,7 +16,8 @@ type Story = StoryObj<typeof meta>;
 
 export const Primary: Story = {
   args: {
-    title: "This is a primary card and you can also customize the card.",
+    title:
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
     className: "hover:bg-pink-500 hover:border-pink-500",
   },
 };

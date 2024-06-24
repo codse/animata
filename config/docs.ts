@@ -1,5 +1,6 @@
-import { MainNavItem, SidebarNavItem } from "@/types";
 import { allDocs } from "contentlayer/generated";
+
+import { MainNavItem, SidebarNavItem } from "@/types";
 
 interface DocsConfig {
   mainNav: MainNavItem[];
@@ -10,13 +11,11 @@ const sortAlphabetically = (a: SidebarNavItem, b: SidebarNavItem) => {
   return a.title.toLowerCase().localeCompare(b.title.toLowerCase());
 };
 
+const isDev = process.env.NODE_ENV !== "production";
+
 const createLinks = (category: string) => {
   return allDocs
-    .filter(
-      (doc) =>
-        doc.slug.startsWith(`/docs/${category}`) &&
-        doc.slug !== `/docs/${category}/index`,
-    )
+    .filter((doc) => doc.slug.startsWith(`/docs/${category}`) && doc.slug !== `/docs/${category}`)
     .map((doc) => ({
       title: doc.title,
       href: doc.slug,
@@ -48,6 +47,7 @@ const sidebarNav: SidebarNavItem[] = [
   },
   {
     title: "Text",
+
     items: createLinks("text"),
   },
   {
@@ -63,8 +63,8 @@ const sidebarNav: SidebarNavItem[] = [
     items: createLinks("layout"),
   },
   {
-    title: "List item",
-    items: createLinks("list-item"),
+    title: "List",
+    items: createLinks("list"),
   },
   {
     title: "Container",
@@ -75,27 +75,56 @@ const sidebarNav: SidebarNavItem[] = [
     items: createLinks("card"),
   },
   {
-
     title: "Icon",
     items: createLinks("icon"),
-
+  },
+  {
     title: "Progress",
     items: createLinks("progress"),
-  },
-  {
-    title: "Bento grid",
-    items: createLinks("bento-grid"),
-  },
-  {
-    title: "Widgets",
-    items: createLinks("widget"),
   },
   {
     title: "Graphs",
     items: createLinks("graphs"),
   },
+  {
+    title: "Overlay",
+    items: createLinks("overlay"),
+  },
+  {
+    icon: "button",
+    title: "Button",
+    label: createLinks("button").length + "",
+    href: "/docs/button",
+    items: isDev ? createLinks("button") : [],
+  },
+  {
+    icon: "widget",
+    title: "Widget",
+    label: createLinks("widget").length + "",
+    href: "/docs/widget",
+    items: isDev ? createLinks("widget") : [],
+  },
+  {
+    icon: "bento",
+    title: "Bento grid",
+    label: createLinks("bento-grid").length + "",
+    href: "/docs/bento-grid",
+    items: isDev ? createLinks("bento-grid") : [],
+  },
+  {
+    title: "Carousel",
+    items: createLinks("carousel"),
+  },
+  {
+    title: "Hero",
+    items: createLinks("hero"),
+  },
+  {
+    title: "Scroll",
+    items: createLinks("scroll"),
+  },
 ]
-  .filter((category) => category.items.length > 0)
+  .filter((category) => Boolean(category.items?.length || category.label))
   .sort((a, b) => {
     if (a.title === "Getting Started") {
       return -1;
@@ -114,7 +143,7 @@ export const docsConfig: DocsConfig = {
     },
     {
       title: "Components",
-      href: sidebarNav[0].items?.[0]?.href,
+      href: sidebarNav[1].items?.[0]?.href ?? sidebarNav[1]?.href,
     },
     {
       title: "Contributing",
