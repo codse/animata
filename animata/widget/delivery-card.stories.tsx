@@ -18,7 +18,6 @@ export const Primary: Story = {
   args: {
     progress: 30,
     arrivalTime: "16 : 30",
-    status: "In Transit",
     location: "Newroad",
     timeAgo: "30min",
   },
