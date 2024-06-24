@@ -1,17 +1,10 @@
 import { ArrowRight } from "lucide-react";
-
-export default function MenuAnimation() {
-  const menuItems = [
-    "Home",
-    "Features",
-    "Company",
-    "FAQs",
-    "Terms of Use",
-    "Get In Touch",
-  ];
-
+interface MenuAnimationProps {
+  menuItems: string[];
+}
+export default function MenuAnimation({ menuItems }: MenuAnimationProps) {
   return (
-    <div className="flex flex-col overflow-hidden p-4">
+    <div className="flex flex-col overflow-hidden p-4 px-10">
       {menuItems.map((item, index) => (
         <div key={index} className="group flex items-center">
           <div className="relative">

@@ -15,5 +15,14 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Primary: Story = {
-  args: {},
+  args: {
+    menuItems: [
+      "Home",
+      "Features",
+      "Company",
+      "FAQs",
+      "Terms of Use",
+      "Get In Touch",
+    ],
+  },
 };
