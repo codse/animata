@@ -1,1 +1,4 @@
 /components/ui
+public/
+.next/
+.contentlayer/
