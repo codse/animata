@@ -4,6 +4,7 @@ export default function Profile() {
   return (
     <div className="group flex h-52 w-52 flex-col items-center justify-center rounded-3xl bg-cyan-200 p-4 shadow-sm transition-all duration-300 hover:shadow-black/25 dark:bg-zinc-800">
       <img
+        alt=""
         src="https://sm.ign.com/ign_nordic/cover/a/avatar-gen/avatar-generations_prsz.jpg"
         className="h-16 w-16 rounded-full duration-300 ease-in-out hover:scale-125"
       />

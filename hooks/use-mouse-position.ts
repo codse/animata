@@ -20,7 +20,7 @@ export function useMousePosition(ref: React.RefObject<HTMLElement>) {
         ref.current.removeEventListener("mousemove", handleMouseMove);
       }
     };
-  }, []);
+  }, [ref]);
 
   return position;
 }

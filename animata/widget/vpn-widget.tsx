@@ -1,6 +1,6 @@
 "use client";
-import { FlagIcon, ShieldBan, ShieldCheck } from "lucide-react";
 import { useState } from "react";
+import { FlagIcon, ShieldBan, ShieldCheck } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
