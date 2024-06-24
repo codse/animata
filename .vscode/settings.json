@@ -2,5 +2,8 @@
   "typescript.experimental.updateImportsOnPaste": true,
   "javascript.preferences.importModuleSpecifierEnding": "minimal",
   "javascript.preferences.importModuleSpecifier": "non-relative",
-  "javascript.preferences.quoteStyle": "double"
+  "javascript.preferences.quoteStyle": "double",
+  "typescript.preferences.importModuleSpecifier": "non-relative",
+  "typescript.preferences.importModuleSpecifierEnding": "minimal",
+  "typescript.preferences.quoteStyle": "double"
 }
