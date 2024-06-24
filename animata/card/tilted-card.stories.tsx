@@ -16,8 +16,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Primary: Story = {
   args: {
-    title:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-    className: "hover:bg-pink-500 hover:border-pink-500",
+    title: "Lorem ipsum.",
+    className: "hover:bg-blue-400 hover:border-blue-400 ",
   },
 };

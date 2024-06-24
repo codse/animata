@@ -7,7 +7,7 @@ export default function TiltCard({ title, className }: TiltCardProps) {
   return (
     <div
       className={cn(
-        "hover:scale-300 max-h-fit w-[320px] transform rounded-lg border-2 p-3 text-justify transition-all duration-700 ease-in hover:-rotate-6 hover:bg-indigo-200 hover:shadow-xl hover:hue-rotate-30",
+        "max-h-fit transform rounded-full border-2 border-gray-200 bg-gray-200 p-2 px-6 transition-all duration-500 ease-out hover:-rotate-2 hover:scale-110 hover:text-white hover:shadow-xl",
         className,
       )}
     >

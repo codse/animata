@@ -15,7 +15,7 @@ const PhotoBooth = ({ collections, className, ...props }: PhotoBoothProps) => {
         {collections.map((image, index) => (
           <div
             key={`alt_${index}`}
-            className="relative h-[110px] w-[110px] transition-transform duration-700 group-hover:skew-y-6"
+            className="relative h-[110px] w-[110px] transition-transform duration-700"
           >
             <img
               src={image}
