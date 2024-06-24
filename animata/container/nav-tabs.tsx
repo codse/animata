@@ -1,6 +1,7 @@
-import { cn } from "@/lib/utils";
-import { motion } from "framer-motion";
 import { useState } from "react";
+import { motion } from "framer-motion";
+
+import { cn } from "@/lib/utils";
 
 interface TabProps {
   text: string;

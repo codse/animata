@@ -1,16 +1,8 @@
 "use client";
 
-import { DialogProps } from "@radix-ui/react-alert-dialog";
-import {
-  CircleIcon,
-  FileIcon,
-  LaptopIcon,
-  MoonIcon,
-  SunIcon,
-} from "@radix-ui/react-icons";
-import { useTheme } from "next-themes";
-import { useRouter } from "next/navigation";
 import * as React from "react";
+import { useRouter } from "next/navigation";
+import { useTheme } from "next-themes";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -24,6 +16,8 @@ import {
 } from "@/components/ui/command";
 import { docsConfig } from "@/config/docs";
 import { cn } from "@/lib/utils";
+import { DialogProps } from "@radix-ui/react-alert-dialog";
+import { CircleIcon, FileIcon, LaptopIcon, MoonIcon, SunIcon } from "@radix-ui/react-icons";
 
 export function CommandMenu({ ...props }: DialogProps) {
   const router = useRouter();

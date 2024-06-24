@@ -1,6 +1,6 @@
+import { useTheme } from "next-themes";
 import { motion, useMotionValue, useSpring } from "framer-motion";
 import { MoonIcon, SunIcon } from "lucide-react";
-import { useTheme } from "next-themes";
 
 export default function ModeSwitcher() {
   const { setTheme, resolvedTheme } = useTheme();

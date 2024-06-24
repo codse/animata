@@ -1,16 +1,8 @@
+import { Airplay, BarChart, Cloud, Earth, GitCommit, GitGraph, Heart, Map } from "lucide-react";
+
 import Marquee from "@/animata/container/marquee";
 import { cn } from "@/lib/utils";
 import { Meta, StoryObj } from "@storybook/react";
-import {
-  Airplay,
-  BarChart,
-  Cloud,
-  Earth,
-  GitCommit,
-  GitGraph,
-  Heart,
-  Map,
-} from "lucide-react";
 
 const meta = {
   title: "Container/Marquee",

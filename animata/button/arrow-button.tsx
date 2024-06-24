@@ -1,7 +1,8 @@
 "use client";
-import { cn } from "@/lib/utils";
-import { MoveRight } from "lucide-react";
 import React from "react";
+import { MoveRight } from "lucide-react";
+
+import { cn } from "@/lib/utils";
 
 interface ArrowButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   text: string;

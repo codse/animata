@@ -1,5 +1,5 @@
-import { motion } from "framer-motion";
 import { Anaheim } from "next/font/google";
+import { motion } from "framer-motion";
 
 import WaveReveal from "@/animata/text/wave-reveal";
 import { cn } from "@/lib/utils";

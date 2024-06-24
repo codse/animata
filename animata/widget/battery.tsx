@@ -1,7 +1,8 @@
 "use client";
-import { cn } from "@/lib/utils";
-import { BatteryMediumIcon } from "lucide-react";
 import { useEffect, useRef } from "react";
+import { BatteryMediumIcon } from "lucide-react";
+
+import { cn } from "@/lib/utils";
 
 const Battery = () => {
   const batteryLevel = 50;

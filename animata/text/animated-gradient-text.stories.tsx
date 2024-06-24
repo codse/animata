@@ -1,8 +1,8 @@
-import AnimatedGradientText from "@/animata/text/animated-gradient-text";
-import { Meta, StoryObj } from "@storybook/react";
 import { ArrowRight, Combine } from "lucide-react";
 
+import AnimatedGradientText from "@/animata/text/animated-gradient-text";
 import { Separator } from "@/components/ui/separator";
+import { Meta, StoryObj } from "@storybook/react";
 const meta = {
   title: "Text/Animated Gradient Text",
   component: AnimatedGradientText,

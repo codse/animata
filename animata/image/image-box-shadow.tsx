@@ -1,5 +1,6 @@
-import { cn } from "@/lib/utils";
 import { ImgHTMLAttributes } from "react";
+
+import { cn } from "@/lib/utils";
 
 interface ZoomImageProps extends ImgHTMLAttributes<HTMLImageElement> {
   shadowSize?: string;

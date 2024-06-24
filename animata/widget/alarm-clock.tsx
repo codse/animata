@@ -1,9 +1,10 @@
 "use client";
 
+import { useState } from "react";
+import { AlarmClockIcon } from "lucide-react";
+
 import ToggleSwitch from "@/animata/button/toggle-switch";
 import { cn } from "@/lib/utils";
-import { AlarmClockIcon } from "lucide-react";
-import { useState } from "react";
 
 interface AlarmProps {
   alarms: { id?: number; time: string; repetition: string }[];

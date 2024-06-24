@@ -1,7 +1,8 @@
 "use client";
-import { cn } from "@/lib/utils";
-import { ArrowUp, CornerUpLeft, CornerUpRight } from "lucide-react";
 import { ElementType, useEffect, useState } from "react";
+import { ArrowUp, CornerUpLeft, CornerUpRight } from "lucide-react";
+
+import { cn } from "@/lib/utils";
 
 interface IDirectionCardProps {
   directionValues: Direction[];

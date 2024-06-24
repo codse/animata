@@ -1,8 +1,9 @@
 "use client";
 
-import { cn } from "@/lib/utils";
-import { motion, useMotionValue, useSpring } from "framer-motion";
 import { useCallback, useEffect, useRef } from "react";
+import { motion, useMotionValue, useSpring } from "framer-motion";
+
+import { cn } from "@/lib/utils";
 
 function Number({
   value,
@@ -44,10 +45,7 @@ function Number({
       return;
     }
 
-    const timer = setTimeout(
-      update,
-      (total - index) * Math.floor(Math.random() * delay),
-    );
+    const timer = setTimeout(update, (total - index) * Math.floor(Math.random() * delay));
 
     return () => clearTimeout(timer);
   }, [value, isRaw, springValue, getHeight, index, total, delay]);
@@ -85,18 +83,10 @@ export default function Ticker({
 }) {
   const parts = String(value).trim().split("");
   const divRef = useRef<HTMLDivElement>(null);
-  const getHeight = useCallback(
-    () => divRef.current?.getBoundingClientRect().height ?? 0,
-    [],
-  );
+  const getHeight = useCallback(() => divRef.current?.getBoundingClientRect().height ?? 0, []);
 
   return (
-    <div
-      className={cn(
-        "relative overflow-hidden whitespace-pre tabular-nums",
-        className,
-      )}
-    >
+    <div className={cn("relative overflow-hidden whitespace-pre tabular-nums", className)}>
       <div className="absolute inset-0 flex min-w-fit">
         {parts.map((part, index) => (
           <Number

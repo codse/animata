@@ -1,8 +1,7 @@
 "use client";
 
-import { DropdownMenuTriggerProps } from "@radix-ui/react-dropdown-menu";
-import { CheckIcon, ClipboardIcon } from "lucide-react";
 import * as React from "react";
+import { CheckIcon, ClipboardIcon } from "lucide-react";
 import { NpmCommands } from "types/unist";
 
 import { Button, ButtonProps } from "@/components/ui/button";
@@ -14,6 +13,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Event, trackEvent } from "@/lib/events";
 import { cn } from "@/lib/utils";
+import { DropdownMenuTriggerProps } from "@radix-ui/react-dropdown-menu";
 
 interface CopyButtonProps extends ButtonProps {
   value: string;

@@ -1,5 +1,6 @@
-import { cn } from "@/lib/utils";
 import { Mic } from "lucide-react";
+
+import { cn } from "@/lib/utils";
 
 interface IconRippleProps extends React.HTMLAttributes<HTMLDivElement> {
   /**

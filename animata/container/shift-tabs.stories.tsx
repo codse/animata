@@ -1,5 +1,5 @@
-import { Meta, StoryObj } from "@storybook/react";
 import ShiftTabs from "@/animata/container/shift-tabs";
+import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
   title: "Container/Shift Tabs",

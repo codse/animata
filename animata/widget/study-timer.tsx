@@ -1,6 +1,7 @@
-import { cn } from "@/lib/utils";
-import { GraduationCap, XCircle } from "lucide-react";
 import React from "react";
+import { GraduationCap, XCircle } from "lucide-react";
+
+import { cn } from "@/lib/utils";
 
 export interface StudyTimerProps {
   segments: Segment[];

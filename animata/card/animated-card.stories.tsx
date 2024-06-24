@@ -1,5 +1,5 @@
-
 import { Meta, StoryObj } from "@storybook/react";
+
 import AnimatedCard3d from "./animated-card";
 
 const meta = {

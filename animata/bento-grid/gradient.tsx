@@ -1,5 +1,4 @@
-import MovingGradient from "@/animata/background/moving-gradient";
-import { cn } from "@/lib/utils";
+import { ReactNode } from "react";
 import {
   ArrowRight,
   BarChart,
@@ -10,7 +9,9 @@ import {
   Sun,
   TypeIcon,
 } from "lucide-react";
-import { ReactNode } from "react";
+
+import MovingGradient from "@/animata/background/moving-gradient";
+import { cn } from "@/lib/utils";
 
 function BentoCard({
   title,
