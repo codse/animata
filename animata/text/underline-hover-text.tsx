@@ -15,7 +15,7 @@ export interface UnderlineHoverTextProps {
 
 const UnderlineHoverText: React.FC<UnderlineHoverTextProps> = ({
   text,
-  textColor = "text-gray-900",
+  textColor = "text-yellow-600",
   hoverTextColor = "hover:text-white",
   hoverColor = "hover:after:bg-indigo-500",
   fontSize = "text-2xl",
@@ -29,7 +29,7 @@ const UnderlineHoverText: React.FC<UnderlineHoverTextProps> = ({
         fontSize,
         textColor,
         fontWeight,
-        "after:absolute after:bottom-0 after:left-0 after:h-1 after:w-full after:bg-gray-300",
+        "after:absolute after:bottom-0 after:left-0 after:h-1 after:w-full after:bg-gray-400",
         "after:transition-all after:duration-150",
         hoverTextColor,
         "hover:after:h-full",
