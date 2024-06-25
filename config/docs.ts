@@ -156,6 +156,10 @@ const sidebarNav: SidebarNavItem[] = [
     title: "Scroll",
     items: createLinks("scroll"),
   },
+  {
+    title: "Carousel",
+    items: createLinks("carousel"),
+  },
 ]
   .filter((category) => Boolean(category.items?.length || category.label))
   .sort((a, b) => {
