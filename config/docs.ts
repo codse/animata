@@ -169,11 +169,11 @@ const sidebarNav: SidebarNavItem[] = [
       return 1;
     }
 
-    if (a.title === "Developers") {
+    if (a.title === "Contributing") {
       return -1;
     }
 
-    if (b.title === "Developers") {
+    if (b.title === "Contributing") {
       return 1;
     }
 
