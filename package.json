@@ -11,8 +11,7 @@
     "storybook": "storybook dev -p 6006",
     "storybook:build": "storybook build -o public/preview",
     "animata:new": "node ./scripts/create-new.js",
-    "animata:sync-doc": "node ./scripts/update-contributing-doc.js",
-    "postinstall": "yarn animata:sync-doc && yarn prepare",
+    "postinstall": "yarn prepare",
     "shadcn:add": "npx shadcn-ui@latest add",
     "prepare": "husky"
   },
