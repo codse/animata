@@ -1,0 +1,54 @@
+---
+title: Contributing animations
+date: 2024-06-24
+description: Learn how to contribute animations to Animata.
+---
+
+## Generating
+
+Once you have the project set up, you can start contributing to Animata.
+
+The first step is to generate a new component. You can use the `yarn animata:new` command to create a new component. This command will ask you the following questions and generate the required files for you.
+
+```mdx
+? Enter a name for the new component ›
+```
+
+> Simply enter the name of the component you want to create.
+
+```mdx
+? Enter the description for the new component ›
+```
+
+> Provide a brief description of the component. It will be used in the documentation.
+
+```mdx
+? Select the type of component you want to create ›
+```
+
+> It will list the available types of components. You can select one of them or create a new type. If you select `+ Create a new type` then it will ask you to enter the name of the new type.
+
+```mdx
+? Enter the name for the new type ›
+```
+
+> Enter the name of the new type.
+
+If you create a new type, you will see the following message:
+
+```mdx
+You need to register the new type in the following file:
+
+config/docs.ts - Add the new entry in docsConfig.sidebarNav
+```
+
+Simply open the `config/docs.ts` file and add the new entry in the `docsConfig.sidebarNav` array.
+
+## Submitting
+
+1. Create a new branch.
+2. Commit your changes. We use [Conventional Commits](https://www.conventionalcommits.org/).
+3. Push the branch.
+4. Open a pull request.
+
+If you have any questions, feel free to reach out to us.

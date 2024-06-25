@@ -18,25 +18,19 @@ export default function FlipCard({
   ...props
 }: FlipCardProps) {
   const rotationClass = {
-    x: [
-      "group-hover:[transform:rotateX(180deg)]",
-      "[transform:rotateX(180deg)]",
-    ],
-    y: [
-      "group-hover:[transform:rotateY(180deg)]",
-      "[transform:rotateY(180deg)]",
-    ],
+    x: ["group-hover:[transform:rotateX(180deg)]", "[transform:rotateX(180deg)]"],
+    y: ["group-hover:[transform:rotateY(180deg)]", "[transform:rotateY(180deg)]"],
   };
   const self = rotationClass[rotate];
   return (
-    <div className={cn("group size-96", className)} {...props}>
+    <div className={cn("group size-96 [perspective:1000px]", className)} {...props}>
       <div
         className={cn(
           "relative h-full rounded-xl transition-all duration-500 [transform-style:preserve-3d]",
           self[0],
         )}
       >
-        <div className="absolute inset-[1px] h-full w-full">
+        <div className="absolute h-full w-full [backface-visibility:hidden]">
           <img
             src={image}
             alt="image"
@@ -45,7 +39,7 @@ export default function FlipCard({
         </div>
         <div
           className={cn(
-            "absolute inset-0 h-full w-full rounded-xl bg-black/80 text-center text-slate-200 [backface-visibility:hidden]",
+            "absolute h-full w-full rounded-xl bg-black/80 text-center text-slate-200 [backface-visibility:hidden]",
             self[1],
           )}
         >

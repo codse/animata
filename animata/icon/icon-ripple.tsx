@@ -3,6 +3,7 @@
 import { cn } from "@/lib/utils";
 import { Mic } from "lucide-react";
 
+
 interface IconRippleProps extends React.HTMLAttributes<HTMLDivElement> {
   /**
    * Icon we want to have.
@@ -48,6 +49,11 @@ export default function IconRipple({
       <Icon size={iconSize} color={iconColor} />
       <div
         className="absolute -inset-4 animate-ping rounded-full border-2"
+  return (
+    <div className={cn("relative flex items-center justify-center")}>
+      <Icon size={iconSize} color={iconColor} />
+      <div
+        className={cn("absolute -inset-4 rounded-full border-2 hover:animate-ping")}
         style={{ ...customBorderStyle, ...insetStyle }}
       />
     </div>
