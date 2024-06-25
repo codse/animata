@@ -1,15 +1,15 @@
-import BreakedDonutChart from "@/animata/graphs/breaked-donut-chart";
+import GaugeChart from "@/animata/graphs/gauge-chart";
 import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
-  title: "Graphs/Breaked Donut Chart",
-  component: BreakedDonutChart,
+  title: "Graphs/Gauge Chart",
+  component: GaugeChart,
   parameters: {
     layout: "centered",
   },
   tags: ["autodocs"],
   argTypes: {},
-} satisfies Meta<typeof BreakedDonutChart>;
+} satisfies Meta<typeof GaugeChart>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;

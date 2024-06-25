@@ -2,7 +2,7 @@ import { ReactNode, useEffect, useState } from "react";
 
 import { cn } from "@/lib/utils";
 
-interface BreakedDonutChartProps {
+interface GaugeChartProps {
   showValue?: boolean;
   size: number;
   gap: number;
@@ -16,7 +16,7 @@ interface BreakedDonutChartProps {
   children?: ReactNode;
 }
 
-export default function BreakedDonutChart({
+export default function GaugeChart({
   showValue,
   size,
   progress,
@@ -28,7 +28,7 @@ export default function BreakedDonutChart({
   rounded = true,
   className,
   children,
-}: BreakedDonutChartProps) {
+}: GaugeChartProps) {
   const [shouldUseValue, setShouldUseValue] = useState(false);
 
   useEffect(() => {
