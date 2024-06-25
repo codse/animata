@@ -18,23 +18,126 @@ interface CylinderProps {
   bgColor?: string;
 }
 
-const Circle = ({
-  height = "h-36",
-  width = "w-36",
+interface LineProps {
+  className?: string;
+  animationEnd: boolean;
+}
+
+function Circle({
+  height = "h-8 md:h-16",
+  width = "w-8 md:w-16",
   bgColor = "bg-yellow-500",
   borderRadius = "rounded-full",
-}: CircleProps) => <div className={cn(height, width, borderRadius, bgColor)} />;
+}: CircleProps) {
+  return <div className={cn(height, width, borderRadius, bgColor)} />;
+}
 
-const Cylinder = ({
+function Cylinder({
   text,
-  height = "h-36",
-  width = "w-96",
+  height = "h-8 md:h-16",
+  width = "w-24 md:w-48",
   bgColor = "bg-slate-100",
-}: CylinderProps) => (
-  <div className={cn("flex items-center justify-center rounded-full", height, width, bgColor)}>
-    <p className={cn("text-8xl font-bold tracking-wider text-purple-950")}>{text}</p>
-  </div>
-);
+}: CylinderProps) {
+  return (
+    <div className={cn("flex items-center justify-center rounded-full", height, width, bgColor)}>
+      <p className={cn("text-xl font-bold tracking-wider text-purple-950 md:text-6xl")}>{text}</p>
+    </div>
+  );
+}
+
+function LineOne({ className, animationEnd }: LineProps) {
+  return (
+    <div
+      className={cn(
+        className,
+        "duration-500",
+        animationEnd
+          ? "animate-out fade-out slide-out-to-left-full"
+          : "animate-in fade-in slide-in-from-right-full",
+      )}
+    >
+      <Circle /> <Cylinder bgColor="bg-purple-900" />
+      <Cylinder bgColor="bg-yellow-500" width="w-56 md:w-[600px]" />
+      <Cylinder bgColor="bg-yellow-500" />
+    </div>
+  );
+}
+
+function LineTwo({ className, animationEnd }: LineProps) {
+  return (
+    <div
+      className={cn(
+        className,
+        "duration-700",
+        animationEnd
+          ? "animate-out fade-out slide-out-to-right-full"
+          : "animate-in fade-in slide-in-from-left-full",
+      )}
+    >
+      <Circle bgColor="bg-green-500" />
+      <Cylinder text="Introducing" width="w-64 md:w-[800px]" />
+      <Circle bgColor="bg-green-500" borderRadius="rounded-t-full rounded-bl-full" />
+      <Circle bgColor="bg-green-500" />
+      <Cylinder bgColor="bg-purple-900" />
+    </div>
+  );
+}
+
+function LineThree({ className, animationEnd }: LineProps) {
+  return (
+    <div
+      className={cn(
+        className,
+        "duration-700",
+        animationEnd
+          ? "animate-out fade-out slide-out-to-left-full"
+          : "animate-in fade-in slide-in-from-right-full",
+      )}
+    >
+      <Cylinder bgColor="bg-blue-400" />
+      <Circle bgColor="bg-purple-900" borderRadius="rounded-t-full rounded-br-full" />
+      <Circle bgColor="bg-blue-400" /> <Cylinder text="the new" width="w-64 md:w-[600px]" />
+      <Circle bgColor="bg-purple-900" />
+      <Cylinder bgColor="bg-blue-400" />
+    </div>
+  );
+}
+
+function LineFour({ className, animationEnd }: LineProps) {
+  return (
+    <div
+      className={cn(
+        className,
+        "duration-700",
+        animationEnd
+          ? "animate-out fade-out slide-out-to-right-full"
+          : "animate-in fade-in slide-in-from-left-full",
+      )}
+    >
+      <Circle bgColor="bg-red-500" />
+      <Cylinder text="User Experience" width="w-96 md:w-[700px]" />
+      <Circle bgColor="bg-red-500" borderRadius="rounded-t-full rounded-br-full" />
+    </div>
+  );
+}
+
+function LineFive({ className, animationEnd }: LineProps) {
+  return (
+    <div
+      className={cn(
+        className,
+        animationEnd
+          ? "animate-out fade-out slide-out-to-left-full"
+          : "animate-in fade-in slide-in-from-right-full",
+      )}
+    >
+      <Cylinder bgColor="bg-purple-900" />
+      <Cylinder bgColor="bg-yellow-500" width="w-64 md:w-[700px]" />{" "}
+      <Circle bgColor="bg-yellow-500" />
+      <Cylinder bgColor="bg-purple-900" />
+    </div>
+  );
+}
 
 export default function ApkSplashScreen() {
   const [animationEnd, setAnimationEnd] = useState(false);
@@ -45,74 +148,20 @@ export default function ApkSplashScreen() {
     }, 3000);
     return () => clearTimeout(timer);
   }, []);
+
+  const common = "flex duration-1000 ease-out fill-mode-forwards";
+
   return (
     <div
       className={cn(
-        "flex h-screen w-screen flex-col items-center justify-center gap-3 overflow-hidden bg-purple-950",
+        "flex flex-col items-center justify-center gap-1 overflow-hidden bg-purple-950 py-4 md:gap-3",
       )}
     >
-      <div
-        className={cn(
-          "flex",
-          animationEnd ? "animate-end-slide-from-right" : "animate-slide-from-right",
-        )}
-      >
-        <Circle /> <Cylinder bgColor="bg-purple-900" />
-        <Cylinder bgColor="bg-yellow-500" width="w-[600px]" />
-        <Cylinder bgColor="bg-yellow-500" />
-      </div>
-      <div
-        className={cn(
-          "flex",
-          animationEnd
-            ? "animate-end-slide-from-left"
-            : "animate-slide-from-left opacity-0 delay-150",
-        )}
-      >
-        <Circle bgColor="bg-green-500" />
-        <Cylinder text="Introducing" width="w-[800px]" />
-        <Circle bgColor="bg-green-500" borderRadius="rounded-t-full rounded-bl-full" />
-        <Circle bgColor="bg-green-500" />
-        <Cylinder bgColor="bg-purple-900" />
-      </div>
-      <div
-        className={cn(
-          "flex",
-          animationEnd
-            ? "animate-end-slide-from-right"
-            : "animate-slide-from-right opacity-0 delay-300",
-        )}
-      >
-        <Cylinder bgColor="bg-blue-400" />
-        <Circle bgColor="bg-purple-900" borderRadius="rounded-t-full rounded-br-full" />
-        <Circle bgColor="bg-blue-400" /> <Cylinder text="the new" width="w-[600px]" />
-        <Circle bgColor="bg-purple-900" />
-        <Cylinder bgColor="bg-blue-400" />
-      </div>
-      <div
-        className={cn(
-          "flex",
-          animationEnd
-            ? "animate-end-slide-from-left"
-            : "animate-slide-from-left opacity-0 delay-500",
-        )}
-      >
-        <Circle bgColor="bg-red-500" />
-        <Cylinder text="Slack User Experience" width="w-[1300px]" />
-        <Circle bgColor="bg-red-500" borderRadius="rounded-t-full rounded-br-full" />
-      </div>
-      <div
-        className={cn(
-          "flex",
-          animationEnd
-            ? "animate-end-slide-from-right"
-            : "animate-slide-from-right opacity-0 delay-1000",
-        )}
-      >
-        <Cylinder bgColor="bg-purple-900" />
-        <Cylinder bgColor="bg-yellow-500" width="w-[700px]" /> <Circle bgColor="bg-yellow-500" />
-        <Cylinder bgColor="bg-purple-900" />
-      </div>
+      <LineOne className={common} animationEnd={animationEnd} />
+      <LineTwo className={common} animationEnd={animationEnd} />
+      <LineThree className={common} animationEnd={animationEnd} />
+      <LineFour className={common} animationEnd={animationEnd} />
+      <LineFive className={common} animationEnd={animationEnd} />
     </div>
   );
 }
