@@ -13,6 +13,10 @@ const config = {
       },
     },
     extend: {
+      backgroundImage: {
+        striped:
+          "repeating-linear-gradient(45deg, #3B3A3D, #3B3A3D 5px, transparent 5px, transparent 20px)",
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
@@ -126,6 +130,16 @@ const config = {
           from: { opacity: "0" },
           to: { opacity: "1" },
         },
+        "blink-red": {
+          "0%, 100%": {
+            backgroundColor: "rgba(239, 68, 68, 0.7)",
+            boxShadow: "0 0 30px 10px rgba(239, 68, 68, 0.5)",
+          },
+          "50%": {
+            backgroundColor: "rgba(239, 68, 68, 0.5)",
+            boxShadow: "0 0 30px 10px rgba(239, 68, 68, 1)",
+          },
+        },
       },
       animation: {
         fill: "fill 1s forwards",
@@ -136,6 +150,7 @@ const config = {
         "bg-position": "bg-position 3s infinite alternate",
         "pop-blob": "pop-blob 4s infinite",
         fadeIn: "fadeIn 0.5s ease-in",
+        "blink-red": "blink-red 1s infinite linear",
       },
       transitionTimingFunction: {
         slow: "cubic-bezier(.405, 0, .025, 1)",
