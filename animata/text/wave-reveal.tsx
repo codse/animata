@@ -63,7 +63,6 @@ const Word = ({
   delay,
   duration,
   className,
-  length,
 }: Pick<ReducedValue, "delay" | "duration" | "offset"> & {
   index: number;
   className: string;
@@ -84,7 +83,6 @@ const Word = ({
             className={cn({
               [className]: !isWordMode,
             })}
-            data-coords={[index, letterIndex, offset, length]}
             style={{
               animationDuration: `${duration}`,
               animationDelay: createDelay({
@@ -121,7 +119,7 @@ const createAnimatedNodes = (args: ReducedValue, word: string, index: number): R
   const isLast = index === length - 1;
 
   const className = cn(
-    "inline-block text-foreground opacity-0 transition-all ease-minor-spring fill-mode-forwards",
+    "inline-block opacity-0 transition-all ease-minor-spring fill-mode-forwards",
     {
       // Determine the animation direction
       ["animate-[reveal-down]"]: !isUp && !blur,
@@ -137,7 +135,6 @@ const createAnimatedNodes = (args: ReducedValue, word: string, index: number): R
       className={cn({
         [className]: isWordMode,
       })}
-      data-coords={[index, offset, length]}
       style={
         isWordMode
           ? {

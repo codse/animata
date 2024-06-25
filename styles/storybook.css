@@ -32,8 +32,15 @@
     @apply flex items-center justify-center;
 
     > div > div {
-      width: 90vw;
+      min-width: 90vw;
       @apply flex max-w-full items-center justify-center;
+    }
+
+    .innerZoomElementWrapper:has(.storybook-fix) {
+      @apply flow-root w-full;
+      > div {
+        @apply mx-auto my-3;
+      }
     }
   }
 

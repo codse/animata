@@ -110,7 +110,8 @@ const sidebarNav: SidebarNavItem[] = [
   {
     title: "Icon",
     items: createLinks("icon"),
-  },{
+  },
+  {
     title: "Progress",
     items: createLinks("progress"),
   },
@@ -142,10 +143,6 @@ const sidebarNav: SidebarNavItem[] = [
     label: -1 + createLinks("bento-grid").length + "",
     href: "/docs/bento-grid",
     items: isDev ? createLinks("bento-grid") : [],
-  },
-  {
-    title: "Carousel",
-    items: createLinks("carousel"),
   },
   {
     title: "Hero",
