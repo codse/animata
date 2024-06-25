@@ -150,6 +150,23 @@ const config = {
             boxShadow: "0 0 30px 10px rgba(239, 68, 68, 1)",
           },
         },
+
+        "slide-from-right": {
+          "0%": { transform: "translateX(100%)", opacity: "0" },
+          "100%": { transform: "translateX(0%)", opacity: "1" },
+        },
+        "end-slide-from-right": {
+          "0%": { transform: "translateX(0%)", opacity: "1" },
+          "100%": { transform: "translateX(-100%)", opacity: "0" },
+        },
+        "slide-from-left": {
+          "0%": { transform: "translateX(-100%)", opacity: "0" },
+          "100%": { transform: "translateX(0%)", opacity: "1" },
+        },
+        "end-slide-from-left": {
+          "0%": { transform: "translateX(0)", opacity: "1" },
+          "100%": { transform: "translateX(100%)", opacity: "0" },
+        },
       },
       animation: {
         fill: "fill 1s forwards",
@@ -162,6 +179,10 @@ const config = {
         flipWords: "flipWords 8s infinite",
         fadeIn: "fadeIn 0.5s ease-in",
         "blink-red": "blink-red 1s infinite linear",
+        "slide-from-left": "slide-from-left 1s ease-out forwards",
+        "slide-from-right": "slide-from-right 1s ease-out forwards",
+        "end-slide-from-left": "end-slide-from-left 1s ease-out forwards",
+        "end-slide-from-right": "end-slide-from-right 1s ease-out forwards",
       },
       transitionTimingFunction: {
         slow: "cubic-bezier(.405, 0, .025, 1)",
