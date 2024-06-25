@@ -8,16 +8,18 @@ interface DocsConfig {
 }
 
 const sortAlphabetically = (a: SidebarNavItem, b: SidebarNavItem) => {
-  return a.title.toLowerCase().localeCompare(b.title.toLowerCase());
+  return (a.sortId ?? a.title).toLowerCase().localeCompare((b.sortId ?? b.title).toLowerCase());
 };
 
 const isDev = process.env.NODE_ENV !== "production";
 
 const createLinks = (category: string) => {
   return allDocs
-    .filter((doc) => doc.slug.startsWith(`/docs/${category}`) && doc.slug !== `/docs/${category}`)
+    .filter((doc) => doc.slug.startsWith(`/docs/${category}`))
     .map((doc) => ({
+      // Make sure the index page is the first item
       title: doc.title,
+      sortId: doc.slug === `/docs/${category}` ? "000" : doc.title,
       href: doc.slug,
       items: [],
     }))
@@ -41,6 +43,37 @@ const sidebarNav: SidebarNavItem[] = [
       {
         title: "Changelog",
         href: "/docs/changelog",
+        items: [],
+      },
+    ],
+  },
+  {
+    title: "Contributing",
+    href: "/docs/contributing",
+    items: [
+      {
+        title: "Running Locally",
+        href: "/docs/contributing",
+        items: [],
+      },
+      {
+        title: "Adding animations",
+        href: "/docs/contributing/animations",
+        items: [],
+      },
+      {
+        title: "Folder structure",
+        href: "/docs/contributing/folder-structure",
+        items: [],
+      },
+      {
+        title: "Guidelines",
+        href: "/docs/contributing/guidelines",
+        items: [],
+      },
+      {
+        title: "Best practices",
+        href: "/docs/contributing/best-practices",
         items: [],
       },
     ],
@@ -93,21 +126,21 @@ const sidebarNav: SidebarNavItem[] = [
   {
     icon: "button",
     title: "Button",
-    label: createLinks("button").length + "",
+    label: -1 + createLinks("button").length + "",
     href: "/docs/button",
     items: isDev ? createLinks("button") : [],
   },
   {
     icon: "widget",
     title: "Widget",
-    label: createLinks("widget").length + "",
+    label: -1 + createLinks("widget").length + "",
     href: "/docs/widget",
     items: isDev ? createLinks("widget") : [],
   },
   {
     icon: "bento",
     title: "Bento grid",
-    label: createLinks("bento-grid").length + "",
+    label: -1 + createLinks("bento-grid").length + "",
     href: "/docs/bento-grid",
     items: isDev ? createLinks("bento-grid") : [],
   },
@@ -132,6 +165,15 @@ const sidebarNav: SidebarNavItem[] = [
     if (b.title === "Getting Started") {
       return 1;
     }
+
+    if (a.title === "Developers") {
+      return -1;
+    }
+
+    if (b.title === "Developers") {
+      return 1;
+    }
+
     return a.title.localeCompare(b.title);
   });
 
@@ -143,7 +185,7 @@ export const docsConfig: DocsConfig = {
     },
     {
       title: "Components",
-      href: sidebarNav[1].items?.[0]?.href ?? sidebarNav[1]?.href,
+      href: sidebarNav[2].items?.[0]?.href ?? sidebarNav[2]?.href,
     },
     {
       title: "Contributing",

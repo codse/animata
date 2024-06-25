@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ChevronDown } from "lucide-react";
@@ -16,46 +16,69 @@ export interface DocsSidebarNavProps {
 
 export function DocsSidebarNav({ items }: DocsSidebarNavProps) {
   const pathname = usePathname();
-  const [closed, setClosed] = useState(new Set());
+  const [closed, setClosed] = useState(
+    new Set(
+      items
+        .filter(
+          (item) => !!item.icon && item.items?.length && item.href && !pathname.includes(item.href),
+        )
+        .map((item) => item.title),
+    ),
+  );
+
+  useEffect(() => {
+    setClosed(
+      new Set(
+        items
+          .filter(
+            (item) =>
+              !!item.icon && item.items?.length && item.href && !pathname.includes(item.href),
+          )
+          .map((item) => item.title),
+      ),
+    );
+  }, [pathname, items]);
 
   return items.length ? (
     <div className="w-full">
       {items.map((item, index) => {
         const isOpen = !closed.has(item.title);
         const Icon = item.icon && Icons[item.icon as keyof typeof Icons];
+
+        const toggle = () => {
+          setClosed((prev) => {
+            const next = new Set(prev);
+            if (isOpen) {
+              next.add(item.title);
+            } else {
+              next.delete(item.title);
+            }
+            return next;
+          });
+        };
+
         return (
           <div key={index}>
             <Link
               key={index}
               href={item.href ?? (item.items?.[0].href as string)}
               className="cursor-pointer"
+              onClick={toggle}
             >
               <h4 className="mb-1 flex items-center gap-1 rounded-md py-1 pr-2 text-sm font-semibold">
                 {Icon ? (
                   <Icon className="w-4" />
                 ) : (
                   <ChevronDown
-                    className={cn("transform transition-all hover:opacity-50", {
+                    className={cn("w-4 transform transition-all hover:opacity-50", {
                       "-rotate-90": !isOpen,
                     })}
-                    onClick={() => {
-                      setClosed((prev) => {
-                        const next = new Set(prev);
-                        if (isOpen) {
-                          next.add(item.title);
-                        } else {
-                          next.delete(item.title);
-                        }
-                        return next;
-                      });
-                    }}
-                    size={16}
                   />
                 )}
                 {item.title}
-                {Boolean(item.items?.length || item.label) && index !== 0 && (
+                {Boolean(item.items?.length || item.label) && index > 1 && (
                   <span className="flex aspect-square items-center justify-center rounded-full bg-gray-200 px-1 py-0.5 text-[10px] leading-none text-[#000000] no-underline">
-                    {item.items?.length || item.label}
+                    {item.label || item.items?.length}
                   </span>
                 )}
               </h4>
@@ -95,6 +118,7 @@ export function DocsSidebarNavItems({ items, pathname }: DocsSidebarNavItemsProp
               pathname === item.href
                 ? "bg-muted font-normal text-foreground"
                 : "text-muted-foreground",
+              item.sortId === "000" && "hidden",
             )}
             target={item.external ? "_blank" : ""}
             rel={item.external ? "noreferrer" : ""}
