@@ -134,6 +134,15 @@ const config = {
           "66%": { transform: "scale(0.8)" },
           "100%": { transform: "scale(1)" },
         },
+        "flipWords": {
+          '10%': { transform: 'translateY(-112%)' },
+          '25%': { transform: 'translateY(-100%)' },
+          '35%': { transform: 'translateY(-212%)' },
+          '50%': { transform: 'translateY(-200%)' },
+          '60%': { transform: 'translateY(-312%)' },
+          '75%': { transform: 'translateY(-300%)' },
+          '85%': { transform: 'translateY(-412%)' },
+          '100%': { transform: 'translateY(-400%)' },
         fadeIn: {
           from: { opacity: "0" },
           to: { opacity: "1" },
@@ -157,6 +166,7 @@ const config = {
         "marquee-vertical": "marquee-y var(--duration) linear infinite",
         "bg-position": "bg-position 3s infinite alternate",
         "pop-blob": "pop-blob 4s infinite",
+        "flipWords": 'flipWords 8s infinite',
         fadeIn: "fadeIn 0.5s ease-in",
         "blink-red": "blink-red 1s infinite linear",
       },
