@@ -13,26 +13,19 @@ interface DeliveryCardProps {
 }
 
 const DeliveryCard = ({
-  progress = 90,
+  progress = 10,
   arrivalTime = "09 : 26",
   location = "Pokhara",
   timeAgo = "30 min",
 }: DeliveryCardProps) => {
   const [adjustedProgress, setAdjustedProgress] = useState(0);
-  const [status, setStatus] = useState<
-    "Processing" | "In Transit" | "Delivered"
-  >();
-  const adjustedLocation =
-    location.length > 5 ? `${location.slice(0, 4)}...` : location;
+  const status =
+    progress <= 0 ? "Processing" : progress >= 100 ? "Delivered" : "In Transit";
+
   useEffect(() => {
     const timeout = setTimeout(() => {
       const adjustedProgress = Math.min(Math.max(0, progress), 100);
       setAdjustedProgress(adjustedProgress);
-      adjustedProgress === 0
-        ? setStatus("Processing")
-        : adjustedProgress === 100
-          ? setStatus("Delivered")
-          : setStatus("In Transit");
     }, 250);
     return () => clearTimeout(timeout);
   }, [progress]);
@@ -58,7 +51,7 @@ const DeliveryCard = ({
             <div className="absolute left-0 top-1/2 size-4 -translate-y-1/2 rounded-full bg-yellow-300"></div>
             <div className="absolute right-0 top-1/2 size-4 -translate-y-1/2 rounded-full bg-gray-400"></div>
             <div
-              className="relative h-1 bg-yellow-300 transition-all ease-in-out [transition-duration:2000ms]"
+              className="relative h-1 bg-yellow-300 transition-all ease-in-out [transition-duration:1500ms]"
               style={{
                 width: `calc(2.5rem + (${adjustedProgress} / 100) * (100% - 2.5rem))`,
               }}
@@ -71,12 +64,10 @@ const DeliveryCard = ({
               />
             </div>
           </div>
-
-          <div className="mt-2 flex items-center gap-2 text-gray-400">
-            <LocateIcon />
-            <div className="tracking-tighter">
-              <span>{adjustedLocation}</span> <span>{timeAgo} ago</span>
-            </div>
+          <div className="my-1 line-clamp-1 tracking-tight text-gray-400">
+            <LocateIcon className="mr-2 inline" />
+            <span className="mr-1">{location}</span>
+            <span>{timeAgo} ago</span>
           </div>
         </div>
       </div>
