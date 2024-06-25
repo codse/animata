@@ -1,7 +1,7 @@
-import { Mic } from "lucide-react";
 
 import IconRipple from "@/animata/icon/icon-ripple";
 import { Meta, StoryObj } from "@storybook/react";
+import { Mic } from "lucide-react";
 
 const meta = {
   title: "Icon/Icon Ripple",
