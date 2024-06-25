@@ -17,5 +17,6 @@ type Story = StoryObj<typeof meta>;
 export const Primary: Story = {
   args: {
     text: "Hello World",
+    className: "text-foreground",
   },
 };
