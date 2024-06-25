@@ -1,15 +1,15 @@
-import ApkSplashScreen from "@/animata/splash-screen/apk-splash-screen";
+import SlackIntro from "@/animata/hero/slack-intro";
 import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
-  title: "Splash Screen/Apk Splash Screen",
-  component: ApkSplashScreen,
+  title: "Hero/Slack Intro",
+  component: SlackIntro,
   parameters: {
     layout: "centered",
   },
   tags: ["autodocs"],
   argTypes: {},
-} satisfies Meta<typeof ApkSplashScreen>;
+} satisfies Meta<typeof SlackIntro>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;

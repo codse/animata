@@ -156,7 +156,7 @@ function LineFive({ className, animationEnd }: LineProps) {
   );
 }
 
-export default function ApkSplashScreen({
+export default function SlackIntro({
   animateOut,
 }: {
   /**

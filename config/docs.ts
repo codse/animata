@@ -120,10 +120,6 @@ const sidebarNav: SidebarNavItem[] = [
     items: createLinks("graphs"),
   },
   {
-    title: "Splash Screen",
-    items: createLinks("splash-screen"),
-  },
-  {
     title: "Overlay",
     items: createLinks("overlay"),
   },
