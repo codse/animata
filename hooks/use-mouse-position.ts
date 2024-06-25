@@ -15,10 +15,9 @@ export function useMousePosition(ref: React.RefObject<HTMLElement>) {
 
     ref.current?.addEventListener("mousemove", handleMouseMove);
 
-    () => {
-      if (ref.current) {
-        ref.current.removeEventListener("mousemove", handleMouseMove);
-      }
+    const nodeRef = ref.current;
+    return () => {
+      nodeRef?.removeEventListener("mousemove", handleMouseMove);
     };
   }, [ref]);
 

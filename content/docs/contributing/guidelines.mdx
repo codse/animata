@@ -6,7 +6,7 @@ description: Guidelines for contributing to Animata.
 
 ## Component Generation
 
-Use `yarn animata:new` for creating new components. This command will add some default files.
+Use `yarn animata:new` for creating new components. This command will add some default files. More details can be found in the [contributing animations](/docs/contributing/animations) documentation.
 
 ## File Naming
 
@@ -20,7 +20,7 @@ All file names should use lower `kebab-case`.
 
 ## Imports
 
-All imports should be `absolute`, i.e., use `@animata/...` instead of relative imports like `./` or `../`.
+All imports should be `absolute`, i.e., use `@/...` instead of relative imports like `./` or `../`. If you are using VSCode, we have this setup by default.
 
 ## "use client" Directive
 
@@ -28,7 +28,7 @@ If you are using React hooks, make sure to add the `use client` directive at the
 
 ## Plugins
 
-Install [Tailwind's VSCode plugin](https://tailwindcss.com/docs/editor-setup) for a better development experience.
+Install [Tailwind's VSCode plugin](https://tailwindcss.com/docs/editor-setup) for a better development experience. If you are using VSCode, we have added recommended extensions in the `.vscode/extensions.json` file.
 
 ## Event Handlers
 
@@ -44,8 +44,8 @@ Use `cn` for writing conditional classes. For example:
 
 ```tsx
 cn({
-  'visible': shouldShow,
-  'invisible': !shouldShow
+  visible: shouldShow,
+  invisible: !shouldShow,
 });
 ```
 

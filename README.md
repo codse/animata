@@ -4,7 +4,7 @@ Visit https://animata.design/docs to view the documentation.
 
 ## Contributing
 
-Visit our [contributing guide](https://github.com/codse/animata/blob/main/CONTRIBUTING.md) to learn how to contribute. _So easy_ that you just run a command to get started.
+Visit our [contributing guide](https://animata.design/docs/contributing) to learn how to contribute. _So easy_ that you just run a command to get started.
 
 ### Built With
 
@@ -25,11 +25,9 @@ Visit our [contributing guide](https://github.com/codse/animata/blob/main/CONTRI
 
 ![Alt](https://repobeats.axiom.co/api/embed/e38b0585b184d8d9426620096bba5af194ccafde.svg "Repobeats analytics image")
 
-
 ## Deploy
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fcodse%2Fanimata)
-
 
 ## License
 
