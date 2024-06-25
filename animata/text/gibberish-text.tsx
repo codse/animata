@@ -1,5 +1,6 @@
-import { cn } from '@/lib/utils';
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
+
+import { cn } from "@/lib/utils";
 
 interface GibberishTextProps {
   /**
@@ -13,13 +14,7 @@ interface GibberishTextProps {
   className?: string;
 }
 
-const Letter = ({
-  letter,
-  className,
-}: {
-  letter: string;
-  className?: string;
-}) => {
+const Letter = ({ letter, className }: { letter: string; className?: string }) => {
   const [code, setCode] = useState(letter.toUpperCase().charCodeAt(0));
 
   useEffect(() => {
@@ -36,11 +31,7 @@ const Letter = ({
     return () => clearInterval(interval);
   }, [letter]);
 
-  return (
-    <span className={cn('whitespace-pre', className)}>
-      {String.fromCharCode(code)}
-    </span>
-  );
+  return <span className={cn("whitespace-pre", className)}>{String.fromCharCode(code)}</span>;
 };
 
 /**
@@ -50,14 +41,8 @@ const Letter = ({
 export default function GibberishText({ text, className }: GibberishTextProps) {
   return (
     <>
-      {text.split('').map((letter, index) => {
-        return (
-          <Letter
-            className={className}
-            letter={letter}
-            key={`${index}-${letter}`}
-          />
-        );
+      {text.split("").map((letter, index) => {
+        return <Letter className={className} letter={letter} key={`${index}-${letter}`} />;
       })}
     </>
   );

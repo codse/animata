@@ -40,7 +40,6 @@ export default function Marquee({
   reverse = false,
   className,
   applyMask = true,
-  style,
   ...props
 }: MarqueeProps) {
   return (

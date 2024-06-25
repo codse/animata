@@ -2,11 +2,7 @@ import type { Config } from "tailwindcss";
 
 const config = {
   darkMode: ["class"],
-  content: [
-    "./animata/**/*.{ts,tsx}",
-    "./app/**/*.{ts,tsx}",
-    "./components/**/*.{ts,tsx}",
-  ],
+  content: ["./animata/**/*.{ts,tsx}", "./app/**/*.{ts,tsx}", "./components/**/*.{ts,tsx}"],
   prefix: "",
   theme: {
     container: {
@@ -58,16 +54,22 @@ const config = {
         sm: "calc(var(--radius) - 4px)",
       },
       boxShadow: {
-        'glow': '0 0 20px rgba(255, 204, 112, 0.7), 0 0 40px rgba(200, 80, 192, 0.5), 0 0 60px rgba(65, 88, 208, 0.3)',
+        glow: "0 0 20px rgba(255, 204, 112, 0.7), 0 0 40px rgba(200, 80, 192, 0.5), 0 0 60px rgba(65, 88, 208, 0.3)",
+        glow2:
+          "0 0 20px rgba(50, 255, 50, 0.7), 0 0 40px rgba(20, 200, 20, 0.5), 0 0 60px rgba(5, 150, 5, 0.3)",
       },
       filter: {
-        'blur-20': 'blur(20px)',
-        'blur-25': 'blur(25px)',
+        "blur-20": "blur(20px)",
+        "blur-25": "blur(25px)",
       },
       brightness: {
-        150: '1.5',
+        150: "1.5",
       },
       keyframes: {
+        fill: {
+          "0%": { height: "0%" },
+          "100%": { height: "var(--progress-height)" },
+        },
         "accordion-down": {
           from: { height: "0" },
           to: { height: "var(--radix-accordion-content-height)" },
@@ -96,6 +98,20 @@ const config = {
           "0%": { backgroundPosition: "0% 50%" },
           "100%": { backgroundPosition: "100% 50%" },
         },
+        "shape-shift": {
+          "0%": {
+            width: "40px",
+            height: "20px",
+          },
+          "20%": { width: "240px", height: "128px" },
+          "40%": { width: "80px", height: "80px" },
+          "80%": { width: "128px", height: "240px" },
+          "100%": { width: "80px", height: "80px" },
+        },
+        swing: {
+          "0%": { transform: "rotate(0deg)" },
+          "100%": { transform: "rotate(-30deg)" },
+        },
         "content-blur": {
           "0%": { filter: "blur(0.3rem)" },
           "100%": { filter: "blur(0)" },
@@ -115,9 +131,13 @@ const config = {
           '75%': { transform: 'translateY(-300%)' },
           '85%': { transform: 'translateY(-412%)' },
           '100%': { transform: 'translateY(-400%)' },
+        fadeIn: {
+          from: { opacity: "0" },
+          to: { opacity: "1" },
         },
       },
       animation: {
+        fill: "fill 1s forwards",
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
         "marquee-horizontal": "marquee-x var(--duration) infinite linear",
@@ -125,9 +145,11 @@ const config = {
         "bg-position": "bg-position 3s infinite alternate",
         "pop-blob": "pop-blob 4s infinite",
         "flipWords": 'flipWords 8s infinite',
+        fadeIn: "fadeIn 0.5s ease-in",
       },
       transitionTimingFunction: {
         slow: "cubic-bezier(.405, 0, .025, 1)",
+        "minor-spring": "cubic-bezier(0.18,0.89,0.82,1.04)",
       },
       transitionDuration: {
         mid: "3s",

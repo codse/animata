@@ -11,18 +11,43 @@ import { baseComponents } from "../components/mdx-base-components";
 import { ReloadButton } from "../components/reload-button";
 import { useMutationObserver } from "../hooks/use-mutation-observer";
 import "../styles/globals.css";
+import "../styles/storybook.css";
 
-import { withThemeByClassName } from "@storybook/addon-themes";
 import { addons } from "@storybook/manager-api";
+import { useDarkMode } from "storybook-dark-mode";
 
 addons.setConfig({
   theme: themes.dark,
 });
 
-const MdxContainer = (props) => {
+const useThemeProps = (props) => {
+  const isDark = useDarkMode();
+  const forced = (() => {
+    const sp = new URLSearchParams(location.search);
+    if (!sp.get("globals")?.includes("theme")) {
+      return null;
+    }
+
+    return sp.get("globals")?.includes("light") ? "theme:light" : "theme:dark";
+  })();
+
+  const currentProps = { ...props };
+  if (!forced) {
+    currentProps.theme = isDark ? themes.dark : themes.light;
+    currentProps.isDark = isDark;
+  } else {
+    currentProps.theme = forced === "theme:dark" ? themes.dark : themes.light;
+    currentProps.isDark = forced === "theme:dark";
+  }
+
+  return currentProps;
+};
+
+const MdxContainer = (props: any) => {
+  const currentProps = useThemeProps(props);
   return (
     <MDXProvider components={baseComponents}>
-      <DocsContainer {...props} />
+      <DocsContainer {...currentProps} />
     </MDXProvider>
   );
 };
@@ -31,9 +56,11 @@ const isEmbedded = window.location.href.includes("site:docs");
 
 const Wrapper = ({ children }) => {
   const nodeRef = React.useRef(isEmbedded ? document.body : null);
+  const theme = useThemeProps({}).isDark ? "dark" : "";
+
   const callbackRef = React.useRef(() => {
     const height = document.querySelector(".embedded")?.clientHeight ?? 0;
-    const padding = 32;
+    const padding = 0;
     window.parent.postMessage(
       {
         type: "animata-set-height",
@@ -54,7 +81,7 @@ const Wrapper = ({ children }) => {
 
   return (
     <div
-      className={isEmbedded ? "embedded" : ""}
+      className={isEmbedded ? `embedded ${theme}`.trim() : ""}
       style={{ padding: isEmbedded ? 0 : "4rem 20px" }}
     >
       {children}
@@ -86,7 +113,7 @@ const preview: Preview = {
     },
     darkMode: {
       dark: { ...themes.dark, appBg: "black" },
-      light: { ...themes.normal, appBg: "red" },
+      light: { ...themes.normal, appBg: "light" },
     },
     docs: {
       container: MdxContainer,
@@ -102,16 +129,6 @@ const preview: Preview = {
       },
     },
   },
-
-  decorators: [
-    withThemeByClassName({
-      themes: {
-        light: "",
-        dark: "dark",
-      },
-      defaultTheme: "light",
-    }),
-  ],
 };
 
 export default preview;

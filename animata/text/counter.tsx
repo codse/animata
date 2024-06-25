@@ -1,6 +1,7 @@
-import { cn } from "@/lib/utils";
-import { useInView, useMotionValue, useSpring } from "framer-motion";
 import { useEffect, useRef } from "react";
+import { useInView, useMotionValue, useSpring } from "framer-motion";
+
+import { cn } from "@/lib/utils";
 
 interface CounterProps {
   /**
@@ -25,15 +26,17 @@ interface CounterProps {
    * The delay in milliseconds before the counter starts counting.
    */
   delay?: number;
+
+  /**
+   * Additional classes for the counter.
+   */
+  className?: string;
 }
 
 export const Formatter = {
-  number: (value: number) =>
-    Intl.NumberFormat("en-US").format(+value.toFixed(0)),
+  number: (value: number) => Intl.NumberFormat("en-US").format(+value.toFixed(0)),
   currency: (value: number) =>
-    Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(
-      +value.toFixed(0),
-    ),
+    Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(+value.toFixed(0)),
 };
 
 export default function Counter({
@@ -41,6 +44,7 @@ export default function Counter({
   targetValue,
   direction = "up",
   delay = 0,
+  className,
 }: CounterProps) {
   const ref = useRef<HTMLSpanElement>(null);
   const isGoingUp = direction === "up";
@@ -70,5 +74,5 @@ export default function Counter({
     });
   }, [springValue, format]);
 
-  return <span ref={ref} className={cn("text-4xl font-bold")} />;
+  return <span ref={ref} className={cn("text-4xl font-bold", className)} />;
 }

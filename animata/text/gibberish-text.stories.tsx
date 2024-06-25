@@ -1,13 +1,13 @@
-import GibberishText from '@/animata/text/gibberish-text';
-import { Meta, StoryObj } from '@storybook/react';
+import GibberishText from "@/animata/text/gibberish-text";
+import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
-  title: 'Text/Gibberish Text',
+  title: "Text/Gibberish Text",
   component: GibberishText,
   parameters: {
-    layout: 'centered',
+    layout: "centered",
   },
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   argTypes: {},
 } satisfies Meta<typeof GibberishText>;
 
@@ -16,7 +16,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Primary: Story = {
   args: {
-    text: 'Hello World',
-    className: 'text-6xl font-black',
+    text: "Hello World",
+    className: "text-6xl font-black",
   },
 };

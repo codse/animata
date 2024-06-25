@@ -1,52 +1,36 @@
-"use client"
+"use client";
 
-import * as React from "react"
+import * as React from "react";
 
-import { CopyButton, CopyWithClassNames } from "@/components/copy-button"
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "@/components/ui/tabs"
-import { cn } from "@/lib/utils"
+import { CopyButton, CopyWithClassNames } from "@/components/copy-button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { cn } from "@/lib/utils";
 
 interface ComponentExampleProps extends React.HTMLAttributes<HTMLDivElement> {
-  extractClassname?: boolean
-  extractedClassNames?: string
-  align?: "center" | "start" | "end"
-  src?: string
+  extractClassname?: boolean;
+  extractedClassNames?: string;
+  align?: "center" | "start" | "end";
+  src?: string;
 }
 
 export function ComponentExample({
   children,
   className,
-  extractClassname,
   extractedClassNames,
   align = "center",
-  src: _,
   ...props
 }: ComponentExampleProps) {
-  const [Example, Code, ...Children] = React.Children.toArray(
-    children
-  ) as React.ReactElement[]
+  const [Example, Code, ...Children] = React.Children.toArray(children) as React.ReactElement[];
 
   const codeString = React.useMemo(() => {
-    if (
-      typeof Code?.props["data-rehype-pretty-code-fragment"] !== "undefined"
-    ) {
-      const [, Button] = React.Children.toArray(
-        Code.props.children
-      ) as React.ReactElement[]
-      return Button?.props?.value || Button?.props?.__rawString__ || null
+    if (typeof Code?.props["data-rehype-pretty-code-fragment"] !== "undefined") {
+      const [, Button] = React.Children.toArray(Code.props.children) as React.ReactElement[];
+      return Button?.props?.value || Button?.props?.__rawString__ || null;
     }
-  }, [Code])
+  }, [Code]);
 
   return (
-    <div
-      className={cn("group relative my-4 flex flex-col space-y-2", className)}
-      {...props}
-    >
+    <div className={cn("group relative my-4 flex flex-col space-y-2", className)} {...props}>
       <Tabs defaultValue="preview" className="relative mr-auto w-full">
         <div className="flex items-center justify-between pb-3">
           <TabsList className="w-full justify-start rounded-none border-b bg-transparent p-0">
@@ -70,12 +54,7 @@ export function ComponentExample({
               className="absolute right-4 top-20"
             />
           ) : (
-            codeString && (
-              <CopyButton
-                value={codeString}
-                className="absolute right-4 top-20"
-              />
-            )
+            codeString && <CopyButton value={codeString} className="absolute right-4 top-20" />
           )}
         </div>
         <TabsContent value="preview" className="rounded-md border">
@@ -103,5 +82,5 @@ export function ComponentExample({
         </TabsContent>
       </Tabs>
     </div>
-  )
+  );
 }

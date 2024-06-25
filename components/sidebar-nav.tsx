@@ -1,10 +1,14 @@
-'use client';
+"use client";
 
-import { SidebarNavItem } from '@/types';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { ChevronDown } from "lucide-react";
 
-import { cn } from '@/lib/utils';
+import { cn } from "@/lib/utils";
+import { SidebarNavItem } from "@/types";
+
+import { Icons } from "./icons";
 
 export interface DocsSidebarNavProps {
   items: SidebarNavItem[];
@@ -12,19 +16,85 @@ export interface DocsSidebarNavProps {
 
 export function DocsSidebarNav({ items }: DocsSidebarNavProps) {
   const pathname = usePathname();
+  const [closed, setClosed] = useState(
+    new Set(
+      items
+        .filter(
+          (item) => !!item.icon && item.items?.length && item.href && !pathname.includes(item.href),
+        )
+        .map((item) => item.title),
+    ),
+  );
+
+  useEffect(() => {
+    setClosed(
+      new Set(
+        items
+          .filter(
+            (item) =>
+              !!item.icon && item.items?.length && item.href && !pathname.includes(item.href),
+          )
+          .map((item) => item.title),
+      ),
+    );
+  }, [pathname, items]);
 
   return items.length ? (
     <div className="w-full">
-      {items.map((item, index) => (
-        <div key={index} className={cn('pb-4')}>
-          <h4 className="mb-1 rounded-md px-2 py-1 text-sm font-semibold">
-            {item.title}
-          </h4>
-          {item?.items?.length && (
-            <DocsSidebarNavItems items={item.items} pathname={pathname} />
-          )}
-        </div>
-      ))}
+      {items.map((item, index) => {
+        const isOpen = !closed.has(item.title);
+        const Icon = item.icon && Icons[item.icon as keyof typeof Icons];
+
+        const toggle = () => {
+          setClosed((prev) => {
+            const next = new Set(prev);
+            if (isOpen) {
+              next.add(item.title);
+            } else {
+              next.delete(item.title);
+            }
+            return next;
+          });
+        };
+
+        return (
+          <div key={index}>
+            <Link
+              key={index}
+              href={item.href ?? (item.items?.[0].href as string)}
+              className="cursor-pointer"
+              onClick={toggle}
+            >
+              <h4 className="mb-1 flex items-center gap-1 rounded-md py-1 pr-2 text-sm font-semibold">
+                {Icon ? (
+                  <Icon className="w-4" />
+                ) : (
+                  <ChevronDown
+                    className={cn("w-4 transform transition-all hover:opacity-50", {
+                      "-rotate-90": !isOpen,
+                    })}
+                  />
+                )}
+                {item.title}
+                {Boolean(item.items?.length || item.label) && index > 1 && (
+                  <span className="flex aspect-square items-center justify-center rounded-full bg-gray-200 px-1 py-0.5 text-[10px] leading-none text-[#000000] no-underline">
+                    {item.label || item.items?.length}
+                  </span>
+                )}
+              </h4>
+            </Link>
+            {!!item?.items?.length && (
+              <div
+                className={cn("pb-3 pl-3", {
+                  hidden: !isOpen,
+                })}
+              >
+                <DocsSidebarNavItems items={item.items} pathname={pathname} />
+              </div>
+            )}
+          </div>
+        );
+      })}
     </div>
   ) : null;
 }
@@ -34,10 +104,7 @@ interface DocsSidebarNavItemsProps {
   pathname: string | null;
 }
 
-export function DocsSidebarNavItems({
-  items,
-  pathname,
-}: DocsSidebarNavItemsProps) {
+export function DocsSidebarNavItems({ items, pathname }: DocsSidebarNavItemsProps) {
   return items?.length ? (
     <div className="grid grid-flow-row auto-rows-max text-sm">
       {items.map((item, index) =>
@@ -46,18 +113,19 @@ export function DocsSidebarNavItems({
             key={index}
             href={item.href}
             className={cn(
-              'group flex w-full items-center rounded-md border border-transparent px-2 py-1 hover:underline',
-              item.disabled && 'cursor-not-allowed opacity-60',
+              "group flex w-full items-center rounded-md border border-transparent px-2 py-1 hover:underline",
+              item.disabled && "cursor-not-allowed opacity-60",
               pathname === item.href
-                ? 'font-medium text-foreground'
-                : 'text-muted-foreground'
+                ? "bg-muted font-normal text-foreground"
+                : "text-muted-foreground",
+              item.sortId === "000" && "hidden",
             )}
-            target={item.external ? '_blank' : ''}
-            rel={item.external ? 'noreferrer' : ''}
+            target={item.external ? "_blank" : ""}
+            rel={item.external ? "noreferrer" : ""}
           >
             {item.title}
             {item.label && (
-              <span className="ml-2 rounded-md bg-[#adfa1d] px-1.5 py-0.5 text-xs leading-none text-[#000000] no-underline group-hover:no-underline">
+              <span className="ml-2 rounded-md bg-lime-300 px-1.5 py-0.5 text-xs leading-none text-[#000000] no-underline group-hover:no-underline">
                 {item.label}
               </span>
             )}
@@ -66,8 +134,8 @@ export function DocsSidebarNavItems({
           <span
             key={index}
             className={cn(
-              'flex w-full cursor-not-allowed items-center rounded-md p-2 text-muted-foreground hover:underline',
-              item.disabled && 'cursor-not-allowed opacity-60'
+              "flex w-full cursor-not-allowed items-center rounded-md p-2 text-muted-foreground hover:underline",
+              item.disabled && "cursor-not-allowed opacity-60",
             )}
           >
             {item.title}
@@ -77,7 +145,7 @@ export function DocsSidebarNavItems({
               </span>
             )}
           </span>
-        )
+        ),
       )}
     </div>
   ) : null;

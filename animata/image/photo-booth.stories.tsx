@@ -17,10 +17,10 @@ type Story = StoryObj<typeof meta>;
 export const Primary: Story = {
   args: {
     collections: [
-      "https://ca.slack-edge.com/TA3D91XF0-UA24KJLUQ-a01f15beaace-512",
-      "https://ca.slack-edge.com/TA3D91XF0-UA2LL51J9-840e932f05c5-512",
-      "https://slp-statics.astockcdn.net/static_assets/staging/24spring/home/EMEA/curated-collections/card-1.jpg?width=580",
-      "https://t3.ftcdn.net/jpg/06/32/96/32/360_F_632963270_HsCKLfqrA4lqiMmfFQ6VeU0UsISmaxpD.jpg",
+      "https://images.unsplash.com/photo-1718147155878-e2baab858e74?q=80&w=3540&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "https://images.unsplash.com/photo-1711431780220-949eb0f9c5d4?q=80&w=3474&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "https://images.unsplash.com/photo-1712780649761-6ab2bebf4aa0?q=80&w=3540&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "https://images.unsplash.com/photo-1716749231987-63c02babbdfd?q=80&w=3387&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     ],
     className: "scale-1.3",
   },

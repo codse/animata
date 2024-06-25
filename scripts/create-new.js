@@ -22,7 +22,13 @@ const schema = [
     },
   },
   {
-    message: "Select the type",
+    message: "Enter the description for the new component",
+    type: "text",
+    required: true,
+    name: "description",
+  },
+  {
+    message: "Select the type of component you want to create",
     type: "select",
     required: true,
     choices: [
@@ -31,7 +37,7 @@ const schema = [
         value: folder,
       })),
       {
-        title: `${chalk.bold(chalk.green("+"))} Create new type`,
+        title: `${chalk.bold(chalk.green("+"))} Create a new type`,
         value: "custom",
       },
     ],
@@ -44,10 +50,7 @@ const createCopy = (source, destination, variables) => {
     encoding: "utf-8",
   });
 
-  const compiled = content.replace(
-    /{{([^{}]*)}}/g,
-    (_, key) => variables[key.trim()],
-  );
+  const compiled = content.replace(/{{([^{}]*)}}/g, (_, key) => variables[key.trim()]);
 
   fs.writeFileSync(destination, compiled, {
     flag: "wx",
@@ -80,23 +83,16 @@ const createCopy = (source, destination, variables) => {
     type = response.newType;
   }
 
-  const { description } = await prompts({
-    message: "Enter the description",
-    type: "text",
-    required: true,
-    name: "description",
-  });
-
   const title = startCase(String(basic.name).trim().toLowerCase());
 
-  if (!basic.name || !description || !type) {
+  if (!basic.name || !basic.description || !type) {
     console.log(chalk.red("Invalid input"));
     return;
   }
 
   const variables = {
     Title: title,
-    Description: String(description)?.trim(),
+    Description: String(basic.description)?.trim(),
     TypePath: kebabCase(String(type).trim().toLowerCase()),
     Filename: kebabCase(title),
     get PlaceholderComponent() {
@@ -122,41 +118,23 @@ const createCopy = (source, destination, variables) => {
     fs.mkdirSync(`content/docs/${variables.TypePath}`);
   }
 
-  if (
-    fs.existsSync(`animata/${variables.TypePath}/${variables.Filename}.tsx`)
-  ) {
+  if (fs.existsSync(`animata/${variables.TypePath}/${variables.Filename}.tsx`)) {
     console.log(
-      chalk.red(
-        `File "animata/${variables.TypePath}/${variables.Filename}.tsx" already exists.`,
-      ),
+      chalk.red(`File "animata/${variables.TypePath}/${variables.Filename}.tsx" already exists.`),
     );
     return;
   }
 
-  createCopy(
-    "doc",
-    `content/docs/${variables.TypePath}/${variables.Filename}.mdx`,
-    variables,
-  );
+  createCopy("doc", `content/docs/${variables.TypePath}/${variables.Filename}.mdx`, variables);
 
-  createCopy(
-    "component",
-    `animata/${variables.TypePath}/${variables.Filename}.tsx`,
-    variables,
-  );
+  createCopy("component", `animata/${variables.TypePath}/${variables.Filename}.tsx`, variables);
 
-  createCopy(
-    "story",
-    `animata/${variables.TypePath}/${variables.Filename}.stories.tsx`,
-    variables,
-  );
+  createCopy("story", `animata/${variables.TypePath}/${variables.Filename}.stories.tsx`, variables);
 
   if (shouldRegister) {
+    console.log("\n\nYou need to register the new type in the following file:\n");
     console.log(
-      "\n\nYou need to register the new type in the following file:\n",
-    );
-    console.log(
-      `${chalk.green(`config/docs.ts`)} - Add the new entry in ${chalk.blue(chalk.italic("docsConfig.sidebarNav"))}`,
+      `${chalk.green("config/docs.ts")} - Add the new entry in ${chalk.blue(chalk.italic("docsConfig.sidebarNav"))}`,
     );
   }
 })();
