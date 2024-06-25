@@ -1,5 +1,5 @@
-import { TriangleAlert } from "lucide-react";
 import React from "react";
+import { TriangleAlert } from "lucide-react";
 
 const SecurityAlert = () => {
   const riskValue = "139 532",
@@ -12,12 +12,10 @@ const SecurityAlert = () => {
       <div className="text-2xl font-bold text-white">{riskValue}</div>
       <div className="flex items-center gap-2">
         <div className="text-gray-400">{time} ago</div>
-        <div className="rounded-lg bg-zinc-600 px-2 py-1 text-gray-500">
-          Quick scan
-        </div>
+        <div className="rounded-lg bg-zinc-600 px-2 py-1 text-gray-500">Quick scan</div>
       </div>
       <div className="mb-4 mt-2 flex animate-blink-red items-center justify-center gap-2 rounded-2xl border-2 border-red-500 px-10 py-2 font-bold">
-        <TriangleAlert color="#0004" fill="#ef4444" />
+        <TriangleAlert className="fill-red-500 stroke-black/40" />
         <div className="text-red-500">{numberOfIssue} Items</div>
       </div>
     </div>
