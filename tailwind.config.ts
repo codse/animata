@@ -161,7 +161,7 @@ const config = {
         "pop-blob": "pop-blob 4s infinite",
         flipWords: "flipWords 8s infinite",
         fadeIn: "fadeIn 0.5s ease-in",
-        "blink-red": "blink-red 1s infinite linear",
+        "blink-red": "blink-red 2s infinite linear",
       },
       transitionTimingFunction: {
         slow: "cubic-bezier(.405, 0, .025, 1)",

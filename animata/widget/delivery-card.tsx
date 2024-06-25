@@ -14,60 +14,67 @@ interface DeliveryCardProps {
 
 const DeliveryCard = ({
   progress = 10,
-  arrivalTime = "09 : 26",
+  arrivalTime = "09:26",
   location = "Pokhara",
   timeAgo = "30 min",
 }: DeliveryCardProps) => {
-  const [adjustedProgress, setAdjustedProgress] = useState(0);
-  const status =
-    progress <= 0 ? "Processing" : progress >= 100 ? "Delivered" : "In Transit";
+  const [adjustedProgress, setAdjustedProgress] = useState(progress);
+  const status = progress <= 0 ? "Processing" : progress >= 100 ? "Delivered" : "In Transit";
 
   useEffect(() => {
-    const timeout = setTimeout(() => {
-      const adjustedProgress = Math.min(Math.max(0, progress), 100);
-      setAdjustedProgress(adjustedProgress);
-    }, 250);
-    return () => clearTimeout(timeout);
-  }, [progress]);
+    const timeout = setInterval(() => {
+      setAdjustedProgress((currentProgress) => {
+        let newProgress = currentProgress;
+        if (newProgress >= 100) {
+          return 0;
+        }
+        newProgress += 30;
+        return Math.min(Math.max(0, newProgress), 100);
+      });
+    }, 3000);
+    return () => clearInterval(timeout);
+  }, []);
 
   return (
-    <div className="relative min-h-40 w-52 overflow-hidden rounded-2xl font-mono text-white">
-      <div className="absolute right-2 z-10 h-32 w-5 bg-white/30">
-        <div className="absolute -bottom-2 h-4 w-full rotate-45 bg-gray-700"></div>
+    <div className="relative size-52 overflow-hidden rounded-3xl font-mono text-white">
+      <div className="absolute right-2 z-10 h-28 w-5 bg-white/30">
+        <div className="absolute -bottom-2 z-0 h-4 w-full rotate-45 bg-gray-700"></div>
       </div>
+
       <div className="flex h-full flex-col justify-between">
-        <div className="relative w-full bg-gray-500 p-4">
+        <div className="relative w-full bg-gray-500 px-4 pb-2 pt-4">
           <div className="absolute right-2 top-0 flex h-full w-5 justify-center">
             <div className="z-20 w-[2px] bg-gray-500"></div>
           </div>
-          <p className="text-md">
-            {adjustedProgress === 100 ? "Arrived" : "Arrives Today"}
-          </p>
+          <p className="text-md">{adjustedProgress === 100 ? "Arrived" : "Arrives Today"}</p>
           <p className="font-mono text-xl font-bold">{arrivalTime}</p>
         </div>
-        <div className="border-t-2 border-t-gray-900 bg-gray-700 p-4">
-          <p className="min-h-6 w-full text-yellow-400">{status}</p>
-          <div className="relative my-8 bg-gray-400">
-            <div className="absolute left-0 top-1/2 size-4 -translate-y-1/2 rounded-full bg-yellow-300"></div>
-            <div className="absolute right-0 top-1/2 size-4 -translate-y-1/2 rounded-full bg-gray-400"></div>
+
+        <div className="border-t-2 border-t-gray-900 bg-gray-700 px-4 pb-4 pt-2">
+          <p className="w-full text-yellow-400">{status}</p>
+          <div className="relative mx-0.5 mb-6 mt-5 bg-gray-400">
+            <div className="absolute left-0 top-1/2 size-3 -translate-y-1/2 rounded-full bg-yellow-300"></div>
+            <div className="absolute right-0 top-1/2 z-10 size-3 -translate-y-1/2 rounded-full bg-gray-400"></div>
             <div
-              className="relative h-1 bg-yellow-300 transition-all ease-in-out [transition-duration:1500ms]"
+              className="relative h-0.5 bg-yellow-300 transition-all ease-in-out [transition-duration:500ms]"
               style={{
-                width: `calc(2.5rem + (${adjustedProgress} / 100) * (100% - 2.5rem))`,
+                width: `${adjustedProgress}%`,
               }}
             >
               <TruckIcon
                 className={cn(
-                  "absolute right-0 top-1/2 size-10 -translate-y-1/2 rounded-full p-2 text-gray-700 transition-all duration-500",
-                  adjustedProgress >= 100 ? "bg-green-500" : "bg-yellow-300",
+                  "absolute right-0 top-1/2 z-50 size-8 -translate-y-1/2 translate-x-1/2 rounded-full bg-yellow-300 p-1.5 text-gray-700 transition-all duration-500",
                 )}
               />
             </div>
           </div>
-          <div className="my-1 line-clamp-1 tracking-tight text-gray-400">
-            <LocateIcon className="mr-2 inline" />
-            <span className="mr-1">{location}</span>
-            <span>{timeAgo} ago</span>
+
+          <div className="my-1 flex gap-1 tracking-tight text-gray-400">
+            <LocateIcon className="inline size-4" />
+            <div>
+              <span className="line-clamp-1 text-sm leading-none">{location}</span>
+              <span className="text-sm leading-none">{timeAgo} ago</span>
+            </div>
           </div>
         </div>
       </div>

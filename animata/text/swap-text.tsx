@@ -22,8 +22,21 @@ interface SwapTextProps extends React.ComponentPropsWithoutRef<"div"> {
    * The class name for the text.
    */
   textClassName?: string;
+
+  /**
+   * The class name for the initial text.
+   */
   initialTextClassName?: string;
+
+  /**
+   * The class name for the final text.
+   */
   finalTextClassName?: string;
+
+  /**
+   * Whether to disable the click interaction.
+   */
+  disableClick?: boolean;
 }
 
 export default function SwapText({
@@ -34,6 +47,7 @@ export default function SwapText({
   textClassName,
   initialTextClassName,
   finalTextClassName,
+  disableClick,
   // The rest of the props are passed to the container div.
   ...props
 }: SwapTextProps) {
@@ -46,7 +60,7 @@ export default function SwapText({
     <div {...props} className={cn("relative overflow-hidden", className)}>
       <div
         className={cn("group cursor-pointer select-none text-3xl font-bold", textClassName)}
-        onClick={() => setActive((current) => !current)}
+        onClick={() => !disableClick && setActive((current) => !current)}
       >
         <span
           className={cn(common, initialTextClassName, {
