@@ -22,6 +22,8 @@ interface SwapTextProps extends React.ComponentPropsWithoutRef<"div"> {
    * The class name for the text.
    */
   textClassName?: string;
+  initialTextClassName?: string;
+  finalTextClassName?: string;
 }
 
 export default function SwapText({
@@ -30,6 +32,8 @@ export default function SwapText({
   className,
   supportsHover = true,
   textClassName,
+  initialTextClassName,
+  finalTextClassName,
   // The rest of the props are passed to the container div.
   ...props
 }: SwapTextProps) {
@@ -45,7 +49,7 @@ export default function SwapText({
         onClick={() => setActive((current) => !current)}
       >
         <span
-          className={cn(common, {
+          className={cn(common, initialTextClassName, {
             "flex flex-col": true,
             "-translate-y-full": active,
             "group-hover:-translate-y-full": supportsHover,
@@ -58,7 +62,7 @@ export default function SwapText({
           }
         </span>
         <span
-          className={cn(`${common} absolute top-full`, {
+          className={cn(`${common} absolute top-full`, finalTextClassName, {
             "-translate-y-full": active,
             "group-hover:-translate-y-full": supportsHover,
           })}
