@@ -13,7 +13,6 @@ import { codeImport } from "remark-code-import";
 import remarkGfm from "remark-gfm";
 import { BlogPosting, WithContext } from "schema-dts";
 import { visit } from "unist-util-visit";
-
 const computedFields: ComputedFields = {
   url: {
     type: "string",
@@ -40,7 +39,7 @@ const computedFields: ComputedFields = {
         headline: doc.title,
         datePublished: doc.date,
         dateModified: doc.date,
-        description: doc.summary,
+        description: doc.summary || doc.description,
         image: doc.image,
         url: `https://animata.design/${doc._raw.flattenedPath}`,
         author: {
@@ -139,6 +138,26 @@ const postProcess = () => (tree: any) => {
         pre.properties.__rawString__ = node.__rawString__;
         Reflect.deleteProperty(node, "__rawString__");
         Reflect.deleteProperty(node, "__copyId__");
+
+        if (pre.properties?.["__rawString__"]?.startsWith("mkdir")) {
+          const path = pre.properties?.["__rawString__"].split(" ").pop();
+          if (!path) {
+            return;
+          }
+
+          const filename = path.split("/").pop() ?? "";
+          const dir = path.replace("/" + filename, "");
+          pre.properties["__windows__"] = `mkdir "${dir}" && type null > ${path}`;
+          pre.properties["__unix__"] = `mkdir -p ${dir} && touch ${path}`;
+        }
+
+        if (pre.properties?.["__rawString__"]?.startsWith("npm install")) {
+          const npmCommand = pre.properties?.["__rawString__"];
+          pre.properties["__npmCommand__"] = npmCommand;
+          pre.properties["__yarnCommand__"] = npmCommand.replace("npm install", "yarn add");
+          pre.properties["__pnpmCommand__"] = npmCommand.replace("npm install", "pnpm add");
+          pre.properties["__bunCommand__"] = npmCommand.replace("npm install", "bun add");
+        }
       }
     }
   });

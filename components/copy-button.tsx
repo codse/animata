@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { CheckIcon, ClipboardIcon } from "lucide-react";
-import { NpmCommands } from "types/unist";
+import { NpmCommands, TouchCommands } from "types/unist";
 
 import { Button, ButtonProps } from "@/components/ui/button";
 import {
@@ -123,6 +123,57 @@ export function CopyWithClassNames({ value, classNames, className }: CopyWithCla
 
 interface CopyNpmCommandButtonProps extends DropdownMenuTriggerProps {
   commands: Required<NpmCommands>;
+}
+
+interface CopyTouchCommandButtonProps extends DropdownMenuTriggerProps {
+  commands: Required<TouchCommands>;
+}
+
+export function CopyTouchCommandButton({ commands, className }: CopyTouchCommandButtonProps) {
+  const [hasCopied, setHasCopied] = React.useState(false);
+
+  React.useEffect(() => {
+    setTimeout(() => {
+      setHasCopied(false);
+    }, 2000);
+  }, [hasCopied]);
+
+  const copyCommand = React.useCallback((value: string, os: "windows" | "macOS/Linux") => {
+    copyToClipboardWithMeta(value, {
+      name: "copy_touch_command",
+      properties: {
+        command: value,
+        os,
+      },
+    });
+    setHasCopied(true);
+  }, []);
+
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button
+          size="icon"
+          variant="ghost"
+          className={cn(
+            "relative z-10 h-6 w-6 text-zinc-50 hover:bg-zinc-700 hover:text-zinc-50",
+            className,
+          )}
+        >
+          {hasCopied ? <CheckIcon className="h-3 w-3" /> : <ClipboardIcon className="h-3 w-3" />}
+          <span className="sr-only">Copy</span>
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end">
+        <DropdownMenuItem onClick={() => copyCommand(commands.__unix__, "macOS/Linux")}>
+          macOS/Linux
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={() => copyCommand(commands.__windows__, "windows")}>
+          Windows
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
 }
 
 export function CopyNpmCommandButton({ commands, className }: CopyNpmCommandButtonProps) {
