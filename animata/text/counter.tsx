@@ -61,9 +61,11 @@ export default function Counter({
       return;
     }
 
-    setTimeout(() => {
+    const timer = setTimeout(() => {
       motionValue.set(isGoingUp ? targetValue : 0);
     }, delay);
+
+    return () => clearTimeout(timer);
   }, [isInView, delay, isGoingUp, targetValue, motionValue]);
 
   useEffect(() => {

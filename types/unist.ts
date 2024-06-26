@@ -29,3 +29,8 @@ export interface NpmCommands {
   __pnpmCommand__?: string;
   __bunCommand__?: string;
 }
+
+export interface TouchCommands {
+  __windows__?: string;
+  __unix__?: string;
+}

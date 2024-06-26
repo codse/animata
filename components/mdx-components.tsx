@@ -3,15 +3,21 @@ import { ComponentProps, HTMLAttributes } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useMDXComponent } from "next-contentlayer/hooks";
-import { NpmCommands } from "types/unist";
+import { NpmCommands, TouchCommands } from "types/unist";
 
 import Modal from "@/animata/overlay/modal";
 import { Callout } from "@/components/callout";
 import { CodeBlockWrapper } from "@/components/code-block-wrapper";
 import { ComponentExample } from "@/components/component-example";
+import ComponentListItem from "@/components/component-list-item";
 import { ComponentPreview } from "@/components/component-preview";
 import { ComponentSource } from "@/components/component-source";
-import { CopyButton, copyToClipboardWithMeta } from "@/components/copy-button";
+import {
+  CopyButton,
+  CopyNpmCommandButton,
+  copyToClipboardWithMeta,
+  CopyTouchCommandButton,
+} from "@/components/copy-button";
 import { FrameworkDocs } from "@/components/framework-docs";
 import {
   Accordion,
@@ -43,6 +49,12 @@ const components = {
     __src__,
     __event__,
     __copyId__,
+    __windows__,
+    __unix__,
+    __bunCommand__,
+    __npmCommand__,
+    __pnpmCommand__,
+    __yarnCommand__,
     ...props
   }: React.HTMLAttributes<HTMLPreElement> & {
     __copyId__?: string;
@@ -50,7 +62,8 @@ const components = {
     __withMeta__?: boolean;
     __src__?: string;
     __event__?: Event["name"];
-  } & NpmCommands) => {
+  } & NpmCommands &
+    TouchCommands) => {
     if (__copyId__ && __rawString__) {
       return (
         <div
@@ -71,11 +84,31 @@ const components = {
           )}
           {...props}
         />
-        {__rawString__ && (
+
+        {__rawString__ && !__windows__ && (
           <CopyButton
             value={__rawString__}
             src={__src__}
             event={__event__}
+            className={cn("absolute right-4 top-4", __withMeta__ && "top-16")}
+          />
+        )}
+
+        {__windows__ && __unix__ && (
+          <CopyTouchCommandButton
+            commands={{ __windows__, __unix__ }}
+            className="absolute right-4 top-4"
+          />
+        )}
+
+        {__npmCommand__ && __yarnCommand__ && __pnpmCommand__ && __bunCommand__ && (
+          <CopyNpmCommandButton
+            commands={{
+              __npmCommand__,
+              __yarnCommand__,
+              __pnpmCommand__,
+              __bunCommand__,
+            }}
             className={cn("absolute right-4 top-4", __withMeta__ && "top-16")}
           />
         )}
@@ -163,33 +196,7 @@ const components = {
       </div>
     );
   },
-  ComponentListItem: ({
-    children,
-    className,
-    copyId,
-    ...props
-  }: {
-    copyId: string;
-    className?: string;
-    children: React.ReactNode;
-  }) => {
-    return (
-      <div
-        {...props}
-        className={cn(
-          "component-list-item relative flex min-h-72 items-center justify-center rounded-xl border p-4",
-          className,
-        )}
-      >
-        {children}
-        <CopyButton
-          className="visible absolute right-1 top-1 text-zinc-600"
-          proxyId={`source-${copyId}`}
-          value=""
-        />
-      </div>
-    );
-  },
+  ComponentListItem,
 };
 
 interface MdxProps {
