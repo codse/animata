@@ -15,7 +15,7 @@ const isDev = process.env.NODE_ENV !== "production";
 
 const createLinks = (category: string) => {
   return allDocs
-    .filter((doc) => doc.slug.startsWith(`/docs/${category}`))
+    .filter((doc) => doc.slug.startsWith(`/docs/${category}`) && doc.published)
     .map((doc) => ({
       // Make sure the index page is the first item
       title: doc.title,
