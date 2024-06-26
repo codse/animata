@@ -17,7 +17,6 @@ type Story = StoryObj<typeof meta>;
 export const Primary: Story = {
   args: {
     text: "> yarn add @animata/awesomeness",
-    repeat: true,
     grow: false,
   },
   render: (props) => (
@@ -27,16 +26,16 @@ export const Primary: Story = {
   ),
 };
 
-export const Quote: Story = {
+export const Smooth: Story = {
   args: {
-    text: "The following excerpt from Carl Sagan's book Pale Blue Dot was inspired by an image taken, at Sagan's suggestion, by Voyager 1 on 14 February 1990. As the spacecraft was departing our planetary neighborhood for the fringes of the solar system, it turned it around for one last look at its home planet.",
-    repeat: true,
-    delay: 16,
+    text: "This is a smooth typing text",
+    delay: 50,
     alwaysVisibleCount: 0,
+    smooth: true,
+    waitTime: 5000,
   },
   render: (props) => (
-    <div className="min-w-96 max-w-96 rounded-sm bg-blue-200 px-4 py-2 text-blue-600 shadow-lg">
-      <div className="mb-1 text-lg font-bold">Quote</div>
+    <div className="min-w-96 max-w-96 rounded-sm bg-gray-800 px-4 py-2 text-yellow-400 shadow-lg">
       <TypingText {...props} />
     </div>
   ),
