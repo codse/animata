@@ -1,8 +1,8 @@
 "use client";
 
-import { cn } from "@/lib/utils";
-import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
+
+import { cn } from "@/lib/utils";
 
 interface TextProps {
   /**
@@ -10,7 +10,7 @@ interface TextProps {
    */
   text: string;
 }
-export default function TextButtomBorder({ text = "Programming" }: TextProps) {
+export default function TextBorderAnimation({ text = "Programming" }: TextProps) {
   const [isHoveredIn, setIsHoveredIn] = useState(false);
   const [isHoveredOut, setIsHoveredOut] = useState(false);
 
@@ -34,11 +34,7 @@ export default function TextButtomBorder({ text = "Programming" }: TextProps) {
   }, [isHoveredOut]);
 
   return (
-    <div
-      onMouseEnter={handleHover}
-      onMouseLeave={handleHoverExit}
-      className="overflow-hidden"
-    >
+    <div onMouseEnter={handleHover} onMouseLeave={handleHoverExit} className="overflow-hidden">
       <span className="text-5xl font-bold text-black">{text}</span>
       <div className="relative mt-1 h-1 w-full">
         <div
@@ -51,7 +47,7 @@ export default function TextButtomBorder({ text = "Programming" }: TextProps) {
         ></div>
         <div
           className={cn(
-            `absolute left-0 top-0 h-full w-full translate-x-0 transform bg-yellow-500 opacity-0 transition-transform duration-300`,
+            "absolute left-0 top-0 h-full w-full translate-x-0 transform bg-yellow-500 opacity-0 transition-transform duration-300",
             isHoveredOut && "translate-x-full opacity-100",
           )}
         ></div>
