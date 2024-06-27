@@ -1,4 +1,7 @@
+import posthog from "posthog-js";
 import { z } from "zod";
+
+import { config } from "@/config";
 
 const eventSchema = z.object({
   name: z.enum(["copy_npm_command", "copy_touch_command", "copy_usage_code", "copy_source_code"]),
@@ -9,7 +12,7 @@ export type Event = z.infer<typeof eventSchema>;
 
 export function trackEvent(input: Event): void {
   const event = eventSchema.parse(input);
-  if (event) {
-    console.log(event.name, event.properties);
+  if (config.isProduction) {
+    posthog.capture(event.name, event.properties);
   }
 }
