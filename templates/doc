@@ -6,28 +6,48 @@ author: YourTwitterUsername
 
 <ComponentPreview name="{{StoryPath}}--docs" />
 
-# Installation
+## Installation
 
-1. Create a new file called `{{Filename}}.tsx` inside the `components/animata/{{TypePath}}` directory.
+<Steps>
+<Step>Install dependencies</Step>
 
-   macOS/Linux:
-   ```bash
-   mkdir -p components/animata/{{TypePath}} && touch components/animata/{{TypePath}}/{{Filename}}.tsx
-   ```
+```bash
+npm install framer-motion lucide-react
+```
 
-   windows:
-   ```bash
-   mkdir components\animata\{{TypePath}} && type null > components\animata\{{TypePath}}\{{Filename}}.tsx
-   ```
+<Step>Update `tailwind.config.js`</Step>
 
-2. Open the newly created file and add the following code:
+Add the following to your tailwind.config.js file.
 
-   ```jsx file=<rootDir>/animata/{{TypePath}}/{{Filename}}.tsx
+```json
+module.exports = {
+  theme: {
+    extend: {
+    }
+  }
+}
+```
 
-   ```
+<Step>Run the following command</Step>
+
+It will create a new file `{{Filename}}.tsx` inside the `components/animata/{{TypePath}}` directory.
+
+```bash 
+mkdir -p components/animata/{{TypePath}} && touch components/animata/{{TypePath}}/{{Filename}}.tsx
+```
+
+<Step>Paste the code</Step> 
+
+Open the newly created file and paste the following code:
+
+```jsx file=<rootDir>/animata/{{TypePath}}/{{Filename}}.tsx
+
+```
+</Steps>
 
 
-# Credits
+## Credits
 
    Built by [Your name](https://github.com/YourGithubUsername)
+
    ...Add appropriate credits here.

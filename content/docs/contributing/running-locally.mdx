@@ -1,0 +1,68 @@
+---
+title: Runing Locally
+date: 2024-06-11
+description: Set up your local environment to run Animata.
+---
+
+Animata is built using Next.js and TailwindCSS. To run Animata locally, you need to have Node.js installed on your machine. You can follow the steps below to set up your local environment.
+
+## Getting Started
+
+To get a local copy up and running, please follow these simple steps.
+
+### Prerequisites
+
+Here is what you need to be able to run animata.
+
+- Node.js (Version: >=18.x)
+- Yarn _(recommended)_
+
+## Development
+
+### Setup
+
+1. Clone the repo into a public GitHub repository (or fork https://github.com/codse/animata/fork).
+
+   ```sh
+   git clone https://github.com/codse/animata.git
+   ```
+
+2. Go to the project folder
+
+   ```sh
+   cd animata
+   ```
+
+3. Install packages with yarn
+
+   ```sh
+   yarn
+   ```
+
+4. Set up your `.env` file
+
+   - Duplicate `.env.example` to `.env`
+
+5. Setup Node
+
+   If your Node version does not meet the project's requirements as instructed by the docs, "nvm" (Node Version Manager) allows using Node at the version required by the project:
+
+   ```sh
+   nvm use
+   ```
+
+   You first might need to install the specific version and then use it:
+
+   ```sh
+   nvm install && nvm use
+   ```
+
+   You can install nvm from [here](https://github.com/nvm-sh/nvm).
+
+6. Start the development server
+
+   ```sh
+   yarn dev
+   ```
+
+7. Open [http://localhost:3000](http://localhost:3000) in the browser to see the result.

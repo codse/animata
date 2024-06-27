@@ -1,10 +1,12 @@
 ---
-title: Contributing animations
+title: Contributing components
 date: 2024-06-24
-description: Learn how to contribute animations to Animata.
+description: Learn how to contribute components to Animata.
 ---
 
-## Generating
+New components are very welcome. Note that if you are going to propose drastic changes, be sure to open an issue for discussion first, to make sure that your PR will be accepted before you spend effort coding it.
+
+## Generating a new component
 
 Once you have the project set up, you can start contributing to Animata.
 
@@ -42,13 +44,10 @@ You need to register the new type in the following file:
 config/docs.ts - Add the new entry in docsConfig.sidebarNav
 ```
 
-Simply open the `config/docs.ts` file and add the new entry in the `docsConfig.sidebarNav` array.
+Simply open the `config/docs.ts` file and paste the new entry in the `docsConfig.sidebarNav` array.
 
-## Submitting
+## Proposing pull requests
 
-1. Create a new branch.
-2. Commit your changes. We use [Conventional Commits](https://www.conventionalcommits.org/).
-3. Push the branch.
-4. Open a pull request.
+- **Making changes**: implement your bug fix or feature and write stories to cover different use cases. Then commit your changes, push your bug fix/feature branch to the origin (your forked repo) and open a pull request to the upstream (the repository you originally forked)‘s main branch.
 
 If you have any questions, feel free to reach out to us.

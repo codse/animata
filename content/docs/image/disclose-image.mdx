@@ -1,34 +1,57 @@
 ---
 title: Disclose Image
 description: Reveal the image using a sliding door-like effect
-labels: ["requires interaction", "hover"]
+labels: ["requires interaction", "hover", "requires config"]
 author: harimanok_
 ---
 
 <ComponentPreview name="image-disclose-image--docs" />
 
-# Installation
+## Installation
 
-1. Create a new file called `disclose-image.tsx` inside the `components/animata/image` directory.
+<Steps>
+<Step>Update `tailwind.config.js`</Step>
 
-macOS/Linux:
+Add the following to your tailwind.config.js file.
+
+```js {4-9} title=tailwind.config.js
+module.exports = {
+  theme: {
+    extend: {
+      transitionTimingFunction: {
+        slow: "cubic-bezier(.405, 0, .025, 1)",
+      },
+      transitionDuration: {
+        mid: "3s",
+      },
+    },
+  },
+};
+```
+
+<Callout>
+  Alternatively, you can replace `ease-slow` with `ease-[cubic-bezier(.405,_0,_.025,_1)]` and
+  `duration-mid` with `duration-[3000ms]` instead of updating the `tailwind.config.js` file.
+</Callout>
+
+<Step>Run the following command</Step>
+
+It will create a new file called `disclose-image.tsx` inside the `components/animata/image` directory.
 
 ```bash
 mkdir -p components/animata/image && touch components/animata/image/disclose-image.tsx
 ```
 
-windows:
+<Step>Paste the code</Step>
 
-```bash
-mkdir components\animata\image && type null > components\animata\image\disclose-image.tsx
-```
-
-2. Open the newly created file and add the following code:
+Open the newly created file and paste the following code:
 
 ```jsx file=<rootDir>/animata/image/disclose-image.tsx
 
 ```
 
-# Credits
+</Steps>
 
-Built by [Hari Lamichhane](https://github.com/hari)
+## Credits
+
+Built by [hari](https://github.com/hari)

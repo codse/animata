@@ -23,7 +23,7 @@ export default function Reminder({ className }: { className?: string }) {
 
       <div className="flex flex-row gap-1 text-muted-foreground">
         <ArrowRight size={18} className="self-center" />
-        <p className="text-md font-semibold">Meeting in 30 mins</p>
+        <p className="text-sm font-semibold">Meeting in 30 mins</p>
       </div>
     </div>
   );

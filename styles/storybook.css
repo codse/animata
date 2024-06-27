@@ -24,6 +24,10 @@
     @apply !m-0;
   }
 
+  .innerZoomElementWrapper {
+    @apply max-w-full;
+  }
+
   .sb-anchor:not(:first-child) {
     @apply mt-4;
   }

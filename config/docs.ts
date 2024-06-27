@@ -15,7 +15,7 @@ const isDev = process.env.NODE_ENV !== "production";
 
 const createLinks = (category: string) => {
   return allDocs
-    .filter((doc) => doc.slug.startsWith(`/docs/${category}`))
+    .filter((doc) => doc.slug.startsWith(`/docs/${category}`) && doc.published)
     .map((doc) => ({
       // Make sure the index page is the first item
       title: doc.title,
@@ -52,13 +52,18 @@ const sidebarNav: SidebarNavItem[] = [
     href: "/docs/contributing",
     items: [
       {
-        title: "Running Locally",
+        title: "Overview",
         href: "/docs/contributing",
         items: [],
       },
       {
-        title: "Adding animations",
-        href: "/docs/contributing/animations",
+        title: "Running locally",
+        href: "/docs/contributing/running-locally",
+        items: [],
+      },
+      {
+        title: "Adding components",
+        href: "/docs/contributing/components",
         items: [],
       },
       {
@@ -155,6 +160,10 @@ const sidebarNav: SidebarNavItem[] = [
   {
     title: "Carousel",
     items: createLinks("carousel"),
+  },
+  {
+    title: "Skeleton",
+    items: createLinks("skeleton"),
   },
 ]
   .filter((category) => Boolean(category.items?.length || category.label))
