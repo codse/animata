@@ -64,6 +64,7 @@ export function CopyButton({
                 name: event,
                 properties: {
                   code: value,
+                  proxyId: proxyId ?? "",
                 },
               }
             : undefined,
