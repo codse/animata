@@ -1,23 +1,21 @@
 import React from "react";
 import { Map } from "lucide-react";
 
-interface DestinationProps {
-  emoji: string;
-  position: string;
-}
+import { cn } from "@/lib/utils";
 
-interface TreasureProps {
+interface ItemProps {
   emoji: string;
   position: string;
 }
 
 interface HeroCardProps {
-  destinations?: DestinationProps[];
-  treasures?: TreasureProps[];
+  destinations?: ItemProps[];
+  treasures?: ItemProps[];
+  className?: string;
 }
 
-const HeroSectionTextHover: React.FC<HeroCardProps> = () => {
-  const destinations: DestinationProps[] = [
+const HeroSectionTextHover: React.FC<HeroCardProps> = ({ className }) => {
+  const destinations: ItemProps[] = [
     {
       emoji: "🪂",
       position:
@@ -40,7 +38,7 @@ const HeroSectionTextHover: React.FC<HeroCardProps> = () => {
     },
   ];
 
-  const treasures: TreasureProps[] = [
+  const treasures: ItemProps[] = [
     {
       emoji: "🦝",
       position:
@@ -63,7 +61,12 @@ const HeroSectionTextHover: React.FC<HeroCardProps> = () => {
   ];
 
   return (
-    <div className="relative min-h-[100px] w-full rounded-2xl border-2 border-gray-300 md:min-h-[200px]">
+    <div
+      className={cn(
+        "relative min-h-[100px] w-full rounded-2xl border-2 border-gray-300 md:min-h-[200px]",
+        className,
+      )}
+    >
       <div className="mb-2 flex cursor-pointer flex-col items-center justify-center gap-3">
         <div className="text-normal flex flex-col items-center justify-center p-5 font-bold sm:text-xl md:text-2xl">
           <div className="mt-5">
@@ -77,8 +80,10 @@ const HeroSectionTextHover: React.FC<HeroCardProps> = () => {
                 {destinations.map((dest, index) => (
                   <span
                     key={index}
-                    className={`absolute transform text-lg transition-transform duration-500 group-hover:scale-110 sm:text-2xl md:text-4xl ${dest.position}`}
-                    role="img"
+                    className={cn(
+                      "absolute transform text-lg transition-transform duration-500 group-hover:scale-110 sm:text-2xl md:text-4xl",
+                      dest.position,
+                    )}
                   >
                     {dest.emoji}
                   </span>
@@ -95,8 +100,10 @@ const HeroSectionTextHover: React.FC<HeroCardProps> = () => {
                 {treasures.map((gem, index) => (
                   <span
                     key={index}
-                    className={`absolute transform text-lg transition-transform duration-500 group-hover:scale-110 sm:text-2xl md:text-4xl ${gem.position}`}
-                    role="img"
+                    className={cn(
+                      "absolute transform text-lg transition-transform duration-500 group-hover:scale-110 sm:text-2xl md:text-4xl",
+                      gem.position,
+                    )}
                   >
                     {gem.emoji}
                   </span>
