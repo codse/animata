@@ -58,7 +58,7 @@ export default function ShapeShifter({
       <div>{prefix}</div>
       <div
         className={cn(
-          "dark:bg-wht relative animate-[shape-shift] overflow-hidden bg-black p-0 transition-all ease-in-out direction-alternate repeat-infinite group-hover:[animation-play-state:paused]",
+          "relative animate-[shape-shift] overflow-hidden bg-black p-0 transition-all ease-in-out direction-alternate repeat-infinite group-hover:[animation-play-state:paused] dark:bg-white",
           className,
         )}
         // Magic number based on length of images.
