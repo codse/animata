@@ -52,13 +52,18 @@ const sidebarNav: SidebarNavItem[] = [
     href: "/docs/contributing",
     items: [
       {
-        title: "Running Locally",
+        title: "Overview",
         href: "/docs/contributing",
         items: [],
       },
       {
-        title: "Adding animations",
-        href: "/docs/contributing/animations",
+        title: "Running locally",
+        href: "/docs/contributing/running-locally",
+        items: [],
+      },
+      {
+        title: "Adding components",
+        href: "/docs/contributing/components",
         items: [],
       },
       {

@@ -13,3 +13,43 @@ You don't need to install it as a dependency instead you can simply copy and pas
 2. **Framer Motion** (Optionally required): Some complex animations require Framer Motion. See the [Framer Motion documentation](https://www.framer.com/api/motion/) for more information.
 
 3. **Lucide Icons** or **Radix Icon** (Optional): Some components use [Lucide Icons](https://lucide.dev/guide/packages/lucide-react) or [Radix Icons](https://radix-ui.com/icons). You can use any other icon library or SVG icons as well.
+
+## Setting up
+
+<Callout>
+  This is optional but recommended. You can paste the components where ever you want however make
+  sure to update the paths in the code if you are not using the same structure.
+</Callout>
+
+The project assumes that you have the following structure:
+
+```
+/
+  /components
+  /ui
+```
+
+where `/` is the root of your project, `/components` is where you keep your components and the project has been set up using paths in the `tsconfig.json` file.
+
+```json
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./*"]
+    }
+  }
+}
+```
+
+The root of your project can be anything (like `src` or `app`), but the `components` folder should be at the root level.
+
+## Copying the code
+
+1. If you are copying the dependency installation or file creation command make sure to use the copy button as it provides multiple options to copy the code.
+
+![Install dependency](/install.png)
+
+2. If you see something that has been imported but not mentioned in the documentation, then it is a dependency that you need to install. If it starts with `@/` then it is Animata's component else it is an external dependency. In such case, you can submit a PR to update the documentation.
+
+3. If something is not working, then the docs is probably missing the `tailwind.config.js` updates. You can look for the entries that have been added to the `tailwind.config.js` in Animata's source code. You can create an issue or submit a PR to update the documentation.

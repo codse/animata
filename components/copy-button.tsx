@@ -49,7 +49,7 @@ export function CopyButton({
     <Button
       size="icon"
       variant={variant}
-      className={cn("relative z-10 h-6 w-6 text-zinc-50 [&_svg]:size-3", className)}
+      className={cn("relative z-10 h-6 w-6 bg-zinc-500 text-zinc-50 [&_svg]:size-3", className)}
       onClick={() => {
         if (proxyId) {
           document.getElementById(proxyId)?.click();
@@ -156,7 +156,7 @@ export function CopyTouchCommandButton({ commands, className }: CopyTouchCommand
           size="icon"
           variant="ghost"
           className={cn(
-            "relative z-10 h-6 w-6 text-zinc-50 hover:bg-zinc-700 hover:text-zinc-50",
+            "relative z-10 h-6 w-6 bg-zinc-500 text-zinc-50 hover:bg-zinc-700 hover:text-zinc-50",
             className,
           )}
         >
@@ -203,7 +203,7 @@ export function CopyNpmCommandButton({ commands, className }: CopyNpmCommandButt
           size="icon"
           variant="ghost"
           className={cn(
-            "relative z-10 h-6 w-6 text-zinc-50 hover:bg-zinc-700 hover:text-zinc-50",
+            "relative z-10 h-6 w-6 bg-zinc-500 text-zinc-50 hover:bg-zinc-700 hover:text-zinc-50",
             className,
           )}
         >
