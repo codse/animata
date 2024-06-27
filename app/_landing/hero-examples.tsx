@@ -233,6 +233,7 @@ export default function HeroExamples() {
             alwaysVisibleCount={0}
             delay={100}
             repeat={false}
+            className="md:py-3"
             text="Bring your site to life with these ready to use animated components & interaction built using React, Framer Motion, and Tailwind CSS."
           />
         </RemountOnMouseIn>
