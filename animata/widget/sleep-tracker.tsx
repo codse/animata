@@ -108,14 +108,12 @@ export default function SleepTracker({
         <div className="icon flex h-4 w-4 items-center justify-center rounded-full bg-red-50">
           <div className="inner-icon h-2 w-2 rounded-full bg-red-500"></div>
         </div>
-        <p className="text-gray-600 dark:text-white">Sleep Tracker</p>
+        <p className="text-sm text-gray-600 dark:text-white">Sleep Tracker</p>
       </div>
-      <img className="h-20 w-full rounded-xl object-cover" src={image} alt="Sleep Tracker" />
+      <img className="h-16 w-full rounded-xl object-cover" src={image} alt="Sleep Tracker" />
 
-      <div className="graph-container">
-        <BarChart className="pt-3" items={items} height={40} />
-      </div>
-      <div className="activity mt-2 flex flex-row justify-between">
+      <BarChart className="pt-1" items={items} height={40} />
+      <div className="activity mt-2 flex flex-row justify-between text-sm">
         <p className="text-primary opacity-70">Activity</p>
         <p className="text-muted-foreground">
           <strong>32m</strong> ago
