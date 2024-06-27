@@ -26,11 +26,7 @@ const images: { src: string; alt: string; className?: string }[] = [
 
 const placeholderChildren = (
   /* Marquee is optional and can be replaced with a different component like video. */
-  <Marquee
-    className="absolute inset-0 [--gap:2px]"
-    applyMask={false}
-    pauseOnHover
-  >
+  <Marquee className="absolute inset-0 [--gap:2px]" applyMask={false} pauseOnHover>
     {images.map((image, index) => (
       /* Use `next/image` and remove the line below. */
       /* eslint-disable-next-line @next/next/no-img-element */
@@ -55,14 +51,14 @@ export default function ShapeShifter({
   return (
     <div
       className={cn(
-        "text-md group flex min-h-96 w-full min-w-fit flex-col items-center justify-center gap-3 font-bold transition-all md:flex-row md:text-xl",
+        "text-md group flex min-h-96 w-full min-w-fit flex-col items-center justify-center gap-3 font-bold text-foreground transition-all sm:flex-row sm:text-xl",
         containerClassName,
       )}
     >
       <div>{prefix}</div>
       <div
         className={cn(
-          "relative animate-[shape-shift] overflow-hidden bg-black p-0 transition-all ease-in-out direction-alternate repeat-infinite group-hover:[animation-play-state:paused]",
+          "dark:bg-wht relative animate-[shape-shift] overflow-hidden bg-black p-0 transition-all ease-in-out direction-alternate repeat-infinite group-hover:[animation-play-state:paused]",
           className,
         )}
         // Magic number based on length of images.
