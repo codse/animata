@@ -121,7 +121,7 @@ const sidebarNav: SidebarNavItem[] = [
     items: createLinks("progress"),
   },
   {
-    title: "Graphs",
+    title: "Graphs & charts",
     items: createLinks("graphs"),
   },
   {

@@ -42,7 +42,7 @@ export default function TiltedCover({
       <div className="group relative h-52 w-40">
         {/* Background content */}
         <div
-          className="border-box border-1 pointer-events-none relative h-full w-full overflow-hidden rounded-xl border border-gray-100 bg-white transition-all duration-500 ease-slow group-hover:!transform-none"
+          className="border-box border-1 pointer-events-none relative h-full w-full overflow-hidden rounded-xl border bg-background transition-all duration-500 ease-slow group-hover:!transform-none dark:border-zinc-700"
           style={{
             transform: `perspective(400px) rotateY(${factor * 20}deg) scale(0.85) translateX(${-factor * 20}%)`,
           }}
