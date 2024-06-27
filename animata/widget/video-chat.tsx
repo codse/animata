@@ -19,19 +19,28 @@ import { cn } from "@/lib/utils";
 import Hills from "@/public/bg-hills.jpg";
 import Music from "@/public/widget/music.jpg";
 
-interface SquareDiv {
+interface SquareDivProps {
   bgColor?: string;
   children: React.ReactNode;
   onClick?: () => void;
 }
 
-interface ImageSlot {
+interface ImageSlotProps {
   minimize: boolean;
   imageSource: StaticImageData;
   imageAlternate: string;
 }
 
-function SquareDiv({ bgColor = "bg-green-600", children, onClick }: SquareDiv) {
+interface ControlIconStateProps {
+  iconState: {
+    Mic: boolean;
+    Screen: boolean;
+    Video: boolean;
+  };
+  toggleIconState: (icon: keyof ControlIconStateProps["iconState"]) => void;
+}
+
+function SquareDiv({ bgColor = "bg-green-600", children, onClick }: SquareDivProps) {
   return (
     <div
       className={cn("flex h-6 w-6 cursor-pointer items-center justify-center rounded-md", bgColor)}
@@ -42,7 +51,7 @@ function SquareDiv({ bgColor = "bg-green-600", children, onClick }: SquareDiv) {
   );
 }
 
-function ImageSlot({ minimize, imageSource, imageAlternate }: ImageSlot) {
+function ImageSlot({ minimize, imageSource, imageAlternate }: ImageSlotProps) {
   return (
     <motion.div
       layout
@@ -58,7 +67,7 @@ function ImageSlot({ minimize, imageSource, imageAlternate }: ImageSlot) {
   );
 }
 
-function YourImageSlot({ minimize, imageSource, imageAlternate }: ImageSlot) {
+function YourImageSlot({ minimize, imageSource, imageAlternate }: ImageSlotProps) {
   return (
     <motion.div
       layout
@@ -71,6 +80,26 @@ function YourImageSlot({ minimize, imageSource, imageAlternate }: ImageSlot) {
         className={cn("h-full w-full object-cover", minimize ? "rounded-xl" : "rounded-3xl")}
       />
     </motion.div>
+  );
+}
+function ControlIconState({ iconState, toggleIconState }: ControlIconStateProps) {
+  return (
+    <div className="flex items-center justify-center gap-1">
+      <SquareDiv onClick={() => toggleIconState("Mic")}>
+        <Mic size={18}>{iconState.Mic && <Slash />}</Mic>
+      </SquareDiv>
+      <SquareDiv bgColor="bg-slate-400" onClick={() => toggleIconState("Screen")}>
+        <Monitor size={18}>{iconState.Screen && <Slash />}</Monitor>
+      </SquareDiv>
+      <SquareDiv onClick={() => toggleIconState("Video")}>
+        <VideoIcon fill="white" size={18}>
+          {iconState.Video && <Slash />}
+        </VideoIcon>
+      </SquareDiv>
+      <SquareDiv bgColor="bg-red-600">
+        <LogOut size={18} />
+      </SquareDiv>
+    </div>
   );
 }
 
@@ -121,24 +150,7 @@ export default function VideoChat() {
           <Circle fill="yellow" stroke="none" size={14} />
           <Circle fill="green" stroke="none" size={14} />
         </div>
-        {!minimize && (
-          <div className="flex items-center justify-center gap-1">
-            <SquareDiv onClick={() => toggleIconState("Mic")}>
-              <Mic size={18}>{iconState.Mic && <Slash />}</Mic>
-            </SquareDiv>
-            <SquareDiv bgColor="bg-slate-400" onClick={() => toggleIconState("Screen")}>
-              <Monitor size={18}>{iconState.Screen && <Slash />}</Monitor>
-            </SquareDiv>
-            <SquareDiv onClick={() => toggleIconState("Video")}>
-              <VideoIcon fill="white" size={18}>
-                {iconState.Video && <Slash />}
-              </VideoIcon>
-            </SquareDiv>
-            <SquareDiv bgColor="bg-red-600">
-              <LogOut size={18} />
-            </SquareDiv>
-          </div>
-        )}
+        {!minimize && <ControlIconState iconState={iconState} toggleIconState={toggleIconState} />}
         <div className="flex items-center gap-2">
           <button onClick={() => setMinimize(!minimize)}>
             {minimize ? (
