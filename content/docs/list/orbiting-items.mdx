@@ -13,7 +13,7 @@ author: harimanok_
 
 Add the following to your tailwind.config.js file.
 
-```json
+```json {5-8}
 module.exports = {
   theme: {
     extend: {
@@ -22,9 +22,6 @@ module.exports = {
           "0%": { transform: "rotate(0deg)" },
           "100%": { transform: "rotate(360deg)" },
         },
-      },
-      transitionDuration: {
-        long: "10s",
       },
     }
   }

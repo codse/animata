@@ -35,8 +35,19 @@ export default function OrbitingItems({
   items = testOrbitingItems,
   pauseOnHover,
 }: {
+  /**
+   * The radius of the circle in percentage, relative to the container.
+   */
   radius: number;
+
+  /**
+   * The items to orbit around the center of the parent element.
+   */
   items: React.ReactNode[];
+
+  /**
+   * Pause the animation when the parent element is hovered.
+   */
   pauseOnHover?: boolean;
 }) {
   // The idea is to distribute the items in a circle around the center of the parent element.
@@ -44,18 +55,18 @@ export default function OrbitingItems({
   // The items rotate in the opposite direction to the parent element so they appear to be stationary.
 
   const reverse = cn(
-    "animate-[rotate-full] transition-transform duration-long ease-linear direction-reverse repeat-infinite",
+    "animate-[rotate-full_30s] transition-transform ease-linear direction-reverse repeat-infinite",
     {
       "group-hover:[animation-play-state:paused]": pauseOnHover,
     },
   );
 
   return (
-    <div className="storybook-fix bg- group flex items-center justify-center py-32">
+    <div className="storybook-fix group flex items-center justify-center py-32">
       <div className="absolute inset-0 h-full w-full items-center [background:radial-gradient(125%_125%_at_50%_10%,#030637_30%,#10439F_100%)]" />
       <div
         className={cn(
-          "relative flex h-64 w-64 animate-[rotate-full] items-center justify-center duration-long ease-linear repeat-infinite",
+          "relative flex h-64 w-64 animate-[rotate-full_30s] items-center justify-center ease-linear repeat-infinite",
           {
             "group-hover:[animation-play-state:paused]": pauseOnHover,
           },

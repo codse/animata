@@ -1,8 +1,8 @@
-import FlippingCard from "@/animata/card/flipping-card";
+import FlippingCard from "@/animata/list/flipping-cards";
 import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
-  title: "Card/Flipping Card",
+  title: "List/Flipping Cards",
   component: FlippingCard,
   parameters: {
     layout: "centered",
