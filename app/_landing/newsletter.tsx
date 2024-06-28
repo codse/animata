@@ -5,8 +5,7 @@ import { Input } from "@/components/ui/input";
 import useNewsletterSubscription from "@/hooks/use-newsletter-subscription";
 
 export function NewsletterInput() {
-  const { isLoading, error, success, addSubscriber, setEmail, email } =
-    useNewsletterSubscription();
+  const { isLoading, error, success, addSubscriber, setEmail, email } = useNewsletterSubscription();
 
   return (
     <div className="w-full max-w-sm space-y-2">
@@ -26,7 +25,7 @@ export function NewsletterInput() {
         />
         <Button type="submit" disabled={isLoading}>
           {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-          {isLoading ? "Please wait" : "Request access"}
+          {isLoading ? "Please wait" : "Join now"}
         </Button>
       </form>
       <p className="text-xs text-gray-500 dark:text-gray-400">
@@ -46,15 +45,11 @@ export function NewsletterInput() {
 
 export default function NewsletterSection() {
   return (
-    <section className="py-18 w-full md:py-24 lg:py-32">
-      <div className="container px-4 md:px-6">
-        <div className="flex flex-col items-center text-center" id="join">
-          <p className="mb-1 mt-12 max-w-[750px] text-center text-sm font-medium text-foreground opacity-60">
-            Be among the first to use Animata.
-          </p>
-          <NewsletterInput />
-        </div>
-      </div>
-    </section>
+    <div className="mt-8 flex flex-col" id="join">
+      <p className="mb-1 text-sm font-medium text-foreground opacity-60">
+        Join our newsletter to get the latest updates.
+      </p>
+      <NewsletterInput />
+    </div>
   );
 }
