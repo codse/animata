@@ -1,15 +1,15 @@
-import Carousel from "@/animata/container/carousel";
+import ImageCarousel from "@/animata/carousel/image-carousel";
 import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
-  title: "Container/Carousel",
-  component: Carousel,
+  title: "Carousel/Image Carousel",
+  component: ImageCarousel,
   parameters: {
     layout: "centered",
   },
   tags: ["autodocs"],
   argTypes: {},
-} satisfies Meta<typeof Carousel>;
+} satisfies Meta<typeof ImageCarousel>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
