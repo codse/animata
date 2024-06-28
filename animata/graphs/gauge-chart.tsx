@@ -22,7 +22,7 @@ export default function GaugeChart({
   progress,
   gap,
   progressClassName = "text-green-500",
-  trackClassName = "text-black/10",
+  trackClassName = "text-black/10 dark:text-white/10",
   circleWidth = 16,
   progressWidth = 16,
   rounded = true,
@@ -91,7 +91,7 @@ export default function GaugeChart({
         </svg>
         {showValue && (
           <div
-            className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 font-mono font-bold"
+            className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 font-mono font-bold text-foreground"
             style={{ fontSize: size / 4 }}
           >
             {progress}

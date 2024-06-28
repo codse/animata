@@ -19,6 +19,7 @@ import {
   CopyTouchCommandButton,
 } from "@/components/copy-button";
 import { FrameworkDocs } from "@/components/framework-docs";
+import PreviewContainer from "@/components/preview-container";
 import {
   Accordion,
   AccordionContent,
@@ -41,6 +42,7 @@ const components = {
   Alert,
   AlertTitle,
   AlertDescription,
+  PreviewContainer,
   ...baseComponents,
   pre: ({
     className,
