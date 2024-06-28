@@ -1,6 +1,13 @@
-export default function Report() {
+import { cn } from "@/lib/utils";
+
+export default function Report({ className }: { className?: string }) {
   return (
-    <div className="flex min-h-48 w-52 flex-col gap-3 rounded-md border bg-background p-3 shadow-xl transition-shadow hover:shadow-sm dark:border-zinc-700">
+    <div
+      className={cn(
+        "flex min-h-48 w-52 flex-col gap-3 rounded-md border bg-background p-3 shadow-xl transition-shadow hover:shadow-sm dark:border-zinc-700",
+        className,
+      )}
+    >
       <div className="flex items-center justify-between border-b pb-3 dark:border-zinc-700">
         <span className="font-semibold text-foreground">Report</span>
 

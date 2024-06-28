@@ -61,6 +61,7 @@ export default function BarChart({ items, className, height: providedHeight }: B
           <div
             className={cn("flex h-full flex-1 flex-col-reverse", item.containerClassName)}
             key={`bar_${index}`}
+            title={item.label}
           >
             <div
               style={{ height: barHeight }}
