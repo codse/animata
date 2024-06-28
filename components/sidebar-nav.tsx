@@ -22,45 +22,42 @@ export function DocsSidebarNav({ items }: DocsSidebarNavProps) {
         .filter(
           (item) => !!item.icon && item.items?.length && item.href && !pathname.includes(item.href),
         )
-        .map((item) => item.title),
+        .map((item) => item.href ?? item.title),
     ),
   );
 
   useEffect(() => {
-    setClosed(
-      new Set(
-        items
-          .filter(
-            (item) =>
-              !!item.icon && item.items?.length && item.href && !pathname.includes(item.href),
-          )
-          .map((item) => item.title),
-      ),
-    );
-  }, [pathname, items]);
+    setClosed((current) => {
+      const next = new Set(current);
+      // Open the current section if one of the child pages is active
+      next.add("/docs/" + pathname.split("/")[1]);
+      return next;
+    });
+  }, [pathname]);
 
   return items.length ? (
     <div className="w-full">
       {items.map((item, index) => {
-        const isOpen = !closed.has(item.title);
+        const isOpen = !closed.has(item.href ?? item.title);
         const Icon = item.icon && Icons[item.icon as keyof typeof Icons];
 
         const toggle = () => {
           setClosed((prev) => {
             const next = new Set(prev);
             if (isOpen) {
-              next.add(item.title);
+              next.add(item.href ?? item.title);
             } else {
-              next.delete(item.title);
+              next.delete(item.href ?? item.title);
             }
             return next;
           });
         };
 
+        const specialHeaderCount = 2; // Getting started & contributing;
+
         return (
           <div key={index}>
             <Link
-              key={index}
               href={item.href ?? (item.items?.[0].href as string)}
               className="cursor-pointer"
               onClick={toggle}
@@ -76,7 +73,7 @@ export function DocsSidebarNav({ items }: DocsSidebarNavProps) {
                   />
                 )}
                 {item.title}
-                {Boolean(item.items?.length || item.label) && index > 1 && (
+                {Boolean(item.items?.length || item.label) && index >= specialHeaderCount && (
                   <span className="flex aspect-square items-center justify-center rounded-full bg-gray-200 px-1 py-0.5 text-[10px] leading-none text-[#000000] no-underline">
                     {item.label || item.items?.length}
                   </span>
@@ -90,6 +87,11 @@ export function DocsSidebarNav({ items }: DocsSidebarNavProps) {
                 })}
               >
                 <DocsSidebarNavItems items={item.items} pathname={pathname} />
+              </div>
+            )}
+            {index === specialHeaderCount - 1 && (
+              <div className="mb-1 mt-2 pl-4 text-xs font-semibold uppercase text-muted-foreground">
+                COMPONENTS
               </div>
             )}
           </div>
@@ -113,12 +115,11 @@ export function DocsSidebarNavItems({ items, pathname }: DocsSidebarNavItemsProp
             key={index}
             href={item.href}
             className={cn(
-              "group flex w-full items-center rounded-md border border-transparent px-2 py-1 hover:underline",
+              "group flex w-full items-center rounded-md border border-transparent px-2 py-1 capitalize hover:underline",
               item.disabled && "cursor-not-allowed opacity-60",
               pathname === item.href
                 ? "bg-muted font-normal text-foreground"
                 : "text-muted-foreground",
-              item.sortId === "000" && "hidden",
             )}
             target={item.external ? "_blank" : ""}
             rel={item.external ? "noreferrer" : ""}

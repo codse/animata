@@ -150,6 +150,10 @@ const config = {
             boxShadow: "0 0 30px 10px rgba(239, 68, 68, 1)",
           },
         },
+        "rotate-full": {
+          "0%": { transform: "rotate(0deg)" },
+          "100%": { transform: "rotate(360deg)" },
+        },
       },
       animation: {
         fill: "fill 1s forwards",

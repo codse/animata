@@ -59,7 +59,7 @@ export function MobileNav() {
           <Icons.logo className="mr-2 h-4 w-4" />
           <span className="font-bold">{siteConfig.name}</span>
         </MobileLink>
-        <ScrollArea className="my-4 h-[calc(100vh-8rem)] pb-10 pl-6">
+        <ScrollArea className="my-4 h-[calc(100vh-4rem)] pb-4 pl-4">
           <div className="flex flex-col space-y-3">
             {docsConfig.mainNav?.map(
               (item) =>

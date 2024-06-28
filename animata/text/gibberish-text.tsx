@@ -31,7 +31,11 @@ const Letter = ({ letter, className }: { letter: string; className?: string }) =
     return () => clearInterval(interval);
   }, [letter]);
 
-  return <span className={cn("whitespace-pre", className)}>{String.fromCharCode(code)}</span>;
+  return (
+    <span className={cn("whitespace-pre text-foreground", className)}>
+      {String.fromCharCode(code)}
+    </span>
+  );
 };
 
 /**
