@@ -153,7 +153,7 @@ export default function HeroExamples() {
         <div className="relative w-full rounded-full border border-gray-200 bg-gray-50 p-4 shadow-xl transition-all dark:border-gray-600 dark:bg-gray-900">
           <AnimatedGradientText className="overflow-hidden rounded-xl tabular-nums">
             <Counter
-              targetValue={30}
+              targetValue={40}
               className="text-2xl md:text-4xl"
               format={(value) => {
                 const val = Math.ceil(value);

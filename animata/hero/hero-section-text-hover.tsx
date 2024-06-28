@@ -63,7 +63,7 @@ const HeroSectionTextHover: React.FC<HeroCardProps> = ({ className }) => {
   return (
     <div
       className={cn(
-        "relative min-h-[100px] w-full rounded-2xl border-2 border-gray-300 md:min-h-[200px]",
+        "storybook-fix py-12å relative min-h-[100px] w-full rounded-2xl border border-gray-200 md:min-h-[200px]",
         className,
       )}
     >
