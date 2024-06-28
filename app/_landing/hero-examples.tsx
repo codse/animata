@@ -154,7 +154,7 @@ export default function HeroExamples() {
           <AnimatedGradientText className="overflow-hidden rounded-xl tabular-nums">
             <Counter
               targetValue={40}
-              className="text-2xl md:text-4xl"
+              className="text-2xl text-transparent md:text-4xl"
               format={(value) => {
                 const val = Math.ceil(value);
                 const padded = val.toString().padStart(2, "0");
