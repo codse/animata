@@ -17,11 +17,13 @@ import FlightWidget from "@/animata/widget/flight-widget";
 import LiveScore from "@/animata/widget/live-score";
 import MobileDetail from "@/animata/widget/mobile-detail";
 import MusicWidget from "@/animata/widget/music-widget";
+import NotesWidget from "@/animata/widget/notes";
 import Profile from "@/animata/widget/profile";
 import ReminderWidget from "@/animata/widget/reminder-widget";
 import Reminder from "@/animata/widget/reminder";
 import ScoreBoard from "@/animata/widget/score-board";
 import SecurityAlert from "@/animata/widget/security-alert";
+import ShoppingListWidget from "@/animata/widget/shopping-list";
 import SleepTracker from "@/animata/widget/sleep-tracker";
 import StorageStatus from "@/animata/widget/storage-status";
 import StorageWidget from "@/animata/widget/storage-widget";
@@ -255,6 +257,22 @@ import WeeklyProgress from "@/animata/widget/weekly-progress";
   <ComponentListItem copyId="reminder-widget">
     <ReminderWidget />
     ```tsx file=<rootDir>/animata/widget/reminder-widget.tsx copyId="reminder-widget"
+
+    ````
+
+  </ComponentListItem>
+
+  <ComponentListItem copyId="notes">
+    <NotesWidget />
+    ```tsx file=<rootDir>/animata/widget/notes.tsx copyId="notes"
+
+    ````
+
+  </ComponentListItem>
+
+  <ComponentListItem copyId="shopping-list">
+    <ShoppingListWidget />
+    ```tsx file=<rootDir>/animata/widget/shopping-list.tsx copyId="shopping-list"
 
     ````
 
