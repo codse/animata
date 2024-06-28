@@ -58,6 +58,7 @@
     10px 10px;
   background-color: #fefefe;
 }
+
 .preview-dark {
   background-image: radial-gradient(#6a6a6a 1px, transparent 1px),
     radial-gradient(#6a6a6a 1px, transparent 1px);
@@ -73,10 +74,6 @@
 
 .dark .component-list-item {
   @apply preview-dark border-zinc-700 bg-zinc-950;
-}
-
-.text-underline {
-  @apply cursor-pointer underline decoration-yellow-300 decoration-wavy;
 }
 
 .embedded:not(.dark) {
