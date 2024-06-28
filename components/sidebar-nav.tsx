@@ -16,21 +16,16 @@ export interface DocsSidebarNavProps {
 
 export function DocsSidebarNav({ items }: DocsSidebarNavProps) {
   const pathname = usePathname();
-  const [closed, setClosed] = useState(
-    new Set(
-      items
-        .filter(
-          (item) => !!item.icon && item.items?.length && item.href && !pathname.includes(item.href),
-        )
-        .map((item) => item.href ?? item.title),
-    ),
-  );
+  const [closed, setClosed] = useState(new Set<string>());
 
   useEffect(() => {
     setClosed((current) => {
       const next = new Set(current);
       // Open the current section if one of the child pages is active
-      next.add("/docs/" + pathname.split("/")[1]);
+      const path = "/docs/" + pathname.split("/")[1];
+      if (next.has(path)) {
+        next.delete(path);
+      }
       return next;
     });
   }, [pathname]);
