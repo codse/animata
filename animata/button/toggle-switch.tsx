@@ -2,17 +2,16 @@
 import { useState } from "react";
 
 interface IToggleSwitchProps {
-  onChecked?: () => void;
+  onChange?: (value: boolean) => void;
+  defaultChecked?: boolean;
 }
 
-const ToggleSwitch = ({ onChecked }: IToggleSwitchProps) => {
-  const [isChecked, setIsChecked] = useState<boolean>(false);
+const ToggleSwitch = ({ onChange, defaultChecked }: IToggleSwitchProps) => {
+  const [isChecked, setIsChecked] = useState<boolean>(defaultChecked ?? false);
   const handleCheckboxChange = () => {
     const newCheckedState = !isChecked;
     setIsChecked(newCheckedState);
-    if (newCheckedState && onChecked) {
-      onChecked();
-    }
+    onChange?.(newCheckedState);
   };
 
   return (
@@ -26,13 +25,11 @@ const ToggleSwitch = ({ onChecked }: IToggleSwitchProps) => {
             className="sr-only"
           />
           <div
-            className={`box block h-8 w-14 rounded-full ${
-              isChecked ? "bg-primary" : "bg-gray-400"
-            }`}
+            className={`box block h-8 w-14 rounded-full ${isChecked ? "bg-muted" : "bg-muted"}`}
           />
           <div
-            className={`absolute left-1 top-1 flex h-6 w-6 items-center justify-center rounded-full bg-white transition ${
-              isChecked ? "translate-x-full" : ""
+            className={`absolute left-1 top-1 flex h-6 w-6 items-center justify-center rounded-full transition ${
+              isChecked ? "translate-x-full bg-foreground/75" : "bg-foreground/50"
             }`}
           />
         </div>

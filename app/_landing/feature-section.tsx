@@ -218,7 +218,7 @@ export default function FeatureSection() {
               BoldCopy
             </span>{" "}
             <span className="font-medium text-yellow-600 dark:text-yellow-500">from</span>{" "}
-            &quot;@/animata/components/text/bold-copy&quot;
+            &quot;@/components/animata/text/bold-copy&quot;
           </div>
 
           <div className="mt-3 transition-all group-hover:animate-pulse">

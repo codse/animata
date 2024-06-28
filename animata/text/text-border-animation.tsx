@@ -9,8 +9,11 @@ interface TextProps {
    * Text to display
    */
   text: string;
+
+  className?: string;
 }
-export default function TextBorderAnimation({ text = "Programming" }: TextProps) {
+
+export default function TextBorderAnimation({ text = "Programming", className }: TextProps) {
   const [isHoveredIn, setIsHoveredIn] = useState(false);
   const [isHoveredOut, setIsHoveredOut] = useState(false);
 
@@ -35,7 +38,7 @@ export default function TextBorderAnimation({ text = "Programming" }: TextProps)
 
   return (
     <div onMouseEnter={handleHover} onMouseLeave={handleHoverExit} className="overflow-hidden">
-      <span className="text-5xl font-bold text-black">{text}</span>
+      <span className={cn("text-5xl font-bold text-black", className)}>{text}</span>
       <div className="relative mt-1 h-1 w-full">
         <div
           className={cn(

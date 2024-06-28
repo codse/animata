@@ -85,7 +85,6 @@ const sidebarNav: SidebarNavItem[] = [
   },
   {
     title: "Text",
-
     items: createLinks("text"),
   },
   {
