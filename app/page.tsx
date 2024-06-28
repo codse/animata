@@ -26,7 +26,7 @@ export default function IndexPage() {
       <DiagonalLines color="#dadada" className="absolute -left-20 -top-20 h-52 w-52 rotate-12">
         <div className="h-52 w-52" />
       </DiagonalLines>
-      <div className="container relative flex w-full flex-col gap-8 py-12 md:py-24">
+      <div className="container relative flex w-full flex-col gap-8 pb-12 pt-4 md:pb-24 md:pt-8">
         <Announcement />
         <Hero />
         <FeatureSection />
