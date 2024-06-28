@@ -163,6 +163,8 @@ const sidebarNav: SidebarNavItem[] = [
   },
   {
     title: "Skeleton",
+    label: "6",
+    href: "/docs/skeleton",
     items: createLinks("skeleton"),
   },
 ]

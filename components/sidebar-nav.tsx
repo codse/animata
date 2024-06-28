@@ -120,7 +120,6 @@ export function DocsSidebarNavItems({ items, pathname }: DocsSidebarNavItemsProp
               pathname === item.href
                 ? "bg-muted font-normal text-foreground"
                 : "text-muted-foreground",
-              item.sortId === "000" && "hidden",
             )}
             target={item.external ? "_blank" : ""}
             rel={item.external ? "noreferrer" : ""}
