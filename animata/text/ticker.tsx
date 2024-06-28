@@ -86,7 +86,12 @@ export default function Ticker({
   const getHeight = useCallback(() => divRef.current?.getBoundingClientRect().height ?? 0, []);
 
   return (
-    <div className={cn("relative overflow-hidden whitespace-pre tabular-nums", className)}>
+    <div
+      className={cn(
+        "relative overflow-hidden whitespace-pre tabular-nums text-foreground",
+        className,
+      )}
+    >
       <div className="absolute inset-0 flex min-w-fit">
         {parts.map((part, index) => (
           <Number
