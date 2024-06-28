@@ -126,7 +126,7 @@ const config = {
           "66%": { transform: "scale(0.8)" },
           "100%": { transform: "scale(1)" },
         },
-        flipWords: {
+        "flip-words": {
           "10%": { transform: "translateY(-112%)" },
           "25%": { transform: "translateY(-100%)" },
           "35%": { transform: "translateY(-212%)" },
@@ -163,7 +163,7 @@ const config = {
         "marquee-vertical": "marquee-y var(--duration) linear infinite",
         "bg-position": "bg-position 3s infinite alternate",
         "pop-blob": "pop-blob 4s infinite",
-        flipWords: "flipWords 8s infinite",
+        "flip-words": "flip-words 8s infinite",
         fadeIn: "fadeIn 0.5s ease-in",
         "blink-red": "blink-red 2s infinite linear",
       },

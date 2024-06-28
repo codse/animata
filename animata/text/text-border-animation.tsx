@@ -12,7 +12,7 @@ interface TextProps {
 
   className?: string;
 }
-
+  
 export default function TextBorderAnimation({ text = "Programming", className }: TextProps) {
   const [isHoveredIn, setIsHoveredIn] = useState(false);
   const [isHoveredOut, setIsHoveredOut] = useState(false);

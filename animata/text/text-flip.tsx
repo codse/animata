@@ -33,7 +33,7 @@ export default function TextFlip() {
       <p className="text-foreground">Coding is</p>
       <div ref={tallestRef} className="flex flex-col overflow-hidden text-blue-400">
         {words.map((word, index) => (
-          <span key={index} className="animate-flipWords">
+          <span key={index} className="animate-flip-words">
             {word}
           </span>
         ))}
