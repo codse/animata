@@ -57,7 +57,7 @@ export default function SwapText({
   const longWord = finalText.length > initialText.length ? finalText : null;
 
   return (
-    <div {...props} className={cn("relative overflow-hidden", className)}>
+    <div {...props} className={cn("relative overflow-hidden text-foreground", className)}>
       <div
         className={cn("group cursor-pointer select-none text-3xl font-bold", textClassName)}
         onClick={() => !disableClick && setActive((current) => !current)}

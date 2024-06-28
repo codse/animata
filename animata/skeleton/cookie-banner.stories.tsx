@@ -1,15 +1,15 @@
-import RevealImageList from "@/animata/list/reveal-image";
+import CookieBanner from "@/animata/skeleton/cookie-banner";
 import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
-  title: "List/Reveal image",
-  component: RevealImageList,
+  title: "Skeleton/Cookie Banner",
+  component: CookieBanner,
   parameters: {
     layout: "centered",
   },
   tags: ["autodocs"],
   argTypes: {},
-} satisfies Meta<typeof RevealImageList>;
+} satisfies Meta<typeof CookieBanner>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;

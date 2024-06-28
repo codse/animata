@@ -59,7 +59,7 @@ export default function WaterTracker({ dailyGoal = 5000 }: WaterTrackerProps) {
         <div className="absolute bottom-0 right-0 h-full w-10 overflow-hidden rounded-r-3xl border-l-2 border-gray-700 bg-gray-800">
           <div
             className={
-              "absolute bottom-0 right-0 w-full bg-gradient-to-t from-blue-500 to-blue-700 transition-all duration-300 ease-in"
+              "absolute bottom-0 right-0 w-full bg-gradient-to-t from-blue-500 to-blue-700 transition-all duration-100 ease-out"
             }
             style={{
               height: `${progress}%`,

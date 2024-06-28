@@ -1,15 +1,15 @@
-import RevealImageList from "@/animata/list/reveal-image";
+import Code from "@/animata/skeleton/code";
 import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
-  title: "List/Reveal image",
-  component: RevealImageList,
+  title: "Skeleton/Code",
+  component: Code,
   parameters: {
     layout: "centered",
   },
   tags: ["autodocs"],
   argTypes: {},
-} satisfies Meta<typeof RevealImageList>;
+} satisfies Meta<typeof Code>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;

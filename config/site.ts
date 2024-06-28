@@ -5,7 +5,7 @@ export const siteConfig = {
   description:
     "Hand-crafted animated components that you can copy and paste into your apps. Free & Open Source.",
   links: {
-    twitter: "https://twitter.com/animata.design",
+    twitter: "https://twitter.com/animatadesign",
     github: "https://github.com/codse/animata",
   },
 };

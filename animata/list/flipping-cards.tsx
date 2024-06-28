@@ -18,6 +18,7 @@ interface CardDetailsProps extends React.HTMLAttributes<HTMLDivElement> {
 interface FlippingCardProps {
   list: CardDetailsProps[];
 }
+
 const Card = ({ show, reveal }: CardProps) => {
   const common = "absolute flex w-full h-full  [backface-visibility:hidden]";
   return (

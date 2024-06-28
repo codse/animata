@@ -1,0 +1,51 @@
+---
+title: Orbiting Items
+description: List component with orbiting items. The items orbit around the center of the list.
+author: harimanok_
+---
+
+<ComponentPreview name="list-orbiting-items--docs" />
+
+## Installation
+
+<Steps>
+<Step>Update `tailwind.config.js`</Step>
+
+Add the following to your tailwind.config.js file.
+
+```json {5-8}
+module.exports = {
+  theme: {
+    extend: {
+      keyframes: {
+        "rotate-full": {
+          "0%": { transform: "rotate(0deg)" },
+          "100%": { transform: "rotate(360deg)" },
+        },
+      },
+    }
+  }
+}
+```
+
+<Step>Run the following command</Step>
+
+It will create a new file `orbiting-items.tsx` inside the `components/animata/list` directory.
+
+```bash
+mkdir -p components/animata/list && touch components/animata/list/orbiting-items.tsx
+```
+
+<Step>Paste the code</Step>{" "}
+
+Open the newly created file and paste the following code:
+
+```jsx file=<rootDir>/animata/list/orbiting-items.tsx
+
+```
+
+</Steps>
+
+## Credits
+
+Built by [hari](https://github.com/hari)

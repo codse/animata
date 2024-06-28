@@ -18,7 +18,7 @@ export default function DonutChart({
   size,
   progress,
   progressClassName = "text-green-500",
-  trackClassName = "text-black/10",
+  trackClassName = "text-black/10 dark:text-white/10",
   circleWidth = 16,
   progressWidth = 16,
   rounded = true,

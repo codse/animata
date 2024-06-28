@@ -85,7 +85,6 @@ const sidebarNav: SidebarNavItem[] = [
   },
   {
     title: "Text",
-
     items: createLinks("text"),
   },
   {
@@ -121,7 +120,7 @@ const sidebarNav: SidebarNavItem[] = [
     items: createLinks("progress"),
   },
   {
-    title: "Graphs",
+    title: "Graphs & charts",
     items: createLinks("graphs"),
   },
   {
@@ -163,6 +162,8 @@ const sidebarNav: SidebarNavItem[] = [
   },
   {
     title: "Skeleton",
+    label: "6",
+    href: "/docs/skeleton",
     items: createLinks("skeleton"),
   },
 ]

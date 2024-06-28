@@ -76,5 +76,5 @@ export default function Counter({
     });
   }, [springValue, format]);
 
-  return <span ref={ref} className={cn("text-4xl font-bold", className)} />;
+  return <span ref={ref} className={cn("text-4xl font-bold text-foreground", className)} />;
 }

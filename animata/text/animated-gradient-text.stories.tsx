@@ -34,6 +34,6 @@ export const CustomColors: Story = {
       </>
     ),
     className:
-      "text-lg inline-flex cursor-pointer items-center rounded-lg border-2 hover:border-sky-500 border-sky-300 bg-muted px-3 py-1 text-sm font-medium md:border-4 md:px-6 md:py-2 md:text-2xl font-bold from-blue-300 via-blue-600 to-purple-300",
+      "text-lg inline-flex cursor-pointer items-center rounded-lg border-2 hover:border-sky-500 border-sky-300 bg-muted px-3 py-1  md:border-4 md:px-6 md:py-2 md:text-2xl font-bold from-blue-300 via-blue-600 to-purple-300",
   },
 };

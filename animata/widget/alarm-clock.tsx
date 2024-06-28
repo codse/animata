@@ -18,21 +18,25 @@ export default function AlarmClock({
     { id: 2, time: "9:00 AM", repetition: "Weekdays" },
   ],
 }: AlarmProps) {
-  const [toggleStates, setToggleStates] = useState(alarms.map(() => false));
+  const [toggleStates, setToggleStates] = useState(new Set<number>());
 
-  const handleToggleChange = (index: number) => {
+  const handleToggleChange = (value: boolean, index: number) => {
     setToggleStates((prevStates) => {
-      const newStates = [...prevStates];
-      newStates[index] = !newStates[index];
+      const newStates = new Set(prevStates);
+      if (value) {
+        newStates.add(index);
+      } else {
+        newStates.delete(index);
+      }
       return newStates;
     });
   };
 
   return (
-    <div className={cn("group h-52 w-52 rounded-3xl bg-gray-800 p-4")}>
+    <div className={cn("group size-52 rounded-3xl border bg-background p-4 dark:border-zinc-700")}>
       <div className="flex items-center justify-between">
-        <p className="text-md font-bold text-white">Alarms</p>
-        <AlarmClockIcon size={20} color="white" className="mt-1" />
+        <p className="text-md font-bold text-foreground">Alarms</p>
+        <AlarmClockIcon size={20} className="mt-1 text-muted-foreground" />
       </div>
 
       <div className="mt-3 flex flex-col gap-2">
@@ -40,18 +44,19 @@ export default function AlarmClock({
           <div className="flex items-center justify-between" key={index}>
             <div className="flex-col justify-start tabular-nums">
               <p
-                className={`text-md font-bold ${toggleStates[index] ? "text-foreground" : "text-gray-500"}`}
+                className={`text-md font-bold ${toggleStates.has(index) ? "text-foreground" : "text-muted-foreground"}`}
               >
                 {alarm.time}
               </p>
               <p
-                className={`text-xs font-medium ${toggleStates[index] ? "text-foreground" : "text-gray-500"}`}
+                className={`text-xs font-medium ${toggleStates.has(index) ? "text-foreground" : "text-muted-foreground"}`}
               >
                 {alarm.repetition}
               </p>
             </div>
             <ToggleSwitch
-              onChecked={() => handleToggleChange(index)} // Pass index to identify which alarm is toggled
+              defaultChecked={toggleStates.has(index)}
+              onChange={(value) => handleToggleChange(value, index)} // Pass index to identify which alarm is toggled
             />
           </div>
         ))}
