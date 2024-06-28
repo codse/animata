@@ -4,7 +4,7 @@ interface FlipCardProps extends React.HTMLAttributes<HTMLDivElement> {
   image: string;
   title: string;
   description: string;
-  subtitle: string;
+  subtitle?: string;
   rotate?: "x" | "y";
 }
 
@@ -34,7 +34,7 @@ export default function FlipCard({
           <img
             src={image}
             alt="image"
-            className="h-full w-full rounded-xl object-cover shadow-2xl shadow-black/40"
+            className="h-full w-full object-cover shadow-2xl shadow-black/40"
           />
         </div>
         <div
