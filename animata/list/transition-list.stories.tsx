@@ -1,8 +1,8 @@
-import TransitionList from "@/animata/container/transition-list";
+import TransitionList from "@/animata/list/transition-list";
 import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
-  title: "Container/Transition List",
+  title: "List/Transition List",
   component: TransitionList,
   parameters: {
     layout: "centered",
