@@ -1,3 +1,5 @@
+import { cn } from "@/lib/utils";
+
 interface ZigZagProps {
   /**
    * Color of the pattern
@@ -13,6 +15,11 @@ interface ZigZagProps {
    * Content of the component
    */
   children?: React.ReactNode;
+
+  /**
+   * Additional classes
+   */
+  className?: string;
 }
 
 function Placeholder() {
@@ -23,9 +30,9 @@ function Placeholder() {
   );
 }
 
-export default function ZigZag({ color = "#cacaca", size = 10, children }: ZigZagProps) {
+export default function ZigZag({ color = "#cacaca", size = 10, children, className }: ZigZagProps) {
   return (
-    <div className="bg-background">
+    <div className={cn("bg-background", className)}>
       <div
         key={`zigzag-${color}-${size}`}
         style={{

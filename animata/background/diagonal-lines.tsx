@@ -1,3 +1,5 @@
+import { cn } from "@/lib/utils";
+
 interface DiagonalLinesProps {
   /**
    * Color of the line
@@ -13,6 +15,11 @@ interface DiagonalLinesProps {
    * Content of the component
    */
   children?: React.ReactNode;
+
+  /**
+   * Additional classes
+   */
+  className?: string;
 }
 
 function Placeholder() {
@@ -27,9 +34,10 @@ export default function DiagonalLines({
   color = "#cacaca",
   spacing = 10,
   children,
+  className,
 }: DiagonalLinesProps) {
   return (
-    <div className="bg-background">
+    <div className={cn("bg-background", className)}>
       <div
         style={{
           backgroundImage: `repeating-linear-gradient(45deg,

@@ -10,6 +10,38 @@ export const testOrbitingItems = [
   <Icons.apple key="apple" className="h-6 w-6" />,
 ];
 
+interface OrbitingItemsProps {
+  /**
+   * The radius of the circle in percentage, relative to the container.
+   */
+  radius: number;
+
+  /**
+   * The items to orbit around the center of the parent element.
+   */
+  items: React.ReactNode[];
+
+  /**
+   * Pause the animation when the parent element is hovered.
+   */
+  pauseOnHover?: boolean;
+
+  /**
+   * Class name for the background element.
+   */
+  backgroundClassName?: string;
+
+  /**
+   * Class name for the container element.
+   */
+  containerClassName?: string;
+
+  /**
+   * Additional classes for the item container.
+   */
+  className?: string;
+}
+
 const calculateItemStyle = ({
   index,
   radius,
@@ -34,42 +66,41 @@ export default function OrbitingItems({
   radius = 50,
   items = testOrbitingItems,
   pauseOnHover,
-}: {
-  /**
-   * The radius of the circle in percentage, relative to the container.
-   */
-  radius: number;
-
-  /**
-   * The items to orbit around the center of the parent element.
-   */
-  items: React.ReactNode[];
-
-  /**
-   * Pause the animation when the parent element is hovered.
-   */
-  pauseOnHover?: boolean;
-}) {
+  backgroundClassName,
+  containerClassName,
+  className,
+}: OrbitingItemsProps) {
   // The idea is to distribute the items in a circle around the center of the parent element.
   // Then the whole parent element rotates around its center.
   // The items rotate in the opposite direction to the parent element so they appear to be stationary.
 
   const reverse = cn(
-    "animate-[rotate-full_30s] transition-transform ease-linear direction-reverse repeat-infinite",
+    "animate-[rotate-full_45s] transition-transform ease-linear direction-reverse repeat-infinite",
     {
       "group-hover:[animation-play-state:paused]": pauseOnHover,
     },
   );
 
   return (
-    <div className="storybook-fix group flex items-center justify-center py-32">
-      <div className="absolute inset-0 h-full w-full items-center [background:radial-gradient(125%_125%_at_50%_10%,#030637_30%,#10439F_100%)]" />
+    <div
+      className={cn(
+        "storybook-fix group flex items-center justify-center py-32",
+        containerClassName,
+      )}
+    >
       <div
         className={cn(
-          "relative flex h-64 w-64 animate-[rotate-full_30s] items-center justify-center ease-linear repeat-infinite",
+          "absolute inset-0 h-full w-full items-center [background:radial-gradient(125%_125%_at_50%_10%,#030637_30%,#10439F_100%)]",
+          backgroundClassName,
+        )}
+      />
+      <div
+        className={cn(
+          "relative flex h-64 w-64 animate-[rotate-full_45s] items-center justify-center ease-linear repeat-infinite",
           {
             "group-hover:[animation-play-state:paused]": pauseOnHover,
           },
+          className,
         )}
       >
         <div className="absolute h-full w-full rounded-full border-2 border-gray-500" />
