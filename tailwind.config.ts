@@ -175,6 +175,9 @@ const config = {
         mid: "3s",
         long: "10s",
       },
+      cursor: {
+        sword: "url('/cursor.png'), default",
+      },
     },
   },
   plugins: [require("tailwindcss-animate")],
