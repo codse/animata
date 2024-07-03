@@ -140,6 +140,17 @@ export default async function DocPage({ params }: DocPageProps) {
         ) : null}
         <div className="pb-12">
           <Mdx code={doc.body.code} />
+
+          <div className="my-3 text-right">
+            <Link
+              href={`https://github.com/codse/animata/edit/main/content/docs/${doc.slugAsParams}.mdx`}
+              target="_blank"
+              rel="noreferrer"
+              className="text-sm text-secondary-foreground underline"
+            >
+              Edit this page on GitHub
+            </Link>
+          </div>
         </div>
         <DocsPager doc={doc} />
       </div>
