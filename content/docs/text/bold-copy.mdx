@@ -10,6 +10,19 @@ author: harimanok_
 ## Installation
 
 <Steps>
+
+<Step>Update `tailwind.config.js`</Step>
+```js
+theme: {
+    extend: {
+     colors: {
+        background: "hsl(var(--background))",
+        foreground: "hsl(var(--foreground))",
+     }
+    },
+  },
+```
+
 <Step>Run the following command</Step>
 
 It will create a new file called `bold-copy.tsx` inside the `components/animata/text` directory.

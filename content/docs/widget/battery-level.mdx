@@ -8,6 +8,19 @@ description: A widget that shows battery level of different devices
 ## Installation
 
 <Steps>
+
+<Step>Update `tailwind.config.js`</Step>
+```js
+theme: {
+    extend: {
+     colors: {
+        foreground: "hsl(var(--foreground))",
+        background: "hsl(var(--background))",
+     }
+    },
+  },
+```
+
 <Step>Run the following command</Step>
 
 It will create a new file called `battery-level.tsx` inside the `components/animata/widget` directory.

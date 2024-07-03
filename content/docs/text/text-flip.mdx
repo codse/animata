@@ -18,6 +18,9 @@ Add the following to your tailwind.config.js file.
 module.exports = {
   theme: {
     extend: {
+      colors: {
+        foreground: "hsl(var(--foreground))",
+      },
       keyframes: {
         flipWords: {
           "10%": { transform: "translateY(-112%)" },

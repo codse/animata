@@ -10,6 +10,22 @@ author: harimanok_
 ## Installation
 
 <Steps>
+
+<Step>Update `tailwind.config.js`</Step>
+```js
+theme: {
+    extend: {
+        colors: {
+        foreground: "hsl(var(--foreground))",
+     },
+       transitionTimingFunction: {
+        slow: "cubic-bezier(.405, 0, .025, 1)",
+        "minor-spring": "cubic-bezier(0.18,0.89,0.82,1.04)",
+     }
+    },
+  },
+```
+
 <Step>Run the following command</Step>
 
 It will create a new file called `swap-text.tsx` inside the `components/animata/text` directory.

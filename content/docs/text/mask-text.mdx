@@ -10,6 +10,30 @@ author: morphhyy
 ## Installation
 
 <Steps>
+
+<Step>Create a hook `use-mouse-postition.ts` and paste the following code</Step>
+
+```jsx file=<rootDir>/hooks/use-mouse-position.ts
+
+```
+
+<Step>Create a `circle.svg` file inside `public` directory and paste the following code</Step>
+
+```jsx file=<rootDir>/public/circle.svg
+
+```
+
+<Step>Update `tailwind.config.js`</Step>
+```js
+theme: {
+    extend: {
+     colors: {
+        foreground: "hsl(var(--foreground))",
+     }
+    },
+  },
+```
+
 <Step>Run the following command</Step>
 
 It will create a new file called `mask-text.tsx` inside the `components/animata/text` directory.
