@@ -10,6 +10,22 @@ author: harimanok_
 ## Installation
 
 <Steps>
+
+<Step>Update `tailwind.config.js`</Step>
+```js
+theme: {
+    extend: {
+     keyframes: {
+        "shape-shift": {
+          "0%": {
+            width: "40px",
+            height: "20px",
+          },
+     }
+    },
+  },
+```
+
 <Step>Run the following command</Step>
 
 It will create a new file called `shape-shifter.tsx` inside the `components/animata/hero` directory.
