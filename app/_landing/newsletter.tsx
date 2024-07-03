@@ -45,7 +45,7 @@ export function NewsletterInput() {
 
 export default function NewsletterSection() {
   return (
-    <div className="mt-8 flex flex-col" id="join">
+    <div className="my-16 flex flex-col md:my-8" id="join">
       <p className="mb-1 text-sm font-medium text-foreground opacity-60">
         Join our newsletter to get the latest updates.
       </p>
