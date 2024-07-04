@@ -18,7 +18,7 @@ export default function Curtain() {
   return (
     <div
       className={cn(
-        "absolute inset-0 z-20 -mt-16 flex items-end justify-center bg-yellow-200 ease-slow animate-out slide-out-to-top-full fill-mode-forwards",
+        "absolute inset-0 z-20 flex items-end justify-center bg-yellow-200 ease-slow animate-out slide-out-to-top-full fill-mode-forwards",
         {
           // Only animate it once per load
           "duration-1000": !hasLoaded,
