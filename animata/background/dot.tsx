@@ -18,6 +18,11 @@ interface DotProps {
    * Content of the component
    */
   children?: React.ReactNode;
+
+  /**
+   * Class name
+   */
+  className?: string;
 }
 
 function Placeholder() {
@@ -28,7 +33,13 @@ function Placeholder() {
   );
 }
 
-export default function Dot({ color = "#cacaca", size = 1, spacing = 10, children }: DotProps) {
+export default function Dot({
+  color = "#cacaca",
+  size = 1,
+  spacing = 10,
+  children,
+  className,
+}: DotProps) {
   return (
     <div
       style={{
@@ -36,6 +47,7 @@ export default function Dot({ color = "#cacaca", size = 1, spacing = 10, childre
         backgroundImage: `radial-gradient(${color} ${size}px, transparent ${size}px)`,
         backgroundSize: `calc(${spacing} * ${size}px) calc(${spacing} * ${size}px)`,
       }}
+      className={className}
     >
       {children ?? <Placeholder />}
     </div>

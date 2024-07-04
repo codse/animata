@@ -3,6 +3,7 @@
 import { useTheme } from "next-themes";
 
 import DiagonalLines from "@/animata/background/diagonal-lines";
+import Dot from "@/animata/background/dot";
 import AnimatedGradientText from "@/animata/text/animated-gradient-text";
 import { Announcement } from "@/components/announcement";
 import ComponentLinkWrapper from "@/components/component-link-wrapper";
@@ -16,6 +17,7 @@ import Thunder from "./_landing/thunder";
 export default function IndexPage() {
   const { theme } = useTheme();
   const lineColor = theme === "dark" ? "#ffffff11" : "#444cf710";
+  const diagonalColor = theme === "dark" ? "#5f5f5f" : "#dadada";
   return (
     <div
       style={{
@@ -24,11 +26,23 @@ export default function IndexPage() {
       }}
       className="relative bg-background"
     >
-      <DiagonalLines color="#dadada" className="absolute -left-20 -top-20 z-10 h-52 w-52 rotate-12">
+      <DiagonalLines
+        color={diagonalColor}
+        className="absolute -left-20 -top-20 z-10 h-52 w-52 rotate-12"
+      >
         <ComponentLinkWrapper link="/docs/background/diagonal-lines">
           <div className="h-52 w-52" />
         </ComponentLinkWrapper>
       </DiagonalLines>
+      <Dot
+        color={diagonalColor}
+        className="absolute -right-20 -top-20 z-10 h-52 w-52 rotate-12 !bg-transparent"
+      >
+        <ComponentLinkWrapper link="/docs/background/dot">
+          <div className="h-52 w-52" />
+        </ComponentLinkWrapper>
+      </Dot>
+
       <div className="container relative flex w-full flex-col gap-8 pb-12 pt-4 md:pb-24 md:pt-8">
         <Announcement />
         <Hero />
