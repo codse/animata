@@ -35,7 +35,10 @@ export default function IndexPage() {
         <FeatureSection />
         <FAQSection />
       </div>
-      <div className="flex w-full items-center justify-center px-2 pb-12 pt-6 md:pb-36 md:pt-6 lg:pb-44 lg:pt-12">
+      <ComponentLinkWrapper
+        link="/docs/text/animated-gradient-text"
+        className="flex w-full items-center justify-center px-2 pb-12 pt-6 md:pb-36 md:pt-6 lg:pb-44 lg:pt-12"
+      >
         <AnimatedGradientText className="from-yellow-500 via-lime-500 to-green-500 text-4xl font-black uppercase md:text-5xl">
           Copy
         </AnimatedGradientText>
@@ -43,7 +46,7 @@ export default function IndexPage() {
         <AnimatedGradientText className="from-blue-500 via-violet-500 to-purple-500 text-4xl font-black uppercase md:text-5xl">
           Paste
         </AnimatedGradientText>
-      </div>
+      </ComponentLinkWrapper>
 
       <Curtain />
     </div>
