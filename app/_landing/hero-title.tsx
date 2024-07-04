@@ -12,7 +12,7 @@ const titleFont = Anaheim({
 
 export default function HeroTitle() {
   return (
-    <div className="group relative inline-block">
+    <div className="group relative z-10 inline-block">
       <motion.span
         initial={{
           opacity: 0,
