@@ -4,6 +4,7 @@ import RingChart from "@/animata/graphs/ring-chart";
 import TypingText from "@/animata/text/typing-text";
 import WaveReveal from "@/animata/text/wave-reveal";
 import Cycling from "@/animata/widget/cycling";
+import ComponentLinkWrapper from "@/components/component-link-wrapper";
 import { Icons } from "@/components/icons";
 import RemountOnMouseIn from "@/components/remount-on-mouse-in";
 import { cn } from "@/lib/utils";
@@ -178,32 +179,34 @@ export default function FeatureSection() {
         </div>
       </BentoCard>
       <BentoCard className="flex flex-col items-center justify-center bg-zinc-800 dark:bg-zinc-900">
-        <RemountOnMouseIn>
-          <RingChart
-            size={36}
-            className="bg-transparent"
-            width={16}
-            rings={[
-              {
-                progress: 10,
-                trackClassName: "text-rose-600/30",
-                progressClassName: "text-rose-600",
-              },
-              {
-                progress: 60,
-                trackClassName: "text-lime-500/20",
-                progressClassName: "text-lime-500",
-              },
-              {
-                progress: 40,
-                trackClassName: "text-teal-400/30",
-                progressClassName: "text-teal-400",
-              },
-            ]}
-          />
-        </RemountOnMouseIn>
+        <ComponentLinkWrapper link="/docs/graphs/ring-chart" className="w-full">
+          <RemountOnMouseIn>
+            <RingChart
+              size={36}
+              className="bg-transparent"
+              width={16}
+              rings={[
+                {
+                  progress: 10,
+                  trackClassName: "text-rose-600/30",
+                  progressClassName: "text-rose-600",
+                },
+                {
+                  progress: 60,
+                  trackClassName: "text-lime-500/20",
+                  progressClassName: "text-lime-500",
+                },
+                {
+                  progress: 40,
+                  trackClassName: "text-teal-400/30",
+                  progressClassName: "text-teal-400",
+                },
+              ]}
+            />
+          </RemountOnMouseIn>
+        </ComponentLinkWrapper>
       </BentoCard>
-      <BentoCard className="group flex flex-col bg-gray-100 dark:bg-zinc-900 lg:col-span-2">
+      <BentoCard className="flex flex-col bg-gray-100 dark:bg-zinc-900 lg:col-span-2">
         {/** Window */}
         <div className="flex gap-1.5">
           <span className="h-3 w-3 rounded-full bg-red-500" />
@@ -211,7 +214,7 @@ export default function FeatureSection() {
           <span className="h-3 w-3 rounded-full bg-green-500" />
         </div>
         {/** Code */}
-        <div className="mt-3 font-mono text-sm">
+        <div className="group mt-3 w-full font-mono text-sm">
           <div className="mt-2 line-clamp-1">
             <span className="font-medium text-yellow-600 dark:text-yellow-500">import</span>{" "}
             <span className="transition-all group-hover:animate-pulse group-hover:text-blue-600 dark:group-hover:text-blue-400">
@@ -221,17 +224,19 @@ export default function FeatureSection() {
             &quot;@/components/animata/text/bold-copy&quot;
           </div>
 
-          <div className="mt-3 transition-all group-hover:animate-pulse">
+          <ComponentLinkWrapper link="/docs/text/typing-text" className="mt-3 w-full">
             <TypingText text='<BoldCopy text="Animata" />' />
-          </div>
+          </ComponentLinkWrapper>
         </div>
 
         <RemountOnMouseIn className="flex flex-1 flex-col justify-end">
-          <WaveReveal
-            className="justify-start self-end px-0 pt-4 text-sm font-bold text-blue-500 md:px-0 md:pt-0 md:text-sm"
-            text="Copy. Paste. Animate."
-            blur={false}
-          />
+          <ComponentLinkWrapper link="/docs/text/wave-reveal" className="-mb-4 self-end py-4">
+            <WaveReveal
+              className="justify-start self-end px-0 pt-4 text-sm font-bold text-blue-500 md:px-0 md:pt-0 md:text-sm"
+              text="Copy. Paste. Animate."
+              blur={false}
+            />
+          </ComponentLinkWrapper>
         </RemountOnMouseIn>
       </BentoCard>
       <BentoCard className="group flex flex-col bg-green-100 dark:bg-zinc-900">
@@ -282,7 +287,9 @@ export default function FeatureSection() {
         </div>
       </BentoCard>
       <BentoCard className="bg-zinc-900">
-        <Cycling className="w-full" title="Widgets" />
+        <ComponentLinkWrapper link="/docs/widget" className="w-full">
+          <Cycling className="w-full" title="Widgets" />
+        </ComponentLinkWrapper>
       </BentoCard>
     </div>
   );

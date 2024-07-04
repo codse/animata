@@ -2,6 +2,7 @@ import { Anaheim } from "next/font/google";
 import { motion } from "framer-motion";
 
 import WaveReveal from "@/animata/text/wave-reveal";
+import ComponentLinkWrapper from "@/components/component-link-wrapper";
 import { cn } from "@/lib/utils";
 
 const titleFont = Anaheim({
@@ -37,16 +38,18 @@ export default function HeroTitle() {
       >
         Open source
       </motion.span>
-      <WaveReveal
-        text="animata"
-        className={cn(
-          "select-none px-0 text-7xl uppercase text-blue-700 transition-opacity delay-1000 dark:text-blue-500 md:px-0 md:text-8xl",
-          titleFont.className,
-        )}
-        delay={750}
-        direction="up"
-        duration="500ms"
-      />
+      <ComponentLinkWrapper link="/docs/text/wave-reveal">
+        <WaveReveal
+          text="animata"
+          className={cn(
+            "select-none px-0 text-7xl uppercase text-blue-700 transition-opacity delay-1000 dark:text-blue-500 md:px-0 md:text-8xl",
+            titleFont.className,
+          )}
+          delay={750}
+          direction="up"
+          duration="500ms"
+        />
+      </ComponentLinkWrapper>
     </div>
   );
 }

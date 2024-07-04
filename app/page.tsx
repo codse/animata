@@ -5,6 +5,7 @@ import { useTheme } from "next-themes";
 import DiagonalLines from "@/animata/background/diagonal-lines";
 import AnimatedGradientText from "@/animata/text/animated-gradient-text";
 import { Announcement } from "@/components/announcement";
+import ComponentLinkWrapper from "@/components/component-link-wrapper";
 
 import Curtain from "./_landing/curtain";
 import FAQSection from "./_landing/faq-section";
@@ -23,8 +24,10 @@ export default function IndexPage() {
       }}
       className="relative bg-background"
     >
-      <DiagonalLines color="#dadada" className="absolute -left-20 -top-20 h-52 w-52 rotate-12">
-        <div className="h-52 w-52" />
+      <DiagonalLines color="#dadada" className="absolute -left-20 -top-20 z-10 h-52 w-52 rotate-12">
+        <ComponentLinkWrapper link="/docs/background/diagonal-lines">
+          <div className="h-52 w-52" />
+        </ComponentLinkWrapper>
       </DiagonalLines>
       <div className="container relative flex w-full flex-col gap-8 pb-12 pt-4 md:pb-24 md:pt-8">
         <Announcement />
