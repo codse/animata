@@ -1,8 +1,9 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
-export function useMousePosition(ref: React.RefObject<HTMLElement>) {
-  const [position, setPosition] = useState({ x: 0, y: 0 });
-
+export function useMousePosition(
+  ref: React.RefObject<HTMLElement>,
+  callback?: ({ x, y }: { x: number; y: number }) => void,
+) {
   useEffect(() => {
     const handleMouseMove = (event: MouseEvent) => {
       const { clientX, clientY } = event;
@@ -10,7 +11,8 @@ export function useMousePosition(ref: React.RefObject<HTMLElement>) {
         top: 0,
         left: 0,
       };
-      setPosition({ x: clientX - left, y: clientY - top });
+
+      callback?.({ x: clientX - left, y: clientY - top });
     };
 
     ref.current?.addEventListener("mousemove", handleMouseMove);
@@ -19,7 +21,5 @@ export function useMousePosition(ref: React.RefObject<HTMLElement>) {
     return () => {
       nodeRef?.removeEventListener("mousemove", handleMouseMove);
     };
-  }, [ref]);
-
-  return position;
+  }, [ref, callback]);
 }

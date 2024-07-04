@@ -17,7 +17,8 @@ export default function MaskText({
 }: MaskTextProps) {
   const [isHovered, setIsHovered] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
-  const { x, y } = useMousePosition(containerRef);
+  const [{ x, y }, setMousePosition] = useState({ x: 0, y: 0 });
+  useMousePosition(containerRef, setMousePosition);
   const size = isHovered ? 500 : 50;
 
   const common =
