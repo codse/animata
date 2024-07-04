@@ -1,6 +1,6 @@
-import { useCallback, useRef } from "react";
+import { useCallback, useRef, useState } from "react";
 import Link from "next/link";
-import { Code2 } from "lucide-react";
+import { CircleDashed, Code2 } from "lucide-react";
 
 import { useMousePosition } from "@/hooks/use-mouse-position";
 import { cn } from "@/lib/utils";
@@ -29,10 +29,15 @@ export default function ComponentLinkWrapper({
 
   useMousePosition(anchorRef, update);
 
+  const [clicked, setClicked] = useState(false);
+
   return (
     <Link
       href={link}
       ref={anchorRef}
+      onClick={() => {
+        setClicked(true);
+      }}
       className={cn("group relative block h-fit w-fit cursor-none", className)}
     >
       {children}
@@ -45,7 +50,7 @@ export default function ComponentLinkWrapper({
         className="pointer-events-none absolute left-0 top-0 z-50 flex gap-1 rounded-full bg-zinc-950/80 px-2 py-1 text-sm font-bold text-white opacity-0 delay-150 duration-100 group-hover:opacity-100 group-hover:transition-none group-hover:delay-0"
       >
         <span className="font-mono text-xs">View code</span>
-        <Code2 className="size-4" />
+        {clicked ? <CircleDashed className="size-4 animate-spin" /> : <Code2 className="size-4" />}
       </div>
     </Link>
   );
