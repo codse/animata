@@ -10,6 +10,19 @@ author: harimanok_
 ## Installation
 
 <Steps>
+
+<Step>Update `tailwind.config.js`</Step>
+```js
+theme: {
+    extend: {
+       transitionTimingFunction: {
+        slow: "cubic-bezier(.405, 0, .025, 1)",
+        "minor-spring": "cubic-bezier(0.18,0.89,0.82,1.04)",
+     }
+    },
+  },
+```
+
 <Step>Run the following command</Step>
 
 It will create a new file called `tilted-cover.tsx` inside the `components/animata/image` directory.

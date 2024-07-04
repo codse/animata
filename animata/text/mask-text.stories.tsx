@@ -17,12 +17,7 @@ type Story = StoryObj<typeof meta>;
 export const Primary: Story = {
   args: {
     className: "h-[30rem]",
-    revealText:
-      "I'm a selectively skilled full-stack developer with keen enthusiasm for mobile/web application.",
-    originalText: (
-      <p>
-        I&apos;m a <span className="text-rose-900">selectively skilled</span> product designer
-      </p>
-    ),
+    revealText: "I find joy in PHP.",
+    originalText: <p>I am a Javascript developer.</p>,
   },
 };
