@@ -1,4 +1,5 @@
 import { Cabin as Font } from "next/font/google";
+import { HeartHandshake } from "lucide-react";
 
 import RingChart from "@/animata/graphs/ring-chart";
 import TypingText from "@/animata/text/typing-text";
@@ -16,6 +17,8 @@ function BentoCard({ children, className }: { children: React.ReactNode; classNa
 const textFont = Font({
   subsets: ["latin"],
 });
+
+const titleClassName = cn("mb-3 text-2xl font-semibold text-foreground", textFont.className);
 
 function Feather(props: { className?: string }) {
   return (
@@ -113,70 +116,106 @@ function Feather(props: { className?: string }) {
   );
 }
 
-export default function FeatureSection() {
-  const titleClassName = cn("mb-3 text-2xl font-semibold text-foreground", textFont.className);
+function BuiltWith() {
+  const rotate = "y";
+  const rotationClass = {
+    x: ["group-hover:[transform:rotateX(180deg)]", "[transform:rotateX(180deg)]"],
+    y: ["group-hover:[transform:rotateY(180deg)]", "[transform:rotateY(180deg)]"],
+  };
+  const self = rotationClass[rotate];
 
+  return (
+    <div className={cn("group h-full w-full [perspective:1000px]")}>
+      <div
+        className={cn(
+          "relative h-full rounded-2xl transition-all duration-500 [transform-style:preserve-3d]",
+          self[0],
+        )}
+      >
+        {/* Front */}
+        <div className="absolute h-full w-full rounded-3xl bg-blue-100 p-4 [backface-visibility:hidden] dark:bg-zinc-900">
+          <h4 className={titleClassName}>Built with</h4>
+          <div className="flex flex-1 flex-wrap items-center justify-evenly gap-3">
+            <div
+              title="Github"
+              className="flex h-12 w-12 items-center justify-center rounded-full bg-white text-black transition-all duration-100 animate-in zoom-in-75 slide-in-from-top-4"
+            >
+              <Icons.gitHub className="h-8 w-8" />
+            </div>
+
+            <div
+              title="Storybook"
+              className="relative flex h-12 w-12 items-center justify-center rounded-full bg-white text-black transition-all duration-100 animate-in zoom-in-75 slide-in-from-top-4"
+            >
+              <Icons.storybook className="absolute left-2.5 h-8 w-8" />
+            </div>
+
+            <div
+              title="NextJS"
+              className="flex h-12 w-12 items-center justify-center rounded-full bg-white text-black transition-all duration-100 animate-in zoom-in-75 slide-in-from-top-4"
+            >
+              <Icons.nextJS className="h-8 w-8" />
+            </div>
+
+            <div
+              title="ReactJS"
+              className="flex h-12 w-12 items-center justify-center rounded-full bg-white text-black transition-all duration-100 animate-in zoom-in-75 slide-in-from-top-4"
+            >
+              <Icons.react className="h-8 w-8" />
+            </div>
+
+            <div
+              title="Tailwind"
+              className="flex h-12 w-12 items-center justify-center rounded-full bg-white text-black transition-all duration-100 animate-in zoom-in-75 slide-in-from-top-4"
+            >
+              <Icons.tailwind className="h-8 w-8" />
+            </div>
+
+            <div
+              title="Yarn"
+              className="flex h-12 w-12 items-center justify-center rounded-full bg-white text-black transition-all duration-100 animate-in zoom-in-75 slide-in-from-top-4"
+            >
+              <Icons.yarn className="h-8 w-8" />
+            </div>
+            <div
+              title="Framer motion"
+              className="flex h-12 w-12 items-center justify-center rounded-full bg-white text-black transition-all duration-100 animate-in zoom-in-75 slide-in-from-top-4"
+            >
+              <Icons.framerMotion className="h-8 w-8" />
+            </div>
+
+            <div
+              title="Content layer"
+              className="flex h-12 w-12 items-center justify-center rounded-full bg-white transition-all duration-100 animate-in zoom-in-75 slide-in-from-top-4"
+            >
+              <Icons.contentLayer className="h-8 w-8" />
+            </div>
+          </div>
+        </div>
+
+        {/* Back */}
+        <div
+          className={cn(
+            "absolute flex h-full w-full flex-col items-center justify-center rounded-2xl bg-blue-200 p-4 [backface-visibility:hidden] dark:bg-zinc-800",
+            self[1],
+          )}
+        >
+          <div className="text-lg font-light">And a lot of</div>
+          <HeartHandshake className="my-2 h-16 w-16 animate-pulse fill-red-500 stroke-red-600 duration-mid repeat-infinite" />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default function FeatureSection() {
   const descriptionClassName = "text-muted-foreground font-medium";
   return (
     <div className="mb-8 grid grid-cols-1 gap-3 md:mb-16 md:grid-cols-3 md:grid-rows-3 lg:grid-cols-4 lg:grid-rows-3">
-      <BentoCard className="flex flex-col bg-blue-100 dark:bg-zinc-900">
-        <h4 className={titleClassName}>Built with</h4>
-        <div className="flex flex-1 flex-wrap items-center justify-evenly gap-3">
-          <div
-            title="Github"
-            className="flex h-12 w-12 items-center justify-center rounded-full bg-white text-black transition-all duration-100 animate-in zoom-in-75 slide-in-from-top-4"
-          >
-            <Icons.gitHub className="h-8 w-8" />
-          </div>
-
-          <div
-            title="Storybook"
-            className="relative flex h-12 w-12 items-center justify-center rounded-full bg-white text-black transition-all duration-100 animate-in zoom-in-75 slide-in-from-top-4"
-          >
-            <Icons.storybook className="absolute left-2.5 h-8 w-8" />
-          </div>
-
-          <div
-            title="NextJS"
-            className="flex h-12 w-12 items-center justify-center rounded-full bg-white text-black transition-all duration-100 animate-in zoom-in-75 slide-in-from-top-4"
-          >
-            <Icons.nextJS className="h-8 w-8" />
-          </div>
-
-          <div
-            title="ReactJS"
-            className="flex h-12 w-12 items-center justify-center rounded-full bg-white text-black transition-all duration-100 animate-in zoom-in-75 slide-in-from-top-4"
-          >
-            <Icons.react className="h-8 w-8" />
-          </div>
-
-          <div
-            title="Tailwind"
-            className="flex h-12 w-12 items-center justify-center rounded-full bg-white text-black transition-all duration-100 animate-in zoom-in-75 slide-in-from-top-4"
-          >
-            <Icons.tailwind className="h-8 w-8" />
-          </div>
-
-          <div
-            title="Yarn"
-            className="flex h-12 w-12 items-center justify-center rounded-full bg-white text-black transition-all duration-100 animate-in zoom-in-75 slide-in-from-top-4"
-          >
-            <Icons.yarn className="h-8 w-8" />
-          </div>
-          <div
-            title="Framer motion"
-            className="flex h-12 w-12 items-center justify-center rounded-full bg-white text-black transition-all duration-100 animate-in zoom-in-75 slide-in-from-top-4"
-          >
-            <Icons.framerMotion className="h-8 w-8" />
-          </div>
-
-          <div
-            title="Content layer"
-            className="flex h-12 w-12 items-center justify-center rounded-full bg-white transition-all duration-100 animate-in zoom-in-75 slide-in-from-top-4"
-          >
-            <Icons.contentLayer className="h-8 w-8" />
-          </div>
-        </div>
+      <BentoCard className="flex flex-col p-0">
+        <ComponentLinkWrapper link="/docs/card/flip-card" className="h-full w-full">
+          <BuiltWith />
+        </ComponentLinkWrapper>
       </BentoCard>
       <BentoCard className="flex flex-col items-center justify-center bg-zinc-800 dark:bg-zinc-900">
         <ComponentLinkWrapper link="/docs/graphs/ring-chart" className="w-full">
@@ -247,11 +286,16 @@ export default function FeatureSection() {
         </div>
       </BentoCard>
 
-      <BentoCard className="flex flex-col items-center justify-center bg-white text-center text-4xl font-black uppercase text-yellow-500 shadow-sm dark:bg-zinc-900 dark:text-yellow-400 md:col-span-2 md:text-5xl lg:col-span-2">
-        <span>
-          Free <span className="inline-block rotate-6 text-lg">&amp;</span>
-        </span>
-        <span>Open source</span>
+      <BentoCard className="shadow-sm dark:bg-zinc-900 md:col-span-2 md:text-5xl lg:col-span-2">
+        <ComponentLinkWrapper
+          link="/docs/bento-grid"
+          className="flex h-full w-full flex-col items-center justify-center bg-white text-center text-4xl font-black uppercase text-yellow-500 dark:text-yellow-400"
+        >
+          <span>
+            Free <span className="inline-block rotate-6 text-lg">&amp;</span>
+          </span>
+          <span>Open source</span>
+        </ComponentLinkWrapper>
       </BentoCard>
       <BentoCard className="group relative flex flex-col bg-yellow-100 dark:bg-zinc-900">
         <h4 className={titleClassName}>Light weight</h4>
