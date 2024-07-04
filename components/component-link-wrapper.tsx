@@ -47,7 +47,7 @@ export default function ComponentLinkWrapper({
         style={{
           transform: "translate(var(--x), var(--y))",
         }}
-        className="pointer-events-none absolute left-0 top-0 z-50 flex gap-1 rounded-full bg-zinc-950/80 px-2 py-1 text-sm font-bold text-white opacity-0 delay-150 duration-100 group-hover:opacity-100 group-hover:transition-none group-hover:delay-0"
+        className="pointer-events-none absolute left-0 top-0 z-50 flex gap-1 rounded-full bg-zinc-950/80 px-2 py-1 text-sm font-bold text-white opacity-0 duration-0 group-hover:opacity-100"
       >
         <span className="font-mono text-xs">View code</span>
         {clicked ? <CircleDashed className="size-4 animate-spin" /> : <Code2 className="size-4" />}
