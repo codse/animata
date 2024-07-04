@@ -17,7 +17,7 @@ function LinkSection() {
           <Link
             key={nav.title}
             href={nav.href ?? nav.items?.[0].href ?? "/docs"}
-            className={cn("text-muted-foreground")}
+            className={cn("text-muted-foreground hover:text-foreground")}
           >
             <span className="text-sm font-medium underline-offset-4 hover:underline hover:decoration-wavy">
               {nav.title}

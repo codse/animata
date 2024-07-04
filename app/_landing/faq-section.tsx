@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import BoldCopy from "@/animata/text/bold-copy";
+import ComponentLinkWrapper from "@/components/component-link-wrapper";
 import { cn } from "@/lib/utils";
 
 import Highlight from "./highlight";
@@ -85,7 +86,9 @@ function FaqItem({ index }: { index: number }) {
 export default function FAQSection() {
   return (
     <section id="faq" className="relative mx-auto max-w-5xl">
-      <BoldCopy text="FAQ" className="mb-4 border border-gray-200 dark:border-zinc-800" />
+      <ComponentLinkWrapper link="/docs/text/bold-copy" className="w-full">
+        <BoldCopy text="FAQ" className="mb-4 border border-gray-200 dark:border-zinc-800" />
+      </ComponentLinkWrapper>
       {faq.map((_, index) => {
         return <FaqItem key={`item-${index}`} index={index} />;
       })}

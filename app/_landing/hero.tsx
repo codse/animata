@@ -11,7 +11,7 @@ import HeroTitle from "./hero-title";
 
 export default function Hero() {
   return (
-    <div className="mx-auto flex min-h-[80vh] max-w-7xl flex-col items-center justify-center gap-8 md:flex-row">
+    <div className="mx-auto mb-12 flex min-h-[60vh] max-w-7xl flex-col items-center justify-center gap-8 md:flex-row">
       <div className="flex flex-1 flex-col items-center justify-center md:items-start">
         <HeroTitle />
         <PageHeaderDescription className="mb-4 md:text-left">
