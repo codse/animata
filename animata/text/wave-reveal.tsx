@@ -206,6 +206,7 @@ export default function WaveReveal({
       )}
     >
       {nodes}
+      <div className="sr-only">{text}</div>
     </div>
   );
 }
