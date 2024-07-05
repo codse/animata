@@ -9,7 +9,7 @@ interface ButtonTitleProps {
 
 export default function ExternalLinkButton({ text = "Open Link" }: ButtonTitleProps) {
   return (
-    <button className="text-md group flex items-center justify-center gap-1 bg-pink-600 px-10 py-2 text-white hover:cursor-pointer hover:text-yellow-300">
+    <button className="text-md group flex items-center justify-center gap-1 rounded-md bg-pink-600 px-6 py-3 text-white hover:cursor-pointer hover:text-yellow-300">
       <span>{text}</span>
       <ArrowTopRightIcon
         height={20}
