@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { lazy, useState } from "react";
 
 import { CopyButton } from "@/components/copy-button";
 import { ReloadButton } from "@/components/reload-button";
@@ -20,17 +20,24 @@ function Actions({ copyId, onRefresh }: { copyId: string; onRefresh: () => void 
   );
 }
 
+const lazyList: Record<string, React.LazyExoticComponent<() => JSX.Element>> = {
+  "ai-button": lazy(() => import("@/animata/button/ai-button")),
+};
+
 export default function ComponentListItem({
   children,
   className,
   copyId,
+  lazy,
   ...props
 }: {
   copyId: string;
   className?: string;
   children: React.ReactNode;
+  lazy?: boolean;
 }) {
   const [forceUpdate, setForceUpdate] = useState(0);
+  const Component = lazy && Reflect.has(lazyList, copyId) ? lazyList[copyId] : null;
   return (
     <div {...props} className={cn("component-list-item relative rounded-xl border", className)}>
       <Actions copyId={copyId} onRefresh={() => setForceUpdate((prev) => prev + 1)} />
@@ -39,6 +46,7 @@ export default function ComponentListItem({
         className="flex min-h-56 flex-col items-center justify-center px-4 pb-4"
       >
         {children}
+        {Component && <Component />}
       </div>
     </div>
   );
