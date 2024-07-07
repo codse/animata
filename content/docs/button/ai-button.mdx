@@ -1,0 +1,63 @@
+---
+title: AI Button
+description: A button for creating magic with AI 🤖 🫣
+author: harimanok_
+labels: ["requires interaction", "hover"]
+---
+
+<ComponentPreview name="button-ai-button--docs" />
+
+## Installation
+
+<Steps>
+<Step>Install dependencies</Step>
+
+```bash
+npm install tsparticles @tsparticles/react @tsparticles/engine
+```
+
+<Step>Update `tailwind.config.js`</Step>
+
+Add the following to your tailwind.config.js file.
+
+```json {4-12}
+module.exports = {
+  theme: {
+    extend: {
+      keyframes: {
+        sparkle: {
+          "0%, 100%": { opacity: "0.75", scale: "0.9" },
+          "50%": { opacity: "1", scale: "1" },
+        },
+      },
+      animation: {
+        sparkle: "sparkle 2s ease-in-out infinite",
+      },
+    }
+  }
+}
+```
+
+<Step>Run the following command</Step>
+
+It will create a new file `ai-button.tsx` inside the `components/animata/button` directory.
+
+```bash
+mkdir -p components/animata/button && touch components/animata/button/ai-button.tsx
+```
+
+<Step>Paste the code</Step>{" "}
+
+Open the newly created file and paste the following code:
+
+```jsx file=<rootDir>/animata/button/ai-button.tsx
+
+```
+
+</Steps>
+
+## Credits
+
+Built by [hari](https://github.com/hari)
+
+Inspired by [this](https://dribbble.com/shots/21729480--Start-your-site-with-Framer-AI)
