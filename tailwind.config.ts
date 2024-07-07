@@ -154,6 +154,10 @@ const config = {
           "0%": { transform: "rotate(0deg)" },
           "100%": { transform: "rotate(360deg)" },
         },
+        sparkle: {
+          "0%, 100%": { opacity: "0.75", scale: "0.9" },
+          "50%": { opacity: "1", scale: "1" },
+        },
       },
       animation: {
         fill: "fill 1s forwards",
@@ -166,6 +170,7 @@ const config = {
         "flip-words": "flip-words 8s infinite",
         fadeIn: "fadeIn 0.5s ease-in",
         "blink-red": "blink-red 2s infinite linear",
+        sparkle: "sparkle 2s ease-in-out infinite",
       },
       transitionTimingFunction: {
         slow: "cubic-bezier(.405, 0, .025, 1)",

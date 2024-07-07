@@ -31,6 +31,8 @@
     "@radix-ui/react-tabs": "^1.0.4",
     "@radix-ui/react-tooltip": "^1.0.7",
     "@rehype-pretty/transformers": "^0.13.2",
+    "@tsparticles/engine": "^3.5.0",
+    "@tsparticles/react": "^3.0.0",
     "chalk": "^5.3.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
@@ -63,6 +65,7 @@
     "shiki": "^1.6.2",
     "tailwind-merge": "^2.3.0",
     "tailwindcss-animate": "^1.0.7",
+    "tsparticles": "^3.5.0",
     "unist-builder": "^4.0.0",
     "vaul": "^0.9.1",
     "zod": "^3.23.8"
