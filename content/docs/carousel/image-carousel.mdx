@@ -1,0 +1,51 @@
+---
+title: Image Carousel
+description: A responsive carousel for your projects
+labels: ["requires interaction", "click"]
+author: AdashBaral
+---
+
+<ComponentPreview name="carousel-image-carousel--docs" />
+
+## Installation
+
+<Steps>
+
+<Step>Update `tailwind.config.js`</Step>
+```js
+theme: {
+    extend: {
+      keyframes: {
+          fadeIn: {
+          from: { opacity: "0" },
+          to: { opacity: "1" },
+        },
+      },
+    },
+    animation: {
+      fadeIn: "fadeIn 0.5s ease-in",
+    },
+  },
+```
+
+<Step>Run the following command</Step>
+
+It will create a new file called `image-carousel.tsx` inside the `components/animata/carousel` directory.
+
+```bash
+mkdir -p components/animata/carousel && touch components/animata/carousel/image-carousel.tsx
+```
+
+<Step>Paste the code</Step>
+
+Open the newly created file and paste the following code:
+
+```jsx file=<rootDir>/animata/carousel/image-carousel.tsx
+
+```
+
+</Steps>
+
+## Credits
+
+Built by [Aadarsh Baral](https://github.com/aadarshbaral)

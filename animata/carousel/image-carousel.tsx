@@ -5,11 +5,11 @@ interface ICarouselItem {
   title: string;
   image: string;
 }
-interface ICarouselProps {
+interface IImageCarouselProps {
   items: ICarouselItem[];
 }
 
-export default function Carousel({ items: initialItems }: ICarouselProps) {
+export default function ImageCarousel({ items: initialItems }: IImageCarouselProps) {
   const [currentIndex, setCurrentIndex] = useState(1);
   const handleNext = () => {
     setCurrentIndex((prevIndex) => (prevIndex + 1) % initialItems.length);
