@@ -6,6 +6,7 @@ import {
   defineNestedType,
   makeSource,
 } from "contentlayer/source-files";
+import fs from "node:fs";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import rehypePrettyCode from "rehype-pretty-code";
 import rehypeSlug from "rehype-slug";
@@ -13,6 +14,7 @@ import { codeImport } from "remark-code-import";
 import remarkGfm from "remark-gfm";
 import { BlogPosting, WithContext } from "schema-dts";
 import { visit } from "unist-util-visit";
+
 const computedFields: ComputedFields = {
   url: {
     type: "string",
@@ -29,6 +31,10 @@ const computedFields: ComputedFields = {
   slugAsParams: {
     type: "string",
     resolve: (doc: any) => doc._raw.flattenedPath.split("/").slice(1).join("/"),
+  },
+  dateModified: {
+    type: "date",
+    resolve: (doc: any) => doc.date ?? fs.statSync("content/" + doc._raw.sourceFilePath).mtime,
   },
   structuredData: {
     type: "json",
@@ -94,6 +100,7 @@ export const Doc = defineDocumentType(() => ({
     author: { type: "string", required: false },
     video: { type: "string", required: false },
     labels: { type: "list", of: { type: "string" }, required: false },
+    dateModified: { type: "date", required: false },
   },
   computedFields,
 }));
