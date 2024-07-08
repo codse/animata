@@ -23,7 +23,7 @@ Visit our [contributing guide](https://animata.design/docs/contributing) to lear
 
 ## Activity
 
-![Alt](https://repobeats.axiom.co/api/embed/e38b0585b184d8d9426620096bba5af194ccafde.svg "Repobeats analytics image")
+![Alt](https://repobeats.axiom.co/api/embed/d9e51a39c4a87d16c8f685e5f6d84d700eba0e85.svg "Repobeats analytics image")
 
 ## Deploy
 
