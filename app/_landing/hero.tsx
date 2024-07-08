@@ -1,12 +1,17 @@
+import Link from "next/link";
+
+import { Icons } from "@/components/icons";
 import { PageHeaderDescription } from "@/components/page-header";
+import { buttonVariants } from "@/components/ui/button";
+import { siteConfig } from "@/config/site";
+import { cn } from "@/lib/utils";
 
 import HeroExamples from "./hero-examples";
 import HeroTitle from "./hero-title";
-import { NewsletterInput } from "./newsletter";
 
 export default function Hero() {
   return (
-    <div className="mx-auto flex min-h-[80vh] max-w-7xl flex-col items-center justify-center gap-8 md:flex-row">
+    <div className="mx-auto mb-12 flex min-h-[60vh] max-w-7xl flex-col items-center justify-center gap-8 md:flex-row">
       <div className="flex flex-1 flex-col items-center justify-center md:items-start">
         <HeroTitle />
         <PageHeaderDescription className="mb-4 md:text-left">
@@ -15,11 +20,7 @@ export default function Hero() {
           <span className="underline decoration-wavy underline-offset-8">paste</span> into your
           project.
         </PageHeaderDescription>
-        <PageHeaderDescription className="md:16 mb-1 mt-24 text-sm font-medium opacity-60 md:text-left">
-          Join the community for early access and updates.
-        </PageHeaderDescription>
-        <NewsletterInput />
-        {/* <div className="mb-6 mt-3 flex items-start gap-4">
+        <div className="mb-6 mt-3 flex items-start gap-4">
           <Link href="/docs/setup" className={cn(buttonVariants())}>
             Get started
           </Link>
@@ -30,9 +31,9 @@ export default function Hero() {
             className={cn(buttonVariants({ variant: "outline" }))}
           >
             <Icons.gitHub className="mr-2 h-4 w-4" />
-            GitHub
+            Star us on GitHub
           </Link>
-        </div> */}
+        </div>
       </div>
       <HeroExamples />
     </div>

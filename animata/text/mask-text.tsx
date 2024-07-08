@@ -17,15 +17,17 @@ export default function MaskText({
 }: MaskTextProps) {
   const [isHovered, setIsHovered] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
-  const { x, y } = useMousePosition(containerRef);
+  const [{ x, y }, setMousePosition] = useState({ x: 0, y: 0 });
+  useMousePosition(containerRef, setMousePosition);
   const size = isHovered ? 500 : 50;
 
-  const common = "flex h-full w-full items-center justify-center text-5xl font-bold leading-snug";
+  const common =
+    "flex h-full w-full items-center justify-center text-5xl font-bold leading-snug text-foreground";
 
   return (
     <div className={cn("relative h-screen", className)} ref={containerRef}>
       <motion.div
-        className={cn(common, "absolute bg-black text-white")}
+        className={cn(common, "absolute bg-black text-foreground")}
         style={{
           maskImage: "url(/circle.svg)",
           maskRepeat: "no-repeat",

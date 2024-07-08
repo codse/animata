@@ -18,7 +18,7 @@ Visit our [contributing guide](https://animata.design/docs/contributing) to lear
 ## Authors
 
 <a href="https://github.com/codse/animata/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=codse/animata" />
+  <img src="https://contrib.rocks/image?repo=codse/animata&max=100" />
 </a>
 
 ## Activity

@@ -11,8 +11,6 @@ const sortAlphabetically = (a: SidebarNavItem, b: SidebarNavItem) => {
   return (a.sortId ?? a.title).toLowerCase().localeCompare((b.sortId ?? b.title).toLowerCase());
 };
 
-const isDev = process.env.NODE_ENV !== "production";
-
 const createLinks = (category: string) => {
   return allDocs
     .filter((doc) => doc.slug.startsWith(`/docs/${category}`) && doc.published)
@@ -85,7 +83,6 @@ const sidebarNav: SidebarNavItem[] = [
   },
   {
     title: "Text",
-
     items: createLinks("text"),
   },
   {
@@ -121,7 +118,7 @@ const sidebarNav: SidebarNavItem[] = [
     items: createLinks("progress"),
   },
   {
-    title: "Graphs",
+    title: "Graphs & charts",
     items: createLinks("graphs"),
   },
   {
@@ -133,21 +130,21 @@ const sidebarNav: SidebarNavItem[] = [
     title: "Button",
     label: -1 + createLinks("button").length + "",
     href: "/docs/button",
-    items: isDev ? createLinks("button") : [],
+    items: createLinks("button"),
   },
   {
     icon: "widget",
     title: "Widget",
     label: -1 + createLinks("widget").length + "",
     href: "/docs/widget",
-    items: isDev ? createLinks("widget") : [],
+    items: createLinks("widget"),
   },
   {
     icon: "bento",
     title: "Bento grid",
     label: -1 + createLinks("bento-grid").length + "",
     href: "/docs/bento-grid",
-    items: isDev ? createLinks("bento-grid") : [],
+    items: createLinks("bento-grid"),
   },
   {
     title: "Hero",
@@ -163,6 +160,8 @@ const sidebarNav: SidebarNavItem[] = [
   },
   {
     title: "Skeleton",
+    label: "6",
+    href: "/docs/skeleton",
     items: createLinks("skeleton"),
   },
 ]

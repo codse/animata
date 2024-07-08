@@ -19,18 +19,19 @@ export default function Modal({ modalSize = "lg" }: { modalSize?: "sm" | "lg" })
         {isOpen && (
           <div
             onClick={() => setIsOpen(false)}
-            className="fixed inset-0 z-10 flex cursor-pointer items-center justify-center overflow-y-scroll bg-slate-900/20 p-8 backdrop-blur"
+            className="fixed inset-0 z-50 flex cursor-pointer items-center justify-center overflow-y-scroll bg-slate-900/20 p-8 backdrop-blur"
           >
             <motion.div
-              initial={{ scale: 0, rotate: "360deg" }}
+              initial={{ scale: 0, rotate: "180deg" }}
               animate={{
                 scale: 1,
                 rotate: "0deg",
                 transition: {
                   type: "spring",
+                  bounce: 0.25,
                 },
               }}
-              exit={{ scale: 0 }}
+              exit={{ scale: 0, rotate: "180deg" }}
               onClick={(e) => e.stopPropagation()}
               className={cn(
                 "relative w-full max-w-lg cursor-default overflow-hidden rounded-xl bg-gradient-to-r from-indigo-500 via-purple-500 to-indigo-500 p-6 text-white shadow-2xl",

@@ -9,6 +9,21 @@ author: harimanok_
 ## Installation
 
 <Steps>
+
+<Step>Update `tailwind.config.js`</Step>
+```js
+theme: {
+    extend: {
+       keyframes: {
+         "bg-position": {
+         "0%": { backgroundPosition: "0% 50%" },
+          "100%": { backgroundPosition: "100% 50%" },
+         }
+     }
+    },
+  },
+```
+
 <Step>Run the following command</Step>
 
 It will create a new file called `animated-gradient-text.tsx` inside the `components/animata/text` directory.

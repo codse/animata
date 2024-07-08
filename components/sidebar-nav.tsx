@@ -16,21 +16,16 @@ export interface DocsSidebarNavProps {
 
 export function DocsSidebarNav({ items }: DocsSidebarNavProps) {
   const pathname = usePathname();
-  const [closed, setClosed] = useState(
-    new Set(
-      items
-        .filter(
-          (item) => !!item.icon && item.items?.length && item.href && !pathname.includes(item.href),
-        )
-        .map((item) => item.href ?? item.title),
-    ),
-  );
+  const [closed, setClosed] = useState(new Set<string>());
 
   useEffect(() => {
     setClosed((current) => {
       const next = new Set(current);
       // Open the current section if one of the child pages is active
-      next.add("/docs/" + pathname.split("/")[1]);
+      const path = "/docs/" + pathname.split("/")[1];
+      if (next.has(path)) {
+        next.delete(path);
+      }
       return next;
     });
   }, [pathname]);
@@ -115,12 +110,11 @@ export function DocsSidebarNavItems({ items, pathname }: DocsSidebarNavItemsProp
             key={index}
             href={item.href}
             className={cn(
-              "group flex w-full items-center rounded-md border border-transparent px-2 py-1 hover:underline",
+              "group flex w-full items-center rounded-md border border-transparent px-2 py-1 capitalize hover:underline",
               item.disabled && "cursor-not-allowed opacity-60",
               pathname === item.href
                 ? "bg-muted font-normal text-foreground"
                 : "text-muted-foreground",
-              item.sortId === "000" && "hidden",
             )}
             target={item.external ? "_blank" : ""}
             rel={item.external ? "noreferrer" : ""}

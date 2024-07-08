@@ -1,18 +1,19 @@
 import Link from "next/link";
-import { Blocks } from "lucide-react";
+import { ArrowRight, Combine } from "lucide-react";
 
+import AnimatedGradientText from "@/animata/text/animated-gradient-text";
 import { Separator } from "@/components/ui/separator";
-import { ArrowRightIcon } from "@radix-ui/react-icons";
 
 export function Announcement() {
   return (
-    <Link
-      href="/docs/changelog"
-      className="inline-flex items-center rounded-lg bg-muted px-3 py-1 text-sm font-medium"
-    >
-      <Blocks className="h-4 w-4" /> <Separator className="mx-2 h-4" orientation="vertical" />{" "}
-      <span>Introducing Lift Mode</span>
-      <ArrowRightIcon className="ml-1 h-4 w-4" />
-    </Link>
+    <div className="group z-10 mx-auto mb-4 w-fit rounded-full bg-background px-2 lg:-mb-20">
+      <Link href="/docs/changelog">
+        <AnimatedGradientText className="inline-flex cursor-pointer items-center rounded-full border border-sky-500 from-rose-500 via-green-600 to-purple-500 px-4 py-2 text-sm font-semibold hover:border-sky-600">
+          <Combine className="h-4 w-4 text-blue-500" />{" "}
+          <Separator className="mx-3 h-4" orientation="vertical" /> <span>Animata is live</span>
+          <ArrowRight className="ml-1 h-4 w-4 text-blue-500 transition-all group-hover:translate-x-2" />{" "}
+        </AnimatedGradientText>
+      </Link>
+    </div>
   );
 }

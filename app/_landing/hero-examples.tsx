@@ -7,6 +7,7 @@ import AnimatedGradientText from "@/animata/text/animated-gradient-text";
 import Counter from "@/animata/text/counter";
 import MirrorText from "@/animata/text/mirror-text";
 import TypingText from "@/animata/text/typing-text";
+import ComponentLinkWrapper from "@/components/component-link-wrapper";
 import RemountOnMouseIn from "@/components/remount-on-mouse-in";
 
 import ModeSwitcher from "./mode-switcher";
@@ -150,11 +151,14 @@ export default function HeroExamples() {
         }}
         className="relative rounded-full"
       >
-        <div className="relative w-full rounded-full border border-gray-200 bg-gray-50 p-4 shadow-xl transition-all dark:border-gray-600 dark:bg-gray-900">
+        <ComponentLinkWrapper
+          link="/docs/text/counter"
+          className="relative w-full rounded-full border border-gray-200 bg-gray-50 p-4 shadow-xl transition-all dark:border-gray-600 dark:bg-gray-900"
+        >
           <AnimatedGradientText className="overflow-hidden rounded-xl tabular-nums">
             <Counter
-              targetValue={30}
-              className="text-2xl md:text-4xl"
+              targetValue={40}
+              className="text-2xl text-transparent md:text-4xl"
               format={(value) => {
                 const val = Math.ceil(value);
                 const padded = val.toString().padStart(2, "0");
@@ -162,7 +166,7 @@ export default function HeroExamples() {
               }}
             />
           </AnimatedGradientText>
-        </div>
+        </ComponentLinkWrapper>
       </motion.div>
       <div className="relative flex flex-row flex-wrap gap-4">
         <motion.div
@@ -180,11 +184,11 @@ export default function HeroExamples() {
             delay: 0.4,
             duration: 0.3,
           }}
-          className="flex h-24 flex-1 items-center justify-center overflow-hidden rounded-xl border border-gray-200 bg-gray-50 shadow-xl dark:border-gray-600 dark:bg-gray-900"
+          className="flex h-24 flex-1 items-center justify-center rounded-xl border border-gray-200 bg-gray-50 shadow-xl dark:border-gray-600 dark:bg-gray-900"
         >
-          <div className={titleFont.className}>
+          <ComponentLinkWrapper link="/docs/text/mirror-text" className={titleFont.className}>
             <MirrorText className="text-xl sm:text-3xl md:text-4xl" text="Awesomeness" />
-          </div>
+          </ComponentLinkWrapper>
         </motion.div>
 
         <motion.div
@@ -228,13 +232,16 @@ export default function HeroExamples() {
           duration={3000}
           className="w-full rounded-xl border border-gray-200 bg-gray-50 p-4 shadow-xl dark:border-gray-600 dark:bg-gray-900"
         >
-          <TypingText
-            smooth
-            alwaysVisibleCount={0}
-            delay={100}
-            repeat={false}
-            text="Bring your site to life with these ready to use animated components & interaction built using React, Framer Motion, and Tailwind CSS."
-          />
+          <ComponentLinkWrapper link="/docs/text/typing-text">
+            <TypingText
+              smooth
+              alwaysVisibleCount={0}
+              delay={100}
+              repeat={false}
+              className="md:py-3"
+              text="Bring your site to life with these ready to use animated components & interaction built using React, Framer Motion, and Tailwind CSS."
+            />
+          </ComponentLinkWrapper>
         </RemountOnMouseIn>
       </motion.div>
     </div>

@@ -48,7 +48,7 @@ export default function IconRipple({
     <div className={cn("group relative flex items-center justify-center")}>
       <Icon size={iconSize} color={iconColor} />
       <div
-        className={cn("absolute -inset-4 rounded-full border-2 hover:animate-ping")}
+        className={cn("absolute -inset-4 animate-ping rounded-full border-2")}
         style={{ ...customBorderStyle, ...insetStyle }}
       />
     </div>

@@ -64,7 +64,7 @@ function Blinker() {
     }, 500);
     return () => clearInterval(interval);
   }, []);
-  return <span>{show ? "|" : ""}</span>;
+  return <span className={show ? "" : "opacity-0"}>|</span>;
 }
 
 function SmoothEffect({

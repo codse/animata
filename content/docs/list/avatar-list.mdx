@@ -1,7 +1,7 @@
 ---
 title: Avatar List
 description: A component that displays list of user's avatar
-author: YourTwitterUsername
+author: sudha_shrestha
 ---
 
 <ComponentPreview name="list-avatar-list--docs" />
@@ -9,6 +9,21 @@ author: YourTwitterUsername
 ## Installation
 
 <Steps>
+
+<Step>Update `tailwind.config.js`</Step>
+```js
+theme: {
+    extend: {
+       keyframes: {
+         "bg-position": {
+         "0%": { backgroundPosition: "0% 50%" },
+          "100%": { backgroundPosition: "100% 50%" },
+         }
+     }
+    },
+  },
+```
+
 <Step>Run the following command</Step>
 
 It will create a new file called `avatar-list.tsx` inside the `components/animata/list` directory.
@@ -29,5 +44,4 @@ Open the newly created file and paste the following code:
 
 ## Credits
 
-Built by [Your name](https://github.com/YourGithubUsername)
-...Add appropriate credits here.
+Built by [sudha](https://github.com/sudhashrestha)

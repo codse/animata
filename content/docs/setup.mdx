@@ -16,7 +16,9 @@ You don't need to install it as a dependency instead you can simply copy and pas
 
 ## Setting up
 
-<Callout>
+### Folder structure
+
+<Callout className="mt-2">
   This is optional but recommended. You can paste the components where ever you want however make
   sure to update the paths in the code if you are not using the same structure.
 </Callout>
@@ -43,6 +45,35 @@ where `/` is the root of your project, `/components` is where you keep your comp
 ```
 
 The root of your project can be anything (like `src` or `app`), but the `components` folder should be at the root level.
+
+### Install basic dependencies
+
+Install the required dependencies, if you haven't already:
+
+```bash
+npm install tailwind-merge clsx lucide-react tailwindcss-animate
+```
+
+Add `tailwindcss-animate` to the `plugins` array in your `tailwind.config.js` file:
+
+```js
+module.exports = {
+  plugins: [require("tailwindcss-animate")],
+};
+```
+
+### Create utils.ts file
+
+Create `utils.ts` file in the `libs` folder and paste the following code:
+
+```ts
+import { type ClassValue, clsx } from "clsx";
+import { twMerge } from "tailwind-merge";
+
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
+}
+```
 
 ## Copying the code
 

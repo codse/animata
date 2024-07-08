@@ -1,6 +1,6 @@
 import { useTheme } from "next-themes";
 import { motion, useMotionValue, useSpring } from "framer-motion";
-import { MoonIcon, SunIcon } from "lucide-react";
+import { Cloud, MoonStar, Star, Sun } from "lucide-react";
 
 export default function ModeSwitcher() {
   const { setTheme, resolvedTheme } = useTheme();
@@ -27,17 +27,37 @@ export default function ModeSwitcher() {
         onClick={() => {
           setTheme("light");
         }}
-        className="group col-start-2 row-start-2 flex h-24 w-24 items-center justify-center"
+        className="group relative col-start-2 row-start-2 flex h-24 w-24 items-center justify-center"
       >
-        <SunIcon className="h-[2rem] w-[2rem] text-yellow-300 transition-all group-hover:scale-125 group-active:scale-100" />
+        <motion.span
+          key={resolvedTheme}
+          className="absolute bottom-2 right-2 h-4 w-4 rotate-12"
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
+          exit={{ scale: 0 }}
+          transition={{ duration: 1.2 }}
+        >
+          <Star className="size-4 fill-yellow-300 stroke-yellow-300" />
+        </motion.span>
+        <MoonStar className="size-10 rotate-180 fill-white transition-all group-hover:scale-110 group-active:scale-100" />
       </div>
       <div
-        className="group flex h-24 w-24 items-center justify-center"
+        className="group relative flex h-24 w-24 items-center justify-center"
         onClick={() => {
           setTheme("dark");
         }}
       >
-        <MoonIcon className="h-[2rem] w-[2rem] transition-all group-hover:scale-125 group-active:scale-100" />
+        <motion.span
+          key={resolvedTheme}
+          className="absolute top-12 z-10"
+          initial={{ translateX: -45 }}
+          animate={{ translateX: 0 }}
+          exit={{ translateX: -45 }}
+          transition={{ duration: 1.2 }}
+        >
+          <Cloud className="size-8 fill-white" />
+        </motion.span>
+        <Sun className="size-10 transition-all group-hover:scale-110 group-active:scale-100" />
       </div>
     </motion.div>
   );

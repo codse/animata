@@ -1,9 +1,9 @@
 "use client";
 
-import { useRef, useEffect } from "react";
+import { useEffect, useMemo, useRef } from "react";
 
 export default function TextFlip() {
-  const words = ["fantastic", "love", "fire", "awesome", "fantastic"];
+  const words = useMemo(() => ["fantastic", "love", "fire", "awesome", "fantastic"], []);
 
   const tallestRef = useRef<HTMLDivElement>(null);
 
@@ -30,13 +30,10 @@ export default function TextFlip() {
 
   return (
     <div className="box-content flex gap-4 text-3xl font-semibold">
-      <p>Coding is</p>
-      <div
-        ref={tallestRef}
-        className="flex flex-col overflow-hidden text-blue-400"
-      >
+      <p className="text-foreground">Coding is</p>
+      <div ref={tallestRef} className="flex flex-col overflow-hidden text-blue-400">
         {words.map((word, index) => (
-          <span key={index} className="animate-flipWords">
+          <span key={index} className="animate-flip-words">
             {word}
           </span>
         ))}

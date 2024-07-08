@@ -1,4 +1,7 @@
+import Link from "next/link";
+
 import BoldCopy from "@/animata/text/bold-copy";
+import ComponentLinkWrapper from "@/components/component-link-wrapper";
 import { cn } from "@/lib/utils";
 
 import Highlight from "./highlight";
@@ -36,14 +39,17 @@ const faq = [
       "While you certainly can create animations yourself, using Animata saves you time and effort. Plus, you can learn from our implementations and even contribute to improving them.",
   },
   {
-    question: "Who is behind Animata?",
-    answer:
-      "Animata is developed by a passionate team of developers who love animations. We study the best interactions from top websites and bring them to you, saving you hours of development time.",
-  },
-  {
     question: "Sounds amazing, how do I use it?",
-    answer:
-      "Animata will be available by the end of June. Enter your email below to be notified as soon as we go live.",
+    answer: (
+      <span>
+        Simply copy the code snippets provided on the Animata website and paste them into your
+        project. It&apos;s that easy! Check out the{" "}
+        <Link className="text-blue-500 hover:text-blue-700" href="/docs">
+          documentation
+        </Link>{" "}
+        for more details.
+      </span>
+    ),
   },
 ];
 
@@ -80,7 +86,9 @@ function FaqItem({ index }: { index: number }) {
 export default function FAQSection() {
   return (
     <section id="faq" className="relative mx-auto max-w-5xl">
-      <BoldCopy text="FAQ" className="mb-4 border border-gray-200 dark:border-zinc-800" />
+      <ComponentLinkWrapper link="/docs/text/bold-copy" className="w-full">
+        <BoldCopy text="FAQ" className="mb-4 border border-gray-200 dark:border-zinc-800" />
+      </ComponentLinkWrapper>
       {faq.map((_, index) => {
         return <FaqItem key={`item-${index}`} index={index} />;
       })}
