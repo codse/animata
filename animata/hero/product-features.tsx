@@ -76,6 +76,9 @@ export default function ProductFeatures() {
         animate={{
           y: 0,
           opacity: 1,
+          transition: {
+            duration: 0.5,
+          },
         }}
         className="flex max-w-md flex-col items-center gap-2 text-center"
       >
@@ -94,6 +97,9 @@ export default function ProductFeatures() {
         animate={{
           y: 0,
           opacity: 1,
+          transition: {
+            duration: 0.5,
+          },
         }}
       >
         <button
@@ -128,7 +134,7 @@ export default function ProductFeatures() {
             rotate: -angle,
             transition: {
               type: "spring",
-              delay: 1,
+              delay: 0.8,
             },
           }}
         />
@@ -142,11 +148,14 @@ export default function ProductFeatures() {
           }}
           initial={{
             y: yOffset,
+            opacity: 0,
           }}
           animate={{
             y: 0,
+            opacity: 1,
             transition: {
               type: "spring",
+              delay: 0.4,
             },
           }}
           zIndexOffset={1}
@@ -174,7 +183,7 @@ export default function ProductFeatures() {
             scale: 0.95,
             transition: {
               type: "spring",
-              delay: 0.5,
+              delay: 0.6,
             },
           }}
         />
