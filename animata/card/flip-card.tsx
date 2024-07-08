@@ -4,7 +4,7 @@ interface FlipCardProps extends React.HTMLAttributes<HTMLDivElement> {
   image: string;
   title: string;
   description: string;
-  subtitle: string;
+  subtitle?: string;
   rotate?: "x" | "y";
 }
 
