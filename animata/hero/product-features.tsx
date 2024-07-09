@@ -23,8 +23,8 @@ function FeatureCard({ feature, className, zIndexOffset = 0, ...props }: Feature
 
   const content = (
     <>
-      <img src={imageUrl} alt="" className="absolute inset-0 -z-10 h-full w-full object-cover" />
-      <div className="flex h-full w-full flex-col gap-2 bg-gradient-to-t from-zinc-800/40 from-15% to-transparent p-3">
+      <img src={imageUrl} alt="" className="-z-1 absolute inset-0 h-full w-full object-cover" />
+      <div className="z-10 flex h-full w-full flex-col gap-2 bg-gradient-to-t from-zinc-800/40 from-15% to-transparent p-3">
         <small className="inline w-fit rounded-xl bg-orange-950 bg-opacity-50 px-2 py-1 text-xs font-medium leading-none text-white">
           {category}
         </small>
@@ -56,7 +56,13 @@ function FeatureCard({ feature, className, zIndexOffset = 0, ...props }: Feature
       >
         {content}
       </motion.div>
-      <div className={cn(containerClassName, "flex sm:hidden")}>{content}</div>
+      <motion.div
+        initial={{ y: 100 }}
+        whileInView={{ y: 0, transition: { duration: 0.5 } }}
+        className={cn(containerClassName, "flex sm:hidden")}
+      >
+        {content}
+      </motion.div>
     </>
   );
 }
@@ -111,7 +117,7 @@ export default function ProductFeatures() {
         </button>
       </motion.div>
 
-      <div className="relative flex w-full flex-wrap gap-8 py-12 sm:flex-row sm:justify-center sm:gap-0">
+      <div className="relative flex w-full flex-wrap justify-center gap-8 px-4 py-12 sm:flex-row sm:gap-0">
         <FeatureCard
           feature={{
             category: "Vases",

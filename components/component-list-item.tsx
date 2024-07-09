@@ -1,4 +1,4 @@
-import { lazy, useState } from "react";
+import { lazy, Suspense, useState } from "react";
 
 import { CopyButton } from "@/components/copy-button";
 import { ReloadButton } from "@/components/reload-button";
@@ -22,6 +22,7 @@ function Actions({ copyId, onRefresh }: { copyId: string; onRefresh: () => void 
 
 const lazyList: Record<string, React.LazyExoticComponent<() => JSX.Element>> = {
   "ai-button": lazy(() => import("@/animata/button/ai-button")),
+  "status-button": lazy(() => import("@/animata/button/status-button")),
 };
 
 export default function ComponentListItem({
@@ -46,7 +47,11 @@ export default function ComponentListItem({
         className="flex min-h-56 flex-col items-center justify-center px-4 pb-4"
       >
         {children}
-        {Component && <Component />}
+        {Component && (
+          <Suspense fallback={<div className="h-full w-full" />}>
+            <Component />
+          </Suspense>
+        )}
       </div>
     </div>
   );
