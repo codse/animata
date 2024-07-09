@@ -12,23 +12,9 @@ labels: ["requires interaction", "click"]
 <Steps>
 
 <Step>Install dependencies</Step>
-```sh npm install lucide-react tailwindcss-animate ```
 
-<Step>Update `tailwind.config.js`</Step>
-
-Add the following to your tailwind.config.js file.
-
-```json {4-6} {9}
-module.exports = {
-  theme: {
-    extend: {
-      transitionTimingFunction: {
-        "minor-spring": "cubic-bezier(0.76,0.34,0.38,1.64)",
-      },
-    }
-  },
-  plugins: [require("tailwindcss-animate")],
-}
+```sh
+npm install framer-motion lucide-react
 ```
 
 <Step>Run the following command</Step>

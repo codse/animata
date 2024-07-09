@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 import { CheckCircle2, CircleDashed } from "lucide-react";
 
 import { cn } from "@/lib/utils";
@@ -14,11 +15,10 @@ export default function StatusButton() {
       return;
     }
 
-    await wait(100);
     setStatus("loading");
-    await wait(3000);
+    await wait(1500);
     setStatus("Added to cart");
-    await wait(3000);
+    await wait(1500);
     setStatus("Add to cart");
   };
 
@@ -26,29 +26,36 @@ export default function StatusButton() {
     <button
       onClick={changeStatus}
       disabled={!isEnabled}
-      className="group relative h-11 min-w-52 overflow-hidden rounded-full bg-blue-700 px-6 text-sm font-semibold text-white transition-colors duration-300 hover:bg-blue-800"
+      className="group relative h-10 min-w-40 overflow-hidden rounded-md bg-teal-500 px-6 text-sm font-semibold text-white transition-colors duration-300 hover:bg-teal-600"
     >
-      <span
-        // Remount the component so that the animation can be restarted
-        key={status}
-        className={cn(
-          "flex items-center justify-center gap-1 duration-100 ease-minor-spring animate-in fill-mode-forwards",
-          {
-            // Only animate after the status is set after user clicks
-            "fade-in slide-in-from-top-full": !!status,
-          },
-        )}
-      >
-        {status === "Added to cart" && (
-          <CheckCircle2 className="h-4 w-4 fill-white stroke-blue-700 duration-300 ease-minor-spring animate-in zoom-in-0 fill-mode-forwards group-hover:stroke-blue-800" />
-        )}
+      <AnimatePresence mode="wait" initial={false}>
+        <motion.span
+          // Remount the component so that the animation can be restarted
+          key={status}
+          initial={{ opacity: 0, y: -15 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: 15 }}
+          transition={{ duration: 0.075 }}
+          className={cn("flex items-center justify-center gap-1")}
+        >
+          {status === "Added to cart" && (
+            <motion.span
+              className="h-fit w-fit"
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ delay: 0.075, type: "spring" }}
+            >
+              <CheckCircle2 className="h-4 w-4 fill-white stroke-teal-500 group-hover:stroke-teal-600" />
+            </motion.span>
+          )}
 
-        {status == "loading" ? (
-          <CircleDashed className="h-3 w-3 animate-spin" />
-        ) : (
-          status ?? "Add to cart"
-        )}
-      </span>
+          {status == "loading" ? (
+            <CircleDashed className="h-4 w-4 animate-spin" />
+          ) : (
+            status ?? "Add to cart"
+          )}
+        </motion.span>
+      </AnimatePresence>
     </button>
   );
 }
