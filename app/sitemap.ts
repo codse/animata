@@ -12,7 +12,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...allDocs
       .filter((doc) => doc.published)
       .map((doc) => ({
-        url: `${domain}/${doc.slugAsParams}`,
+        url: `${domain}/docs/${doc.slugAsParams}`,
         lastModified: doc.date ?? doc.dateModified,
       })),
   ];
