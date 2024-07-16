@@ -28,6 +28,11 @@ export function DocsSidebarNav({ items }: DocsSidebarNavProps) {
       }
       return next;
     });
+
+    const node = document.querySelector(`[href="${pathname}"]`);
+    if (node) {
+      node.scrollIntoView({ behavior: "instant", block: "center" });
+    }
   }, [pathname]);
 
   return items.length ? (
