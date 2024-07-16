@@ -1,0 +1,61 @@
+---
+title: Trailing Image
+description: A trailing effect where the images move with the mouse.
+author: harimanok_
+labels: ["requires interaction", "hover"]
+---
+
+<ComponentPreview name="image-trailing-image--docs" />
+
+## Installation
+
+<Steps>
+<Step>Install dependencies</Step>
+
+```bash
+npm install framer-motion
+```
+
+<Step>Copy the `useMousePosition` hook</Step>
+
+```jsx file=<rootDir>/hooks/use-mouse-position.ts
+
+```
+
+<Step>Copy the helper functions (`lerp` and `getDistance`) to `lib/utils.ts`</Step>
+
+```ts
+// Linear interpolation
+export function lerp(a: number, b: number, n: number) {
+  return (1 - n) * a + n * b;
+}
+
+// Get distance between two points
+export function getDistance(x1: number, y1: number, x2: number, y2: number) {
+  return Math.hypot(x2 - x1, y2 - y1);
+}
+```
+
+<Step>Run the following command</Step>
+
+It will create a new file `trailing-image.tsx` inside the `components/animata/image` directory.
+
+```bash
+mkdir -p components/animata/image && touch components/animata/image/trailing-image.tsx
+```
+
+<Step>Paste the code</Step>{" "}
+
+Open the newly created file and paste the following code:
+
+```jsx file=<rootDir>/animata/image/trailing-image.tsx
+
+```
+
+</Steps>
+
+## Credits
+
+Built by [hari](https://github.com/hari)
+
+Images from [lummi](https://lummi.ai/)
