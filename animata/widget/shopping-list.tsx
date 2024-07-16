@@ -60,7 +60,9 @@ export default function ShoppingList({
 }) {
   return (
     <div className="h-64 w-48 rounded-3xl border bg-white p-4 font-sans shadow-sm">
-      <div className="text-lg font-bold tracking-wide">{title || "Shopping list"}</div>
+      <div className="text-lg font-bold tracking-wide text-zinc-950">
+        {title || "Shopping list"}
+      </div>
       <div className="mt-4 flex flex-col gap-4 text-sm">
         {data.map((item, index) => (
           <Checkbox key={index} title={item.title} checked={item.checked} />
