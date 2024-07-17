@@ -33,7 +33,7 @@ function Beam({ index }: { index: number }) {
   );
 }
 
-function Background() {
+function useGridCount() {
   const containerRef = useRef<HTMLDivElement>(null);
   const [count, setCount] = useState(0);
 
@@ -54,6 +54,15 @@ function Background() {
     window.addEventListener("resize", updateCount);
     return () => window.removeEventListener("resize", updateCount);
   }, []);
+
+  return {
+    count,
+    containerRef,
+  };
+}
+
+function Background() {
+  const { count, containerRef } = useGridCount();
 
   return (
     <div
