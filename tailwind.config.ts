@@ -158,6 +158,10 @@ const config = {
           "0%, 100%": { opacity: "0.75", scale: "0.9" },
           "50%": { opacity: "1", scale: "1" },
         },
+        meteor: {
+          "0%": { transform: "translateY(-20%) translateX(-50%)" },
+          "100%": { transform: "translateY(300%) translateX(-50%)" },
+        },
       },
       animation: {
         fill: "fill 1s forwards",
@@ -171,6 +175,7 @@ const config = {
         fadeIn: "fadeIn 0.5s ease-in",
         "blink-red": "blink-red 2s infinite linear",
         sparkle: "sparkle 2s ease-in-out infinite",
+        meteor: "meteor var(--duration) var(--delay) ease-in-out infinite",
       },
       transitionTimingFunction: {
         slow: "cubic-bezier(.405, 0, .025, 1)",

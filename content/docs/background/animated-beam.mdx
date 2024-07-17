@@ -1,0 +1,55 @@
+---
+title: Animated Beam
+description: Animated beam background section where the meteor beam of lights move through the line.
+author: harimanok_
+---
+
+<ComponentPreview name="background-animated-beam--docs" />
+
+## Installation
+
+<Steps>
+
+<Step>Update `tailwind.config.js`</Step>
+
+Add the following to your tailwind.config.js file.
+
+```json {5-8} {11}
+module.exports = {
+  theme: {
+    extend: {
+      keyframes: {
+        meteor: {
+          "0%": { transform: "translateY(-20%) translateX(-50%)" },
+          "100%": { transform: "translateY(300%) translateX(-50%)" },
+        },
+      },
+      animation: {
+        meteor: "meteor var(--duration) var(--delay) ease-in-out infinite",
+      },
+    }
+  }
+}
+```
+
+<Step>Run the following command</Step>
+
+It will create a new file `animated-beam.tsx` inside the `components/animata/background` directory.
+
+```bash
+mkdir -p components/animata/background && touch components/animata/background/animated-beam.tsx
+```
+
+<Step>Paste the code</Step>{" "}
+
+Open the newly created file and paste the following code:
+
+```jsx file=<rootDir>/animata/background/animated-beam.tsx
+
+```
+
+</Steps>
+
+## Credits
+
+Built by [hari](https://github.com/hari)
