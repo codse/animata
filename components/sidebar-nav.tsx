@@ -31,7 +31,7 @@ export function DocsSidebarNav({ items }: DocsSidebarNavProps) {
 
     const node = document.querySelector(`[href="${pathname}"]`);
     if (node) {
-      node.scrollIntoView({ behavior: "instant", block: "center" });
+      node.scrollIntoView({ behavior: "instant", block: "nearest" });
     }
   }, [pathname]);
 
