@@ -108,3 +108,9 @@
     @apply absolute -inset-4 rounded-xl border shadow-xl;
   }
 }
+
+@property --angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
