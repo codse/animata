@@ -162,6 +162,10 @@ const config = {
           "0%": { transform: "translateY(-20%) translateX(-50%)" },
           "100%": { transform: "translateY(300%) translateX(-50%)" },
         },
+        trail: {
+          "0%": { "--angle": "0deg" },
+          "100%": { "--angle": "360deg" },
+        },
       },
       animation: {
         fill: "fill 1s forwards",
@@ -176,6 +180,7 @@ const config = {
         "blink-red": "blink-red 2s infinite linear",
         sparkle: "sparkle 2s ease-in-out infinite",
         meteor: "meteor var(--duration) var(--delay) ease-in-out infinite",
+        trail: "trail var(--duration) linear infinite",
       },
       transitionTimingFunction: {
         slow: "cubic-bezier(.405, 0, .025, 1)",
