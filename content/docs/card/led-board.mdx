@@ -1,0 +1,58 @@
+---
+title: Led Board
+description: A component that mimicks LED board and can display words; as seen in NextJS's homepage. Hover over the component to see the animation.
+author: harimanok_
+labels: ["requires interaction", "hover"]
+---
+
+<ComponentPreview name="card-led-board--docs" />
+
+## Installation
+
+<Steps> 
+<Step>Update `tailwind.config.js`</Step>
+
+Add the following to your tailwind.config.js file.
+
+```json {5-9} {12}
+module.exports = {
+  theme: {
+    extend: {
+      keyframes: {
+        led: {
+          "0%": { fill: "currentColor", brightness: "1" },
+          "50%": { fill: "#a855f7", brightness: "500%" },
+          "100%": { fill: "currentColor", brightness: "1" },
+        },
+      },
+      animation: {
+        led: "led 100ms ease-in-out",
+      },
+    }
+  }
+}
+```
+
+<Step>Run the following command</Step>
+
+It will create a new file `led-board.tsx` inside the `components/animata/card` directory.
+
+```bash
+mkdir -p components/animata/card && touch components/animata/card/led-board.tsx
+```
+
+<Step>Paste the code</Step>{" "}
+
+Open the newly created file and paste the following code:
+
+```jsx file=<rootDir>/animata/card/led-board.tsx
+
+```
+
+</Steps>
+
+## Credits
+
+Built by [hari](https://github.com/hari)
+
+Inspired by [NextJS's homepage](https://nextjs.org/)
