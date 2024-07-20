@@ -166,6 +166,11 @@ const config = {
           "0%": { "--angle": "0deg" },
           "100%": { "--angle": "360deg" },
         },
+        led: {
+          "0%": { fill: "currentColor", brightness: "1" },
+          "50%": { fill: "#a855f7", brightness: "500%" },
+          "100%": { fill: "currentColor", brightness: "1" },
+        },
       },
       animation: {
         fill: "fill 1s forwards",
@@ -181,6 +186,7 @@ const config = {
         sparkle: "sparkle 2s ease-in-out infinite",
         meteor: "meteor var(--duration) var(--delay) ease-in-out infinite",
         trail: "trail var(--duration) linear infinite",
+        led: "led 100ms ease-in-out",
       },
       transitionTimingFunction: {
         slow: "cubic-bezier(.405, 0, .025, 1)",
