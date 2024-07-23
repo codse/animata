@@ -37,7 +37,7 @@ export default function CursorTracker() {
         style={{
           transform: "translate(var(--x), var(--y))",
         }}
-        className="0 pointer-events-none absolute left-0 top-0 z-50 rounded-full bg-blue-800/80 px-4 py-2 text-sm font-bold text-white opacity-0 duration-0 group-hover:opacity-100"
+        className="pointer-events-none absolute left-0 top-0 z-50 rounded-full bg-blue-800/80 px-4 py-2 text-sm font-bold text-white opacity-0 duration-0 group-hover:opacity-100"
       >
         Read more &rarr;
       </div>
