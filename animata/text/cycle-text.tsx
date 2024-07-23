@@ -20,9 +20,9 @@ export default function CycleText() {
         <AnimatePresence mode="wait">
           <motion.h1
             key={`words_${index}`}
-            initial={{ opacity: 0, y: 50 }}
+            initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -50 }}
+            exit={{ opacity: 0, y: -30 }}
             transition={{ duration: 0.08 }}
             className="inline-block font-mono text-xl text-blue-700"
           >
