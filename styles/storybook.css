@@ -63,3 +63,7 @@
     }
   }
 }
+
+.sbdocs-preview > div > div {
+  @apply overflow-hidden;
+}
