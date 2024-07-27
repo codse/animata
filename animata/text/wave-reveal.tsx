@@ -132,7 +132,7 @@ const createAnimatedNodes = (args: ReducedValue, word: string, index: number): R
   const node = (
     <span
       key={`word_${index}`}
-      className={cn({
+      className={cn("contents", {
         [className]: isWordMode,
       })}
       style={
