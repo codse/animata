@@ -85,9 +85,15 @@ function Background() {
   );
 }
 
-export default function AnimatedBeam({ children }: { children: React.ReactNode }) {
+export default function AnimatedBeam({
+  children,
+  className,
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
   return (
-    <div className="storybook-fix relative w-full overflow-hidden">
+    <div className={cn("storybook-fix relative w-full overflow-hidden", className)}>
       <Background />
       <div className="relative h-full w-full">{children}</div>
     </div>

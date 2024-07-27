@@ -1,6 +1,7 @@
 import { useCallback, useRef } from "react";
 
 import { useMousePosition } from "@/hooks/use-mouse-position";
+import { cn } from "@/lib/utils";
 
 function calculateCardRotation({
   currentX,
@@ -34,7 +35,7 @@ function calculateCardRotation({
   return { rotationX, rotationY };
 }
 
-export default function GithubCardSkew() {
+export default function GithubCardSkew({ className }: { className?: string }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const resetRef = useRef<NodeJS.Timeout>();
 
@@ -61,7 +62,10 @@ export default function GithubCardSkew() {
   return (
     <div
       ref={containerRef}
-      className="flex max-w-80 transform-gpu flex-col gap-4 rounded-3xl border border-zinc-500 bg-zinc-900 p-10 text-zinc-200 shadow-lg transition-transform ease-linear will-change-transform"
+      className={cn(
+        "flex max-w-80 transform-gpu flex-col gap-4 rounded-3xl border border-zinc-500 bg-zinc-900 p-10 text-zinc-200 shadow-lg transition-transform ease-linear will-change-transform",
+        className,
+      )}
       style={{
         transform: "perspective(400px) rotateX(var(--x)) rotateY(var(--y))",
         transitionDuration: "50ms",

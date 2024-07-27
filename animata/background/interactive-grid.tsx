@@ -147,17 +147,25 @@ function Grid() {
   );
 }
 
-export default function InteractiveGrid({ children }: { children: React.ReactNode }) {
+export default function InteractiveGrid({
+  children,
+  className,
+  contentClassName,
+}: {
+  children: React.ReactNode;
+  className?: string;
+  contentClassName?: string;
+}) {
   return (
     <div
-      className="storybook-fix relative h-full w-full overflow-hidden rounded-3xl"
+      className={cn("storybook-fix relative h-full w-full overflow-hidden rounded-3xl", className)}
       style={{
         backgroundImage:
           "linear-gradient(123deg, transparent 0%, transparent 36%,rgba(17, 17, 57,0.02) 36%, rgba(17, 17, 87,0.02) 56%,transparent 56%, transparent 100%),linear-gradient(251deg, transparent 0%, transparent 68%,rgba(3, 3, 3,0.02) 68%, rgba(3, 3, 93,0.02) 99%,transparent 99%, transparent 100%),linear-gradient(135deg, rgb(200,215,255),rgb(205,215,255))",
       }}
     >
       <Grid />
-      <div className="relative mx-auto h-full w-fit">{children}</div>
+      <div className={cn("relative mx-auto h-full w-fit", contentClassName)}>{children}</div>
     </div>
   );
 }
