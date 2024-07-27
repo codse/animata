@@ -33,7 +33,7 @@ export default function CallToActionSection() {
         </h1>
       </ComponentLinkWrapper>
 
-      <div className="mx-auto flex max-w-2xl flex-row items-center justify-center gap-4">
+      <div className="mx-auto flex max-w-2xl flex-col items-center justify-center gap-4 md:flex-row">
         <Link
           href="/docs"
           className="relative flex aspect-square min-h-52 w-full flex-col items-center justify-center gap-4 overflow-hidden rounded-xl border border-border bg-gray-100/50 bg-opacity-100 p-12 transition-all duration-100 hover:scale-105 hover:bg-opacity-50 dark:border-zinc-600 dark:bg-zinc-800"

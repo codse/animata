@@ -1,5 +1,4 @@
 import { Anaheim } from "next/font/google";
-import { motion } from "framer-motion";
 
 import WaveReveal from "@/animata/text/wave-reveal";
 import ComponentLinkWrapper from "@/components/component-link-wrapper";
@@ -13,31 +12,6 @@ const titleFont = Anaheim({
 export default function HeroTitle() {
   return (
     <div className="group relative z-10 inline-block">
-      <motion.span
-        initial={{
-          opacity: 0,
-        }}
-        animate={{
-          opacity: 1,
-        }}
-        transition={{ duration: "1s", delay: 0.1, type: "spring" }}
-        className="absolute -left-3 -top-1 inline-block -rotate-12 rounded-full bg-lime-200 px-2 py-1 text-sm font-bold uppercase text-lime-600 transition-all ease-slow group-hover:z-10 group-hover:rotate-0 group-hover:bg-lime-300"
-      >
-        FREE
-      </motion.span>
-
-      <motion.span
-        initial={{
-          opacity: 0,
-        }}
-        animate={{
-          opacity: 1,
-        }}
-        transition={{ duration: "1s", delay: 0.2, type: "spring" }}
-        className="absolute -right-9 -top-1 inline-block rotate-12 rounded-full bg-lime-200 px-2 py-1 text-sm font-bold uppercase text-lime-600 transition-all ease-slow group-hover:z-10 group-hover:rotate-0 group-hover:bg-lime-300"
-      >
-        Open source
-      </motion.span>
       <ComponentLinkWrapper link="/docs/text/wave-reveal">
         <WaveReveal
           text="animata"

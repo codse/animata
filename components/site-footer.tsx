@@ -12,12 +12,12 @@ export function SiteFooter() {
   const pathname = usePathname();
   return (
     <footer
-      className={cn("container flex flex-col justify-between py-4 md:py-6", {
+      className={cn("container mb-36 flex flex-col justify-between py-4 md:py-6", {
         "border-t border-t-border": pathname === "/",
       })}
     >
       <NewsletterSection />
-      <div className="group mx-auto my-36 w-fit">
+      <div className="group mx-auto mt-16 w-fit">
         <div className="flex gap-1">
           <div className="flex gap-1">
             <Icons.logo className="h-6 w-6 origin-[top_center] animate-[swing] transition-all duration-1000 ease-in-out direction-alternate repeat-infinite" />
@@ -43,6 +43,13 @@ export function SiteFooter() {
           </Link>
         </small>
       </div>
+
+      <small className="container mt-12 block max-w-6xl text-balance text-center text-muted-foreground">
+        <strong>Disclaimer</strong>: All trademarks, logos and brand names are the property of their
+        respective owners. All company, product and service names used in this website are for
+        identification purposes only. Use of these names,trademarks and brands does not imply
+        endorsement.
+      </small>
     </footer>
   );
 }

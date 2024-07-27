@@ -6,7 +6,6 @@ import { useTheme } from "next-themes";
 import GithubCardShiny from "@/animata/card/github-card-shiny";
 import GithubCardSkew from "@/animata/card/github-card-skew";
 import AnimatedBorderTrail from "@/animata/container/animated-border-trail";
-import FibonacciLines from "@/animata/container/fibonacci-lines";
 import AnimatedGradientText from "@/animata/text/animated-gradient-text";
 import MirrorText from "@/animata/text/mirror-text";
 import TypingText from "@/animata/text/typing-text";
@@ -19,18 +18,16 @@ export default function SectionOne() {
   const { theme } = useTheme();
   return (
     <div className="bg-white duration-1000 ease-in-out animate-in fade-in-0 slide-in-from-bottom-10 dark:bg-zinc-900">
-      <FibonacciLines className="relative mb-8 w-full">
-        <div className="absolute inset-0 flex h-full w-full flex-col items-center justify-center gap-1 text-foreground">
-          <h4 className="text-4xl font-light md:text-5xl lg:text-7xl">
-            <AnimatedGradientText className="bg-gradient-to-br from-foreground/30 via-foreground/40 to-foreground/60">
-              EXAMPLES
-            </AnimatedGradientText>
-          </h4>
-          <small className="max-w-xs text-balance text-center text-muted-foreground duration-500 md:max-w-md">
-            <strong>Tip</strong>: Use the view button to see the source.
-          </small>
-        </div>
-      </FibonacciLines>
+      <div className="flex flex-col items-center justify-center gap-1 py-12 text-foreground">
+        <h4 className="text-4xl font-medium md:text-5xl lg:text-7xl">
+          <AnimatedGradientText className="bg-gradient-to-br from-foreground/30 via-foreground/40 to-foreground/60">
+            demOS
+          </AnimatedGradientText>
+        </h4>
+        <small className="max-w-xs text-balance text-center text-muted-foreground duration-500 md:max-w-md">
+          <strong>Tip</strong>: Use the view button to see the source.
+        </small>
+      </div>
 
       <GridView>
         <ComponentCard
