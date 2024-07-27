@@ -2,7 +2,13 @@ import { useRef, useState } from "react";
 
 import { cn } from "@/lib/utils";
 
-export default function SplitText({ text = "ANIMATA" }: { text: string }) {
+export default function SplitText({
+  text = "ANIMATA",
+  className,
+}: {
+  text: string;
+  className?: string;
+}) {
   const [activeIndex, setIndex] = useState<number>();
   const timer = useRef<NodeJS.Timeout>();
 
@@ -10,7 +16,12 @@ export default function SplitText({ text = "ANIMATA" }: { text: string }) {
     "inline h-1/2 select-none overflow-y-hidden leading-none transition-all duration-300 ease-out whitespace-pre";
 
   return (
-    <div className={"relative mx-auto cursor-sword text-9xl font-black uppercase text-yellow-500"}>
+    <div
+      className={cn(
+        "relative mx-auto cursor-sword text-4xl font-black uppercase text-yellow-500 md:text-5xl lg:text-9xl",
+        className,
+      )}
+    >
       {/** add hidden text so that we maintain the size for any text */}
       <div className="invisible leading-none">{text}</div>
       <div className="absolute top-0 flex h-full">

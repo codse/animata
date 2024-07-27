@@ -2,8 +2,9 @@ import { useCallback, useRef } from "react";
 import { CheckCircle2 } from "lucide-react";
 
 import { useMousePosition } from "@/hooks/use-mouse-position";
+import { cn } from "@/lib/utils";
 
-export default function GithubCardShiny() {
+export default function GithubCardShiny({ className }: { className?: string }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
 
@@ -25,7 +26,10 @@ export default function GithubCardShiny() {
   return (
     <div
       ref={containerRef}
-      className="group relative min-w-96 overflow-hidden rounded-md border border-zinc-500 bg-zinc-700 p-10 text-zinc-200 shadow-lg"
+      className={cn(
+        "group relative min-w-96 overflow-hidden rounded-md border border-zinc-500 bg-zinc-700 p-10 text-zinc-200 shadow-lg",
+        className,
+      )}
     >
       <div
         ref={overlayRef}

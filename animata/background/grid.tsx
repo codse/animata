@@ -13,6 +13,8 @@ interface GridProps {
    * Content of the component
    */
   children?: React.ReactNode;
+
+  className?: string;
 }
 
 function Placeholder({ size = 20 }: Pick<GridProps, "size">) {
@@ -32,7 +34,7 @@ function Placeholder({ size = 20 }: Pick<GridProps, "size">) {
   );
 }
 
-export default function Grid({ color = "#cacaca", size = 20, children }: GridProps) {
+export default function Grid({ color = "#cacaca", size = 20, children, className }: GridProps) {
   return (
     <div
       style={{
@@ -40,6 +42,7 @@ export default function Grid({ color = "#cacaca", size = 20, children }: GridPro
         backgroundImage: `linear-gradient(${color} 1px, transparent 1px), linear-gradient(to right, ${color} 1px, transparent 1px)`,
         backgroundSize: `${size}px ${size}px`,
       }}
+      className={className}
     >
       {children ?? <Placeholder size={size} />}
     </div>
