@@ -4,11 +4,19 @@ import { ArrowUp, CornerUpLeft, CornerUpRight } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
-interface IDirectionCardProps {
-  directionValues: Direction[];
+interface Direction {
+  distance: number;
+  direction: string;
+  to: string;
+  iconType: ElementType;
 }
 
-export const testProps: IDirectionCardProps = {
+interface IDirectionCardProps {
+  directionValues: Direction[];
+  duration?: number;
+}
+
+export const testDirectionProps: IDirectionCardProps = {
   directionValues: [
     {
       distance: 350,
@@ -37,15 +45,10 @@ export const testProps: IDirectionCardProps = {
   ],
 };
 
-interface Direction {
-  distance: number;
-  direction: string;
-  to: string;
-  iconType: ElementType;
-}
-
-const duration = 5000;
-function DirectionCard({ directionValues = testProps.directionValues }: IDirectionCardProps) {
+function DirectionCard({
+  directionValues = testDirectionProps.directionValues,
+  duration = 5000,
+}: IDirectionCardProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [iconState, setIconState] = useState({
     prevIconType: directionValues[directionValues.length - 1].iconType,
@@ -75,9 +78,9 @@ function DirectionCard({ directionValues = testProps.directionValues }: IDirecti
         return newIndex;
       });
       setProgress(0);
-    }, duration);
+    }, duration ?? 5000);
 
-    const progressIncrement = 100 / (duration / 100);
+    const progressIncrement = 100 / ((duration ?? 5000) / 100);
     const progressInterval = setInterval(() => {
       setProgress((prevProgress) => {
         if (prevProgress >= 100) {
@@ -91,7 +94,7 @@ function DirectionCard({ directionValues = testProps.directionValues }: IDirecti
       clearInterval(changeDirectionInterval);
       clearInterval(progressInterval);
     };
-  }, [directionValues]);
+  }, [directionValues, duration]);
 
   const currentDirection = directionValues[currentIndex];
 

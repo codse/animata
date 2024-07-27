@@ -4,6 +4,7 @@ export default function MirrorText({
   text = "This is a text",
   className,
   direction = "up",
+  containerClassName,
 }: {
   text: string;
   className?: string;
@@ -12,6 +13,8 @@ export default function MirrorText({
    * @default "up"
    */
   direction?: "up" | "down" | "left" | "right";
+
+  containerClassName?: string;
 }) {
   const animation = cn("transition-all duration-500 ease-slow", {
     "group-hover:-translate-y-4": direction === "up",
@@ -27,7 +30,12 @@ export default function MirrorText({
   );
 
   return (
-    <div className="group relative w-full justify-end overflow-hidden p-6 text-foreground">
+    <div
+      className={cn(
+        "group relative w-full justify-end overflow-hidden p-6 text-foreground",
+        containerClassName,
+      )}
+    >
       <div className={cn("h-3 overflow-hidden delay-200", animation)}>{content}</div>
       <div className={cn("h-3 overflow-hidden delay-100", animation)}>{content}</div>
       <div className={cn("h-3 overflow-hidden delay-75", animation)}>{content}</div>
