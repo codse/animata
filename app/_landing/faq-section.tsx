@@ -1,8 +1,14 @@
 import Link from "next/link";
+import { useTheme } from "next-themes";
 
 import BoldCopy from "@/animata/text/bold-copy";
 import ComponentLinkWrapper from "@/components/component-link-wrapper";
-import { cn } from "@/lib/utils";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 
 import Highlight from "./highlight";
 
@@ -55,43 +61,48 @@ const faq = [
 
 function FaqItem({ index }: { index: number }) {
   const item = faq[index];
-  const count = (
-    <BoldCopy
-      text={String(index + 1)}
-      className="w-fit bg-transparent px-0 md:px-0"
-      textClassName="text-md md:text-xl group-hover:text-2xl group-hover:md:text-5xl transition-all"
-      backgroundTextClassName="text-2xl md:text-5xl"
-    />
-  );
-
   return (
-    <div
-      key={`question-${index}`}
-      className={cn({
-        "mb-4": index !== faq.length - 1,
-      })}
-    >
-      <h3 className="relative flex flex-shrink-0 flex-wrap items-center gap-4">
-        {count}
-        <span className="inline-block w-3/4 text-lg font-medium md:text-xl">{item.question}</span>
-      </h3>
-      <div className="flex gap-4">
-        <div className="invisible h-0">{count}</div>
-        <div className="text-muted-foreground">{item.answer}</div>
-      </div>
-    </div>
+    <AccordionItem value={`question-${index}`} className="w-full px-4 md:px-0">
+      <AccordionTrigger className="w-full">
+        <span className="inline-block text-sm font-medium md:text-base">{item.question}</span>
+      </AccordionTrigger>
+      <AccordionContent>
+        <div className="text-gray-900 dark:text-slate-50">{item.answer}</div>
+      </AccordionContent>
+    </AccordionItem>
   );
 }
 
 export default function FAQSection() {
+  const { theme } = useTheme();
+  const color = theme === "dark" ? "#ffffff12" : "#444cf710";
   return (
-    <section id="faq" className="relative mx-auto max-w-5xl">
-      <ComponentLinkWrapper link="/docs/text/bold-copy" className="w-full">
-        <BoldCopy text="FAQ" className="mb-4 border border-gray-200 dark:border-zinc-800" />
-      </ComponentLinkWrapper>
-      {faq.map((_, index) => {
-        return <FaqItem key={`item-${index}`} index={index} />;
-      })}
-    </section>
+    <div
+      className="relative border-b border-t border-border"
+      style={{
+        backgroundImage: `radial-gradient(${color} 1px, transparent 1px)`,
+        backgroundSize: "calc(10px) calc(10px)",
+      }}
+    >
+      <div className="absolute inset-0 left-1/2 z-0 aspect-square h-[120%] -translate-x-1/2 rounded-full bg-gradient-to-br from-gray-100 to-gray-50 blur-3xl dark:from-zinc-900 dark:to-zinc-800" />
+      <section id="faq" className="mx-auto flex max-w-xl flex-col gap-4 py-16">
+        <ComponentLinkWrapper className="mx-auto px-4" link="/docs/text/bold-copy">
+          <BoldCopy
+            text="FAQ"
+            textClassName="leading-none"
+            backgroundTextClassName="leading-none"
+            className="bg-transparent"
+          />
+          <div className="relative z-10 -mt-2 block text-center text-xs leading-none text-muted-foreground md:-mt-4 md:text-base">
+            You ask. We answer.
+          </div>
+        </ComponentLinkWrapper>
+        <Accordion collapsible type="single" className="relative">
+          {faq.map((_, index) => {
+            return <FaqItem key={`item-${index}`} index={index} />;
+          })}
+        </Accordion>
+      </section>
+    </div>
   );
 }

@@ -20,7 +20,7 @@ export default function HeroTitle() {
         animate={{
           opacity: 1,
         }}
-        transition={{ duration: "2s", delay: 0.5, type: "spring" }}
+        transition={{ duration: "1s", delay: 0.1, type: "spring" }}
         className="absolute -left-3 -top-1 inline-block -rotate-12 rounded-full bg-lime-200 px-2 py-1 text-sm font-bold uppercase text-lime-600 transition-all ease-slow group-hover:z-10 group-hover:rotate-0 group-hover:bg-lime-300"
       >
         FREE
@@ -33,7 +33,7 @@ export default function HeroTitle() {
         animate={{
           opacity: 1,
         }}
-        transition={{ duration: "2s", delay: 1, type: "spring" }}
+        transition={{ duration: "1s", delay: 0.2, type: "spring" }}
         className="absolute -right-9 -top-1 inline-block rotate-12 rounded-full bg-lime-200 px-2 py-1 text-sm font-bold uppercase text-lime-600 transition-all ease-slow group-hover:z-10 group-hover:rotate-0 group-hover:bg-lime-300"
       >
         Open source
@@ -45,9 +45,9 @@ export default function HeroTitle() {
             "select-none px-0 text-7xl uppercase text-blue-700 transition-opacity delay-1000 dark:text-blue-500 md:px-0 md:text-8xl",
             titleFont.className,
           )}
-          delay={750}
+          delay={0}
           direction="up"
-          duration="500ms"
+          duration="300ms"
         />
       </ComponentLinkWrapper>
     </div>
