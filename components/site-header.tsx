@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useTheme } from "next-themes";
 import { motion, useInView, useSpring, useTransform } from "framer-motion";
@@ -12,6 +12,7 @@ import { MainNav } from "@/components/main-nav";
 import { MobileNav } from "@/components/mobile-nav";
 import { ModeToggle } from "@/components/mode-toggle";
 import { buttonVariants } from "@/components/ui/button";
+import { docsConfig } from "@/config/docs";
 import { siteConfig } from "@/config/site";
 import { cn } from "@/lib/utils";
 
@@ -23,28 +24,44 @@ export function SiteHeader() {
   const height = useSpring(40, { damping: 15 });
   const isInView = useInView(headerRef);
   const opacity = useTransform(top, (value) => (value > 40 ? 0 : 0.75));
+  const [animationEnded, setAnimationEnded] = useState(false);
 
   useEffect(() => {
     if (!isInView) {
       return;
     }
 
-    const timeout = setTimeout(() => {
+    function setSize() {
       const offset = 40;
       top.set(window.innerHeight - (headerRef.current?.clientHeight ?? 0) - offset);
       width.set(headerRef.current?.clientWidth ?? 0);
       height.set(headerRef.current?.clientHeight ?? 0);
-    }, 750);
-    return () => clearTimeout(timeout);
+    }
+
+    const timeout = setTimeout(setSize, 750);
+    return () => {
+      clearTimeout(timeout);
+    };
   }, [top, isInView, width, height]);
 
   return (
     <>
       <div className="border-b border-border bg-background py-2">
         <div className="container flex justify-between gap-4">
-          <Link href="/">
-            <Icons.logo className="h-10 w-10" />
-          </Link>
+          <div className="flex items-center space-x-4">
+            <Link href="/">
+              <Icons.logo className="h-10 w-10" />
+            </Link>
+            {docsConfig.mainNav.map((item, index) => (
+              <Link
+                key={index}
+                href={item.href as string}
+                className="text-sm font-medium text-muted-foreground hover:underline"
+              >
+                {item.title}
+              </Link>
+            ))}
+          </div>
           <AnimatedBorderTrail
             trailColor={resolvedTheme === "dark" ? "white" : "gray"}
             className="rounded-full border-2 border-border bg-foreground/30 p-0.5"
@@ -61,17 +78,35 @@ export function SiteHeader() {
         </div>
       </div>
       <motion.header
-        style={{ translateX: "-50%", top, width, height }}
+        style={{
+          translateX: "-50%",
+          top: animationEnded ? "calc(100% - 96px)" : top,
+          width: animationEnded ? "fit-content" : width,
+          height: height,
+        }}
+        onAnimationEnd={() => {
+          function clear() {
+            if (String(height.get()) === String(headerRef.current?.clientHeight)) {
+              setAnimationEnded(true);
+            } else {
+              requestAnimationFrame(clear);
+            }
+          }
+
+          if (!animationEnded && width.get() > 40 && isInView) {
+            requestAnimationFrame(clear);
+          }
+        }}
         className="fixed left-1/2 z-50 mx-auto overflow-hidden rounded-full border border-foreground/5 bg-foreground/70 text-background shadow-xl shadow-foreground/10 backdrop-blur supports-[backdrop-filter]:bg-foreground/40 dark:bg-foreground/40"
       >
-        <div ref={headerRef} className="container flex h-14 w-fit items-center">
+        <div ref={headerRef} className="container flex h-14 w-fit max-w-fit items-center">
           <MainNav />
           <MobileNav />
           <div className="flex flex-1 items-center justify-between space-x-2 md:justify-end">
             <div className="w-full flex-1 md:w-auto md:flex-none">
               <CommandMenu />
             </div>
-            <Link href={siteConfig.links.github} rel="noreferrer">
+            <Link href={docsConfig.mainNav[1].href ?? ""} rel="noreferrer">
               <div
                 className={cn(
                   buttonVariants({

@@ -1,5 +1,6 @@
-import { HTMLAttributes } from "react";
+import { HTMLAttributes, useState } from "react";
 import Link from "next/link";
+import { ArrowRight, CircleDashed } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
@@ -14,6 +15,7 @@ export function ComponentCard({
   name: string;
   rounded?: boolean;
 }) {
+  const [clicked, setClicked] = useState(false);
   return (
     <section
       className={cn(
@@ -41,9 +43,15 @@ export function ComponentCard({
         </h2>
         <Link
           href={href}
-          className="ml-auto text-xs font-semibold leading-none text-blue-500 hover:underline"
+          onClick={() => setClicked(true)}
+          className="ml-auto flex items-center gap-1 text-xs font-semibold leading-none text-blue-500 hover:underline"
         >
-          View &rarr;
+          View{" "}
+          {clicked ? (
+            <CircleDashed className="size-4 animate-spin" />
+          ) : (
+            <ArrowRight className="size-4" />
+          )}
         </Link>
       </header>
       <div {...props} className="mx-4 my-6 flex flex-1 items-center justify-center" />
