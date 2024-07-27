@@ -4,7 +4,7 @@ export default function Report({ className }: { className?: string }) {
   return (
     <div
       className={cn(
-        "flex min-h-48 w-52 flex-col gap-3 rounded-md border bg-background p-3 shadow-xl transition-shadow hover:shadow-sm dark:border-zinc-700",
+        "flex min-h-52 w-52 flex-col gap-3 rounded-md border bg-background p-3 shadow-xl transition-shadow hover:shadow-sm dark:border-zinc-700",
         className,
       )}
     >

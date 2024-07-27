@@ -55,14 +55,13 @@ export function CommandMenu({ ...props }: DialogProps) {
       <Button
         variant="outline"
         className={cn(
-          "relative h-8 w-full justify-start rounded-[0.5rem] bg-background text-sm font-normal text-muted-foreground shadow-none sm:pr-12 md:w-40 lg:w-64",
+          "relative h-8 w-full justify-start rounded-full border-none bg-foreground/10 px-4 text-sm font-normal text-background/75 shadow-none transition-all duration-300 hover:bg-foreground/20 hover:text-background/80 md:w-40 lg:w-64",
         )}
         onClick={() => setOpen(true)}
         {...props}
       >
-        <span className="hidden lg:inline-flex">Search documentation...</span>
-        <span className="inline-flex lg:hidden">Search...</span>
-        <kbd className="pointer-events-none absolute right-[0.3rem] top-[0.3rem] hidden h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium opacity-100 sm:flex">
+        <span className="inline-flex flex-1">Search...</span>
+        <kbd className="pointer-events-none hidden flex-shrink-0 select-none items-center gap-1 rounded border border-background/30 bg-muted-foreground px-2 font-mono text-[10px] font-medium sm:flex">
           <span className="text-xs">⌘</span>K
         </kbd>
       </Button>
@@ -72,7 +71,7 @@ export function CommandMenu({ ...props }: DialogProps) {
           <CommandEmpty>No results found.</CommandEmpty>
           <CommandGroup heading="Links">
             {docsConfig.mainNav
-              .filter((navitem) => !navitem.external)
+              .filter((item) => !item.external)
               .map((navItem) => (
                 <CommandItem
                   key={navItem.href}
