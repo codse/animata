@@ -27,7 +27,7 @@ export default function GithubCardShiny({ className }: { className?: string }) {
     <div
       ref={containerRef}
       className={cn(
-        "group relative w-96 min-w-fit max-w-full overflow-hidden rounded-md border border-zinc-500 bg-zinc-700 p-10 text-zinc-200 shadow-lg",
+        "group relative w-96 min-w-fit max-w-full overflow-hidden rounded-md border border-border bg-zinc-700 p-10 text-zinc-200 shadow-lg",
         className,
       )}
     >

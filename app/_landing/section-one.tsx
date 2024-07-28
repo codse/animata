@@ -68,7 +68,7 @@ export default function SectionOne() {
 
         <div className="flex w-full flex-1 flex-col gap-4">
           <ComponentCard name="Mirror text" className="w-full" href="/docs/text/mirror-text">
-            <div className="mx-auto w-fit rounded-xl border border-gray-200 bg-gray-50 shadow-xl dark:border-gray-600 dark:bg-gray-900">
+            <div className="mx-auto w-fit rounded-xl border border-border bg-gray-100 shadow-xl dark:border-zinc-600 dark:bg-zinc-700">
               <MirrorText
                 containerClassName="px-3 py-2"
                 className="text-xl sm:text-2xl md:text-3xl"
@@ -78,9 +78,9 @@ export default function SectionOne() {
           </ComponentCard>
 
           <ComponentCard name="Typing text" href="/docs/text/typing-text">
-            <div className="flex flex-col rounded-xl border border-border bg-gray-100 dark:bg-zinc-900 lg:col-span-2">
+            <div className="flex flex-col rounded-xl border border-border bg-gray-100 dark:border-zinc-600 dark:bg-zinc-700 lg:col-span-2">
               {/** Window */}
-              <div className="flex gap-1.5 border-b border-border p-4">
+              <div className="flex gap-1.5 border-b border-border p-4 dark:border-zinc-600">
                 <span className="h-3 w-3 transform rounded-full bg-red-500 transition-transform duration-150 hover:scale-110" />
                 <span className="h-3 w-3 transform rounded-full bg-yellow-500 transition-transform duration-150 hover:scale-110" />
                 <span className="h-3 w-3 transform rounded-full bg-green-500 transition-transform duration-150 hover:scale-110" />

@@ -38,7 +38,7 @@ export function SiteHeader() {
       height.set(headerRef.current?.clientHeight ?? 0);
     }
 
-    const timeout = setTimeout(setSize, 750);
+    const timeout = setTimeout(setSize, 500);
     return () => {
       clearTimeout(timeout);
     };
