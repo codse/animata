@@ -27,7 +27,7 @@ export default function GithubCardShiny({ className }: { className?: string }) {
     <div
       ref={containerRef}
       className={cn(
-        "group relative w-96 min-w-fit max-w-full overflow-hidden rounded-md border border-border bg-zinc-700 p-10 text-zinc-200 shadow-lg",
+        "group relative w-96 min-w-fit max-w-full overflow-hidden rounded-md border border-border bg-zinc-700 p-6 text-zinc-200 shadow-lg",
         className,
       )}
     >
@@ -63,9 +63,9 @@ export default function GithubCardShiny({ className }: { className?: string }) {
           return (
             <div className="flex w-full items-center gap-2" key={step.title}>
               <CheckCircle2 className="flex-shrink-0 fill-green-400 text-zinc-600" />
-              <strong className="md:flex-shrink-0">{step.title}</strong>
+              <strong className="text-xs md:flex-shrink-0 md:text-base">{step.title}</strong>
 
-              <span className="ml-auto inline-block flex-shrink-0 text-sm opacity-75">
+              <span className="ml-auto inline-block flex-shrink-0 text-xs opacity-75">
                 {step.time}
               </span>
             </div>

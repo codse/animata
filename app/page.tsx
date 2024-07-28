@@ -33,7 +33,16 @@ function LazySection({
       })}
       ref={divRef}
     >
-      <Suspense fallback={<div className={cn("h-full w-full blur-xl", className)} />}>
+      <Suspense
+        fallback={
+          <div
+            className={cn(
+              "h-full min-h-32 w-full animate-pulse bg-foreground/10 blur-xl",
+              className,
+            )}
+          />
+        }
+      >
         <Component />
       </Suspense>
     </div>

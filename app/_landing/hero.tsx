@@ -26,7 +26,7 @@ export default function Hero() {
   return (
     <div className="relative overflow-visible pt-16">
       <div
-        className="absolute inset-0 aspect-square min-h-full w-[120%] opacity-25 duration-1000 ease-in-out animate-in fade-in-0 dark:opacity-75 dark:mix-blend-soft-light dark:brightness-150"
+        className="absolute inset-0 aspect-square min-h-full w-[1200%] opacity-25 duration-1000 ease-in-out animate-in fade-in-0 dark:opacity-75 dark:mix-blend-soft-light dark:brightness-150 md:w-[120%]"
         style={{
           backgroundImage: `radial-gradient(at 88% 11%, hsla(166,69%,67%,1) 0px, transparent 50%),
           radial-gradient(at 56% 93%, hsla(295,72%,68%,1) 0px, transparent 50%),
