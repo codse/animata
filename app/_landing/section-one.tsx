@@ -15,12 +15,12 @@ import { ComponentCard } from "@/components/component-card";
 const WidgetSection = React.lazy(() => import("./widget-section"));
 
 export default function SectionOne() {
-  const { theme } = useTheme();
+  const { resolvedTheme } = useTheme();
   return (
-    <div className="bg-white duration-1000 ease-in-out animate-in fade-in-0 slide-in-from-bottom-10 dark:bg-zinc-900">
+    <div className="bg-transparent duration-1000 ease-in-out animate-in fade-in-0 slide-in-from-bottom-16">
       <div className="flex flex-col items-center justify-center gap-1 py-12 text-foreground">
         <h4 className="text-4xl font-medium md:text-5xl lg:text-7xl">
-          <AnimatedGradientText className="bg-gradient-to-br from-foreground/30 via-foreground/40 to-foreground/60">
+          <AnimatedGradientText className="bg-gradient-to-br from-foreground/50 via-foreground/60 to-foreground/80">
             demOS
           </AnimatedGradientText>
         </h4>
@@ -35,12 +35,16 @@ export default function SectionOne() {
           name="Border trail"
           href="/docs/container/animated-border-trail"
         >
-          <AnimatedBorderTrail trailColor={theme === "dark" ? "#ff0" : "purple"}>
-            <div className="flex-1 p-3 dark:text-zinc-800">
+          <AnimatedBorderTrail
+            trailColor={resolvedTheme === "dark" ? "#ff0" : "purple"}
+            className="border border-border bg-gray-100 dark:bg-zinc-500"
+            contentClassName="bg-gray-100 dark:bg-zinc-700"
+          >
+            <div className="flex-1 p-3">
               No longer wasting hours 🕕 looking for the inspiration or trying to write everything
               from scratch 📝.
             </div>
-            <div className="m-3 rounded-xl bg-gray-50 px-3 py-2 font-mono text-sm text-black dark:bg-zinc-800 dark:text-white">
+            <div className="m-3 rounded-xl bg-gray-50 px-4 py-3 font-mono text-sm text-black dark:bg-zinc-800 dark:text-white">
               <div>
                 <span className="font-semibold text-blue-400 dark:text-blue-200">time.</span>
                 saved = <span className="font-bold text-blue-400">true</span>;
@@ -74,15 +78,15 @@ export default function SectionOne() {
           </ComponentCard>
 
           <ComponentCard name="Typing text" href="/docs/text/typing-text">
-            <div className="flex flex-col rounded-xl bg-gray-100 p-4 dark:bg-zinc-900 lg:col-span-2">
+            <div className="flex flex-col rounded-xl border border-border bg-gray-100 dark:bg-zinc-900 lg:col-span-2">
               {/** Window */}
-              <div className="flex gap-1.5">
-                <span className="h-3 w-3 rounded-full bg-red-500" />
-                <span className="h-3 w-3 rounded-full bg-yellow-500" />
-                <span className="h-3 w-3 rounded-full bg-green-500" />
+              <div className="flex gap-1.5 border-b border-border p-4">
+                <span className="h-3 w-3 transform rounded-full bg-red-500 transition-transform duration-150 hover:scale-110" />
+                <span className="h-3 w-3 transform rounded-full bg-yellow-500 transition-transform duration-150 hover:scale-110" />
+                <span className="h-3 w-3 transform rounded-full bg-green-500 transition-transform duration-150 hover:scale-110" />
               </div>
               {/** Code */}
-              <div className="group mt-3 w-full font-mono text-sm">
+              <div className="group w-full p-4 font-mono text-sm">
                 <div className="mt-2 line-clamp-1">
                   <span className="font-medium text-yellow-600 dark:text-yellow-500">import</span>{" "}
                   <span className="transition-all group-hover:animate-pulse group-hover:text-blue-600 dark:group-hover:text-blue-400">

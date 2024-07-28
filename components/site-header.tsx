@@ -46,8 +46,8 @@ export function SiteHeader() {
 
   return (
     <>
-      <div className="border-b border-border bg-background py-2">
-        <div className="container flex justify-between gap-4">
+      <div className="absolute left-0 top-2 z-10 h-fit w-full">
+        <div className="container flex justify-between gap-4 rounded-full border-b border-foreground/10 bg-background/15 py-2 shadow-sm backdrop-blur">
           <div className="flex items-center space-x-4">
             <Link href="/">
               <Icons.logo className="h-10 w-10" />
@@ -63,14 +63,14 @@ export function SiteHeader() {
             ))}
           </div>
           <AnimatedBorderTrail
-            trailColor={resolvedTheme === "dark" ? "white" : "gray"}
-            className="rounded-full border-2 border-border bg-foreground/30 p-0.5"
+            trailColor={resolvedTheme === "dark" ? "white" : "black"}
+            className="rounded-full bg-foreground/30 p-0.5 transition-all duration-100 hover:scale-105 hover:opacity-95 active:scale-90 active:opacity-100"
             contentClassName="rounded-full bg-transparent "
           >
             <Link
-              href="/"
+              href={siteConfig.links.github}
               target="_blank"
-              className="inline-block rounded-full bg-gradient-to-br from-gray-50/75 from-10% via-slate-100/75 via-60% to-zinc-50/75 px-4 py-2 text-xs font-medium text-foreground/75 backdrop-blur-sm dark:from-gray-900/60 dark:via-zinc-500/60 dark:to-slate-700/60"
+              className="inline-block rounded-full bg-opacity-75 bg-gradient-to-br from-gray-100 from-5% via-zinc-50 via-60% to-slate-200 px-4 py-2 text-xs font-medium text-foreground dark:from-gray-900 dark:via-zinc-700 dark:to-slate-700"
             >
               Star us on GitHub
             </Link>

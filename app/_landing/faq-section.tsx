@@ -74,11 +74,11 @@ function FaqItem({ index }: { index: number }) {
 }
 
 export default function FAQSection() {
-  const { theme } = useTheme();
-  const color = theme === "dark" ? "#ffffff12" : "#444cf710";
+  const { resolvedTheme } = useTheme();
+  const color = resolvedTheme === "dark" ? "#ffffff12" : "#444cf710";
   return (
     <div
-      className="relative border-b border-t border-border"
+      className="relative border-b border-t border-border pb-4"
       style={{
         backgroundImage: `radial-gradient(${color} 1px, transparent 1px)`,
         backgroundSize: "calc(10px) calc(10px)",

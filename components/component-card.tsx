@@ -19,7 +19,7 @@ export function ComponentCard({
   return (
     <section
       className={cn(
-        "relative flex h-full flex-col border border-border bg-gray-50 dark:bg-zinc-800",
+        "relative flex h-full flex-col border border-border bg-gray-50 dark:border-zinc-600 dark:bg-zinc-800",
         className,
         {
           "rounded-xl": rounded,
