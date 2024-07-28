@@ -1,4 +1,6 @@
+import { useRef } from "react";
 import { useTheme } from "next-themes";
+import { useInView } from "framer-motion";
 import { Quote } from "lucide-react";
 
 import { cn } from "@/lib/utils";
@@ -39,9 +41,41 @@ const testimonials: {
   },
 ];
 
+function Testimonial({
+  comment,
+  author,
+  className,
+}: {
+  comment: string;
+  author: string;
+  className?: string;
+}) {
+  const divRef = useRef<HTMLDivElement>(null);
+  const isInView = useInView(divRef, {
+    once: true,
+  });
+  return (
+    <div
+      ref={divRef}
+      key={`${isInView}-${author}`}
+      className={cn(
+        "flex h-fit w-fit max-w-sm flex-shrink-0 transform gap-2 rounded-xl border-2 border-border bg-background p-3 text-sm transition-all duration-1000 ease-in-out animate-in md:ease-minor-spring",
+        className,
+      )}
+    >
+      <div className="flex-1">
+        {comment}
+        <div className="mt-2 font-semibold">{author}</div>
+      </div>
+      <Quote className="size-10 flex-shrink-0 opacity-5 dark:opacity-10" />
+    </div>
+  );
+}
+
 export default function Testimonials() {
   const { theme } = useTheme();
   const lineColor = theme === "dark" ? "#ffffff12" : "#444cf710";
+
   return (
     <div
       className="relative -mt-4 flex flex-col gap-2 overflow-hidden px-4 py-16"
@@ -56,19 +90,16 @@ export default function Testimonials() {
         wall of love
       </h3>
       <div className="relative mx-auto flex max-w-3xl flex-wrap items-center justify-center gap-4">
-        {testimonials.map(({ comment, author }) => (
-          <div
-            key={author}
-            className={cn(
-              "flex h-fit w-fit max-w-sm flex-shrink-0 transform gap-2 rounded-xl border-2 border-border bg-background p-3 text-sm transition-all duration-300",
-            )}
-          >
-            <div className="flex-1">
-              {comment}
-              <div className="mt-2 font-semibold">{author}</div>
-            </div>
-            <Quote className="size-10 flex-shrink-0 opacity-5 dark:opacity-10" />
-          </div>
+        {testimonials.map(({ comment, author }, index) => (
+          <Testimonial
+            className={cn({
+              "slide-in-from-right-full": index % 2 === 0,
+              "slide-in-from-left-full": index % 2 !== 0,
+            })}
+            key={index}
+            comment={comment}
+            author={author}
+          />
         ))}
       </div>
     </div>

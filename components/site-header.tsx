@@ -1,17 +1,18 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useTheme } from "next-themes";
 import { motion, useInView, useSpring, useTransform } from "framer-motion";
 import { CodeIcon } from "lucide-react";
 
 import AnimatedBorderTrail from "@/animata/container/animated-border-trail";
 import { CommandMenu } from "@/components/command-menu";
+import HeaderDockItem from "@/components/header-dock-item";
 import { Icons } from "@/components/icons";
 import { MainNav } from "@/components/main-nav";
 import { MobileNav } from "@/components/mobile-nav";
 import { ModeToggle } from "@/components/mode-toggle";
-import { buttonVariants } from "@/components/ui/button";
 import { docsConfig } from "@/config/docs";
 import { siteConfig } from "@/config/site";
 import { cn } from "@/lib/utils";
@@ -21,10 +22,12 @@ export function SiteHeader() {
   const headerRef = useRef<HTMLDivElement>(null);
   const top = useSpring(8, { damping: 15 });
   const width = useSpring(40, { damping: 15 });
-  const height = useSpring(40, { damping: 15 });
+  const height = useSpring(10, { damping: 15 });
   const isInView = useInView(headerRef);
   const opacity = useTransform(top, (value) => (value > 40 ? 0 : 0.75));
   const [animationEnded, setAnimationEnded] = useState(false);
+  const pathname = usePathname();
+  const isIndexPage = pathname === "/";
 
   useEffect(() => {
     if (!isInView) {
@@ -44,13 +47,42 @@ export function SiteHeader() {
     };
   }, [top, isInView, width, height]);
 
+  const Header = !animationEnded ? motion.header : "header";
+  const styles = !animationEnded
+    ? {
+        top,
+        width,
+        height,
+        transform: "translateX(-50%)",
+      }
+    : {
+        // Once the animation ends, use CSS to properly position the header
+        top: "calc(100dvh - 96px)",
+        width: "fit-content",
+        height: "fit-content",
+        transform: "translateX(-50%)",
+      };
+
   return (
     <>
-      <div className="absolute left-0 top-2 z-10 h-fit w-full">
-        <div className="container flex justify-between gap-4 rounded-full border-b border-foreground/10 bg-background/15 py-2 shadow-sm backdrop-blur">
+      <div
+        className={cn("h-fit w-full", {
+          "absolute left-0 top-2 z-10 px-2": isIndexPage,
+          "py-2": !isIndexPage,
+        })}
+      >
+        <div
+          className={cn(
+            "container flex w-full justify-between gap-4 border-b border-foreground/10 bg-background/15 py-2 shadow-sm backdrop-blur transition-all duration-300 ease-minor-spring",
+            {
+              "rounded-full": isIndexPage,
+              "px-4": !isIndexPage,
+            },
+          )}
+        >
           <div className="flex items-center space-x-4">
             <Link href="/">
-              <Icons.logo className="h-10 w-10" />
+              <Icons.logo className="h-8 w-8" />
             </Link>
             {docsConfig.mainNav.map((item, index) => (
               <Link
@@ -72,18 +104,14 @@ export function SiteHeader() {
               target="_blank"
               className="inline-block rounded-full bg-opacity-75 bg-gradient-to-br from-gray-100 from-5% via-zinc-50 via-60% to-slate-200 px-4 py-2 text-xs font-medium text-foreground dark:from-gray-900 dark:via-zinc-700 dark:to-slate-700"
             >
-              Star us on GitHub
+              Star us <span className="hidden sm:inline">on GitHub</span>
             </Link>
           </AnimatedBorderTrail>
         </div>
       </div>
-      <motion.header
-        style={{
-          translateX: "-50%",
-          top: animationEnded ? "calc(100% - 96px)" : top,
-          width: animationEnded ? "fit-content" : width,
-          height: height,
-        }}
+      <Header
+        // @ts-expect-error - the conditional type is not being inferred correctly
+        style={styles}
         onAnimationEnd={() => {
           function clear() {
             if (String(height.get()) === String(headerRef.current?.clientHeight)) {
@@ -97,64 +125,49 @@ export function SiteHeader() {
             requestAnimationFrame(clear);
           }
         }}
-        className="fixed left-1/2 z-50 mx-auto overflow-hidden rounded-full border border-foreground/5 bg-foreground/70 text-background shadow-xl shadow-foreground/10 backdrop-blur supports-[backdrop-filter]:bg-foreground/40 dark:bg-foreground/40"
+        className={cn(
+          "fixed left-1/2 z-50 mx-auto rounded-2xl border border-muted-foreground bg-zinc-700 text-background shadow-sm shadow-muted-foreground dark:bg-white",
+          {
+            "transition-all duration-300": animationEnded,
+            "overflow-hidden": !animationEnded,
+          },
+        )}
       >
-        <div ref={headerRef} className="container flex h-14 w-fit max-w-fit items-center">
+        <div ref={headerRef} className="flex h-14 w-fit max-w-fit items-center px-2">
           <MainNav />
           <MobileNav />
-          <div className="flex flex-1 items-center justify-between space-x-2 md:justify-end">
+          <div className="flex flex-1 items-center justify-between space-x-2">
             <div className="w-full flex-1 md:w-auto md:flex-none">
               <CommandMenu />
             </div>
-            <Link href={docsConfig.mainNav[1].href ?? ""} rel="noreferrer">
-              <div
-                className={cn(
-                  buttonVariants({
-                    variant: "ghost",
-                  }),
-                  "w-9 px-0",
-                )}
-              >
-                <CodeIcon className="h-4 w-4" />
-                <span className="sr-only">Components</span>
-              </div>
-            </Link>
-            <nav className="flex items-center">
+            <nav className="flex items-center gap-2">
+              <Link href={docsConfig.mainNav[1].href ?? ""} rel="noreferrer">
+                <HeaderDockItem>
+                  <CodeIcon className="h-4 w-4" />
+                  <span className="sr-only">Components</span>
+                </HeaderDockItem>
+              </Link>
               <Link href={siteConfig.links.github} target="_blank" rel="noreferrer">
-                <div
-                  className={cn(
-                    buttonVariants({
-                      variant: "ghost",
-                    }),
-                    "w-9 px-0",
-                  )}
-                >
+                <HeaderDockItem>
                   <Icons.gitHub className="h-4 w-4" />
                   <span className="sr-only">GitHub</span>
-                </div>
+                </HeaderDockItem>
               </Link>
               <Link href={siteConfig.links.twitter} target="_blank" rel="noreferrer">
-                <div
-                  className={cn(
-                    buttonVariants({
-                      variant: "ghost",
-                    }),
-                    "w-9 px-0",
-                  )}
-                >
+                <HeaderDockItem>
                   <Icons.twitter className="h-3 w-3 fill-current" />
                   <span className="sr-only">Twitter</span>
-                </div>
+                </HeaderDockItem>
               </Link>
               <ModeToggle />
             </nav>
           </div>
         </div>
         <motion.div
-          className="pointer-events-none absolute inset-0 h-full w-full animate-pulse bg-foreground duration-mid repeat-1"
+          className="pointer-events-none absolute inset-0 h-full w-full animate-pulse rounded-2xl bg-foreground duration-mid repeat-0"
           style={{ opacity }}
         />
-      </motion.header>
+      </Header>
     </>
   );
 }
