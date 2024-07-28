@@ -27,7 +27,7 @@ export default function GithubCardShiny({ className }: { className?: string }) {
     <div
       ref={containerRef}
       className={cn(
-        "group relative min-w-96 overflow-hidden rounded-md border border-zinc-500 bg-zinc-700 p-10 text-zinc-200 shadow-lg",
+        "group relative w-96 min-w-fit max-w-full overflow-hidden rounded-md border border-border bg-zinc-700 p-6 text-zinc-200 shadow-lg",
         className,
       )}
     >
@@ -45,7 +45,7 @@ export default function GithubCardShiny({ className }: { className?: string }) {
         <div className="text-xs text-zinc-400">on: push</div>
       </div>
 
-      <div className="z-10 mt-10 flex min-w-fit flex-col gap-2 rounded-md bg-zinc-600 p-4 shadow-2xl">
+      <div className="z-10 mt-10 flex w-full min-w-fit flex-col gap-2 rounded-md bg-zinc-600 p-4 shadow-2xl">
         {[
           {
             title: "Install dependencies",
@@ -61,11 +61,13 @@ export default function GithubCardShiny({ className }: { className?: string }) {
           },
         ].map((step) => {
           return (
-            <div className="flex items-center gap-2" key={step.title}>
-              <CheckCircle2 className="fill-green-400 text-zinc-600" />
-              <strong>{step.title}</strong>
+            <div className="flex w-full items-center gap-2" key={step.title}>
+              <CheckCircle2 className="flex-shrink-0 fill-green-400 text-zinc-600" />
+              <strong className="text-xs md:flex-shrink-0 md:text-base">{step.title}</strong>
 
-              <span className="ml-auto inline-block text-sm opacity-75">{step.time}</span>
+              <span className="ml-auto inline-block flex-shrink-0 text-xs opacity-75">
+                {step.time}
+              </span>
             </div>
           );
         })}

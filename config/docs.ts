@@ -188,16 +188,12 @@ const sidebarNav: SidebarNavItem[] = [
 export const docsConfig: DocsConfig = {
   mainNav: [
     {
-      title: "Documentation",
+      title: "Docs",
       href: "/docs",
     },
     {
       title: "Components",
       href: sidebarNav[2].items?.[0]?.href ?? sidebarNav[2]?.href,
-    },
-    {
-      title: "Contributing",
-      href: "/docs/contributing",
     },
   ],
   sidebarNav,

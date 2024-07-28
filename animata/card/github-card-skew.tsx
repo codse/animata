@@ -63,7 +63,7 @@ export default function GithubCardSkew({ className }: { className?: string }) {
     <div
       ref={containerRef}
       className={cn(
-        "flex max-w-80 transform-gpu flex-col gap-4 rounded-3xl border border-zinc-500 bg-zinc-900 p-10 text-zinc-200 shadow-lg transition-transform ease-linear will-change-transform",
+        "flex max-w-80 transform-gpu flex-col gap-4 rounded-3xl border border-border bg-zinc-700 p-10 text-zinc-200 shadow-lg transition-transform ease-linear will-change-transform",
         className,
       )}
       style={{

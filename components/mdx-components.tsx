@@ -144,7 +144,10 @@ const components = {
     />
   ),
   Steps: ({ ...props }) => (
-    <div className="[&>h3]:step steps mb-12 ml-4 border-l pl-8 [counter-reset:step]" {...props} />
+    <div
+      className="[&>h3]:step steps mb-12 ml-4 border-l border-border pl-8 [counter-reset:step]"
+      {...props}
+    />
   ),
   Tabs: ({ className, ...props }: ComponentProps<typeof Tabs>) => (
     <Tabs className={cn("relative mt-6 w-full", className)} {...props} />
