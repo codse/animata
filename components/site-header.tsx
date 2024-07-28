@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTheme } from "next-themes";
-import { motion, useInView, useSpring, useTransform } from "framer-motion";
+import { motion, useInView, useSpring } from "framer-motion";
 import { CodeIcon } from "lucide-react";
 
 import AnimatedBorderTrail from "@/animata/container/animated-border-trail";
@@ -24,10 +24,10 @@ export function SiteHeader() {
   const width = useSpring(40, { damping: 15 });
   const height = useSpring(10, { damping: 15 });
   const isInView = useInView(headerRef);
-  const opacity = useTransform(top, (value) => (value > 40 ? 0 : 0.75));
   const [animationEnded, setAnimationEnded] = useState(false);
   const pathname = usePathname();
   const isIndexPage = pathname === "/";
+  const border = 2;
 
   useEffect(() => {
     if (!isInView) {
@@ -38,7 +38,7 @@ export function SiteHeader() {
       const offset = 40;
       top.set(window.innerHeight - (headerRef.current?.clientHeight ?? 0) - offset);
       width.set(headerRef.current?.clientWidth ?? 0);
-      height.set(headerRef.current?.clientHeight ?? 0);
+      height.set(border + (headerRef.current?.clientHeight ?? 0));
     }
 
     const timeout = setTimeout(setSize, 500);
@@ -114,7 +114,7 @@ export function SiteHeader() {
         style={styles}
         onAnimationEnd={() => {
           function clear() {
-            if (String(height.get()) === String(headerRef.current?.clientHeight)) {
+            if (String(height.get()) === String(border + (headerRef.current?.clientHeight ?? 0))) {
               setAnimationEnded(true);
             } else {
               requestAnimationFrame(clear);
@@ -164,8 +164,8 @@ export function SiteHeader() {
           </div>
         </div>
         <motion.div
-          className="pointer-events-none absolute inset-0 h-full w-full animate-pulse rounded-2xl bg-foreground duration-mid repeat-0"
-          style={{ opacity }}
+          className="pointer-events-none absolute inset-0 h-full w-full animate-pulse rounded-2xl bg-foreground duration-mid repeat-1"
+          style={{ opacity: animationEnded ? 0 : 0.3 }}
         />
       </Header>
     </>
