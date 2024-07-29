@@ -23,6 +23,8 @@ interface DotProps {
    * Class name
    */
   className?: string;
+
+  style?: React.CSSProperties;
 }
 
 function Placeholder() {
@@ -39,11 +41,14 @@ export default function Dot({
   spacing = 10,
   children,
   className,
+  style = {
+    backgroundColor: "white",
+  },
 }: DotProps) {
   return (
     <div
       style={{
-        backgroundColor: "white",
+        ...style,
         backgroundImage: `radial-gradient(${color} ${size}px, transparent ${size}px)`,
         backgroundSize: `calc(${spacing} * ${size}px) calc(${spacing} * ${size}px)`,
       }}

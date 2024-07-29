@@ -45,8 +45,8 @@ export function NewsletterInput() {
 
 export default function NewsletterSection() {
   return (
-    <div className="my-16 flex flex-col md:my-8" id="join">
-      <p className="mb-1 text-sm font-medium text-foreground opacity-60">
+    <div className="mx-auto mt-16 flex flex-col gap-2" id="join">
+      <p className="text-center text-sm font-medium text-foreground opacity-60">
         Join our newsletter to get the latest updates.
       </p>
       <NewsletterInput />

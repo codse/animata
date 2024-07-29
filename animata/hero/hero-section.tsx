@@ -8,7 +8,7 @@ import animataImage from "@/public/android-chrome-192x192.png";
 import TypingText from "../text/typing-text";
 import WaveReveal from "../text/wave-reveal";
 import Cycling from "../widget/cycling";
-import DirectionCard, { testProps } from "../widget/direction-card";
+import DirectionCard, { testDirectionProps } from "../widget/direction-card";
 import WaterTracker from "../widget/water-tracker";
 
 // Button Component
@@ -62,7 +62,7 @@ function Card({ card, index, stackAlign }: { card: string; index: number; stackA
       case "card2":
         return (
           <>
-            <DirectionCard {...testProps} />
+            <DirectionCard {...testDirectionProps} />
             <CardLabel text="Direction Card" />
           </>
         );

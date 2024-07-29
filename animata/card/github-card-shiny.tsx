@@ -2,8 +2,9 @@ import { useCallback, useRef } from "react";
 import { CheckCircle2 } from "lucide-react";
 
 import { useMousePosition } from "@/hooks/use-mouse-position";
+import { cn } from "@/lib/utils";
 
-export default function GithubCardShiny() {
+export default function GithubCardShiny({ className }: { className?: string }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
 
@@ -25,7 +26,10 @@ export default function GithubCardShiny() {
   return (
     <div
       ref={containerRef}
-      className="group relative min-w-96 overflow-hidden rounded-md border border-zinc-500 bg-zinc-700 p-10 text-zinc-200 shadow-lg"
+      className={cn(
+        "group relative w-96 min-w-fit max-w-full overflow-hidden rounded-md border border-border bg-zinc-700 p-6 text-zinc-200 shadow-lg",
+        className,
+      )}
     >
       <div
         ref={overlayRef}
@@ -41,7 +45,7 @@ export default function GithubCardShiny() {
         <div className="text-xs text-zinc-400">on: push</div>
       </div>
 
-      <div className="z-10 mt-10 flex min-w-fit flex-col gap-2 rounded-md bg-zinc-600 p-4 shadow-2xl">
+      <div className="z-10 mt-10 flex w-full min-w-fit flex-col gap-2 rounded-md bg-zinc-600 p-4 shadow-2xl">
         {[
           {
             title: "Install dependencies",
@@ -57,11 +61,13 @@ export default function GithubCardShiny() {
           },
         ].map((step) => {
           return (
-            <div className="flex items-center gap-2" key={step.title}>
-              <CheckCircle2 className="fill-green-400 text-zinc-600" />
-              <strong>{step.title}</strong>
+            <div className="flex w-full items-center gap-2" key={step.title}>
+              <CheckCircle2 className="flex-shrink-0 fill-green-400 text-zinc-600" />
+              <strong className="text-xs md:flex-shrink-0 md:text-base">{step.title}</strong>
 
-              <span className="ml-auto inline-block text-sm opacity-75">{step.time}</span>
+              <span className="ml-auto inline-block flex-shrink-0 text-xs opacity-75">
+                {step.time}
+              </span>
             </div>
           );
         })}
