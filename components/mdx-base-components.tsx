@@ -44,7 +44,11 @@ export const baseComponents = {
     />
   ),
   a: ({ className, ...props }: React.HTMLAttributes<HTMLAnchorElement>) => (
-    <a className={cn("font-medium underline underline-offset-4", className)} {...props} />
+    <a
+      className={cn("font-medium underline underline-offset-4", className)}
+      {...props}
+      target={Reflect.get(props, "href")?.toString().startsWith("http") ? "_blank" : undefined}
+    />
   ),
   p: ({ className, ...props }: React.HTMLAttributes<HTMLParagraphElement>) => (
     <p className={cn("leading-7 [&:not(:first-child)]:mt-6", className)} {...props} />

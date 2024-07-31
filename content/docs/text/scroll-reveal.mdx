@@ -1,0 +1,50 @@
+---
+title: Scroll Reveal
+description: A component that reveals text based on the scroll position. Make sure to scroll inside the preview to see the effect.
+author: harimanok_
+labels: ["requires interaction", "scroll"]
+---
+
+<ComponentPreview name="text-scroll-reveal--docs" />
+
+## Installation
+
+<Steps>
+
+<Step>(optional): Update globals.css</Step>
+
+This is just for changing the color of the icon once it is revealed. You can skip this step if you don't want to change the color.
+
+```css
+.scroll-baby[style*="opacity: 1"] {
+  @apply text-yellow-300 dark:text-yellow-500;
+}
+
+.scroll-file[style*="opacity: 1"] {
+  @apply text-blue-300 dark:text-blue-500;
+}
+```
+
+<Step>Run the following command</Step>
+
+It will create a new file `scroll-reveal.tsx` inside the `components/animata/text` directory.
+
+```bash
+mkdir -p components/animata/text && touch components/animata/text/scroll-reveal.tsx
+```
+
+<Step>Paste the code</Step>{" "}
+
+Open the newly created file and paste the following code:
+
+```jsx file=<rootDir>/animata/text/scroll-reveal.tsx
+
+```
+
+</Steps>
+
+## Credits
+
+Built by [hari](https://github.com/hari)
+
+Inspired by: [onassemble](https://onassemble.com/)
