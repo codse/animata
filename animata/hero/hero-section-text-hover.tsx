@@ -67,7 +67,7 @@ const HeroSectionTextHover: React.FC<HeroCardProps> = ({ className }) => {
         className,
       )}
     >
-      <div className="mb-2 flex cursor-pointer flex-col items-center justify-center gap-3">
+      <div className="mb-2 flex flex-col items-center justify-center gap-3">
         <div className="text-normal flex flex-col items-center justify-center p-5 font-bold sm:text-xl md:text-2xl">
           <div className="mt-5">
             <Map size={40} className="fill-zinc-900 text-white" />
@@ -76,12 +76,12 @@ const HeroSectionTextHover: React.FC<HeroCardProps> = ({ className }) => {
             <span className="text-gray-400">Embark on</span>
             <div className="group relative flex items-center">
               <span className="text-zinc-500 group-hover:text-sky-400">Uncharted Adventures</span>
-              <div className="duration-400 absolute inset-0 opacity-0 transition-opacity group-hover:opacity-100">
+              <div className="duration-400 absolute inset-0 cursor-pointer opacity-0 transition-opacity group-hover:opacity-100">
                 {destinations.map((dest, index) => (
                   <span
                     key={index}
                     className={cn(
-                      "absolute transform text-lg transition-transform duration-500 group-hover:scale-110 sm:text-2xl md:text-4xl",
+                      "pointer-events-none absolute transform text-lg transition-transform duration-500 group-hover:scale-110 sm:text-2xl md:text-4xl",
                       dest.position,
                     )}
                   >
@@ -96,12 +96,12 @@ const HeroSectionTextHover: React.FC<HeroCardProps> = ({ className }) => {
             <span className="text-gray-400">and</span>
             <div className="group relative flex items-center">
               <span className="text-zinc-500 group-hover:text-orange-500">Feel Alive</span>
-              <div className="duration-400 absolute inset-0 opacity-0 transition-opacity group-hover:opacity-100">
+              <div className="duration-400 absolute inset-0 cursor-pointer opacity-0 transition-opacity group-hover:opacity-100">
                 {treasures.map((gem, index) => (
                   <span
                     key={index}
                     className={cn(
-                      "absolute transform text-lg transition-transform duration-500 group-hover:scale-110 sm:text-2xl md:text-4xl",
+                      "pointer-events-none absolute transform text-lg transition-transform duration-500 group-hover:scale-110 sm:text-2xl md:text-4xl",
                       gem.position,
                     )}
                   >
@@ -112,7 +112,7 @@ const HeroSectionTextHover: React.FC<HeroCardProps> = ({ className }) => {
             </div>
           </div>
         </div>
-        <button className="rounded-3xl bg-orange-400 px-4 py-2 font-mono tracking-tighter hover:bg-orange-500">
+        <button className="cursor-pointer rounded-3xl bg-orange-400 px-4 py-2 font-mono tracking-tighter hover:bg-orange-500">
           Begin your journey
         </button>
       </div>
