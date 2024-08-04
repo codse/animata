@@ -166,6 +166,7 @@ export default function TextExplodeIMessage({
           {char === " " ? "\u00A0" : char}
         </motion.span>
       ))}
+      <span className="sr-only">{text}</span>
     </motion.div>
   );
 }
