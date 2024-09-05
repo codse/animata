@@ -18,7 +18,7 @@ type Story = StoryObj<typeof meta>;
 export const Primary: Story = {
   render: ({ ...args }) => (
     <div className="storybook-fix min-h-80 w-full">
-      <StaggeredCard {...args} />
+      <StaggeredCard className="mx-auto" {...args} />
     </div>
   ),
 
