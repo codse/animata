@@ -59,7 +59,7 @@ function Testimonial({
       ref={divRef}
       key={`${isInView}-${author}`}
       className={cn(
-        "flex h-fit w-fit max-w-sm flex-shrink-0 transform gap-2 rounded-xl border-2 border-border bg-background p-3 text-sm transition-all duration-1000 ease-in-out animate-in md:ease-minor-spring",
+        "flex h-fit w-fit max-w-sm flex-shrink-0 transform gap-2 rounded-xl border-2 border-border bg-background p-3 text-sm transition-all duration-1000 ease-in-out animate-in",
         className,
       )}
     >
