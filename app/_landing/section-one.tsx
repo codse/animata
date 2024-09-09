@@ -11,7 +11,6 @@ import MirrorText from "@/animata/text/mirror-text";
 import TypingText from "@/animata/text/typing-text";
 import GridView from "@/app/_landing/grid-view";
 import { ComponentCard } from "@/components/component-card";
-
 const WidgetSection = React.lazy(() => import("./widget-section"));
 
 export default function SectionOne() {
@@ -21,7 +20,7 @@ export default function SectionOne() {
       <div className="flex flex-col items-center justify-center gap-1 py-12 text-foreground">
         <h4 className="text-4xl font-medium md:text-5xl lg:text-7xl">
           <AnimatedGradientText className="bg-gradient-to-br from-foreground/50 via-foreground/60 to-foreground/80">
-            demOS
+            Checkout the demo below
           </AnimatedGradientText>
         </h4>
         <small className="max-w-xs text-balance text-center text-muted-foreground duration-500 md:max-w-md">
