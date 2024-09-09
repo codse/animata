@@ -119,7 +119,7 @@ const createAnimatedNodes = (args: ReducedValue, word: string, index: number): R
   const isLast = index === length - 1;
 
   const className = cn(
-    "inline-block opacity-0 transition-all ease-minor-spring fill-mode-forwards",
+    "inline-block opacity-0 transition-all ease-in-out fill-mode-forwards",
     {
       // Determine the animation direction
       ["animate-[reveal-down]"]: !isUp && !blur,
