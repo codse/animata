@@ -66,9 +66,9 @@ export default function Hero() {
         </div>
 
         <Pill className="left-12 top-20 rotate-3">80+ components</Pill>
-        <Pill className="right-12 top-20 -translate-y-1/2 -rotate-6">600+ stars</Pill>
-        <Pill className="bottom-12 left-12 -rotate-6">1000+ hours of development</Pill>
-        <Pill className="right-8 top-1/2 -translate-y-1/2">200+ hours of research</Pill>
+        <Pill className="right-12 top-20 -translate-y-1/2 -rotate-6">1000+ stars</Pill>
+        <Pill className="bottom-12 left-12 -rotate-6">1033+ hours of development</Pill>
+        <Pill className="right-8 top-1/2 -translate-y-1/2">250+ hours of research</Pill>
         <Pill className="bottom-32 left-12 aspect-square -translate-y-full translate-x-full">
           <Icons.framerMotion className="size-6" />
         </Pill>
