@@ -27,7 +27,7 @@ export default function MaskText({
   return (
     <div className={cn("relative h-screen", className)} ref={containerRef}>
       <motion.div
-        className={cn(common, "absolute bg-black text-foreground")}
+        className={cn(common, "absolute bg-black")}
         style={{
           maskImage: "url(/circle.svg)",
           maskRepeat: "no-repeat",
