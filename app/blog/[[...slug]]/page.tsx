@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { allDocs } from "contentlayer/generated";
+import { allBlogs, Doc } from "contentlayer/generated";
 import Balancer from "react-wrap-balancer";
 
 import NavMenu from "@/app/docs/[[...slug]]/nav-menu";
@@ -10,7 +10,7 @@ import { DocsPager } from "@/components/pager";
 import { DashboardTableOfContents } from "@/components/toc";
 import { badgeVariants } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { docsConfig } from "@/config/docs";
+import { blogSidebarNav } from "@/config/blog";
 import { siteConfig } from "@/config/site";
 import { getTableOfContents } from "@/lib/toc";
 import { absoluteUrl, cn } from "@/lib/utils";
@@ -19,38 +19,38 @@ import { ChevronRightIcon, ExternalLinkIcon } from "@radix-ui/react-icons";
 import "@/styles/mdx.css";
 import "@/styles/storybook.css";
 
-interface DocPageProps {
+interface BlogPageProps {
   params: {
     slug: string[];
   };
 }
 
-async function getDocFromParams({ params }: DocPageProps) {
+async function getBlogFromParams({ params }: BlogPageProps) {
   const slug = params.slug?.join("/") || "";
-  const doc = allDocs.find((doc) => doc.slugAsParams === slug);
+  const blog = allBlogs.find((doc) => doc.slugAsParams === slug);
 
-  if (!doc) {
+  if (!blog) {
     return null;
   }
 
-  return doc;
+  return blog;
 }
 
-export async function generateMetadata({ params }: DocPageProps): Promise<Metadata> {
-  const doc = await getDocFromParams({ params });
+export async function generateMetadata({ params }: BlogPageProps): Promise<Metadata> {
+  const blog = await getBlogFromParams({ params });
 
-  if (!doc) {
+  if (!blog) {
     return {};
   }
 
   return {
-    title: doc.title,
-    description: doc.description,
+    title: blog.title,
+    description: blog.description,
     openGraph: {
-      title: doc.title,
-      description: doc.description,
+      title: blog.title,
+      description: blog.description,
       type: "article",
-      url: absoluteUrl(doc.slug),
+      url: absoluteUrl(blog.slug),
       images: [
         {
           url: siteConfig.ogImage,
@@ -62,54 +62,68 @@ export async function generateMetadata({ params }: DocPageProps): Promise<Metada
     },
     twitter: {
       card: "summary_large_image",
-      title: doc.title,
-      description: doc.description,
+      title: blog.title,
+      description: blog.description,
       images: [siteConfig.ogImage],
-      creator: doc.author ? `@${doc.author}` : "@AnimataDesign",
+      creator: blog.author ? `@${blog.author}` : "@AnimataDesign",
     },
   };
 }
 
-export async function generateStaticParams(): Promise<DocPageProps["params"][]> {
-  return allDocs.map((doc) => ({
-    slug: doc.slugAsParams.split("/"),
+export async function generateStaticParams(): Promise<BlogPageProps["params"][]> {
+  return allBlogs.map((blog) => ({
+    slug: blog.slugAsParams.split("/"),
   }));
 }
 
-export default async function DocPage({ params }: DocPageProps) {
-  const doc = await getDocFromParams({ params });
+export default async function BlogPage({ params }: BlogPageProps) {
+  const slug = params.slug?.join("/") || "";
 
-  if (!doc) {
+  // // Check if the slug is empty (i.e., the user is at /blog/)
+  // if (slug === "") {
+  //   // Redirect to the first blog post
+  //   const firstBlogPost = blogSidebarNav[0]?.items[0]?.href; // Get the first blog post href
+  //   if (firstBlogPost) {
+  //     // Use the Next.js redirect method
+  //     redirect(firstBlogPost);
+  //   }
+  // }
+
+  const isIndexPage = slug === "";
+
+  const blog = await getBlogFromParams({ params });
+
+  if (!blog) {
     notFound();
   }
 
-  const toc = await getTableOfContents(doc.body.raw);
+  const toc = await getTableOfContents(blog.body.raw);
 
   return (
     <main className="relative py-6 lg:gap-10 lg:py-8 xl:grid xl:grid-cols-[1fr_150px]">
       <div className="mx-auto w-full min-w-0">
         <div className="mb-4 flex items-center space-x-1 text-sm text-muted-foreground">
-          <div className="overflow-hidden text-ellipsis whitespace-nowrap">Docs</div>
+          <div className="overflow-hidden text-ellipsis whitespace-nowrap">Blog</div>
           <ChevronRightIcon className="h-4 w-4" />
-          <NavMenu
-            baseRoute="docs"
-            sideBarNavItems={docsConfig.sidebarNav}
-            value={doc.slugAsParams}
-          />
+          {isIndexPage ? (
+            <div className="overflow-hidden text-ellipsis whitespace-nowrap">Welcome</div>
+          ) : (
+            <NavMenu baseRoute="blog" sideBarNavItems={blogSidebarNav} value={blog.slugAsParams} />
+          )}
         </div>
         <div className="space-y-2">
-          <h1 className={cn("scroll-m-20 text-4xl font-bold tracking-tight")}>{doc.title}</h1>
-          {doc.description && (
+          <h1 className={cn("scroll-m-20 text-4xl font-bold tracking-tight")}>{blog.title}</h1>
+          {blog.description && (
             <p className="text-lg text-muted-foreground">
-              <Balancer>{doc.description}</Balancer>
+              <Balancer>{blog.description}</Balancer>
             </p>
           )}
           <div
             className={cn("flex items-center space-x-2 text-sm text-muted-foreground", {
-              invisible: !doc.labels?.length,
+              invisible: !blog.labels?.length,
             })}
           >
-            {doc.labels?.map((label) => {
+            {blog.labels?.map((label) => {
               return (
                 <span key={label} className={cn(badgeVariants({ variant: "secondary" }), "gap-1")}>
                   {label}
@@ -118,11 +132,11 @@ export default async function DocPage({ params }: DocPageProps) {
             })}
           </div>
         </div>
-        {doc.links ? (
+        {blog.links ? (
           <div className="flex items-center space-x-2 pt-4">
-            {doc.links?.doc && (
+            {blog.links?.doc && (
               <Link
-                href={doc.links.doc}
+                href={blog.links.doc}
                 target="_blank"
                 rel="noreferrer"
                 className={cn(badgeVariants({ variant: "secondary" }), "gap-1")}
@@ -131,9 +145,9 @@ export default async function DocPage({ params }: DocPageProps) {
                 <ExternalLinkIcon className="h-3 w-3" />
               </Link>
             )}
-            {doc.links?.api && (
+            {blog.links?.api && (
               <Link
-                href={doc.links.api}
+                href={blog.links.api}
                 target="_blank"
                 rel="noreferrer"
                 className={cn(badgeVariants({ variant: "secondary" }), "gap-1")}
@@ -145,11 +159,11 @@ export default async function DocPage({ params }: DocPageProps) {
           </div>
         ) : null}
         <div className="pb-12">
-          <Mdx code={doc.body.code} />
+          <Mdx code={blog.body.code} />
 
           <div className="my-3 text-right">
             <Link
-              href={`https://github.com/codse/animata/edit/main/content/docs/${doc.slugAsParams}.mdx`}
+              href={`https://github.com/codse/animata/edit/main/content/docs/${blog.slugAsParams}.mdx`}
               target="_blank"
               rel="noreferrer"
               className="text-sm text-secondary-foreground underline"
@@ -158,9 +172,9 @@ export default async function DocPage({ params }: DocPageProps) {
             </Link>
           </div>
         </div>
-        <DocsPager doc={doc} />
+        <DocsPager doc={blog as unknown as Doc} />
       </div>
-      {doc.toc && (
+      {blog.toc && (
         <div className="hidden text-sm xl:block">
           <div className="sticky top-16 -mt-10 pt-4">
             <ScrollArea className="pb-10">
