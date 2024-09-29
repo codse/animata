@@ -195,6 +195,10 @@ export const docsConfig: DocsConfig = {
       title: "Components",
       href: sidebarNav[2].items?.[0]?.href ?? sidebarNav[2]?.href,
     },
+    {
+      title: "Blog",
+      href: "/blog",
+    },
   ],
   sidebarNav,
 };
