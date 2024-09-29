@@ -13,15 +13,23 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { docsConfig } from "@/config/docs";
+import { SidebarNavItem } from "@/types";
 
-export default function NavMenu({ value }: { value: string }) {
+export default function NavMenu({
+  value,
+  sideBarNavItems,
+  baseRoute,
+}: {
+  value: string;
+  sideBarNavItems: SidebarNavItem[];
+  baseRoute: "docs" | "blog";
+}) {
   const router = useRouter();
   const [navigating, setNavigating] = useState(false);
   return (
     <>
       <Select
-        defaultValue={`/docs${value ? `/${value}` : ""}`}
+        defaultValue={`/${baseRoute}${value ? `/${value}` : ""}`}
         onValueChange={(value) => {
           if (value) {
             setNavigating(true);
@@ -33,7 +41,7 @@ export default function NavMenu({ value }: { value: string }) {
           <SelectValue placeholder="Change page" />
         </SelectTrigger>
         <SelectContent>
-          {docsConfig.sidebarNav.map((item, index) => (
+          {sideBarNavItems.map((item, index) => (
             <SelectGroup key={index}>
               <SelectLabel className="font-medium">{item.title}</SelectLabel>
               {item?.items?.length &&
