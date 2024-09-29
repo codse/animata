@@ -105,6 +105,42 @@ export const Doc = defineDocumentType(() => ({
   computedFields,
 }));
 
+export const Blog = defineDocumentType(() => ({
+  name: "Blog",
+  filePathPattern: "blog/**/*.mdx",
+  contentType: "mdx",
+  fields: {
+    title: {
+      type: "string",
+      required: true,
+    },
+    description: {
+      type: "string",
+      required: true,
+    },
+    date: { type: "date", required: false },
+    published: {
+      type: "boolean",
+      default: true,
+    },
+    links: {
+      type: "nested",
+      of: LinksProperties,
+    },
+    featured: {
+      type: "boolean",
+      default: false,
+      required: false,
+    },
+    toc: { type: "boolean", default: true, required: false },
+    author: { type: "string", required: false },
+    video: { type: "string", required: false },
+    labels: { type: "list", of: { type: "string" }, required: false },
+    dateModified: { type: "date", required: false },
+  },
+  computedFields,
+}));
+
 const setupCodeSnippet = () => (tree: any) => {
   visit(tree, (node) => {
     if (node?.type === "element" && node?.tagName === "pre") {
@@ -172,7 +208,7 @@ const postProcess = () => (tree: any) => {
 
 export default makeSource({
   contentDirPath: "./content",
-  documentTypes: [Doc],
+  documentTypes: [Doc, Blog],
   mdx: {
     remarkPlugins: [remarkGfm, codeImport],
     rehypePlugins: [
