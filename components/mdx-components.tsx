@@ -1,6 +1,5 @@
 "use client";
 import { ComponentProps, HTMLAttributes } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { useMDXComponent } from "next-contentlayer/hooks";
 import { NpmCommands, TouchCommands } from "types/unist";
@@ -126,7 +125,7 @@ const components = {
       {...props}
     />
   ),
-  Image,
+  Image: ({ alt, ...props }: ComponentProps<"img">) => <img alt={alt} {...props} />,
   Modal,
   Callout,
   ComponentPreview,

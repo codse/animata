@@ -1,5 +1,4 @@
 import { useState } from "react";
-import Image from "next/image";
 
 import { Button as UIButton } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -24,10 +23,10 @@ function Button({ children }: { children: React.ReactNode }) {
 function ImageWithWave() {
   return (
     <div className="title-logo relative inline-block self-center md:self-start">
-      <Image
+      <img
         width={100}
         height={100}
-        src={animataImage}
+        src={animataImage.src}
         className="-top-6 h-10 w-10 translate-y-5 animate-fadeIn fade-in-0 md:-top-10 md:h-16 md:w-16 md:translate-y-0"
         alt="Hero image"
       />
