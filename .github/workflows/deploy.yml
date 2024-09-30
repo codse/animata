@@ -52,7 +52,6 @@ jobs:
           cache: ${{ steps.detect-package-manager.outputs.manager }}
       - name: Setup Pages
         uses: actions/configure-pages@v5
-        with:
       - name: Restore cache
         uses: actions/cache@v4
         with:
