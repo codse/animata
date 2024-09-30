@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import Image, { StaticImageData } from "next/image";
+import { StaticImageData } from "next/image";
 import { motion } from "framer-motion";
 import {
   Circle,
@@ -58,8 +58,8 @@ function ImageSlot({ minimize, imageSource, imageAlternate }: ImageSlotProps) {
       transition={{ duration: 0.5 }}
       className={cn(minimize ? "h-48 w-full" : "h-56 w-56")}
     >
-      <Image
-        src={imageSource}
+      <img
+        src={imageSource.src}
         alt={imageAlternate}
         className={cn("h-full w-full object-cover", minimize ? "rounded-xl" : "rounded-3xl")}
       />
@@ -74,8 +74,8 @@ function YourImageSlot({ minimize, imageSource, imageAlternate }: ImageSlotProps
       transition={{ duration: 0.5 }}
       className={cn(minimize ? "absolute bottom-2 right-0 h-20 w-20" : "h-56 w-56")}
     >
-      <Image
-        src={imageSource}
+      <img
+        src={imageSource.src}
         alt={imageAlternate}
         className={cn("h-full w-full object-cover", minimize ? "rounded-xl" : "rounded-3xl")}
       />

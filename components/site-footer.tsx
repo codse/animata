@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -25,7 +24,7 @@ export function SiteFooter() {
           </div>
           <p className="text-muted-foreground">by</p>
           <div className="flex gap-1">
-            <Image src="/codse.webp" width={24} height={24} alt="codse" />
+            <img src="/codse.webp" width={24} height={24} alt="codse" />
             <span>codse</span>
           </div>
           <p className="text-muted-foreground"> from</p>
