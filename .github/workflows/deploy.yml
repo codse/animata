@@ -48,6 +48,14 @@ jobs:
       - name: Install dependencies
         run: yarn install --frozen-lockfile
       - name: Build with Next.js
+        env:
+          NEXT_PUBLIC_APP_URL: ${{ vars.NEXT_PUBLIC_APP_URL }}
+          STORYBOOK_NEXT_PUBLIC_APP_URL: ${{ vars.STORYBOOK_NEXT_PUBLIC_APP_URL }}
+          NEXT_PUBLIC_STORYBOOK_URL: ${{ vars.NEXT_PUBLIC_STORYBOOK_URL }}
+          NEXT_PUBLIC_SUPABASE_URL: ${{ vars.NEXT_PUBLIC_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ vars.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+          NEXT_PUBLIC_POSTHOG_KEY: ${{ vars.NEXT_PUBLIC_POSTHOG_KEY }}
+          NEXT_PUBLIC_POSTHOG_HOST: ${{ vars.NEXT_PUBLIC_POSTHOG_HOST }}
         run: yarn build
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
