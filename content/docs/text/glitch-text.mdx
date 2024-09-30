@@ -1,0 +1,75 @@
+---
+title: Glitch Text
+description: Glitch text effect
+author: harimanok_
+---
+
+<ComponentPreview name="text-glitch-text--docs" />
+
+## Installation
+
+<Steps>
+
+<Step>Update `tailwind.config.js`</Step>
+
+Add the following to your tailwind.config.js file.
+
+```json
+module.exports = {
+  theme: {
+    extend: {
+      keyframes: {
+        glitch: {
+          "0%": {
+            color: "#fff",
+            textShadow: "2px 2px 0px #00ffff, -2px -2px 0px #ff00ff",
+          },
+          "25%": {
+            color: "#00ffff",
+            textShadow: "-2px -2px 0px #fff, 2px 2px 0px #ff00ff",
+          },
+          "50%": {
+            color: "#ff00ff",
+            textShadow: "2px -2px 0px #00ffff, -2px 2px 0px #fff",
+          },
+          "75%": {
+            color: "#eee",
+            textShadow: "-2px 2px 0px #ff00ff, 2px -2px 0px #00ffff",
+          },
+          "100%": {
+            color: "#fff",
+            textShadow: "2px 2px 0px #00ffff, -2px -2px 0px #ff00ff",
+          },
+        },
+        twinkle: {
+          "0%": { opacity: "0" },
+          "50%": { opacity: "1" },
+          "100%": { opacity: "0" },
+        },
+      },
+    },
+  },
+}
+```
+
+<Step>Run the following command</Step>
+
+It will create a new file `glitch-text.tsx` inside the `components/animata/text` directory.
+
+```bash
+mkdir -p components/animata/text && touch components/animata/text/glitch-text.tsx
+```
+
+<Step>Paste the code</Step>{" "}
+
+Open the newly created file and paste the following code:
+
+```jsx file=<rootDir>/animata/text/glitch-text.tsx
+
+```
+
+</Steps>
+
+## Credits
+
+Built by [hari](https://github.com/hari)

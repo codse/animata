@@ -171,6 +171,33 @@ const config = {
           "50%": { fill: "#a855f7", brightness: "500%" },
           "100%": { fill: "currentColor", brightness: "1" },
         },
+        glitch: {
+          "0%": {
+            color: "#fff",
+            textShadow: "2px 2px 0px #00ffff, -2px -2px 0px #ff00ff",
+          },
+          "25%": {
+            color: "#00ffff",
+            textShadow: "-2px -2px 0px #fff, 2px 2px 0px #ff00ff",
+          },
+          "50%": {
+            color: "#ff00ff",
+            textShadow: "2px -2px 0px #00ffff, -2px 2px 0px #fff",
+          },
+          "75%": {
+            color: "#eee",
+            textShadow: "-2px 2px 0px #ff00ff, 2px -2px 0px #00ffff",
+          },
+          "100%": {
+            color: "#fff",
+            textShadow: "2px 2px 0px #00ffff, -2px -2px 0px #ff00ff",
+          },
+        },
+        twinkle: {
+          "0%": { opacity: "0" },
+          "50%": { opacity: "1" },
+          "100%": { opacity: "0" },
+        },
       },
       animation: {
         fill: "fill 1s forwards",
