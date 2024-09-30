@@ -77,20 +77,6 @@ export async function generateStaticParams(): Promise<BlogPageProps["params"][]>
 }
 
 export default async function BlogPage({ params }: BlogPageProps) {
-  const slug = params.slug?.join("/") || "";
-
-  // // Check if the slug is empty (i.e., the user is at /blog/)
-  // if (slug === "") {
-  //   // Redirect to the first blog post
-  //   const firstBlogPost = blogSidebarNav[0]?.items[0]?.href; // Get the first blog post href
-  //   if (firstBlogPost) {
-  //     // Use the Next.js redirect method
-  //     redirect(firstBlogPost);
-  //   }
-  // }
-
-  const isIndexPage = slug === "";
-
   const blog = await getBlogFromParams({ params });
 
   if (!blog) {
@@ -105,11 +91,7 @@ export default async function BlogPage({ params }: BlogPageProps) {
         <div className="mb-4 flex items-center space-x-1 text-sm text-muted-foreground">
           <div className="overflow-hidden text-ellipsis whitespace-nowrap">Blog</div>
           <ChevronRightIcon className="h-4 w-4" />
-          {isIndexPage ? (
-            <div className="overflow-hidden text-ellipsis whitespace-nowrap">Welcome</div>
-          ) : (
-            <NavMenu baseRoute="blog" sideBarNavItems={blogSidebarNav} value={blog.slugAsParams} />
-          )}
+          <NavMenu baseRoute="blog" sideBarNavItems={blogSidebarNav} value={blog.slugAsParams} />
         </div>
         <div className="space-y-2">
           <h1 className={cn("scroll-m-20 text-4xl font-bold tracking-tight")}>{blog.title}</h1>
