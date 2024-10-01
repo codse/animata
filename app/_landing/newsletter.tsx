@@ -6,8 +6,15 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input";
 import useNewsletterSubscription from "@/hooks/use-newsletter-subscription";
 
-function NewsletterInput() {
-  const { isLoading, addSubscriber, setEmail, email } = useNewsletterSubscription();
+interface NewsletterInputProps {
+  setSuccess: React.Dispatch<React.SetStateAction<boolean>>;
+  setError: React.Dispatch<React.SetStateAction<string>>;
+}
+
+function NewsletterInput({ setSuccess, setError }: NewsletterInputProps): React.JSX.Element {
+  const { isLoading, success, error, addSubscriber, setEmail, email } = useNewsletterSubscription();
+  setSuccess(success);
+  setError(error);
 
   return (
     <form
@@ -37,7 +44,8 @@ function NewsletterInput() {
 }
 
 export default function NewsletterSection() {
-  const { error, success } = useNewsletterSubscription();
+  const [success, setSuccess] = React.useState(false);
+  const [error, setError] = React.useState("");
 
   return (
     <Card
@@ -54,7 +62,7 @@ export default function NewsletterSection() {
         </CardDescription>
       </CardHeader>
       <CardContent className="mx-4 my-6">
-        <NewsletterInput />
+        <NewsletterInput setSuccess={setSuccess} setError={setError} />
         <p className="mt-2 text-center text-sm text-gray-500 dark:text-gray-400">
           {success ? (
             <span className="text-green-500 dark:text-green-400">Thank you for subscribing!</span>
