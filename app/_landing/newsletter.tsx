@@ -6,47 +6,50 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input";
 import useNewsletterSubscription from "@/hooks/use-newsletter-subscription";
 
-interface NewsletterInputProps {
-  setSuccess: React.Dispatch<React.SetStateAction<boolean>>;
-  setError: React.Dispatch<React.SetStateAction<string>>;
-}
+function NewsletterInput(): React.JSX.Element {
+  const { isLoading, error, success, addSubscriber, setEmail, email } = useNewsletterSubscription();
 
-function NewsletterInput({ setSuccess, setError }: NewsletterInputProps): React.JSX.Element {
-  const { isLoading, success, error, addSubscriber, setEmail, email } = useNewsletterSubscription();
-  setSuccess(success);
-  setError(error);
+  const handleSubmit = (event: React.FormEvent) => {
+    event.preventDefault();
+    addSubscriber();
+  };
 
   return (
-    <form
-      className="flex flex-col space-y-2 sm:flex-row sm:space-x-2 sm:space-y-0"
-      onSubmit={(event) => {
-        event.preventDefault();
-        addSubscriber();
-      }}
-    >
-      <Input
-        type="email"
-        placeholder="Enter your email"
-        className="flex-1 border-gray-200 bg-gray-50 dark:border-zinc-600 dark:bg-zinc-800"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-      />
-      <Button
-        type="submit"
-        disabled={isLoading}
-        className="mt-1 w-full bg-blue-500 text-white hover:bg-blue-600 sm:w-auto"
+    <>
+      <form
+        className="flex flex-col space-y-2 sm:flex-row sm:space-x-2 sm:space-y-0"
+        onSubmit={handleSubmit}
       >
-        {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-        {isLoading ? "Please wait" : "Subscribe"}
-      </Button>
-    </form>
+        <Input
+          type="email"
+          placeholder="Enter your email"
+          className="flex-1 border-gray-200 bg-gray-50 dark:border-zinc-600 dark:bg-zinc-800"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+        <Button
+          type="submit"
+          disabled={isLoading}
+          className="mt-1 w-full bg-blue-500 text-white hover:bg-blue-600 sm:w-auto"
+        >
+          {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+          {isLoading ? "Please wait" : "Join now"}
+        </Button>
+      </form>
+      <p className="mt-4 text-center text-xs text-gray-500 dark:text-gray-400">
+        {success ? (
+          <span className="text-green-500">Thank you for subscribing!</span>
+        ) : error ? (
+          <span className="text-red-500">{error}</span>
+        ) : (
+          "100% free. No spam. No noise. Unsubscribe at any time."
+        )}
+      </p>
+    </>
   );
 }
 
 export default function NewsletterSection() {
-  const [success, setSuccess] = React.useState(false);
-  const [error, setError] = React.useState("");
-
   return (
     <Card
       className="mx-auto mt-16 w-full max-w-2xl rounded-xl border border-border bg-gray-50 shadow-none dark:border-zinc-600 dark:bg-zinc-800"
@@ -61,17 +64,8 @@ export default function NewsletterSection() {
           Get the latest updates from animata.
         </CardDescription>
       </CardHeader>
-      <CardContent className="mx-4 my-6">
-        <NewsletterInput setSuccess={setSuccess} setError={setError} />
-        <p className="mt-2 text-center text-sm text-gray-500 dark:text-gray-400">
-          {success ? (
-            <span className="text-green-500 dark:text-green-400">Thank you for subscribing!</span>
-          ) : error ? (
-            <span className="text-red-500 dark:text-red-400">{error}</span>
-          ) : (
-            "100% free. No spam. Unsubscribe at any time."
-          )}
-        </p>
+      <CardContent className="mx-4 mb-1 mt-6">
+        <NewsletterInput />
       </CardContent>
     </Card>
   );
