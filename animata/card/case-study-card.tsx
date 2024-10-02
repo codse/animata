@@ -11,7 +11,7 @@ interface CaseStudyCardProps extends React.HTMLAttributes<HTMLDivElement> {
   type?: "text" | "image"; // Decides between text or image
 }
 
-// CardText component for rendering text + image
+// CardText Component for rendering text + image
 const CardText: React.FC<CaseStudyCardProps> = ({ title, category, image, logo }) => {
   return (
     <div
