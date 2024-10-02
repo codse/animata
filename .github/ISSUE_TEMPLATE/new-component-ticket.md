@@ -1,5 +1,5 @@
 ---
-name: New Component Ticket
+name: New Component Ticket [HACKTOBERFEST]
 about: Create a new animated component task for Hacktoberfest
 title: Component Name
 labels: hacktoberfest
@@ -11,7 +11,10 @@ assignees: ''
 Create the component as shown in the video attached below.
 
 ### Animation Preview
-- Screenshot/Video: [Upload file here]
+- Screenshot/Video:
+
+[Upload file here]
+
 
 > [!NOTE]  
 > Please refer to the **Animata contributing guidelines** available [here](https://www.animata.design/docs/contributing) for rules on how to contribute to the project. Let us know in the comments if you’re working on this issue, and feel free to ask any questions!
