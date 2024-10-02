@@ -7,20 +7,20 @@ interface CardCommentProps {
 
 export const CardComment = ({ commenter, replier }: CardCommentProps) => {
   return (
-    <div className="h-60 w-full max-w-md bg-white p-4 shadow-sm shadow-gray-400">
-      <div className="group relative h-40 overflow-hidden rounded-md bg-gray-100 text-black shadow-sm shadow-gray-400 transition-all duration-700 ease-in-out">
-        <div className="p-4 transition-transform duration-700 ease-in-out group-hover:-translate-y-full">
-          <h3 className="text-lg font-semibold">{commenter} commented</h3>
-          <div className="line my-2 h-2 w-full animate-pulse rounded-md bg-[#DBDBDB]"></div>
-          <div className="line2 my-2 h-2 w-2/5 animate-pulse rounded-md bg-[#DBDBDB]"></div>
+    <div className="storybook-fix group mx-auto h-48 w-full max-w-md rounded-xl bg-white p-4 shadow">
+      <div className="relative flex h-40 flex-col space-y-4 overflow-hidden rounded-md bg-neutral-50 text-black shadow-sm hover:shadow-lg">
+        <div className="h-fit p-4 transition-all group-hover:-translate-y-1/3">
+          <h3 className="text-sm font-semibold">{commenter} commented</h3>
+          <div className="my-2 h-3 w-full animate-pulse rounded-md bg-neutral-300" />
+          <div className="my-2 h-3 w-2/5 animate-pulse rounded-md bg-neutral-300" />
         </div>
 
-        <div className="replier-container absolute top-full w-full transition-transform duration-700 ease-in-out group-hover:-translate-y-full">
-          <div className="h-40 w-full rounded-md bg-green-500 p-4 transition-opacity duration-700">
-            <h3 className="text-lg font-semibold text-white">{replier} replied</h3>
-            <div className="line my-2 h-2 w-full animate-pulse rounded-md bg-[#DBDBDB]"></div>
-            <div className="line my-2 h-2 w-full animate-pulse rounded-md bg-[#DBDBDB]"></div>
-            <div className="line2 my-2 h-2 w-2/5 animate-pulse rounded-md bg-[#DBDBDB]"></div>
+        <div className="w-full px-4 opacity-0 transition-all group-hover:-translate-y-1/3 group-hover:opacity-100">
+          <div className="h-40 w-full rounded-md bg-green-500 p-4">
+            <h3 className="text-sm font-semibold text-white">{replier} replied</h3>
+            <div className="line my-2 h-3 w-full animate-pulse rounded-lg bg-white/50" />
+            <div className="line my-2 h-3 w-full animate-pulse rounded-lg bg-white/50" />
+            <div className="line2 my-2 h-3 w-2/5 animate-pulse rounded-lg bg-white/50" />
           </div>
         </div>
       </div>

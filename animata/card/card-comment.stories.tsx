@@ -20,9 +20,3 @@ export const Primary: Story = {
     replier: "Sumana",
   },
 };
-export const Secondary: Story = {
-  args: {
-    commenter: "Radhey",
-    replier: "Krishna",
-  },
-};
