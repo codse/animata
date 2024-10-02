@@ -15,14 +15,14 @@ interface CaseStudyCardProps extends React.HTMLAttributes<HTMLDivElement> {
 const CardText: React.FC<CaseStudyCardProps> = ({ title, category, image, logo }) => {
   return (
     <div
-      className="relative flex h-full flex-col items-start justify-between p-4"
+      className="relative flex h-full flex-col items-start justify-between rounded-lg p-4"
       style={{
         backgroundImage: `url(${image})`,
         backgroundSize: "cover",
         backgroundPosition: "center",
       }}
     >
-      {image && <div className="absolute inset-0 bg-black opacity-70" />}
+      {image && <div className="absolute inset-0 bg-black opacity-70" rounded-lg />}
 
       <div className="relative z-10">
         {category && <div className="text-xs text-gray-200">{category}</div>}
@@ -44,7 +44,7 @@ const CardText: React.FC<CaseStudyCardProps> = ({ title, category, image, logo }
 const CardImage: React.FC<CaseStudyCardProps> = ({ image }) => {
   return (
     <div
-      className="relative flex w-full flex-col items-start justify-between p-4"
+      className="relative flex w-full flex-col items-start justify-between rounded-lg p-4"
       style={{
         backgroundImage: `url(${image})`,
         backgroundSize: "cover",
@@ -99,7 +99,7 @@ export default function CaseStudyCard({
       <a href={link} className="block">
         <CardAni
           show={
-            type === "text" ? (
+            type === "text"? (
               <CardText title={title} category={category} image={image} logo={logo} />
             ) : (
               <CardImage image={image} title={title} />
