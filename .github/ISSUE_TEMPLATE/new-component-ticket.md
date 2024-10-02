@@ -43,3 +43,8 @@ Create the component as shown in the video attached below.
 
 ### Additional Resources
 <!-- Add references and credits here -->
+
+---
+
+> [!Tip]
+> Join our Discord community if you need help or have any questions. We're here to help you get started and guide you through the process. [Join now](https://discord.gg/YfvqMf5MTE)
