@@ -84,7 +84,7 @@ export const CardAni = ({ show }: { show: React.ReactNode }) => {
   );
 };
 
-// Main CaseStudyCard component
+// Main CaseStudyCard Component
 export default function CaseStudyCard({
   title,
   category,
