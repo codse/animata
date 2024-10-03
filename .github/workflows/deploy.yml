@@ -42,7 +42,7 @@ jobs:
           NEXT_PUBLIC_POSTHOG_KEY: ${{ vars.NEXT_PUBLIC_POSTHOG_KEY }}
           NEXT_PUBLIC_POSTHOG_HOST: ${{ vars.NEXT_PUBLIC_POSTHOG_HOST }}
         run: yarn build
-      - name: Deploy to Cloudflare Pages
+      - name: Deploy to Cloudflare Pages (Preview)
         uses: cloudflare/pages-action@v1
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
@@ -50,5 +50,5 @@ jobs:
           projectName: animata
           directory: out
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
-          branch: ${{ github.event.pull_request.head.ref }}
+          branch: ${{ github.head_ref }}
           wranglerVersion: "3"
