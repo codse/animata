@@ -5,14 +5,14 @@ import { cn } from "@/lib/utils";
 interface CaseStudyCardProps extends React.HTMLAttributes<HTMLDivElement> {
   title?: string;
   category?: string;
-  image: string;
+  image?: string;
   logo?: string;
-  link: string;
-  type?: "text" | "image"; // Decides between text or image
+  link?: string;
+  type?: "content" | "simple-image"; // Decides between text or image
 }
 
-// CardText Component for rendering text + image
-const CardText: React.FC<CaseStudyCardProps> = ({ title, category, image, logo }) => {
+// ContentCard Component for rendering text + image
+const ContentCard: React.FC<CaseStudyCardProps> = ({ title, category, image, logo }) => {
   return (
     <div
       className="relative flex h-full flex-col items-start justify-between rounded-lg p-4"
@@ -22,7 +22,7 @@ const CardText: React.FC<CaseStudyCardProps> = ({ title, category, image, logo }
         backgroundPosition: "center",
       }}
     >
-      {image && <div className="absolute inset-0 bg-black opacity-70" rounded-lg />}
+      {image && <div className="opacity-70rounded-lg absolute inset-0 bg-black" />}
 
       <div className="relative z-10">
         {category && <div className="text-xs text-gray-200">{category}</div>}
@@ -40,8 +40,8 @@ const CardText: React.FC<CaseStudyCardProps> = ({ title, category, image, logo }
   );
 };
 
-// CardImage component for rendering only image
-const CardImage: React.FC<CaseStudyCardProps> = ({ image }) => {
+// SimpleImageCard component for rendering only image
+const SimpleImageCard: React.FC<CaseStudyCardProps> = ({ image }) => {
   return (
     <div
       className="relative flex w-full flex-col items-start justify-between rounded-lg p-4"
@@ -54,7 +54,7 @@ const CardImage: React.FC<CaseStudyCardProps> = ({ image }) => {
   );
 };
 
-export const CardAni = ({ show }: { show: React.ReactNode }) => {
+const HoverRevealSlip = ({ show }: { show: React.ReactNode }) => {
   const common = "absolute flex w-full h-full [backface-visibility:hidden]";
 
   return (
@@ -95,14 +95,13 @@ export default function CaseStudyCard({
 }: CaseStudyCardProps) {
   return (
     <div className="flex gap-8">
-      {/* Example card */}
       <a href={link} className="block">
-        <CardAni
+        <HoverRevealSlip
           show={
-            type === "text"? (
-              <CardText title={title} category={category} image={image} logo={logo} />
+            type === "content" ? (
+              <ContentCard title={title} category={category} image={image} logo={logo} />
             ) : (
-              <CardImage image={image} title={title} />
+              <SimpleImageCard image={image} title={title} />
             )
           }
         />
