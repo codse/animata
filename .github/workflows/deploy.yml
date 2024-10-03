@@ -1,16 +1,21 @@
 name: Deploy Preview
 
 on:
-  pull_request:
+  pull_request_target:
+    branches:
+      - main
     types: [opened, synchronize, reopened]
 
 jobs:
   deploy-preview:
     if: github.event.pull_request.head.repo.full_name != github.repository
     runs-on: ubuntu-latest
+    environment: preview-deployment
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
