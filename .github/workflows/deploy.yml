@@ -46,4 +46,4 @@ jobs:
           directory: out
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
           branch: ${{ github.event.pull_request.head.ref }}
-          deploymentName: pr-${{ github.event.number }}
+          wranglerVersion: "3"
