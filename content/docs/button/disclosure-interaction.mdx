@@ -1,27 +1,52 @@
 ---
 title: Disclosure Interaction
-description: The DisclosureInteraction component is an interactive button that expands into a small sheet when clicked. This sheet provides six options (e.g., Project, Task, Note, etc.) and includes a close button to collapse the sheet back to its original state. The component features smooth animations for expanding and collapsing, and is styled using a clean and modern UI design.
+description: The DisclosureInteraction component is an interactive button that expands into a small sheet when clicked. The sheet provides six options (e.g., Project, Task, Note, etc.), and includes a close button to collapse the sheet back to its original state. It features smooth animations for expanding and collapsing, and is styled with Tailwind CSS and lucide-react icons.
 author: IngaleChinmay04
+labels: ["interactive", "expandable", "button"]
 ---
 
 <ComponentPreview name="button-disclosure-interaction--docs" />
 
-## Usage
+## Installation
 
-1. **Import the component** into your project.
+<Steps>
+<Step>Install dependencies</Step>
 
-```tsx
-import { DisclosureInteraction } from './components/animata/button/disclosure-interaction';
+```bash
+yarn add framer-motion lucide-react
+```
 
-// Use the component in your application.
-export default function Example() {
-  return (
-    <div>
-      <DisclosureInteraction />
-    </div>
-  );
-}
+<Step>Update `tailwind.config.js`</Step>
+Add the following to your tailwind.config.js file.
+```json {4-12}
+module.exports = {
+  theme: {
+    extend: {
+      colors: {
+        beige: "#faf5e9",
+        hoverBeige: "#f1e9dd",
+      },
+      borderRadius: {
+        '2xl': '1.5rem',
+      },
+    },
+  },
+};
+```
+<Step>Run the following command</Step>
+```bash
+mkdir -p components/animata/button && touch components/animata/button/disclosure-interaction.tsx
+```
+<Step>Paste the code</Step>{" "}
 
+Open the newly created file and paste the following code:
+
+```jsx file=<rootDir>/animata/button/disclosure-interaction.tsx
+
+```
+
+</Steps>
+
+## Credits
 
 Built by [IngaleChinmay04](https://github.com/IngaleChinmay04)
-```
