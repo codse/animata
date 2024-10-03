@@ -1,15 +1,15 @@
-import FeatureCardTsx from "@/animata/card/feature-card-tsx";
+import IntegrationPills from "@/animata/card/integration-pills";
 import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
   title: "Card/Integration pills",
-  component: FeatureCardTsx,
+  component: IntegrationPills,
   parameters: {
     layout: "centered",
   },
   tags: ["autodocs"],
   argTypes: {},
-} satisfies Meta<typeof FeatureCardTsx>;
+} satisfies Meta<typeof IntegrationPills>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
