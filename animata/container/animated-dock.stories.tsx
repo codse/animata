@@ -1,6 +1,7 @@
 import { Meta, StoryObj } from "@storybook/react";
-import { HiOutlineHome, HiOutlineSearch, HiOutlineBell, HiOutlineUser } from "react-icons/hi";
+import { Home, Search, Bell, User } from "lucide-react";
 import AnimatedDock from "@/animata/container/animated-dock";
+
 
 const meta = {
   title: "Container/Animated Dock",
@@ -18,13 +19,15 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+
 // Example contents for AnimatedDock
 const dockItems = [
-  { title: "Home", icon: <HiOutlineHome />, href: "/" },
-  { title: "Search", icon: <HiOutlineSearch />, href: "/search" },
-  { title: "Notifications", icon: <HiOutlineBell />, href: "/notifications" },
-  { title: "Profile", icon: <HiOutlineUser />, href: "/profile" },
+  { title: "Home", icon: <Home />, href: "/" },
+  { title: "Search", icon: <Search />, href: "/search" },
+  { title: "Notifications", icon: <Bell />, href: "/notifications" },
+  { title: "Profile", icon: <User />, href: "/profile" },
 ];
+
 
 // Primary story for AnimatedDock (default layout)
 export const Primary: Story = {
@@ -40,6 +43,7 @@ export const Primary: Story = {
   ),
 };
 
+
 // Story focused on the Small layout (for mobile view)
 export const Small: Story = {
   args: {
@@ -53,6 +57,7 @@ export const Small: Story = {
   ),
 };
 
+
 // Story focused on the Large layout (for desktop view)
 export const Large: Story = {
   args: {
@@ -65,6 +70,7 @@ export const Large: Story = {
     </div>
   ),
 };
+
 
 // Story showing both layouts at the same time (for comparison)
 export const Multiple: Story = {

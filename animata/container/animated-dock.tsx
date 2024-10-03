@@ -9,7 +9,7 @@ import {
 } from "framer-motion";
 import Link from "next/link"; // Next.js Link component for navigation
 import React, { useRef, useState } from "react"; // Importing React hooks
-import { HiOutlineMenuAlt4, HiX } from "react-icons/hi"; // Importing icons for menu
+import { Menu, X } from "lucide-react"; // Importing icons from lucide-react
 
 // Interface for props accepted by the AnimatedDock component
 interface AnimatedDockProps {
@@ -176,9 +176,9 @@ const SmallDock = ({
       >
         {/* Render the appropriate icon based on open/close state */}
         {isOpen ? (
-          <HiX className="h-5 w-5" /> // Show close icon when open
+          <X className="h-5 w-5" /> // Show close icon when open
         ) : (
-          <HiOutlineMenuAlt4 className="h-5 w-5" /> // Show menu icon when closed
+          <Menu className="h-5 w-5" /> // Show menu icon when closed
         )}
       </button>
     </div>
