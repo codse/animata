@@ -3,7 +3,9 @@ import { Apple, BadgeCent, BadgeInfo, BadgeX, Banana, Bolt, Gem } from "lucide-r
 
 import { cn } from "@/lib/utils";
 
-export const CenterIcon = <Gem key="gem" className="z-0 h-24 w-24 rounded-full bg-blue-800" />;
+export const CenterIcon = (
+  <Gem key="gem" className="z-0 h-32 w-32 animate-float rounded-full bg-blue-800" />
+);
 export const LucideIcons = [
   <Banana key="banana" className="h-12 w-12" />,
   <Bolt key="bolt" className="h-12 w-12" />,
@@ -40,11 +42,6 @@ interface OrbitingItems3DProps {
   items: React.ReactNode[];
 
   /**
-   * Pause the animation when the parent element is hovered.
-   */
-  pauseOnHover?: boolean;
-
-  /**
    * Class name for the background element.
    */
   backgroundClassName?: string;
@@ -66,7 +63,6 @@ export default function OrbitingItems3D({
   tiltAngle = 360 - 30,
   duration = 20,
   items = LucideIcons,
-  pauseOnHover,
   backgroundClassName,
   containerClassName,
   className,
@@ -112,18 +108,18 @@ export default function OrbitingItems3D({
     const xTilted = x * Math.cos(tiltRadians) - y * Math.sin(tiltRadians);
     const yTilted = x * Math.sin(tiltRadians) + y * Math.cos(tiltRadians);
     const zIndex = angle > 180 ? -1 : 1;
+    const scale = angle < 180 ? 1.2 : 1.0;
 
     return {
       left: `${50 + xTilted}%`,
       top: `${50 + yTilted}%`,
-      transform: "translate(-50%, -50%)",
+      transform: `translate(-50%, -50%) scale(${scale})`,
       zIndex: zIndex,
+      transition: "transform 0.8s ease-in-out",
     };
   };
 
-  const reverse = cn("transition-transform ease-linear direction-reverse repeat-infinite", {
-    "group-hover:[animation-play-state:paused]": pauseOnHover,
-  });
+  const reverse = cn("transition-transform ease-linear direction-reverse repeat-infinite");
 
   return (
     <div
@@ -141,13 +137,9 @@ export default function OrbitingItems3D({
       <div
         className={cn(
           "relative flex h-64 w-64 items-center justify-center ease-linear repeat-infinite",
-          {
-            "group-hover:[animation-play-state:paused]": pauseOnHover,
-          },
           className,
         )}
       >
-        <div className="absolute h-full w-full rounded-full border-2 border-gray-500" />
         {CenterIcon}
         {items.map((item, index) => {
           return (
@@ -167,10 +159,6 @@ export default function OrbitingItems3D({
             </div>
           );
         })}
-
-        <div
-          className={cn("absolute h-1/2 w-1/2 rounded-full border-2 border-gray-700", reverse)}
-        />
       </div>
     </div>
   );

@@ -1,4 +1,5 @@
 import OrbitingItems3D from "@/animata/list/orbiting-items-3-d";
+import { LucideIcons } from "@/animata/list/orbiting-items-3-d";
 import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
@@ -15,5 +16,11 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Primary: Story = {
-  args: {},
+  args: {
+    radiusX: 120,
+    radiusY: 30,
+    items: LucideIcons,
+    duration: 20,
+    tiltAngle: 360 - 30,
+  },
 };

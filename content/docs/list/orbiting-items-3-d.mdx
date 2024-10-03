@@ -12,7 +12,7 @@ author: Pikachu-345
 <Step>Install dependencies</Step>
 
 ```bash
-npm install framer-motion lucide-react
+npm install lucide-react
 ```
 
 <Step>Update `tailwind.config.js`</Step>
@@ -23,6 +23,15 @@ Add the following to your tailwind.config.js file.
 module.exports = {
   theme: {
     extend: {
+      keyframes: {
+        float: {
+          '0%, 100%': { transform: 'translateY(0)' },
+          '50%': { transform: 'translateY(-40px)' },
+        },
+      },
+      animation: {
+        float: 'float 3s ease-in-out infinite',
+      },
     }
   }
 }
