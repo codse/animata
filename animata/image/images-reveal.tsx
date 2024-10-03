@@ -24,9 +24,14 @@ const cards = [
   },
 ];
 
+interface CustomProps {
+  index: number;
+  angle: string;
+}
+
 const cardVariants = {
   hidden: { opacity: 0, scale: 0.2 },
-  visible: (custom) => ({
+  visible: (custom: CustomProps) => ({
     opacity: 1,
     scale: 1,
     rotate: custom.angle,
