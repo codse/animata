@@ -1,8 +1,8 @@
-import Scorecard from "@/animata/card/scorecard";
+import Scorecard from "@/animata/card/score-card";
 import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
-  title: "Card/Scorecard",
+  title: "Card/Score Card",
   component: Scorecard,
   parameters: {
     layout: "centered",
