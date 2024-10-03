@@ -20,7 +20,7 @@ export const Primary: Story = {
     radiusX: 120,
     radiusY: 30,
     items: LucideIcons,
-    duration: 20,
+    duration: 25,
     tiltAngle: 360 - 30,
   },
 };

@@ -1,10 +1,16 @@
 import { useEffect, useState } from "react";
-import { Apple, BadgeCent, BadgeInfo, BadgeX, Banana, Bolt, Gem } from "lucide-react";
+import { Apple, BadgeCent, BadgeInfo, BadgeX, Banana, Bolt } from "lucide-react";
 
+import { Icons } from "@/components/icons";
 import { cn } from "@/lib/utils";
 
 export const CenterIcon = (
-  <Gem key="gem" className="z-0 h-32 w-32 animate-float rounded-full bg-blue-800" />
+  <Icons.logo
+    className="center z-0 h-32 w-32 animate-float rounded-full bg-gradient-to-r from-purple-400 to-blue-400 shadow-lg"
+    style={{
+      boxShadow: "0 0 20px 10px rgba(128, 90, 213, 0.6)",
+    }}
+  />
 );
 export const LucideIcons = [
   <Banana key="banana" className="h-12 w-12" />,
@@ -61,7 +67,7 @@ export default function OrbitingItems3D({
   radiusX = 120,
   radiusY = 30,
   tiltAngle = 360 - 30,
-  duration = 20,
+  duration = 25,
   items = LucideIcons,
   backgroundClassName,
   containerClassName,
@@ -87,7 +93,8 @@ export default function OrbitingItems3D({
     tiltAngle: number;
     duration: number;
   }) => {
-    const [angle, setAngle] = useState((index / totalItems) * 360);
+    const angleStep = 360 / totalItems;
+    const [angle, setAngle] = useState(index * angleStep);
     useEffect(() => {
       const animation = setInterval(() => {
         setAngle((prevAngle) => (prevAngle + 1) % 360);
@@ -130,7 +137,7 @@ export default function OrbitingItems3D({
     >
       <div
         className={cn(
-          "absolute inset-0 -z-10 h-full w-full items-center [background:radial-gradient(125%_125%_at_50%_10%,#030637_30%,#10439F_100%)]",
+          "absolute inset-0 -z-10 h-full w-full items-center bg-gradient-to-r from-violet-200 to-pink-200",
           backgroundClassName,
         )}
       />
@@ -145,7 +152,7 @@ export default function OrbitingItems3D({
           return (
             <div
               key={index}
-              className="absolute flex h-20 w-20 items-center justify-center rounded-full bg-gray-200"
+              className="absolute flex h-20 w-20 items-center justify-center rounded-full bg-white/30 shadow-xl shadow-purple-500/30 backdrop-blur-md transition-transform duration-500 ease-out"
               style={CalculateItemStyle({
                 index,
                 radiusX,
