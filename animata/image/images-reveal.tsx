@@ -26,13 +26,13 @@ const cards = [
 
 const cardVariants = {
   hidden: { opacity: 0, scale: 0.2 },
-  visible: (i) => ({
+  visible: (custom) => ({
     opacity: 1,
     scale: 1,
-    rotate: cards[i].angle,
+    rotate: custom.angle,
     transition: {
-      delay: i * 0.2,
-      duration: 0.5,
+      delay: custom.index * 0.1,
+      duration: 0.3,
       type: "spring",
       stiffness: 150,
       damping: 20,
@@ -49,9 +49,9 @@ export default function ImagesReveal() {
         {cards.map((card, i) => (
           <motion.img
             key={i}
-            className="relative -ml-10 h-[100px] w-[100px] rounded-xl border-[6px] border-white object-cover shadow-xl md:-ml-20 md:h-[150px] md:w-[150px]"
+            className="relative -ml-10 size-24 rounded-2xl border-[6px] border-white object-cover shadow-xl md:-ml-20 md:size-36"
             src={card.src}
-            custom={i}
+            custom={{ index: i, angle: card.angle }}
             initial="hidden"
             animate="visible"
             variants={cardVariants}
