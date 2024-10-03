@@ -1,53 +1,27 @@
 ---
 title: Disclosure Interaction
 description: The DisclosureInteraction component is an interactive button that expands into a small sheet when clicked. This sheet provides six options (e.g., Project, Task, Note, etc.) and includes a close button to collapse the sheet back to its original state. The component features smooth animations for expanding and collapsing, and is styled using a clean and modern UI design.
-author: YourTwitterUsername
+author: IngaleChinmay04
 ---
 
 <ComponentPreview name="button-disclosure-interaction--docs" />
 
-## Installation
+## Usage
 
-<Steps>
-<Step>Install dependencies</Step>
+1. **Import the component** into your project.
 
-```bash
-npm install framer-motion lucide-react
-```
+```tsx
+import { DisclosureInteraction } from './components/animata/button/disclosure-interaction';
 
-<Step>Update `tailwind.config.js`</Step>
-
-Add the following to your tailwind.config.js file.
-
-```json
-module.exports = {
-  theme: {
-    extend: {
-    }
-  }
+// Use the component in your application.
+export default function Example() {
+  return (
+    <div>
+      <DisclosureInteraction />
+    </div>
+  );
 }
+
+
+Built by [IngaleChinmay04](https://github.com/IngaleChinmay04)
 ```
-
-<Step>Run the following command</Step>
-
-It will create a new file `disclosure-interaction.tsx` inside the `components/animata/button` directory.
-
-```bash
-mkdir -p components/animata/button && touch components/animata/button/disclosure-interaction.tsx
-```
-
-<Step>Paste the code</Step>{" "}
-
-Open the newly created file and paste the following code:
-
-```jsx file=<rootDir>/animata/button/disclosure-interaction.tsx
-
-```
-
-</Steps>
-
-## Credits
-
-Built by [Your name](https://github.com/YourGithubUsername)
-
-...Add appropriate credits here.
