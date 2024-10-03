@@ -87,7 +87,7 @@ const TimelineItem: React.FC<TimelineItemProps> = ({
           transition={{ duration: fillDuration, delay: fillDelay }}
         />
       </div>
-      <div className="flex-grow pt-1 leading-5">
+      <div className={cn("flex-grow leading-5", !isLast && "mb-3")}>
         {customRender ? (
           customRender(event)
         ) : (
@@ -145,7 +145,7 @@ export function AnimatedTimeline({
   };
 
   return (
-    <div className={`relative p-4 ${className}`}>
+    <div className={`relative py-4 ${className}`}>
       {events.map((event, index) => (
         <div key={event.id} onClick={() => onEventClick?.(event)}>
           <TimelineItem
@@ -196,7 +196,7 @@ export default function AnimatedTimelinePage({
   return (
     <div
       className={cn(
-        "container mx-auto rounded-lg bg-background text-foreground",
+        "container mx-auto rounded-lg bg-background px-8 pt-6 text-foreground",
         containerClassName,
       )}
     >
