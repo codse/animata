@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
+
 interface Team {
   name: string;
   logo: string;
@@ -22,71 +23,88 @@ export default function LiveScoreWidget({
   matchTime,
   scorer,
 }: ScoreProps) {
-  const [y, setY] = useState(28);
-  const [hmScore] = useState(homeScore);
-  const [awScore, setAwScore] = useState(awayScore);
   const [scored, setScored] = useState(false);
+  const [awScore, setAwScore] = useState(awayScore);
+  const [popAnimation, setPopAnimation] = useState(false);
+
   return (
     <div className="p-10">
-      <div className={`rounded-3xl ${scored ? "bg-[#09374d]" : "bg-none"} p-1`}>
-        <motion.div className="box" animate={{ y }} transition={{ type: "spring" }}>
-          <div className="mx-auto flex w-[440px] items-center justify-evenly rounded-3xl bg-black p-4 text-white">
-            {/* Home Team h-[135px] */}
-            <div className="flex flex-col">
-              <img
-                src={homeTeam.logo}
-                alt={homeTeam.name}
-                className="mb-2 h-[70px] w-[70px] object-contain"
-              />
-              {!scored && <span>{homeTeam.name}</span>}
-            </div>
-
-            {/* Score */}
-            <div className="text-center">
-              <div className="text-4xl font-bold">
-                {hmScore}-{awScore}
-              </div>
-              <div className="text-base">{matchTime}</div>
-            </div>
-
-            {/* Away Team */}
-            <div className="flex flex-col">
-              <img
-                src={awayTeam.logo}
-                alt={awayTeam.name}
-                className="mb-2 h-[70px] w-[70px] object-contain"
-              />
-              {!scored && <span>{awayTeam.name}</span>}
-            </div>
+      <motion.div
+        className={`rounded-3xl ${scored ? "bg-[#09374d]" : "bg-none"} p-1`}
+        animate={{ height: scored ? 160 : 100 }}
+        transition={{ type: "spring", stiffness: 200, damping: 20 }}
+      >
+        <div className="mx-auto flex w-[440px] items-center justify-evenly rounded-3xl bg-black p-4 text-white">
+          {/* Home Team */}
+          <div className="flex flex-col">
+            <img
+              src={homeTeam.logo}
+              alt={homeTeam.name}
+              className="mb-2 h-[70px] w-[70px] object-contain"
+            />
+            {!scored && <span>{homeTeam.name}</span>}
           </div>
-        </motion.div>
+
+          {/* Score */}
+          <div className="text-center">
+            <motion.div
+              className="text-4xl font-bold"
+              animate={popAnimation ? { opacity: [1, 0, 1] } : { opacity: 1 }} // Popping animation
+              transition={{ duration: 0.5 }} // Control animation speed
+              onAnimationComplete={() => setPopAnimation(false)}
+            >
+              {homeScore}-{awScore}
+            </motion.div>
+            <div className="text-base">{matchTime}</div>
+          </div>
+
+          {/* Away Team */}
+          <div className="flex flex-col">
+            <img
+              src={awayTeam.logo}
+              alt={awayTeam.name}
+              className="mb-2 h-[70px] w-[70px] object-contain"
+            />
+            {!scored && <span>{awayTeam.name}</span>}
+          </div>
+        </div>
         {scored && (
-          <div className="flex justify-between py-4">
-            <div className="ml-2 flex items-center text-lg text-white">
-              <FootbalIcon />
-              <span className="ml-2 text-white">{scorer} scores!</span>
+          <motion.div
+            className="py-2"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 4 }}
+          >
+            <div className="flex items-center justify-between">
+              <div className="ml-4 flex items-center text-lg text-white">
+                <FootbalIcon />
+                <span className="ml-2 text-white">{scorer} scores!</span>
+              </div>
+              <span className="mr-4 text-lg text-slate-500">now</span>
             </div>
-            <span className="mr-2 text-lg text-slate-500">now</span>
-          </div>
+          </motion.div>
         )}
-      </div>
+      </motion.div>
+
       <button
         className="absolute bottom-4 right-4 rounded-full bg-white p-2"
         onClick={() => {
-          setAwScore(awScore + 1);
-          setY(0);
           setScored(true);
+          setPopAnimation(true);
           setTimeout(() => {
-            setY(28);
+            setAwScore(awScore + 1);
+          }, 500);
+          setTimeout(() => {
             setScored(false);
           }, 3000);
         }}
       >
-        score
+        Score
       </button>
     </div>
   );
 }
+
 function FootbalIcon() {
   return (
     <svg
