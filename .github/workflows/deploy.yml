@@ -52,21 +52,3 @@ jobs:
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
           branch: ${{ github.event.pull_request.head.ref }}
           wranglerVersion: "3"
-      - name: Get Cloudflare Pages URL
-        id: cf-pages
-        run: |
-          PAGES_URL=$(yarn wrangler pages deployment list --project-name animata | grep -oP '(?<=https://).*?(?=\.pages\.dev)')
-          echo "PAGES_URL=$PAGES_URL" >> $GITHUB_OUTPUT
-      - name: Add preview links to PR
-        uses: actions/github-script@v6
-        with:
-          github-token: ${{secrets.GITHUB_TOKEN}}
-          script: |
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: `📝 Preview links:
-              - Main: https://${{ steps.cf-pages.outputs.PAGES_URL }}.pages.dev
-              - Storybook: https://${{ steps.cf-pages.outputs.PAGES_URL }}.pages.dev/preview`
-            })
