@@ -1,15 +1,15 @@
-import FeatureCard from "@/animata/card/feature-card";
+import SubscribeCard from "@/animata/card/subscribe-card";
 import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
-  title: "Card/Feature Card",
-  component: FeatureCard,
+  title: "Card/Subscribe Card",
+  component: SubscribeCard,
   parameters: {
     layout: "centered",
   },
   tags: ["autodocs"],
   argTypes: {},
-} satisfies Meta<typeof FeatureCard>;
+} satisfies Meta<typeof SubscribeCard>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;

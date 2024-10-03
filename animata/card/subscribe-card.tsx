@@ -3,17 +3,17 @@ import { Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
-interface FeatureCardProps {
+interface SubscribeCardProps {
   title?: string;
   placeholder?: string;
   buttonText?: string;
 }
 
-export default function FeatureCard({
+export default function SubscribeCard({
   title = "Want to read the rest?",
   placeholder = "justin@buttondown.email",
   buttonText = "Subscribe for $5/mo",
-}: FeatureCardProps) {
+}: SubscribeCardProps) {
   return (
     <div className="mx-auto flex w-full max-w-lg -skew-x-3 skew-y-2 flex-col gap-2 rounded-lg bg-white py-6 transition-transform duration-300 hover:skew-x-0 hover:skew-y-0">
       <h3 className="px-8 font-sans font-bold text-black">{title}</h3>
