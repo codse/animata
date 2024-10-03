@@ -68,13 +68,13 @@ const brands = [
 
 export default function FeatureCardTsx() {
   return (
-    <div className="flex justify-center p-10">
+    <div className="flex justify-center py-10">
       {/* Rectangular box around all cards */}
-      <div className="group flex w-full max-w-4xl flex-wrap justify-center rounded-xl border-4 border-gray-400 bg-gray-100 p-12 shadow-2xl transition-all duration-300 ease-in-out hover:bg-white hover:shadow-2xl">
+      <div className="group flex w-full max-w-lg flex-wrap justify-center rounded-xl border-2 border-gray-400 bg-gray-50 px-2 py-6 shadow-2xl transition-all duration-300 ease-in-out hover:bg-white hover:shadow-2xl">
         {brands.map((brand, index) => (
           <div
             key={index}
-            className={`m-4 transform cursor-pointer rounded-full border-2 border-gray-400 bg-white px-8 py-3 text-xl text-black transition-transform duration-300 ease-in-out ${brand.defaultColor} ${brand.hoverColor}`}
+            className={`m-1 transform cursor-pointer rounded-full border-2 border-gray-400 bg-white px-6 py-2 text-xl text-black transition-transform duration-300 ease-in-out ${brand.defaultColor} ${brand.hoverColor}`}
             style={{
               fontWeight:
                 brand.name === "RSS" || brand.name === "Twitter" || brand.name === "Mastodon"

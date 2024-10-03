@@ -2,7 +2,7 @@ import FeatureCardTsx from "@/animata/card/feature-card-tsx";
 import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
-  title: "Card/Feature Card Tsx",
+  title: "Card/Integration pills",
   component: FeatureCardTsx,
   parameters: {
     layout: "centered",
