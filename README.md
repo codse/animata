@@ -115,8 +115,8 @@ export function cn(...inputs: ClassValue[]) {
 ```
 
 #### NOTE
-1. If you see something that has been imported but not mentioned in the documentation, then it is a dependency that you need to install. If it starts with @/ then it is Animata's component else it is an external dependency. In such a case, you can submit a PR to update the documentation.
-2. If something is not working, then the docs are probably missing the tailwind.config.js updates. You can look for the entries that have been added to the tailwind.config.js in Animata's source code. You can create an issue or submit a PR to update the documentation.
+1. If you see something that has been imported but not mentioned in the documentation, then it is a dependency you need to install. If it starts with @/ then it is Animata's component else it is an external dependency. In such a case, you can submit a PR to update the documentation.
+2. If something is not working, the docs probably miss the tailwind.config.js updates. You can look for the entries that have been added to the tailwind.config.js in Animata's source code. You can create an issue or submit a PR to update the documentation.
 
 ## Contributing
 
@@ -127,28 +127,14 @@ Contributions to Animata are always welcome!
   or find us on [Discord](https://discord.gg/STYEh3UW), we will take the time to guide you.
 
 ## Authors
+Heartfelt gratitude goes to each of you for your amazing contributions to this project. Your hard work, creativity, and dedication have been nothing short of incredible. Whether it was coding, debugging, testing, or sharing ideas, every effort made a significant difference.
 
 <section id="#Authors"
-  <a href="https://github.com/hari"><img alt="Hari" src="https://github.com/user-attachments/assets/d74cd9ea-be3c-4ab8-8611-ecd55c9a2e9a" width="64"/></a>
-  <a href="https://github.com/AashishKatila"><img alt="Aashish Katila" src="https://github.com/user-attachments/assets/e7283234-932c-4e22-80c5-b043267e0190" width="64"/></a>
-  <a href="https://github.com/GrgSumin"><img alt="Grg Sumin" src="https://github.com/user-attachments/assets/cf16eef7-964e-4891-a7d1-e9b300d2f22a" width="64"/></a>
-  <a href="https://github.com/morphhyy"><img alt="Bibek" src="https://github.com/user-attachments/assets/dfa2e4e2-5e5d-4911-b359-dc7d7ed9d910" width="64"/></a>
-  <a href="https://github.com/llaxmi"><img alt="Laxmi Lamichhane" src="https://github.com/user-attachments/assets/5bf4271b-dc72-4a93-9a30-ea11f69b9027" width="64"/></a>
-  <a href="https://github.com/AadarshBaral"><img alt="Aadarsh Baral" src="https://github.com/user-attachments/assets/ef1a6751-5807-45d9-803a-e10d983133b9" width="64"/></a>
-  <a href="https://github.com/acharya-sanjaya"><img alt="Sanjaya Acharya" src="https://github.com/user-attachments/assets/5bf55021-7237-4482-a5d2-2e37146d6194" width="64"/></a>
-  <a href="https://github.com/chiranjibi10"><img alt="chirubhai" src="https://github.com/user-attachments/assets/e4c455eb-ee7d-4b99-8e19-2813d8fbb70c" width="64"/></a>
-  <a href="https://github.com/sudhashrestha"><img alt="Sudha Shrestha" src="https://github.com/user-attachments/assets/92207607-483b-4e06-8df0-0356cb8456df" width="64"/></a>
-  <a href="https://github.com/Yug-Mistry"><img alt="Yug-Mistry" src="https://github.com/user-attachments/assets/53ebd4e7-f273-41b0-8589-c7a8adb837a9" width="64"/></a>
-  <a href="https://github.com/Abishkardhenga"><img alt="Abishkar Dhenga" src="https://github.com/user-attachments/assets/0b06bc6d-ee69-4a9f-a2f3-ea5e726172e8" width="64"/></a>
-  <a href="https://github.com/raghav3615"><img alt="Raghav" src="https://github.com/user-attachments/assets/f6c0592e-57cf-42af-8088-08890ede90a8" width="64"/></a>
-  <a href="https://github.com/SatyamVyas04"><img alt="Satyam Vyas" src="https://github.com/user-attachments/assets/48036bbb-35e7-4ddd-89c5-46c79739b73e" width="64"/></a>
-  <a href="https://github.com/preronagit"><img alt="Prerona" src="https://github.com/user-attachments/assets/23a916b7-5d37-47ce-a460-5a61d2eea625" width="64"/></a>
-  <a href="https://github.com/ozantekin"><img alt="Ozan Tekin" src="https://github.com/user-attachments/assets/eeeb3a3c-4aee-419f-a8c5-9c8523042074" width="64"/></a>
-  <a href="https://github.com/teamkuka"><img alt="teamkuka" src="https://github.com/user-attachments/assets/a288bf3e-11cd-464a-86f7-4af050f23476" width="64"/></a>
-  <a href="https://github.com/Humboorgir"><img alt="Iliya.Faz" src="https://github.com/user-attachments/assets/9d5bb095-13a9-4c3e-8416-194ab39e717d" width="64"/></a>
-  <a href="https://github.com/DoffuXx"><img alt="Ali" src="https://github.com/user-attachments/assets/8ffcc532-40bb-466f-8e61-32321ad00844" width="64"/></a>
+  <a href="https://github.com/codse/animata/graphs/contributors">
+    <img src="https://contrib.rocks/image?repo=codse/animata&max=100"/>
+  </a>
 </section>
 
 ## License
 
-This project licensed under the MIT License. see the [LICENSE](https://github.com/codse/animata/blob/main/LICENSE.md) file for details.
+This project is licensed under the MIT License. see the [LICENSE](https://github.com/codse/animata/blob/main/LICENSE.md) file for details.
