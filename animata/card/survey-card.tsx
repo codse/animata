@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import { cn } from "@/lib/utils";
 
@@ -25,13 +25,13 @@ export default function SurveyCard({ items, width: providedWidth, surveyTitle }:
   const [{ width }, setSize] = useState({
     width: providedWidth ?? 250,
   });
-  const [totalVotes, setTotalVotes] = useState(0);
-  const [maxVote, setMaxVote] = useState(0);
+  // Calculate total votes and max votes using useMemo
+  const totalVotes = useMemo(() => items.reduce((acc, item) => acc + item.vote, 0), [items]);
+  const maxVote = useMemo(() => Math.max(...items.map((item) => item.vote)), [items]);
+
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    setTotalVotes(items.reduce((acc, item) => acc + item.vote, 0));
-    setMaxVote(Math.max(...items.map((item) => item.vote)));
     setSize({
       width: providedWidth ?? containerRef.current?.offsetWidth ?? 250,
     });
@@ -63,21 +63,18 @@ export default function SurveyCard({ items, width: providedWidth, surveyTitle }:
       {items.map((item, index) => {
         const clampedProgress = Math.max(0, item.vote);
         // saving overflow over itemName using 8/12
-        const barWidth = isParentHovered ? ((clampedProgress / totalVotes) * 100 * 8) / 12 : 30;
+        const barWidth = isParentHovered ? (clampedProgress / totalVotes) * 100 * (8 / 12) : 30;
         return (
           <div
             key={`survey-item-${index}`}
             className={cn("flex w-full items-center justify-between")}
           >
             <div
-              className={cn(
-                "flex h-6 justify-start rounded-full",
-                !isParentHovered
-                  ? "animate-pulse bg-slate-300"
-                  : maxVote === item.vote
-                    ? "bg-green-600"
-                    : "bg-slate-400",
-              )}
+              className={cn("duration-600 flex h-6 justify-start rounded-full transition-all", {
+                "animate-pulse bg-slate-300": !isParentHovered,
+                "bg-green-600": isParentHovered && maxVote === item.vote,
+                "bg-slate-400": isParentHovered && maxVote !== item.vote,
+              })}
               style={{ width: `${barWidth}%` }}
             />
             <div className="flex h-6 w-3/12 justify-end">
