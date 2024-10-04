@@ -31,19 +31,42 @@ export const Primary: Story = {
 };
 
 export const DifferentAnimations: Story = {
-  args: {}, // Ensure args are present
-  render: () => (
-    <div className="grid grid-cols-3 gap-6 h-60 w-full items-center justify-center">
-      {["Default", "Up To Down", "Click Me"].map((text, idx) => (
-        <AnimatedFollowButton
-          key={idx}
-          className={`h-16 flex items-center justify-center rounded-xl bg-${["blue", "zinc", "red"][idx]}-100 text-${["blue", "zinc", "red"][idx]}-600`}
-          changeTextClassName={`h-16 bg-${["blue", "zinc", "red"][idx]}-600 text-${["blue", "zinc", "red"][idx]}-100 rounded-xl text-white flex items-center justify-center`}
-          initialText={<span className="inline-flex items-center">{text}</span>}
-          changeText={<span className="inline-flex items-center">{["Up To Down", "Down To Up", "Zoom In"][idx]}</span>}
-          animationType={["up-to-down", "down-to-up", "zoom-in"][idx]}
-        />
-      ))}
-    </div>
-  ),
+  args: {},
+  render: () => {
+    const buttons = [
+      {
+        initialText: "Default",
+        changeText: "Up To Down",
+        animationType: "up-to-down" as const,
+        color: "blue",
+      },
+      {
+        initialText: "Click Me",
+        changeText: "Down To Up",
+        animationType: "down-to-up" as const,
+        color: "zinc",
+      },
+      {
+        initialText: "Click Me",
+        changeText: "Zoom In",
+        animationType: "zoom-in" as const,
+        color: "red",
+      },
+    ];
+
+    return (
+      <div className="grid grid-cols-3 gap-6 h-60 w-full items-center justify-center">
+        {buttons.map(({ initialText, changeText, animationType, color }, idx) => (
+          <AnimatedFollowButton
+            key={idx}
+            className={`h-16 flex items-center justify-center rounded-xl bg-${color}-100 text-${color}-600`}
+            changeTextClassName={`h-16 bg-${color}-600 text-${color}-100 rounded-xl text-white flex items-center justify-center`}
+            initialText={<span className="inline-flex items-center">{initialText}</span>}
+            changeText={<span className="inline-flex items-center">{changeText}</span>}
+            animationType={animationType}
+          />
+        ))}
+      </div>
+    );
+  },
 };
