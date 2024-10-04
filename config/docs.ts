@@ -114,6 +114,10 @@ const sidebarNav: SidebarNavItem[] = [
     items: createLinks("icon"),
   },
   {
+    title: "PreLoader",
+    items: createLinks("preloader"),
+  },
+  {
     title: "Progress",
     items: createLinks("progress"),
   },
