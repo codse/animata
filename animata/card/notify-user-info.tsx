@@ -51,7 +51,7 @@ export default function NotifyUserInfo({
             </div>
           </div>
 
-          <span className="text-lg font-semibold text-gray-800 dark:text-gray-200">{aiName}</span>
+          <span className="text-lg font-semibold text-muted-foreground">{aiName}</span>
         </motion.div>
 
         <div className="relative">
