@@ -14,6 +14,14 @@ const meta = {
       control: { type: "select" },
       options: ["sm", "md", "lg", "xl"],
     },
+    outerRadius: {
+      control: { type: "select" },
+      options: ["normal", "rounded", "moreRounded"],
+    },
+    padding: {
+      control: { type: "select" },
+      options: ["small", "medium", "large"],
+    },
   },
 } satisfies Meta<typeof Pricing>;
 
@@ -28,6 +36,8 @@ export const Primary: Story = {
       { name: "Pro", monthlyPrice: "$19.99", yearlyPrice: "$199.99" },
     ],
     width: "md",
+    outerRadius: "rounded",
+    padding: "medium",
   },
 };
 
@@ -40,5 +50,7 @@ export const CustomPlans: Story = {
       { name: "Enterprise", monthlyPrice: "$49.99", yearlyPrice: "$499.99" },
     ],
     width: "xl",
+    outerRadius: "moreRounded",
+    padding: "large",
   },
 };

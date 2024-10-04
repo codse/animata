@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 
 import { cn } from "@/lib/utils";
@@ -15,6 +15,8 @@ interface PricingProps {
   onPlanSelect?: (plan: string) => void;
   onCycleChange?: (cycle: "Monthly" | "Yearly") => void;
   width?: "sm" | "md" | "lg" | "xl";
+  outerRadius?: "normal" | "rounded" | "moreRounded";
+  padding?: "small" | "medium" | "large";
 }
 
 const widthClasses = {
@@ -24,8 +26,31 @@ const widthClasses = {
   xl: "w-full sm:w-[300px] md:w-[500px] lg:w-[768px] xl:w-[1024px]",
 };
 
-export default function Pricing({ plans, width = "lg" }: PricingProps) {
-  const [selectedPlan, setSelectedPlan] = useState(plans[0].name);
+const outerRadiusClasses = {
+  normal: "rounded-[16px]",
+  rounded: "rounded-[24px]",
+  moreRounded: "rounded-[32px]",
+};
+
+const paddingClasses = {
+  small: "p-2",
+  medium: "p-3",
+  large: "p-4",
+};
+
+const innerRadiusClasses = {
+  normal: "rounded-xl",
+  rounded: "rounded-2xl",
+  moreRounded: "rounded-3xl",
+};
+
+export default function Pricing({
+  plans,
+  width = "lg",
+  outerRadius = "rounded",
+  padding = "medium",
+}: PricingProps) {
+  const [selectedPlan, setSelectedPlan] = useState("Basic");
   const [billingCycle, setBillingCycle] = useState<"Monthly" | "Yearly">("Monthly");
 
   const handlePlanSelect = (planName: string) => {
@@ -37,7 +62,14 @@ export default function Pricing({ plans, width = "lg" }: PricingProps) {
   };
 
   return (
-    <div className={cn("mx-auto rounded-[28px] bg-white p-3 shadow-lg", widthClasses[width])}>
+    <div
+      className={cn(
+        "mx-auto bg-white shadow-lg",
+        widthClasses[width],
+        outerRadiusClasses[outerRadius],
+        paddingClasses[padding],
+      )}
+    >
       <div className="mb-3 flex justify-center">
         <div className="relative w-3/4 rounded-full bg-zinc-300 p-1 pb-2">
           <motion.div
@@ -68,11 +100,12 @@ export default function Pricing({ plans, width = "lg" }: PricingProps) {
         </div>
       </div>
 
-      {plans.map((plan, _) => (
+      {plans.map((plan) => (
         <motion.div
           key={plan.name}
           className={cn(
-            "relative mb-3 cursor-pointer rounded-2xl border-2 border-zinc-200 p-4",
+            "relative mb-3 cursor-pointer border-2 border-zinc-200 p-4",
+            innerRadiusClasses[outerRadius],
             selectedPlan === plan.name ? "bg-zinc-100" : "bg-white",
           )}
           onClick={() => handlePlanSelect(plan.name)}
@@ -83,7 +116,10 @@ export default function Pricing({ plans, width = "lg" }: PricingProps) {
           <AnimatePresence>
             {selectedPlan === plan.name && (
               <motion.div
-                className="absolute inset-0 rounded-2xl border-4 border-zinc-900"
+                className={cn(
+                  "absolute inset-0 border-4 border-zinc-900",
+                  innerRadiusClasses[outerRadius],
+                )}
                 layoutId="selectedPlanBorder"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
@@ -126,7 +162,7 @@ export default function Pricing({ plans, width = "lg" }: PricingProps) {
       ))}
 
       <motion.button
-        className="w-full rounded-2xl bg-black py-3 font-bold text-white"
+        className={cn("w-full bg-black py-3 font-bold text-white", innerRadiusClasses[outerRadius])}
         whileTap={{ scale: 0.95 }}
       >
         Get Started
@@ -134,7 +170,6 @@ export default function Pricing({ plans, width = "lg" }: PricingProps) {
     </div>
   );
 }
-
 interface AnimatedPriceProps {
   monthlyPrice: string;
   yearlyPrice: string;
@@ -147,6 +182,7 @@ function AnimatedPrice({
   billingCycle,
 }: AnimatedPriceProps): React.JSX.Element {
   const [price, setPrice] = useState(monthlyPrice);
+  const animationRef = useRef<number | null>(null);
 
   useEffect(() => {
     const targetPrice = billingCycle === "Monthly" ? monthlyPrice : yearlyPrice;
@@ -163,13 +199,19 @@ function AnimatedPrice({
       setPrice(`$${currentValue.toFixed(2)}`);
 
       if (progress < 1) {
-        requestAnimationFrame(animatePrice);
+        animationRef.current = requestAnimationFrame(animatePrice);
       } else {
         setPrice(targetPrice);
       }
     };
 
     animatePrice();
+
+    return () => {
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+      }
+    };
   }, [price, billingCycle, monthlyPrice, yearlyPrice]);
 
   return (
