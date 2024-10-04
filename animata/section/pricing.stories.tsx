@@ -3,7 +3,7 @@ import { Meta, StoryObj } from "@storybook/react";
 import Pricing from "./pricing";
 
 const meta = {
-  title: "Widget/Pricing",
+  title: "Section/Pricing",
   component: Pricing,
   parameters: {
     layout: "centered",
