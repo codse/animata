@@ -172,6 +172,10 @@ const sidebarNav: SidebarNavItem[] = [
     href: "/docs/skeleton",
     items: createLinks("skeleton"),
   },
+  {
+    title: "Pills",
+    items: createLinks("pills"), // Adjust based on how "pills" is organized in docs
+  },
 ]
   .filter((category) => Boolean(category.items?.length || category.label))
   .sort((a, b) => {
