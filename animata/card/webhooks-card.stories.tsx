@@ -4,9 +4,7 @@ import { Meta, StoryObj } from "@storybook/react";
 const meta = {
   title: "Card/Web Hooks",
   component: WebHooks,
-  parameters: {
-    layout: "centered",
-  },
+  parameters: {},
   tags: ["autodocs"],
   argTypes: {},
 } satisfies Meta<typeof WebHooks>;
