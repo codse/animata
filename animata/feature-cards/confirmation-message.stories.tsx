@@ -18,7 +18,7 @@ export const Primary: Story = {
   args: {
     successMessage: "Process Successful",
     labelName: "Animata",
-    labelMessage:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque tincidunt. Vestibulum eleifend nibh a est tristique sollicitudin.",
+    labelMessage: `The Confirmation Message component is a sleek, animated UI element that displays a checkmark with a success message.
+      It expands to reveal a personalized detailed description of the process.`,
   },
 };

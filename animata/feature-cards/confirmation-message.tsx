@@ -9,7 +9,7 @@ interface ConfirmationMessageProps {
   successMessage: string;
 
   /**
-   * The name of the organization/bot who perform the operations.
+   * The name of the organization/bot who performs the operations.
    */
   labelName: string;
 
@@ -32,7 +32,7 @@ interface ConfirmationMessageProps {
 export default function ConfirmationMessage({
   successMessage = "Process Successful",
   labelName = "Animata",
-  labelMessage = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque tincidunt. Vestibulum eleifend nibh a est tristique sollicitudin.",
+  labelMessage,
   backgroundClassName,
   containerClassName,
 }: ConfirmationMessageProps) {
@@ -49,22 +49,26 @@ export default function ConfirmationMessage({
           backgroundClassName,
         )}
       />
-      <div className="flex h-64 flex-col items-center justify-center">
-        <div className="flex overflow-hidden rounded-full bg-green-600">
+
+      {/* Parent Container for message */}
+      <div className="flex h-64 max-w-lg flex-col items-center justify-center">
+        <div className="flex h-20 items-center justify-center overflow-hidden rounded-full bg-green-800">
           {/* Checkmark */}
-          <div className="z-10 flex h-16 w-16 flex-col content-center items-center justify-center rounded-full bg-green-600 text-2xl">
+          <div className="z-10 flex h-20 w-20 flex-col content-center items-center justify-center rounded-full bg-green-800 text-3xl text-white">
+            {" "}
+            {/* Adjusted size */}
             &#10003;
           </div>
 
           {/* Expanding green box with sliding text */}
           <motion.div
-            className="z-0 flex h-16 overflow-hidden rounded-full bg-green-600"
+            className="z-0 flex h-20 overflow-hidden rounded-full bg-green-800"
             initial={{ width: "0rem" }}
-            animate={{ width: "auto" }}
+            animate={{ width: "12rem" }}
             transition={{ delay: 0.5, duration: 0.8 }}
           >
             <motion.div
-              className="flex items-center text-nowrap pr-6 text-lg"
+              className="flex items-center text-nowrap pr-6 text-lg text-white"
               initial={{ x: -1000, zIndex: -10 }}
               animate={{ x: 0, zIndex: 1 }}
               transition={{ duration: 1.0, delay: 0.3 }}
@@ -73,25 +77,30 @@ export default function ConfirmationMessage({
             </motion.div>
           </motion.div>
         </div>
+
+        {/* Container to control height animation */}
         <motion.div
-          className="my-4 flex w-[600px] rounded-lg border border-white/40 bg-gray-100 bg-white/30 p-6 shadow-lg backdrop-blur-md"
-          initial={{ height: 0, opacity: 0 }}
-          animate={{ height: "auto", opacity: 1 }}
+          className="relative flex h-fit w-[600px] max-w-lg overflow-hidden"
+          initial={{ y: 100, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 1.2, duration: 0.5 }}
         >
-          <div className="mr-4 flex h-12 w-12 items-center justify-center rounded-full bg-green-600 text-white">
-            {labelName[0]}
-          </div>
-          <div className="text-gray-800">
-            <p className="text-xl font-bold text-slate-500">{labelName}</p>
-            <motion.p
-              className="w-[480px] text-wrap font-semibold"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 2, duration: 0.9 }}
-            >
-              {labelMessage}
-            </motion.p>
+          {/* Message box */}
+          <div className="my-4 flex h-fit w-full rounded-lg border border-white/40 bg-white/30 bg-opacity-90 p-6 py-4 shadow-lg backdrop-blur-md">
+            <div className="mr-4 flex h-12 min-w-12 items-center justify-center rounded-full bg-green-800 text-white">
+              {labelName[0]}
+            </div>
+            <div className="text-gray-800">
+              <p className="text-xl font-bold text-slate-500">{labelName}</p>
+              <motion.p
+                className="max-w-[390px] truncate text-wrap font-semibold"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 2, duration: 0.9 }}
+              >
+                {labelMessage.length > 200 ? labelMessage.slice(0, 199) + "..." : labelMessage}
+              </motion.p>
+            </div>
           </div>
         </motion.div>
       </div>
