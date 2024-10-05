@@ -2,19 +2,22 @@ import React, { useEffect, useState } from "react";
 
 import { cn } from "@/lib/utils";
 
-const ReminderScheduler: React.FC = () => {
-  const [isRepeating, setIsRepeating] = useState<boolean>(true);
-  const [repeatInterval, setRepeatInterval] = useState<string>("Weekly");
-  const [selectedDays, setSelectedDays] = useState<string[]>(["Mo", "We", "Th"]);
+interface ReminderSchedulerProps {
+  isRepeating: boolean;
+  toggleRepeating: () => void;
+  repeatInterval: string;
+  setRepeatInterval: (interval: string) => void;
+  daysOfWeek: string[];
+}
 
-  const daysOfWeek = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"];
-
-  const toggleRepeating = () => {
-    console.log("Toggled");
-    isRepeating ? setSelectedDays(["Th", "Fr", "Su"]) : setSelectedDays(["Mo", "We", "Sa"]);
-    setIsRepeating(!isRepeating);
-  };
-
+const ReminderScheduler: React.FC<ReminderSchedulerProps> = ({
+  isRepeating,
+  toggleRepeating,
+  repeatInterval,
+  setRepeatInterval,
+  daysOfWeek,
+}) => {
+  const selectedDays = isRepeating ? new Set(["Th", "Fr", "Su"]) : new Set(["Mo", "We", "Sa"]);
   return (
     <div className="mx-auto max-w-sm rounded-3xl border border-gray-200 bg-white p-6 shadow-md">
       {/* Toggle Switch */}
@@ -46,7 +49,7 @@ const ReminderScheduler: React.FC = () => {
           {daysOfWeek.map((day) => (
             <SwapText
               key={day}
-              check={selectedDays.includes(day)}
+              check={selectedDays.has(day)}
               initialText={day}
               finalText={day}
               supportsHover={false}
@@ -94,15 +97,19 @@ function SwapText({
 }: SwapTextProps) {
   const [active, setActive] = useState<boolean>(!check);
   useEffect(() => {
+    let timeoutId: NodeJS.Timeout;
     if (check) {
-      setTimeout(() => {
+      timeoutId = setTimeout(() => {
         setActive((current) => !current);
       }, 100);
     } else {
-      setTimeout(() => {
+      timeoutId = setTimeout(() => {
         setActive((current) => !current);
       }, 100);
     }
+    return () => {
+      clearTimeout(timeoutId); // clear the timeout when component unmounts
+    };
   }, [check]);
   const common = "block transition-all duration-1000 ease-slow";
   const longWord = finalText.length > initialText.length ? finalText : null;
