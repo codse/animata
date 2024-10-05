@@ -22,6 +22,8 @@ Create the component as shown in the video attached below.
 ### Requirements
 1. Create a new animated component that matches the provided design.
 2. Add example usage of the component in the documentation or storybook.
+3. **Add credits** for any resources, references, or assets used, as specified in the **Additional Resources** section.
+
 
 <details>
   <summary>
