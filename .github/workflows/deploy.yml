@@ -2,8 +2,6 @@ name: Deploy Preview
 
 on:
   pull_request_target:
-    branches:
-      - main
     types: [opened, synchronize, reopened]
 
 jobs:
@@ -50,5 +48,5 @@ jobs:
           projectName: animata
           directory: out
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
-          branch: ${{ github.event.pull_request.head.ref }}
+          branch: main
           wranglerVersion: "3"
