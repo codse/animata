@@ -110,6 +110,10 @@ const sidebarNav: SidebarNavItem[] = [
     items: createLinks("card"),
   },
   {
+    title: "Section",
+    items: createLinks("section"),
+  },
+  {
     title: "Icon",
     items: createLinks("icon"),
   },
@@ -167,6 +171,10 @@ const sidebarNav: SidebarNavItem[] = [
     label: "6",
     href: "/docs/skeleton",
     items: createLinks("skeleton"),
+  },
+  {
+    title: "Feature cards",
+    items: createLinks("feature-cards"),
   },
 ]
   .filter((category) => Boolean(category.items?.length || category.label))
