@@ -176,6 +176,10 @@ const sidebarNav: SidebarNavItem[] = [
     title: "Feature cards",
     items: createLinks("feature-cards"),
   },
+  {
+    title: "Floating Action Buttons",
+    items: createLinks("fabs"),
+  },
 ]
   .filter((category) => Boolean(category.items?.length || category.label))
   .sort((a, b) => {
