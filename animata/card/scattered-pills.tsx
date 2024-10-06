@@ -46,7 +46,7 @@ export default function InteractivePillsPyramid() {
   };
 
   return (
-    <div className="flex h-screen flex-col items-center justify-start space-y-3 bg-transparent pt-24">
+    <div className="flex h-fit flex-col items-center justify-start space-y-3 bg-transparent pt-24">
       {pills.map((pill, index) => (
         <div
           key={pill.id}
