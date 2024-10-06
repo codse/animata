@@ -48,4 +48,5 @@ jobs:
           projectName: animata
           directory: out
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ github.head_ref || github.ref_name }}
           wranglerVersion: "3"
