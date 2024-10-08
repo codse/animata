@@ -2,7 +2,7 @@ import RippleButton from "@/animata/button/ripple-button";
 import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
-  title: "Button/RippleButton",
+  title: "Button/Ripple Button",
   component: RippleButton,
   parameters: {
     layout: "centered",

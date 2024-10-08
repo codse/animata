@@ -12,7 +12,7 @@ export default function RippleButton({ children, ...props }: RippleButtonProps) 
     const button = buttonRef.current;
     if (!button) return;
 
-    const ripple = document.createElement("span");
+    const ripple = document.createElement("span") as HTMLElement;
     const rect = button.getBoundingClientRect();
     const size = Math.max(rect.width, rect.height) * 2;
     const x = event.clientX - rect.left - size / 2;
@@ -30,7 +30,7 @@ export default function RippleButton({ children, ...props }: RippleButtonProps) 
     const button = buttonRef.current;
     if (!button) return;
 
-    const ripple = button.querySelector(".ripple");
+    const ripple = button.querySelector(".ripple") as HTMLElement | null;
     if (ripple) {
       const rect = button.getBoundingClientRect();
       const size = Math.max(rect.width, rect.height) * 2;
