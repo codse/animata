@@ -1,4 +1,4 @@
-import { Receipt, Signal } from "lucide-react";
+import { ChefHat, Receipt, Signal } from "lucide-react";
 
 import TransactionList from "@/animata/list/transaction-list";
 import { Meta, StoryObj } from "@storybook/react";
@@ -72,7 +72,7 @@ const transactions = [
     amount: -12.05,
     date: "September 12",
     time: "09:06 pm",
-    icon: <Receipt className="h-10 w-10 p-2 text-white" />,
+    icon: <ChefHat className="h-10 w-10 p-2 text-white" />,
     paymentMethod: "Credit Card",
     cardLastFour: "2316",
     cardType: "visa",
