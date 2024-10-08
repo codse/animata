@@ -5,6 +5,7 @@ import { useTheme } from "next-themes";
 
 import { CopyButton } from "@/components/copy-button";
 import { Icons } from "@/components/icons";
+import { config } from "@/config";
 import { cn } from "@/lib/utils";
 
 interface ComponentPreviewProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -66,6 +67,12 @@ export function ComponentPreview({ name, className, ...props }: ComponentPreview
     };
   }, []);
 
+  let previewBaseUrl = process.env.NEXT_PUBLIC_STORYBOOK_URL;
+  if (!previewBaseUrl) {
+    // Fallback to local storybook if env var is not set (useful in action deployment)
+    previewBaseUrl = config.isProduction ? "/preview" : "http://localhost:6006";
+  }
+
   return (
     <div className={cn("group relative", className)} {...props}>
       <div
@@ -83,7 +90,7 @@ export function ComponentPreview({ name, className, ...props }: ComponentPreview
           }
         >
           <iframe
-            src={`${process.env.NEXT_PUBLIC_STORYBOOK_URL}/iframe.html?globals=backgrounds.grid:!false;theme:${resolvedTheme ?? (typeof localStorage !== "undefined" ? localStorage?.getItem?.("theme") : "")};backgrounds.value:!transparent&viewMode=docs&id=${name}&site:docs=true`}
+            src={`${previewBaseUrl}/iframe.html?globals=backgrounds.grid:!false;theme:${resolvedTheme ?? (typeof localStorage !== "undefined" ? localStorage?.getItem?.("theme") : "")};backgrounds.value:!transparent&viewMode=docs&id=${name}&site:docs=true`}
             className="w-full"
             style={{
               height: `${Math.max(100, minHeight)}px`,
