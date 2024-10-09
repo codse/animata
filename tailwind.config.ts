@@ -198,6 +198,10 @@ const config = {
           "50%": { opacity: "1" },
           "100%": { opacity: "0" },
         },
+        float: {
+          "0%, 100%": { transform: "translateY(0)" },
+          "50%": { transform: "translateY(-40px)" },
+        },
       },
       animation: {
         fill: "fill 1s forwards",
@@ -214,6 +218,7 @@ const config = {
         meteor: "meteor var(--duration) var(--delay) ease-in-out infinite",
         trail: "trail var(--duration) linear infinite",
         led: "led 100ms ease-in-out",
+        float: "float 3s ease-in-out infinite",
       },
       transitionTimingFunction: {
         slow: "cubic-bezier(.405, 0, .025, 1)",
