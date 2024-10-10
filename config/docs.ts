@@ -105,6 +105,10 @@ const sidebarNav: SidebarNavItem[] = [
     items: createLinks("container"),
   },
   {
+    title: "Accordion",
+    items: createLinks("accordion"),
+  },
+  {
     title: "Card",
     items: createLinks("card"),
   },
