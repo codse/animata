@@ -51,50 +51,19 @@ export default function RippleButton({ children, ...props }: RippleButtonProps) 
   return (
     <button
       ref={buttonRef}
-      className="button homepage"
+      className="relative overflow-hidden text-[#0e352e] bg-[#cbfe7e] rounded-full p-[1.3rem] flex items-center justify-center font-jost font-medium text-[1.2rem] hover:text-white transition duration-[600ms]"
       onMouseEnter={createRipple}
       onMouseLeave={removeRipple}
       {...props}
     >
-      <span>{children}</span>
+      <span className="relative z-[2]">{children}</span>
       <style>{`
-        .button {
-          position: relative;
-          overflow: hidden;
-          color: #fff;
-          font-family: 'Jost', sans-serif;
-          font-style: normal;
-          font-weight: 500;
-          -webkit-font-smoothing: antialiased;
-          padding: 0.6rem 1rem;
-          font-size: 1.2rem;
-          outline: 0;
-          border: 0;
-          cursor: pointer;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-        }
-        .button.homepage {
-          background-color: #cbfe7e;
-          border-radius: 50px;
-          color: #0e352e;
-          padding: 1.3rem;
-        }
-        .button.homepage:hover {
-          color: #ffffff;
-          transition-duration: 600ms;
-        }
         .ripple {
           position: absolute;
           border-radius: 50%;
           pointer-events: none;
           background-color: #000000;
           z-index: 1;
-        }
-        span{
-          position:relative;
-          z-index: 2;
         }
         .ripple-enter {
           animation: ripple-enter 600ms ease-out forwards;
@@ -114,3 +83,5 @@ export default function RippleButton({ children, ...props }: RippleButtonProps) 
     </button>
   );
 }
+
+
