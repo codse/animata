@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { useEffect, useState } from "react";
+import { AnimatePresence, motion, PanInfo } from "framer-motion";
 
 import { cn } from "@/lib/utils";
 
@@ -11,7 +11,7 @@ type Fund = {
 
 interface FundWidgetProps {
   /**
-   * the array which contians all the funds with their value, changes and label.
+   * The array which contains all the funds with their value, changes, and label.
    */
   funds: Fund[];
 
@@ -37,10 +37,19 @@ export default function FundWidget({
 }: FundWidgetProps) {
   const len = funds.length;
 
-  // UseState type for state [activeDiv: number, direction: number]
   const [[activeDiv, direction], setDirection] = useState([0, 0]);
+  const [dragDistance, setDragDistance] = useState(0);
 
-  // Type for the slider variants function
+  // Reset dragDistance after the drag ends to remove blur/rotate effects
+  useEffect(() => {
+    if (dragDistance !== 0) {
+      const timer = setTimeout(() => {
+        setDragDistance(0);
+      }, 500);
+      return () => clearTimeout(timer);
+    }
+  }, [activeDiv, dragDistance]);
+
   const sliderVariants = {
     incoming: (direction: number) => ({
       y: direction > 0 ? "100%" : "-100%",
@@ -61,21 +70,26 @@ export default function FundWidget({
   };
 
   const swipeToAction = (direction: number) => {
-    let newDiv = activeDiv + direction;
-    if (newDiv < 0) newDiv = (newDiv + len) % len;
-    else if (newDiv >= funds.length) newDiv = newDiv % len;
+    const newDiv = activeDiv + direction;
+    if (newDiv < 0 || newDiv >= len) return;
+
     setDirection([newDiv, direction]);
   };
 
-  // Type for draghandler: dragInfo contains offset: {x: number, y: number}
-  const draghandler = (dragInfo: { offset: { y: number } }) => {
-    const dragDistance = dragInfo.offset.y;
+  const draghandler = (dragInfo: PanInfo) => {
+    const dragDistanceY = dragInfo.offset.y;
     const swipeThreshold = 20;
-    if (dragDistance > swipeThreshold) {
+
+    // Only swipe down if not at the first div (activeDiv !== 0)
+    if (dragDistanceY > swipeThreshold) {
       swipeToAction(-1);
-    } else if (dragDistance < -swipeThreshold) {
+    }
+    // Only swipe up if not at the last div (activeDiv !== len - 1)
+    else if (dragDistanceY < -swipeThreshold) {
       swipeToAction(1);
     }
+
+    setDragDistance(0);
   };
 
   const skipToDiv = (divId: number) => {
@@ -87,6 +101,9 @@ export default function FundWidget({
     }
     setDirection([divId, changeDirection]);
   };
+
+  const blurValue = Math.min(Math.abs(dragDistance / 20), 10);
+  const rotateYValue = Math.min(dragDistance / 10, 15);
 
   return (
     <>
@@ -104,7 +121,7 @@ export default function FundWidget({
         />
         <AnimatePresence initial={false}>
           <div className="flex h-72 w-64 flex-col items-center">
-            <div className="z-20 flex h-64 w-72 overflow-clip rounded-3xl bg-white px-6 pt-6 shadow-[0px_0px_10px_1px_#bec2bf]">
+            <div className="z-20 flex h-64 w-72 overflow-clip rounded-[35px] bg-white px-6 pt-6 shadow-[0px_0px_10px_1px_#bec2bf]">
               <motion.div
                 key={activeDiv}
                 custom={direction}
@@ -114,9 +131,14 @@ export default function FundWidget({
                 animate="active"
                 transition={sliderTransition}
                 drag="y"
-                dragConstraints={{ left: 0, right: 0 }}
+                dragConstraints={{ top: 0, bottom: 0 }}
                 dragElastic={1}
                 onDragEnd={(_, dragInfo) => draghandler(dragInfo)}
+                onDrag={(event, info) => setDragDistance(info.offset.y)}
+                style={{
+                  filter: `blur(${blurValue}px)`,
+                  transform: `rotateY(${rotateYValue}deg)`,
+                }}
               >
                 <div className="h-56 w-56 bg-white">
                   <h1 className="mb-3 text-6xl font-bold">{funds[activeDiv].value}</h1>
@@ -142,14 +164,14 @@ export default function FundWidget({
                       className="my-1 h-2 w-2 rounded-full bg-black"
                       style={{ backgroundColor: index === activeDiv ? "black" : "gray" }}
                       initial={{ height: 8 }}
-                      animate={{ height: index === activeDiv ? 20 : 8 }}
+                      animate={{ height: index === activeDiv ? 30 : 8 }}
                       onClick={() => skipToDiv(index)}
                     ></motion.span>
                   );
                 })}
               </div>
             </div>
-            <div className="z-10 -mt-8 h-10 w-[270px] rounded-b-3xl bg-white shadow-[0px_0px_5px_1px_#bec2bf]"></div>
+            <div className="z-10 -mt-8 h-10 w-[270px] rounded-b-[35px] bg-white shadow-[0px_0px_5px_1px_#bec2bf]"></div>
           </div>
         </AnimatePresence>
       </div>
