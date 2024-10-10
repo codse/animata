@@ -8,17 +8,17 @@ const tabs = [
   {
     id: "accounts",
     label: "Accounts",
-    icon: <Landmark size={18} className="mr-2 mt-1" />,
+    icon: <Landmark size={18} />,
   },
   {
     id: "deposits",
     label: "Deposits",
-    icon: <Inbox size={18} className="mr-2 mt-1" />,
+    icon: <Inbox size={18} />,
   },
   {
     id: "funds",
     label: "Funds",
-    icon: <PieChart size={18} className="mr-2 mt-1" />,
+    icon: <PieChart size={18} />,
   },
 ];
 
@@ -67,7 +67,7 @@ export default function FluidTabs() {
         {tabs.map((tab) => (
           <motion.button
             key={tab.id}
-            className={`relative z-10 flex w-full items-center justify-center px-5 py-3 text-sm font-bold transition-colors duration-300 ${
+            className={`relative z-10 flex w-full items-center justify-center gap-1.5 px-5 py-3 text-sm font-bold transition-colors duration-300 ${
               activeTab === tab.id ? "font-bold text-black" : "text-gray-500"
             } ${touchedTab === tab.id ? "blur-sm" : ""}`}
             onClick={() => handleTabClick(tab.id)}
