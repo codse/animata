@@ -1509,7 +1509,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/runtime@npm:^7.12.5, @babel/runtime@npm:^7.13.10, @babel/runtime@npm:^7.16.3, @babel/runtime@npm:^7.17.8, @babel/runtime@npm:^7.21.0, @babel/runtime@npm:^7.23.2, @babel/runtime@npm:^7.24.1, @babel/runtime@npm:^7.24.4, @babel/runtime@npm:^7.8.4, @babel/runtime@npm:^7.9.2":
+"@babel/runtime@npm:^7.12.5, @babel/runtime@npm:^7.13.10, @babel/runtime@npm:^7.16.3, @babel/runtime@npm:^7.17.8, @babel/runtime@npm:^7.21.0, @babel/runtime@npm:^7.23.2, @babel/runtime@npm:^7.24.4, @babel/runtime@npm:^7.8.4, @babel/runtime@npm:^7.9.2":
   version: 7.24.7
   resolution: "@babel/runtime@npm:7.24.7"
   dependencies:
@@ -7154,13 +7154,13 @@ __metadata:
     eslint-plugin-simple-import-sort: "npm:^12.1.0"
     eslint-plugin-storybook: "npm:^0.8.0"
     eslint-plugin-unused-imports: "npm:^4.0.0"
-    framer-motion: "npm:^11.2.10"
+    framer-motion: "npm:^11.11.7"
     husky: "npm:^9.0.11"
     lint-staged: "npm:^15.2.7"
     lodash.camelcase: "npm:^4.3.0"
     lodash.kebabcase: "npm:^4.1.1"
     lodash.startcase: "npm:^4.4.0"
-    lucide-react: "npm:^0.390.0"
+    lucide-react: "npm:^0.451.0"
     mdast-util-toc: "npm:^7.1.0"
     next: "npm:14.2.10"
     next-contentlayer: "npm:^0.3.4"
@@ -7185,7 +7185,7 @@ __metadata:
     shiki: "npm:^1.6.2"
     storybook: "npm:^8.1.6"
     storybook-dark-mode: "npm:^4.0.1"
-    tailwind-merge: "npm:^2.3.0"
+    tailwind-merge: "npm:^2.5.2"
     tailwindcss: "npm:^3.4.1"
     tailwindcss-animate: "npm:^1.0.7"
     tsparticles: "npm:^3.5.0"
@@ -10978,9 +10978,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"framer-motion@npm:^11.2.10":
-  version: 11.2.10
-  resolution: "framer-motion@npm:11.2.10"
+"framer-motion@npm:^11.11.7":
+  version: 11.11.7
+  resolution: "framer-motion@npm:11.11.7"
   dependencies:
     tslib: "npm:^2.4.0"
   peerDependencies:
@@ -10994,7 +10994,7 @@ __metadata:
       optional: true
     react-dom:
       optional: true
-  checksum: 10c0/b28a906f16c23b2ae14aedcee5a292364fa4ccab129efd86a163da8fd95533bcc6604e9636a4d3727278a7ad0866a69fba3c8884554e67d15722abe1f3c05744
+  checksum: 10c0/3ea38038c4ff7e421c22811109ebe0aced595afcf8a204b2548c137b5d73cea983bc78d8fd2fb43406636f848bd53414eb41afb9fe182bb23afcddb2dccd98bb
   languageName: node
   linkType: hard
 
@@ -13256,12 +13256,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lucide-react@npm:^0.390.0":
-  version: 0.390.0
-  resolution: "lucide-react@npm:0.390.0"
+"lucide-react@npm:^0.451.0":
+  version: 0.451.0
+  resolution: "lucide-react@npm:0.451.0"
   peerDependencies:
-    react: ^16.5.1 || ^17.0.0 || ^18.0.0
-  checksum: 10c0/d8062c311e703c592c0704d624855b965ba2caa3260f7158f65eb6a63c0826150ac67d35df210d58830bc6d85f8ad0e98e62c7e02e6f9e37690909aa046f64d0
+    react: ^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0-rc
+  checksum: 10c0/12c37f4d88adc5d2ba58eb7e13b5fe6b2af06328d16a79e65cf92d7b9c844e1313fa0b185e216e1e0cf42a903e2994a37a824bdee009e1f90abb023ce5c32763
   languageName: node
   linkType: hard
 
@@ -18123,12 +18123,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tailwind-merge@npm:^2.3.0":
-  version: 2.3.0
-  resolution: "tailwind-merge@npm:2.3.0"
-  dependencies:
-    "@babel/runtime": "npm:^7.24.1"
-  checksum: 10c0/5ea308e23c3ab1cf4c3f35f0a471753f4d3ed232d63dd7c09151a74428737321902203d90e9f0cb76ea5c3978e71b0adbc503dc455e56cda967a7674ae4b94b5
+"tailwind-merge@npm:^2.5.2":
+  version: 2.5.2
+  resolution: "tailwind-merge@npm:2.5.2"
+  checksum: 10c0/e43a9a468f7ba4ed5b4a399558d96d6270a3d8131dca111cccc803e71cc23885060d18d721f312a24fff0a75c567dbb30b2a87c18aba25eb4255df197d8170ab
   languageName: node
   linkType: hard
 

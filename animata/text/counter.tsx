@@ -71,7 +71,7 @@ export default function Counter({
   useEffect(() => {
     springValue.on("change", (value) => {
       if (ref.current) {
-        ref.current.textContent = format ? format(value) : value;
+        ref.current.textContent = format ? format(value) : String(value);
       }
     });
   }, [springValue, format]);

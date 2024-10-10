@@ -1,5 +1,4 @@
-import { allDocs } from "contentlayer/generated";
-
+import { allDocs } from "@/.contentlayer/generated";
 import { MainNavItem, SidebarNavItem } from "@/types";
 
 interface DocsConfig {
