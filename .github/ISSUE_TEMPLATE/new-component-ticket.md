@@ -3,27 +3,27 @@ name: New Component Ticket [HACKTOBERFEST]
 about: Create a new animated component task for Hacktoberfest
 title: Component Name
 labels: hacktoberfest
-assignees: ''
-
+assignees: ""
 ---
 
 ### Description
+
 Create the component as shown in the video attached below.
 
 ### Animation Preview
+
 - Screenshot/Video:
 
 [Upload file here]
-
 
 > [!NOTE]  
 > Please refer to the **Animata contributing guidelines** available [here](https://www.animata.design/docs/contributing) for rules on how to contribute to the project. Let us know in the comments if you’re working on this issue, and feel free to ask any questions!
 
 ### Requirements
+
 1. Create a new animated component that matches the provided design.
 2. Add example usage of the component in the documentation or storybook.
 3. **Add credits** for any resources, references, or assets used, as specified in the **Additional Resources** section.
-
 
 <details>
   <summary>
@@ -38,12 +38,14 @@ Create the component as shown in the video attached below.
 
 > [!IMPORTANT]  
 > To ensure more contributors have the opportunity to participate, we kindly request that:
+>
 > - Each contributor submits only **one pull request** related to this issue.
 > - If you're interested in working on this issue, please comment below. We will assign the issue on a **first-come, first-served basis**.
 
 ---
 
 ### Additional Resources
+
 <!-- Add references and credits here -->
 
 ---
