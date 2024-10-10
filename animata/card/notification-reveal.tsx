@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 
 interface Notification {
   title: string;
-  description: string;
+  description: string | JSX.Element;
   img: string;
 }
 
