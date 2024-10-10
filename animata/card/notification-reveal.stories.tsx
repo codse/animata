@@ -56,7 +56,11 @@ export const Primary: Story = {
       },
       {
         title: "Notification 5",
-        description: "This is the fifth notification.",
+        description: (
+          <p>
+            Paid you <span className="bold text-blue-700">$45</span> for your work
+          </p>
+        ),
         img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTWAke9JalGdtG8WstKTrhHikhibvwJFYdbIpyuc4QOwVcSCwly__Lw721P-nWX0YEmHAQ&usqp=CAU",
       },
     ],

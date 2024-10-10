@@ -38,8 +38,8 @@ const NotificationReveal = ({ notifications, className }: NotificationRevealProp
           animate={{ opacity: 1, y: -60 }}
           exit={{ opacity: 0, y: -120 }}
           transition={{
-            duration: 0.8,
-            ease: "easeInOut",
+            duration: 1,
+            ease: "easeIn",
           }}
         >
           <img
@@ -61,8 +61,8 @@ const NotificationReveal = ({ notifications, className }: NotificationRevealProp
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, y: -60, scale: 1 }}
           transition={{
-            duration: 1,
-            ease: "easeInOut",
+            duration: 1.3,
+            ease: "easeIn",
           }}
         >
           <img
