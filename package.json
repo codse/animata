@@ -41,6 +41,7 @@
     "contentlayer": "^0.3.4",
     "date-fns": "^3.6.0",
     "framer-motion": "^11.2.10",
+    "gsap": "^3.12.5",
     "lodash.camelcase": "^4.3.0",
     "lodash.kebabcase": "^4.1.1",
     "lodash.startcase": "^4.4.0",
