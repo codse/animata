@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Check, X } from "lucide-react";
@@ -10,12 +12,22 @@ interface Comment {
   avatarColor: string;
 }
 
+const containerVariants = {
+  hidden: { height: "auto" },
+  visible: { height: "auto", transition: { duration: 0.5, ease: "easeInOut" } },
+};
+
+const commentVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.3 } },
+  exit: { opacity: 0, y: -20, transition: { duration: 0.3 } },
+};
+
 export default function CommentReplyCard({ initialComments }: { initialComments: Comment[] }) {
   const [comments, setComments] = useState<Comment[]>([...initialComments]);
   const [newComment, setNewComment] = useState<string>("");
   const [isAnimating, setIsAnimating] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
-  const latestCommentRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const handleAddComment = () => {
@@ -29,17 +41,15 @@ export default function CommentReplyCard({ initialComments }: { initialComments:
       avatarColor: "#e84b9d",
     };
 
-    const addCommentTimeout = setTimeout(() => {
+    setTimeout(() => {
       setComments((prevComments) => [...prevComments, newCommentData]);
       setNewComment("");
-      const resetAnimationTimeout = setTimeout(() => {
+      setTimeout(() => {
         setIsAnimating(false);
         if (inputRef.current) {
           inputRef.current.focus();
         }
-        clearTimeout(resetAnimationTimeout);
       }, 300);
-      clearTimeout(addCommentTimeout);
     }, 300);
   };
 
@@ -50,7 +60,7 @@ export default function CommentReplyCard({ initialComments }: { initialComments:
   }, [comments]);
 
   return (
-    <div className="no-scrollbar mx-auto max-h-full min-h-96 w-full max-w-md">
+    <div className="mx-auto max-h-full min-h-96 w-full max-w-md">
       <div
         className="relative overflow-hidden rounded-lg bg-[#202020] shadow-md"
         style={{ paddingBottom: "10px" }}
@@ -72,54 +82,69 @@ export default function CommentReplyCard({ initialComments }: { initialComments:
 
         {/* Comment Section */}
         <motion.div
-          ref={containerRef}
-          className="no-scrollbar max-h-60 overflow-y-auto p-2"
-          initial={{ y: 20 }}
-          animate={{ y: 0 }}
-          transition={{ duration: 0.5, ease: "easeInOut" }}
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+          style={{ maxHeight: "60vh" }}
+          className="relative overflow-hidden"
         >
-          <AnimatePresence>
-            {comments.map((comment, index) => (
-              <motion.div
-                key={comment.id}
-                ref={index === comments.length - 1 ? latestCommentRef : null}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                transition={{ duration: 0.5 }}
-                className="mb-4"
-              >
-                <div className="flex items-center">
-                  <div
-                    className="mr-3 h-8 w-8 overflow-hidden rounded-full"
-                    style={{ backgroundColor: comment.avatarColor }}
-                  >
-                    <svg
-                      className="h-full w-full text-white opacity-70"
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
-                      xmlns="http://www.w3.org/2000/svg"
+          <motion.div
+            ref={containerRef}
+            className="no-scrollbar max-h-60 overflow-y-auto p-2"
+            initial={{ y: 0 }}
+            animate={{ y: 0 }}
+            transition={{ duration: 0.5, ease: "easeInOut" }}
+          >
+            <AnimatePresence initial={false}>
+              {comments.map((comment) => (
+                <motion.div
+                  key={comment.id}
+                  variants={commentVariants}
+                  initial="hidden"
+                  animate="visible"
+                  exit="exit"
+                  className="mb-4"
+                  layout
+                >
+                  <div className="flex items-center">
+                    <div
+                      className="mr-3 h-8 w-8 overflow-hidden rounded-full"
+                      style={{ backgroundColor: comment.avatarColor }}
                     >
-                      <path
-                        fillRule="evenodd"
-                        d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
-                        clipRule="evenodd"
-                      ></path>
-                    </svg>
+                      <svg
+                        className="h-full w-full text-white opacity-70"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+                          clipRule="evenodd"
+                        ></path>
+                      </svg>
+                    </div>
+                    <div>
+                      <span className="font-semibold text-white">{comment.user}</span>
+                      <span className="ml-2 text-sm text-gray-400">{comment.time}</span>
+                    </div>
                   </div>
-                  <div>
-                    <span className="font-semibold text-white">{comment.user}</span>
-                    <span className="ml-2 text-sm text-gray-400">{comment.time}</span>
+                  <div className="mt-1 pl-11 text-white">
+                    {comment.text.map((text, textIndex) => (
+                      <motion.p
+                        key={`${comment.id}-${textIndex}`}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ duration: 0.3, delay: 0.1 }}
+                      >
+                        {text}
+                      </motion.p>
+                    ))}
                   </div>
-                </div>
-                <div className="mt-1 pl-11 text-white">
-                  {comment.text.map((text, textIndex) => (
-                    <motion.p key={`${comment.id}-${textIndex}`}>{text}</motion.p>
-                  ))}
-                </div>
-              </motion.div>
-            ))}
-          </AnimatePresence>
+                </motion.div>
+              ))}
+            </AnimatePresence>
+          </motion.div>
         </motion.div>
       </div>
 
@@ -155,6 +180,11 @@ export default function CommentReplyCard({ initialComments }: { initialComments:
                 placeholder="Reply"
                 value={newComment}
                 onChange={(e) => setNewComment(e.target.value)}
+                onKeyPress={(e) => {
+                  if (e.key === "Enter") {
+                    handleAddComment();
+                  }
+                }}
               />
               <button
                 onClick={handleAddComment}
