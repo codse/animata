@@ -1,15 +1,15 @@
-import CommentReplayCard from "@/animata/card/comment-replay-card";
+import CommentReplyCard from "@/animata/card/comment-reply-card";
 import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
-  title: "Card/Comment Replay Card",
-  component: CommentReplayCard,
+  title: "Card/Comment Reply Card",
+  component: CommentReplyCard,
   parameters: {
     layout: "centered",
   },
   tags: ["autodocs"],
   argTypes: {},
-} satisfies Meta<typeof CommentReplayCard>;
+} satisfies Meta<typeof CommentReplyCard>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
