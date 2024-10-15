@@ -7154,13 +7154,13 @@ __metadata:
     eslint-plugin-simple-import-sort: "npm:^12.1.0"
     eslint-plugin-storybook: "npm:^0.8.0"
     eslint-plugin-unused-imports: "npm:^4.0.0"
-    framer-motion: "npm:^11.2.10"
+    framer-motion: "npm:^11.11.8"
     husky: "npm:^9.0.11"
     lint-staged: "npm:^15.2.7"
     lodash.camelcase: "npm:^4.3.0"
     lodash.kebabcase: "npm:^4.1.1"
     lodash.startcase: "npm:^4.4.0"
-    lucide-react: "npm:^0.390.0"
+    lucide-react: "npm:^0.452.0"
     mdast-util-toc: "npm:^7.1.0"
     next: "npm:14.2.10"
     next-contentlayer: "npm:^0.3.4"
@@ -10978,9 +10978,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"framer-motion@npm:^11.2.10":
-  version: 11.2.10
-  resolution: "framer-motion@npm:11.2.10"
+"framer-motion@npm:^11.11.8":
+  version: 11.11.8
+  resolution: "framer-motion@npm:11.11.8"
   dependencies:
     tslib: "npm:^2.4.0"
   peerDependencies:
@@ -10994,7 +10994,7 @@ __metadata:
       optional: true
     react-dom:
       optional: true
-  checksum: 10c0/b28a906f16c23b2ae14aedcee5a292364fa4ccab129efd86a163da8fd95533bcc6604e9636a4d3727278a7ad0866a69fba3c8884554e67d15722abe1f3c05744
+  checksum: 10c0/5294dbd7272f4958e9e567843d5d6bf226b42bfa605262e9a6ad68d44c5380e8073f61bad345db94372abfe5781407221be804608475fca37a870f7beb77b9c4
   languageName: node
   linkType: hard
 
@@ -13256,12 +13256,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lucide-react@npm:^0.390.0":
-  version: 0.390.0
-  resolution: "lucide-react@npm:0.390.0"
+"lucide-react@npm:^0.452.0":
+  version: 0.452.0
+  resolution: "lucide-react@npm:0.452.0"
   peerDependencies:
-    react: ^16.5.1 || ^17.0.0 || ^18.0.0
-  checksum: 10c0/d8062c311e703c592c0704d624855b965ba2caa3260f7158f65eb6a63c0826150ac67d35df210d58830bc6d85f8ad0e98e62c7e02e6f9e37690909aa046f64d0
+    react: ^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0-rc
+  checksum: 10c0/8e8dd351dfcdffc65a3a76eba04f08310fb13c8fce3e2cab74246c72df45d37e467d521b36053298fb33fe1c5c4770be4750eefa224ae5cf6258dffe95c72da1
   languageName: node
   linkType: hard
 
