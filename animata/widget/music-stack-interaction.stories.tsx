@@ -42,7 +42,6 @@ export const Primary: Story = {
         cover: "https://images.unsplash.com/photo-1528822234686-beae35cab346",
       },
     ],
-    // albumCover: "https://images.unsplash.com/photo-1512389055488-8d82cb26ba6c",
   },
   render: (args) => {
     return (

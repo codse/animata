@@ -36,17 +36,6 @@ const carouselItemFirstChildStyles: React.CSSProperties = {
   transition: "transform 2s, box-shadow 2s",
 };
 
-// const carouselBackgroundStyles: React.CSSProperties = {
-//   position: "absolute",
-//   top: 0,
-//   left: 0,
-//   width: "100%",
-//   height: "100%",
-//   backgroundSize: "cover",
-//   backgroundPosition: "center",
-//   opacity: 0.6,
-// };
-
 interface albumsProps {
   /*
    * Array of album objects
@@ -57,10 +46,6 @@ interface albumsProps {
     artist: string;
     cover: string;
   }[];
-  /*
-   * URL of the album cover
-   */
-  albumCover: string;
 }
 
 export default function MusicStackInteraction({ albums }: albumsProps) {
@@ -72,12 +57,6 @@ export default function MusicStackInteraction({ albums }: albumsProps) {
 
   return (
     <div className="relative mx-auto h-[33rem] w-80 rounded bg-gray-900 p-2 text-white">
-      {/* <motion.div
-        // style={
-        //   { ...carouselBackgroundStyles, backgroundImage: `url(${albumCover})` , zIndex: g}
-        // }
-        // layout
-      > */}
       <motion.div
         className={cn("h-96 w-full", { "mt-24": !isGridView })}
         style={isGridView ? undefined : carouselStyles}
@@ -121,9 +100,8 @@ export default function MusicStackInteraction({ albums }: albumsProps) {
           ))}
         </motion.div>
       </motion.div>
-      {/* </motion.div> */}
 
-      <motion.div className="fixed bottom-4 left-0 right-0 mx-8 mb-4 flex w-auto items-center justify-center rounded-xl bg-gray-800 p-4 text-white shadow-2xl transition-all duration-1000">
+      <motion.div className="duration-2000 absolute bottom-4 left-0 right-0 -mb-4 flex w-auto items-center justify-center rounded-xl bg-gray-800 p-4 text-white shadow-2xl transition-all">
         <div className="flex w-32 items-center space-x-2 rounded-full bg-gray-900 p-2">
           <div
             className={cn("flex h-8 w-16 cursor-pointer items-center justify-center rounded-full", {
