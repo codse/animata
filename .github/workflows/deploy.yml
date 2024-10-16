@@ -43,12 +43,21 @@ jobs:
           NEXT_PUBLIC_POSTHOG_HOST: ${{ vars.NEXT_PUBLIC_POSTHOG_HOST }}
         run: yarn build
       - name: Deploy to Cloudflare Pages
-        uses: cloudflare/pages-action@v1
+        id: deploy
+        uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          projectName: animata
-          directory: out
+          command: pages deploy out --project-name=animata --branch=dev-${{ github.event.pull_request.head.ref }}
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
-          branch: ${{ github.event.pull_request.head.ref }}
-          wranglerVersion: "3"
+      - name: Comment Deployment URL
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            await github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `🚀 Preview deployed to: ${{ steps.deploy.outputs.deployment-url }}`
+            })
