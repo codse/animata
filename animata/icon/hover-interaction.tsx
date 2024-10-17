@@ -37,23 +37,16 @@ const textSizeClasses: Record<IconSize, string> = {
 
 const getIconForTitle = (title: string) => {
   const lowercaseTitle = title.toLowerCase().trim();
-  // swtich case for default, add non-defaults likewise
-  switch (lowercaseTitle) {
-    case "framer":
-      return FramerLogoIcon;
-    case "twitter/x":
-      return TwitterLogoIcon;
-    case "instagram":
-      return InstagramLogoIcon;
-    case "linkedin":
-      return LinkedInLogoIcon;
-    case "github":
-      return GitHubLogoIcon;
-    case "figma":
-      return FigmaLogoIcon;
-    default:
-      return SquareIcon;
-  }
+  const iconMap = {
+  framer: FramerLogoIcon,
+  "twitter/x": TwitterLogoIcon,
+  instagram: InstagramLogoIcon,
+  linkedin: LinkedInLogoIcon,
+  github: GitHubLogoIcon,
+  figma: FigmaLogoIcon
+  };
+  // return SquareIcon as default
+  return iconMap[lowercaseTitle] || SquareIcon;
 };
 
 // twitter -> Twitter, Twitter -> Twitter, twitter/x -> Twitter/X, Twitter/x -> Twitter/X
