@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { ElementType, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 
 // default imports
@@ -37,16 +37,17 @@ const textSizeClasses: Record<IconSize, string> = {
 
 const getIconForTitle = (title: string) => {
   const lowercaseTitle = title.toLowerCase().trim();
-  const iconMap = {
-  framer: FramerLogoIcon,
-  "twitter/x": TwitterLogoIcon,
-  instagram: InstagramLogoIcon,
-  linkedin: LinkedInLogoIcon,
-  github: GitHubLogoIcon,
-  figma: FigmaLogoIcon
+  const iconMap: { [key: string]: ElementType } = {
+    framer: FramerLogoIcon,
+    "twitter/x": TwitterLogoIcon,
+    instagram: InstagramLogoIcon,
+    linkedin: LinkedInLogoIcon,
+    github: GitHubLogoIcon,
+    figma: FigmaLogoIcon
   };
-  // return SquareIcon as default
-  return iconMap[lowercaseTitle] || SquareIcon;
+
+  // SquareIcon as default
+  return (iconMap[lowercaseTitle] as ElementType) || SquareIcon;
 };
 
 // twitter -> Twitter, Twitter -> Twitter, twitter/x -> Twitter/X, Twitter/x -> Twitter/X
