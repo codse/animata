@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 
+import { cn } from "@/lib/utils";
+
 interface NoticeCardProps {
   acceptText?: string;
   title?: string;
@@ -17,6 +19,10 @@ export default function NoticeCard({
   const handleClick = () => {
     setIsAccepted(!isAccepted);
   };
+  
+  const bgClass = isAccepted
+    ? "bg-green-300"
+    : "bg-gradient-to-r from-slate-50 via-slate-50 to-green-100";
 
   return (
     <div className="flex items-center justify-center">
@@ -65,11 +71,10 @@ export default function NoticeCard({
 
             {/* Toggle Button */}
             <div
-              className={`relative mt-4 flex h-12 w-4/5 cursor-pointer items-center rounded-xl px-2 py-1 transition-colors duration-300 ${
-                isAccepted
-                  ? "bg-green-300"
-                  : "bg-gradient-to-r from-slate-50 via-slate-50 to-green-100"
-              }`}
+              className={cn(
+                "relative mt-4 flex h-12 w-4/5 cursor-pointer items-center rounded-xl px-2 py-1 transition-colors duration-300",
+                bgClass,
+              )}
             >
               {/* Toggle Handle */}
               <div
