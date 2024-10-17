@@ -95,35 +95,16 @@ export default function TeamClock({
 
   return (
     <>
-      <style>{`
-        .bg-accent {
-          background-color: var(--accent-color);
-        }
-        .team-clock-text {
-          color: ${textColor};
-        }
-        @media (max-width: 767px) {
-          .team-clock-mobile {
-            position: relative;
-            width: 100%;
-            max-height: none;
-            overflow-y: visible;
-          }
-          .team-clock-mobile-list {
-            max-height: none;
-            overflow-y: visible;
-          }
-        }
-      `}</style>
       <motion.div
         className={cn(
-          "team-clock-text relative flex flex-col overflow-hidden rounded-lg border transition-shadow duration-300 hover:shadow-lg md:flex-row",
+          "relative flex flex-col overflow-hidden rounded-lg border transition-shadow duration-300 hover:shadow-lg md:flex-row",
           "min-w-26 h-auto w-full md:w-[450px]",
           isMobile ? "team-clock-mobile" : "",
         )}
         style={{
           backgroundColor: backgroundColor,
           borderColor: borderColor,
+          color: textColor,
         }}
         animate={{ width: isMobile ? "100%" : isExpanded ? "800px" : "400px" }}
         transition={{ duration: animationDuration }}
@@ -392,7 +373,10 @@ function ListElement(props: ListElementProp) {
 
   return (
     <motion.div
-      className="flex cursor-pointer items-center rounded-lg p-3"
+      className={cn(
+        "flex cursor-pointer items-center rounded-lg p-3",
+        props.isSelected || isHovered ? "bg-opacity-10" : "",
+      )}
       onMouseEnter={handleEnter}
       onMouseLeave={handleLeave}
       onClick={handleClick}
