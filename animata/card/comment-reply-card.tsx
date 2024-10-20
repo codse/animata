@@ -152,7 +152,7 @@ export default function CommentReplyCard({ initialComments }: { initialComments:
       <AnimatePresence>
         {!isAnimating && (
           <motion.div
-            className="absolute bottom-[-10] left-0 right-0 mx-auto mt-4 w-[470px] rounded-lg p-2"
+            className="absolute bottom-[-10] left-0 right-0 mx-auto mt-8 w-full max-w-[470px] rounded-lg p-2"
             initial={{ opacity: 0, y: 60 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -60 }}
