@@ -33,10 +33,12 @@ const RosettaLogo: React.FC = () => (
 export const Primary: Story = {
   args: {
     title: "Rosetta AI",
-    message:
-      "Hey Sandra, your paper on neural conditions was used by DoctorLLM to give an assessment to a patient today.",
-    earnings: "$0.25c",
-    totalEarnings: "$400",
+    message: "Your dataset on renewable energy efficiency has just been cited by Dr. A. Scott",
     RosettaLogo,
+    userInfo: {
+      name: "Dr. A. Scott",
+      title: "Senior Researcher",
+      avatar: "https://avatars.githubusercontent.com/u/17984567?v=4",
+    },
   },
 };
