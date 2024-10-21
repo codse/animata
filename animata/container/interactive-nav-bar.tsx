@@ -8,7 +8,7 @@ import {
   NavigationMenuViewport,
 } from "@/components/ui/navigation-menu";
 import { Separator } from "@/components/ui/separator";
-import { EyeOpenIcon, InstagramLogoIcon } from "@radix-ui/react-icons";
+import { EyeOpenIcon, GitHubLogoIcon, InstagramLogoIcon } from "@radix-ui/react-icons";
 import * as NavigationMenuPrimitive from "@radix-ui/react-navigation-menu";
 
 export default function InteractiveNavBar() {
@@ -46,7 +46,7 @@ export default function InteractiveNavBar() {
             <div className="h-12 w-24 rounded-xl bg-red-50" />
           </NavigationMenuContent>
         </NavigationMenuItem>
-        <Separator orientation="vertical" />
+        <Separator orientation="vertical" className="h-6 bg-gray-300" />
         <NavigationMenuItem value="shop">
           <NavigationMenuTrigger>SHOP</NavigationMenuTrigger>
           <NavigationMenuContent className="p-1">
@@ -59,13 +59,14 @@ export default function InteractiveNavBar() {
             <div className="h-12 w-24 rounded-xl bg-green-50" />
           </NavigationMenuContent>
         </NavigationMenuItem>
-        <Separator orientation="vertical" />
+        <Separator orientation="vertical" className="h-6 bg-gray-300" />
         <NavigationMenuItem value="x">
-          <div className="flex gap-2">
+          <div className="flex gap-4 px-2">
             <InstagramLogoIcon width={24} height={24} />
+            <GitHubLogoIcon width={24} height={24} />
           </div>
         </NavigationMenuItem>
-        <Separator orientation="vertical" />
+        <Separator orientation="vertical" className="h-6 bg-gray-300" />
         <NavigationMenuItem value="about">
           <NavigationMenuTrigger>ABOUT</NavigationMenuTrigger>
           <NavigationMenuContent className="p-1">
