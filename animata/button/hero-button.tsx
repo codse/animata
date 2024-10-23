@@ -89,11 +89,12 @@ export default function DemoButton() {
         </div>
 
         {/* Text section on the extreme right with animation on hover */}
-        <span
-          className={`text-md ml-auto transform font-medium transition-all duration-500 ease-in-out ${isHovered ? "-translate-x-2 opacity-0" : "translate-x-0 opacity-100"}`}
-        >
-          Book a demo
+       <div className="flex justify-center items-center">
+        <span className={`text-md transform font-medium transition-all duration-500 ease-in-out ${isHovered ? "-translate-x-2 opacity-0" : "translate-x-0 opacity-100"}`}
+          >
+        Book Your Demo
         </span>
+      </div>
       </button>
     </div>
   );
