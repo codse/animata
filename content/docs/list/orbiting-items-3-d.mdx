@@ -1,0 +1,60 @@
+---
+title: Orbiting Items 3D
+description: List component with orbiting items. The items orbit around the center of an element in 3D Ellipse.
+author: Pikachu-345
+---
+
+<ComponentPreview name="list-orbiting-items-3-d--docs" />
+
+## Installation
+
+<Steps>
+<Step>Install dependencies</Step>
+
+```bash
+npm install lucide-react
+```
+
+<Step>Update `tailwind.config.js`</Step>
+
+Add the following to your tailwind.config.js file.
+
+```json
+module.exports = {
+  theme: {
+    extend: {
+      keyframes: {
+        float: {
+          '0%, 100%': { transform: 'translateY(0)' },
+          '50%': { transform: 'translateY(-40px)' },
+        },
+      },
+      animation: {
+        float: 'float 3s ease-in-out infinite',
+      },
+    }
+  }
+}
+```
+
+<Step>Run the following command</Step>
+
+It will create a new file `orbiting-items-3-d.tsx` inside the `components/animata/list` directory.
+
+```bash
+mkdir -p components/animata/list && touch components/animata/list/orbiting-items-3-d.tsx
+```
+
+<Step>Paste the code</Step>{" "}
+
+Open the newly created file and paste the following code:
+
+```jsx file=<rootDir>/animata/list/orbiting-items-3-d.tsx
+
+```
+
+</Steps>
+
+## Credits
+
+Built by [Vishal](https://github.com/Pikachu-345)

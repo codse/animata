@@ -106,12 +106,24 @@ const sidebarNav: SidebarNavItem[] = [
     items: createLinks("container"),
   },
   {
+    title: "Accordion",
+    items: createLinks("accordion"),
+  },
+  {
     title: "Card",
     items: createLinks("card"),
   },
   {
+    title: "Section",
+    items: createLinks("section"),
+  },
+  {
     title: "Icon",
     items: createLinks("icon"),
+  },
+  {
+    title: "PreLoader",
+    items: createLinks("preloader"),
   },
   {
     title: "Progress",
@@ -163,6 +175,14 @@ const sidebarNav: SidebarNavItem[] = [
     label: "6",
     href: "/docs/skeleton",
     items: createLinks("skeleton"),
+  },
+  {
+    title: "Feature cards",
+    items: createLinks("feature-cards"),
+  },
+  {
+    title: "Floating Action Buttons",
+    items: createLinks("fabs"),
   },
 ]
   .filter((category) => Boolean(category.items?.length || category.label))

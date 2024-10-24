@@ -39,7 +39,7 @@ export default function Hero() {
         }}
       />
       <Link href="/blog/hacktoberfest-2024">
-        <Announcement text="Get a chance to win $50 by contributing to Hacktoberfest 2024 - Learn more" />
+        <Announcement text="Get a chance to win $100 by contributing to Hacktoberfest 2024 - Learn more" />
       </Link>
       <div className="container relative overflow-hidden py-16 md:py-48">
         <div className="relative mx-auto flex max-w-7xl flex-col items-center justify-center gap-8 px-4 md:flex-row">

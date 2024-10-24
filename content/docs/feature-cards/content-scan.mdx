@@ -1,0 +1,54 @@
+---
+title: Content Scan
+description: A scanning component to highlight detected words to predict AI content probability
+author: MEbandhan
+---
+
+<ComponentPreview name="feature-cards-content-scan--docs" />
+
+## Installation
+
+<Steps>
+<Step>Install dependencies</Step>
+
+```bash
+npm install framer-motion
+```
+
+<Step>Update `tailwind.config.js`</Step>
+
+Add the following to your tailwind.config.js file.
+
+```json
+module.exports = {
+  theme: {
+    extend: {
+      backgroundImage: {
+        "custom-gradient": "linear-gradient(to left, rgba(136,127,242,0.7) 0%, transparent 100%)",
+      },
+    },
+  }
+}
+```
+
+<Step>Run the following command</Step>
+
+It will create a new file `content-scan.tsx` inside the `components/animata/feature-cards` directory.
+
+```bash
+mkdir -p components/animata/feature-cards && touch components/animata/feature-cards/content-scan.tsx
+```
+
+<Step>Paste the code</Step>{" "}
+
+Open the newly created file and paste the following code:
+
+```jsx file=<rootDir>/animata/feature-cards/content-scan.tsx
+
+```
+
+</Steps>
+
+## Credits
+
+Built by [Bandhan Majumder](https://github.com/bandhan-majumder)
