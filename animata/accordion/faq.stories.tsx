@@ -1,53 +1,96 @@
-import Faq from "@/animata/accordion/faq";
+"use client";
+import { Calendar, Code, DollarSign, Heart, Ticket } from "lucide-react";
+
+import Faq, { IFaqItems } from "@/animata/accordion/faq";
 import { Meta, StoryObj } from "@storybook/react";
 
-const faqData = [
-  {
-    id: 1,
-    question: "How late does the internet close?",
-    answer: "The internet doesn't close. It's available 24/7.",
-    icon: "❤️",
-    iconPosition: "right",
-  },
-  {
-    id: 2,
-    question: "Do I need a license to browse this website?",
-    answer: "No, you don't need a license to browse this website.",
-  },
-  {
-    id: 3,
-    question: "What flavour are the cookies?",
-    answer: "Our cookies are digital, not edible. They're used for website functionality.",
-  },
-  {
-    id: 4,
-    question: "Can I get lost here?",
-    answer: "Yes, but we do have a return policy",
-    icon: "⭐",
-    iconPostion: "left",
-  },
-  {
-    id: 5,
-    question: "What if I click the wrong button?",
-    answer: "Don't worry, you can always go back or refresh the page.",
-  },
-];
-
-const meta = {
+const meta: Meta<typeof Faq> = {
   title: "Accordion/Faq",
   component: Faq,
   parameters: {
     layout: "centered",
   },
   tags: ["autodocs"],
-  argTypes: {},
-} satisfies Meta<typeof Faq>;
+  argTypes: {
+    borderShape: {
+      control: { type: "select" },
+      options: ["rounded", "rectangle"],
+      description: "Shape of the FAQ box (rounded or rectangle)",
+      table: {
+        type: { summary: "string" },
+        defaultValue: { summary: "rounded" },
+      },
+    },
+    faqItems: {
+      description:
+        "Array of FAQ items to be displayed. Each item should have an id, question, answer, isActive, and an optional icon.",
+      table: {
+        type: { summary: "Array of objects" },
+      },
+    },
+  },
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
 
-export const Primary: Story = {
+const faqItems: IFaqItems[] = [
+  {
+    id: 1,
+    question: "What can I contribute during Hacktoberfest?",
+    answer: "You can contribute new animations, fix bugs, or improve documentation.",
+    isActive: false,
+    icon: (
+      <Heart className="h-5 w-5 text-gray-500 transition-all duration-300 group-hover:text-red-500" />
+    ),
+  },
+  {
+    id: 2,
+    question: "How do I participate in Hacktoberfest?",
+    answer: "It's simple! Choose an issue, start coding, and submit a pull request (PR).",
+    isActive: false,
+    icon: (
+      <Code className="h-5 w-5 text-gray-500 transition-all duration-300 group-hover:text-green-500" />
+    ),
+  },
+  {
+    id: 3,
+    question: "What’s the deadline for contributions?",
+    answer: "The deadline is October 31st at 11:59 PM. Don’t be late, Mr. Pumpkin!",
+    isActive: false,
+    icon: (
+      <Calendar className="h-5 w-5 text-gray-500 transition-all duration-300 group-hover:text-blue-500" />
+    ),
+  },
+  {
+    id: 4,
+    question: "Can I get paid for contributing?",
+    answer: "Yes! One lucky contributor will win $100.",
+    isActive: false,
+    icon: (
+      <DollarSign className="h-5 w-5 text-gray-500 transition-all duration-300 group-hover:text-yellow-500" />
+    ),
+  },
+  {
+    id: 5,
+    question: "How many raffle entries can I get?",
+    answer:
+      "You can have up to 5 raffle entries to keep it fair, but feel free to contribute more!",
+    isActive: false,
+    icon: (
+      <Ticket className="h-5 w-5 text-gray-500 transition-all duration-300 group-hover:text-purple-500" />
+    ),
+  },
+];
+
+export const Default: StoryObj<typeof Faq> = {
   args: {
-    data: faqData,
+    faqItems: faqItems,
+    borderShape: "rounded",
+  },
+};
+
+Default.parameters = {
+  docs: {
+    storyDescription: "The FAQ component allows users to interactively view questions and answers.",
   },
 };
