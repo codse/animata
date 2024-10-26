@@ -14,11 +14,17 @@ export default function FormControlSwitch() {
 }
 const styles = {
   switch: {
-    width: 20,
-    height: 20,
-    borderRadius: 10,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
+    transition: "background-color 0.3s ease",
+    cursor: "pointer",
+    border: "none",
+    outline: "none",
+    padding: 8,
+    margin: 4,
   },
 };
