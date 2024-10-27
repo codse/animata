@@ -2,7 +2,7 @@ import NavbarSmoothTransition from "@/animata/container/navbar-smooth-transition
 import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
-  title: "Navbar/Navbar Smooth Transition",
+  title: "Container/Navbar Smooth Transition",
   component: NavbarSmoothTransition,
   parameters: {
     layout: "centered",
