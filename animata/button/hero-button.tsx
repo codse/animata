@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function DemoButton() {
+export default function HeroButton() {
   return (
     <div className="flex h-[100px] items-center justify-center">
       <button className="duration-800 group relative flex h-[55.5px] w-[199.46px] items-center justify-between rounded-[5px] bg-gray-900 px-4 py-2 text-white shadow-md transition-all hover:shadow-lg">
