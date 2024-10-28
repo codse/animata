@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const styles = {
+const switchStyles = {
   switch: {
     width: 40,
     height: 40,
@@ -17,20 +17,23 @@ const styles = {
   },
 };
 
-interface ToggleSwitchProps {
+interface FormControlSwitchProps {
   onChange: (value: boolean) => void;
   defaultChecked?: boolean;
 }
-function FormControlSwitch({ onChange, defaultChecked }: ToggleSwitchProps) {
+
+function FormControlSwitch({ onChange, defaultChecked }: FormControlSwitchProps) {
   const [isOn, setIsOn] = useState(defaultChecked ?? false);
-  const handleToggleSwitch = () => {
+
+  const toggleSwitch = () => {
     const newCheckedState = !isOn;
     setIsOn(newCheckedState);
     onChange?.(newCheckedState);
   };
+
   return (
-    <button onClick={handleToggleSwitch} style={{ backgroundColor: isOn ? "green" : "white" }}>
-      <div key="switch" style={{ ...styles.switch, backgroundColor: isOn ? "green" : "grey" }}>
+    <button onClick={toggleSwitch}>
+      <div style={{ ...switchStyles.switch, backgroundColor: isOn ? "green" : "grey" }}>
         {isOn ? "✔️" : "❌"}
       </div>
     </button>
