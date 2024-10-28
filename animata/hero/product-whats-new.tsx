@@ -159,7 +159,8 @@ const ImageCard: React.FC<CardComponentType> = ({
   isSelected,
   customStyle,
 }) => (
-  <div
+  <motion.div
+    layout
     className={`flex h-full w-full flex-col justify-start overflow-hidden rounded-md ${customStyle ? customStyle : "bg-white"} `}
   >
     <motion.img
@@ -172,11 +173,14 @@ const ImageCard: React.FC<CardComponentType> = ({
     <motion.div
       className={`h-1/4 p-2 ${customStyle} flex w-full flex-col items-center justify-center`}
     >
-      <p className={`text-center ${isSelected ? "text-lg" : "text-xs"}`}>
+      <motion.p
+        layoutId={`${title}-content`}
+        className={`text-center ${isSelected ? "text-lg" : "text-xs"}`}
+      >
         <span className="font-bold">{title}: </span> {description}
-      </p>
+      </motion.p>
     </motion.div>
-  </div>
+  </motion.div>
 );
 // Helper function to generate random values within a range
 const getRandom = (min: number, max: number) => Math.random() * (max - min) + min;
@@ -206,12 +210,12 @@ const FilmCollection: React.FC<FilmCollectionProps> = ({ isSelected, collection,
     return (index: number) => ({
       scale: 0.5,
       rotate: `${index === 0 ? -15 : index === 1 ? 0 : 15}deg`,
-      x: index === 0 ? -20 : index === 1 ? 5 : 15,
+      x: index === 0 ? 10 : index === 1 ? 20 : 40,
       zIndex: collection.length - index,
       top: `${baseY}px`,
       borderRadius: "8px",
       y: getRandom(1, 10),
-      transition: { duration: 0.3, ease: "easeInOut" },
+      transition: { duration: 0.3, type: "spring" },
     });
   }, [collection.length, baseY]);
 
@@ -223,23 +227,24 @@ const FilmCollection: React.FC<FilmCollectionProps> = ({ isSelected, collection,
           y: 200,
           rotate: 0,
           scale: 1,
-          x: index === 0 ? 80 : index === 1 ? 290 : 510,
+          x: index === 0 ? 50 : index === 1 ? 270 : 490,
           transition: {
             delay: index === 0 ? 2 : index === 1 ? 2.6 : 2.8,
             duration: 0.05,
-            ease: "easeInOut",
+            type: "spring",
           },
         }));
         backgroundControls.set({
           height: "100%",
           width: "100%",
           origin: "center center",
-          transition: { duration: 0.5, ease: "easeInOut" },
+          transition: { duration: 0.5, type: "spring" },
         });
 
         await headlineControls.start({
           top: 60,
           scale: 1.6,
+          transition: { duration: 0.2, type: "spring" },
         });
       }
       if (isSelected) {
@@ -247,20 +252,20 @@ const FilmCollection: React.FC<FilmCollectionProps> = ({ isSelected, collection,
           scale: 1,
           zIndex: 50 - index,
           delay: index === 0 ? 0.3 : index * 0.1,
-          transition: { duration: 0.4, ease: "easeInOut" },
+          transition: { duration: 0.4, type: "spring" },
         }));
       } else {
-        headlineControls.start({
-          top: 0,
-          scale: 1,
-          transition: { duration: 0.2, ease: "easeOut" },
-        });
         cardControls.set((index: number) => initialCards(index));
 
         backgroundControls.set({
           height: "auto",
           width: "auto",
-          transition: { duration: 0.6, ease: "easeOut" },
+          transition: { duration: 0.3, type: "spring" },
+        });
+        await headlineControls.start({
+          top: 0,
+          scale: 1,
+          transition: { duration: 0.2, type: "spring" },
         });
       }
     };
@@ -284,7 +289,9 @@ const FilmCollection: React.FC<FilmCollectionProps> = ({ isSelected, collection,
     >
       <div className="flex flex-col items-center justify-around">
         <motion.div
-          className={`relative flex w-full flex-col items-start ${isExpanded ? "" : "min-h-36"}`}
+          layout
+          layoutRoot
+          className={`relative flex w-full flex-col items-start ${isExpanded ? "" : "min-h-40"}`}
         >
           {collection?.map((film, index) => (
             <motion.div
@@ -310,7 +317,7 @@ const FilmCollection: React.FC<FilmCollectionProps> = ({ isSelected, collection,
           ))}
         </motion.div>
 
-        <motion.div animate={headlineControls} className="relative w-full p-3 text-center">
+        <motion.div animate={headlineControls} layout className="relative w-full p-3 text-center">
           <h1 className="text-bold text-ellipsis text-lg text-gray-800">The Film Collection</h1>
           <p className="text-sm text-gray-600">
             An affirmed collection comprised of Staff picked new Films.
