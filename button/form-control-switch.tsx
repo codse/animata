@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const switchStyles = {
+const _switchStyles = {
   switch: {
     width: 40,
     height: 40,
@@ -16,7 +16,6 @@ const switchStyles = {
     margin: 4,
   },
 };
-
 interface FormControlSwitchProps {
   onChange: (value: boolean) => void;
   defaultChecked?: boolean;
@@ -32,12 +31,16 @@ function FormControlSwitch({ onChange, defaultChecked }: FormControlSwitchProps)
   };
 
   return (
-    <button onClick={toggleSwitch}>
-      <div style={{ ...switchStyles.switch, backgroundColor: isOn ? "green" : "grey" }}>
-        {isOn ? "✔️" : "❌"}
-      </div>
-    </button>
+    <label>
+      <button onClick={toggleSwitch} style={{ backgroundColor: isOn ? "green" : "white" }}>
+        <div
+          key="switch"
+          style={{ ..._switchStyles.switch, backgroundColor: isOn ? "green" : "grey" }}
+        >
+          {isOn ? "✔️" : "❌"}
+        </div>
+      </button>
+    </label>
   );
 }
-
 export { FormControlSwitch };
