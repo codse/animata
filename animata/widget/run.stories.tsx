@@ -17,6 +17,6 @@ type Story = StoryObj<typeof meta>;
 export const Primary: Story = {
   args: {
     unit: "miles",
-    buttonText: "🏃 Begin Run",
+    buttonText: "Begin Run",
   },
 };
