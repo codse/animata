@@ -6,6 +6,7 @@ import {
   MotionValue,
   useMotionValue,
   useMotionValueEvent,
+  useReducedMotion,
   useSpring,
   useTransform,
 } from "framer-motion";
@@ -83,6 +84,8 @@ const Digit: React.FC<{ place: number; value: number }> = ({ place, value }) => 
 };
 
 const Number: React.FC<{ mv: MotionValue; number: number }> = ({ mv, number }) => {
+  const shouldReduceMotion = useReducedMotion();
+
   const y = useTransform(mv, (latest) => {
     const placeValue = latest % 10;
     const offset = (10 + number - placeValue) % 10;
@@ -99,6 +102,11 @@ const Number: React.FC<{ mv: MotionValue; number: number }> = ({ mv, number }) =
   const opacity = useTransform(y, [-height, 0, height], [0.2, 1, 0.2]);
   const scale = useTransform(y, [-height, 0, height], [0.2, 1, 0.2]);
   const filter = useTransform(y, [-height, 0, height], ["blur(5px)", "blur(0px)", "blur(5px)"]);
+
+  if (shouldReduceMotion) {
+    scale.set(1);
+    filter.set("blur(0px)");
+  }
 
   return (
     <motion.span
