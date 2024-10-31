@@ -1,4 +1,4 @@
-import FormControlSwitch from "@/animata/button/form-control-switch";
+import {FormControlSwitch} from "@/animata/button/form-control-switch";
 import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
