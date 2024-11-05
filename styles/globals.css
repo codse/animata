@@ -122,3 +122,14 @@
 .scroll-file[style*="opacity: 1"] {
   @apply text-blue-300 dark:text-blue-500;
 }
+
+@layer utilities {
+  .scrollbar-hide {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none; /* Chrome, Safari and Opera */
+  }
+}

@@ -1,0 +1,50 @@
+---
+title: Event Scroller
+description: A sleek, scrollable event timeline to view upcoming and past events.
+labels: ["requires interaction", "scroll"]
+author: Rohit Rai
+---
+
+<ComponentPreview name="feature-cards-event-scroller--docs" />
+
+## Installation
+
+<Steps>
+
+<Step>Run the following command</Step>
+
+It will create a new file `event-scroller.tsx` inside the `components/animata/feature-cards` directory.
+
+```bash
+mkdir -p components/animata/feature-cards && touch components/animata/feature-cards/event-scroller.tsx
+```
+
+<Step>Paste the code </Step>{" "}
+
+Open your index.css file and paste the following code :
+
+```@layer utilities {
+  .scrollbar-hide {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;  /* Chrome, Safari and Opera */
+  }
+}
+```
+
+<Step>Paste the code</Step>{" "}
+
+Open the newly created file and paste the following code:
+
+```jsx file=<rootDir>/animata/feature-cards/event-scroller.tsx
+
+```
+
+</Steps>
+
+## Credits
+
+Built by [Rohit](https://github.com/rairohit17)
