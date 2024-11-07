@@ -1,4 +1,4 @@
-import {FormControlSwitch} from "@/animata/button/form-control-switch";
+import { FormControlSwitch } from "@/animata/button/form-control-switch";
 import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
@@ -15,6 +15,7 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Primary: Story = {
-  args: {},
-  onChange: () => {},
+  args: {
+    onChange: (_value: boolean) => {},
+  },
 };
