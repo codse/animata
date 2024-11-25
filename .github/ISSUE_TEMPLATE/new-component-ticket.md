@@ -25,6 +25,7 @@ Create the component as shown in the video attached below.
 2. Add example usage of the component in the documentation or storybook.
 3. **Add credits** for any resources, references, or assets used, as specified in the **Additional Resources** section.
 
+
 <details>
   <summary>
     <h3> Guidelines & Best Practices</h3>
