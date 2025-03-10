@@ -184,6 +184,10 @@ const sidebarNav: SidebarNavItem[] = [
     title: "Floating Action Buttons",
     items: createLinks("fabs"),
   },
+  {
+    title: "Form controls",
+    items: createLinks("form-controls"),
+  },
 ]
   .filter((category) => Boolean(category.items?.length || category.label))
   .sort((a, b) => {
