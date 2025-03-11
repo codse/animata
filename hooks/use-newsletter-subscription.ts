@@ -1,8 +1,8 @@
 "use client";
 import { useState } from "react";
 
-const url = process.env.NEXT_PUBLIC_SUPABASE_URL + "/rest/v1/prelaunch_subscribers";
-const apiKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+const plunkApiUrl = "https://api.useplunk.com/v1/track";
+const plunkApiKey = process.env.NEXT_PUBLIC_PLUNK_API_KEY;
 
 export default function useNewsletterSubscription() {
   const initialState = {
@@ -29,20 +29,25 @@ export default function useNewsletterSubscription() {
     }
 
     setState({ ...state, isLoading: true });
-    const data = { email: state.email };
+
+    const options = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${plunkApiKey}`,
+      },
+      body: JSON.stringify({
+        event: "newsletter_subscription",
+        email: state.email,
+        subscribed: true,
+        data: {
+          project_id: "animata",
+        },
+      }),
+    };
 
     try {
-      const response = await fetch(url, {
-        method: "POST",
-        // @ts-expect-error - Types for custom headers are not defined in fetch types
-        headers: {
-          apikey: apiKey,
-          Authorization: "Bearer " + apiKey,
-          "Content-Type": "application/json",
-          Prefer: "return=minimal",
-        },
-        body: JSON.stringify(data),
-      });
+      const response = await fetch(plunkApiUrl, options);
 
       if (response.status >= 200 && response.status < 300) {
         // Email added successfully
