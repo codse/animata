@@ -71,7 +71,7 @@ export default function Hero() {
         <Pill className="bottom-12 left-12 -rotate-6">1033+ hours of development</Pill>
         <Pill className="right-8 top-1/2 -translate-y-1/2">250+ hours of research</Pill>
 
-        <div className="absolute left-12 top-1/2 w-32 -translate-y-1/2">
+        <div className="mt-12 sm:absolute sm:left-12 sm:top-1/2 sm:mt-0 sm:w-32 sm:-translate-y-1/2">
           <CarbonAds />
         </div>
         <Pill className="bottom-24 right-12 aspect-square -translate-x-full -translate-y-full p-2">
