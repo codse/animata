@@ -12,8 +12,8 @@ import "@/styles/globals.css";
 
 export const metadata: Metadata = {
   title: {
-    default: siteConfig.name,
-    template: `%s - ${siteConfig.name}`,
+    default: `Free & Open Source Animated ReactJS Components | ${siteConfig.name}`,
+    template: "%s | Free & Open Source Animated ReactJS Components",
   },
   metadataBase: new URL(siteConfig.url),
   description: siteConfig.description,

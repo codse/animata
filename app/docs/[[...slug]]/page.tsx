@@ -5,6 +5,7 @@ import { allDocs } from "contentlayer/generated";
 import Balancer from "react-wrap-balancer";
 
 import NavMenu from "@/app/docs/[[...slug]]/nav-menu";
+import CarbonAds from "@/components/ads";
 import { Mdx } from "@/components/mdx-components";
 import { DocsPager } from "@/components/pager";
 import { DashboardTableOfContents } from "@/components/toc";
@@ -18,7 +19,6 @@ import { ChevronRightIcon, ExternalLinkIcon } from "@radix-ui/react-icons";
 
 import "@/styles/mdx.css";
 import "@/styles/storybook.css";
-
 interface DocPageProps {
   params: {
     slug: string[];
@@ -144,6 +144,9 @@ export default async function DocPage({ params }: DocPageProps) {
             )}
           </div>
         ) : null}
+        <div className="relative w-fit overflow-y-hidden rounded-xl">
+          <CarbonAds />
+        </div>
         <div className="pb-12">
           <Mdx code={doc.body.code} />
 
