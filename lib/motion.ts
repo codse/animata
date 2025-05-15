@@ -3,7 +3,7 @@ import { animate, inView, scroll, stagger, timeline } from "@motionone/dom";
 import React, { createRef, useEffect, useRef, useState } from "react";
 
 // Replacement for framer-motion's useInView hook
-export function useInView(ref: React.RefObject<HTMLElement>) {
+export function useInView(ref: React.RefObject<HTMLElement>, options?: { margin?: string; once?: boolean }) {
   const [isInView, setIsInView] = useState(false);
 
   useEffect(() => {
@@ -11,11 +11,98 @@ export function useInView(ref: React.RefObject<HTMLElement>) {
 
     return inView(ref.current, () => {
       setIsInView(true);
-      return () => setIsInView(false);
+      return () => {
+        if (!options?.once) {
+          setIsInView(false);
+        }
+      };
+    }, { 
+      margin: options?.margin || '0px'
     });
-  }, [ref]);
+  }, [ref, options]);
 
   return isInView;
+}
+
+// Replacement for framer-motion's useMotionValue hook
+export function useMotionValue(initialValue: number) {
+  const value = useRef(initialValue);
+  const subscribers = useRef(new Set<(v: number) => void>());
+  
+  const motionValue = {
+    get: () => value.current,
+    set: (newValue: number) => {
+      value.current = newValue;
+      subscribers.current.forEach(callback => callback(newValue));
+    },
+    on: (event: string, callback: (v: number) => void) => {
+      if (event === 'change') {
+        subscribers.current.add(callback);
+        // Call immediately with current value
+        callback(value.current);
+      }
+      
+      return () => {
+        subscribers.current.delete(callback);
+      };
+    }
+  };
+  
+  return motionValue;
+}
+
+// Replacement for framer-motion's useSpring hook
+export function useSpring(motionValue: ReturnType<typeof useMotionValue>, options?: { damping?: number; stiffness?: number }) {
+  const springValue = useRef(motionValue.get());
+  const target = useRef(motionValue.get());
+  const animation = useRef<any>(null);
+  const subscribers = useRef(new Set<(v: number) => void>());
+  
+  useEffect(() => {
+    const unsubscribe = motionValue.on('change', (newTarget) => {
+      target.current = newTarget;
+      
+      if (animation.current) {
+        animation.current.cancel();
+      }
+      
+      animation.current = animate(springValue.current, target.current, {
+        type: 'spring',
+        damping: options?.damping ?? 10,
+        stiffness: options?.stiffness ?? 100,
+        onUpdate: (value) => {
+          springValue.current = value;
+          subscribers.current.forEach(callback => callback(value));
+        }
+      });
+    });
+    
+    return () => {
+      unsubscribe();
+      if (animation.current) {
+        animation.current.cancel();
+      }
+    };
+  }, [motionValue, options]);
+  
+  return {
+    get: () => springValue.current,
+    set: (newValue: number) => {
+      springValue.current = newValue;
+      subscribers.current.forEach(callback => callback(newValue));
+    },
+    on: (event: string, callback: (v: number) => void) => {
+      if (event === 'change') {
+        subscribers.current.add(callback);
+        // Call immediately with current value
+        callback(springValue.current);
+      }
+      
+      return () => {
+        subscribers.current.delete(callback);
+      };
+    }
+  };
 }
 
 // Replacement for framer-motion's motion components
