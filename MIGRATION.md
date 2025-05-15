@@ -36,6 +36,8 @@ This project has been migrated from framer-motion to @motionone/dom (motion.dev)
 3. The compatibility layer provides:
    - `motion` components (div, span, button, etc.)
    - `useInView` hook
+   - `useMotionValue` hook
+   - `useSpring` hook
    - Animation utilities like `animate`, `inView`, `scroll`, `stagger`, and `timeline`
 
 ### Known Limitations
