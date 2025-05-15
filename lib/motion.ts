@@ -1,6 +1,6 @@
 // This file provides compatibility between framer-motion and motion.dev
 import { animate, inView, scroll, stagger, timeline } from "@motionone/dom";
-import { createRef, useEffect, useRef, useState } from "react";
+import React, { createRef, useEffect, useRef, useState } from "react";
 
 // Replacement for framer-motion's useInView hook
 export function useInView(ref: React.RefObject<HTMLElement>) {
@@ -80,10 +80,10 @@ export function createMotionComponent(element: keyof HTMLElementTagNameMap) {
     }, [whileHover, whileTap, initial, animateProp, transition]);
 
     const Element = element as any;
-    return (
-      <Element ref={elementRef} {...props}>
-        {children}
-      </Element>
+    return React.createElement(
+      Element,
+      { ref: elementRef, ...props },
+      children
     );
   };
 }
