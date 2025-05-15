@@ -1,6 +1,6 @@
 import { useRef } from "react";
 import { useTheme } from "next-themes";
-import { useInView } from "framer-motion";
+import { useInView } from "@/lib/motion";
 import { Quote } from "lucide-react";
 
 import { cn } from "@/lib/utils";

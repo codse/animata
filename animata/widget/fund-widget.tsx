@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { AnimatePresence, motion, PanInfo } from "framer-motion";
+import { AnimatePresence, motion, PanInfo } from "@/lib/motion";
 
 import { cn } from "@/lib/utils";
 

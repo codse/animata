@@ -21,10 +21,10 @@
       <img alt="React.js" src="https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB"/>
     </a>
     <a href="https://tailwindcss.com/?ref=animata.design">
-      <img alt="Tailwind" src="https://img.shields.io/badge/Tailwind_CSS-0b1120?style=for-the-badge&logo=tailwind-css&logoColor=38bdf8"/>
+      <img alt="Tailwind CSS v4" src="https://img.shields.io/badge/Tailwind_CSS_v4-0b1120?style=for-the-badge&logo=tailwind-css&logoColor=38bdf8"/>
     </a>
-    <a href="https://www.framer.com/motion/?ref=animata.design">
-      <img alt="Framer Motion" src="https://img.shields.io/badge/Framer-1a1a1a?style=for-the-badge&logo=framer&logoColor=white"/>
+    <a href="https://motion.dev/?ref=animata.design">
+      <img alt="Motion.dev" src="https://img.shields.io/badge/Motion.dev-1a1a1a?style=for-the-badge&logo=framer&logoColor=white"/>
     </a>
     <a href="https://www.typescriptlang.org/?ref=animata.design">
       <img alt="Typescript" src="https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white"/>
@@ -62,9 +62,11 @@ Animata is not a full-fledged UI library like Material-UI or Chakra-UI. It is a 
 You don't need to install it as a dependency instead you can simply copy and paste the code, as shadcn/ui, into your project. However, you still need to install the other dependency that the code needs.
 
 ### Requirements
-- [TailwindCSS](https://tailwindcss.com/docs/installation): For styling.
-- [Framer Motion](https://www.framer.com/motion/) (Optional): For complex animations.
+- [TailwindCSS v4](https://tailwindcss.com/docs/installation): For styling.
+- [Motion.dev](https://motion.dev/) (Optional): For complex animations.
 - [Lucide Icons](https://lucide.dev/) or [Radix Icons](https://www.radix-ui.com/icons) (Optional): Use for icons, or replace with any other icon library or SVGs.
+
+> **Note:** This project has been migrated from Tailwind CSS v3 to v4 and from Framer Motion to Motion.dev. See [MIGRATION.md](./MIGRATION.md) for details.
 
 ### Setup Instructions
 #### Folder Structure (Recommended)
@@ -91,7 +93,7 @@ where `/` is the root of your project, `/components` is where you keep your comp
 Install the required dependencies, if you haven't already:
 
 ```sh
-npm install tailwind-merge clsx lucide-react tailwindcss-animate
+npm install tailwind-merge clsx lucide-react tailwindcss-animate @motionone/dom
 ```
 
 Add `tailwindcss-animate` to plugins in `tailwind.config.js` file:

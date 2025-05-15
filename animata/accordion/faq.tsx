@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { motion } from "framer-motion";
+import { motion } from "@/lib/motion";
 
 import * as Accordion from "@radix-ui/react-accordion";
 

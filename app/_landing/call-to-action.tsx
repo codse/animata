@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { useInView } from "framer-motion";
 import { Navigation } from "lucide-react";
+import { useInView } from "@/lib/motion";
 
 import AnimatedGradientText from "@/animata/text/animated-gradient-text";
 import GibberishText from "@/animata/text/gibberish-text";

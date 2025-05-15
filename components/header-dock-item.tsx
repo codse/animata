@@ -1,5 +1,4 @@
-import { motion, TargetAndTransition, VariantLabels } from "framer-motion";
-
+import { motion } from "@/lib/motion";
 import { cn } from "@/lib/utils";
 
 export default function HeaderDockItem({
@@ -9,7 +8,7 @@ export default function HeaderDockItem({
 }: {
   children: React.ReactNode;
   className?: string;
-  whileTap?: VariantLabels | TargetAndTransition;
+  whileTap?: Record<string, any>;
 }) {
   return (
     <motion.div

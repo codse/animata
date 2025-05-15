@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { motion, useAnimation } from "framer-motion";
+import { motion, useAnimation } from "@/lib/motion";
 
 interface ContentScannerProps {
   content: string;

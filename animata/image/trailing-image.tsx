@@ -1,5 +1,5 @@
 import React, { createRef, forwardRef, useCallback, useImperativeHandle, useRef } from "react";
-import { motion, useAnimation } from "framer-motion";
+import { motion, useAnimation } from "@/lib/motion";
 
 import { useMousePosition } from "@/hooks/use-mouse-position";
 import { getDistance, lerp } from "@/lib/utils";

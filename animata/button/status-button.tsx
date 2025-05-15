@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion } from "@/lib/motion";
 import { CheckCircle2, CircleDashed } from "lucide-react";
 
 import { cn } from "@/lib/utils";

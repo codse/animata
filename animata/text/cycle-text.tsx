@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion } from "@/lib/motion";
 
 export default function CycleText() {
   const words = ["Hello", "World", "Ciaoo", "World"];

@@ -1,5 +1,5 @@
 import React, { useRef } from "react";
-import { motion, MotionValue, useScroll, useTransform } from "framer-motion";
+import { motion, MotionValue, useScroll, useTransform } from "@/lib/motion";
 
 import { cn } from "@/lib/utils";
 

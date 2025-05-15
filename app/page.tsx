@@ -1,7 +1,7 @@
 "use client";
 
 import React, { Suspense } from "react";
-import { useInView } from "framer-motion";
+import { useInView } from "@/lib/motion";
 
 import SectionOne from "@/app/_landing/section-one";
 import { cn } from "@/lib/utils";

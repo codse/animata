@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { StaticImageData } from "next/image";
-import { motion } from "framer-motion";
+import { motion } from "@/lib/motion";
 import {
   Circle,
   LogOut,

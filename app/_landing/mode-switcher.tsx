@@ -1,5 +1,5 @@
 import { useTheme } from "next-themes";
-import { motion, useMotionValue, useSpring } from "framer-motion";
+import { motion, useMotionValue, useSpring } from "@/lib/motion";
 import { Cloud, MoonStar, Star, Sun } from "lucide-react";
 
 export default function ModeSwitcher() {

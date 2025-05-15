@@ -1,7 +1,7 @@
 "use client";
 
 import React, { ElementType, useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion } from "@/lib/motion";
 
 // default imports
 import {

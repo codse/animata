@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion } from "@/lib/motion";
 import { ArrowRight, CreditCard, X } from "lucide-react";
 
 interface Transaction {

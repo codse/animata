@@ -1,12 +1,10 @@
 import { cn } from "@/lib/utils"; // Import utility for conditional class names
-import {
-  AnimatePresence, // Enables animation presence detection
+import { AnimatePresence, // Enables animation presence detection
   MotionValue, // Type for motion values
   motion, // Main component for animations
   useMotionValue, // Hook to create a motion value
   useSpring, // Hook to create smooth spring animations
-  useTransform, // Hook to transform motion values
-} from "framer-motion";
+  useTransform, // Hook to transform motion values } from "@/lib/motion";
 import Link from "next/link"; // Next.js Link component for navigation
 import React, { useRef, useState } from "react"; // Importing React hooks
 import { Menu, X } from "lucide-react"; // Importing icons from lucide-react

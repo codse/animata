@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import { HTMLMotionProps, motion, useSpring, useTransform } from "framer-motion";
+import { HTMLMotionProps, motion, useSpring, useTransform } from "@/lib/motion";
 import Balancer from "react-wrap-balancer";
 
 import { cn } from "@/lib/utils";
