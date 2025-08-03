@@ -1,0 +1,21 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry.json",
+  "name": "animata",
+  "homepage": "https://animata.design",
+  "items": [
+    {
+      "name": "accordion-faq",
+      "type": "registry:component",
+      "title": "FAQ Accordion",
+      "description": "A simple FAQ accordion component.",
+      "dependencies": ["@radix-ui/react-accordion", "framer-motion"],
+      "files": [
+        {
+          "path": "animata/accordion/faq.tsx",
+          "type": "registry:component",
+          "target": "components/animata/faq.tsx"
+        }
+      ]
+    }
+  ]
+}
