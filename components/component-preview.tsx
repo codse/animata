@@ -5,6 +5,7 @@ import { useTheme } from "next-themes";
 
 import { CopyButton } from "@/components/copy-button";
 import { Icons } from "@/components/icons";
+import { OpenInV0 } from "@/components/open-in-v0";
 import { config } from "@/config";
 import { cn } from "@/lib/utils";
 
@@ -89,6 +90,7 @@ export function ComponentPreview({ name, className, ...props }: ComponentPreview
             </div>
           }
         >
+          <OpenInV0 name={name.replaceAll("--docs", "")} />
           <iframe
             src={`${previewBaseUrl}/iframe.html?globals=backgrounds.grid:!false;theme:${resolvedTheme ?? (typeof localStorage !== "undefined" ? localStorage?.getItem?.("theme") : "")};backgrounds.value:!transparent&viewMode=docs&id=${name}&site:docs=true`}
             className="w-full"
