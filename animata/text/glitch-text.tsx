@@ -1,13 +1,16 @@
 import React from "react";
-import { Tomorrow } from "next/font/google";
 
+// TODO: Re-enable Google Font when network access is available during build
+// import { Tomorrow } from "next/font/google";
+// const tomorrow = Tomorrow({
+//   subsets: ["latin"],
+//   weight: ["800", "900"],
+//   variable: "--font-tomorrow",
+// });
 import { cn } from "@/lib/utils";
 
-const tomorrow = Tomorrow({
-  subsets: ["latin"],
-  weight: ["800", "900"],
-  variable: "--font-tomorrow",
-});
+// Temporary fallback font
+const tomorrow = { className: "font-sans font-extrabold", variable: "--font-tomorrow" };
 
 export default function GlitchText({
   text = "1000 Stars",

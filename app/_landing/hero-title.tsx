@@ -1,13 +1,16 @@
-import { Anaheim } from "next/font/google";
+// TODO: Re-enable Google Font when network access is available during build
+// import { Anaheim } from "next/font/google";
+// const titleFont = Anaheim({
+//   subsets: ["latin"],
+//   weight: ["400"],
+// });
 
 import WaveReveal from "@/animata/text/wave-reveal";
 import ComponentLinkWrapper from "@/components/component-link-wrapper";
 import { cn } from "@/lib/utils";
 
-const titleFont = Anaheim({
-  subsets: ["latin"],
-  weight: ["400"],
-});
+// Temporary fallback font
+const titleFont = { className: "font-sans" };
 
 export default function HeroTitle() {
   return (
@@ -16,7 +19,7 @@ export default function HeroTitle() {
         <WaveReveal
           text="animata"
           className={cn(
-            "select-none px-0 text-7xl uppercase text-blue-700 transition-opacity delay-1000 dark:text-blue-500 md:px-0 md:text-8xl",
+            "select-none px-0 text-7xl uppercase text-blue-700 transition-opacity delay-1000 md:px-0 md:text-8xl dark:text-blue-500",
             titleFont.className,
           )}
           delay={0}

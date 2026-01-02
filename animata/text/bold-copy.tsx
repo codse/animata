@@ -1,10 +1,11 @@
-import { Tourney } from "next/font/google";
+// TODO: Re-enable Google Font when network access is available during build
+// import { Tourney } from "next/font/google";
+// const tourney = Tourney({ subsets: ["latin"] });
 
 import { cn } from "@/lib/utils";
 
-const tourney = Tourney({
-  subsets: ["latin"],
-});
+// Temporary fallback font class
+const tourney = { className: "font-sans" };
 
 export default function BoldCopy({
   text = "animata",
@@ -24,14 +25,14 @@ export default function BoldCopy({
   return (
     <div
       className={cn(
-        "group relative flex items-center justify-center bg-background px-2 py-2 md:px-6 md:py-4",
+        "bg-background group relative flex items-center justify-center px-2 py-2 md:px-6 md:py-4",
         tourney.className,
         className,
       )}
     >
       <div
         className={cn(
-          "text-4xl font-bold uppercase text-foreground/15 transition-all group-hover:opacity-50 md:text-8xl",
+          "text-foreground/15 text-4xl font-bold uppercase transition-all group-hover:opacity-50 md:text-8xl",
           backgroundTextClassName,
         )}
       >
@@ -39,7 +40,7 @@ export default function BoldCopy({
       </div>
       <div
         className={cn(
-          "text-md absolute font-bold uppercase text-foreground transition-all group-hover:text-4xl md:text-3xl group-hover:md:text-8xl",
+          "text-md text-foreground absolute font-bold uppercase transition-all group-hover:text-4xl md:text-3xl group-hover:md:text-8xl",
           textClassName,
         )}
       >
