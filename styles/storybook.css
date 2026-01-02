@@ -1,3 +1,5 @@
+@import "tailwindcss";
+
 /** Fix/improve storybook styles for embedding */
 .sbdocs-wrapper {
   padding: 0 !important;
