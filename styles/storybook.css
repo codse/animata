@@ -1,27 +1,29 @@
 /** Fix/improve storybook styles for embedding */
 .sbdocs-wrapper {
-  @apply !p-0 font-sans;
+  padding: 0 !important;
+  @apply font-sans;
   display: block !important;
   min-height: unset !important;
 
   .sbdocs-content {
-    @apply !p-0;
+    padding: 0 !important;
   }
 }
 
 .sb-preparing-docs {
-  @apply !p-0;
+  padding: 0 !important;
 }
 
 .sb-previewBlock,
 .sb-argstableBlock {
-  @apply !mx-auto;
+  margin-left: auto !important;
+  margin-right: auto !important;
   max-width: calc(100% - 4px) !important;
 }
 
 .embedded {
   .sbdocs {
-    @apply !m-0;
+    margin: 0 !important;
   }
 
   .innerZoomElementWrapper {
@@ -49,7 +51,7 @@
   }
 
   .docblock-argstable {
-    @apply !mb-0;
+    margin-bottom: 0 !important;
     max-width: calc(100% - 2px);
 
     tr:not(:first-child),
