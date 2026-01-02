@@ -42,7 +42,7 @@ export default function TiltedCover({
       <div className="group relative h-52 w-40">
         {/* Background content */}
         <div
-          className="border-box border-1 pointer-events-none relative h-full w-full overflow-hidden rounded-xl border bg-background transition-all duration-500 ease-slow group-hover:!transform-none dark:border-zinc-700"
+          className="border-box border-1 bg-background ease-slow group-hover:transform-none! pointer-events-none relative h-full w-full overflow-hidden rounded-xl border transition-all duration-500 dark:border-zinc-700"
           style={{
             transform: `perspective(400px) rotateY(${factor * 20}deg) scale(0.85) translateX(${-factor * 20}%)`,
           }}
@@ -54,7 +54,7 @@ export default function TiltedCover({
         {/* Cover Content */}
         <div
           className={cn(
-            "border-box pointer-events-none absolute inset-0 h-full w-full rounded-xl border-[6px] bg-white transition-all delay-75 duration-500 ease-slow group-hover:!transform-none group-hover:opacity-0 dark:bg-gray-800",
+            "border-box ease-slow pointer-events-none absolute inset-0 h-full w-full rounded-xl border-[6px] bg-white transition-all delay-75 duration-500 group-hover:!transform-none group-hover:opacity-0 dark:bg-gray-800",
             {
               "group-hover:left-[200%]": tiltLeft,
               "group-hover:-left-[200%]": !tiltLeft,

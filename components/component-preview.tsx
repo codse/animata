@@ -41,7 +41,7 @@ function CodeView({ children }: { children: React.ReactNode }) {
             <CopyButton
               value={codeString ?? ""}
               variant="outline"
-              className="h-7 w-7 text-foreground opacity-100 hover:bg-muted hover:text-foreground [&_svg]:size-3.5"
+              className="text-foreground hover:bg-muted hover:text-foreground h-7 w-7 opacity-100 [&_svg]:size-3.5"
             />
           </div>
         </div>
@@ -76,14 +76,14 @@ export function ComponentPreview({ name, className, ...props }: ComponentPreview
   return (
     <div className={cn("group relative", className)} {...props}>
       <div
-        className={cn("preview relative w-full max-w-full !overflow-hidden")}
+        className={cn("preview overflow-hidden! relative w-full max-w-full")}
         style={{
           height: `${Math.max(100, minHeight)}px`,
         }}
       >
         <React.Suspense
           fallback={
-            <div className="flex items-center text-sm text-muted-foreground">
+            <div className="text-muted-foreground flex items-center text-sm">
               <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
               Loading...
             </div>

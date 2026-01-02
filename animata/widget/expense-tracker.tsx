@@ -29,10 +29,10 @@ export default function ExpenseTracker({
   return (
     <div
       className={cn(
-        "flex h-52 w-52 flex-col rounded-3xl border bg-background p-4 dark:border-zinc-700",
+        "bg-background flex h-52 w-52 flex-col rounded-3xl border p-4 dark:border-zinc-700",
       )}
     >
-      <h4 className="mb-1 text-sm font-semibold text-muted-foreground">
+      <h4 className="text-muted-foreground mb-1 text-sm font-semibold">
         {new Date().toLocaleString("default", { month: "long" }).toUpperCase()}{" "}
         {new Date().getFullYear()}
       </h4>
@@ -40,9 +40,9 @@ export default function ExpenseTracker({
         {spending.map((item) => (
           <div
             key={item.day}
-            className="flex cursor-pointer flex-col items-center transition-opacity hover:!opacity-100 group-hover:opacity-50"
+            className="hover:opacity-100! flex cursor-pointer flex-col items-center transition-opacity group-hover:opacity-50"
           >
-            <div className="mb-1 text-xs text-foreground">{item.day}</div>
+            <div className="text-foreground mb-1 text-xs">{item.day}</div>
             <div
               className="h-20 w-3 rounded-full bg-gray-300 dark:bg-gray-600"
               style={{
@@ -62,8 +62,8 @@ export default function ExpenseTracker({
         ))}
       </div>
       <div className="mt-3">
-        <p className="text-xs tracking-wide text-muted-foreground">THIS WEEK SPENDING</p>
-        <p className="text-xl font-black text-foreground">
+        <p className="text-muted-foreground text-xs tracking-wide">THIS WEEK SPENDING</p>
+        <p className="text-foreground text-xl font-black">
           ${Intl.NumberFormat().format(totalSpending)}
         </p>
       </div>
