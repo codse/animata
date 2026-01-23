@@ -1,14 +1,7 @@
-import { useEffect, useMemo } from "react";
-import { animate, motion, useMotionValue, type ValueAnimationTransition } from "framer-motion";
+import { useMemo } from "react";
+import { motion } from "framer-motion";
 
 import { cn } from "@/lib/utils";
-
-const createRotation = (duration: number): ValueAnimationTransition => ({
-  duration,
-  ease: "linear",
-  repeat: Infinity,
-  type: "tween",
-});
 
 export default function CircularText({
   text,
@@ -21,22 +14,21 @@ export default function CircularText({
   radius?: number;
   className?: string;
 }) {
-  const rotation = useMotionValue(0);
   const characters = useMemo(() => [...text], [text]);
-
-  useEffect(() => {
-    const start = rotation.get();
-    const keyframes: number[] = [start, start + 360];
-    const animation = animate(rotation, keyframes, createRotation(spinDuration));
-    return () => animation.stop();
-  }, [spinDuration, rotation]);
   return (
     <motion.div
+      key={spinDuration}
       className={cn(
-        "relative mx-auto flex h-[200px] w-[200px] origin-center cursor-pointer items-center justify-center rounded-full text-center font-bold text-white",
+        "relative mx-auto flex h-[200px] w-[200px] origin-center cursor-pointer items-center justify-center rounded-full text-center font-bold text-foreground",
         className,
       )}
-      style={{ rotate: rotation }}
+      initial={{ rotate: 0 }}
+      animate={{ rotate: 360 }}
+      transition={{
+        ease: "linear",
+        duration: spinDuration,
+        repeat: Infinity,
+      }}
     >
       {characters.map((char, index) => {
         const angle = (360 / characters.length) * index;
