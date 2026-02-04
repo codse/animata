@@ -9,6 +9,7 @@
     "start": "next start",
     "lint": "npx eslint .",
     "storybook": "storybook dev -p 6006 --no-open",
+    "shadcn:build": "rm -fr ./public/r && npx shadcn build",
     "storybook:build": "storybook build -o public/preview",
     "animata:new": "node ./scripts/create-new.js",
     "postinstall": "yarn prepare",
