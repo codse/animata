@@ -46,7 +46,7 @@
     "lodash.startcase": "^4.4.0",
     "lucide-react": "^0.390.0",
     "mdast-util-toc": "^7.1.0",
-    "next": "14.2.26",
+    "next": "14.2.35",
     "next-contentlayer": "^0.3.4",
     "next-themes": "^0.3.0",
     "ora": "^8.0.1",
@@ -108,11 +108,11 @@
     "prettier": "^3.3.2",
     "prettier-plugin-tailwindcss": "^0.6.5",
     "react-docgen": "^7.0.3",
-    "storybook": "^8.1.6",
+    "storybook": "^8.6.15",
     "storybook-dark-mode": "^4.0.1",
     "tailwindcss": "^3.4.1",
     "typescript": "^5",
-    "wrangler": "^3.79.0"
+    "wrangler": "^3.114.17"
   },
   "packageManager": "yarn@4.2.2",
   "lint-staged": {
