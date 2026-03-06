@@ -19,7 +19,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: "22"
       - name: Install yarn
         run: npm install -g yarn
       - name: Restore cache
@@ -32,11 +32,11 @@ jobs:
             ${{ runner.os }}-nextjs-${{ hashFiles('**/yarn.lock') }}-
       - name: Install dependencies
         run: yarn install --immutable
+      - name: Build component previews
+        run: yarn storybook:build
       - name: Build with Next.js
         env:
           NEXT_PUBLIC_APP_URL: ${{ vars.NEXT_PUBLIC_APP_URL }}
-          STORYBOOK_NEXT_PUBLIC_APP_URL: ${{ vars.STORYBOOK_NEXT_PUBLIC_APP_URL }}
-          NEXT_PUBLIC_STORYBOOK_URL: ${{ vars.NEXT_PUBLIC_STORYBOOK_URL }}
           NEXT_PUBLIC_SUPABASE_URL: ${{ vars.NEXT_PUBLIC_SUPABASE_URL }}
           NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ vars.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
           NEXT_PUBLIC_POSTHOG_KEY: ${{ vars.NEXT_PUBLIC_POSTHOG_KEY }}

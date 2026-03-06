@@ -1,5 +1,5 @@
-import React from "react";
 import { ArrowRight } from "lucide-react";
+import type React from "react";
 
 interface SlideArrowButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   text?: string;

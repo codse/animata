@@ -1,5 +1,5 @@
+import type { Meta, StoryObj } from "@storybook/react";
 import NoticeCard from "@/animata/card/notice-card";
-import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
   title: "Card/Notice Card",
@@ -26,10 +26,6 @@ export const Primary: Story = {
       "Due to severe weather conditions, we will be closed from 11th to 14th of January.",
   },
   render: (args) => {
-    return (
-      <>
-        <NoticeCard {...args} />
-      </>
-    );
+    return <NoticeCard {...args} />;
   },
 };

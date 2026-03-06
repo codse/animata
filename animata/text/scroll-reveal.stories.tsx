@@ -1,7 +1,6 @@
+import type { Meta, StoryObj } from "@storybook/react";
 import { Baby, File } from "lucide-react";
-
 import ScrollReveal from "@/animata/text/scroll-reveal";
-import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
   title: "Text/Scroll Reveal",

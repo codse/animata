@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 
 import { cn } from "@/lib/utils";
 
@@ -98,7 +98,7 @@ export default function ConfirmationMessage({
                 animate={{ opacity: 1 }}
                 transition={{ delay: 2, duration: 0.9 }}
               >
-                {labelMessage.length > 200 ? labelMessage.slice(0, 199) + "..." : labelMessage}
+                {labelMessage.length > 200 ? `${labelMessage.slice(0, 199)}...` : labelMessage}
               </motion.p>
             </div>
           </div>

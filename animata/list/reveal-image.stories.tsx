@@ -1,5 +1,5 @@
+import type { Meta, StoryObj } from "@storybook/react";
 import RevealImageList from "@/animata/list/reveal-image";
-import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
   title: "List/Reveal image",

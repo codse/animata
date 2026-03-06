@@ -1,5 +1,5 @@
+import type { Meta, StoryObj } from "@storybook/react";
 import ScoreBoard, { testScoreBoardProps } from "@/animata/widget/score-board";
-import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
   title: "Widget/Score Board",

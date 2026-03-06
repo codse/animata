@@ -34,10 +34,9 @@ export default function AnimatedBorderTrail({
       className={cn("relative h-fit w-fit overflow-hidden rounded-2xl bg-gray-200 p-px", className)}
     >
       <div
-        className="absolute inset-0 h-full w-full animate-trail"
+        className="absolute inset-0 h-full w-full"
         style={{
-          "--duration": duration ?? "10s",
-          "--angle": "0deg",
+          animation: `trail ${duration ?? "10s"} linear infinite`,
           background: `conic-gradient(from var(--angle) at 50% 50%, transparent ${100 - sizes[trailSize]}%, ${trailColor})`,
         }}
       />

@@ -1,5 +1,5 @@
+import type { Meta, StoryObj } from "@storybook/react";
 import ExpenseTracker, { spendingTrackerProps } from "@/animata/widget/expense-tracker";
-import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
   title: "Widget/Expense Tracker",

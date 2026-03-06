@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useState } from "react";
 import { Plus } from "lucide-react";
+import type React from "react";
+import { useState } from "react";
 
 interface SpeedialProps {
   direction: string;

@@ -1,12 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { ChevronDown } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ChevronDown } from "lucide-react";
+import { useEffect, useState } from "react";
 
 import { cn } from "@/lib/utils";
-import { SidebarNavItem } from "@/types";
+import type { SidebarNavItem } from "@/types";
 
 import { Icons } from "./icons";
 
@@ -22,7 +22,7 @@ export function DocsSidebarNav({ items }: DocsSidebarNavProps) {
     setClosed((current) => {
       const next = new Set(current);
       // Open the current section if one of the child pages is active
-      const path = "/docs/" + pathname.split("/")[1];
+      const path = `/docs/${pathname.split("/")[1]}`;
       if (next.has(path)) {
         next.delete(path);
       }

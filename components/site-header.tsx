@@ -1,9 +1,9 @@
 "use client";
-import { useRef } from "react";
+import { CodeIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTheme } from "next-themes";
-import { CodeIcon } from "lucide-react";
+import { useRef } from "react";
 
 import AnimatedBorderTrail from "@/animata/container/animated-border-trail";
 import { CommandMenu } from "@/components/command-menu";

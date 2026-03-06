@@ -1,7 +1,5 @@
-import React from "react";
-
+import type { Meta, StoryObj } from "@storybook/react";
 import VerticalTiles from "@/animata/preloader/vertical-tiles";
-import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
   title: "Preloader/Vertical Tiles",

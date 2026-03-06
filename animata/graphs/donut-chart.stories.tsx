@@ -1,5 +1,5 @@
+import type { Meta, StoryObj } from "@storybook/react";
 import DonutChart from "@/animata/graphs/donut-chart";
-import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
   title: "Graphs/Donut Chart",

@@ -1,7 +1,5 @@
 "use client";
 
-import React from "react";
-
 const EmailCard = () => {
   return (
     <div className="group relative w-full max-w-lg rounded-lg bg-gray-50 p-6 shadow-lg backdrop-blur-sm transition-shadow duration-300 ease-in-out">
@@ -19,13 +17,17 @@ const EmailCard = () => {
         {/* To Email (Static) */}
         <div className="flex flex-col">
           <label className="font-medium">To</label>
-          <p className="mt-1 rounded-md border border-gray-300 p-2 bg-gray-100">recipient@example.com</p>
+          <p className="mt-1 rounded-md border border-gray-300 p-2 bg-gray-100">
+            recipient@example.com
+          </p>
         </div>
 
         {/* Subject (Static) */}
         <div className="flex flex-col">
           <label className="font-medium">Subject</label>
-          <p className="mt-1 rounded-md border border-gray-300 p-2 bg-gray-100">The Pokemon I caught this week</p>
+          <p className="mt-1 rounded-md border border-gray-300 p-2 bg-gray-100">
+            The Pokemon I caught this week
+          </p>
         </div>
 
         {/* Body (Static) */}

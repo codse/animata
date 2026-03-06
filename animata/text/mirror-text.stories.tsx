@@ -1,5 +1,5 @@
+import type { Meta, StoryObj } from "@storybook/react";
 import MirrorText from "@/animata/text/mirror-text";
-import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
   title: "Text/Mirror Text",

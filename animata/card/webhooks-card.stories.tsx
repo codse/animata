@@ -1,5 +1,5 @@
+import type { Meta, StoryObj } from "@storybook/react";
 import { WebHooks } from "@/animata/card/WebHooks-card";
-import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
   title: "Card/Web Hooks",

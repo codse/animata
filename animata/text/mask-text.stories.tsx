@@ -1,5 +1,5 @@
+import type { Meta, StoryObj } from "@storybook/react";
 import MaskText from "@/animata/text/mask-text";
-import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
   title: "Text/Mask Text",

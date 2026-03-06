@@ -1,8 +1,5 @@
 "use client";
 
-import React, { ElementType, useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
-
 // default imports
 import {
   FigmaLogoIcon,
@@ -13,6 +10,8 @@ import {
   SquareIcon,
   TwitterLogoIcon,
 } from "@radix-ui/react-icons";
+import { AnimatePresence, motion } from "motion/react";
+import { type ElementType, useState } from "react";
 
 type IconSize = "1" | "2" | "3" | "4"; // source: https://www.radix-ui.com/themes/docs/components/icon-button
 
@@ -43,7 +42,7 @@ const getIconForTitle = (title: string) => {
     instagram: InstagramLogoIcon,
     linkedin: LinkedInLogoIcon,
     github: GitHubLogoIcon,
-    figma: FigmaLogoIcon
+    figma: FigmaLogoIcon,
   };
 
   // SquareIcon as default
@@ -84,7 +83,7 @@ export default function HoverInteraction({
       scale: 1,
       rotate: 0,
       transition: {
-        type: "spring",
+        type: "spring" as const,
         stiffness: 100,
         damping: 15,
         duration: 0.3,

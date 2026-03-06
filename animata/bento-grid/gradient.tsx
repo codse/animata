@@ -1,4 +1,3 @@
-import { ReactNode } from "react";
 import {
   ArrowRight,
   BarChart,
@@ -9,6 +8,7 @@ import {
   Sun,
   TypeIcon,
 } from "lucide-react";
+import type { ReactNode } from "react";
 
 import MovingGradient from "@/animata/background/moving-gradient";
 import { cn } from "@/lib/utils";

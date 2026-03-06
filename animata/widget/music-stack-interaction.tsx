@@ -1,6 +1,7 @@
-import React, { useState } from "react";
-import { motion } from "framer-motion";
 import { Layers, LayoutGrid } from "lucide-react";
+import { motion } from "motion/react";
+import type React from "react";
+import { useState } from "react";
 
 import { cn } from "@/lib/utils";
 
@@ -81,7 +82,7 @@ export default function MusicStackInteraction({ albums }: albumsProps) {
             >
               <motion.img
                 layout
-                src={album.cover + "?w=200&h=200"}
+                src={`${album.cover}?w=200&h=200`}
                 alt={album.title}
                 className="h-auto rounded-xl shadow-md"
               />

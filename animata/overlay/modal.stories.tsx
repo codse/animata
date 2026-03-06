@@ -1,5 +1,5 @@
+import type { Meta, StoryObj } from "@storybook/react";
 import Modal from "@/animata/overlay/modal";
-import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
   title: "Overlay/Modal",

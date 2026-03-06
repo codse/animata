@@ -1,5 +1,5 @@
+import type { Meta, StoryObj } from "@storybook/react";
 import TypingText from "@/animata/text/typing-text";
-import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
   title: "Text/Typing Text",

@@ -1,5 +1,5 @@
+import type { Meta, StoryObj } from "@storybook/react";
 import FibonacciLines from "@/animata/container/fibonacci-lines";
-import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
   title: "Container/Fibonacci Lines",

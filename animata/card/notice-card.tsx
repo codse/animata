@@ -1,5 +1,5 @@
+import { motion } from "motion/react";
 import { useState } from "react";
-import { motion } from "framer-motion";
 
 import { cn } from "@/lib/utils";
 
@@ -19,7 +19,7 @@ export default function NoticeCard({
   const handleClick = () => {
     setIsAccepted(!isAccepted);
   };
-  
+
   const bgClass = isAccepted
     ? "bg-green-300"
     : "bg-gradient-to-r from-slate-50 via-slate-50 to-green-100";

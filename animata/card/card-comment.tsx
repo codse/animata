@@ -1,5 +1,3 @@
-import React from "react";
-
 interface CardCommentProps {
   commenter: string;
   replier: string;

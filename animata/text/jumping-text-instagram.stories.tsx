@@ -1,5 +1,5 @@
+import type { Meta, StoryObj } from "@storybook/react";
 import JumpingTextInstagram from "@/animata/text/jumping-text-instagram";
-import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
   title: "Text/Jumping Text Instagram",

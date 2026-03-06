@@ -1,5 +1,5 @@
+import type { Meta, StoryObj } from "@storybook/react";
 import WideCard from "@/animata/skeleton/wide-card";
-import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
   title: "Skeleton/Wide Card",

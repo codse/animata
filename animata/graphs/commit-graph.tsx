@@ -1,6 +1,5 @@
-import React from "react";
-
 import { cn } from "@/lib/utils";
+
 const getColor = (count: number): string => {
   const colors: { [key: number]: string } = {
     0: "bg-gray-300",

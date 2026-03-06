@@ -1,6 +1,6 @@
 "use client";
-import { useState } from "react";
 import { LaptopMinimal, LocateOff } from "lucide-react";
+import { useState } from "react";
 
 import FlipCard from "@/animata/card/flip-card";
 import WaveReveal from "@/animata/text/wave-reveal";

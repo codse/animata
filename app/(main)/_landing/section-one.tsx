@@ -1,7 +1,7 @@
 "use client";
 
-import React, { Suspense } from "react";
 import { useTheme } from "next-themes";
+import React, { Suspense } from "react";
 
 import GithubCardShiny from "@/animata/card/github-card-shiny";
 import GithubCardSkew from "@/animata/card/github-card-skew";
@@ -9,8 +9,9 @@ import AnimatedBorderTrail from "@/animata/container/animated-border-trail";
 import AnimatedGradientText from "@/animata/text/animated-gradient-text";
 import MirrorText from "@/animata/text/mirror-text";
 import TypingText from "@/animata/text/typing-text";
-import GridView from "@/app/_landing/grid-view";
+import GridView from "@/app/(main)/_landing/grid-view";
 import { ComponentCard } from "@/components/component-card";
+
 const WidgetSection = React.lazy(() => import("./widget-section"));
 
 export default function SectionOne() {

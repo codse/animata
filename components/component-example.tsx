@@ -23,9 +23,13 @@ export function ComponentExample({
   const [Example, Code, ...Children] = React.Children.toArray(children) as React.ReactElement[];
 
   const codeString = React.useMemo(() => {
-    if (typeof Code?.props["data-rehype-pretty-code-fragment"] !== "undefined") {
-      const [, Button] = React.Children.toArray(Code.props.children) as React.ReactElement[];
-      return Button?.props?.value || Button?.props?.__rawString__ || null;
+    const codeProps = Code?.props as Record<string, unknown> | undefined;
+    if (typeof codeProps?.["data-rehype-pretty-code-fragment"] !== "undefined") {
+      const [, Button] = React.Children.toArray(
+        codeProps?.children as React.ReactNode,
+      ) as React.ReactElement[];
+      const buttonProps = Button?.props as Record<string, unknown> | undefined;
+      return (buttonProps?.value || buttonProps?.__rawString__ || null) as string | null;
     }
   }, [Code]);
 
@@ -49,7 +53,7 @@ export function ComponentExample({
           </TabsList>
           {extractedClassNames ? (
             <CopyWithClassNames
-              value={codeString}
+              value={codeString ?? ""}
               classNames={extractedClassNames}
               className="absolute right-4 top-20"
             />

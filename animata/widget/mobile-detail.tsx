@@ -1,10 +1,11 @@
 import { BatteryMedium, Cpu, Database, Volume1 } from "lucide-react";
+import type React from "react";
 
 interface ProgressBarData {
   label: string;
   value: number;
   max: number;
-  icon?: JSX.Element;
+  icon?: React.ReactNode;
 }
 
 const progressBarsData: ProgressBarData[] = [

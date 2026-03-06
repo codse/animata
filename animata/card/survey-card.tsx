@@ -35,7 +35,7 @@ export default function SurveyCard({ items, width: providedWidth, surveyTitle }:
     setSize({
       width: providedWidth ?? containerRef.current?.offsetWidth ?? 250,
     });
-  }, [providedWidth, items]);
+  }, [providedWidth]);
 
   const [isParentHovered, setIsParentHovered] = useState(false);
 

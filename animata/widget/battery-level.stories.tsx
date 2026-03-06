@@ -1,5 +1,5 @@
+import type { Meta, StoryObj } from "@storybook/react";
 import BatteryLevel from "@/animata/widget/battery-level";
-import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
   title: "Widget/Battery Level",

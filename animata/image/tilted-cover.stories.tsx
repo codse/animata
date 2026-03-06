@@ -1,5 +1,5 @@
+import type { Meta, StoryObj } from "@storybook/react";
 import TiltedCover from "@/animata/image/tilted-cover";
-import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
   title: "Image/Tilted Cover",

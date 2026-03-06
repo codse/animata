@@ -1,7 +1,7 @@
 "use client";
 
+import { motion } from "motion/react";
 import { useRef, useState } from "react";
-import { motion } from "framer-motion";
 
 import { useMousePosition } from "@/hooks/use-mouse-position";
 import { cn } from "@/lib/utils";
@@ -33,10 +33,12 @@ export default function MaskText({
           maskRepeat: "no-repeat",
           maskSize: "50px",
         }}
-        animate={{
-          WebkitMaskPosition: `${x - size / 2}px ${y - size / 2}px`,
-          WebkitMaskSize: `${size}px`,
-        }}
+        animate={
+          {
+            WebkitMaskPosition: `${x - size / 2}px ${y - size / 2}px`,
+            WebkitMaskSize: `${size}px`,
+          } as Record<string, string>
+        }
         transition={{ type: "tween", ease: "backOut", duration: 0.5 }}
       >
         <p

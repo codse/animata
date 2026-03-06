@@ -1,5 +1,5 @@
+import type { Meta, StoryObj } from "@storybook/react";
 import AvatarList from "@/animata/list/avatar-list";
-import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
   title: "List/Avatar List",

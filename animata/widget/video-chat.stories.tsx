@@ -1,5 +1,5 @@
+import type { Meta, StoryObj } from "@storybook/react";
 import VideoChat from "@/animata/widget/video-chat";
-import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
   title: "Widget/Video Chat",

@@ -10,7 +10,7 @@ export default function SplitText({
   className?: string;
 }) {
   const [activeIndex, setIndex] = useState<number>();
-  const timer = useRef<NodeJS.Timeout>();
+  const timer = useRef<NodeJS.Timeout>(undefined);
 
   const letterClassName =
     "inline h-1/2 select-none overflow-y-hidden leading-none transition-all duration-300 ease-out whitespace-pre";

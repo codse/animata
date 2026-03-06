@@ -1,5 +1,5 @@
+import type { Meta, StoryObj } from "@storybook/react";
 import ZoomImage from "@/animata/image/zoom-image";
-import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
   title: "Image/Zoom Image",

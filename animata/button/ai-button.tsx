@@ -1,9 +1,8 @@
-import { useEffect, useMemo, useState } from "react";
-import { Sparkle } from "lucide-react";
-import { loadFull } from "tsparticles";
-
 import type { ISourceOptions } from "@tsparticles/engine";
 import Particles, { initParticlesEngine } from "@tsparticles/react";
+import { Sparkle } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
+import { loadFull } from "tsparticles";
 
 const options: ISourceOptions = {
   key: "star",

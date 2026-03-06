@@ -1,5 +1,5 @@
+import type { Meta, StoryObj } from "@storybook/react";
 import DiagonalLines from "@/animata/background/diagonal-lines";
-import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
   title: "Background/Diagonal Lines",

@@ -1,8 +1,4 @@
-import {
-  PageHeader,
-  PageHeaderDescription,
-  PageHeaderHeading,
-} from "@/components/page-header";
+import { PageHeader, PageHeaderDescription, PageHeaderHeading } from "@/components/page-header";
 
 export default function CreditsPage() {
   return (
@@ -10,8 +6,8 @@ export default function CreditsPage() {
       <PageHeader>
         <PageHeaderHeading>Inspiration</PageHeaderHeading>
         <PageHeaderDescription>
-          Beautifully designed components that you can copy and paste into your
-          apps. Accessible. Customizable. Open Source.
+          Beautifully designed components that you can copy and paste into your apps. Accessible.
+          Customizable. Open Source.
         </PageHeaderDescription>
       </PageHeader>
     </div>

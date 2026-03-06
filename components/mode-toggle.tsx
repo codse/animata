@@ -1,7 +1,7 @@
 "use client";
 
+import { MoonIcon, SunIcon } from "@radix-ui/react-icons";
 import { useTheme } from "next-themes";
-
 import HeaderDockItem from "@/components/header-dock-item";
 import {
   DropdownMenu,
@@ -9,7 +9,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { MoonIcon, SunIcon } from "@radix-ui/react-icons";
 
 export function ModeToggle() {
   const { setTheme } = useTheme();

@@ -1,7 +1,6 @@
+import type { Meta, StoryObj } from "@storybook/react";
 import { BadgeAlert } from "lucide-react";
-
 import MovingGradient from "@/animata/background/moving-gradient";
-import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
   title: "Background/Moving Gradient",

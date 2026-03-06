@@ -38,7 +38,7 @@ export default function Hero() {
           radial-gradient(at 66% 84%, hsla(89,66%,79%,1) 0px, transparent 50%)`,
         }}
       />
-      <div className="container relative overflow-hidden py-16 md:py-48">
+      <div className="container mx-auto relative overflow-hidden py-16 md:py-48">
         <div className="relative mx-auto flex max-w-7xl flex-col items-center justify-center gap-8 px-4 md:flex-row">
           <div className="flex flex-col items-center justify-center gap-2">
             <HeroTitle />

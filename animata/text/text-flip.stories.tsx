@@ -1,5 +1,5 @@
+import type { Meta, StoryObj } from "@storybook/react";
 import TextFlip from "@/animata/text/text-flip";
-import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
   title: "Text/Text Flip",

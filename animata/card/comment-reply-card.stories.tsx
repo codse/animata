@@ -1,5 +1,5 @@
+import type { Meta, StoryObj } from "@storybook/react";
 import CommentReplyCard from "@/animata/card/comment-reply-card";
-import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
   title: "Card/Comment Reply Card",

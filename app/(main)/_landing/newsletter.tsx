@@ -1,5 +1,5 @@
-import React from "react";
 import { Loader2, Mail } from "lucide-react";
+import type React from "react";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";

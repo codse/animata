@@ -1,8 +1,14 @@
-"use client";
-import { ComponentProps, HTMLAttributes } from "react";
 import Link from "next/link";
-import { useMDXComponent } from "next-contentlayer/hooks";
-import { NpmCommands, TouchCommands } from "types/unist";
+import { MDXRemote } from "next-mdx-remote/rsc";
+import type { ComponentProps, HTMLAttributes } from "react";
+import rehypeAutolinkHeadings from "rehype-autolink-headings";
+import rehypePrettyCode from "rehype-pretty-code";
+import rehypeSlug from "rehype-slug";
+import { codeImport } from "remark-code-import";
+import remarkGfm from "remark-gfm";
+import type { NpmCommands, TouchCommands } from "types/unist";
+import { visit } from "unist-util-visit";
+import { VFile } from "vfile";
 
 import Modal from "@/animata/overlay/modal";
 import { Callout } from "@/components/callout";
@@ -11,12 +17,9 @@ import { ComponentExample } from "@/components/component-example";
 import ComponentListItem from "@/components/component-list-item";
 import { ComponentPreview } from "@/components/component-preview";
 import { ComponentSource } from "@/components/component-source";
-import {
-  CopyButton,
-  CopyNpmCommandButton,
-  copyToClipboardWithMeta,
-  CopyTouchCommandButton,
-} from "@/components/copy-button";
+import { CopyButton, CopyNpmCommandButton, CopyTouchCommandButton } from "@/components/copy-button";
+import { CopyProxy } from "@/components/copy-proxy";
+import { AnimataRenderer } from "@/components/dynamic-animata";
 import { FrameworkDocs } from "@/components/framework-docs";
 import PreviewContainer from "@/components/preview-container";
 import {
@@ -28,10 +31,75 @@ import {
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Event } from "@/lib/events";
+import type { Event } from "@/lib/events";
 import { cn } from "@/lib/utils";
 
 import { baseComponents } from "./mdx-base-components";
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+const setupCodeSnippet = () => (tree: any) => {
+  visit(tree, (node: any) => {
+    if (node?.type === "element" && node?.tagName === "pre") {
+      const [codeEl] = node.children;
+      if (codeEl.tagName !== "code") {
+        return;
+      }
+
+      if (codeEl.data?.meta) {
+        const regex = /event="([^"]*)"/;
+        const match = codeEl.data?.meta.match(regex);
+        if (match) {
+          node.__event__ = match[1];
+          codeEl.data.meta = codeEl.data.meta.replace(regex, "");
+        }
+
+        const copyId = codeEl.data?.meta.match(/copyId="([^"]*)"/);
+        if (copyId) {
+          node.__copyId__ = copyId[1];
+        }
+      }
+
+      node.__rawString__ = codeEl.children?.[0].value;
+    }
+  });
+};
+
+const postProcess = () => (tree: any) => {
+  visit(tree, "element", (node: any) => {
+    if (node.__rawString__) {
+      if (node.tagName !== "pre") {
+        const [pre] = node.children;
+        if (pre.tagName !== "pre") {
+          return;
+        }
+        pre.properties.__copyId__ = node.__copyId__;
+        pre.properties.__rawString__ = node.__rawString__;
+        Reflect.deleteProperty(node, "__rawString__");
+        Reflect.deleteProperty(node, "__copyId__");
+
+        if (pre.properties?.__rawString__?.startsWith("mkdir")) {
+          const path = pre.properties?.__rawString__.split(" ").pop();
+          if (!path) {
+            return;
+          }
+
+          const filename = path.split("/").pop() ?? "";
+          const dir = path.replace(`/${filename}`, "");
+          pre.properties.__windows__ = `mkdir "${dir}" && type null > ${path}`;
+          pre.properties.__unix__ = `mkdir -p ${dir} && touch ${path}`;
+        }
+
+        if (pre.properties?.__rawString__?.startsWith("npm install")) {
+          const npmCommand = pre.properties?.__rawString__;
+          pre.properties.__npmCommand__ = npmCommand;
+          pre.properties.__yarnCommand__ = npmCommand.replace("npm install", "yarn add");
+          pre.properties.__pnpmCommand__ = npmCommand.replace("npm install", "pnpm add");
+          pre.properties.__bunCommand__ = npmCommand.replace("npm install", "bun add");
+        }
+      }
+    }
+  });
+};
 
 const components = {
   Accordion,
@@ -66,14 +134,7 @@ const components = {
   } & NpmCommands &
     TouchCommands) => {
     if (__copyId__ && __rawString__) {
-      return (
-        <div
-          id={`source-${__copyId__}`}
-          onClick={() => {
-            copyToClipboardWithMeta(__rawString__);
-          }}
-        />
-      );
+      return <CopyProxy id={`source-${__copyId__}`} value={__rawString__} />;
     }
 
     return (
@@ -205,27 +266,78 @@ const components = {
 
 interface MdxProps {
   code: string;
+  filePath?: string;
 }
 
-export function Mdx({ code }: MdxProps) {
-  // Fix `process` issue: https://github.com/contentlayerdev/contentlayer/issues/288#issuecomment-1384180362
-  const Component = useMDXComponent(
-    `
-if (typeof process === 'undefined') {
-  globalThis.process = {
-    env: {
-      NEXT_PUBLIC_APP_URL: '${process.env.NEXT_PUBLIC_APP_URL}',
-    },
-  };
+function stripImports(code: string) {
+  const importRegex = /^import\s+(\w+)\s+from\s+["']@\/animata\/([^"']+)["'];?\s*$/gm;
+  const imports: Array<{ name: string; subpath: string }> = [];
+  const strippedCode = code.replace(importRegex, (_, name, subpath) => {
+    imports.push({ name, subpath });
+    return "";
+  });
+  return { strippedCode, imports };
 }
 
-${code}
-    `,
-  );
+function resolveImports(imports: Array<{ name: string; subpath: string }>) {
+  const resolved: Record<string, any> = {};
+  for (const { name, subpath } of imports) {
+    resolved[name] = (props: any) => <AnimataRenderer subpath={subpath} {...props} />;
+  }
+  return resolved;
+}
+
+const mdxOptions = {
+  remarkPlugins: [remarkGfm, codeImport],
+  rehypePlugins: [
+    setupCodeSnippet,
+    rehypeSlug,
+    [
+      rehypePrettyCode as any,
+      {
+        theme: "github-dark",
+        onVisitLine(node: any) {
+          if (node.children.length === 0) {
+            node.children = [{ type: "text", value: " " }];
+          }
+          if (!node.properties.className) {
+            node.properties.className = ["line"];
+          }
+        },
+        onVisitHighlightedLine(node: any) {
+          node.properties.className.push("line--highlighted");
+        },
+        onVisitHighlightedWord(node: any) {
+          node.properties.className = ["word--highlighted"];
+        },
+      },
+    ],
+    [
+      rehypeAutolinkHeadings,
+      {
+        properties: {
+          className: ["anchor"],
+          ariaLabel: "Link to section",
+        },
+      },
+    ],
+    postProcess,
+  ],
+};
+
+export async function Mdx({ code, filePath }: MdxProps) {
+  const { strippedCode, imports } = stripImports(code);
+  const dynamicComponents = imports.length > 0 ? resolveImports(imports) : {};
+
+  const source = filePath ? new VFile({ value: strippedCode, path: filePath }) : strippedCode;
 
   return (
     <div className="mdx">
-      <Component components={components} />
+      <MDXRemote
+        source={source}
+        components={{ ...components, ...dynamicComponents } as any}
+        options={{ mdxOptions: mdxOptions as any }}
+      />
     </div>
   );
 }

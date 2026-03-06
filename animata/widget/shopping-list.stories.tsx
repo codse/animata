@@ -1,5 +1,5 @@
+import type { Meta, StoryObj } from "@storybook/react";
 import ShoppingList from "@/animata/widget/shopping-list";
-import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
   title: "Widget/Shopping List",

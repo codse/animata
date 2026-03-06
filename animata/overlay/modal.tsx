@@ -1,6 +1,8 @@
-import { useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+"use client";
+
 import { CircleAlert } from "lucide-react";
+import { AnimatePresence, motion } from "motion/react";
+import { useState } from "react";
 
 import { cn } from "@/lib/utils";
 

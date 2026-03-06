@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-import NewsletterSection from "@/app/_landing/newsletter";
+import NewsletterSection from "@/app/(main)/_landing/newsletter";
 import { Icons } from "@/components/icons";
 import { cn } from "@/lib/utils";
 

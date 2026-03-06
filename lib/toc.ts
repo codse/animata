@@ -71,5 +71,5 @@ export type TableOfContents = Items;
 export async function getTableOfContents(content: string): Promise<TableOfContents> {
   const result = await remark().use(getToc).process(content);
 
-  return result.data;
+  return result.data as unknown as Items;
 }

@@ -1,5 +1,5 @@
+import type { Meta, StoryObj } from "@storybook/react";
 import Counter, { Formatter } from "@/animata/text/counter";
-import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
   title: "Text/Counter",
@@ -24,7 +24,7 @@ export const Percentage: Story = {
   args: {
     targetValue: 100,
     direction: "up",
-    format: (value) => value.toFixed(0) + "%",
+    format: (value) => `${value.toFixed(0)}%`,
   },
 };
 

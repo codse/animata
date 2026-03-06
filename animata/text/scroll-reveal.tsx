@@ -1,5 +1,5 @@
+import { type MotionValue, motion, useScroll, useTransform } from "motion/react";
 import React, { useRef } from "react";
-import { motion, MotionValue, useScroll, useTransform } from "framer-motion";
 
 import { cn } from "@/lib/utils";
 
@@ -15,9 +15,10 @@ const flatten = (children: React.ReactNode): React.ReactNode[] => {
 
   React.Children.forEach(children, (child) => {
     if (React.isValidElement(child)) {
+      const childProps = child.props as Record<string, unknown>;
       if (child.type === React.Fragment) {
-        result.push(...flatten(child.props.children));
-      } else if (child.props.children) {
+        result.push(...flatten(childProps.children as React.ReactNode));
+      } else if (childProps.children) {
         result.push(React.cloneElement(child, {}));
       } else {
         result.push(child);
@@ -48,7 +49,7 @@ function OpacityChild({
 
   let className = "";
   if (React.isValidElement(children)) {
-    className = Reflect.get(children, "props")?.className;
+    className = (Reflect.get(children, "props") as Record<string, unknown>)?.className as string;
   }
 
   return (

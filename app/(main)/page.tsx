@@ -1,9 +1,9 @@
 "use client";
 
+import { useInView } from "motion/react";
 import React, { Suspense } from "react";
-import { useInView } from "framer-motion";
 
-import SectionOne from "@/app/_landing/section-one";
+import SectionOne from "@/app/(main)/_landing/section-one";
 import { cn } from "@/lib/utils";
 
 import Hero from "./_landing/hero";
@@ -19,7 +19,7 @@ function LazySection({
   className,
 }: {
   className?: string;
-  component: React.LazyExoticComponent<() => JSX.Element>;
+  component: React.LazyExoticComponent<() => React.JSX.Element>;
 }) {
   const divRef = React.useRef<HTMLDivElement>(null);
   const isInView = useInView(divRef, {

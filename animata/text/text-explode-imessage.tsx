@@ -1,5 +1,5 @@
+import { motion, useAnimationControls, type Variants } from "motion/react";
 import { useCallback, useEffect, useRef } from "react";
-import { motion, useAnimationControls, Variants } from "framer-motion";
 
 import { cn } from "@/lib/utils";
 

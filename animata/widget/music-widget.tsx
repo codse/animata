@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
 import { Music, Music2, Music3, Pause, Play, SkipBack, SkipForward } from "lucide-react";
+import { useState } from "react";
 
 import { absoluteUrl, cn } from "@/lib/utils";
 

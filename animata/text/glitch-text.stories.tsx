@@ -1,5 +1,5 @@
+import type { Meta, StoryObj } from "@storybook/react";
 import GlitchText from "@/animata/text/glitch-text";
-import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
   title: "Text/Glitch Text",

@@ -23,9 +23,9 @@ function calculateCardRotation({
   const deltaY = currentY - centerY;
 
   // Calculate the maximum distance (assuming a rectangular area)
-  const maxDistance = Math.sqrt(Math.pow(centerX, 2) + Math.pow(centerY, 2));
+  const maxDistance = Math.sqrt(centerX ** 2 + centerY ** 2);
   // Calculate the actual distance
-  const distance = Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2));
+  const distance = Math.sqrt(deltaX ** 2 + deltaY ** 2);
   // Calculate the rotation factor (0 to 1)
   const rotationFactor = distance / maxDistance;
 
@@ -37,7 +37,7 @@ function calculateCardRotation({
 
 export default function GithubCardSkew({ className }: { className?: string }) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const resetRef = useRef<NodeJS.Timeout>();
+  const resetRef = useRef<NodeJS.Timeout>(undefined);
 
   const update = useCallback(({ x, y }: { x: number; y: number }) => {
     if (!containerRef.current) {

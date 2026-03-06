@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import type { ReactNode } from "react";
 
 import { cn } from "@/lib/utils";
 
@@ -107,7 +107,7 @@ const createDelay = ({
 }: Pick<ReducedValue, "offset" | "delay"> & {
   index: number;
 }) => {
-  return delay + (index + offset) * 50 + "ms";
+  return `${delay + (index + offset) * 50}ms`;
 };
 
 const createAnimatedNodes = (args: ReducedValue, word: string, index: number): ReducedValue => {
@@ -122,10 +122,10 @@ const createAnimatedNodes = (args: ReducedValue, word: string, index: number): R
     "inline-block opacity-0 transition-all ease-in-out fill-mode-forwards",
     {
       // Determine the animation direction
-      ["animate-[reveal-down]"]: !isUp && !blur,
-      ["animate-[reveal-up]"]: isUp && !blur,
-      ["animate-[reveal-down,content-blur]"]: !isUp && blur,
-      ["animate-[reveal-up,content-blur]"]: isUp && blur,
+      "animate-[reveal-down]": !isUp && !blur,
+      "animate-[reveal-up]": isUp && !blur,
+      "animate-[reveal-down,content-blur]": !isUp && blur,
+      "animate-[reveal-up,content-blur]": isUp && blur,
     },
     args.className,
   );

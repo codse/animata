@@ -1,5 +1,5 @@
+import type { Meta, StoryObj } from "@storybook/react";
 import ImageBoxShadow from "@/animata/image/image-box-shadow";
-import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
   title: "Image/Image Box Shadow",

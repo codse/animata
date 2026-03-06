@@ -1,5 +1,5 @@
+import type { Meta, StoryObj } from "@storybook/react";
 import Expandable from "@/animata/carousel/expandable";
-import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
   title: "Carousel/Expandable",

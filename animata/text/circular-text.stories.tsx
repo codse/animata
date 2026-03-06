@@ -1,5 +1,5 @@
+import type { Meta, StoryObj } from "@storybook/react";
 import CircularText from "@/animata/text/circular-text";
-import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
   title: "Text/Circular Text",

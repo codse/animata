@@ -1,7 +1,6 @@
 "use client";
-import { useEffect, useState } from "react";
-import React from "react";
 import { LocateIcon, TruckIcon } from "lucide-react";
+import { useEffect, useState } from "react";
 
 import { cn } from "@/lib/utils";
 

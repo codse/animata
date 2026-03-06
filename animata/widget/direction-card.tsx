@@ -1,6 +1,6 @@
 "use client";
-import { ElementType, useEffect, useState } from "react";
 import { ArrowUp, CornerUpLeft, CornerUpRight } from "lucide-react";
+import { type ElementType, useEffect, useState } from "react";
 
 import { cn } from "@/lib/utils";
 

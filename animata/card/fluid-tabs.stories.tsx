@@ -1,8 +1,8 @@
+import type { Meta, StoryObj } from "@storybook/react";
 import FluidTabs from "@/animata/card/fluid-tabs";
-import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
-  title: "Tabs/Fluid Tabs",
+  title: "Card/Fluid Tabs",
   component: FluidTabs,
   parameters: {
     layout: "centered",

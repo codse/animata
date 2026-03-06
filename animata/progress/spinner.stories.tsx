@@ -1,5 +1,5 @@
+import type { Meta, StoryObj } from "@storybook/react";
 import Spinner from "@/animata/progress/spinner";
-import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
   title: "Progress/Spinner",

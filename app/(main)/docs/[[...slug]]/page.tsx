@@ -1,10 +1,10 @@
+import { ChevronRightIcon, ExternalLinkIcon } from "@radix-ui/react-icons";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { allDocs } from "contentlayer/generated";
 import Balancer from "react-wrap-balancer";
-
-import NavMenu from "@/app/docs/[[...slug]]/nav-menu";
+import { docs as allDocs } from "#site/content";
+import NavMenu from "@/app/(main)/docs/[[...slug]]/nav-menu";
 import CarbonAds from "@/components/ads";
 import { Mdx } from "@/components/mdx-components";
 import { DocsPager } from "@/components/pager";
@@ -15,17 +15,15 @@ import { docsConfig } from "@/config/docs";
 import { siteConfig } from "@/config/site";
 import { getTableOfContents } from "@/lib/toc";
 import { absoluteUrl, cn } from "@/lib/utils";
-import { ChevronRightIcon, ExternalLinkIcon } from "@radix-ui/react-icons";
 
 import "@/styles/mdx.css";
-import "@/styles/storybook.css";
 interface DocPageProps {
-  params: {
+  params: Promise<{
     slug: string[];
-  };
+  }>;
 }
 
-async function getDocFromParams({ params }: DocPageProps) {
+async function getDocFromParams(params: { slug: string[] }) {
   const slug = params.slug?.join("/") || "";
   const doc = allDocs.find((doc) => doc.slugAsParams === slug);
 
@@ -37,7 +35,8 @@ async function getDocFromParams({ params }: DocPageProps) {
 }
 
 export async function generateMetadata({ params }: DocPageProps): Promise<Metadata> {
-  const doc = await getDocFromParams({ params });
+  const resolvedParams = await params;
+  const doc = await getDocFromParams(resolvedParams);
 
   if (!doc) {
     return {};
@@ -70,20 +69,21 @@ export async function generateMetadata({ params }: DocPageProps): Promise<Metada
   };
 }
 
-export async function generateStaticParams(): Promise<DocPageProps["params"][]> {
+export async function generateStaticParams() {
   return allDocs.map((doc) => ({
     slug: doc.slugAsParams.split("/"),
   }));
 }
 
 export default async function DocPage({ params }: DocPageProps) {
-  const doc = await getDocFromParams({ params });
+  const resolvedParams = await params;
+  const doc = await getDocFromParams(resolvedParams);
 
   if (!doc) {
     notFound();
   }
 
-  const toc = await getTableOfContents(doc.body.raw);
+  const toc = await getTableOfContents(doc.content);
 
   return (
     <main className="relative py-6 lg:gap-10 lg:py-8 xl:grid xl:grid-cols-[1fr_150px]">
@@ -148,7 +148,7 @@ export default async function DocPage({ params }: DocPageProps) {
           <CarbonAds />
         </div>
         <div className="pb-12">
-          <Mdx code={doc.body.code} />
+          <Mdx code={doc.body} filePath={`content/${doc.path}.mdx`} />
 
           <div className="my-3 text-right">
             <Link

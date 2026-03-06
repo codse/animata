@@ -1,5 +1,5 @@
+import type { Meta, StoryObj } from "@storybook/react";
 import TextBorderAnimation from "@/animata/text/text-border-animation";
-import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
   title: "Text/Text Border Animation",

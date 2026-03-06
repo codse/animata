@@ -1,6 +1,7 @@
-import React, { useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
 import { ArrowRight, CreditCard, X } from "lucide-react";
+import { AnimatePresence, motion } from "motion/react";
+import type React from "react";
+import { useState } from "react";
 
 interface Transaction {
   id: string;

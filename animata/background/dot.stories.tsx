@@ -1,5 +1,5 @@
+import type { Meta, StoryObj } from "@storybook/react";
 import Dot from "@/animata/background/dot";
-import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
   title: "Background/Dot",

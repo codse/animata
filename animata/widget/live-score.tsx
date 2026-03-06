@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { Circle, Triangle } from "lucide-react";
+import { useEffect, useState } from "react";
 
 import { cn } from "@/lib/utils";
 
@@ -34,14 +34,18 @@ const getScore = (lastScore?: GameInfo): GameInfo => {
       name: "NPL",
       score: teamOneScore % maxScore,
       win:
-        teamOneScore >= maxScore ? (lastScore?.teamOne.win ?? 0) + 1 : lastScore?.teamOne.win ?? 0,
+        teamOneScore >= maxScore
+          ? (lastScore?.teamOne.win ?? 0) + 1
+          : (lastScore?.teamOne.win ?? 0),
     },
     teamTwo: {
       name: "USA",
       icon: "🇺🇸",
       score: teamTwoScore % maxScore,
       win:
-        teamTwoScore >= maxScore ? (lastScore?.teamTwo.win ?? 0) + 1 : lastScore?.teamTwo.win ?? 0,
+        teamTwoScore >= maxScore
+          ? (lastScore?.teamTwo.win ?? 0) + 1
+          : (lastScore?.teamTwo.win ?? 0),
     },
   };
 };

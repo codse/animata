@@ -1,6 +1,6 @@
-import { useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
 import { CheckCircle2, CircleDashed } from "lucide-react";
+import { AnimatePresence, motion } from "motion/react";
+import { useState } from "react";
 
 import { cn } from "@/lib/utils";
 
@@ -49,10 +49,10 @@ export default function StatusButton() {
             </motion.span>
           )}
 
-          {status == "loading" ? (
+          {status === "loading" ? (
             <CircleDashed className="h-4 w-4 animate-spin" />
           ) : (
-            status ?? "Add to cart"
+            (status ?? "Add to cart")
           )}
         </motion.span>
       </AnimatePresence>

@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
 import { Apple, BadgeCent, BadgeInfo, BadgeX, Banana, Bolt } from "lucide-react";
+import { useEffect, useState } from "react";
 
 import { Icons } from "@/components/icons";
 import { cn } from "@/lib/utils";

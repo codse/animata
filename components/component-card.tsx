@@ -1,6 +1,6 @@
-import { HTMLAttributes, useState } from "react";
-import Link from "next/link";
 import { ArrowRight, CircleDashed } from "lucide-react";
+import Link from "next/link";
+import { type HTMLAttributes, useState } from "react";
 
 import { cn } from "@/lib/utils";
 

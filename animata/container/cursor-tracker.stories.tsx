@@ -1,5 +1,5 @@
+import type { Meta, StoryObj } from "@storybook/react";
 import CursorTracker from "@/animata/container/cursor-tracker";
-import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
   title: "Container/Cursor Tracker",

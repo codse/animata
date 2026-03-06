@@ -1,5 +1,5 @@
+import type { Meta, StoryObj } from "@storybook/react";
 import SlackIntro from "@/animata/hero/slack-intro";
-import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
   title: "Hero/Slack Intro",

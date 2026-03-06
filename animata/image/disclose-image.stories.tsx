@@ -1,5 +1,5 @@
+import type { Meta, StoryObj } from "@storybook/react";
 import DiscloseImage from "@/animata/image/disclose-image";
-import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
   title: "Image/Disclose Image",

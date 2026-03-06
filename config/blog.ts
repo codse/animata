@@ -1,6 +1,6 @@
-import { allBlogs } from "contentlayer/generated";
+import { blogs as allBlogs } from "#site/content";
 
-import { SidebarNavItem } from "@/types";
+import type { SidebarNavItem } from "@/types";
 
 interface BlogPost extends SidebarNavItem {
   date: Date;

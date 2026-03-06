@@ -13,7 +13,7 @@ export default function GridView({
 }) {
   const items = React.Children.toArray(children);
   return (
-    <div className="container my-4 flex flex-col gap-4 md:flex-row">
+    <div className="container mx-auto my-4 flex flex-col gap-4 md:flex-row">
       {items.map((item, i) => (
         <div
           key={i}

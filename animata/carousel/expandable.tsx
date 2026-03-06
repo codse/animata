@@ -1,4 +1,4 @@
-import { HTMLAttributes, useEffect, useState } from "react";
+import { type HTMLAttributes, useEffect, useState } from "react";
 
 import WaveReveal from "@/animata/text/wave-reveal";
 import { cn } from "@/lib/utils";

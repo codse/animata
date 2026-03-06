@@ -1,7 +1,5 @@
 "use client";
 
-import React from "react";
-
 import Marquee from "@/animata/container/marquee";
 import BatteryLevel from "@/animata/widget/battery-level";
 import ClockWithPhoto from "@/animata/widget/clock-with-photo";

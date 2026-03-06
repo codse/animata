@@ -23,10 +23,7 @@ export default function Thunder() {
         </mask>
         <g mask="url(#cs_mask_1_misc-4)">
           <path fill="#fff" d="M200 0H0v200h200V0z"></path>
-          <path
-            fill="url(#paint0_linear_748_5038)"
-            d="M200 0H0v200h200V0z"
-          ></path>
+          <path fill="url(#paint0_linear_748_5038)" d="M200 0H0v200h200V0z"></path>
           <g filter="url(#filter0_f_748_5038)">
             <path fill="#18A0FB" d="M216 79H96v135h120V79z"></path>
           </g>
@@ -43,11 +40,7 @@ export default function Thunder() {
           filterUnits="userSpaceOnUse"
         >
           <feFlood floodOpacity="0" result="BackgroundImageFix"></feFlood>
-          <feBlend
-            in="SourceGraphic"
-            in2="BackgroundImageFix"
-            result="shape"
-          ></feBlend>
+          <feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"></feBlend>
           <feGaussianBlur
             result="effect1_foregroundBlur_748_5038"
             stdDeviation="31.25"
@@ -85,24 +78,9 @@ export default function Thunder() {
           y="0%"
           filterUnits="objectBoundingBox"
         >
-          <feTurbulence
-            baseFrequency="0.6"
-            numOctaves="5"
-            result="out1"
-            seed="4"
-          ></feTurbulence>
-          <feComposite
-            in="out1"
-            in2="SourceGraphic"
-            operator="in"
-            result="out2"
-          ></feComposite>
-          <feBlend
-            in="SourceGraphic"
-            in2="out2"
-            mode="overlay"
-            result="out3"
-          ></feBlend>
+          <feTurbulence baseFrequency="0.6" numOctaves="5" result="out1" seed="4"></feTurbulence>
+          <feComposite in="out1" in2="SourceGraphic" operator="in" result="out2"></feComposite>
+          <feBlend in="SourceGraphic" in2="out2" mode="overlay" result="out3"></feBlend>
         </filter>
       </defs>
     </svg>

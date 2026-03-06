@@ -1,5 +1,5 @@
+import type { Meta, StoryObj } from "@storybook/react";
 import NotificationCard from "@/animata/card/notification-card";
-import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
   title: "Card/Notification Card",

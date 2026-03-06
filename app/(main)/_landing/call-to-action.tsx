@@ -1,13 +1,12 @@
-import { useEffect, useRef, useState } from "react";
-import Link from "next/link";
-import { useInView } from "framer-motion";
+import { GitHubLogoIcon } from "@radix-ui/react-icons";
 import { Navigation } from "lucide-react";
-
+import { useInView } from "motion/react";
+import Link from "next/link";
+import { useEffect, useRef, useState } from "react";
 import AnimatedGradientText from "@/animata/text/animated-gradient-text";
 import GibberishText from "@/animata/text/gibberish-text";
 import ComponentLinkWrapper from "@/components/component-link-wrapper";
 import RemountOnMouseIn from "@/components/remount-on-mouse-in";
-import { GitHubLogoIcon } from "@radix-ui/react-icons";
 
 export default function CallToActionSection() {
   const headerRef = useRef<HTMLHeadingElement>(null);

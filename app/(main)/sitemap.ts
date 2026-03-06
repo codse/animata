@@ -1,6 +1,8 @@
-import { MetadataRoute } from "next";
+import type { MetadataRoute } from "next";
 
-import { allDocs } from "@/.contentlayer/generated";
+import { docs as allDocs } from "#site/content";
+
+export const dynamic = "force-static";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const domain = process.env.NEXT_PUBLIC_APP_URL;

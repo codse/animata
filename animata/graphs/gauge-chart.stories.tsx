@@ -1,5 +1,5 @@
+import type { Meta, StoryObj } from "@storybook/react";
 import GaugeChart from "@/animata/graphs/gauge-chart";
-import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
   title: "Graphs/Gauge Chart",

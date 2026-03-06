@@ -5,11 +5,7 @@ interface SpinnerProps {
   outerSize?: string;
   childSize?: string;
 }
-export default function Spinner({
-  className,
-  outerSize,
-  childSize,
-}: SpinnerProps) {
+export default function Spinner({ className, outerSize, childSize }: SpinnerProps) {
   return (
     <div
       className={cn(

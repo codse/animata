@@ -1,4 +1,3 @@
-import React from "react";
 import { Tomorrow } from "next/font/google";
 
 import { cn } from "@/lib/utils";

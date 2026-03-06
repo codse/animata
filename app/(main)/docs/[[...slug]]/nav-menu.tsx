@@ -1,8 +1,8 @@
 "use client";
-import { useState } from "react";
+import { Loader } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Loader } from "lucide-react";
+import { useState } from "react";
 
 import {
   Select,
@@ -13,7 +13,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { SidebarNavItem } from "@/types";
+import type { SidebarNavItem } from "@/types";
 
 export default function NavMenu({
   value,

@@ -1,5 +1,5 @@
+import type { Meta, StoryObj } from "@storybook/react";
 import SwapText from "@/animata/text/swap-text";
-import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
   title: "Text/Swap Text",

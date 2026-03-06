@@ -1,5 +1,5 @@
+import fs from "node:fs";
 import chalk from "chalk";
-import fs from "fs";
 import camelCase from "lodash.camelcase";
 import kebabCase from "lodash.kebabcase";
 import startCase from "lodash.startcase";

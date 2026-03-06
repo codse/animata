@@ -1,5 +1,5 @@
+import type { Meta, StoryObj } from "@storybook/react";
 import TextExplodeIMessage from "@/animata/text/text-explode-imessage";
-import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
   title: "Text/Text Explode Imessage",

@@ -1,5 +1,5 @@
+import type { Meta, StoryObj } from "@storybook/react";
 import AnimatedBorderTrail from "@/animata/container/animated-border-trail";
-import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
   title: "Container/Animated Border Trail",

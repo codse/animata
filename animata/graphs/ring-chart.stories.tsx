@@ -1,5 +1,5 @@
+import type { Meta, StoryObj } from "@storybook/react";
 import Rings from "@/animata/graphs/ring-chart";
-import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
   title: "Graphs/Ring Chart",

@@ -1,5 +1,5 @@
+import type { Meta, StoryObj } from "@storybook/react";
 import OrbitingItems, { testOrbitingItems } from "@/animata/list/orbiting-items";
-import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
   title: "List/Orbiting Items",

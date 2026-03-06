@@ -1,5 +1,5 @@
+import type { Meta, StoryObj } from "@storybook/react";
 import TeamClock from "@/animata/widget/team-clock";
-import { Meta, StoryObj } from "@storybook/react";
 
 const testTeamClockProps = {
   users: [

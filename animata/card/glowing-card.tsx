@@ -1,4 +1,5 @@
-import React from "react";
+import type React from "react";
+
 interface GlowCardProps extends React.HTMLAttributes<HTMLDivElement> {
   /**
    * Starting gradient color.

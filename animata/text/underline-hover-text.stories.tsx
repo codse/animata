@@ -1,5 +1,7 @@
-import UnderlineHoverText, { UnderlineHoverTextProps } from "@/animata/text/underline-hover-text";
-import { Meta, StoryFn } from "@storybook/react";
+import type { Meta, StoryFn } from "@storybook/react";
+import UnderlineHoverText, {
+  type UnderlineHoverTextProps,
+} from "@/animata/text/underline-hover-text";
 
 export default {
   title: "text/Underline hover text",
@@ -18,7 +20,7 @@ export default {
 
 const Template: StoryFn<UnderlineHoverTextProps> = (args) => <UnderlineHoverText {...args} />;
 
-export const Default = Template.bind({});
-Default.args = {
+export const Primary = Template.bind({});
+Primary.args = {
   text: "Hover over me",
 };

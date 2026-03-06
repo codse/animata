@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
 import { Check, X } from "lucide-react";
+import { AnimatePresence, motion } from "motion/react";
+import type React from "react";
+import { useEffect, useRef, useState } from "react";
 
 interface Comment {
   id: number;
@@ -14,7 +15,7 @@ interface Comment {
 
 const containerVariants = {
   hidden: { height: "auto" },
-  visible: { height: "auto", transition: { duration: 0.5, ease: "easeInOut" } },
+  visible: { height: "auto", transition: { duration: 0.5, ease: "easeInOut" as const } },
 };
 
 const commentVariants = {
@@ -57,7 +58,7 @@ export default function CommentReplyCard({ initialComments }: { initialComments:
     if (containerRef.current) {
       containerRef.current.scrollTop = containerRef.current.scrollHeight;
     }
-  }, [comments]);
+  }, []);
 
   return (
     <div className="mx-auto max-h-full min-h-96 w-full max-w-md">

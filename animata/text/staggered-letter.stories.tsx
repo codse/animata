@@ -1,5 +1,5 @@
+import type { Meta, StoryObj } from "@storybook/react";
 import StaggeredLetter from "@/animata/text/staggered-letter";
-import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
   title: "Text/Staggered Letter",

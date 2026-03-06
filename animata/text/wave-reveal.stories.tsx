@@ -1,5 +1,5 @@
+import type { Meta, StoryObj } from "@storybook/react";
 import WaveReveal from "@/animata/text/wave-reveal";
-import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
   title: "Text/Wave Reveal",

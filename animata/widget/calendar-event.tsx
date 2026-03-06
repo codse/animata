@@ -106,7 +106,7 @@ export default function CalendarEvent({
             </p>
             <p className="text-[10px] text-gray-500">16:15 - 20:00</p>
           </div>
-          {dates.slice(maxEvents, maxEvents + 3).map((date, index) => (
+          {dates.slice(maxEvents, maxEvents + 3).map((_date, index) => (
             <div
               key={index}
               style={{

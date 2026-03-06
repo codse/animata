@@ -1,10 +1,10 @@
+import { ChevronRightIcon, ExternalLinkIcon } from "@radix-ui/react-icons";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { allBlogs, Doc } from "contentlayer/generated";
 import Balancer from "react-wrap-balancer";
-
-import NavMenu from "@/app/docs/[[...slug]]/nav-menu";
+import { blogs as allBlogs } from "#site/content";
+import NavMenu from "@/app/(main)/docs/[[...slug]]/nav-menu";
 import { Mdx } from "@/components/mdx-components";
 import { DocsPager } from "@/components/pager";
 import { DashboardTableOfContents } from "@/components/toc";
@@ -14,18 +14,16 @@ import { blogSidebarNav } from "@/config/blog";
 import { siteConfig } from "@/config/site";
 import { getTableOfContents } from "@/lib/toc";
 import { absoluteUrl, cn } from "@/lib/utils";
-import { ChevronRightIcon, ExternalLinkIcon } from "@radix-ui/react-icons";
 
 import "@/styles/mdx.css";
-import "@/styles/storybook.css";
 
 interface BlogPageProps {
-  params: {
+  params: Promise<{
     slug: string[];
-  };
+  }>;
 }
 
-async function getBlogFromParams({ params }: BlogPageProps) {
+async function getBlogFromParams(params: { slug: string[] }) {
   const slug = params.slug?.join("/") || "";
   const blog = allBlogs.find((doc) => doc.slugAsParams === slug);
 
@@ -37,7 +35,8 @@ async function getBlogFromParams({ params }: BlogPageProps) {
 }
 
 export async function generateMetadata({ params }: BlogPageProps): Promise<Metadata> {
-  const blog = await getBlogFromParams({ params });
+  const resolvedParams = await params;
+  const blog = await getBlogFromParams(resolvedParams);
 
   if (!blog) {
     return {};
@@ -70,20 +69,21 @@ export async function generateMetadata({ params }: BlogPageProps): Promise<Metad
   };
 }
 
-export async function generateStaticParams(): Promise<BlogPageProps["params"][]> {
+export async function generateStaticParams() {
   return allBlogs.map((blog) => ({
     slug: blog.slugAsParams.split("/"),
   }));
 }
 
 export default async function BlogPage({ params }: BlogPageProps) {
-  const blog = await getBlogFromParams({ params });
+  const resolvedParams = await params;
+  const blog = await getBlogFromParams(resolvedParams);
 
   if (!blog) {
     notFound();
   }
 
-  const toc = await getTableOfContents(blog.body.raw);
+  const toc = await getTableOfContents(blog.content);
 
   return (
     <main className="relative py-6 lg:gap-10 lg:py-8 xl:grid xl:grid-cols-[1fr_150px]">
@@ -141,11 +141,11 @@ export default async function BlogPage({ params }: BlogPageProps) {
           </div>
         ) : null}
         <div className="pb-12">
-          <Mdx code={blog.body.code} />
+          <Mdx code={blog.body} filePath={`content/${blog.path}.mdx`} />
 
           <div className="my-3 text-right">
             <Link
-              href={`https://github.com/codse/animata/edit/main/content/docs/${blog.slugAsParams}.mdx`}
+              href={`https://github.com/codse/animata/edit/main/content/blog/${blog.slugAsParams}.mdx`}
               target="_blank"
               rel="noreferrer"
               className="text-sm text-secondary-foreground underline"
@@ -154,7 +154,7 @@ export default async function BlogPage({ params }: BlogPageProps) {
             </Link>
           </div>
         </div>
-        <DocsPager doc={blog as unknown as Doc} />
+        <DocsPager doc={blog} />
       </div>
       {blog.toc && (
         <div className="hidden text-sm xl:block">

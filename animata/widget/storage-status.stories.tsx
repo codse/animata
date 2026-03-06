@@ -1,5 +1,5 @@
+import type { Meta, StoryObj } from "@storybook/react";
 import StorageStatus from "@/animata/widget/storage-status";
-import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
   title: "Widget/Storage Status",

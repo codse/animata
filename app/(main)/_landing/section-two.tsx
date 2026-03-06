@@ -2,7 +2,7 @@ import AnimatedBeam from "@/animata/background/animated-beam";
 import InteractiveGrid from "@/animata/background/interactive-grid";
 import AnimatedGradientText from "@/animata/text/animated-gradient-text";
 import SplitText from "@/animata/text/split-text";
-import GridView from "@/app/_landing/grid-view";
+import GridView from "@/app/(main)/_landing/grid-view";
 import { ComponentCard } from "@/components/component-card";
 import ComponentLinkWrapper from "@/components/component-link-wrapper";
 

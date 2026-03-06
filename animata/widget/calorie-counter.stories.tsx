@@ -1,5 +1,5 @@
+import type { Meta, StoryObj } from "@storybook/react";
 import CalorieCounter, { testCalorieCounterProps } from "@/animata/widget/calorie-counter";
-import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
   title: "Widget/Calorie Counter",

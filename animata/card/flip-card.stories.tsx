@@ -1,5 +1,5 @@
+import type { Meta, StoryObj } from "@storybook/react";
 import FlipCard from "@/animata/card/flip-card";
-import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
   title: "Card/Flip Card",

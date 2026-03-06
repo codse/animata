@@ -1,8 +1,5 @@
 "use client";
 
-import { useState } from "react";
-import { StaticImageData } from "next/image";
-import { motion } from "framer-motion";
 import {
   Circle,
   LogOut,
@@ -14,6 +11,9 @@ import {
   Square,
   VideoIcon,
 } from "lucide-react";
+import { motion } from "motion/react";
+import type { StaticImageData } from "next/image";
+import { useState } from "react";
 
 import { cn } from "@/lib/utils";
 import Hills from "@/public/bg-hills.jpg";
