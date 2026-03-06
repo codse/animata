@@ -92,7 +92,6 @@
   --animate-blink-red: blink-red 2s infinite linear;
   --animate-sparkle: sparkle 2s ease-in-out infinite;
   --animate-meteor: meteor var(--duration) var(--delay) ease-in-out infinite;
-  --animate-trail: trail var(--duration) linear infinite;
   --animate-led: led 100ms ease-in-out;
   --animate-float: float 3s ease-in-out infinite;
 
@@ -306,15 +305,6 @@
     }
   }
 
-  @keyframes trail {
-    0% {
-      --angle: 0deg;
-    }
-    100% {
-      --angle: 360deg;
-    }
-  }
-
   @keyframes led {
     0% {
       fill: currentColor;
@@ -499,12 +489,6 @@
     content: "";
     @apply absolute -inset-4 rounded-xl border shadow-xl;
   }
-}
-
-@property --angle {
-  syntax: "<angle>";
-  initial-value: 0deg;
-  inherits: false;
 }
 
 .scroll-baby[style*="opacity: 1"] {
