@@ -4,8 +4,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "next dev & storybook dev -p 6006 --no-open & wait",
-    "prebuild": "storybook build -o public/preview",
+    "dev": "velite --watch & next dev & storybook dev -p 6006 --no-open & wait",
+    "prebuild": "velite && storybook build -o public/preview",
     "build": "next build --webpack",
     "start": "next start",
     "lint": "biome check .",
