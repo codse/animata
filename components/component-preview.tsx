@@ -55,7 +55,7 @@ export function ComponentPreview({ name, className, ...props }: ComponentPreview
           }
         >
           <iframe
-            src={`/preview/iframe.html?globals=${themeParam}&id=${name}&viewMode=docs&site:docs=true`}
+            src={`${process.env.NEXT_PUBLIC_STORYBOOK_URL ?? "/preview"}/iframe.html?globals=${themeParam}&id=${name}&viewMode=story`}
             className="w-full"
             style={{
               minHeight: "200px",
