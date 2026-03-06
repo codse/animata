@@ -106,7 +106,7 @@ function DirectionCard({
       <div className="direction-container flex h-full w-[80%] flex-col items-center justify-center gap-3">
         <p className="text-3xl font-bold text-white">
           {currentDirection.distance}
-          <span className="text-opacity-50">m</span>
+          <span className="text-black/50">m</span>
         </p>
         <p className="animate-pulse">{renderIcon(iconState.currentIconType, 52, "text-white")}</p>
         <p className="text-md h-8 w-20 text-ellipsis break-all text-center text-gray-400">

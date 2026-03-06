@@ -86,7 +86,7 @@ export default function ConfirmationMessage({
           transition={{ delay: 1.2, duration: 0.5 }}
         >
           {/* Message box */}
-          <div className="my-4 flex h-fit w-full rounded-lg border border-white/40 bg-white/30 bg-opacity-90 p-6 py-4 shadow-lg backdrop-blur-md">
+          <div className="my-4 flex h-fit w-full rounded-lg border border-white/40 bg-white/90 p-6 py-4 shadow-lg backdrop-blur-md">
             <div className="mr-4 flex h-12 min-w-12 items-center justify-center rounded-full bg-green-800 text-white">
               {labelName[0]}
             </div>

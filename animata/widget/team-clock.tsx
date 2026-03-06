@@ -367,10 +367,7 @@ function ListElement(props: ListElementProp) {
 
   return (
     <motion.div
-      className={cn(
-        "flex cursor-pointer items-center rounded-lg p-3",
-        props.isSelected || isHovered ? "bg-opacity-10" : "",
-      )}
+      className={cn("flex cursor-pointer items-center rounded-lg p-3", "")}
       onMouseEnter={handleEnter}
       onMouseLeave={handleLeave}
       onClick={handleClick}

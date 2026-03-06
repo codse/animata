@@ -35,7 +35,7 @@ export default function GlowingCard({
       <div className="flex h-64 w-56 flex-col gap-2 rounded-3xl bg-blue-950 p-4">
         <div className="mb-2 text-xl font-bold text-gray-50">Glowing</div>
 
-        <div className="flex-1 text-sm font-medium text-gray-100 text-opacity-80">
+        <div className="flex-1 text-sm font-medium text-gray-100/80">
           A glowing card is a card that glows.
         </div>
       </div>

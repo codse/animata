@@ -35,7 +35,7 @@ export default function CallToActionSection() {
       <div className="mx-auto flex w-full max-w-2xl flex-row items-center justify-center gap-4">
         <Link
           href="/docs"
-          className="relative flex aspect-square min-h-52 w-full flex-col items-center justify-center gap-4 overflow-hidden rounded-xl border border-border bg-gray-100/50 bg-opacity-100 py-12 transition-all duration-100 hover:scale-105 hover:bg-opacity-50 dark:border-zinc-600 dark:bg-zinc-800"
+          className="relative flex aspect-square min-h-52 w-full flex-col items-center justify-center gap-4 overflow-hidden rounded-xl border border-border bg-gray-100/50 py-12 transition-all duration-100 hover:scale-105 hover:bg-gray-100/25 dark:border-zinc-600 dark:bg-zinc-800"
         >
           <Navigation className="size-10 md:size-14" />
           <div className="text-balance px-4 text-center text-sm font-bold sm:text-base md:text-lg">
@@ -44,7 +44,7 @@ export default function CallToActionSection() {
         </Link>
         <Link
           href="https://github.com/codse/animata"
-          className="relative flex aspect-square min-h-52 w-full flex-col items-center justify-center gap-4 overflow-hidden rounded-xl border border-border bg-gray-100/50 bg-opacity-100 py-12 transition-all duration-100 hover:scale-105 hover:bg-opacity-50 dark:border-zinc-600 dark:bg-zinc-800"
+          className="relative flex aspect-square min-h-52 w-full flex-col items-center justify-center gap-4 overflow-hidden rounded-xl border border-border bg-gray-100/50 py-12 transition-all duration-100 hover:scale-105 hover:bg-gray-100/25 dark:border-zinc-600 dark:bg-zinc-800"
         >
           <GitHubLogoIcon className="size-10 md:size-14" />
           <div className="text-balance px-4 text-center text-sm font-bold sm:text-base md:text-lg">

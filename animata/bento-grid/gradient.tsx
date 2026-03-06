@@ -41,7 +41,7 @@ function BentoCard({
             <p className="text-md line-clamp-1 font-bold">{title}</p>
           </div>
         </header>
-        <div className="flex-1 text-sm font-medium text-opacity-80">{description}</div>
+        <div className="flex-1 text-sm font-medium text-white/80">{description}</div>
         {children}
       </section>
     </MovingGradient>

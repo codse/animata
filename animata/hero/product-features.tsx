@@ -25,12 +25,12 @@ function FeatureCard({ feature, className, zIndexOffset = 0, ...props }: Feature
     <>
       <img src={imageUrl} alt="" className="-z-1 absolute inset-0 h-full w-full object-cover" />
       <div className="z-10 flex h-full w-full flex-col gap-2 bg-gradient-to-t from-zinc-800/40 from-15% to-transparent p-3">
-        <small className="inline w-fit rounded-xl bg-orange-950 bg-opacity-50 px-2 py-1 text-xs font-medium leading-none text-white">
+        <small className="inline w-fit rounded-xl bg-orange-950/50 px-2 py-1 text-xs font-medium leading-none text-white">
           {category}
         </small>
 
         <div className="flex-1" />
-        <h3 className="rounded-xl bg-blue-950 bg-opacity-30 p-3 text-base font-bold leading-none text-white backdrop-blur-sm">
+        <h3 className="rounded-xl bg-blue-950/30 p-3 text-base font-bold leading-none text-white backdrop-blur-sm">
           {title}
         </h3>
       </div>
