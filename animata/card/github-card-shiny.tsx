@@ -34,7 +34,7 @@ export default function GithubCardShiny({ className }: { className?: string }) {
       <div
         ref={overlayRef}
         // Adjust height & width as required
-        className="-z-1 absolute h-64 w-64 rounded-full bg-white opacity-0 bg-blend-soft-light blur-3xl transition-opacity group-hover:opacity-20"
+        className="z-0 absolute h-64 w-64 rounded-full bg-white opacity-0 bg-blend-soft-light blur-3xl transition-opacity group-hover:opacity-20"
         style={{
           transform: "translate(var(--x), var(--y))",
         }}

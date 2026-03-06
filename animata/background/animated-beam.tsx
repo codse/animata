@@ -67,7 +67,7 @@ function Background() {
   return (
     <div
       ref={containerRef}
-      className="-z-1 absolute inset-0 flex h-full w-full flex-row justify-between bg-gradient-to-t from-indigo-900 to-indigo-950"
+      className="z-0 absolute inset-0 flex h-full w-full flex-row justify-between bg-gradient-to-t from-indigo-900 to-indigo-950"
     >
       <div
         style={{

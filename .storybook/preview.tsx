@@ -3,6 +3,7 @@ import type React from "react";
 import { useEffect } from "react";
 
 import "../styles/globals.css";
+import "../styles/storybook.css";
 
 const isEmbedded = typeof window !== "undefined" && window.location.href.includes("site:docs");
 

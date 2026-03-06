@@ -23,7 +23,7 @@ function FeatureCard({ feature, className, zIndexOffset = 0, ...props }: Feature
 
   const content = (
     <>
-      <img src={imageUrl} alt="" className="-z-1 absolute inset-0 h-full w-full object-cover" />
+      <img src={imageUrl} alt="" className="z-0 absolute inset-0 h-full w-full object-cover" />
       <div className="z-10 flex h-full w-full flex-col gap-2 bg-gradient-to-t from-zinc-800/40 from-15% to-transparent p-3">
         <small className="inline w-fit rounded-xl bg-orange-950/50 px-2 py-1 text-xs font-medium leading-none text-white">
           {category}
