@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "next dev",
+    "prebuild": "storybook build -o public/preview",
     "build": "next build --webpack",
     "start": "next start",
     "lint": "biome check .",
