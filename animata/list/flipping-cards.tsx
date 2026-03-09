@@ -25,7 +25,7 @@ const Card = ({ show, reveal }: CardProps) => {
     <div className={cn("group/flip h-60 w-48 [perspective:1000px]")}>
       <div
         className={cn(
-          "relative h-full transition-all delay-75 duration-500 ease-linear [transform-style:preserve-3d] group-hover/flip:[transform:rotateY(-180deg)]",
+          "relative h-full transition delay-75 duration-500 ease-linear [transform-style:preserve-3d] group-hover/flip:[transform:rotateY(-180deg)]",
         )}
       >
         <div className={cn("bg-white", common)}>{show}</div>
@@ -48,11 +48,13 @@ const CardDetails = ({ title, image, font, index }: CardDetailsProps) => {
     <Card
       show={
         <div className="flex w-full flex-col border-[1px] border-black/15 px-3 py-4 text-sm">
-          <span className="border-t-2 border-black pt-1">{font}</span>
+          <span className="border-t-2 border-black text-black pt-1">{font}</span>
 
-          <span className="mt-4 border-b-2 border-black px-1 font-serif text-8xl">{title}</span>
+          <span className="mt-4 border-b-2 border-black text-black px-1 font-serif text-8xl">
+            {title}
+          </span>
           <div className="mt-12 flex items-center justify-between">
-            <span>{index}</span>
+            <span>{(index ?? 0) + 1}</span>
             <PlusCircle size={18} />
           </div>
         </div>
@@ -64,8 +66,8 @@ const CardDetails = ({ title, image, font, index }: CardDetailsProps) => {
             {font.split(" ")[0]}
           </Marquee>
           <div className="flex items-center justify-between px-3">
-            <span className="text-white">See more</span>
-            <PlusCircle size={18} color="white" />
+            <span className="text-black">See more</span>
+            <PlusCircle size={18} color="black" />
           </div>
         </div>
       }

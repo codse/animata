@@ -16,7 +16,7 @@ export default function MirrorText({
 
   containerClassName?: string;
 }) {
-  const animation = cn("transition-all duration-500 ease-slow", {
+  const animation = cn("transition duration-500 ease-slow", {
     "group-hover/mirror:-translate-y-4": direction === "up",
     "group-hover/mirror:translate-y-4": direction === "down",
     "group-hover/mirror:-translate-x-4": direction === "left",

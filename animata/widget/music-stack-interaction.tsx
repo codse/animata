@@ -102,7 +102,7 @@ export default function MusicStackInteraction({ albums }: albumsProps) {
         </motion.div>
       </motion.div>
 
-      <motion.div className="duration-2000 absolute bottom-4 left-0 right-0 -mb-4 flex w-auto items-center justify-center rounded-xl bg-gray-800 p-4 text-white shadow-2xl transition-all">
+      <motion.div className="duration-2000 absolute bottom-4 left-0 right-0 -mb-4 flex w-auto items-center justify-center rounded-xl bg-gray-800 p-4 text-white shadow-2xl transition">
         <div className="flex w-32 items-center space-x-2 rounded-full bg-gray-900 p-2">
           <div
             className={cn("flex h-8 w-16 cursor-pointer items-center justify-center rounded-full", {

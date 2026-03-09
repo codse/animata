@@ -10,7 +10,7 @@ interface SectionItem {
 function Section({ label, value, color, total, stretch }: SectionItem & { total: number }) {
   return (
     <div
-      className={cn("relative w-full rounded-md transition-all", color, {
+      className={cn("relative w-full rounded-md transition", color, {
         "flex-1 text-gray-500": stretch,
       })}
       style={{ height: `${(value / total) * 100}%` }}

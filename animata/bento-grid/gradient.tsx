@@ -60,10 +60,10 @@ function GetGradient() {
       <div className="group/grid relative flex cursor-pointer flex-col justify-end rounded-md bg-zinc-950 p-2 text-2xl tracking-tight text-gray-100 md:text-4xl">
         <div className="font-light">Get</div>
         <div className="-mt-2 font-bold">Gradients</div>
-        <div className="flex h-6 w-6 items-center justify-center rounded-full border bg-white transition-all duration-700 group-hover/grid:rotate-[360] md:h-8 md:w-8">
+        <div className="flex h-6 w-6 items-center justify-center rounded-full border bg-white transition duration-700 group-hover/grid:rotate-[360] md:h-8 md:w-8">
           <ArrowRight size={16} className="text-blue-600" />
         </div>
-        <div className="absolute right-2 top-2 h-2 w-2 rounded-full bg-white opacity-50 transition-all duration-700 group-hover/grid:opacity-25" />
+        <div className="absolute right-2 top-2 h-2 w-2 rounded-full bg-white opacity-50 transition duration-700 group-hover/grid:opacity-25" />
       </div>
     </BentoCard>
   );

@@ -236,7 +236,7 @@ export default function LEDBoard({
                   animationDuration: "2000ms",
                   animationDelay: `${delay}ms`,
                 }}
-                className={cn("fill-zinc-800 transition-all duration-200 ease-in-out", {
+                className={cn("fill-zinc-800 transition duration-200 ease-in-out", {
                   "group-hover/led:fill-purple-500": isLit,
                   "animate-led ease-in-out": shouldAnimate,
                 })}

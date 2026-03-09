@@ -14,7 +14,7 @@ export default function ExternalLinkButton({ text = "Open Link" }: ButtonTitlePr
       <ArrowTopRightIcon
         height={20}
         width={20}
-        className="opacity-75 transition-all group-hover/link:-translate-y-1 group-hover/link:translate-x-1 group-hover/link:scale-110 group-hover/link:text-yellow-300 group-hover/link:opacity-100"
+        className="opacity-75 transition group-hover/link:-translate-y-1 group-hover/link:translate-x-1 group-hover/link:scale-110 group-hover/link:text-yellow-300 group-hover/link:opacity-100"
       />
     </button>
   );

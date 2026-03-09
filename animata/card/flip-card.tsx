@@ -26,7 +26,7 @@ export default function FlipCard({
     <div className={cn("group/card h-72 w-56 perspective-[1000px]", className)} {...props}>
       <div
         className={cn(
-          "relative h-full rounded-2xl transition-all duration-500 transform-3d",
+          "relative h-full rounded-2xl transition duration-500 transform-3d",
           rotationClass[rotate][0],
         )}
       >

@@ -21,9 +21,9 @@ export const Primary: Story = {
     children: (
       <>
         This component reveals its children{" "}
-        <Baby className="scroll-baby size-5 transition-all duration-75 ease-in-out md:size-8" /> as
-        you scroll down the page{" "}
-        <File className="scroll-file size-5 transition-all duration-75 ease-in-out md:size-8" />
+        <Baby className="scroll-baby size-5 transition duration-75 ease-in-out md:size-8" /> as you
+        scroll down the page{" "}
+        <File className="scroll-file size-5 transition duration-75 ease-in-out md:size-8" />
         .
         <div className="my-4 w-full" />
         It uses a sticky container with a fixed height and a large space at the bottom. Finally, it

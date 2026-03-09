@@ -27,7 +27,7 @@ const Tab = ({ text, selected, setSelected }: TabProps) => {
     <button
       onClick={() => setSelected(text)}
       className={cn(
-        "relative rounded-md p-2 text-sm transition-all",
+        "relative rounded-md p-2 text-sm transition",
         selected ? "text-white" : "text-slate-300 hover:font-black",
       )}
     >

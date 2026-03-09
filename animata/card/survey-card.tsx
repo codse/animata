@@ -70,7 +70,7 @@ export default function SurveyCard({ items, width: providedWidth, surveyTitle }:
             className={cn("flex w-full items-center justify-between")}
           >
             <div
-              className={cn("duration-600 flex h-6 justify-start rounded-full transition-all", {
+              className={cn("duration-600 flex h-6 justify-start rounded-full transition", {
                 "animate-pulse bg-slate-300": !isParentHovered,
                 "bg-green-600": isParentHovered && maxVote === item.vote,
                 "bg-slate-400": isParentHovered && maxVote !== item.vote,

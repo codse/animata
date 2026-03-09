@@ -64,7 +64,7 @@ function EventCard({ date }: { date: CalendarEvent; hides: boolean }) {
   return (
     <div
       className={cn(
-        "relative flex h-10 w-full items-center gap-2 overflow-hidden rounded-md pl-1 transition-all",
+        "relative flex h-10 w-full items-center gap-2 overflow-hidden rounded-md pl-1 transition",
         date.bgcolor,
       )}
     >

@@ -70,7 +70,7 @@ export default function IntegrationPills() {
   return (
     <div className="flex justify-center py-10">
       {/* Rectangular box around all cards */}
-      <div className="group/pills flex w-full max-w-lg flex-wrap justify-center rounded-xl border-2 border-gray-400 bg-gray-50 px-2 py-6 shadow-2xl transition-all duration-300 ease-in-out hover:bg-white hover:shadow-2xl">
+      <div className="group/pills flex w-full max-w-lg flex-wrap justify-center rounded-xl border-2 border-gray-400 bg-gray-50 px-2 py-6 shadow-2xl transition duration-300 ease-in-out hover:bg-white hover:shadow-2xl">
         {brands.map((brand, index) => (
           <div
             key={index}

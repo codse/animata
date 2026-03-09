@@ -32,7 +32,7 @@ export default function GetStartedButton({
             "bg-orange-600 group-hover/start:bg-amber-100",
           )}
         >
-          <div className="absolute left-0 flex h-7 w-14 -translate-x-1/2 items-center justify-center transition-all duration-200 ease-in-out group-hover/start:translate-x-0">
+          <div className="absolute left-0 flex h-7 w-14 -translate-x-1/2 items-center justify-center transition duration-200 ease-in-out group-hover/start:translate-x-0">
             <ArrowRight
               size={16}
               className={cn(

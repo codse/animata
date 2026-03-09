@@ -66,7 +66,7 @@ export default function Speeddial({ direction, actionButtons }: SpeedialProps) {
   const handleMouseLeave = () => setIsHovered(false);
 
   const getGlassyClasses = () => {
-    return "backdrop-filter backdrop-blur-xl bg-white border border-white rounded-xl shadow-lg transition-all duration-300";
+    return "backdrop-filter backdrop-blur-xl bg-white border border-white rounded-xl shadow-lg transition duration-300";
   };
 
   //customize your action buttons here
@@ -80,7 +80,7 @@ export default function Speeddial({ direction, actionButtons }: SpeedialProps) {
     >
       <button
         onMouseEnter={handleMouseEnter}
-        className={`${getGlassyClasses()} order-0 order-1 flex items-center p-3 text-gray-800 transition-all duration-300 hover:bg-slate-100`}
+        className={`${getGlassyClasses()} order-0 order-1 flex items-center p-3 text-gray-800 transition duration-300 hover:bg-slate-100`}
       >
         <Plus size={20} />
       </button>
@@ -89,14 +89,14 @@ export default function Speeddial({ direction, actionButtons }: SpeedialProps) {
       <div
         className={`${
           isHovered ? "scale-100 opacity-100" : "scale-0 opacity-0"
-        } flex items-center gap-3 transition-all duration-500 ease-in-out ${getAnimation()}`}
+        } flex items-center gap-3 transition duration-500 ease-in-out ${getAnimation()}`}
       >
         {actionButtons.map((action, index) => (
           <Tooltip text={action.label} key={index} direction={direction}>
             <button
               key={index}
               onClick={action.action}
-              className={`${getGlassyClasses()} flex items-center p-3 text-gray-800 transition-all duration-300 hover:bg-slate-100`}
+              className={`${getGlassyClasses()} flex items-center p-3 text-gray-800 transition duration-300 hover:bg-slate-100`}
             >
               {action.icon}
             </button>

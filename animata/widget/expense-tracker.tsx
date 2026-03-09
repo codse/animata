@@ -51,7 +51,7 @@ export default function ExpenseTracker({
               }}
             >
               <div
-                className="fill absolute bottom-0 left-0 bg-blue-500 transition-all"
+                className="fill absolute bottom-0 left-0 bg-blue-500 transition"
                 style={{
                   height: `${(item.amount / totalSpending) * 100}%`,
                   width: "100%",

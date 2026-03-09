@@ -132,7 +132,7 @@ export default function LiveScore() {
       </div>
 
       <div className="relative h-14 overflow-hidden rounded-b-3xl bg-zinc-950 text-white">
-        <div className="flex h-14 items-center justify-around overflow-hidden p-4 font-medium transition-all group-hover/score:-translate-y-full">
+        <div className="flex h-14 items-center justify-around overflow-hidden p-4 font-medium transition group-hover/score:-translate-y-full">
           <div className="flex items-center gap-1 tabular-nums">
             <Triangle fill="white" size={6} />
             <p>
@@ -156,7 +156,7 @@ export default function LiveScore() {
             {game.teamOne.win} - {game.teamTwo.win}
           </div>
         </div>
-        <div className="flex h-14 items-center justify-center bg-green-500 text-sm transition-all group-hover/score:-translate-y-full">
+        <div className="flex h-14 items-center justify-center bg-green-500 text-sm transition group-hover/score:-translate-y-full">
           Some other information.
         </div>
       </div>

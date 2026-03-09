@@ -30,7 +30,7 @@ const UnderlineHoverText: React.FC<UnderlineHoverTextProps> = ({
         textColor,
         fontWeight,
         "after:absolute after:bottom-0 after:left-0 after:h-1 after:w-full after:bg-gray-400",
-        "after:transition-all after:duration-150",
+        "after:transition after:duration-150",
         hoverTextColor,
         "hover:after:h-full",
         hoverColor,

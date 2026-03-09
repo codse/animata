@@ -53,7 +53,7 @@ export default function MusicWidget() {
           <div className={cn("flex h-fit w-12 flex-wrap justify-center gap-1")}>
             <Music2
               size={16}
-              className={cn("text-white transition-all", {
+              className={cn("text-white transition", {
                 hidden: !play,
                 "delay-500 duration-1000 animate-in zoom-in direction-alternate-reverse repeat-infinite":
                   play,
@@ -61,7 +61,7 @@ export default function MusicWidget() {
             />
             <Music3
               size={14}
-              className={cn("text-white transition-all", {
+              className={cn("text-white transition", {
                 hidden: !play,
                 "duration-1000 animate-in zoom-in direction-alternate-reverse repeat-infinite":
                   play,
@@ -69,7 +69,7 @@ export default function MusicWidget() {
             />
             <Music
               size={18}
-              className={cn("text-white transition-all", {
+              className={cn("text-white transition", {
                 hidden: !play,
                 "delay-300 duration-1000 animate-in zoom-in direction-alternate-reverse repeat-infinite":
                   play,

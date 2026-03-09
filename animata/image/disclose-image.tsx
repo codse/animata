@@ -20,7 +20,7 @@ export default function DiscloseImage({
 }) {
   const [imageLoaded, setImageLoaded] = useState(false);
   const baseClassName =
-    "ease-slow duration-mid absolute bg-sky-500 transition-all animate-out fill-mode-forwards";
+    "ease-slow duration-mid absolute bg-sky-500 transition animate-out fill-mode-forwards";
 
   return (
     <div className="relative h-64 w-52 overflow-hidden rounded-md bg-yellow-100">

@@ -19,7 +19,7 @@ const Button = ({ item, index, activeIndex, onTabClick }: ButtonProps) => {
     >
       <div
         className={cn(
-          "flex h-10 cursor-pointer items-center justify-center rounded-md border-2 bg-white p-3 transition-all",
+          "flex h-10 cursor-pointer items-center justify-center rounded-md border-2 bg-white p-3 transition",
           {
             "border-2 border-indigo-500 text-indigo-600": index === activeIndex,
             "origin-top-right ease-in hover:rotate-6": index !== activeIndex,

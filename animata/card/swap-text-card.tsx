@@ -20,7 +20,7 @@ export default function SwapTextCard({ initialText, finalText }: FlipTextCardPro
           disableClick
           // Set min height so that all the text content fits
           // use -mb-7 to hide the extra space when not active
-          className="-mb-7 hidden min-h-20 w-3/4 transition-all duration-200 group-hover/swap:mb-0 md:flex md:flex-col"
+          className="-mb-7 hidden min-h-20 w-3/4 transition duration-200 group-hover/swap:mb-0 md:flex md:flex-col"
           initialTextClassName="text-lg group-hover/swap:opacity-0 h-full duration-200 font-semibold text-black"
           finalTextClassName="text-sm h-full duration-200 font-medium text-gray-500"
         />

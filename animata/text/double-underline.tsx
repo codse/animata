@@ -6,7 +6,7 @@ export default function DoubleUnderline({
   ...props
 }: React.HTMLProps<HTMLSpanElement>) {
   const common =
-    "absolute h-px w-full bg-blue-500 transition-all duration-200 group-hover/underline:opacity-50 dark:bg-white/70";
+    "absolute h-px w-full bg-blue-500 transition duration-200 group-hover/underline:opacity-50 dark:bg-white/70";
   return (
     <span
       {...props}

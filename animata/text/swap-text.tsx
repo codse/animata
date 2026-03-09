@@ -52,7 +52,7 @@ export default function SwapText({
   ...props
 }: SwapTextProps) {
   const [active, setActive] = useState(false);
-  const common = "block transition-all duration-1000 ease-slow";
+  const common = "block transition duration-1000 ease-slow";
 
   const longWord = finalText.length > initialText.length ? finalText : null;
 

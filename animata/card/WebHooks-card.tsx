@@ -28,7 +28,7 @@ export const WebHooks = ({ leftBoxElem, rightBoxElem }: webHooksCardCommentProps
             isHovered
               ? "border-solid border-lime-500 bg-lime-500"
               : "border-dotted border-gray-300 hover:border-solid"
-          } transition-all duration-500`}
+          } transition duration-500`}
         />
 
         {/* Animated Ball */}

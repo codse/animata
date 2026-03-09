@@ -68,7 +68,7 @@ const Switch = ({ toggle, value }: { toggle: () => void; value: boolean }) => {
   return (
     <label className="inline-flex cursor-pointer items-center">
       <input checked={value} type="checkbox" className="peer sr-only" onChange={toggle} />
-      <div className="rtl:peer-checked:after:-translate-x-[unset] peer relative h-8 w-[53px] rounded-full bg-gray-200 transition-colors duration-500 after:absolute after:start-[5px] after:top-[4px] after:h-6 after:w-6 after:rounded-full after:border after:border-white after:bg-white after:transition-all after:duration-300 after:content-[''] peer-checked:bg-[#95ef90] peer-checked:after:translate-x-[19px] peer-checked:after:border-white"></div>
+      <div className="rtl:peer-checked:after:-translate-x-[unset] peer relative h-8 w-[53px] rounded-full bg-gray-200 transition-colors duration-500 after:absolute after:start-[5px] after:top-[4px] after:h-6 after:w-6 after:rounded-full after:border after:border-white after:bg-white after:transition after:duration-300 after:content-[''] peer-checked:bg-[#95ef90] peer-checked:after:translate-x-[19px] peer-checked:after:border-white"></div>
     </label>
   );
 };
@@ -112,7 +112,7 @@ function SwapText({
       clearTimeout(timeoutId); // clear the timeout when component unmounts
     };
   }, [check]);
-  const common = "block transition-all duration-1000 ease-slow";
+  const common = "block transition duration-1000 ease-slow";
   const longWord = finalText.length > initialText.length ? finalText : null;
   return (
     <div {...props} className={cn("relative overflow-hidden text-foreground", className)}>

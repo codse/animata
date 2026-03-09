@@ -65,7 +65,7 @@ export default function BarChart({ items, className, height: providedHeight }: B
           >
             <div
               style={{ height: barHeight }}
-              className={cn("transition-all duration-200", item.className)}
+              className={cn("transition duration-200", item.className)}
             />
           </div>
         );

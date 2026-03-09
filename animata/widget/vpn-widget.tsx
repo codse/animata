@@ -38,7 +38,7 @@ function SlidingButton({ initialConnected = false, className }: SlidingButtonPro
       </div>
       <div
         className={cn(
-          "absolute z-10 flex h-11 w-36 flex-1 flex-col items-center justify-center rounded-[14px] bg-white py-2 transition-all duration-200 ease-in-out hover:bg-gray-50/95 active:bg-gray-50/70",
+          "absolute z-10 flex h-11 w-36 flex-1 flex-col items-center justify-center rounded-[14px] bg-white py-2 transition duration-200 ease-in-out hover:bg-gray-50/95 active:bg-gray-50/70",
           {
             "left-0.5": connected,
             "left-[34px]": !connected,
