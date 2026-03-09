@@ -133,7 +133,11 @@ interface StoryData {
   argTypes: Record<string, { table?: { disable?: boolean }; control?: unknown }>;
 }
 
-function StoryRenderer({ name }: { name: string }) {
+type StoryResult =
+  | { message: React.ReactNode }
+  | { preview: React.ReactNode; editor: React.ReactNode };
+
+function useStoryRenderer(name: string): StoryResult {
   const [storyData, setStoryData] = React.useState<StoryData | null>(null);
   const [args, setArgs] = React.useState<Record<string, unknown>>({});
   const [error, setError] = React.useState<string | null>(null);
@@ -175,16 +179,18 @@ function StoryRenderer({ name }: { name: string }) {
   }, []);
 
   if (error) {
-    return <div className="text-sm text-muted-foreground">{error}</div>;
+    return { message: <div className="text-sm text-muted-foreground">{error}</div> };
   }
 
   if (!storyData) {
-    return (
-      <div className="flex items-center text-sm text-muted-foreground">
-        <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
-        Loading...
-      </div>
-    );
+    return {
+      message: (
+        <div className="flex items-center text-sm text-muted-foreground">
+          <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+          Loading...
+        </div>
+      ),
+    };
   }
 
   const preview = storyData.render
@@ -193,10 +199,29 @@ function StoryRenderer({ name }: { name: string }) {
       ? React.createElement(storyData.Component, args)
       : null;
 
+  return {
+    preview,
+    editor: <PropsEditor args={args} argTypes={storyData.argTypes} onChange={handleChange} />,
+  };
+}
+
+function StoryRendererWrapper({ name }: { name: string }) {
+  const result = useStoryRenderer(name);
+
+  if ("message" in result) {
+    return (
+      <div className="preview relative flex min-h-[200px] w-full max-w-full items-center justify-center overflow-hidden rounded-lg border">
+        {result.message}
+      </div>
+    );
+  }
+
   return (
     <>
-      <div className="flex min-h-[200px] w-full items-center justify-center p-4">{preview}</div>
-      <PropsEditor args={args} argTypes={storyData.argTypes} onChange={handleChange} />
+      <div className="preview relative flex min-h-[200px] w-full max-w-full items-center justify-center overflow-hidden rounded-lg border">
+        {result.preview}
+      </div>
+      {result.editor}
     </>
   );
 }
@@ -204,18 +229,18 @@ function StoryRenderer({ name }: { name: string }) {
 export function ComponentPreview({ name, className, ...props }: ComponentPreviewProps) {
   return (
     <div className={cn("group relative my-4", className)} {...props}>
-      <div className="preview relative w-full max-w-full overflow-hidden rounded-lg border">
-        <React.Suspense
-          fallback={
-            <div className="flex min-h-[200px] items-center justify-center text-sm text-muted-foreground">
+      <React.Suspense
+        fallback={
+          <div className="preview relative flex min-h-[200px] w-full max-w-full items-center justify-center overflow-hidden rounded-lg border">
+            <div className="flex items-center text-sm text-muted-foreground">
               <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
               Loading...
             </div>
-          }
-        >
-          <StoryRenderer name={name} />
-        </React.Suspense>
-      </div>
+          </div>
+        }
+      >
+        <StoryRendererWrapper name={name} />
+      </React.Suspense>
     </div>
   );
 }
