@@ -495,10 +495,10 @@
   }
 }
 
-.scroll-baby[style*="opacity: 1"] {
+[style*="opacity: 1"] > .scroll-baby {
   @apply text-yellow-300 dark:text-yellow-500;
 }
 
-.scroll-file[style*="opacity: 1"] {
+[style*="opacity: 1"] > .scroll-file {
   @apply text-blue-300 dark:text-blue-500;
 }
