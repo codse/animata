@@ -17,6 +17,7 @@ interface ComponentPreviewProps extends React.HTMLAttributes<HTMLDivElement> {
 export function ComponentPreview({ name, className, ...props }: ComponentPreviewProps) {
   const [minHeight, setMinHeight] = React.useState<number>(350);
   const [mounted, setMounted] = React.useState(false);
+  const iframeRef = React.useRef<HTMLIFrameElement>(null);
 
   const { resolvedTheme } = useTheme();
 
@@ -33,6 +34,15 @@ export function ComponentPreview({ name, className, ...props }: ComponentPreview
     };
   }, []);
 
+  // Send theme to iframe via postMessage when it changes
+  React.useEffect(() => {
+    if (!mounted) return;
+    iframeRef.current?.contentWindow?.postMessage(
+      { type: "animata-set-theme", theme: resolvedTheme ?? "light" },
+      "*",
+    );
+  }, [resolvedTheme, mounted]);
+
   // Only render iframe after mount so resolvedTheme is accurate
   const themeParam = mounted && resolvedTheme === "dark" ? "theme:dark" : "theme:light";
 
@@ -41,8 +51,7 @@ export function ComponentPreview({ name, className, ...props }: ComponentPreview
       <div
         className={cn("preview relative w-full max-w-full overflow-hidden!")}
         style={{
-          minHeight: "200px",
-          height: `${Math.max(200, minHeight)}px`,
+          height: `${minHeight}px`,
         }}
       >
         <React.Suspense
@@ -55,12 +64,12 @@ export function ComponentPreview({ name, className, ...props }: ComponentPreview
           key={`${name}-${themeParam}`}
         >
           <iframe
+            ref={iframeRef}
             src={`${process.env.NEXT_PUBLIC_STORYBOOK_URL ?? "/preview"}/iframe.html?globals=backgrounds.grid:!false;${themeParam};backgrounds.value:!transparent&viewMode=docs&id=${name.replace(/--[^-]+$/, "--docs")}&r=docs-view`}
             className="w-full"
             title="preview"
             style={{
-              minHeight: "200px",
-              height: `${Math.max(200, minHeight)}px`,
+              height: `${minHeight}px`,
             }}
           />
         </React.Suspense>
