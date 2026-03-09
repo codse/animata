@@ -52,6 +52,12 @@ const HIDDEN_PROPS = new Set(["children", "className", "style", "key", "ref"]);
 // Storybook internal exports to skip when collecting other stories
 const INTERNAL_EXPORTS = new Set(["default", "__namedExportsOrder"]);
 
+type ArgType = {
+  table?: { disable?: boolean };
+  control?: unknown;
+  options?: string[];
+};
+
 function PropsEditor({
   args,
   initialArgs,
@@ -61,13 +67,15 @@ function PropsEditor({
 }: {
   args: Record<string, unknown>;
   initialArgs: Record<string, unknown>;
-  argTypes: Record<string, { table?: { disable?: boolean }; control?: unknown }>;
+  argTypes: Record<string, ArgType>;
   onChange: (key: string, value: unknown) => void;
   onReset: () => void;
 }) {
   const editableArgs = Object.entries(args).filter(([key]) => {
     if (HIDDEN_PROPS.has(key)) return false;
     if (argTypes[key]?.table?.disable) return false;
+    // Allow args with options even if value type isn't primitive
+    if (argTypes[key]?.options) return true;
     const val = args[key];
     return typeof val === "boolean" || typeof val === "number" || typeof val === "string";
   });
@@ -101,7 +109,20 @@ function PropsEditor({
             >
               {key}
             </label>
-            {typeof value === "boolean" ? (
+            {argTypes[key]?.options ? (
+              <select
+                id={`prop-${key}`}
+                value={String(value)}
+                onChange={(e) => onChange(key, e.target.value)}
+                className="h-7 rounded border bg-background px-2 font-mono text-xs"
+              >
+                {argTypes[key].options.map((opt) => (
+                  <option key={opt} value={opt}>
+                    {opt}
+                  </option>
+                ))}
+              </select>
+            ) : typeof value === "boolean" ? (
               <button
                 id={`prop-${key}`}
                 type="button"
@@ -152,7 +173,7 @@ interface StoryData {
   render: ((args: Record<string, unknown>) => React.ReactNode) | null;
   Component: React.ComponentType<Record<string, unknown>> | null;
   initialArgs: Record<string, unknown>;
-  argTypes: Record<string, { table?: { disable?: boolean }; control?: unknown }>;
+  argTypes: Record<string, ArgType>;
   otherStories: OtherStory[];
 }
 
@@ -163,13 +184,13 @@ function formatStoryName(exportName: string): string {
 type StoryExport = {
   render?: (args: Record<string, unknown>) => React.ReactNode;
   args?: Record<string, unknown>;
-  argTypes?: Record<string, { table?: { disable?: boolean }; control?: unknown }>;
+  argTypes?: Record<string, ArgType>;
 };
 
 type StoryMeta = {
   component?: React.ComponentType<Record<string, unknown>>;
   args?: Record<string, unknown>;
-  argTypes?: Record<string, { table?: { disable?: boolean }; control?: unknown }>;
+  argTypes?: Record<string, ArgType>;
 };
 
 function loadStoryModule(mod: Record<string, unknown>, exportName: string): StoryData | string {
@@ -272,6 +293,8 @@ function StoryRenderer({ name }: { name: string }) {
     );
   }
 
+  const argsKey = JSON.stringify(args);
+
   const preview = storyData.render
     ? storyData.render(args)
     : storyData.Component
@@ -280,7 +303,10 @@ function StoryRenderer({ name }: { name: string }) {
 
   return (
     <>
-      <div className="preview relative flex min-h-[200px] w-full max-w-full items-center justify-center overflow-hidden rounded-lg border py-4">
+      <div
+        key={argsKey}
+        className="preview relative flex min-h-[200px] w-full max-w-full items-center justify-center overflow-hidden rounded-lg border p-4 has-[.full-content]:p-0"
+      >
         {preview}
       </div>
       <PropsEditor
@@ -296,7 +322,7 @@ function StoryRenderer({ name }: { name: string }) {
           {storyData.otherStories.map((story) => (
             <div key={story.name}>
               <div className="mb-2 font-mono text-xs text-muted-foreground">{story.name}</div>
-              <div className="preview relative flex min-h-[150px] w-full max-w-full items-center justify-center overflow-hidden rounded-lg border py-4">
+              <div className="preview relative flex min-h-[150px] w-full max-w-full items-center justify-center overflow-hidden rounded-lg border p-4 has-[.full-content]:p-0">
                 {story.render(story.args)}
               </div>
             </div>
