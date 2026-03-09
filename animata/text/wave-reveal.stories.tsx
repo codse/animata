@@ -8,7 +8,16 @@ const meta = {
     layout: "centered",
   },
   tags: ["autodocs"],
-  argTypes: {},
+  argTypes: {
+    direction: {
+      control: { type: "select" },
+      options: ["up", "down"],
+    },
+    mode: {
+      control: { type: "select" },
+      options: ["letter", "word"],
+    },
+  },
 } satisfies Meta<typeof WaveReveal>;
 
 export default meta;

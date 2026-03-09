@@ -8,7 +8,12 @@ const meta = {
     layout: "centered",
   },
   tags: ["autodocs"],
-  argTypes: {},
+  argTypes: {
+    direction: {
+      control: { type: "select" },
+      options: ["up", "down", "left", "right"],
+    },
+  },
 } satisfies Meta<typeof MirrorText>;
 
 export default meta;

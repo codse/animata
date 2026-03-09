@@ -8,7 +8,12 @@ const meta = {
     layout: "centered",
   },
   tags: ["autodocs"],
-  argTypes: {},
+  argTypes: {
+    direction: {
+      control: { type: "select" },
+      options: ["up", "down"],
+    },
+  },
 } satisfies Meta<typeof Counter>;
 
 export default meta;

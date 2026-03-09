@@ -14,6 +14,10 @@ const meta = {
         disable: true,
       },
     },
+    trailSize: {
+      control: { type: "select" },
+      options: ["sm", "md", "lg"],
+    },
   },
 } satisfies Meta<typeof AnimatedBorderTrail>;
 

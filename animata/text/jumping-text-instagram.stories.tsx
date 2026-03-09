@@ -8,7 +8,12 @@ const meta = {
     layout: "centered",
   },
   tags: ["autodocs"],
-  argTypes: {},
+  argTypes: {
+    mode: {
+      control: { type: "select" },
+      options: ["word", "character"],
+    },
+  },
 } satisfies Meta<typeof JumpingTextInstagram>;
 
 export default meta;

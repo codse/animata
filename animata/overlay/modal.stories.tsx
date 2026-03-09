@@ -8,7 +8,12 @@ const meta = {
     layout: "centered",
   },
   tags: ["autodocs"],
-  argTypes: {},
+  argTypes: {
+    modalSize: {
+      control: { type: "select" },
+      options: ["sm", "lg"],
+    },
+  },
 } satisfies Meta<typeof Modal>;
 
 export default meta;

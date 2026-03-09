@@ -8,7 +8,12 @@ const meta = {
     layout: "centered",
   },
   tags: ["autodocs"],
-  argTypes: {},
+  argTypes: {
+    direction: {
+      control: { type: "select" },
+      options: ["left", "right"],
+    },
+  },
 } satisfies Meta<typeof TiltedCover>;
 
 export default meta;

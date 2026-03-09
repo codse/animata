@@ -8,7 +8,12 @@ const meta = {
     layout: "centered",
   },
   tags: ["autodocs"],
-  argTypes: {},
+  argTypes: {
+    mode: {
+      control: { type: "select" },
+      options: ["loop", "hover"],
+    },
+  },
 } satisfies Meta<typeof TextExplodeIMessage>;
 
 export default meta;

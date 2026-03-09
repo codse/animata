@@ -8,7 +8,12 @@ const meta = {
     layout: "centered",
   },
   tags: ["autodocs"],
-  argTypes: {},
+  argTypes: {
+    type: {
+      control: { type: "select" },
+      options: ["content", "simple-image"],
+    },
+  },
 } satisfies Meta<typeof CaseStudyCard>;
 
 export default meta;

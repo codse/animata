@@ -8,7 +8,12 @@ const meta = {
     layout: "centered",
   },
   tags: ["autodocs"],
-  argTypes: {},
+  argTypes: {
+    zoom: {
+      control: { type: "select" },
+      options: ["zoomIn", "zoomOut"],
+    },
+  },
 } satisfies Meta<typeof ZoomImage>;
 
 export default meta;

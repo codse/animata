@@ -8,7 +8,9 @@ const meta = {
     layout: "centered",
   },
   tags: ["autodocs"],
-  argTypes: {},
+  argTypes: {
+    rotate: { control: { type: "select" }, options: ["x", "y"] },
+  },
 } satisfies Meta<typeof FlipCard>;
 
 export default meta;
