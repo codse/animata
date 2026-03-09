@@ -2,11 +2,21 @@ import { Controls, Description, Primary, Subtitle, Title } from "@storybook/addo
 import type { Preview } from "@storybook/react";
 // @ts-nocheck importing react to fix type warning
 import { type ReactNode, useEffect } from "react";
+import { themes } from "storybook/theming";
 
 import "../styles/globals.css";
 import "../styles/storybook.css";
 
 const isEmbedded = typeof window !== "undefined" && window.location.href.includes("docs-view");
+
+// Detect theme from URL globals parameter
+const urlParams =
+  typeof window !== "undefined" ? new URLSearchParams(window.location.search) : null;
+const urlGlobals = urlParams?.get("globals") ?? "";
+const urlIsDark =
+  urlGlobals.includes("theme:dark") ||
+  (!urlGlobals.includes("theme:light") && urlGlobals.includes("dark"));
+const storybookTheme = urlIsDark ? themes.dark : themes.light;
 
 // Add embedded class to body so CSS selectors like .embedded .docs-story work
 // regardless of whether we're in story or docs view mode
@@ -69,6 +79,7 @@ const preview: Preview = {
       },
     },
     docs: {
+      theme: storybookTheme,
       page: () => (
         <>
           <Title />
