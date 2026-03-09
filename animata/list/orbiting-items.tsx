@@ -75,9 +75,9 @@ export default function OrbitingItems({
   // The items rotate in the opposite direction to the parent element so they appear to be stationary.
 
   const reverse = cn(
-    "animate-[rotate-full_45s] transition-transform ease-linear direction-reverse repeat-infinite",
+    "animate-rotate-full transition-transform ease-linear direction-reverse repeat-infinite",
     {
-      "group-hover/orbit:paused": pauseOnHover,
+      "group-hover/orbit:[animation-play-state:paused]": pauseOnHover,
     },
   );
 
@@ -96,9 +96,9 @@ export default function OrbitingItems({
       />
       <div
         className={cn(
-          "relative flex h-64 w-64 animate-[rotate-full_45s] items-center justify-center ease-linear repeat-infinite",
+          "relative flex h-64 w-64 animate-rotate-full items-center justify-center ease-linear repeat-infinite",
           {
-            "group-hover/orbit:paused": pauseOnHover,
+            "group-hover/orbit:[animation-play-state:paused]": pauseOnHover,
           },
           className,
         )}

@@ -94,6 +94,7 @@
   --animate-meteor: meteor var(--duration) var(--delay) ease-in-out infinite;
   --animate-led: led 100ms ease-in-out;
   --animate-float: float 3s ease-in-out infinite;
+  --animate-rotate-full: rotate-full 45s linear infinite;
 
   @keyframes fill {
     0% {
