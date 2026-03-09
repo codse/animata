@@ -116,7 +116,7 @@ function PropsEditor({
                 onChange={(e) => onChange(key, e.target.value)}
                 className="h-7 rounded border bg-background px-2 font-mono text-xs"
               >
-                {argTypes[key].options.map((opt) => (
+                {argTypes[key]?.options?.map((opt) => (
                   <option key={opt} value={opt}>
                     {opt}
                   </option>
