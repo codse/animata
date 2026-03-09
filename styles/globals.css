@@ -480,6 +480,11 @@
   }
 }
 
+@utility bg-dot-pattern {
+  background-image: radial-gradient(hsl(var(--foreground) / 0.15) 1px, transparent 1px);
+  background-size: 12px 12px;
+}
+
 @utility chunk-container {
   @apply shadow-none;
 
