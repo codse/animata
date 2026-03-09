@@ -75,6 +75,25 @@ body.embedded {
   .sbdocs-description {
     display: none;
   }
+
+  /* Hide zoom controls */
+  .sb-bar,
+  [class*="zoom"],
+  button[title="Zoom in"],
+  button[title="Zoom out"],
+  button[title="Reset zoom"] {
+    display: none;
+  }
+
+  /* Remove story preview borders */
+  .docs-story,
+  .sbdocs-preview {
+    @apply border-none!;
+  }
+
+  .sb-previewBlock {
+    @apply border-none! shadow-none!;
+  }
 }
 
 /* biome-ignore lint/style/noDescendingSpecificity: separate context from body.embedded selectors */

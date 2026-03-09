@@ -56,7 +56,7 @@ export function ComponentPreview({ name, className, ...props }: ComponentPreview
           key={name}
         >
           <iframe
-            src={`${process.env.NEXT_PUBLIC_STORYBOOK_URL ?? "/preview"}/iframe.html?globals=${themeParam}&id=${name.replace(/--[^-]+$/, "--docs")}&viewMode=docs&r=docs-view`}
+            src={`${process.env.NEXT_PUBLIC_STORYBOOK_URL ?? "/preview"}/iframe.html?globals=backgrounds.grid:!false;${themeParam};backgrounds.value:!transparent&viewMode=docs&id=${name.replace(/--[^-]+$/, "--docs")}&r=docs-view`}
             className="w-full"
             title="preview"
             style={{
