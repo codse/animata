@@ -1,3 +1,5 @@
+@reference "tailwindcss";
+
 /** Fix/improve storybook styles for embedding */
 .sbdocs-wrapper {
   @apply !p-0 font-sans;
