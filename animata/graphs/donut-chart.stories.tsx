@@ -18,5 +18,8 @@ export const Primary: Story = {
   args: {
     size: 200,
     progress: 30,
+    circleWidth: 16,
+    progressWidth: 16,
+    rounded: true,
   },
 };

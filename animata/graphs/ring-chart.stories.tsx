@@ -16,6 +16,9 @@ type Story = StoryObj<typeof meta>;
 
 export const Primary: Story = {
   args: {
+    size: 96,
+    gap: 4,
+    width: 20,
     rings: [
       {
         progress: 10,

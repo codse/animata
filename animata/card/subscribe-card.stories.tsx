@@ -15,5 +15,9 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Primary: Story = {
-  args: {},
+  args: {
+    title: "Want to read the rest?",
+    placeholder: "justin@buttondown.email",
+    buttonText: "Subscribe for $5/mo",
+  },
 };
