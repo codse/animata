@@ -42,7 +42,7 @@ export default function Progress({ progress }: { progress: number }) {
                 !highlight,
             })}
             style={{
-              transitionDelay: highlight ? `${index * 24}ms` : "0ms",
+              transitionDelay: highlight ? `${index * 6}ms` : "0ms",
             }}
             key={`bar_${index}`}
           />
