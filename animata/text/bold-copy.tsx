@@ -31,7 +31,7 @@ export default function BoldCopy({
     >
       <div
         className={cn(
-          "text-4xl font-bold uppercase text-foreground/15 transition group-hover/bold:opacity-50 md:text-8xl",
+          "text-4xl font-bold uppercase text-foreground/15 transition-all group-hover/bold:opacity-50 md:text-8xl",
           backgroundTextClassName,
         )}
       >
@@ -39,7 +39,7 @@ export default function BoldCopy({
       </div>
       <div
         className={cn(
-          "text-md absolute font-bold uppercase text-foreground transition group-hover/bold:text-4xl md:text-3xl group-hover/bold:md:text-8xl",
+          "text-md absolute font-bold uppercase text-foreground transition-all duration-300 group-hover/bold:text-4xl md:text-3xl group-hover/bold:md:text-8xl",
           textClassName,
         )}
       >
