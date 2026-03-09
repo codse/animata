@@ -2,12 +2,12 @@ import { Icons } from "@/components/icons";
 import { cn } from "@/lib/utils";
 
 export const testOrbitingItems = [
-  <Icons.gitHub key="github" className="h-6 w-6" />,
-  <Icons.twitter key="twitter" className="h-6 w-6" />,
-  <Icons.react key="yarn" className="h-6 w-6" />,
-  <Icons.tailwind key="tailwind" className="h-6 w-6" />,
-  <Icons.framerMotion key="framer" className="h-6 w-6" />,
-  <Icons.apple key="apple" className="h-6 w-6" />,
+  <Icons.gitHub key="github" className="h-6 w-6 text-black" />,
+  <Icons.twitter key="twitter" className="h-6 w-6 text-black" />,
+  <Icons.react key="yarn" className="h-6 w-6 text-black" />,
+  <Icons.tailwind key="tailwind" className="h-6 w-6 text-black" />,
+  <Icons.framerMotion key="framer" className="h-6 w-6 text-black" />,
+  <Icons.apple key="apple" className="h-6 w-6 text-black" />,
 ];
 
 interface OrbitingItemsProps {
@@ -77,14 +77,14 @@ export default function OrbitingItems({
   const reverse = cn(
     "animate-[rotate-full_45s] transition-transform ease-linear direction-reverse repeat-infinite",
     {
-      "group-hover/orbit:[animation-play-state:paused]": pauseOnHover,
+      "group-hover/orbit:paused": pauseOnHover,
     },
   );
 
   return (
     <div
       className={cn(
-        "storybook-fix group/orbit flex items-center justify-center py-32",
+        "full-content group/orbit flex items-center justify-center py-32",
         containerClassName,
       )}
     >
@@ -98,7 +98,7 @@ export default function OrbitingItems({
         className={cn(
           "relative flex h-64 w-64 animate-[rotate-full_45s] items-center justify-center ease-linear repeat-infinite",
           {
-            "group-hover/orbit:[animation-play-state:paused]": pauseOnHover,
+            "group-hover/orbit:paused": pauseOnHover,
           },
           className,
         )}
