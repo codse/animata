@@ -44,8 +44,8 @@ body.embedded {
     @apply max-w-full;
   }
 
-  .sb-anchor:not(:first-child) {
-    @apply mt-4;
+  .sb-anchor {
+    @apply border-0;
   }
 
   .docs-story {
@@ -67,6 +67,11 @@ body.embedded {
   .docblock-argstable {
     @apply mb-0!;
     max-width: calc(100% - 2px);
+  }
+
+  .docblock-argstable-body td {
+    border-left: 0;
+    border-right: 0;
   }
 
   /* Hide docs chrome elements in embedded view */
