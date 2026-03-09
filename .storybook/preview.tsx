@@ -1,6 +1,5 @@
 import { Controls, Description, Primary, Subtitle, Title } from "@storybook/addon-docs/blocks";
 import type { Preview } from "@storybook/react";
-// @ts-nocheck importing react to fix type warning
 import { type ReactNode, useEffect } from "react";
 import { themes } from "storybook/theming";
 
@@ -9,41 +8,19 @@ import "../styles/storybook.css";
 
 const isEmbedded = typeof window !== "undefined" && window.location.href.includes("docs-view");
 
-// Detect theme from URL globals parameter
-const urlParams =
-  typeof window !== "undefined" ? new URLSearchParams(window.location.search) : null;
-const urlGlobals = urlParams?.get("globals") ?? "";
-const urlIsDark =
-  urlGlobals.includes("theme:dark") ||
-  (!urlGlobals.includes("theme:light") && urlGlobals.includes("dark"));
-const storybookTheme = urlIsDark ? themes.dark : themes.light;
-
 // Add embedded class to body so CSS selectors like .embedded .docs-story work
-// regardless of whether we're in story or docs view mode
 if (isEmbedded && typeof document !== "undefined") {
   document.body.classList.add("embedded");
 }
 
-const ThemeWrapper = ({ children }: { children: ReactNode }) => {
-  const params = typeof window !== "undefined" ? new URLSearchParams(window.location.search) : null;
-  const globals = params?.get("globals") ?? "";
-  const isDark =
-    globals.includes("theme:dark") ||
-    (!globals.includes("theme:light") && globals.includes("dark"));
+const ThemeWrapper = ({ children, isDark }: { children: ReactNode; isDark: boolean }) => {
   const theme = isDark ? "dark" : "";
 
   useEffect(() => {
     if (!isEmbedded) return;
-    // Apply dark theme class to body for embedded mode
-    if (theme === "dark") {
-      document.body.classList.add("dark");
-    } else {
-      document.body.classList.remove("dark");
-    }
+    document.body.classList.toggle("dark", isDark);
 
     const sendHeight = () => {
-      // In docs view, measure the full docs container (sbdocs-wrapper) rather than
-      // just the story canvas, so Controls/Title/Stories are included
       const el =
         document.querySelector(".sbdocs-wrapper") ?? document.querySelector("#storybook-root");
       if (!el) return;
@@ -53,7 +30,7 @@ const ThemeWrapper = ({ children }: { children: ReactNode }) => {
     const observer = new MutationObserver(sendHeight);
     observer.observe(document.body, { childList: true, subtree: true, attributes: true });
     return () => observer.disconnect();
-  }, [theme]);
+  }, [isDark]);
 
   return (
     <div className={theme} style={{ padding: isEmbedded ? 0 : "4rem 20px" }}>
@@ -64,12 +41,18 @@ const ThemeWrapper = ({ children }: { children: ReactNode }) => {
 
 const preview: Preview = {
   tags: ["autodocs"],
+  initialGlobals: {
+    theme: "light",
+  },
   decorators: [
-    (Story) => (
-      <ThemeWrapper>
-        <Story />
-      </ThemeWrapper>
-    ),
+    (Story, context) => {
+      const isDark = context.globals.theme === "dark";
+      return (
+        <ThemeWrapper isDark={isDark}>
+          <Story />
+        </ThemeWrapper>
+      );
+    },
   ],
   parameters: {
     controls: {
@@ -79,7 +62,7 @@ const preview: Preview = {
       },
     },
     docs: {
-      theme: storybookTheme,
+      theme: themes.light,
       page: () => (
         <>
           <Title />
