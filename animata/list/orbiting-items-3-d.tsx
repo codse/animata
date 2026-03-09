@@ -73,6 +73,61 @@ interface OrbitingItems3DProps {
   className?: string;
 }
 
+function OrbitingItem({
+  index,
+  radiusX,
+  radiusY,
+  totalItems,
+  tiltAngle,
+  duration,
+  children,
+}: {
+  index: number;
+  radiusX: number;
+  radiusY: number;
+  totalItems: number;
+  tiltAngle: number;
+  duration: number;
+  children: React.ReactNode;
+}) {
+  const angleStep = 360 / totalItems;
+  const [angle, setAngle] = useState(index * angleStep);
+
+  useEffect(() => {
+    const animation = setInterval(() => {
+      setAngle((prevAngle) => (prevAngle + 1) % 360);
+    }, duration);
+    return () => clearInterval(animation);
+  }, [duration]);
+
+  const radians = (angle * Math.PI) / 180;
+  const x = radiusX * Math.cos(radians);
+  const y = radiusY * Math.sin(radians);
+
+  const tiltRadians = (tiltAngle * Math.PI) / 180;
+  const xTilted = x * Math.cos(tiltRadians) - y * Math.sin(tiltRadians);
+  const yTilted = x * Math.sin(tiltRadians) + y * Math.cos(tiltRadians);
+  const zIndex = angle > 180 ? -1 : 1;
+  const scale = angle < 180 ? 1.2 : 1.0;
+
+  return (
+    <div
+      className="absolute flex h-20 w-20 items-center justify-center rounded-full border border-white/10 bg-white/5 shadow-2xl shadow-purple-500/20 backdrop-blur-xl transition-transform duration-500 ease-out"
+      style={{
+        left: `${50 + xTilted}%`,
+        top: `${50 + yTilted}%`,
+        transform: `translate(-50%, -50%) scale(${scale})`,
+        zIndex,
+        transition: "transform 0.8s ease-in-out",
+      }}
+    >
+      <div className="transition-transform ease-linear direction-reverse repeat-infinite">
+        {children}
+      </div>
+    </div>
+  );
+}
+
 export default function OrbitingItems3D({
   radiusX = 120,
   radiusY = 30,
@@ -83,65 +138,10 @@ export default function OrbitingItems3D({
   containerClassName,
   className,
 }: OrbitingItems3DProps) {
-  // The OrbitingItems3D component creates an animated elliptical orbiting effect for a set of items around a central element.
-  // It allows for a visually dynamic layout, where items revolve around the center in a smooth, continuous motion,
-  // creating the illusion of 3D movement. The component provides a range of customizable options to control the orbit,
-  // including the size of the elliptical path, tilt angle, and animation duration.
-
-  const CalculateItemStyle = ({
-    index,
-    radiusX,
-    radiusY,
-    totalItems,
-    tiltAngle,
-    duration,
-  }: {
-    index: number;
-    radiusX: number;
-    radiusY: number;
-    totalItems: number;
-    tiltAngle: number;
-    duration: number;
-  }) => {
-    const angleStep = 360 / totalItems;
-    const [angle, setAngle] = useState(index * angleStep);
-    useEffect(() => {
-      const animation = setInterval(() => {
-        setAngle((prevAngle) => (prevAngle + 1) % 360);
-      }, duration);
-
-      return () => clearInterval(animation);
-    }, [duration]);
-    // Calculate the current angle for the item on the orbit
-
-    const radians = (angle * Math.PI) / 180;
-
-    // X and Y positions before tilt
-    const x = radiusX * Math.cos(radians);
-    const y = radiusY * Math.sin(radians);
-
-    // Apply the tilt using rotation matrix
-    const tiltRadians = (tiltAngle * Math.PI) / 180;
-    const xTilted = x * Math.cos(tiltRadians) - y * Math.sin(tiltRadians);
-    const yTilted = x * Math.sin(tiltRadians) + y * Math.cos(tiltRadians);
-    const zIndex = angle > 180 ? -1 : 1;
-    const scale = angle < 180 ? 1.2 : 1.0;
-
-    return {
-      left: `${50 + xTilted}%`,
-      top: `${50 + yTilted}%`,
-      transform: `translate(-50%, -50%) scale(${scale})`,
-      zIndex: zIndex,
-      transition: "transform 0.8s ease-in-out",
-    };
-  };
-
-  const reverse = cn("transition-transform ease-linear direction-reverse repeat-infinite");
-
   return (
     <div
       className={cn(
-        "storybook-fix group flex items-center justify-center py-32",
+        "full-content group flex items-center justify-center py-32",
         containerClassName,
       )}
     >
@@ -158,24 +158,19 @@ export default function OrbitingItems3D({
         )}
       >
         {CenterIcon}
-        {items.map((item, index) => {
-          return (
-            <div
-              key={index}
-              className="absolute flex h-20 w-20 items-center justify-center rounded-full border border-white/10 bg-white/5 shadow-2xl shadow-purple-500/20 backdrop-blur-xl transition-transform duration-500 ease-out"
-              style={CalculateItemStyle({
-                index,
-                radiusX,
-                radiusY,
-                tiltAngle,
-                totalItems: items.length,
-                duration,
-              })}
-            >
-              <div className={reverse}>{item}</div>
-            </div>
-          );
-        })}
+        {items.map((item, index) => (
+          <OrbitingItem
+            key={index}
+            index={index}
+            radiusX={radiusX}
+            radiusY={radiusY}
+            totalItems={items.length}
+            tiltAngle={tiltAngle}
+            duration={duration}
+          >
+            {item}
+          </OrbitingItem>
+        ))}
       </div>
     </div>
   );
