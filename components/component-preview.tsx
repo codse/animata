@@ -7,10 +7,6 @@ import { cn } from "@/lib/utils";
 
 interface ComponentPreviewProps extends React.HTMLAttributes<HTMLDivElement> {
   name: string;
-  extractClassName?: boolean;
-  extractedClassNames?: string;
-  align?: "center" | "start" | "end";
-  description?: string;
 }
 
 // Categories with hyphens must come first so they match before single-word prefixes
