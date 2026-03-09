@@ -17,6 +17,7 @@ type Story = StoryObj<typeof meta>;
 export const Primary: Story = {
   args: {
     text: "Jitter Text",
+    duration: 0.6,
     className: "text-6xl font-black",
   },
 };

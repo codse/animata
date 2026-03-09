@@ -16,6 +16,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Primary: Story = {
   args: {
+    reverse: false,
     className: "storybook-fix w-full",
   },
 };

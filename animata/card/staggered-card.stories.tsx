@@ -30,5 +30,7 @@ export const Primary: Story = {
       { label: "Contact", href: "#" },
       { label: "Careers", href: "#" },
     ],
+    delay: 0.06,
+    openingDelay: 0.1,
   },
 };

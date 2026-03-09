@@ -23,4 +23,9 @@ const Template: StoryFn<UnderlineHoverTextProps> = (args) => <UnderlineHoverText
 export const Primary = Template.bind({});
 Primary.args = {
   text: "Hover over me",
+  textColor: "text-yellow-600",
+  hoverTextColor: "hover:text-white",
+  hoverColor: "hover:after:bg-indigo-500",
+  fontSize: "text-2xl",
+  fontWeight: "font-medium",
 };

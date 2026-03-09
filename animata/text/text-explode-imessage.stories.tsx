@@ -22,6 +22,7 @@ type Story = StoryObj<typeof meta>;
 export const Primary: Story = {
   args: {
     text: "iMessage text explode effect 🧨 🔥 🎃 🎉 🪅",
+    mode: "loop",
     className: "text-red-500",
   },
 };

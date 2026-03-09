@@ -24,6 +24,7 @@ export const Primary: Story = {
     className: "h-16 bg-green-100 text-green-700 flex rounded-full items-center justify-center",
     changeTextClassName:
       "h-16 bg-green-700 text-green-100 rounded-full text-white flex items-center justify-center",
+    animationType: "up-to-down",
   },
   render: (args) => (
     <div className="flex h-40 items-center justify-center">

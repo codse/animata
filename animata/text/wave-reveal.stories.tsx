@@ -26,6 +26,11 @@ type Story = StoryObj<typeof meta>;
 export const Primary: Story = {
   args: {
     text: "Hello World",
+    direction: "down",
+    mode: "letter",
+    duration: "2000ms",
+    delay: 0,
+    blur: true,
     className: "text-foreground",
   },
 };

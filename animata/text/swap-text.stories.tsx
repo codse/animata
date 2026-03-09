@@ -19,6 +19,7 @@ export const Primary: Story = {
     initialText: "Open",
     finalText: "Close",
     supportsHover: true,
+    disableClick: false,
   },
 };
 

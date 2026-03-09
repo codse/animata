@@ -21,6 +21,8 @@ type Story = StoryObj<typeof meta>;
 
 export const Primary: Story = {
   args: {
+    direction: "left",
+    tiltCover: true,
     image: {
       alt: "Statue of Liberty",
       src: "https://plus.unsplash.com/premium_vector-1689096845649-80579c8bb9ce?bg=FFFFFF&w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",

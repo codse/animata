@@ -59,7 +59,11 @@ const Content = () => {
 
 export const Primary: Story = {
   args: {
+    vertical: false,
+    repeat: 5,
+    reverse: false,
     pauseOnHover: true,
+    applyMask: true,
   },
 
   render: (args) => (

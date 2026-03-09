@@ -24,6 +24,7 @@ export const Primary: Story = {
     userName: "Animata",
     latency: "5ms",
     netSpeed: "10",
+    defaultConnected: false,
   },
 };
 

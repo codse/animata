@@ -18,5 +18,6 @@ export const Primary: Story = {
   args: {
     items: testOrbitingItems,
     radius: 50,
+    pauseOnHover: false,
   },
 };

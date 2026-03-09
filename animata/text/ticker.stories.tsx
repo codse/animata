@@ -17,6 +17,7 @@ type Story = StoryObj<typeof meta>;
 export const Primary: Story = {
   args: {
     value: "456.78",
+    delay: 0,
     className: "text-4xl md:text-7xl font-black",
   },
 };

@@ -17,5 +17,7 @@ type Story = StoryObj<typeof meta>;
 export const Primary: Story = {
   args: {
     text: "CIRCULAR•TEXT•COMPONENT•",
+    spinDuration: 30,
+    radius: 5,
   },
 };

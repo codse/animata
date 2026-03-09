@@ -17,6 +17,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Primary: Story = {
   args: {
+    animated: true,
     className: "rounded-xl shadow-md",
     children: (
       <div className="w-64 p-4">

@@ -22,6 +22,8 @@ type Story = StoryObj<typeof meta>;
 export const Primary: Story = {
   args: {
     targetValue: 1000,
+    direction: "up",
+    delay: 0,
   },
 };
 

@@ -22,5 +22,6 @@ type Story = StoryObj<typeof meta>;
 export const Primary: Story = {
   args: {
     text: "This is a jumping text effect",
+    mode: "word",
   },
 };

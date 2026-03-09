@@ -16,6 +16,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Primary: Story = {
   args: {
+    autoPlay: true,
     className: "w-full min-w-72 storybook-fix",
   },
 };
