@@ -30,7 +30,7 @@ export const Primary: Story = {
     children: (
       <div className="p-2">
         <div className="mb-2 text-sm font-semibold text-foreground">Statue of Liberty</div>
-        <p className="leading-2 text-sm text-muted-foreground">
+        <p className="text-sm text-muted-foreground">
           The Statue of Liberty is a colossal neoclassical sculpture on Liberty Island in New York
           Harbor, within New York City.{" "}
         </p>
@@ -49,7 +49,7 @@ export const Reverse: Story = {
     children: (
       <div className="p-2">
         <div className="mb-2 text-sm font-semibold text-foreground/80">Work desk</div>
-        <p className="leading-2 text-sm text-muted-foreground">
+        <p className="text-sm text-muted-foreground">
           A work desk with a laptop, a cup of coffee, and a plant.{" "}
         </p>
       </div>
@@ -70,7 +70,7 @@ export const Multiple: Story = {
         >
           <div className="p-2">
             <div className="mb-2 text-sm font-semibold text-foreground/80">Statue of Liberty</div>
-            <p className="leading-2 text-sm text-muted-foreground">
+            <p className="text-sm text-muted-foreground">
               The Statue of Liberty is a colossal neoclassical sculpture on Liberty Island in New
               York Harbor, within New York City.
             </p>
@@ -91,9 +91,7 @@ export const Multiple: Story = {
         >
           <div className="p-2">
             <div className="mb-2 text-sm font-semibold text-foreground/80">Custom</div>
-            <p className="leading-2 text-sm text-muted-foreground">
-              This is a non-image tilted cover.
-            </p>
+            <p className="text-sm text-muted-foreground">This is a non-image tilted cover.</p>
           </div>
         </TiltedCover>
 
@@ -106,7 +104,7 @@ export const Multiple: Story = {
         >
           <div className="p-2">
             <div className="mb-2 text-sm font-semibold text-foreground/80">Work desk</div>
-            <p className="leading-2 text-sm text-muted-foreground">
+            <p className="text-sm text-muted-foreground">
               A work desk with a laptop, a cup of coffee, and a plant.{" "}
             </p>
           </div>
