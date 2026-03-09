@@ -1,5 +1,5 @@
+import type { Meta, StoryObj } from "@storybook/react";
 import ToggleSwitch from "@/animata/button/toggle-switch";
-import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
   title: "Button/Toggle Switch",
@@ -16,6 +16,7 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 export const Primary: Story = {
   args: {
+    defaultChecked: false,
     onChange: () => {},
   },
 };

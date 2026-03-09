@@ -1,5 +1,6 @@
-import React, { useEffect, useRef, useState } from "react";
-import { motion, useAnimation } from "framer-motion";
+import { motion, useAnimation } from "motion/react";
+import type React from "react";
+import { useEffect, useRef, useState } from "react";
 
 interface ContentScannerProps {
   content: string;
@@ -146,33 +147,31 @@ const ContentScanner: React.FC<ContentScannerProps> = ({
           repeat: Infinity,
           repeatType: "loop" as const,
           duration: 1.5,
-          ease: "easeInOut",
+          ease: "easeInOut" as const,
         },
       },
     };
 
     return (
-      <>
-        <div className="inline-flex items-center">
-          <div className="inline-flex h-8 overflow-hidden">
-            {digits.map((digit, index) => (
-              <motion.div
-                key={`${index}-${digit}`}
-                variants={digitVariants}
-                initial="initial"
-                animate="animate"
-                className="inline-flex h-8 w-6 flex-col items-center justify-center"
-              >
-                {[digit, (digit + 1) % 10, (digit + 2) % 10].map((n, i) => (
-                  <span key={i} className="font-bold leading-8 text-purple-900">
-                    {n}
-                  </span>
-                ))}
-              </motion.div>
-            ))}
-          </div>
+      <div className="inline-flex items-center">
+        <div className="inline-flex h-8 overflow-hidden">
+          {digits.map((digit, index) => (
+            <motion.div
+              key={`${index}-${digit}`}
+              variants={digitVariants}
+              initial="initial"
+              animate="animate"
+              className="inline-flex h-8 w-6 flex-col items-center justify-center"
+            >
+              {[digit, (digit + 1) % 10, (digit + 2) % 10].map((n, i) => (
+                <span key={i} className="font-bold leading-8 text-purple-900">
+                  {n}
+                </span>
+              ))}
+            </motion.div>
+          ))}
         </div>
-      </>
+      </div>
     );
   };
 

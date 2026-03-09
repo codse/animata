@@ -1,15 +1,16 @@
-import { cn } from "@/lib/utils"; // Import utility for conditional class names
+import { Menu, X } from "lucide-react"; // Importing icons from lucide-react
 import {
   AnimatePresence, // Enables animation presence detection
-  MotionValue, // Type for motion values
+  type MotionValue, // Type for motion values
   motion, // Main component for animations
   useMotionValue, // Hook to create a motion value
   useSpring, // Hook to create smooth spring animations
   useTransform, // Hook to transform motion values
-} from "framer-motion";
+} from "motion/react";
 import Link from "next/link"; // Next.js Link component for navigation
-import React, { useRef, useState } from "react"; // Importing React hooks
-import { Menu, X } from "lucide-react"; // Importing icons from lucide-react
+import type React from "react"; // Importing React hooks
+import { useRef, useState } from "react";
+import { cn } from "@/lib/utils"; // Import utility for conditional class names
 
 // Interface for props accepted by the AnimatedDock component
 interface AnimatedDockProps {

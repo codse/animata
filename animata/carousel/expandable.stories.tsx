@@ -1,5 +1,5 @@
+import type { Meta, StoryObj } from "@storybook/react";
 import Expandable from "@/animata/carousel/expandable";
-import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
   title: "Carousel/Expandable",
@@ -16,6 +16,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Primary: Story = {
   args: {
+    autoPlay: true,
     className: "w-full min-w-72 storybook-fix",
   },
 };

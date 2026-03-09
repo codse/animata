@@ -1,5 +1,5 @@
+import type { Meta, StoryObj } from "@storybook/react";
 import AvatarList from "@/animata/list/avatar-list";
-import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
   title: "List/Avatar List",
@@ -8,12 +8,19 @@ const meta = {
     layout: "centered",
   },
   tags: ["autodocs"],
-  argTypes: {},
+  argTypes: {
+    size: {
+      control: { type: "select" },
+      options: ["sm", "md", "lg"],
+    },
+  },
 } satisfies Meta<typeof AvatarList>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Primary: Story = {
-  args: {},
+  args: {
+    size: "md",
+  },
 };

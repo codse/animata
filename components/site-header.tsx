@@ -1,9 +1,9 @@
 "use client";
-import { useRef } from "react";
+import { CodeIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTheme } from "next-themes";
-import { CodeIcon } from "lucide-react";
+import { useRef } from "react";
 
 import AnimatedBorderTrail from "@/animata/container/animated-border-trail";
 import { CommandMenu } from "@/components/command-menu";
@@ -65,7 +65,7 @@ export function SiteHeader() {
             <Link
               href={siteConfig.links.github}
               target="_blank"
-              className="inline-block rounded-full bg-opacity-75 bg-gradient-to-br from-gray-100 from-5% via-zinc-50 via-60% to-slate-200 px-4 py-2 text-xs font-medium text-foreground dark:from-gray-900 dark:via-zinc-700 dark:to-slate-700"
+              className="inline-block rounded-full bg-linear-to-br from-gray-100 from-5% via-zinc-50 via-60% to-slate-200 px-4 py-2 text-xs font-medium text-foreground dark:from-gray-900 dark:via-zinc-700 dark:to-slate-700"
             >
               Star us <span className="hidden sm:inline">on GitHub</span>
             </Link>

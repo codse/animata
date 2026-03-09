@@ -1,4 +1,4 @@
-import { Fragment, ReactNode, useRef, useState } from "react";
+import { Fragment, type ReactNode, useRef, useState } from "react";
 
 export default function RemountOnMouseIn({
   children,

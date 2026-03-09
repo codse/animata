@@ -4,24 +4,18 @@ description: A component that displays list of user's avatar
 author: sudha_shrestha
 ---
 
-<ComponentPreview name="list-avatar-list--docs" />
+<ComponentPreview name="list-avatar-list--primary" />
 
 ## Installation
 
 <Steps>
 
-<Step>Update `tailwind.config.js`</Step>
-```js
-theme: {
-    extend: {
-       keyframes: {
-         "bg-position": {
-         "0%": { backgroundPosition: "0% 50%" },
-          "100%": { backgroundPosition: "100% 50%" },
-         }
-     }
-    },
-  },
+<Step>Add to your CSS</Step>
+```css
+@keyframes bg-position {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 100% 50%; }
+}
 ```
 
 <Step>Run the following command</Step>

@@ -1,5 +1,5 @@
+import type { Meta, StoryObj } from "@storybook/react";
 import ExternalLinkButton from "@/animata/button/external-link-button";
-import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
   title: "Button/External link",

@@ -20,10 +20,10 @@ export default function SubscribeCard({
       <div className="flex flex-col gap-2 px-4">
         <Input placeholder={placeholder} className="rounded-none bg-gray-100" />
         <Button
-          className="group relative cursor-pointer bg-gray-500 text-white transition-all duration-300 hover:bg-green-600"
+          className="group/subscribe relative cursor-pointer bg-gray-500 text-white transition duration-300 hover:bg-green-600"
           aria-label={buttonText}
         >
-          <Check className="absolute left-3 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+          <Check className="absolute left-3 opacity-0 transition-opacity duration-300 group-hover/subscribe:opacity-100" />
           <p className="pl-4 hover:font-bold">{buttonText}</p>
         </Button>
       </div>

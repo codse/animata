@@ -1,5 +1,6 @@
+import type { Meta, StoryObj } from "@storybook/react";
 import SecurityAlert from "@/animata/widget/security-alert";
-import { Meta, StoryObj } from "@storybook/react";
+
 const meta = {
   title: "Widget/Security Alert",
   component: SecurityAlert,

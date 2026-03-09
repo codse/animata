@@ -18,21 +18,20 @@ export default function FlipCard({
   ...props
 }: FlipCardProps) {
   const rotationClass = {
-    x: ["group-hover:[transform:rotateX(180deg)]", "[transform:rotateX(180deg)]"],
-    y: ["group-hover:[transform:rotateY(180deg)]", "[transform:rotateY(180deg)]"],
-  };
-  const self = rotationClass[rotate];
+    x: ["group-hover/card:rotate-x-180", "rotate-x-180"],
+    y: ["group-hover/card:rotate-y-180", "rotate-y-180"],
+  } as const;
 
   return (
-    <div className={cn("group h-72 w-56 [perspective:1000px]", className)} {...props}>
+    <div className={cn("group/card h-72 w-56 perspective-[1000px]", className)} {...props}>
       <div
         className={cn(
-          "relative h-full rounded-2xl transition-all duration-500 [transform-style:preserve-3d]",
-          self[0],
+          "relative h-full rounded-2xl transition duration-500 transform-3d",
+          rotationClass[rotate][0],
         )}
       >
         {/* Front */}
-        <div className="absolute h-full w-full [backface-visibility:hidden]">
+        <div className="absolute inset-0 backface-hidden">
           <img
             src={image}
             alt="image"
@@ -40,18 +39,17 @@ export default function FlipCard({
           />
           <div className="absolute bottom-4 left-4 text-xl font-bold text-white">{title}</div>
         </div>
-
         {/* Back */}
         <div
           className={cn(
-            "absolute h-full w-full rounded-2xl bg-black/80 p-4 text-slate-200 [backface-visibility:hidden]",
-            self[1],
+            "absolute inset-0 rounded-2xl bg-black/80 p-4 text-slate-200 backface-hidden",
+            rotationClass[rotate][1],
           )}
         >
           <div className="flex min-h-full flex-col gap-2">
-            <h1 className="text-xl font-bold text-white">{subtitle}</h1>
+            <h1 className="text-base font-bold text-white">{subtitle}</h1>
             <p className="mt-1 border-t border-t-gray-200 py-4 text-base font-medium leading-normal text-gray-100">
-              {description}{" "}
+              {description}
             </p>
           </div>
         </div>

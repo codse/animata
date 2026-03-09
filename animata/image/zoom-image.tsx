@@ -1,4 +1,4 @@
-import { ImgHTMLAttributes } from "react";
+import type { ImgHTMLAttributes } from "react";
 
 import { cn } from "@/lib/utils";
 
@@ -19,7 +19,7 @@ export default function ZoomImage({ className, zoom, ...props }: ZoomImageProps)
         alt=""
         {...props}
         className={cn(
-          "transition-delay-150 h-full w-full object-contain transition-all duration-300",
+          "transition-delay-150 h-full w-full object-contain transition duration-300",
           zoomClass,
           className,
         )}

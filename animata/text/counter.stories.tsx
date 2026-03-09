@@ -1,5 +1,5 @@
+import type { Meta, StoryObj } from "@storybook/react";
 import Counter, { Formatter } from "@/animata/text/counter";
-import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
   title: "Text/Counter",
@@ -8,7 +8,12 @@ const meta = {
     layout: "centered",
   },
   tags: ["autodocs"],
-  argTypes: {},
+  argTypes: {
+    direction: {
+      control: { type: "select" },
+      options: ["up", "down"],
+    },
+  },
 } satisfies Meta<typeof Counter>;
 
 export default meta;
@@ -17,6 +22,8 @@ type Story = StoryObj<typeof meta>;
 export const Primary: Story = {
   args: {
     targetValue: 1000,
+    direction: "up",
+    delay: 0,
   },
 };
 
@@ -24,7 +31,7 @@ export const Percentage: Story = {
   args: {
     targetValue: 100,
     direction: "up",
-    format: (value) => value.toFixed(0) + "%",
+    format: (value) => `${value.toFixed(0)}%`,
   },
 };
 

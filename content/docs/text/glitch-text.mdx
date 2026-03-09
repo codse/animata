@@ -4,51 +4,26 @@ description: Glitch text effect
 author: harimanok_
 ---
 
-<ComponentPreview name="text-glitch-text--docs" />
+<ComponentPreview name="text-glitch-text--primary" />
 
 ## Installation
 
 <Steps>
 
-<Step>Update `tailwind.config.js`</Step>
+<Step>Add to your CSS</Step>
 
-Add the following to your tailwind.config.js file.
-
-```json
-module.exports = {
-  theme: {
-    extend: {
-      keyframes: {
-        glitch: {
-          "0%": {
-            color: "#fff",
-            textShadow: "2px 2px 0px #00ffff, -2px -2px 0px #ff00ff",
-          },
-          "25%": {
-            color: "#00ffff",
-            textShadow: "-2px -2px 0px #fff, 2px 2px 0px #ff00ff",
-          },
-          "50%": {
-            color: "#ff00ff",
-            textShadow: "2px -2px 0px #00ffff, -2px 2px 0px #fff",
-          },
-          "75%": {
-            color: "#eee",
-            textShadow: "-2px 2px 0px #ff00ff, 2px -2px 0px #00ffff",
-          },
-          "100%": {
-            color: "#fff",
-            textShadow: "2px 2px 0px #00ffff, -2px -2px 0px #ff00ff",
-          },
-        },
-        twinkle: {
-          "0%": { opacity: "0" },
-          "50%": { opacity: "1" },
-          "100%": { opacity: "0" },
-        },
-      },
-    },
-  },
+```css
+@keyframes glitch {
+  0% { color: #fff; text-shadow: 2px 2px 0px #00ffff, -2px -2px 0px #ff00ff; }
+  25% { color: #00ffff; text-shadow: -2px -2px 0px #fff, 2px 2px 0px #ff00ff; }
+  50% { color: #ff00ff; text-shadow: 2px -2px 0px #00ffff, -2px 2px 0px #fff; }
+  75% { color: #eee; text-shadow: -2px 2px 0px #ff00ff, 2px -2px 0px #00ffff; }
+  100% { color: #fff; text-shadow: 2px 2px 0px #00ffff, -2px -2px 0px #ff00ff; }
+}
+@keyframes twinkle {
+  0% { opacity: 0; }
+  50% { opacity: 1; }
+  100% { opacity: 0; }
 }
 ```
 

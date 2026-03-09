@@ -1,5 +1,5 @@
+import type { Meta, StoryObj } from "@storybook/react";
 import CommitGraph from "@/animata/graphs/commit-graph";
-import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
   title: "Graphs/Commit Graph",

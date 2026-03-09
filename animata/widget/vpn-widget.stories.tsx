@@ -1,5 +1,5 @@
+import type { Meta, StoryObj } from "@storybook/react";
 import VpnWidget from "@/animata/widget/vpn-widget";
-import { Meta, StoryObj } from "@storybook/react";
 
 const meta: Meta<typeof VpnWidget> = {
   title: "Widget/Vpn Widget",
@@ -24,6 +24,7 @@ export const Primary: Story = {
     userName: "Animata",
     latency: "5ms",
     netSpeed: "10",
+    defaultConnected: false,
   },
 };
 

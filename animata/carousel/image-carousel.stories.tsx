@@ -1,5 +1,5 @@
+import type { Meta, StoryObj } from "@storybook/react";
 import ImageCarousel from "@/animata/carousel/image-carousel";
-import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
   title: "Carousel/Image Carousel",

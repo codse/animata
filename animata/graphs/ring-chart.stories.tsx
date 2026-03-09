@@ -1,5 +1,5 @@
+import type { Meta, StoryObj } from "@storybook/react";
 import Rings from "@/animata/graphs/ring-chart";
-import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
   title: "Graphs/Ring Chart",
@@ -16,6 +16,9 @@ type Story = StoryObj<typeof meta>;
 
 export const Primary: Story = {
   args: {
+    size: 96,
+    gap: 4,
+    width: 20,
     rings: [
       {
         progress: 10,

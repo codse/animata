@@ -1,8 +1,18 @@
-"use client";
-import { ComponentProps, HTMLAttributes } from "react";
+import type { CompileOptions } from "@mdx-js/mdx";
 import Link from "next/link";
-import { useMDXComponent } from "next-contentlayer/hooks";
-import { NpmCommands, TouchCommands } from "types/unist";
+import { MDXRemote } from "next-mdx-remote/rsc";
+import type { ComponentProps, HTMLAttributes } from "react";
+import rehypeAutolinkHeadings from "rehype-autolink-headings";
+import rehypePrettyCode, {
+  type LineElement,
+  type Options as PrettyCodeOptions,
+} from "rehype-pretty-code";
+import rehypeSlug from "rehype-slug";
+import { codeImport } from "remark-code-import";
+import remarkGfm from "remark-gfm";
+import type { NpmCommands, TouchCommands, UnistNode, UnistTree } from "types/unist";
+import { visit } from "unist-util-visit";
+import { VFile } from "vfile";
 
 import Modal from "@/animata/overlay/modal";
 import { Callout } from "@/components/callout";
@@ -11,12 +21,9 @@ import { ComponentExample } from "@/components/component-example";
 import ComponentListItem from "@/components/component-list-item";
 import { ComponentPreview } from "@/components/component-preview";
 import { ComponentSource } from "@/components/component-source";
-import {
-  CopyButton,
-  CopyNpmCommandButton,
-  copyToClipboardWithMeta,
-  CopyTouchCommandButton,
-} from "@/components/copy-button";
+import { CopyButton, CopyNpmCommandButton, CopyTouchCommandButton } from "@/components/copy-button";
+import { CopyProxy } from "@/components/copy-proxy";
+import { AnimataRenderer } from "@/components/dynamic-animata";
 import { FrameworkDocs } from "@/components/framework-docs";
 import PreviewContainer from "@/components/preview-container";
 import {
@@ -28,10 +35,78 @@ import {
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Event } from "@/lib/events";
+import type { Event } from "@/lib/events";
 import { cn } from "@/lib/utils";
 
 import { baseComponents } from "./mdx-base-components";
+
+const setupCodeSnippet = () => (tree: UnistTree) => {
+  visit(tree, (node: UnistNode) => {
+    if (node?.type === "element" && node?.tagName === "pre") {
+      const [codeEl] = node.children ?? [];
+      if (codeEl?.tagName !== "code") {
+        return;
+      }
+
+      const meta = (codeEl as UnistNode & { data?: { meta?: string } }).data?.meta;
+      if (meta) {
+        const regex = /event="([^"]*)"/;
+        const match = meta.match(regex);
+        if (match) {
+          (node as UnistNode & { __event__?: string }).__event__ = match[1];
+          (codeEl as UnistNode & { data?: { meta?: string } }).data!.meta = meta.replace(regex, "");
+        }
+
+        const copyId = meta.match(/copyId="([^"]*)"/);
+        if (copyId) {
+          (node as UnistNode & { __copyId__?: string }).__copyId__ = copyId[1];
+        }
+      }
+
+      (node as UnistNode & { __rawString__?: string }).__rawString__ = codeEl.children?.[0]?.value;
+    }
+  });
+};
+
+const postProcess = () => (tree: UnistTree) => {
+  visit(tree, "element", (node: UnistNode) => {
+    const rawNode = node as UnistNode & { __rawString__?: string; __copyId__?: string };
+    if (rawNode.__rawString__) {
+      if (node.tagName !== "pre") {
+        const [pre] = node.children ?? [];
+        if (pre?.tagName !== "pre") {
+          return;
+        }
+        if (!pre.properties) pre.properties = {};
+        pre.properties.__copyId__ = rawNode.__copyId__;
+        pre.properties.__rawString__ = rawNode.__rawString__;
+        Reflect.deleteProperty(rawNode, "__rawString__");
+        Reflect.deleteProperty(rawNode, "__copyId__");
+
+        const rawString = pre.properties.__rawString__ as string | undefined;
+
+        if (rawString?.startsWith("mkdir")) {
+          const path = rawString.split(" ").pop();
+          if (!path) {
+            return;
+          }
+
+          const filename = path.split("/").pop() ?? "";
+          const dir = path.replace(`/${filename}`, "");
+          pre.properties.__windows__ = `mkdir "${dir}" && type null > ${path}`;
+          pre.properties.__unix__ = `mkdir -p ${dir} && touch ${path}`;
+        }
+
+        if (rawString?.startsWith("npm install")) {
+          pre.properties.__npmCommand__ = rawString;
+          pre.properties.__yarnCommand__ = rawString.replace("npm install", "yarn add");
+          pre.properties.__pnpmCommand__ = rawString.replace("npm install", "pnpm add");
+          pre.properties.__bunCommand__ = rawString.replace("npm install", "bun add");
+        }
+      }
+    }
+  });
+};
 
 const components = {
   Accordion,
@@ -66,14 +141,7 @@ const components = {
   } & NpmCommands &
     TouchCommands) => {
     if (__copyId__ && __rawString__) {
-      return (
-        <div
-          id={`source-${__copyId__}`}
-          onClick={() => {
-            copyToClipboardWithMeta(__rawString__);
-          }}
-        />
-      );
+      return <CopyProxy id={`source-${__copyId__}`} value={__rawString__} />;
     }
 
     return (
@@ -136,7 +204,7 @@ const components = {
   Step: ({ className, ...props }: ComponentProps<"h3">) => (
     <h3
       className={cn(
-        "font-heading mt-8 scroll-m-20 text-xl font-semibold tracking-tight",
+        "font-heading relative mt-8 scroll-m-20 text-xl font-semibold tracking-tight",
         className,
       )}
       {...props}
@@ -205,27 +273,82 @@ const components = {
 
 interface MdxProps {
   code: string;
+  filePath?: string;
 }
 
-export function Mdx({ code }: MdxProps) {
-  // Fix `process` issue: https://github.com/contentlayerdev/contentlayer/issues/288#issuecomment-1384180362
-  const Component = useMDXComponent(
-    `
-if (typeof process === 'undefined') {
-  globalThis.process = {
-    env: {
-      NEXT_PUBLIC_APP_URL: '${process.env.NEXT_PUBLIC_APP_URL}',
-    },
-  };
+function stripImports(code: string) {
+  const importRegex = /^import\s+(\w+)\s+from\s+["']@\/animata\/([^"']+)["'];?\s*$/gm;
+  const imports: Array<{ name: string; subpath: string }> = [];
+  const strippedCode = code.replace(importRegex, (_, name, subpath) => {
+    imports.push({ name, subpath });
+    return "";
+  });
+  return { strippedCode, imports };
 }
 
-${code}
-    `,
-  );
+function resolveImports(imports: Array<{ name: string; subpath: string }>) {
+  const resolved: Record<string, React.ComponentType<Record<string, unknown>>> = {};
+  for (const { name, subpath } of imports) {
+    resolved[name] = (props: Record<string, unknown>) => (
+      <AnimataRenderer subpath={subpath} {...props} />
+    );
+  }
+  return resolved;
+}
+
+const mdxOptions: Omit<CompileOptions, "outputFormat" | "providerImportSource"> & {
+  useDynamicImport?: boolean;
+} = {
+  remarkPlugins: [remarkGfm, codeImport],
+  rehypePlugins: [
+    setupCodeSnippet,
+    rehypeSlug,
+    [
+      rehypePrettyCode,
+      {
+        theme: "github-dark",
+        onVisitLine(node: LineElement) {
+          if (node.children.length === 0) {
+            node.children = [{ type: "text", value: " " }];
+          }
+          if (!node.properties.className) {
+            node.properties.className = ["line"];
+          }
+        },
+        onVisitHighlightedLine(node: LineElement) {
+          (node.properties.className as string[]).push("line--highlighted");
+        },
+        onVisitHighlightedChars(node: LineElement) {
+          node.properties.className = ["word--highlighted"];
+        },
+      } satisfies PrettyCodeOptions,
+    ],
+    [
+      rehypeAutolinkHeadings,
+      {
+        properties: {
+          className: ["anchor"],
+          ariaLabel: "Link to section",
+        },
+      },
+    ],
+    postProcess,
+  ],
+};
+
+export async function Mdx({ code, filePath }: MdxProps) {
+  const { strippedCode, imports } = stripImports(code);
+  const dynamicComponents = imports.length > 0 ? resolveImports(imports) : {};
+
+  const source = filePath ? new VFile({ value: strippedCode, path: filePath }) : strippedCode;
 
   return (
     <div className="mdx">
-      <Component components={components} />
+      <MDXRemote
+        source={source}
+        components={{ ...components, ...dynamicComponents }}
+        options={{ mdxOptions: mdxOptions }}
+      />
     </div>
   );
 }

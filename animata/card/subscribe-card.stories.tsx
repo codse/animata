@@ -1,5 +1,5 @@
+import type { Meta, StoryObj } from "@storybook/react";
 import SubscribeCard from "@/animata/card/subscribe-card";
-import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
   title: "Card/Subscribe Card",
@@ -15,5 +15,9 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Primary: Story = {
-  args: {},
+  args: {
+    title: "Want to read the rest?",
+    placeholder: "justin@buttondown.email",
+    buttonText: "Subscribe for $5/mo",
+  },
 };

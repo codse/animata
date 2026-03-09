@@ -1,5 +1,5 @@
-import React, { useRef } from "react";
-import { motion, MotionValue, useScroll, useTransform } from "framer-motion";
+import { type MotionValue, motion, useMotionValue, useTransform } from "motion/react";
+import React, { useCallback, useEffect, useRef } from "react";
 
 import { cn } from "@/lib/utils";
 
@@ -15,9 +15,10 @@ const flatten = (children: React.ReactNode): React.ReactNode[] => {
 
   React.Children.forEach(children, (child) => {
     if (React.isValidElement(child)) {
+      const childProps = child.props as Record<string, unknown>;
       if (child.type === React.Fragment) {
-        result.push(...flatten(child.props.children));
-      } else if (child.props.children) {
+        result.push(...flatten(childProps.children as React.ReactNode));
+      } else if (childProps.children) {
         result.push(React.cloneElement(child, {}));
       } else {
         result.push(child);
@@ -48,7 +49,7 @@ function OpacityChild({
 
   let className = "";
   if (React.isValidElement(children)) {
-    className = Reflect.get(children, "props")?.className;
+    className = (Reflect.get(children, "props") as Record<string, unknown>)?.className as string;
   }
 
   return (
@@ -62,10 +63,22 @@ export default function ScrollReveal({ children, className, ...props }: ScrollRe
   const flat = flatten(children);
   const count = flat.length;
   const containerRef = useRef<HTMLDivElement>(null);
+  const scrollYProgress = useMotionValue(0);
 
-  const { scrollYProgress } = useScroll({
-    container: containerRef,
-  });
+  const handleScroll = useCallback(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    const { scrollTop, scrollHeight, clientHeight } = el;
+    const maxScroll = scrollHeight - clientHeight;
+    scrollYProgress.set(maxScroll > 0 ? scrollTop / maxScroll : 0);
+  }, [scrollYProgress]);
+
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    el.addEventListener("scroll", handleScroll, { passive: true });
+    return () => el.removeEventListener("scroll", handleScroll);
+  }, [handleScroll]);
 
   return (
     <div
@@ -73,7 +86,7 @@ export default function ScrollReveal({ children, className, ...props }: ScrollRe
       ref={containerRef}
       className={cn(
         // Adjust the height and spacing according to the need
-        "storybook-fix relative h-96 w-full overflow-y-scroll bg-foreground text-background dark:text-zinc-900",
+        "relative h-96 w-full overflow-y-scroll bg-foreground text-background dark:text-zinc-900",
         className,
       )}
     >

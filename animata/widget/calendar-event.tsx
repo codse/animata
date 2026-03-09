@@ -64,7 +64,7 @@ function EventCard({ date }: { date: CalendarEvent; hides: boolean }) {
   return (
     <div
       className={cn(
-        "relative flex h-10 w-full items-center gap-2 overflow-hidden rounded-md pl-1 transition-all",
+        "relative flex h-10 w-full items-center gap-2 overflow-hidden rounded-md pl-1 transition",
         date.bgcolor,
       )}
     >
@@ -106,7 +106,7 @@ export default function CalendarEvent({
             </p>
             <p className="text-[10px] text-gray-500">16:15 - 20:00</p>
           </div>
-          {dates.slice(maxEvents, maxEvents + 3).map((date, index) => (
+          {dates.slice(maxEvents, maxEvents + 3).map((_date, index) => (
             <div
               key={index}
               style={{

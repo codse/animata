@@ -1,5 +1,5 @@
+import type { Meta, StoryObj } from "@storybook/react";
 import BlurStackCard from "@/animata/card/blur-stack-card";
-import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
   title: "Card/Blur Stack Card",

@@ -1,5 +1,5 @@
+import type { Meta, StoryObj } from "@storybook/react";
 import ContentScan from "@/animata/feature-cards/content-scan";
-import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
   title: "Feature Cards/Content Scan",

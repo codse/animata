@@ -1,5 +1,5 @@
+import type { Meta, StoryObj } from "@storybook/react";
 import StudyTimer, { testStudyTimerProps } from "@/animata/widget/study-timer";
-import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
   title: "Widget/Study Timer",

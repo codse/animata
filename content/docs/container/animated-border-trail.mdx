@@ -4,7 +4,7 @@ description: A container with animated border trail, this can be used for button
 author: harimanok_
 ---
 
-<ComponentPreview name="container-animated-border-trail--docs" />
+<ComponentPreview name="container-animated-border-trail--primary" />
 
 ## Installation
 
@@ -19,25 +19,15 @@ author: harimanok_
 }
 ```
 
-<Step>Update `tailwind.config.js`</Step>
+<Step>Add to your CSS</Step>
 
-Add the following to your tailwind.config.js file.
-
-```json
-module.exports = {
-  theme: {
-    extend: {
-      keyframes: {
-        "trail": {
-          "0%": { "--angle": "0deg" },
-          "100%": { "--angle": "360deg" },
-        },
-      },
-      animation: {
-        "trail": "trail var(--duration) linear infinite",
-      },
-    }
-  }
+```css
+@keyframes trail {
+  0% { --angle: 0deg; }
+  100% { --angle: 360deg; }
+}
+@theme {
+  --animate-trail: trail var(--duration) linear infinite;
 }
 ```
 

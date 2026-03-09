@@ -1,7 +1,6 @@
+import type { Meta, StoryObj } from "@storybook/react";
 import { ChefHat, Receipt, Signal } from "lucide-react";
-
 import TransactionList from "@/animata/list/transaction-list";
-import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
   title: "List/Transaction List",

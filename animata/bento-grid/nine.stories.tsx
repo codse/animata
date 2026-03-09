@@ -1,5 +1,5 @@
+import type { Meta, StoryObj } from "@storybook/react";
 import Nine from "@/animata/bento-grid/nine";
-import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
   title: "Bento Grid/Nine",

@@ -1,5 +1,5 @@
-import Animatedtimeline, { TimelineEvent } from "@/animata/progress/animatedtimeline";
-import { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react";
+import Animatedtimeline, { type TimelineEvent } from "@/animata/progress/animatedtimeline";
 
 const meta = {
   title: "Progress/Animatedtimeline",

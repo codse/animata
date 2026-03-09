@@ -1,4 +1,3 @@
-import React from "react";
 import { Tomorrow } from "next/font/google";
 
 import { cn } from "@/lib/utils";
@@ -19,8 +18,8 @@ export default function GlitchText({
   starCount?: number;
 }) {
   return (
-    <div className="relative flex items-center justify-center overflow-hidden">
-      <div className="relative flex flex-col items-center justify-center bg-gradient-to-b from-[#4B0082] via-[#3B0066] to-[#2B004A]">
+    <div className="full-content relative flex items-center justify-center overflow-hidden">
+      <div className="relative flex flex-col items-center justify-center bg-linear-to-b from-[#4B0082] via-[#3B0066] to-[#2B004A]">
         {[...Array(starCount)].map((_, i) => (
           <div
             key={i}

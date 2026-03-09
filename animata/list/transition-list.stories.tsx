@@ -1,5 +1,5 @@
+import type { Meta, StoryObj } from "@storybook/react";
 import TransitionList from "@/animata/list/transition-list";
-import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
   title: "List/Transition List",

@@ -1,3 +1,4 @@
+import type { Meta, StoryObj } from "@storybook/react";
 import {
   Codepen,
   Facebook,
@@ -8,9 +9,7 @@ import {
   Twitter,
   Youtube,
 } from "lucide-react";
-
 import FlowerMenu from "@/animata/list/flower-menu";
-import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
   title: "List/Flower Menu",

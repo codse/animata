@@ -1,3 +1,5 @@
+"use client";
+
 import { lazy, Suspense, useState } from "react";
 
 import { CopyButton } from "@/components/copy-button";
@@ -20,7 +22,7 @@ function Actions({ copyId, onRefresh }: { copyId: string; onRefresh: () => void 
   );
 }
 
-const lazyList: Record<string, React.LazyExoticComponent<() => JSX.Element>> = {
+const lazyList: Record<string, React.LazyExoticComponent<() => React.JSX.Element>> = {
   "ai-button": lazy(() => import("@/animata/button/ai-button")),
   "status-button": lazy(() => import("@/animata/button/status-button")),
 };

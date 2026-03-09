@@ -1,5 +1,5 @@
+import type { Meta, StoryObj } from "@storybook/react";
 import StaggeredCard from "@/animata/card/staggered-card";
-import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
   title: "Card/Staggered Card",
@@ -30,5 +30,7 @@ export const Primary: Story = {
       { label: "Contact", href: "#" },
       { label: "Careers", href: "#" },
     ],
+    delay: 0.06,
+    openingDelay: 0.1,
   },
 };

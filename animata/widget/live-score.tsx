@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { Circle, Triangle } from "lucide-react";
+import { useEffect, useState } from "react";
 
 import { cn } from "@/lib/utils";
 
@@ -34,14 +34,18 @@ const getScore = (lastScore?: GameInfo): GameInfo => {
       name: "NPL",
       score: teamOneScore % maxScore,
       win:
-        teamOneScore >= maxScore ? (lastScore?.teamOne.win ?? 0) + 1 : lastScore?.teamOne.win ?? 0,
+        teamOneScore >= maxScore
+          ? (lastScore?.teamOne.win ?? 0) + 1
+          : (lastScore?.teamOne.win ?? 0),
     },
     teamTwo: {
       name: "USA",
       icon: "🇺🇸",
       score: teamTwoScore % maxScore,
       win:
-        teamTwoScore >= maxScore ? (lastScore?.teamTwo.win ?? 0) + 1 : lastScore?.teamTwo.win ?? 0,
+        teamTwoScore >= maxScore
+          ? (lastScore?.teamTwo.win ?? 0) + 1
+          : (lastScore?.teamTwo.win ?? 0),
     },
   };
 };
@@ -114,7 +118,7 @@ export default function LiveScore() {
   // #endregion
 
   return (
-    <div className="group flex size-52 flex-col rounded-3xl bg-zinc-800 text-white">
+    <div className="group/score flex size-52 flex-col rounded-3xl bg-zinc-800 text-white">
       <Header game={game} />
       <div className="flex w-full flex-1 items-center justify-center gap-2 px-4">
         <div className="flex">
@@ -128,7 +132,7 @@ export default function LiveScore() {
       </div>
 
       <div className="relative h-14 overflow-hidden rounded-b-3xl bg-zinc-950 text-white">
-        <div className="flex h-14 items-center justify-around overflow-hidden p-4 font-medium transition-all group-hover:-translate-y-full">
+        <div className="flex h-14 items-center justify-around overflow-hidden p-4 font-medium transition group-hover/score:-translate-y-full">
           <div className="flex items-center gap-1 tabular-nums">
             <Triangle fill="white" size={6} />
             <p>
@@ -152,7 +156,7 @@ export default function LiveScore() {
             {game.teamOne.win} - {game.teamTwo.win}
           </div>
         </div>
-        <div className="flex h-14 items-center justify-center bg-green-500 text-sm transition-all group-hover:-translate-y-full">
+        <div className="flex h-14 items-center justify-center bg-green-500 text-sm transition group-hover/score:-translate-y-full">
           Some other information.
         </div>
       </div>

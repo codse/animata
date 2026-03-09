@@ -50,7 +50,7 @@ export default function WeeklyProgress() {
                 attributeName="stroke-dashoffset"
                 from="565.48"
                 to="118.692"
-                dur={0.5 + index * 0.1 + "s"}
+                dur={`${0.5 + index * 0.1}s`}
                 fill="freeze"
               />
             </circle>
@@ -67,7 +67,7 @@ export default function WeeklyProgress() {
                 attributeName="opacity"
                 from="0"
                 to="1"
-                dur={0.5 + index * 0.1 + "s"}
+                dur={`${0.5 + index * 0.1}s`}
                 fill="freeze"
               />
               {day}

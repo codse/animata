@@ -4,7 +4,7 @@ description: A scanning component to highlight detected words to predict AI cont
 author: MEbandhan
 ---
 
-<ComponentPreview name="feature-cards-content-scan--docs" />
+<ComponentPreview name="feature-cards-content-scan--primary" />
 
 ## Installation
 
@@ -15,19 +15,13 @@ author: MEbandhan
 npm install framer-motion
 ```
 
-<Step>Update `tailwind.config.js`</Step>
+<Step>Add to your CSS</Step>
 
-Add the following to your tailwind.config.js file.
+Add the following to your CSS file.
 
-```json
-module.exports = {
-  theme: {
-    extend: {
-      backgroundImage: {
-        "custom-gradient": "linear-gradient(to left, rgba(136,127,242,0.7) 0%, transparent 100%)",
-      },
-    },
-  }
+```css
+@theme {
+  --bg-custom-gradient: linear-gradient(to left, rgba(136,127,242,0.7) 0%, transparent 100%);
 }
 ```
 

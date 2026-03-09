@@ -21,7 +21,7 @@ export default function CursorTracker() {
   return (
     <div
       ref={divRef}
-      className="group relative w-64 cursor-none rounded-3xl bg-violet-50 p-6 text-violet-800"
+      className="group/cursor relative w-64 cursor-none rounded-3xl bg-violet-50 p-6 text-violet-800"
     >
       {/* Actual content */}
       <h1 className="mb-4 text-3xl font-semibold leading-none">
@@ -37,7 +37,7 @@ export default function CursorTracker() {
         style={{
           transform: "translate(var(--x), var(--y))",
         }}
-        className="pointer-events-none absolute left-0 top-0 z-50 rounded-full bg-blue-800/80 px-4 py-2 text-sm font-bold text-white opacity-0 duration-0 group-hover:opacity-100"
+        className="pointer-events-none absolute left-0 top-0 z-50 rounded-full bg-blue-800/80 px-4 py-2 text-sm font-bold text-white opacity-0 duration-0 group-hover/cursor:opacity-100"
       >
         Read more &rarr;
       </div>

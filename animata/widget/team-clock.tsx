@@ -1,7 +1,7 @@
 "use client";
 
+import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
 
 import { cn } from "@/lib/utils";
 
@@ -72,14 +72,14 @@ export default function TeamClock({
       setAngle(0);
     } else {
       setSelectedUser(userName);
-      setAngle(parseInt(timeDifference) * 30);
+      setAngle(parseInt(timeDifference, 10) * 30);
     }
   };
 
   const handleUserHover = (userName: string | null, timeDifference: string | null) => {
     if (userName && timeDifference) {
       setHoveredUser(userName);
-      setAngle(parseInt(timeDifference) * 30);
+      setAngle(parseInt(timeDifference, 10) * 30);
     } else {
       setHoveredUser(null);
       if (!selectedUser) {
@@ -87,119 +87,113 @@ export default function TeamClock({
       } else {
         const selectedUserData = users.find((user) => user.name === selectedUser);
         if (selectedUserData) {
-          setAngle(parseInt(selectedUserData.timeDifference) * 30);
+          setAngle(parseInt(selectedUserData.timeDifference, 10) * 30);
         }
       }
     }
   };
 
   return (
-    <>
-      <motion.div
-        className={cn(
-          "relative flex flex-col overflow-hidden rounded-lg border transition-shadow duration-300 hover:shadow-lg md:flex-row",
-          "min-w-26 h-auto w-full md:w-[450px]",
-          isMobile ? "team-clock-mobile" : "",
-        )}
-        style={{
-          backgroundColor: backgroundColor,
-          borderColor: borderColor,
-          color: textColor,
-        }}
-        animate={{ width: isMobile ? "100%" : isExpanded ? "800px" : "400px" }}
-        transition={{ duration: animationDuration }}
+    <motion.div
+      className={cn(
+        "relative flex flex-col overflow-hidden rounded-lg border transition-shadow duration-300 hover:shadow-lg md:flex-row",
+        "min-w-26 h-auto w-full md:w-[450px]",
+        isMobile ? "team-clock-mobile" : "",
+      )}
+      style={{
+        backgroundColor: backgroundColor,
+        borderColor: borderColor,
+        color: textColor,
+      }}
+      animate={{ width: isMobile ? "100%" : isExpanded ? "800px" : "400px" }}
+      transition={{ duration: animationDuration }}
+    >
+      <div
+        className={cn("flex flex-col rounded-lg p-4", {
+          "w-full": isMobile || (!isExpanded && !isMobile),
+          "w-1/2": isExpanded && !isMobile,
+        })}
+        style={{ backgroundColor: backgroundColor }}
       >
         <div
-          className={cn("flex flex-col rounded-lg p-4", {
-            "w-full": isMobile || (!isExpanded && !isMobile),
-            "w-1/2": isExpanded && !isMobile,
-          })}
-          style={{ backgroundColor: backgroundColor }}
+          className="mb-4 flex items-center justify-between border-b pb-4 pt-1"
+          style={{ borderColor: borderColor }}
         >
-          <div
-            className="mb-4 flex items-center justify-between border-b pb-4 pt-1"
-            style={{ borderColor: borderColor }}
-          >
-            <h2 className="text-2xl font-bold">Team</h2>
-            {!isMobile && (
-              <ToggleButton
-                onClick={handleToggle}
-                accentColor={accentColor}
-                textColor={textColor}
-              />
-            )}
-          </div>
-          <div className="flex flex-grow items-center justify-center">
-            <Clock
-              angle={angle}
-              pressed={isExpanded}
-              size={isMobile ? Math.min(clockSize, window.innerWidth - 40) : clockSize}
-              animationDuration={animationDuration}
-              accentColor={accentColor}
-              textColor={textColor}
-              backgroundColor={backgroundColor}
-            />
-          </div>
-          <div className="my-4 text-center text-3xl font-semibold">
-            {currentTime.toLocaleTimeString([], {
-              hour: use24HourFormat ? "2-digit" : "numeric",
-              minute: "2-digit",
-              second: showSeconds ? "2-digit" : undefined,
-              hour12: !use24HourFormat,
-            })}
-          </div>
+          <h2 className="text-2xl font-bold">Team</h2>
+          {!isMobile && (
+            <ToggleButton onClick={handleToggle} accentColor={accentColor} textColor={textColor} />
+          )}
         </div>
+        <div className="flex grow items-center justify-center">
+          <Clock
+            angle={angle}
+            pressed={isExpanded}
+            size={isMobile ? Math.min(clockSize, window.innerWidth - 40) : clockSize}
+            animationDuration={animationDuration}
+            accentColor={accentColor}
+            textColor={textColor}
+            backgroundColor={backgroundColor}
+          />
+        </div>
+        <div className="my-4 text-center text-3xl font-semibold">
+          {currentTime.toLocaleTimeString([], {
+            hour: use24HourFormat ? "2-digit" : "numeric",
+            minute: "2-digit",
+            second: showSeconds ? "2-digit" : undefined,
+            hour12: !use24HourFormat,
+          })}
+        </div>
+      </div>
 
-        {/* Add vertical dividing line */}
-        {isExpanded && !isMobile && (
-          <div className="h-full w-px" style={{ backgroundColor: borderColor }}></div>
-        )}
+      {/* Add vertical dividing line */}
+      {isExpanded && !isMobile && (
+        <div className="h-full w-px" style={{ backgroundColor: borderColor }}></div>
+      )}
 
-        <AnimatePresence>
-          {(isExpanded || isMobile) && (
+      <AnimatePresence>
+        {(isExpanded || isMobile) && (
+          <motion.div
+            className={cn("overflow-y-auto rounded-r-lg", {
+              "team-clock-mobile-list w-full": isMobile,
+              "w-1/2": !isMobile,
+            })}
+            style={{ backgroundColor: backgroundColor }}
+            initial={isMobile ? { opacity: 1 } : { width: 0, opacity: 0 }}
+            animate={isMobile ? { opacity: 1 } : { width: "50%", opacity: 1 }}
+            exit={isMobile ? { opacity: 1 } : { width: 0, opacity: 0 }}
+            transition={{ duration: animationDuration }}
+          >
             <motion.div
-              className={cn("overflow-y-auto rounded-r-lg", {
-                "team-clock-mobile-list w-full": isMobile,
-                "w-1/2": !isMobile,
-              })}
-              style={{ backgroundColor: backgroundColor }}
-              initial={isMobile ? { opacity: 1 } : { width: 0, opacity: 0 }}
-              animate={isMobile ? { opacity: 1 } : { width: "50%", opacity: 1 }}
-              exit={isMobile ? { opacity: 1 } : { width: 0, opacity: 0 }}
+              className="space-y-4 p-4"
+              initial={isMobile ? { x: 0 } : { x: "100%" }}
+              animate={{ x: 0 }}
+              exit={isMobile ? { x: 0 } : { x: "100%" }}
               transition={{ duration: animationDuration }}
             >
-              <motion.div
-                className="space-y-4 p-4"
-                initial={isMobile ? { x: 0 } : { x: "100%" }}
-                animate={{ x: 0 }}
-                exit={isMobile ? { x: 0 } : { x: "100%" }}
-                transition={{ duration: animationDuration }}
-              >
-                {users.map((user, index) => (
-                  <ListElement
-                    key={index}
-                    name={user.name}
-                    city={user.city}
-                    country={user.country}
-                    pfp={user.pfp}
-                    timeDifference={user.timeDifference}
-                    onSelect={handleUserSelect}
-                    onHover={handleUserHover}
-                    isSelected={selectedUser === user.name}
-                    isHovered={hoveredUser === user.name}
-                    currentTime={currentTime}
-                    animationDuration={animationDuration}
-                    accentColor={accentColor}
-                    textColor={textColor}
-                    hoverBackgroundColor={hoverBackgroundColor}
-                  />
-                ))}
-              </motion.div>
+              {users.map((user, index) => (
+                <ListElement
+                  key={index}
+                  name={user.name}
+                  city={user.city}
+                  country={user.country}
+                  pfp={user.pfp}
+                  timeDifference={user.timeDifference}
+                  onSelect={handleUserSelect}
+                  onHover={handleUserHover}
+                  isSelected={selectedUser === user.name}
+                  isHovered={hoveredUser === user.name}
+                  currentTime={currentTime}
+                  animationDuration={animationDuration}
+                  accentColor={accentColor}
+                  textColor={textColor}
+                  hoverBackgroundColor={hoverBackgroundColor}
+                />
+              ))}
             </motion.div>
-          )}
-        </AnimatePresence>
-      </motion.div>
-    </>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.div>
   );
 }
 
@@ -362,7 +356,7 @@ function ListElement(props: ListElementProp) {
   };
 
   const localTime = useMemo(() => {
-    const hourDifference = parseInt(props.timeDifference);
+    const hourDifference = parseInt(props.timeDifference, 10);
     const newTime = new Date(props.currentTime);
     newTime.setHours(newTime.getHours() + hourDifference);
     return newTime.toLocaleTimeString([], {
@@ -373,10 +367,7 @@ function ListElement(props: ListElementProp) {
 
   return (
     <motion.div
-      className={cn(
-        "flex cursor-pointer items-center rounded-lg p-3",
-        props.isSelected || isHovered ? "bg-opacity-10" : "",
-      )}
+      className={cn("flex cursor-pointer items-center rounded-lg p-3", "")}
       onMouseEnter={handleEnter}
       onMouseLeave={handleLeave}
       onClick={handleClick}
@@ -388,7 +379,7 @@ function ListElement(props: ListElementProp) {
       style={{ color: props.textColor }}
     >
       <img src={props.pfp} alt={props.name} className="mr-4 h-10 w-10 rounded-full" />
-      <div className="flex-grow">
+      <div className="grow">
         <div className="flex items-center justify-between">
           <span className="text-lg font-semibold">{props.name}</span>
           <div className="relative text-sm">
@@ -406,13 +397,13 @@ function ListElement(props: ListElementProp) {
               {(props.isSelected || isHovered) && (
                 <motion.div
                   className={"whitespace-nowrap text-xs sm:text-sm"}
-                  style={{ color: parseInt(props.timeDifference) < 0 ? "#EF4444" : "#10B981" }}
+                  style={{ color: parseInt(props.timeDifference, 10) < 0 ? "#EF4444" : "#10B981" }}
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
                   transition={{ duration: props.animationDuration }}
                 >
-                  {parseInt(props.timeDifference) === 0
+                  {parseInt(props.timeDifference, 10) === 0
                     ? "+ 0 Hours"
                     : `${props.timeDifference} Hours`}
                 </motion.div>

@@ -1,5 +1,5 @@
+import type { Meta, StoryObj } from "@storybook/react";
 import HoverInteraction from "@/animata/icon/hover-interaction";
-import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
   title: "Icon/Hover Interaction",

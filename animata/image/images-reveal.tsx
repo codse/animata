@@ -1,5 +1,4 @@
-import React from "react";
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 
 const cards = [
   {
@@ -38,7 +37,7 @@ const cardVariants = {
     transition: {
       delay: custom.index * 0.1,
       duration: 0.3,
-      type: "spring",
+      type: "spring" as const,
       stiffness: 150,
       damping: 20,
       mass: 0.5,

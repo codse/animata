@@ -1,5 +1,5 @@
+import type { Meta, StoryObj } from "@storybook/react";
 import SlideArrowButton from "@/animata/button/slide-arrow-button";
-import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
   title: "Button/Slide Arrow Button",

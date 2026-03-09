@@ -1,9 +1,10 @@
 "use client";
 
-import * as React from "react";
+import { CircleIcon, FileIcon, LaptopIcon, MoonIcon, SunIcon } from "@radix-ui/react-icons";
 import { useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
-
+import type { ComponentPropsWithoutRef } from "react";
+import * as React from "react";
 import { Button } from "@/components/ui/button";
 import {
   CommandDialog,
@@ -16,10 +17,8 @@ import {
 } from "@/components/ui/command";
 import { docsConfig } from "@/config/docs";
 import { cn } from "@/lib/utils";
-import { DialogProps } from "@radix-ui/react-alert-dialog";
-import { CircleIcon, FileIcon, LaptopIcon, MoonIcon, SunIcon } from "@radix-ui/react-icons";
 
-export function CommandMenu({ ...props }: DialogProps) {
+export function CommandMenu({ ...props }: ComponentPropsWithoutRef<typeof CommandDialog>) {
   const router = useRouter();
   const [open, setOpen] = React.useState(false);
   const { setTheme } = useTheme();
@@ -61,7 +60,7 @@ export function CommandMenu({ ...props }: DialogProps) {
         {...props}
       >
         <span className="inline-flex flex-1">Search...</span>
-        <kbd className="pointer-events-none hidden flex-shrink-0 select-none items-center gap-1 rounded border border-muted-foreground bg-zinc-700 px-2 font-mono text-[10px] font-medium dark:bg-slate-200 sm:flex">
+        <kbd className="pointer-events-none hidden shrink-0 select-none items-center gap-1 rounded border border-muted-foreground bg-zinc-700 px-2 font-mono text-[10px] font-medium dark:bg-slate-200 sm:flex">
           <span className="text-xs">⌘</span>K
         </kbd>
       </Button>

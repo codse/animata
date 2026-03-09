@@ -5,7 +5,7 @@ author: harimanok_
 labels: ["requires interaction", "hover"]
 ---
 
-<ComponentPreview name="button-ai-button--docs" />
+<ComponentPreview name="button-ai-button--primary" />
 
 ## Installation
 
@@ -16,25 +16,15 @@ labels: ["requires interaction", "hover"]
 npm install tsparticles @tsparticles/react @tsparticles/engine
 ```
 
-<Step>Update `tailwind.config.js`</Step>
+<Step>Add to your CSS</Step>
 
-Add the following to your tailwind.config.js file.
-
-```json {4-12}
-module.exports = {
-  theme: {
-    extend: {
-      keyframes: {
-        sparkle: {
-          "0%, 100%": { opacity: "0.75", scale: "0.9" },
-          "50%": { opacity: "1", scale: "1" },
-        },
-      },
-      animation: {
-        sparkle: "sparkle 2s ease-in-out infinite",
-      },
-    }
-  }
+```css
+@keyframes sparkle {
+  0%, 100% { opacity: 0.75; scale: 0.9; }
+  50% { opacity: 1; scale: 1; }
+}
+@theme {
+  --animate-sparkle: sparkle 2s ease-in-out infinite;
 }
 ```
 

@@ -1,9 +1,8 @@
 "use client";
 
-import React, { useState } from "react";
-import { motion } from "framer-motion";
-
 import * as Accordion from "@radix-ui/react-accordion";
+import { motion } from "motion/react";
+import { useState } from "react";
 
 interface FAQItem {
   id: number;

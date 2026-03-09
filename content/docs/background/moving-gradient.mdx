@@ -5,27 +5,21 @@ labels: ["requires config"]
 author: harimanok_
 ---
 
-<ComponentPreview name="background-moving-gradient--docs" />
+<ComponentPreview name="background-moving-gradient--primary" />
 
 ## Installation
 
 <Steps>
 
-<Step>Update `tailwind.config.js`</Step>
-```js
-theme: {
-    extend: {
-      animation: {
-        "bg-position": "bg-position 3s infinite alternate",
-      },
-     keyframes: {
-          "bg-position": {
-          "0%": { backgroundPosition: "0% 50%" },
-          "100%": { backgroundPosition: "100% 50%" },
-        },
-     }
-    },
-  },
+<Step>Add to your CSS</Step>
+```css
+@keyframes bg-position {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 100% 50%; }
+}
+@theme {
+  --animate-bg-position: bg-position 3s infinite alternate;
+}
 ```
 
 <Step>Run the following command</Step>

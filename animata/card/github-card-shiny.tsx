@@ -1,5 +1,5 @@
-import { useCallback, useRef } from "react";
 import { CheckCircle2 } from "lucide-react";
+import { useCallback, useRef } from "react";
 
 import { useMousePosition } from "@/hooks/use-mouse-position";
 import { cn } from "@/lib/utils";
@@ -27,14 +27,14 @@ export default function GithubCardShiny({ className }: { className?: string }) {
     <div
       ref={containerRef}
       className={cn(
-        "group relative w-96 min-w-fit max-w-full overflow-hidden rounded-md border border-border bg-zinc-700 p-6 text-zinc-200 shadow-lg",
+        "group/shiny relative w-96 min-w-fit max-w-full overflow-hidden rounded-md border border-border bg-zinc-700 p-6 text-zinc-200 shadow-lg",
         className,
       )}
     >
       <div
         ref={overlayRef}
         // Adjust height & width as required
-        className="-z-1 absolute h-64 w-64 rounded-full bg-white opacity-0 bg-blend-soft-light blur-3xl transition-opacity group-hover:opacity-20"
+        className="z-0 absolute h-64 w-64 rounded-full bg-white opacity-0 bg-blend-soft-light blur-3xl transition-opacity group-hover/shiny:opacity-20"
         style={{
           transform: "translate(var(--x), var(--y))",
         }}
@@ -62,12 +62,10 @@ export default function GithubCardShiny({ className }: { className?: string }) {
         ].map((step) => {
           return (
             <div className="flex w-full items-center gap-2" key={step.title}>
-              <CheckCircle2 className="flex-shrink-0 fill-green-400 text-zinc-600" />
-              <strong className="text-xs md:flex-shrink-0 md:text-base">{step.title}</strong>
+              <CheckCircle2 className="shrink-0 fill-green-400 text-zinc-600" />
+              <strong className="text-xs md:shrink-0 md:text-base">{step.title}</strong>
 
-              <span className="ml-auto inline-block flex-shrink-0 text-xs opacity-75">
-                {step.time}
-              </span>
+              <span className="ml-auto inline-block shrink-0 text-xs opacity-75">{step.time}</span>
             </div>
           );
         })}

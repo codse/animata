@@ -1,5 +1,6 @@
-import React, { useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useState } from "react";
+
 interface ICarouselItem {
   id: number;
   title: string;
@@ -29,13 +30,13 @@ export default function ImageCarousel({ items: initialItems }: IImageCarouselPro
     <div className="carousel-container relative h-[500px] w-[600px] overflow-hidden rounded-2xl border-2 border-gray-200 bg-white p-2">
       <div
         onClick={handlePrev}
-        className="navigation-item-left absolute left-0 top-[50%] z-20 flex h-10 w-10 translate-y-[-50%] cursor-pointer items-center justify-center rounded-lg bg-gray-400 bg-opacity-40 bg-clip-padding backdrop-blur-sm backdrop-filter"
+        className="navigation-item-left absolute left-0 top-[50%] z-20 flex h-10 w-10 translate-y-[-50%] cursor-pointer items-center justify-center rounded-lg bg-gray-400/40 bg-clip-padding backdrop-blur-sm backdrop-filter"
       >
         <ChevronLeft className="text-gray-800" />
       </div>
       <div
         onClick={handleNext}
-        className="navigation-item-right absolute right-0 top-[50%] z-20 flex h-10 w-10 translate-y-[-50%] cursor-pointer items-center justify-center rounded-lg bg-gray-300 bg-opacity-40 bg-clip-padding backdrop-blur-sm backdrop-filter"
+        className="navigation-item-right absolute right-0 top-[50%] z-20 flex h-10 w-10 translate-y-[-50%] cursor-pointer items-center justify-center rounded-lg bg-gray-300/40 bg-clip-padding backdrop-blur-sm backdrop-filter"
       >
         <ChevronRight className="text-gray-800" />
       </div>

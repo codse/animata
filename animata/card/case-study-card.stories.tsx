@@ -1,5 +1,5 @@
+import type { Meta, StoryObj } from "@storybook/react";
 import CaseStudyCard from "@/animata/card/case-study-card";
-import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
   title: "Card/Case Study Card",
@@ -8,7 +8,12 @@ const meta = {
     layout: "centered",
   },
   tags: ["autodocs"],
-  argTypes: {},
+  argTypes: {
+    type: {
+      control: { type: "select" },
+      options: ["content", "simple-image"],
+    },
+  },
 } satisfies Meta<typeof CaseStudyCard>;
 
 export default meta;

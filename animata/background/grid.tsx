@@ -31,7 +31,9 @@ function Placeholder({ size = 20 }: Pick<GridProps, "size">) {
       }}
       className="flex max-h-full max-w-full items-center justify-center"
     >
-      <div className="rounded bg-white px-4 py-2">This has grid background</div>
+      <div className="rounded bg-foreground text-background px-4 py-2">
+        This has grid background
+      </div>
     </div>
   );
 }

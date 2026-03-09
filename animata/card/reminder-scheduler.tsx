@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import type React from "react";
+import { useEffect, useState } from "react";
 
 import { cn } from "@/lib/utils";
 
@@ -35,7 +36,7 @@ const ReminderScheduler: React.FC<ReminderSchedulerProps> = ({
           disabled={!isRepeating}
           value={repeatInterval}
           onChange={(e) => setRepeatInterval(e.target.value)}
-          className="focus:ring-border-gray-100 mt-2 block w-[70%] rounded-xl border border-gray-100 bg-white px-3 py-3 font-bold text-black shadow-sm focus:border-gray-100 focus:outline-none"
+          className="focus:ring-border-gray-100 mt-2 block w-[70%] rounded-xl border border-gray-100 bg-white px-3 py-3 font-bold text-black shadow-sm focus:border-gray-100 focus:outline-hidden"
         >
           <option value="Daily">Daily</option>
           <option value="Weekly">Weekly</option>
@@ -67,7 +68,7 @@ const Switch = ({ toggle, value }: { toggle: () => void; value: boolean }) => {
   return (
     <label className="inline-flex cursor-pointer items-center">
       <input checked={value} type="checkbox" className="peer sr-only" onChange={toggle} />
-      <div className="rtl:peer-checked:after:-translate-x-[unset] peer relative h-8 w-[53px] rounded-full bg-gray-200 transition-colors duration-500 after:absolute after:start-[5px] after:top-[4px] after:h-6 after:w-6 after:rounded-full after:border after:border-white after:bg-white after:transition-all after:duration-300 after:content-[''] peer-checked:bg-[#95ef90] peer-checked:after:translate-x-[19px] peer-checked:after:border-white"></div>
+      <div className="rtl:peer-checked:after:-translate-x-[unset] peer relative h-8 w-[53px] rounded-full bg-gray-200 transition-colors duration-500 after:absolute after:start-[5px] after:top-[4px] after:h-6 after:w-6 after:rounded-full after:border after:border-white after:bg-white after:transition after:duration-300 after:content-[''] peer-checked:bg-[#95ef90] peer-checked:after:translate-x-[19px] peer-checked:after:border-white"></div>
     </label>
   );
 };
@@ -111,19 +112,22 @@ function SwapText({
       clearTimeout(timeoutId); // clear the timeout when component unmounts
     };
   }, [check]);
-  const common = "block transition-all duration-1000 ease-slow";
+  const common = "block transition duration-1000 ease-slow";
   const longWord = finalText.length > initialText.length ? finalText : null;
   return (
     <div {...props} className={cn("relative overflow-hidden text-foreground", className)}>
       <div
-        className={cn("group cursor-pointer select-none text-3xl font-bold", textClassName)}
+        className={cn(
+          "group/reminder cursor-pointer select-none text-3xl font-bold",
+          textClassName,
+        )}
         onClick={() => !disableClick && setActive((current) => !current)}
       >
         <span
           className={cn(common, initialTextClassName, {
             "flex flex-col": true,
             "-translate-y-full": active,
-            "group-hover:-translate-y-full": supportsHover,
+            "group-hover/reminder:-translate-y-full": supportsHover,
           })}
         >
           {initialText}
@@ -132,7 +136,7 @@ function SwapText({
         <span
           className={cn(`${common} absolute top-full`, finalTextClassName, {
             "-translate-y-full": active,
-            "group-hover:-translate-y-full": supportsHover,
+            "group-hover/reminder:-translate-y-full": supportsHover,
           })}
         >
           {finalText}

@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 
 import { cn } from "@/lib/utils";
 
@@ -45,7 +45,7 @@ export default function ConfirmationMessage({
     >
       <div
         className={cn(
-          "absolute inset-0 -z-10 h-full w-full items-center bg-gradient-to-r from-teal-100 to-green-300",
+          "absolute inset-0 -z-10 h-full w-full items-center bg-linear-to-r from-teal-100 to-green-300",
           backgroundClassName,
         )}
       />
@@ -86,7 +86,7 @@ export default function ConfirmationMessage({
           transition={{ delay: 1.2, duration: 0.5 }}
         >
           {/* Message box */}
-          <div className="my-4 flex h-fit w-full rounded-lg border border-white/40 bg-white/30 bg-opacity-90 p-6 py-4 shadow-lg backdrop-blur-md">
+          <div className="my-4 flex h-fit w-full rounded-lg border border-white/40 bg-white/90 p-6 py-4 shadow-lg backdrop-blur-md">
             <div className="mr-4 flex h-12 min-w-12 items-center justify-center rounded-full bg-green-800 text-white">
               {labelName[0]}
             </div>
@@ -98,7 +98,7 @@ export default function ConfirmationMessage({
                 animate={{ opacity: 1 }}
                 transition={{ delay: 2, duration: 0.9 }}
               >
-                {labelMessage.length > 200 ? labelMessage.slice(0, 199) + "..." : labelMessage}
+                {labelMessage.length > 200 ? `${labelMessage.slice(0, 199)}...` : labelMessage}
               </motion.p>
             </div>
           </div>

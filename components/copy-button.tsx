@@ -1,19 +1,18 @@
 "use client";
 
-import * as React from "react";
+import type { DropdownMenuTriggerProps } from "@radix-ui/react-dropdown-menu";
 import { CheckIcon, ClipboardIcon } from "lucide-react";
-import { NpmCommands, TouchCommands } from "types/unist";
-
-import { Button, ButtonProps } from "@/components/ui/button";
+import * as React from "react";
+import type { NpmCommands, TouchCommands } from "types/unist";
+import { Button, type ButtonProps } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Event, trackEvent } from "@/lib/events";
+import { type Event, trackEvent } from "@/lib/events";
 import { cn } from "@/lib/utils";
-import { DropdownMenuTriggerProps } from "@radix-ui/react-dropdown-menu";
 
 interface CopyButtonProps extends ButtonProps {
   value: string;
@@ -43,7 +42,7 @@ export function CopyButton({
     setTimeout(() => {
       setHasCopied(false);
     }, 2000);
-  }, [hasCopied]);
+  }, []);
 
   return (
     <Button
@@ -92,7 +91,7 @@ export function CopyWithClassNames({ value, classNames, className }: CopyWithCla
     setTimeout(() => {
       setHasCopied(false);
     }, 2000);
-  }, [hasCopied]);
+  }, []);
 
   const copyToClipboard = React.useCallback((value: string) => {
     copyToClipboardWithMeta(value);
@@ -137,7 +136,7 @@ export function CopyTouchCommandButton({ commands, className }: CopyTouchCommand
     setTimeout(() => {
       setHasCopied(false);
     }, 2000);
-  }, [hasCopied]);
+  }, []);
 
   const copyCommand = React.useCallback((value: string, os: "windows" | "macOS/Linux") => {
     copyToClipboardWithMeta(value, {
@@ -184,7 +183,7 @@ export function CopyNpmCommandButton({ commands, className }: CopyNpmCommandButt
     setTimeout(() => {
       setHasCopied(false);
     }, 2000);
-  }, [hasCopied]);
+  }, []);
 
   const copyCommand = React.useCallback((value: string, pm: "npm" | "pnpm" | "yarn" | "bun") => {
     copyToClipboardWithMeta(value, {

@@ -1,5 +1,5 @@
+import type { Meta, StoryObj } from "@storybook/react";
 import GithubCardSkew from "@/animata/card/github-card-skew";
-import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
   title: "Card/Github Card Skew",

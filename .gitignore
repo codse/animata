@@ -35,8 +35,9 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
-.contentlayer
+.velite
 
 *storybook.log
 public/preview
 _internal/
+.superset/

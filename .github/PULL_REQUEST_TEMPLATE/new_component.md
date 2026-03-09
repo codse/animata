@@ -53,7 +53,7 @@ Any additional notes or considerations for reviewers should be included here.
 <!-- Provide instructions on how to test your component locally. -->
 
 1. Pull this branch.
-2. Run the project locally using the following command: `npm run start` or `yarn start`.
+2. Run the project locally using the following command: `yarn dev`.
 3. Go to the relevant component in the storybook/docs to see it in action.
 
 ---

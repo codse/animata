@@ -1,6 +1,8 @@
-import { useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+"use client";
+
 import { CircleAlert } from "lucide-react";
+import { AnimatePresence, motion } from "motion/react";
+import { useState } from "react";
 
 import { cn } from "@/lib/utils";
 
@@ -34,7 +36,7 @@ export default function Modal({ modalSize = "lg" }: { modalSize?: "sm" | "lg" })
               exit={{ scale: 0, rotate: "180deg" }}
               onClick={(e) => e.stopPropagation()}
               className={cn(
-                "relative w-full max-w-lg cursor-default overflow-hidden rounded-xl bg-gradient-to-r from-indigo-500 via-purple-500 to-indigo-500 p-6 text-white shadow-2xl",
+                "relative w-full max-w-lg cursor-default overflow-hidden rounded-xl bg-linear-to-r from-indigo-500 via-purple-500 to-indigo-500 p-6 text-white shadow-2xl",
                 {
                   "max-w-sm": modalSize === "sm",
                 },

@@ -1,5 +1,5 @@
+import type { Meta, StoryObj } from "@storybook/react";
 import AnimatedBorderTrail from "@/animata/container/animated-border-trail";
-import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
   title: "Container/Animated Border Trail",
@@ -14,6 +14,10 @@ const meta = {
         disable: true,
       },
     },
+    trailSize: {
+      control: { type: "select" },
+      options: ["sm", "md", "lg"],
+    },
   },
 } satisfies Meta<typeof AnimatedBorderTrail>;
 
@@ -22,6 +26,8 @@ type Story = StoryObj<typeof meta>;
 
 export const Primary: Story = {
   args: {
+    duration: "10s",
+    trailColor: "purple",
     trailSize: "sm",
     children: (
       <div className="max-w-sm text-balance p-4 text-center font-medium text-zinc-600">

@@ -1,5 +1,5 @@
+import type { Meta, StoryObj } from "@storybook/react";
 import TrailingImage from "@/animata/image/trailing-image";
-import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
   title: "Image/Trailing Image",

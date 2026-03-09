@@ -28,13 +28,13 @@ function BoldCopy({
   return (
     <div
       className={cn(
-        "group relative flex items-center justify-center bg-background px-2 py-2 md:px-6 md:py-4",
+        "group/bento relative flex items-center justify-center bg-background px-2 py-2 md:px-6 md:py-4",
         className,
       )}
     >
       <div
         className={cn(
-          "text-4xl font-black uppercase text-foreground/15 transition-all group-hover:opacity-50 md:text-8xl",
+          "text-4xl font-black uppercase text-foreground/15 transition group-hover/bento:opacity-50 md:text-8xl",
           backgroundTextClassName,
         )}
       >
@@ -42,7 +42,7 @@ function BoldCopy({
       </div>
       <div
         className={cn(
-          "text-md absolute font-black uppercase text-foreground transition-all group-hover:text-4xl md:text-3xl group-hover:md:text-8xl",
+          "text-md absolute font-black uppercase text-foreground transition group-hover/bento:text-4xl md:text-3xl group-hover/bento:md:text-8xl",
           textClassName,
         )}
       >
@@ -78,7 +78,7 @@ function FeatureTwo() {
   return (
     <BentoCard className="relative flex flex-col overflow-visible bg-violet-500 sm:col-span-2">
       <strong className="text-2xl font-semibold text-white">
-        <Counter targetValue={179} format={(v) => +Math.ceil(v) + "k+ students"} />
+        <Counter targetValue={179} format={(v) => `${+Math.ceil(v)}k+ students`} />
       </strong>
       <div className="ml-4 mt-auto">
         <AvatarList size="sm" className="py-0" />
@@ -107,7 +107,7 @@ function FeatureFour() {
   return (
     <BentoCard className="flex items-center gap-4 bg-lime-300 sm:col-span-2 md:flex-row-reverse">
       <div className="text-2xl font-black text-lime-800">Generate progress report</div>
-      <div className="relative max-h-32 flex-shrink-0 overflow-hidden">
+      <div className="relative max-h-32 shrink-0 overflow-hidden">
         <Report className="w-40 overflow-hidden border-none shadow-none hover:shadow-none" />
       </div>
     </BentoCard>
@@ -179,7 +179,7 @@ function FeatureEight() {
 
 export default function Eight() {
   return (
-    <div className="storybook-fix w-full">
+    <div className="full-content w-full">
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-4 sm:grid-rows-3">
         <FeatureOne />
         <FeatureTwo />

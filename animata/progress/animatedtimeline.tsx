@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useState } from "react";
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
+import type React from "react";
+import { useState } from "react";
 
 import { cn } from "@/lib/utils";
 
@@ -87,7 +88,7 @@ const TimelineItem: React.FC<TimelineItemProps> = ({
           transition={{ duration: fillDuration, delay: fillDelay }}
         />
       </div>
-      <div className={cn("flex-grow leading-5", !isLast && "mb-3")}>
+      <div className={cn("grow leading-5", !isLast && "mb-3")}>
         {customRender ? (
           customRender(event)
         ) : (

@@ -1,6 +1,6 @@
-import { HTMLAttributes, useState } from "react";
-import Link from "next/link";
 import { ArrowRight, CircleDashed } from "lucide-react";
+import Link from "next/link";
+import { type HTMLAttributes, useState } from "react";
 
 import { cn } from "@/lib/utils";
 
@@ -28,7 +28,7 @@ export function ComponentCard({
     >
       <header
         className={cn(
-          "flex flex-shrink-0 items-center gap-4 border-b bg-gray-100 p-4 dark:border-b-zinc-700 dark:bg-zinc-700",
+          "flex shrink-0 items-center gap-4 border-b bg-gray-100 p-4 dark:border-b-zinc-700 dark:bg-zinc-700",
           {
             "rounded-tl-xl rounded-tr-xl": rounded,
             "px-6": !rounded,

@@ -1,6 +1,6 @@
 "use client";
-import React from "react";
 import { MoveRight } from "lucide-react";
+import type React from "react";
 
 import { cn } from "@/lib/utils";
 
@@ -42,7 +42,7 @@ export default function ArrowButton({
       <span
         style={{ color: textColor }}
         className={cn(
-          "absolute flex h-full w-full transform items-center justify-center font-bold transition-all duration-300 ease-in-out group-hover:translate-x-full",
+          "absolute flex h-full w-full transform items-center justify-center font-bold transition duration-300 ease-in-out group-hover:translate-x-full",
         )}
       >
         {text}

@@ -1,5 +1,5 @@
+import type { Meta, StoryObj } from "@storybook/react";
 import BarChart from "@/animata/graphs/bar-chart";
-import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
   title: "Graphs/Bar Chart",
