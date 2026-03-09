@@ -74,7 +74,7 @@ export default function ScrollReveal({ children, className, ...props }: ScrollRe
       ref={containerRef}
       className={cn(
         // Adjust the height and spacing according to the need
-        "storybook-fix relative h-96 w-full overflow-y-scroll bg-foreground text-background dark:text-zinc-900",
+        "full-content relative h-96 w-full overflow-y-scroll bg-foreground text-background dark:text-zinc-900",
         className,
       )}
     >
