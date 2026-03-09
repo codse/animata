@@ -77,14 +77,14 @@ export default function OrbitingItems({
   const reverse = cn(
     "animate-[rotate-full_45s] transition-transform ease-linear direction-reverse repeat-infinite",
     {
-      "group-hover:[animation-play-state:paused]": pauseOnHover,
+      "group-hover/orbit:[animation-play-state:paused]": pauseOnHover,
     },
   );
 
   return (
     <div
       className={cn(
-        "storybook-fix group flex items-center justify-center py-32",
+        "storybook-fix group/orbit flex items-center justify-center py-32",
         containerClassName,
       )}
     >
@@ -98,7 +98,7 @@ export default function OrbitingItems({
         className={cn(
           "relative flex h-64 w-64 animate-[rotate-full_45s] items-center justify-center ease-linear repeat-infinite",
           {
-            "group-hover:[animation-play-state:paused]": pauseOnHover,
+            "group-hover/orbit:[animation-play-state:paused]": pauseOnHover,
           },
           className,
         )}

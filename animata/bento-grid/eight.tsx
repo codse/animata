@@ -28,13 +28,13 @@ function BoldCopy({
   return (
     <div
       className={cn(
-        "group relative flex items-center justify-center bg-background px-2 py-2 md:px-6 md:py-4",
+        "group/bento relative flex items-center justify-center bg-background px-2 py-2 md:px-6 md:py-4",
         className,
       )}
     >
       <div
         className={cn(
-          "text-4xl font-black uppercase text-foreground/15 transition-all group-hover:opacity-50 md:text-8xl",
+          "text-4xl font-black uppercase text-foreground/15 transition-all group-hover/bento:opacity-50 md:text-8xl",
           backgroundTextClassName,
         )}
       >
@@ -42,7 +42,7 @@ function BoldCopy({
       </div>
       <div
         className={cn(
-          "text-md absolute font-black uppercase text-foreground transition-all group-hover:text-4xl md:text-3xl group-hover:md:text-8xl",
+          "text-md absolute font-black uppercase text-foreground transition-all group-hover/bento:text-4xl md:text-3xl group-hover/bento:md:text-8xl",
           textClassName,
         )}
       >

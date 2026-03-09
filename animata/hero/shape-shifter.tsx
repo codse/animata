@@ -51,14 +51,14 @@ export default function ShapeShifter({
   return (
     <div
       className={cn(
-        "text-md group flex min-h-96 w-full min-w-fit flex-col items-center justify-center gap-3 font-bold text-foreground transition-all sm:flex-row sm:text-xl",
+        "text-md group/shifter flex min-h-96 w-full min-w-fit flex-col items-center justify-center gap-3 font-bold text-foreground transition-all sm:flex-row sm:text-xl",
         containerClassName,
       )}
     >
       <div>{prefix}</div>
       <div
         className={cn(
-          "relative animate-[shape-shift] overflow-hidden bg-black p-0 transition-all ease-in-out direction-alternate repeat-infinite group-hover:[animation-play-state:paused] dark:bg-white",
+          "relative animate-[shape-shift] overflow-hidden bg-black p-0 transition-all ease-in-out direction-alternate repeat-infinite group-hover/shifter:[animation-play-state:paused] dark:bg-white",
           className,
         )}
         // Magic number based on length of images.

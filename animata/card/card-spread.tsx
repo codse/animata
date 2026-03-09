@@ -36,19 +36,19 @@ const cards = [
   },
   {
     component: ShoppingList,
-    rotationClass: "group-hover:rotate-[15deg]",
+    rotationClass: "group-hover/spread:rotate-[15deg]",
     revealClass: "rotate-[3deg] translate-y-2",
   },
 
   {
     component: RemodelNotes,
-    rotationClass: "group-hover:rotate-[30deg]",
+    rotationClass: "group-hover/spread:rotate-[30deg]",
     revealClass: "-rotate-[2deg] translate-x-1",
   },
 
   {
     component: Reminders,
-    rotationClass: "group-hover:rotate-[45deg]",
+    rotationClass: "group-hover/spread:rotate-[45deg]",
     revealClass: "rotate-[2deg]",
   },
 ];
@@ -59,7 +59,7 @@ export default function CardSpread() {
   return (
     <div
       className={cn(
-        "group relative flex min-h-80 min-w-52 items-center transition-all duration-500 ease-in-out",
+        "group/spread relative flex min-h-80 min-w-52 items-center transition-all duration-500 ease-in-out",
         {
           "origin-bottom transition-all duration-500 ease-in-out hover:-rotate-[15deg]":
             !isExpanded,

@@ -207,7 +207,7 @@ export default function LEDBoard({
 
   return (
     <div
-      className="group rounded-xl border border-gray-600 bg-gradient-to-bl from-zinc-950/80 via-zinc-900 via-30% to-zinc-950 to-75% p-4 dark:border-zinc-800"
+      className="group/led rounded-xl border border-gray-600 bg-gradient-to-bl from-zinc-950/80 via-zinc-900 via-30% to-zinc-950 to-75% p-4 dark:border-zinc-800"
       onMouseEnter={() => setIsHovering(true)}
       onMouseLeave={() => setIsHovering(false)}
     >
@@ -237,7 +237,7 @@ export default function LEDBoard({
                   animationDelay: `${delay}ms`,
                 }}
                 className={cn("fill-zinc-800 transition-all duration-200 ease-in-out", {
-                  "group-hover:fill-purple-500": isLit,
+                  "group-hover/led:fill-purple-500": isLit,
                   "animate-led ease-in-out": shouldAnimate,
                 })}
               />

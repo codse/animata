@@ -46,7 +46,7 @@ export default function Marquee({
     <div
       {...props}
       className={cn(
-        "group relative flex h-full w-full p-2 [--duration:10s] [--gap:12px] [gap:var(--gap)]",
+        "group/marquee relative flex h-full w-full p-2 [--duration:10s] [--gap:12px] [gap:var(--gap)]",
         {
           "flex-col": vertical,
           "flex-row": !vertical,
@@ -74,7 +74,7 @@ export default function Marquee({
         <div
           key={`item-${index}`}
           className={cn("flex shrink-0 [gap:var(--gap)]", {
-            "group-hover:[animation-play-state:paused]": pauseOnHover,
+            "group-hover/marquee:[animation-play-state:paused]": pauseOnHover,
             "marquee-horizontal flex-row": !vertical,
             "marquee-vertical flex-col": vertical,
           })}

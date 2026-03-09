@@ -22,10 +22,10 @@ interface FlippingCardProps {
 const Card = ({ show, reveal }: CardProps) => {
   const common = "absolute flex w-full h-full  [backface-visibility:hidden]";
   return (
-    <div className={cn("group h-60 w-48 [perspective:1000px]")}>
+    <div className={cn("group/flip h-60 w-48 [perspective:1000px]")}>
       <div
         className={cn(
-          "relative h-full transition-all delay-75 duration-500 ease-linear [transform-style:preserve-3d] group-hover:[transform:rotateY(-180deg)]",
+          "relative h-full transition-all delay-75 duration-500 ease-linear [transform-style:preserve-3d] group-hover/flip:[transform:rotateY(-180deg)]",
         )}
       >
         <div className={cn("bg-white", common)}>{show}</div>

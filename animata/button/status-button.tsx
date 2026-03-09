@@ -26,7 +26,7 @@ export default function StatusButton() {
     <button
       onClick={changeStatus}
       disabled={!isEnabled}
-      className="group relative h-10 min-w-40 overflow-hidden rounded-md bg-teal-500 px-6 text-sm font-semibold text-white transition-colors duration-300 hover:bg-teal-600"
+      className="group/status relative h-10 min-w-40 overflow-hidden rounded-md bg-teal-500 px-6 text-sm font-semibold text-white transition-colors duration-300 hover:bg-teal-600"
     >
       <AnimatePresence mode="wait" initial={false}>
         <motion.span
@@ -45,7 +45,7 @@ export default function StatusButton() {
               animate={{ scale: 1 }}
               transition={{ delay: 0.075, type: "spring" }}
             >
-              <CheckCircle2 className="h-4 w-4 fill-white stroke-teal-500 group-hover:stroke-teal-600" />
+              <CheckCircle2 className="h-4 w-4 fill-white stroke-teal-500 group-hover/status:stroke-teal-600" />
             </motion.span>
           )}
 

@@ -100,12 +100,12 @@ export default function HoverInteraction({
 
   return (
     <motion.div
-      className="storybook-fix group relative flex min-h-[120px] w-full cursor-pointer items-center justify-center"
+      className="storybook-fix group/icon relative flex min-h-[120px] w-full cursor-pointer items-center justify-center"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
       <span
-        className={`relative text-center font-medium text-muted-foreground transition-colors duration-200 group-hover:text-black ${textSizeClass}`}
+        className={`relative text-center font-medium text-muted-foreground transition-colors duration-200 group-hover/icon:text-black ${textSizeClass}`}
       >
         {formattedTitle}
       </span>

@@ -60,7 +60,7 @@ function plotSquares(width: number, height: number, size: number): { x: number; 
 
 const size = 24; // h-6
 const boxClassName =
-  "absolute h-6 w-6 rounded-md bg-transparent p-px border border-gray-400/30 border-box group ";
+  "absolute h-6 w-6 rounded-md bg-transparent p-px border border-gray-400/30 border-box group/cell ";
 
 function Grid() {
   const {
@@ -125,7 +125,7 @@ function Grid() {
               "h-full w-full scale-90 rounded bg-gray-400/30 opacity-0 transition-all duration-700",
               {
                 "scale-100 opacity-100": shouldHighlight,
-                "group-hover:scale-100 group-hover:opacity-100": !shouldHighlight,
+                "group-hover/cell:scale-100 group-hover/cell:opacity-100": !shouldHighlight,
               },
             )}
           />

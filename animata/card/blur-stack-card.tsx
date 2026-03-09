@@ -81,7 +81,7 @@ export default function BlueStackCards() {
                 card.color,
               )}
             >
-              <div className="group h-full backdrop-blur-sm">
+              <div className="group/blur h-full backdrop-blur-sm">
                 <h2 className="text-xl font-bold">{card.title}</h2>
                 <p className="text-base font-light">System of colors built out of brand.</p>
                 <div className="my-3 flex flex-col gap-4">

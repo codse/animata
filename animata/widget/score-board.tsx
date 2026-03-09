@@ -70,7 +70,7 @@ export default function ScoreBoard({
   }[];
 }) {
   return (
-    <div className="group flex size-52 flex-col rounded-3xl border bg-background p-4 shadow-sm shadow-black/15 transition-all duration-700 dark:border-zinc-700">
+    <div className="group/board flex size-52 flex-col rounded-3xl border bg-background p-4 shadow-sm shadow-black/15 transition-all duration-700 dark:border-zinc-700">
       <p className="text-base text-foreground">
         Status:
         <span className="font-semibold text-green-700 dark:text-green-500"> Good </span>

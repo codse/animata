@@ -17,10 +17,10 @@ export default function MirrorText({
   containerClassName?: string;
 }) {
   const animation = cn("transition-all duration-500 ease-slow", {
-    "group-hover:-translate-y-4": direction === "up",
-    "group-hover:translate-y-4": direction === "down",
-    "group-hover:-translate-x-4": direction === "left",
-    "group-hover:translate-x-4": direction === "right",
+    "group-hover/mirror:-translate-y-4": direction === "up",
+    "group-hover/mirror:translate-y-4": direction === "down",
+    "group-hover/mirror:-translate-x-4": direction === "left",
+    "group-hover/mirror:translate-x-4": direction === "right",
   });
 
   const content = (
@@ -32,7 +32,7 @@ export default function MirrorText({
   return (
     <div
       className={cn(
-        "group relative w-full justify-end overflow-hidden p-6 text-foreground",
+        "group/mirror relative w-full justify-end overflow-hidden p-6 text-foreground",
         containerClassName,
       )}
     >

@@ -19,22 +19,22 @@ const HeroSectionTextHover: React.FC<HeroCardProps> = ({ className }) => {
     {
       emoji: "🪂",
       position:
-        "-left-20 top-3 group-hover:-rotate-[10deg] group-hover:-translate-y-12 md:-left-28 md:-top-2 sm:-left-24",
+        "-left-20 top-3 group-hover/hero:-rotate-[10deg] group-hover/hero:-translate-y-12 md:-left-28 md:-top-2 sm:-left-24",
     },
     {
       emoji: "🏖️",
       position:
-        "-left-[72px] top-0 group-hover:-rotate-[20deg] group-hover:-translate-x-10 md:-left-[135px] md:-top-2 sm:-left-24 ",
+        "-left-[72px] top-0 group-hover/hero:-rotate-[20deg] group-hover/hero:-translate-x-10 md:-left-[135px] md:-top-2 sm:-left-24 ",
     },
     {
       emoji: "🚁",
       position:
-        "left-[150px] top-0 group-hover:rotate-[10deg] group-hover:-translate-y-10 md:left-[210px] md:-top-1 sm:left-[180px]",
+        "left-[150px] top-0 group-hover/hero:rotate-[10deg] group-hover/hero:-translate-y-10 md:left-[210px] md:-top-1 sm:left-[180px]",
     },
     {
       emoji: "🏯",
       position:
-        "left-[105px] top-0 group-hover:rotate-[20deg] group-hover:translate-x-16 md:left-[190px] md:-top-2 sm:left-[150px]",
+        "left-[105px] top-0 group-hover/hero:rotate-[20deg] group-hover/hero:translate-x-16 md:left-[190px] md:-top-2 sm:left-[150px]",
     },
   ];
 
@@ -42,11 +42,12 @@ const HeroSectionTextHover: React.FC<HeroCardProps> = ({ className }) => {
     {
       emoji: "🦝",
       position:
-        "-left-[100px] -top-7 -rotate-[30deg] group-hover:-translate-y-8 md:-left-40 md:-top-16 sm:-left-32",
+        "-left-[100px] -top-7 -rotate-[30deg] group-hover/hero:-translate-y-8 md:-left-40 md:-top-16 sm:-left-32",
     },
     {
       emoji: "🍜",
-      position: "-left-[115px] -top-2 group-hover:-rotate-45 md:-left-44 md:-top-1 sm:-left-36",
+      position:
+        "-left-[115px] -top-2 group-hover/hero:-rotate-45 md:-left-44 md:-top-1 sm:-left-36",
     },
     {
       emoji: "🏝️",
@@ -56,7 +57,7 @@ const HeroSectionTextHover: React.FC<HeroCardProps> = ({ className }) => {
     {
       emoji: "💎",
       position:
-        "left-32 -top-2 group-hover:rotate-[45deg] md:left-[200px] md:-top-1 sm:left-[160px] ",
+        "left-32 -top-2 group-hover/hero:rotate-[45deg] md:left-[200px] md:-top-1 sm:left-[160px] ",
     },
   ];
 
@@ -74,14 +75,16 @@ const HeroSectionTextHover: React.FC<HeroCardProps> = ({ className }) => {
           </div>
           <div className="flex items-center justify-center gap-1">
             <span className="text-gray-400">Embark on</span>
-            <div className="group relative flex items-center">
-              <span className="text-zinc-500 group-hover:text-sky-400">Uncharted Adventures</span>
-              <div className="duration-400 absolute inset-0 cursor-pointer opacity-0 transition-opacity group-hover:opacity-100">
+            <div className="group/hero relative flex items-center">
+              <span className="text-zinc-500 group-hover/hero:text-sky-400">
+                Uncharted Adventures
+              </span>
+              <div className="duration-400 absolute inset-0 cursor-pointer opacity-0 transition-opacity group-hover/hero:opacity-100">
                 {destinations.map((dest, index) => (
                   <span
                     key={index}
                     className={cn(
-                      "pointer-events-none absolute transform text-lg transition-transform duration-500 group-hover:scale-110 sm:text-2xl md:text-4xl",
+                      "pointer-events-none absolute transform text-lg transition-transform duration-500 group-hover/hero:scale-110 sm:text-2xl md:text-4xl",
                       dest.position,
                     )}
                   >
@@ -94,14 +97,14 @@ const HeroSectionTextHover: React.FC<HeroCardProps> = ({ className }) => {
 
           <div className="flex items-center justify-center gap-1">
             <span className="text-gray-400">and</span>
-            <div className="group relative flex items-center">
-              <span className="text-zinc-500 group-hover:text-orange-500">Feel Alive</span>
-              <div className="duration-400 absolute inset-0 cursor-pointer opacity-0 transition-opacity group-hover:opacity-100">
+            <div className="group/hero relative flex items-center">
+              <span className="text-zinc-500 group-hover/hero:text-orange-500">Feel Alive</span>
+              <div className="duration-400 absolute inset-0 cursor-pointer opacity-0 transition-opacity group-hover/hero:opacity-100">
                 {treasures.map((gem, index) => (
                   <span
                     key={index}
                     className={cn(
-                      "pointer-events-none absolute transform text-lg transition-transform duration-500 group-hover:scale-110 sm:text-2xl md:text-4xl",
+                      "pointer-events-none absolute transform text-lg transition-transform duration-500 group-hover/hero:scale-110 sm:text-2xl md:text-4xl",
                       gem.position,
                     )}
                   >
