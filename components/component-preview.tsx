@@ -1,6 +1,5 @@
 "use client";
 
-import { useTheme } from "next-themes";
 import React from "react";
 
 import { Icons } from "@/components/icons";
@@ -14,46 +13,104 @@ interface ComponentPreviewProps extends React.HTMLAttributes<HTMLDivElement> {
   description?: string;
 }
 
-export function ComponentPreview({ name, className, ...props }: ComponentPreviewProps) {
-  const [minHeight, setMinHeight] = React.useState<number>(350);
-  const [mounted, setMounted] = React.useState(false);
-  const iframeRef = React.useRef<HTMLIFrameElement>(null);
+// Categories with hyphens must come first so they match before single-word prefixes
+const CATEGORIES = [
+  "bento-grid",
+  "feature-cards",
+  "accordion",
+  "background",
+  "button",
+  "card",
+  "carousel",
+  "container",
+  "fabs",
+  "graphs",
+  "hero",
+  "icon",
+  "image",
+  "list",
+  "overlay",
+  "preloader",
+  "progress",
+  "section",
+  "skeleton",
+  "text",
+  "widget",
+];
 
-  const { resolvedTheme } = useTheme();
+/**
+ * Convert a storybook ID like "bento-grid-eight--primary"
+ * to the file path "bento-grid/eight"
+ */
+function storyIdToPath(name: string): string {
+  const [idPart] = name.split("--");
+  for (const cat of CATEGORIES) {
+    if (idPart.startsWith(`${cat}-`)) {
+      return `${cat}/${idPart.slice(cat.length + 1)}`;
+    }
+  }
+  // Fallback: first segment is category
+  const first = idPart.indexOf("-");
+  if (first === -1) return idPart;
+  return `${idPart.slice(0, first)}/${idPart.slice(first + 1)}`;
+}
+
+function StoryRenderer({ name }: { name: string }) {
+  const [Preview, setPreview] = React.useState<React.ReactNode>(null);
+  const [error, setError] = React.useState<string | null>(null);
 
   React.useEffect(() => {
-    setMounted(true);
-    const eventListener = (event: MessageEvent) => {
-      if (event.data.type === "animata-set-height") {
-        setMinHeight(event.data.height);
-      }
-    };
-    window.addEventListener("message", eventListener);
-    return () => {
-      window.removeEventListener("message", eventListener);
-    };
-  }, []);
+    const path = storyIdToPath(name);
+    const [, storyName = "primary"] = name.split("--");
+    const exportName = storyName.charAt(0).toUpperCase() + storyName.slice(1);
 
-  // Send theme to iframe via postMessage when it changes
-  React.useEffect(() => {
-    if (!mounted) return;
-    iframeRef.current?.contentWindow?.postMessage(
-      { type: "animata-set-theme", theme: resolvedTheme ?? "light" },
-      "*",
+    import(`@/animata/${path}.stories`)
+      .then((mod) => {
+        const storyExport = mod[exportName] ?? mod.Primary;
+        const meta = mod.default;
+
+        if (!storyExport) {
+          setError(`Story "${exportName}" not found`);
+          return;
+        }
+
+        const args = { ...meta?.args, ...storyExport.args };
+        const Component = meta?.component;
+
+        if (storyExport.render) {
+          setPreview(React.createElement(() => storyExport.render(args)));
+        } else if (Component) {
+          setPreview(React.createElement(Component, args));
+        } else {
+          setError(`No render function or component for ${path}`);
+        }
+      })
+      .catch((err) => {
+        console.error(`Failed to load story ${path}:`, err);
+        setError(`Failed to load: ${path}`);
+      });
+  }, [name]);
+
+  if (error) {
+    return <div className="text-sm text-muted-foreground">{error}</div>;
+  }
+
+  if (!Preview) {
+    return (
+      <div className="flex items-center text-sm text-muted-foreground">
+        <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+        Loading...
+      </div>
     );
-  }, [resolvedTheme, mounted]);
+  }
 
-  // Only render iframe after mount so resolvedTheme is accurate
-  const themeParam = mounted && resolvedTheme === "dark" ? "theme:dark" : "theme:light";
+  return <>{Preview}</>;
+}
 
+export function ComponentPreview({ name, className, ...props }: ComponentPreviewProps) {
   return (
-    <div className={cn("group relative", className)} {...props}>
-      <div
-        className={cn("preview relative w-full max-w-full overflow-hidden!")}
-        style={{
-          height: `${minHeight}px`,
-        }}
-      >
+    <div className={cn("group relative my-4", className)} {...props}>
+      <div className="preview relative flex min-h-[200px] w-full max-w-full items-center justify-center overflow-hidden rounded-lg border p-4">
         <React.Suspense
           fallback={
             <div className="flex items-center text-sm text-muted-foreground">
@@ -61,17 +118,8 @@ export function ComponentPreview({ name, className, ...props }: ComponentPreview
               Loading...
             </div>
           }
-          key={`${name}-${themeParam}`}
         >
-          <iframe
-            ref={iframeRef}
-            src={`${process.env.NEXT_PUBLIC_STORYBOOK_URL ?? "/preview"}/iframe.html?globals=backgrounds.grid:!false;${themeParam};backgrounds.value:!transparent&viewMode=docs&id=${name.replace(/--[^-]+$/, "--docs")}&r=docs-view`}
-            className="w-full"
-            title="preview"
-            style={{
-              height: `${minHeight}px`,
-            }}
-          />
+          <StoryRenderer name={name} />
         </React.Suspense>
       </div>
     </div>
