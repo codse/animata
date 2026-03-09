@@ -45,7 +45,7 @@ export default function ConfirmationMessage({
     >
       <div
         className={cn(
-          "absolute inset-0 -z-10 h-full w-full items-center bg-gradient-to-r from-teal-100 to-green-300",
+          "absolute inset-0 -z-10 h-full w-full items-center bg-linear-to-r from-teal-100 to-green-300",
           backgroundClassName,
         )}
       />

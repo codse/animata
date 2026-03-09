@@ -30,7 +30,7 @@ export default function FlightWidget() {
 
   return (
     <div className="relative flex h-52 w-52 overflow-hidden rounded-3xl text-black">
-      <div className="relative w-16 items-center justify-evenly overflow-hidden bg-gradient-to-b from-blue-100 to-blue-300">
+      <div className="relative w-16 items-center justify-evenly overflow-hidden bg-linear-to-b from-blue-100 to-blue-300">
         <div className="full absolute bottom-0 left-full flex h-16 w-52 origin-bottom-left -rotate-90 items-center justify-center gap-3 bg-pink-100">
           <div className="text-lg font-semibold tracking-widest text-red-700">AIR CANADA</div>
           <img
@@ -40,7 +40,7 @@ export default function FlightWidget() {
           />
         </div>
       </div>
-      <div className="relative h-full w-36 bg-gradient-to-b from-blue-100 to-teal-100 p-4 text-sm">
+      <div className="relative h-full w-36 bg-linear-to-b from-blue-100 to-teal-100 p-4 text-sm">
         {/* The background should match the container's background */}
         <div className="absolute -left-2 -top-2 z-10 h-4 w-4 rounded-full bg-white dark:bg-zinc-800" />
         <div className="flex justify-around pb-2">

@@ -62,12 +62,10 @@ export default function GithubCardShiny({ className }: { className?: string }) {
         ].map((step) => {
           return (
             <div className="flex w-full items-center gap-2" key={step.title}>
-              <CheckCircle2 className="flex-shrink-0 fill-green-400 text-zinc-600" />
-              <strong className="text-xs md:flex-shrink-0 md:text-base">{step.title}</strong>
+              <CheckCircle2 className="shrink-0 fill-green-400 text-zinc-600" />
+              <strong className="text-xs md:shrink-0 md:text-base">{step.title}</strong>
 
-              <span className="ml-auto inline-block flex-shrink-0 text-xs opacity-75">
-                {step.time}
-              </span>
+              <span className="ml-auto inline-block shrink-0 text-xs opacity-75">{step.time}</span>
             </div>
           );
         })}

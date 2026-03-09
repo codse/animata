@@ -19,7 +19,7 @@ const Battery = () => {
   }, [gap]);
 
   return (
-    <div className="relative size-52 rounded-3xl bg-gradient-to-br from-blue-500/25 to-blue-200/25 p-4">
+    <div className="relative size-52 rounded-3xl bg-linear-to-br from-blue-500/25 to-blue-200/25 p-4">
       <div className="relative size-16">
         <svg viewBox="0 0 100 100" className="absolute right-0 size-full">
           <circle cx={50} cy={50} r={40} stroke="#5d5" strokeWidth={8} fill="none" />

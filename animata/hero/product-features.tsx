@@ -24,7 +24,7 @@ function FeatureCard({ feature, className, zIndexOffset = 0, ...props }: Feature
   const content = (
     <>
       <img src={imageUrl} alt="" className="z-0 absolute inset-0 h-full w-full object-cover" />
-      <div className="z-10 flex h-full w-full flex-col gap-2 bg-gradient-to-t from-zinc-800/40 from-15% to-transparent p-3">
+      <div className="z-10 flex h-full w-full flex-col gap-2 bg-linear-to-t from-zinc-800/40 from-15% to-transparent p-3">
         <small className="inline w-fit rounded-xl bg-orange-950/50 px-2 py-1 text-xs font-medium leading-none text-white">
           {category}
         </small>
@@ -108,7 +108,7 @@ export default function ProductFeatures() {
           },
         }}
       >
-        <button className="box-border inline-block h-11 transform-gpu cursor-pointer touch-manipulation whitespace-nowrap rounded-full border-b-4 border-solid border-transparent bg-orange-600 px-4 py-3 text-center text-sm font-bold uppercase leading-5 tracking-wider text-white shadow-2xl outline-none transition duration-200 hover:brightness-110 active:border-b-0 active:border-t-4 active:bg-none disabled:cursor-auto">
+        <button className="box-border inline-block h-11 cursor-pointer touch-manipulation whitespace-nowrap rounded-full border-b-4 border-solid border-transparent bg-orange-600 px-4 py-3 text-center text-sm font-bold uppercase leading-5 tracking-wider text-white shadow-2xl outline-hidden transition duration-200 hover:brightness-110 active:border-b-0 active:border-t-4 active:bg-none disabled:cursor-auto">
           Ready to clay &rarr;
           <span className="absolute inset-0 -z-10 rounded-full border-b-4 border-solid border-transparent bg-orange-500" />
         </button>

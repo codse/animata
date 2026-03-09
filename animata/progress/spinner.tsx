@@ -9,7 +9,7 @@ export default function Spinner({ className, outerSize, childSize }: SpinnerProp
   return (
     <div
       className={cn(
-        "m-2 h-8 w-8 animate-spin items-center justify-center rounded-full bg-gradient-to-bl from-pink-500 to-blue-600 p-0.5",
+        "m-2 h-8 w-8 animate-spin items-center justify-center rounded-full bg-linear-to-bl from-pink-500 to-blue-600 p-0.5",
         className,
         outerSize,
       )}

@@ -40,7 +40,7 @@ export default function MusicWidget() {
   const { title, artist } = song;
 
   return (
-    <div className="flex h-52 w-52 flex-col rounded-3xl bg-gradient-to-bl from-indigo-200 to-indigo-600 p-4 text-white">
+    <div className="flex h-52 w-52 flex-col rounded-3xl bg-linear-to-bl from-indigo-200 to-indigo-600 p-4 text-white">
       <div className="relative flex flex-1 flex-col justify-between">
         <div className="flex">
           <div className="flex-1">

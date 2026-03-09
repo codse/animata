@@ -42,7 +42,7 @@ export default function WaterTracker({ dailyGoal = 5000 }: WaterTrackerProps) {
             onClick={handleAddWater}
             disabled={waterIntake >= dailyGoal}
             className={cn(
-              "transform rounded-full bg-gradient-to-r px-6 py-2 text-sm font-semibold text-white",
+              "transform rounded-full bg-linear-to-r px-6 py-2 text-sm font-semibold text-white",
               {
                 "cursor-not-allowed from-gray-600 to-gray-500 opacity-80": waterIntake >= dailyGoal,
                 "from-blue-500 to-blue-700 transition-transform hover:scale-105 hover:shadow-lg":
@@ -59,7 +59,7 @@ export default function WaterTracker({ dailyGoal = 5000 }: WaterTrackerProps) {
         <div className="absolute bottom-0 right-0 h-full w-10 overflow-hidden rounded-r-3xl border-l-2 border-gray-700 bg-gray-800">
           <div
             className={
-              "absolute bottom-0 right-0 w-full bg-gradient-to-t from-blue-500 to-blue-700 transition duration-100 ease-out"
+              "absolute bottom-0 right-0 w-full bg-linear-to-t from-blue-500 to-blue-700 transition duration-100 ease-out"
             }
             style={{
               height: `${progress}%`,

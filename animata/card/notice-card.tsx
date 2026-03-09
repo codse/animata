@@ -22,7 +22,7 @@ export default function NoticeCard({
 
   const bgClass = isAccepted
     ? "bg-green-300"
-    : "bg-gradient-to-r from-slate-50 via-slate-50 to-green-100";
+    : "bg-linear-to-r from-slate-50 via-slate-50 to-green-100";
 
   return (
     <div className="flex items-center justify-center">

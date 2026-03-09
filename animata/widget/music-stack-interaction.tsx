@@ -88,7 +88,7 @@ export default function MusicStackInteraction({ albums }: albumsProps) {
               />
               <motion.div
                 layout
-                className="absolute bottom-0 left-0 w-full bg-gradient-to-b from-transparent to-gray-800/50 px-4 py-2 text-white"
+                className="absolute bottom-0 left-0 w-full bg-linear-to-b from-transparent to-gray-800/50 px-4 py-2 text-white"
               >
                 <motion.h3 layout className="font-semibold leading-tight">
                   {album.title}

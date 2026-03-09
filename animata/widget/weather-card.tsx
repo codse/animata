@@ -2,7 +2,7 @@ import { CircleArrowUp, CloudSunRain } from "lucide-react";
 
 export default function WeatherCard() {
   return (
-    <div className="relative flex size-52 flex-col rounded-3xl bg-gradient-to-r from-gray-200 to-gray-300 bg-clip-padding p-4 backdrop-blur-sm backdrop-filter dark:from-gray-700 dark:to-gray-900">
+    <div className="relative flex size-52 flex-col rounded-3xl bg-linear-to-r from-gray-200 to-gray-300 bg-clip-padding p-4 backdrop-blur-sm backdrop-filter dark:from-gray-700 dark:to-gray-900">
       <div className="flex flex-1 flex-col gap-2 dark:text-white">
         <p className="city opacity-70">Tokyo</p>
         <div className="flex items-center">

@@ -20,7 +20,7 @@ function TestimonialCard({
       className="flex h-44 w-96 overflow-hidden rounded-xl border bg-background dark:border-zinc-700"
       key={name}
     >
-      <div className="relative h-full w-32 flex-shrink-0 overflow-hidden">
+      <div className="relative h-full w-32 shrink-0 overflow-hidden">
         <img src={image} alt={name} className="h-full w-full object-cover" />
       </div>
       <div className="px-4 py-2">

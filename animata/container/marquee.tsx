@@ -88,8 +88,8 @@ export default function Marquee({
           className={cn(
             "pointer-events-none absolute inset-0 z-10 h-full w-full from-white/50 from-5% via-transparent via-50% to-white/50 to-95% dark:from-gray-800/50 dark:via-transparent dark:to-gray-800/50",
             {
-              "bg-gradient-to-b": vertical,
-              "bg-gradient-to-r": !vertical,
+              "bg-linear-to-b": vertical,
+              "bg-linear-to-r": !vertical,
             },
           )}
         />

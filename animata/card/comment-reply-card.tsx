@@ -177,7 +177,7 @@ export default function CommentReplyCard({ initialComments }: { initialComments:
               <input
                 ref={inputRef}
                 type="text"
-                className="flex-grow bg-transparent text-white placeholder-gray-400 focus:outline-none"
+                className="grow bg-transparent text-white placeholder-gray-400 focus:outline-hidden"
                 placeholder="Reply"
                 value={newComment}
                 onChange={(e) => setNewComment(e.target.value)}

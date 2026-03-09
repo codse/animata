@@ -36,7 +36,7 @@ const ReminderScheduler: React.FC<ReminderSchedulerProps> = ({
           disabled={!isRepeating}
           value={repeatInterval}
           onChange={(e) => setRepeatInterval(e.target.value)}
-          className="focus:ring-border-gray-100 mt-2 block w-[70%] rounded-xl border border-gray-100 bg-white px-3 py-3 font-bold text-black shadow-sm focus:border-gray-100 focus:outline-none"
+          className="focus:ring-border-gray-100 mt-2 block w-[70%] rounded-xl border border-gray-100 bg-white px-3 py-3 font-bold text-black shadow-sm focus:border-gray-100 focus:outline-hidden"
         >
           <option value="Daily">Daily</option>
           <option value="Weekly">Weekly</option>

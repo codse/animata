@@ -22,7 +22,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Primary: Story = {
   args: {
-    tileClassName: "bg-gradient-to-r from-zinc-100 to-zinc-300",
+    tileClassName: "bg-linear-to-r from-zinc-100 to-zinc-300",
     minTileWidth: 32,
     animationDuration: 0.5,
     animationDelay: 1,
@@ -37,7 +37,7 @@ export const Primary: Story = {
 
 export const Narrow: Story = {
   args: {
-    tileClassName: "bg-gradient-to-r from-zinc-100 to-zinc-300",
+    tileClassName: "bg-linear-to-r from-zinc-100 to-zinc-300",
     minTileWidth: 16,
     animationDuration: 0.5,
     animationDelay: 1,

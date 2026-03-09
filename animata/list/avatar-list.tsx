@@ -60,7 +60,7 @@ export default function AvatarList({
           className="group/avatar relative z-0 -ml-4 flex scale-100 items-center transition duration-200 ease-in-out hover:z-10 hover:scale-110"
         >
           <div className="relative overflow-hidden rounded-full bg-white">
-            <div className="bg-size pointer-events-none absolute h-full w-full animate-bg-position from-violet-500 from-30% via-cyan-400 via-50% to-pink-500 to-80% bg-[length:300%_auto] opacity-15 group-hover/avatar:bg-gradient-to-r" />
+            <div className="bg-size pointer-events-none absolute h-full w-full animate-bg-position from-violet-500 from-30% via-cyan-400 via-50% to-pink-500 to-80% bg-[length:300%_auto] opacity-15 group-hover/avatar:bg-linear-to-r" />
             <div className="z-1 blur-lg" />
             <img
               src={item.image}

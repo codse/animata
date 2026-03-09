@@ -125,11 +125,11 @@ export default function AiButton() {
 
   return (
     <button
-      className="group/ai relative my-8 rounded-full bg-gradient-to-r from-blue-300/30 via-blue-500/30 via-40% to-purple-500/30 p-1 text-white transition-transform hover:scale-110 active:scale-105"
+      className="group/ai relative my-8 rounded-full bg-linear-to-r from-blue-300/30 via-blue-500/30 via-40% to-purple-500/30 p-1 text-white transition-transform hover:scale-110 active:scale-105"
       onMouseEnter={() => setIsHovering(true)}
       onMouseLeave={() => setIsHovering(false)}
     >
-      <div className="relative flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-blue-300 via-blue-500 via-40% to-purple-500 px-4 py-2 text-white">
+      <div className="relative flex items-center justify-center gap-2 rounded-full bg-linear-to-r from-blue-300 via-blue-500 via-40% to-purple-500 px-4 py-2 text-white">
         <Sparkle className="size-6 -translate-y-0.5 animate-sparkle fill-white" />
         <Sparkle
           style={{

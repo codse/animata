@@ -60,7 +60,7 @@ export function CommandMenu({ ...props }: ComponentPropsWithoutRef<typeof Comman
         {...props}
       >
         <span className="inline-flex flex-1">Search...</span>
-        <kbd className="pointer-events-none hidden flex-shrink-0 select-none items-center gap-1 rounded border border-muted-foreground bg-zinc-700 px-2 font-mono text-[10px] font-medium dark:bg-slate-200 sm:flex">
+        <kbd className="pointer-events-none hidden shrink-0 select-none items-center gap-1 rounded border border-muted-foreground bg-zinc-700 px-2 font-mono text-[10px] font-medium dark:bg-slate-200 sm:flex">
           <span className="text-xs">⌘</span>K
         </kbd>
       </Button>

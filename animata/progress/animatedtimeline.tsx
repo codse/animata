@@ -88,7 +88,7 @@ const TimelineItem: React.FC<TimelineItemProps> = ({
           transition={{ duration: fillDuration, delay: fillDelay }}
         />
       </div>
-      <div className={cn("flex-grow leading-5", !isLast && "mb-3")}>
+      <div className={cn("grow leading-5", !isLast && "mb-3")}>
         {customRender ? (
           customRender(event)
         ) : (

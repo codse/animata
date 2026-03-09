@@ -124,7 +124,7 @@ export default function TeamClock({
             <ToggleButton onClick={handleToggle} accentColor={accentColor} textColor={textColor} />
           )}
         </div>
-        <div className="flex flex-grow items-center justify-center">
+        <div className="flex grow items-center justify-center">
           <Clock
             angle={angle}
             pressed={isExpanded}
@@ -379,7 +379,7 @@ function ListElement(props: ListElementProp) {
       style={{ color: props.textColor }}
     >
       <img src={props.pfp} alt={props.name} className="mr-4 h-10 w-10 rounded-full" />
-      <div className="flex-grow">
+      <div className="grow">
         <div className="flex items-center justify-between">
           <span className="text-lg font-semibold">{props.name}</span>
           <div className="relative text-sm">

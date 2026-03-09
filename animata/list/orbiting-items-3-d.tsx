@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 
 export const CenterIcon = (
   <Icons.logo
-    className="center z-0 h-32 w-32 animate-float rounded-full bg-gradient-to-br from-violet-500 via-purple-500 to-indigo-600 p-8 shadow-2xl"
+    className="center z-0 h-32 w-32 animate-float rounded-full bg-linear-to-br from-violet-500 via-purple-500 to-indigo-600 p-8 shadow-2xl"
     style={{
       boxShadow: "0 0 40px 15px rgba(139, 92, 246, 0.4), 0 0 80px 30px rgba(99, 102, 241, 0.2)",
     }}
@@ -147,7 +147,7 @@ export default function OrbitingItems3D({
     >
       <div
         className={cn(
-          "absolute inset-0 -z-10 h-full w-full items-center bg-gradient-to-br from-slate-950 via-purple-950 to-slate-900",
+          "absolute inset-0 -z-10 h-full w-full items-center bg-linear-to-br from-slate-950 via-purple-950 to-slate-900",
           backgroundClassName,
         )}
       />

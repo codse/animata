@@ -28,7 +28,7 @@ function Beam({ index }: { index: number }) {
           "h-12": !flag,
         })}
       >
-        <div className="h-full w-full bg-gradient-to-b from-neutral-50/50 via-neutral-100 via-75% to-neutral-50" />
+        <div className="h-full w-full bg-linear-to-b from-neutral-50/50 via-neutral-100 via-75% to-neutral-50" />
       </div>
     </div>
   );
@@ -68,7 +68,7 @@ function Background() {
   return (
     <div
       ref={containerRef}
-      className="z-0 absolute inset-0 flex h-full w-full flex-row justify-between bg-gradient-to-t from-indigo-900 to-indigo-950"
+      className="z-0 absolute inset-0 flex h-full w-full flex-row justify-between bg-linear-to-t from-indigo-900 to-indigo-950"
     >
       <style>{`
         @keyframes meteor {

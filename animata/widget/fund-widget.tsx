@@ -114,7 +114,7 @@ export default function FundWidget({
     >
       <div
         className={cn(
-          "absolute inset-0 -z-10 h-full w-full items-center bg-gradient-to-r from-violet-200 to-pink-200",
+          "absolute inset-0 -z-10 h-full w-full items-center bg-linear-to-r from-violet-200 to-pink-200",
           backgroundClassName,
         )}
       />

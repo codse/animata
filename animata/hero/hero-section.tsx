@@ -13,7 +13,7 @@ import WaterTracker from "../widget/water-tracker";
 // Button Component
 function Button({ children }: { children: React.ReactNode }) {
   return (
-    <UIButton className="w-32 bg-gradient-to-r from-blue-400 to-sky-300">
+    <UIButton className="w-32 bg-linear-to-r from-blue-400 to-sky-300">
       <p>{children}</p>
     </UIButton>
   );

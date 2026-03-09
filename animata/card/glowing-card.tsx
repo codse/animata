@@ -22,14 +22,14 @@ export default function GlowingCard({
 }: GlowCardProps) {
   return (
     <div
-      className="rounded-3xl bg-gradient-to-r p-0.5 hover:shadow-glow hover:brightness-150"
+      className="rounded-3xl bg-linear-to-r p-0.5 hover:shadow-glow hover:brightness-150"
       style={{
         transition: " box-shadow 0.5s ease",
         backgroundImage: `linear-gradient(to right, ${fromColor}, ${viaColor}, ${toColor})`,
       }}
     >
       <div
-        className="blur-20 inset-0 h-full w-full rounded-3xl bg-gradient-to-r from-[#4158D0] via-[#C850C0] to-[#FFCC70]"
+        className="blur-20 inset-0 h-full w-full rounded-3xl bg-linear-to-r from-[#4158D0] via-[#C850C0] to-[#FFCC70]"
         style={{ transition: "filter 0.5s ease" }}
       />
       <div className="flex h-64 w-56 flex-col gap-2 rounded-3xl bg-blue-950 p-4">
