@@ -2,11 +2,6 @@ import { type ImgHTMLAttributes, useState } from "react";
 
 import { cn } from "@/lib/utils";
 
-/**
- * All the props are passed to the img element.
- * Make sure to adjust the width and height of the container div
- * as per the design requirements/image aspect ratio.
- */
 export default function DiscloseImage({
   className,
   doorClassName,

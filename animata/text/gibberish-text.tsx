@@ -38,10 +38,6 @@ const Letter = ({ letter, className }: { letter: string; className?: string }) =
   );
 };
 
-/**
- * Animate each letter in the text using gibberish text effect.
- * Renders a random letter first and then animates it to the correct letter.
- */
 export default function GibberishText({ text, className }: GibberishTextProps) {
   return (
     <>
