@@ -1,7 +1,7 @@
 "use client";
 
 import { useTheme } from "next-themes";
-import * as React from "react";
+import React from "react";
 
 import { Icons } from "@/components/icons";
 import { cn } from "@/lib/utils";
@@ -40,7 +40,7 @@ export function ComponentPreview({ name, className, ...props }: ComponentPreview
   return (
     <div className={cn("group relative", className)} {...props}>
       <div
-        className={cn("preview relative w-full max-w-full !overflow-hidden")}
+        className={cn("preview relative w-full max-w-full overflow-hidden!")}
         style={{
           minHeight: "200px",
           height: `${Math.max(200, minHeight)}px`,
@@ -53,10 +53,12 @@ export function ComponentPreview({ name, className, ...props }: ComponentPreview
               Loading...
             </div>
           }
+          key={name}
         >
           <iframe
-            src={`${process.env.NEXT_PUBLIC_STORYBOOK_URL ?? "/preview"}/iframe.html?globals=${themeParam}&id=${name}&viewMode=story`}
+            src={`${process.env.NEXT_PUBLIC_STORYBOOK_URL ?? "/preview"}/iframe.html?globals=${themeParam}&id=${name.replace(/--[^-]+$/, "--docs")}&viewMode=docs&r=docs-view`}
             className="w-full"
+            title="preview"
             style={{
               minHeight: "200px",
               height: `${Math.max(200, minHeight)}px`,

@@ -1,29 +1,43 @@
 @reference "tailwindcss";
 
-/** Fix/improve storybook styles for embedding */
+/** Fix/improve storybook styles for embedding — !important overrides Storybook's own inline styles */
+
+/* biome-ignore lint/complexity/noImportantStyles: override Storybook inline styles */
 .sbdocs-wrapper {
-  @apply !p-0 font-sans;
+  @apply p-0! font-sans;
+  /* biome-ignore lint/complexity/noImportantStyles: override Storybook inline styles */
   display: block !important;
+  /* biome-ignore lint/complexity/noImportantStyles: override Storybook inline styles */
   min-height: unset !important;
 
   .sbdocs-content {
-    @apply !p-0;
+    @apply p-0!;
   }
 }
 
 .sb-preparing-docs {
-  @apply !p-0;
+  @apply p-0!;
 }
 
 .sb-previewBlock,
 .sb-argstableBlock {
-  @apply !mx-auto;
+  @apply mx-auto!;
+  /* biome-ignore lint/complexity/noImportantStyles: override Storybook inline styles */
   max-width: calc(100% - 4px) !important;
 }
 
-.embedded {
+#storybook-root {
+  width: 100%;
+  /* biome-ignore lint/complexity/noImportantStyles: override Storybook inline styles */
+  padding: 0 !important;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+body.embedded {
   .sbdocs {
-    @apply !m-0;
+    @apply m-0!;
   }
 
   .innerZoomElementWrapper {
@@ -51,11 +65,19 @@
   }
 
   .docblock-argstable {
-    @apply !mb-0;
+    @apply mb-0!;
     max-width: calc(100% - 2px);
+  }
+
+  /* Hide docs chrome elements in embedded view */
+  .sbdocs-title,
+  .sbdocs-subtitle,
+  .sbdocs-description {
+    display: none;
   }
 }
 
+/* biome-ignore lint/style/noDescendingSpecificity: separate context from body.embedded selectors */
 .sbdocs-preview > div > div {
   @apply overflow-hidden;
 }

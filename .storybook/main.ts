@@ -7,8 +7,6 @@ const config: StorybookConfig = {
     name: "@storybook/nextjs",
     options: {},
   },
-  docs: {
-    autodocs: false,
-  },
+  tags: {},
 };
 export default config;
