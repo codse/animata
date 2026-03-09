@@ -1,12 +1,16 @@
+import type { CompileOptions } from "@mdx-js/mdx";
 import Link from "next/link";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import type { ComponentProps, HTMLAttributes } from "react";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
-import rehypePrettyCode from "rehype-pretty-code";
+import rehypePrettyCode, {
+  type LineElement,
+  type Options as PrettyCodeOptions,
+} from "rehype-pretty-code";
 import rehypeSlug from "rehype-slug";
 import { codeImport } from "remark-code-import";
 import remarkGfm from "remark-gfm";
-import type { NpmCommands, TouchCommands } from "types/unist";
+import type { NpmCommands, TouchCommands, UnistNode, UnistTree } from "types/unist";
 import { visit } from "unist-util-visit";
 import { VFile } from "vfile";
 
@@ -36,49 +40,53 @@ import { cn } from "@/lib/utils";
 
 import { baseComponents } from "./mdx-base-components";
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-const setupCodeSnippet = () => (tree: any) => {
-  visit(tree, (node: any) => {
+const setupCodeSnippet = () => (tree: UnistTree) => {
+  visit(tree, (node: UnistNode) => {
     if (node?.type === "element" && node?.tagName === "pre") {
-      const [codeEl] = node.children;
-      if (codeEl.tagName !== "code") {
+      const [codeEl] = node.children ?? [];
+      if (codeEl?.tagName !== "code") {
         return;
       }
 
-      if (codeEl.data?.meta) {
+      const meta = (codeEl as UnistNode & { data?: { meta?: string } }).data?.meta;
+      if (meta) {
         const regex = /event="([^"]*)"/;
-        const match = codeEl.data?.meta.match(regex);
+        const match = meta.match(regex);
         if (match) {
-          node.__event__ = match[1];
-          codeEl.data.meta = codeEl.data.meta.replace(regex, "");
+          (node as UnistNode & { __event__?: string }).__event__ = match[1];
+          (codeEl as UnistNode & { data?: { meta?: string } }).data!.meta = meta.replace(regex, "");
         }
 
-        const copyId = codeEl.data?.meta.match(/copyId="([^"]*)"/);
+        const copyId = meta.match(/copyId="([^"]*)"/);
         if (copyId) {
-          node.__copyId__ = copyId[1];
+          (node as UnistNode & { __copyId__?: string }).__copyId__ = copyId[1];
         }
       }
 
-      node.__rawString__ = codeEl.children?.[0].value;
+      (node as UnistNode & { __rawString__?: string }).__rawString__ = codeEl.children?.[0]?.value;
     }
   });
 };
 
-const postProcess = () => (tree: any) => {
-  visit(tree, "element", (node: any) => {
-    if (node.__rawString__) {
+const postProcess = () => (tree: UnistTree) => {
+  visit(tree, "element", (node: UnistNode) => {
+    const rawNode = node as UnistNode & { __rawString__?: string; __copyId__?: string };
+    if (rawNode.__rawString__) {
       if (node.tagName !== "pre") {
-        const [pre] = node.children;
-        if (pre.tagName !== "pre") {
+        const [pre] = node.children ?? [];
+        if (pre?.tagName !== "pre") {
           return;
         }
-        pre.properties.__copyId__ = node.__copyId__;
-        pre.properties.__rawString__ = node.__rawString__;
-        Reflect.deleteProperty(node, "__rawString__");
-        Reflect.deleteProperty(node, "__copyId__");
+        if (!pre.properties) pre.properties = {};
+        pre.properties.__copyId__ = rawNode.__copyId__;
+        pre.properties.__rawString__ = rawNode.__rawString__;
+        Reflect.deleteProperty(rawNode, "__rawString__");
+        Reflect.deleteProperty(rawNode, "__copyId__");
 
-        if (pre.properties?.__rawString__?.startsWith("mkdir")) {
-          const path = pre.properties?.__rawString__.split(" ").pop();
+        const rawString = pre.properties.__rawString__ as string | undefined;
+
+        if (rawString?.startsWith("mkdir")) {
+          const path = rawString.split(" ").pop();
           if (!path) {
             return;
           }
@@ -89,12 +97,11 @@ const postProcess = () => (tree: any) => {
           pre.properties.__unix__ = `mkdir -p ${dir} && touch ${path}`;
         }
 
-        if (pre.properties?.__rawString__?.startsWith("npm install")) {
-          const npmCommand = pre.properties?.__rawString__;
-          pre.properties.__npmCommand__ = npmCommand;
-          pre.properties.__yarnCommand__ = npmCommand.replace("npm install", "yarn add");
-          pre.properties.__pnpmCommand__ = npmCommand.replace("npm install", "pnpm add");
-          pre.properties.__bunCommand__ = npmCommand.replace("npm install", "bun add");
+        if (rawString?.startsWith("npm install")) {
+          pre.properties.__npmCommand__ = rawString;
+          pre.properties.__yarnCommand__ = rawString.replace("npm install", "yarn add");
+          pre.properties.__pnpmCommand__ = rawString.replace("npm install", "pnpm add");
+          pre.properties.__bunCommand__ = rawString.replace("npm install", "bun add");
         }
       }
     }
@@ -280,23 +287,27 @@ function stripImports(code: string) {
 }
 
 function resolveImports(imports: Array<{ name: string; subpath: string }>) {
-  const resolved: Record<string, any> = {};
+  const resolved: Record<string, React.ComponentType<Record<string, unknown>>> = {};
   for (const { name, subpath } of imports) {
-    resolved[name] = (props: any) => <AnimataRenderer subpath={subpath} {...props} />;
+    resolved[name] = (props: Record<string, unknown>) => (
+      <AnimataRenderer subpath={subpath} {...props} />
+    );
   }
   return resolved;
 }
 
-const mdxOptions = {
+const mdxOptions: Omit<CompileOptions, "outputFormat" | "providerImportSource"> & {
+  useDynamicImport?: boolean;
+} = {
   remarkPlugins: [remarkGfm, codeImport],
   rehypePlugins: [
     setupCodeSnippet,
     rehypeSlug,
     [
-      rehypePrettyCode as any,
+      rehypePrettyCode,
       {
         theme: "github-dark",
-        onVisitLine(node: any) {
+        onVisitLine(node: LineElement) {
           if (node.children.length === 0) {
             node.children = [{ type: "text", value: " " }];
           }
@@ -304,13 +315,13 @@ const mdxOptions = {
             node.properties.className = ["line"];
           }
         },
-        onVisitHighlightedLine(node: any) {
-          node.properties.className.push("line--highlighted");
+        onVisitHighlightedLine(node: LineElement) {
+          (node.properties.className as string[]).push("line--highlighted");
         },
-        onVisitHighlightedWord(node: any) {
+        onVisitHighlightedChars(node: LineElement) {
           node.properties.className = ["word--highlighted"];
         },
-      },
+      } satisfies PrettyCodeOptions,
     ],
     [
       rehypeAutolinkHeadings,
@@ -335,8 +346,8 @@ export async function Mdx({ code, filePath }: MdxProps) {
     <div className="mdx">
       <MDXRemote
         source={source}
-        components={{ ...components, ...dynamicComponents } as any}
-        options={{ mdxOptions: mdxOptions as any }}
+        components={{ ...components, ...dynamicComponents }}
+        options={{ mdxOptions: mdxOptions }}
       />
     </div>
   );
