@@ -25,7 +25,9 @@ interface ZigZagProps {
 function Placeholder() {
   return (
     <div className="flex max-h-full min-h-64 min-w-72 max-w-full items-center justify-center">
-      <div className="rounded bg-white px-4 py-2">This has zigzag background</div>
+      <div className="rounded bg-foreground text-background px-4 py-2">
+        This has zigzag background
+      </div>
     </div>
   );
 }
