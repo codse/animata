@@ -10,21 +10,15 @@ author: harimanok_
 
 <Steps>
 
-<Step>Update `tailwind.config.js`</Step>
-```js
-theme: {
-    extend: {
-       keyframes: {
-         "bg-position": {
-         "0%": { backgroundPosition: "0% 50%" },
-          "100%": { backgroundPosition: "100% 50%" },
-         }
-        },
-        animation: {
-          "bg-position": "bg-position 3s infinite alternate"
-        }
-    },
-  },
+<Step>Add to your CSS</Step>
+```css
+@keyframes bg-position {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 100% 50%; }
+}
+@theme {
+  --animate-bg-position: bg-position 3s infinite alternate;
+}
 ```
 
 <Step>Run the following command</Step>

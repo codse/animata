@@ -16,34 +16,23 @@ author: sanjaya22780
 npm install lucide-react
 ```
 
-<Step>Update `tailwind.config.js`</Step>Add the following to your tailwind.config.js file.
+<Step>Add to your CSS</Step>
 
-```js
-module.exports = {
-  theme: {
-    extend: {
-      backgroundImage: {
-        striped:
-          "repeating-linear-gradient(45deg, #3B3A3D, #3B3A3D 5px, transparent 5px, transparent 20px)",
-      },
-      keyframes: {
-        "blink-red": {
-          "0%, 100%": {
-            backgroundColor: "rgba(239, 68, 68, 0.7)",
-            boxShadow: "0 0 30px 10px rgba(239, 68, 68, 0.5)",
-          },
-          "50%": {
-            backgroundColor: "rgba(239, 68, 68, 0.5)",
-            boxShadow: "0 0 30px 10px rgba(239, 68, 68, 1)",
-          },
-        },
-      },
-      animation: {
-        "blink-red": "blink-red 2s infinite linear",
-      },
-    },
-  },
-};
+```css
+@theme {
+  --bg-striped: repeating-linear-gradient(45deg, #3B3A3D, #3B3A3D 5px, transparent 5px, transparent 20px);
+  --animate-blink-red: blink-red 2s infinite linear;
+}
+@keyframes blink-red {
+  0%, 100% {
+    background-color: rgba(239, 68, 68, 0.7);
+    box-shadow: 0 0 30px 10px rgba(239, 68, 68, 0.5);
+  }
+  50% {
+    background-color: rgba(239, 68, 68, 0.5);
+    box-shadow: 0 0 30px 10px rgba(239, 68, 68, 1);
+  }
+}
 ```
 
 <Step>Run the following command</Step>

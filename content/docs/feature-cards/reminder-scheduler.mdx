@@ -11,22 +11,15 @@ labels: ["requires interaction", "toggle switch"]
 
 <Steps>
 
-<Step>Update `tailwind.config.js`</Step>
+<Step>Add to your CSS</Step>
 
-Add the following to your tailwind.config.js file.
+Add the following to your CSS file.
 
-```js
-theme: {
-    extend: {
-        colors: {
-        foreground: "hsl(var(--foreground))",
-     },
-       transitionTimingFunction: {
-        slow: "cubic-bezier(.405, 0, .025, 1)",
-        "minor-spring": "cubic-bezier(0.18,0.89,0.82,1.04)",
-     }
-    },
-  },
+```css
+@theme {
+  --ease-slow: cubic-bezier(.405, 0, .025, 1);
+  --ease-minor-spring: cubic-bezier(0.18, 0.89, 0.82, 1.04);
+}
 ```
 
 <Step>Run the following command</Step>

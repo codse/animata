@@ -10,26 +10,16 @@ labels: ["requires interaction", "hover"]
 ## Installation
 
 <Steps> 
-<Step>Update `tailwind.config.js`</Step>
+<Step>Add to your CSS</Step>
 
-Add the following to your tailwind.config.js file.
-
-```json {5-9} {12}
-module.exports = {
-  theme: {
-    extend: {
-      keyframes: {
-        led: {
-          "0%": { fill: "currentColor", brightness: "1" },
-          "50%": { fill: "#a855f7", brightness: "500%" },
-          "100%": { fill: "currentColor", brightness: "1" },
-        },
-      },
-      animation: {
-        led: "led 100ms ease-in-out",
-      },
-    }
-  }
+```css
+@keyframes led {
+  0% { fill: currentColor; brightness: 1; }
+  50% { fill: #a855f7; brightness: 500%; }
+  100% { fill: currentColor; brightness: 1; }
+}
+@theme {
+  --animate-led: led 100ms ease-in-out;
 }
 ```
 

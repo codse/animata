@@ -51,16 +51,12 @@ The root of your project can be anything (like `src` or `app`), but the `compone
 Install the required dependencies, if you haven't already:
 
 ```bash
-npm install tailwind-merge clsx lucide-react tailwindcss-animate
+npm install tailwind-merge clsx lucide-react
 ```
 
-Add `tailwindcss-animate` to the `plugins` array in your `tailwind.config.js` file:
-
-```js
-module.exports = {
-  plugins: [require("tailwindcss-animate")],
-};
-```
+<Callout>
+  Tailwind v4 includes animation utilities natively, so the `tailwindcss-animate` plugin is no longer needed.
+</Callout>
 
 ### Create utils.ts file
 

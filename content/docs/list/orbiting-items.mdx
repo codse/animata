@@ -9,22 +9,12 @@ author: harimanok_
 ## Installation
 
 <Steps>
-<Step>Update `tailwind.config.js`</Step>
+<Step>Add to your CSS</Step>
 
-Add the following to your tailwind.config.js file.
-
-```json {5-8}
-module.exports = {
-  theme: {
-    extend: {
-      keyframes: {
-        "rotate-full": {
-          "0%": { transform: "rotate(0deg)" },
-          "100%": { transform: "rotate(360deg)" },
-        },
-      },
-    }
-  }
+```css
+@keyframes rotate-full {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 ```
 

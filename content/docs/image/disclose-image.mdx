@@ -10,28 +10,20 @@ author: harimanok_
 ## Installation
 
 <Steps>
-<Step>Update `tailwind.config.js`</Step>
+<Step>Add to your CSS</Step>
 
-Add the following to your tailwind.config.js file.
+Add the following to your CSS file.
 
-```js {4-9} title=tailwind.config.js
-module.exports = {
-  theme: {
-    extend: {
-      transitionTimingFunction: {
-        slow: "cubic-bezier(.405, 0, .025, 1)",
-      },
-      transitionDuration: {
-        mid: "3s",
-      },
-    },
-  },
-};
+```css
+@theme {
+  --ease-slow: cubic-bezier(.405, 0, .025, 1);
+  --duration-mid: 3s;
+}
 ```
 
 <Callout>
   Alternatively, you can replace `ease-slow` with `ease-[cubic-bezier(.405,_0,_.025,_1)]` and
-  `duration-mid` with `duration-[3000ms]` instead of updating the `tailwind.config.js` file.
+  `duration-mid` with `duration-[3000ms]` instead of updating your CSS file.
 </Callout>
 
 <Step>Run the following command</Step>

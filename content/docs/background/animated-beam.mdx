@@ -10,25 +10,15 @@ author: harimanok_
 
 <Steps>
 
-<Step>Update `tailwind.config.js`</Step>
+<Step>Add to your CSS</Step>
 
-Add the following to your tailwind.config.js file.
-
-```json {5-8} {11}
-module.exports = {
-  theme: {
-    extend: {
-      keyframes: {
-        meteor: {
-          "0%": { transform: "translateY(-20%) translateX(-50%)" },
-          "100%": { transform: "translateY(300%) translateX(-50%)" },
-        },
-      },
-      animation: {
-        meteor: "meteor var(--duration) var(--delay) ease-in-out infinite",
-      },
-    }
-  }
+```css
+@keyframes meteor {
+  0% { transform: translateY(-20%) translateX(-50%); }
+  100% { transform: translateY(300%) translateX(-50%); }
+}
+@theme {
+  --animate-meteor: meteor var(--duration) var(--delay) ease-in-out infinite;
 }
 ```
 
