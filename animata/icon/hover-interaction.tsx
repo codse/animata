@@ -105,7 +105,7 @@ export default function HoverInteraction({
       onMouseLeave={() => setIsHovered(false)}
     >
       <span
-        className={`relative text-center font-medium text-muted-foreground transition-colors duration-200 group-hover/icon:text-black ${textSizeClass}`}
+        className={`relative text-center font-medium text-muted-foreground transition-colors duration-200 group-hover/icon:text-foreground ${textSizeClass}`}
       >
         {formattedTitle}
       </span>

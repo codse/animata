@@ -207,7 +207,7 @@ export default function LEDBoard({
 
   return (
     <div
-      className="group/led rounded-xl border border-gray-600 bg-gradient-to-bl from-zinc-950/80 via-zinc-900 via-30% to-zinc-950 to-75% p-4 dark:border-zinc-800"
+      className="group/led rounded-xl border border-gray-600 bg-linear-to-bl from-zinc-950/80 via-zinc-900 via-30% to-zinc-950 to-75% p-4 dark:border-zinc-800"
       onMouseEnter={() => setIsHovering(true)}
       onMouseLeave={() => setIsHovering(false)}
     >
