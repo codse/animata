@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 
 export const CenterIcon = (
   <Icons.logo
-    className="center z-0 h-32 w-32 animate-float rounded-full bg-linear-to-br from-violet-500 via-purple-500 to-indigo-600 p-8 shadow-2xl"
+    className="center z-1 h-32 w-32 animate-float rounded-full bg-linear-to-br from-violet-500 via-purple-500 to-indigo-600 p-8 shadow-2xl"
     style={{
       boxShadow: "0 0 40px 15px rgba(139, 92, 246, 0.4), 0 0 80px 30px rgba(99, 102, 241, 0.2)",
     }}
@@ -107,8 +107,8 @@ function OrbitingItem({
   const tiltRadians = (tiltAngle * Math.PI) / 180;
   const xTilted = x * Math.cos(tiltRadians) - y * Math.sin(tiltRadians);
   const yTilted = x * Math.sin(tiltRadians) + y * Math.cos(tiltRadians);
-  const zIndex = angle > 180 ? -1 : 1;
-  const scale = angle < 180 ? 1.2 : 1.0;
+  const zIndex = angle > 180 ? 0 : 3;
+  const scale = angle < 180 ? 1.2 : 0.9;
 
   return (
     <div
