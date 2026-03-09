@@ -16,57 +16,62 @@ interface Transaction {
   cardType?: string;
 }
 
+const spring = {
+  type: "spring" as const,
+  stiffness: 350,
+  damping: 30,
+};
+
 export default function TransactionList({ transactions }: { transactions: Transaction[] }) {
-  const [selectedTransaction, setSelectedTransaction] = useState<Transaction | null>(null);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const selected = transactions.find((t) => t.id === selectedId) ?? null;
 
   return (
     <div className="mx-auto max-w-md font-sans">
       <motion.div
         layout
-        className="w-[350px] overflow-hidden rounded-3xl bg-white shadow"
-        initial={{
-          height: 420,
-          width: 300,
-        }}
-        animate={{
-          height: selectedTransaction ? 350 : 420,
-          width: 300,
-        }}
-        transition={{ duration: 0.5, ease: "easeInOut" }}
+        className="w-[300px] overflow-hidden rounded-3xl bg-white shadow-lg"
+        transition={spring}
       >
-        <AnimatePresence mode="wait">
-          {!selectedTransaction ? (
+        <AnimatePresence mode="popLayout">
+          {!selected ? (
             <motion.div
               key="list"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              transition={{ duration: 0.2 }}
+              transition={{ duration: 0.15 }}
             >
-              <h2 className="pl-6 pt-3 text-xl font-semibold text-gray-400">Transactions</h2>
-              <div className="space-y-2 p-2">
+              <h2 className="pl-6 pt-4 text-lg font-semibold text-gray-400">Transactions</h2>
+              <div className="space-y-0.5 p-2">
                 {transactions.map((transaction) => (
-                  <motion.div
+                  <motion.button
                     key={transaction.id}
-                    layoutId={`transaction-${transaction.id}`}
-                    className="flex cursor-pointer items-center justify-between rounded-lg p-1"
-                    onClick={() => setSelectedTransaction(transaction)}
+                    layoutId={`card-${transaction.id}`}
+                    className="flex w-full cursor-pointer items-center justify-between rounded-2xl p-2 transition-colors hover:bg-gray-50"
+                    onClick={() => setSelectedId(transaction.id)}
+                    transition={spring}
                   >
-                    <div className="flex items-center space-x-3">
+                    <div className="flex items-center gap-3">
                       <motion.div
                         layoutId={`icon-${transaction.id}`}
-                        className="rounded-full bg-black"
-                        transition={{ duration: 0.5 }}
+                        className="flex h-10 w-10 items-center justify-center rounded-full bg-black"
+                        transition={spring}
                       >
                         {transaction.icon}
                       </motion.div>
-                      <div>
-                        <motion.p layoutId={`name-${transaction.id}`} className="font-medium">
+                      <div className="text-left">
+                        <motion.p
+                          layoutId={`name-${transaction.id}`}
+                          className="text-sm font-medium text-gray-800"
+                          transition={spring}
+                        >
                           {transaction.name}
                         </motion.p>
                         <motion.p
                           layoutId={`type-${transaction.id}`}
-                          className="text-sm text-gray-400"
+                          className="text-xs text-gray-400"
+                          transition={spring}
                         >
                           {transaction.type}
                         </motion.p>
@@ -74,20 +79,25 @@ export default function TransactionList({ transactions }: { transactions: Transa
                     </div>
                     <motion.p
                       layoutId={`amount-${transaction.id}`}
-                      className="font-bold text-gray-400"
+                      className="text-sm font-semibold text-gray-500"
+                      transition={spring}
                     >
                       ${Math.abs(transaction.amount).toFixed(2)}
                     </motion.p>
-                  </motion.div>
+                  </motion.button>
                 ))}
               </div>
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="m-auto mt-4 flex w-11/12 items-center justify-center rounded-xl bg-gray-100 py-2 text-gray-800"
-              >
-                All Transactions <ArrowRight className="ml-2 h-4 w-4" />
-              </motion.button>
+              <div className="px-3 pb-3">
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="flex w-full items-center justify-center gap-2 rounded-xl bg-gray-100 py-2.5 text-sm font-medium text-gray-600"
+                  transition={spring}
+                >
+                  All Transactions
+                  <ArrowRight className="h-4 w-4" />
+                </motion.button>
+              </div>
             </motion.div>
           ) : (
             <motion.div
@@ -95,64 +105,77 @@ export default function TransactionList({ transactions }: { transactions: Transa
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              transition={{ duration: 0.2 }}
+              transition={{ duration: 0.15 }}
               className="p-4"
             >
               <div className="mb-4 flex items-center justify-between">
                 <motion.div
-                  layoutId={`transaction-${selectedTransaction.id}`}
-                  className="flex items-center space-x-3"
+                  layoutId={`card-${selected.id}`}
+                  className="flex items-center gap-3"
+                  transition={spring}
                 >
                   <motion.div
-                    layoutId={`icon-${selectedTransaction.id}`}
-                    className="rounded-xl bg-black"
-                    transition={{ duration: 0.5 }}
+                    layoutId={`icon-${selected.id}`}
+                    className="flex h-12 w-12 items-center justify-center rounded-2xl bg-black"
+                    transition={spring}
                   >
-                    {selectedTransaction.icon}
+                    {selected.icon}
                   </motion.div>
                 </motion.div>
-                <button onClick={() => setSelectedTransaction(null)}>
-                  <X className="h-6 w-6 rounded-full bg-gray-400 text-white" />
-                </button>
+                <motion.button
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: 0.15 }}
+                  onClick={() => setSelectedId(null)}
+                  className="flex h-7 w-7 items-center justify-center rounded-full bg-gray-200 text-gray-500 transition-colors hover:bg-gray-300"
+                >
+                  <X className="h-4 w-4" />
+                </motion.button>
               </div>
-              <div className="flex justify-between border-b border-dashed pb-4">
-                <div className="space-y-1">
-                  <motion.p layoutId={`name-${selectedTransaction.id}`} className="font-medium">
-                    {selectedTransaction.name}
+
+              <div className="flex items-start justify-between border-b border-dashed border-gray-200 pb-4">
+                <div className="space-y-0.5">
+                  <motion.p
+                    layoutId={`name-${selected.id}`}
+                    className="font-medium text-gray-800"
+                    transition={spring}
+                  >
+                    {selected.name}
                   </motion.p>
                   <motion.p
-                    layoutId={`type-${selectedTransaction.id}`}
+                    layoutId={`type-${selected.id}`}
                     className="text-sm text-gray-400"
+                    transition={spring}
                   >
-                    {selectedTransaction.type}
+                    {selected.type}
                   </motion.p>
                 </div>
                 <motion.p
-                  layoutId={`amount-${selectedTransaction.id}`}
-                  className="font-bold text-gray-400"
+                  layoutId={`amount-${selected.id}`}
+                  className="text-lg font-bold text-gray-700"
+                  transition={spring}
                 >
-                  ${Math.abs(selectedTransaction.amount).toFixed(2)}
+                  ${Math.abs(selected.amount).toFixed(2)}
                 </motion.p>
               </div>
+
               <motion.div
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2 }}
+                transition={{ delay: 0.1, duration: 0.25 }}
                 className="space-y-4"
               >
-                <div className="mt-4 space-y-2 text-gray-400">
-                  <p>#{selectedTransaction.id}</p>
-                  <p>{selectedTransaction.date}</p>
-                  <p>{selectedTransaction.time}</p>
+                <div className="mt-4 space-y-1.5 text-sm text-gray-400">
+                  <p>#{selected.id}</p>
+                  <p>{selected.date}</p>
+                  <p>{selected.time}</p>
                 </div>
-                <div className="border-t border-dashed pt-4 text-gray-400">
-                  <p className="font-medium">Paid Via {selectedTransaction.paymentMethod}</p>
-                  <div className="mt-2 flex items-center space-x-2">
+                <div className="border-t border-dashed border-gray-200 pt-4 text-sm text-gray-400">
+                  <p className="font-medium text-gray-500">Paid Via {selected.paymentMethod}</p>
+                  <div className="mt-2 flex items-center gap-2">
                     <CreditCard className="h-5 w-5" />
-                    <p>XXXX {selectedTransaction.cardLastFour}</p>
-                    <p>
-                      {selectedTransaction.cardType === "visa" ? <VisaLogo /> : <MasterCardLogo />}
-                    </p>
+                    <p>XXXX {selected.cardLastFour}</p>
+                    {selected.cardType === "visa" ? <VisaLogo /> : <MasterCardLogo />}
                   </div>
                 </div>
               </motion.div>
