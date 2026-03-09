@@ -16,10 +16,12 @@ interface ComponentPreviewProps extends React.HTMLAttributes<HTMLDivElement> {
 
 export function ComponentPreview({ name, className, ...props }: ComponentPreviewProps) {
   const [minHeight, setMinHeight] = React.useState<number>(350);
+  const [mounted, setMounted] = React.useState(false);
 
   const { resolvedTheme } = useTheme();
 
   React.useEffect(() => {
+    setMounted(true);
     const eventListener = (event: MessageEvent) => {
       if (event.data.type === "animata-set-height") {
         setMinHeight(event.data.height);
@@ -31,11 +33,8 @@ export function ComponentPreview({ name, className, ...props }: ComponentPreview
     };
   }, []);
 
-  const theme =
-    resolvedTheme ??
-    (typeof localStorage !== "undefined" ? localStorage?.getItem?.("theme") : "") ??
-    "";
-  const themeParam = theme === "dark" ? "theme:dark" : "theme:light";
+  // Only render iframe after mount so resolvedTheme is accurate
+  const themeParam = mounted && resolvedTheme === "dark" ? "theme:dark" : "theme:light";
 
   return (
     <div className={cn("group relative", className)} {...props}>
@@ -53,7 +52,7 @@ export function ComponentPreview({ name, className, ...props }: ComponentPreview
               Loading...
             </div>
           }
-          key={name}
+          key={`${name}-${themeParam}`}
         >
           <iframe
             src={`${process.env.NEXT_PUBLIC_STORYBOOK_URL ?? "/preview"}/iframe.html?globals=backgrounds.grid:!false;${themeParam};backgrounds.value:!transparent&viewMode=docs&id=${name.replace(/--[^-]+$/, "--docs")}&r=docs-view`}
