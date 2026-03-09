@@ -24,21 +24,20 @@ export default function JumpingTextInstagram({
         <motion.span
           key={index}
           initial={{
-            translateY: 30,
+            y: 30,
             rotate: -30,
             opacity: 0,
           }}
           animate={{
-            opacity: [0, 0.5, 1],
-            translateY: [30, -30, 0],
-            rotate: [-30, 30, 0],
-            transition: {
-              type: "spring",
-              damping: 10,
-              mass: 2,
-              delay: (isWordMode ? 0.05 : 0.01) * index,
-              duration: nodes.length * 0.05,
-            },
+            opacity: 1,
+            y: 0,
+            rotate: 0,
+          }}
+          transition={{
+            type: "spring",
+            damping: 10,
+            mass: 2,
+            delay: (isWordMode ? 0.05 : 0.01) * index,
           }}
           className="inline-block origin-center"
         >

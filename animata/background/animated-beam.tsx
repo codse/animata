@@ -8,7 +8,7 @@ function Beam({ index }: { index: number }) {
   const flag = index % 8 === 0;
   return (
     <div
-      className={cn("h-full animate-meteor", {
+      className={cn("h-full", {
         "[--duration:7s]": flag,
         "[--duration:11s]": !flag,
       })}
@@ -16,6 +16,7 @@ function Beam({ index }: { index: number }) {
         width: "6px",
         transform: "translateY(-20%)",
         "--delay": `${index * 0.5}s`,
+        animation: "meteor var(--duration) var(--delay) ease-in-out infinite",
       }}
     >
       <div
@@ -69,6 +70,12 @@ function Background() {
       ref={containerRef}
       className="z-0 absolute inset-0 flex h-full w-full flex-row justify-between bg-gradient-to-t from-indigo-900 to-indigo-950"
     >
+      <style>{`
+        @keyframes meteor {
+          0% { transform: translateY(-20%) translateX(-50%); }
+          100% { transform: translateY(300%) translateX(-50%); }
+        }
+      `}</style>
       <div
         style={{
           background:

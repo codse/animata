@@ -54,14 +54,30 @@ export default function Marquee({
         className,
       )}
     >
+      <style>{`
+        @keyframes marquee-x {
+          from { transform: translateX(0); }
+          to { transform: translateX(calc(-100% - var(--gap))); }
+        }
+        @keyframes marquee-y {
+          from { transform: translateY(0); }
+          to { transform: translateY(calc(-100% - var(--gap))); }
+        }
+        .marquee-horizontal {
+          animation: marquee-x var(--duration) infinite linear;
+        }
+        .marquee-vertical {
+          animation: marquee-y var(--duration) infinite linear;
+        }
+      `}</style>
       {Array.from({ length: repeat }).map((_, index) => (
         <div
           key={`item-${index}`}
           className={cn("flex shrink-0 [gap:var(--gap)]", {
             "group-hover:[animation-play-state:paused]": pauseOnHover,
             "[animation-direction:reverse]": reverse,
-            "animate-marquee-horizontal flex-row": !vertical,
-            "animate-marquee-vertical flex-col": vertical,
+            "marquee-horizontal flex-row": !vertical,
+            "marquee-vertical flex-col": vertical,
           })}
         >
           {children}
