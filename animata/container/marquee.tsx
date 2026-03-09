@@ -75,10 +75,10 @@ export default function Marquee({
           key={`item-${index}`}
           className={cn("flex shrink-0 [gap:var(--gap)]", {
             "group-hover:[animation-play-state:paused]": pauseOnHover,
-            "[animation-direction:reverse]": reverse,
             "marquee-horizontal flex-row": !vertical,
             "marquee-vertical flex-col": vertical,
           })}
+          style={reverse ? { animationDirection: "reverse" } : undefined}
         >
           {children}
         </div>

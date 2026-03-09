@@ -63,7 +63,7 @@ export const Primary: Story = {
   },
 
   render: (args) => (
-    <div className="storybook-fix relative flex h-full max-h-96 min-h-72 w-full min-w-72 items-center justify-center overflow-hidden rounded border bg-background">
+    <div className="full-content relative flex h-full max-h-96 min-h-72 w-full min-w-72 items-center justify-center overflow-hidden rounded bg-background">
       <Marquee {...args}>
         <Content />
       </Marquee>
@@ -74,7 +74,7 @@ export const Primary: Story = {
 export const Vertical: Story = {
   args: { vertical: true },
   render: (args) => (
-    <div className="storybook-fix relative flex h-full max-h-96 min-h-72 w-full min-w-72 items-center justify-center overflow-hidden rounded-md border bg-background">
+    <div className="full-content relative flex h-full max-h-96 min-h-72 w-full min-w-72 items-center justify-center overflow-hidden rounded-md bg-background">
       <Marquee className="items-center" {...args}>
         <Content />
       </Marquee>
@@ -87,7 +87,7 @@ export const Multiple: Story = {
   render: (args) => (
     <div
       className={cn(
-        "storybook-fix relative flex h-full max-h-96 min-h-72 w-full min-w-72 items-center justify-center overflow-hidden rounded-md border bg-background",
+        "full-content relative flex h-full max-h-96 min-h-72 w-full min-w-72 items-center justify-center overflow-hidden rounded-md bg-background",
         {
           "flex-row": args.vertical,
           "flex-col": !args.vertical,

@@ -179,7 +179,7 @@ function FeatureEight() {
 
 export default function Eight() {
   return (
-    <div className="storybook-fix w-full">
+    <div className="full-content w-full">
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-4 sm:grid-rows-3">
         <FeatureOne />
         <FeatureTwo />

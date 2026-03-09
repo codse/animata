@@ -100,7 +100,7 @@ export default function AnimatedBeam({
   className?: string;
 }) {
   return (
-    <div className={cn("storybook-fix relative w-full overflow-hidden", className)}>
+    <div className={cn("full-content relative w-full overflow-hidden", className)}>
       <Background />
       <div className="relative h-full w-full">{children}</div>
     </div>
