@@ -65,7 +65,7 @@ export default function AvatarList({
     <div className={cn("flex py-12", className)}>
       {avatars.map((item, index) => (
         <div
-          key={item.name}
+          key={`${item.name}-${index}`}
           className={cn(
             "group/avatar relative z-0 flex scale-100 items-center transition duration-200 ease-in-out hover:z-10 hover:scale-110",
             index > 0 && "-ml-3",
