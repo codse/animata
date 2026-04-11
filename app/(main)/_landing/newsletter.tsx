@@ -17,7 +17,7 @@ function NewsletterInput(): React.JSX.Element {
   return (
     <>
       <form
-        className="flex flex-col space-y-2 sm:flex-row sm:space-x-2 sm:space-y-0"
+        className="flex flex-col space-y-2 sm:flex-row sm:items-center sm:space-x-2 sm:space-y-0"
         onSubmit={handleSubmit}
       >
         <Input
@@ -30,7 +30,7 @@ function NewsletterInput(): React.JSX.Element {
         <Button
           type="submit"
           disabled={isLoading}
-          className="mt-1 w-full bg-[hsl(var(--accent))] text-white hover:opacity-90 sm:w-auto"
+          className="w-full bg-[hsl(var(--accent))] text-white hover:opacity-90 sm:w-auto"
         >
           {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
           {isLoading ? "Please wait" : "Join now"}
