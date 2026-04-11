@@ -11,6 +11,7 @@ import Ticker from "@/animata/text/ticker";
 import TypingText from "@/animata/text/typing-text";
 import ComponentLinkWrapper from "@/components/component-link-wrapper";
 import { Icons } from "@/components/icons";
+import RemountOnMouseIn from "@/components/remount-on-mouse-in";
 import { docsConfig } from "@/config/docs";
 import { cn } from "@/lib/utils";
 
@@ -161,10 +162,12 @@ export default function StatsBento() {
             </span>
             <div className="mt-3">
               <strong className="font-[family-name:var(--font-mono)] text-2xl font-bold tabular-nums text-foreground sm:text-3xl lg:text-4xl">
-                <Ticker
-                  value="2,392+"
-                  className="font-[family-name:var(--font-mono)] font-bold tabular-nums"
-                />
+                <RemountOnMouseIn>
+                  <Ticker
+                    value="2,392+"
+                    className="font-[family-name:var(--font-mono)] font-bold tabular-nums"
+                  />
+                </RemountOnMouseIn>
               </strong>
               <p className="mt-1 text-[12px] font-medium text-muted-foreground sm:text-[13px]">
                 GitHub stars
@@ -177,7 +180,7 @@ export default function StatsBento() {
             <div className="mt-auto pt-4 sm:pt-5">
               <ComponentLinkWrapper link="/docs/text/typing-text" className="block w-full">
                 <AnimatedBorderTrail
-                  trailColor="hsl(262, 83%, 58%)"
+                  trailColor="hsl(262 83% 58% / 0.5)"
                   trailSize="md"
                   duration="10s"
                   className="w-full rounded-xl"
@@ -219,13 +222,15 @@ export default function StatsBento() {
                 Components
               </span>
               <div className="mt-2 flex items-baseline gap-1">
-                <Counter
-                  targetValue={194}
-                  direction="up"
-                  delay={0}
-                  format={Formatter.number}
-                  className="font-[family-name:var(--font-mono)] text-5xl font-bold leading-[1] tabular-nums tracking-[-0.03em] text-foreground sm:text-6xl lg:text-7xl"
-                />
+                <RemountOnMouseIn>
+                  <Counter
+                    targetValue={194}
+                    direction="up"
+                    delay={0}
+                    format={Formatter.number}
+                    className="font-[family-name:var(--font-mono)] text-5xl font-bold leading-[1] tabular-nums tracking-[-0.03em] text-foreground sm:text-6xl lg:text-7xl"
+                  />
+                </RemountOnMouseIn>
                 <span className="font-[family-name:var(--font-mono)] text-2xl font-bold text-muted-foreground sm:text-3xl">
                   +
                 </span>
