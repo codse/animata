@@ -35,9 +35,9 @@ export function SiteHeader() {
 
       <header
         className={cn(
-          "sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur-sm transition-[background-color,border-color,backdrop-filter] duration-300",
+          "sticky top-0 z-50 w-full border-b bg-background/80 backdrop-blur-lg backdrop-saturate-150 transition-[background-color,border-color] duration-300",
           scrolled ? "border-border/50" : "border-transparent",
-          isIndexPage && !scrolled && "bg-transparent backdrop-blur-none",
+          isIndexPage && !scrolled && "bg-transparent",
         )}
       >
         <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-4 sm:px-6">

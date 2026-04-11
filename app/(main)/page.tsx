@@ -47,8 +47,8 @@ function Hero() {
           Look better.
         </h1>
         <p className="mx-auto mt-6 max-w-md text-balance text-[clamp(15px,2vw,18px)] leading-[1.6] text-[hsl(var(--text-secondary))]">
-          Buttons that shine. Cards that flip. Text that types itself. 194+ animated React
-          components — copy the code and ship.
+          The animated components you keep rebuilding from scratch? We already built them. 194 of
+          them. Just copy the code.
         </p>
 
         <div className="mt-8 flex flex-col items-center gap-3 sm:mt-10 sm:flex-row sm:justify-center">
@@ -148,49 +148,37 @@ export default function IndexPage() {
       <Hero />
 
       {/* 2. Proof — numbers + ecosystem */}
-      <Reveal>
-        <StatsBento />
-      </Reveal>
+      <StatsBento />
 
       {/* 3. Why — value props */}
-      <Reveal>
-        <WhySection />
-      </Reveal>
+      <WhySection />
 
       {/* 4. Open source — contributors + stats */}
-      <Reveal>
-        <OpenSourceSection />
-      </Reveal>
+      <OpenSourceSection />
 
       {/* 5. Trust — testimonials */}
-      <Reveal>
-        <LazySection component={Testimonials} className="min-h-96" />
-      </Reveal>
+      <LazySection component={Testimonials} className="min-h-96" />
 
-      {/* Mid-page CTA — catch convinced visitors */}
-      <Reveal>
-        <div className="border-y border-border bg-[hsl(var(--surface-alt))] py-16 text-center sm:py-20">
-          <p className="text-[15px] text-muted-foreground">
-            Ready to make your interfaces stand out?
-          </p>
-          <div className="mt-4">
-            <Link
-              href="/docs/setup"
-              className="inline-flex items-center justify-center rounded-full bg-[hsl(var(--accent))] px-7 py-3 text-[15px] font-semibold text-white transition-opacity hover:opacity-90"
-            >
-              Explore components
-            </Link>
-          </div>
+      {/* Mid-page CTA */}
+      <div className="border-y border-border bg-[hsl(var(--surface-alt))] py-16 text-center sm:py-20">
+        <p className="text-[15px] text-muted-foreground">
+          Ready to make your interfaces stand out?
+        </p>
+        <div className="mt-4">
+          <Link
+            href="/docs/setup"
+            className="inline-flex items-center justify-center rounded-full bg-[hsl(var(--accent))] px-7 py-3 text-[15px] font-semibold text-white transition-opacity hover:opacity-90"
+          >
+            Explore components
+          </Link>
         </div>
-      </Reveal>
+      </div>
 
-      {/* 5. Objections — FAQ */}
+      {/* FAQ */}
       <LazySection component={FAQSection} className="min-h-96" />
 
-      {/* 5. Close — CTA */}
-      <Reveal>
-        <LazySection component={CallToActionSection} className="min-h-48" />
-      </Reveal>
+      {/* CTA */}
+      <LazySection component={CallToActionSection} className="min-h-48" />
     </div>
   );
 }

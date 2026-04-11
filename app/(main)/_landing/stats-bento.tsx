@@ -1,15 +1,27 @@
 "use client";
 
-import { useInView } from "motion/react";
-import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
+import { useEffect, useState } from "react";
 
 import AnimatedBorderTrail from "@/animata/container/animated-border-trail";
+import Marquee from "@/animata/container/marquee";
 import AvatarList from "@/animata/list/avatar-list";
 import Counter, { Formatter } from "@/animata/text/counter";
+import Ticker from "@/animata/text/ticker";
 import TypingText from "@/animata/text/typing-text";
 import ComponentLinkWrapper from "@/components/component-link-wrapper";
 import { Icons } from "@/components/icons";
+import { docsConfig } from "@/config/docs";
 import { cn } from "@/lib/utils";
+
+// Get component categories from the sidebar nav (skip Getting Started + Contributing)
+const categories = docsConfig.sidebarNav
+  .filter((item) => item.title !== "Getting Started" && item.title !== "Contributing")
+  .map((item) => ({
+    label: item.title,
+    href: item.items?.[0]?.href ?? item.href ?? "/docs",
+    count: item.items?.length ?? 0,
+  }));
 
 const stargazers = [
   {
@@ -70,9 +82,12 @@ function OrbitItem({
   duration: number;
   children: React.ReactNode;
 }) {
-  const [angle, setAngle] = useState((index / total) * 360);
+  const startAngle = Math.round((index / total) * 360);
+  const [angle, setAngle] = useState(startAngle);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    setMounted(true);
     const id = setInterval(() => setAngle((a) => (a + 1) % 360), duration);
     return () => clearInterval(id);
   }, [duration]);
@@ -85,15 +100,21 @@ function OrbitItem({
   const yT = x * Math.sin(tilt) + y * Math.cos(tilt);
   const depth = (Math.sin(rad) + 1) / 2;
 
+  // Round to 2 decimals to prevent hydration mismatch
+  const left = Math.round((50 + xT) * 100) / 100;
+  const top = Math.round((50 + yT) * 100) / 100;
+  const scale = Math.round((0.7 + depth * 0.5) * 100) / 100;
+  const op = Math.round((0.35 + depth * 0.65) * 100) / 100;
+
   return (
     <div
       className="absolute flex h-8 w-8 items-center justify-center rounded-full border border-border bg-[hsl(var(--surface-card))] sm:h-10 sm:w-10"
       style={{
-        left: `${50 + xT}%`,
-        top: `${50 + yT}%`,
-        transform: `translate(-50%, -50%) scale(${0.7 + depth * 0.5})`,
+        left: `${left}%`,
+        top: `${top}%`,
+        transform: `translate(-50%, -50%) scale(${scale})`,
         zIndex: Math.round(depth * 10),
-        opacity: 0.35 + depth * 0.65,
+        opacity: op,
       }}
     >
       {children}
@@ -128,11 +149,8 @@ function BentoCard({ children, className }: { children: React.ReactNode; classNa
 }
 
 export default function StatsBento() {
-  const ref = useRef<HTMLDivElement>(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
-
   return (
-    <section className="border-t border-border py-16 sm:py-20 lg:py-24" ref={ref}>
+    <section className="border-t border-border py-16 sm:py-20 lg:py-24">
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         {/* 1 col mobile → 2 col tablet → 3 col desktop */}
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3">
@@ -143,15 +161,10 @@ export default function StatsBento() {
             </span>
             <div className="mt-3">
               <strong className="font-[family-name:var(--font-mono)] text-2xl font-bold tabular-nums text-foreground sm:text-3xl lg:text-4xl">
-                {isInView && (
-                  <Counter
-                    targetValue={2392}
-                    direction="up"
-                    delay={100}
-                    format={(v) => `${Math.ceil(v).toLocaleString()}+`}
-                    className="font-[family-name:var(--font-mono)] font-bold tabular-nums"
-                  />
-                )}
+                <Ticker
+                  value="2,392+"
+                  className="font-[family-name:var(--font-mono)] font-bold tabular-nums"
+                />
               </strong>
               <p className="mt-1 text-[12px] font-medium text-muted-foreground sm:text-[13px]">
                 GitHub stars
@@ -206,28 +219,50 @@ export default function StatsBento() {
                 Components
               </span>
               <div className="mt-2 flex items-baseline gap-1">
-                {isInView && (
-                  <Counter
-                    targetValue={194}
-                    direction="up"
-                    delay={0}
-                    format={Formatter.number}
-                    className="font-[family-name:var(--font-mono)] text-5xl font-bold leading-[1] tabular-nums tracking-[-0.03em] text-foreground sm:text-6xl lg:text-7xl"
-                  />
-                )}
+                <Counter
+                  targetValue={194}
+                  direction="up"
+                  delay={0}
+                  format={Formatter.number}
+                  className="font-[family-name:var(--font-mono)] text-5xl font-bold leading-[1] tabular-nums tracking-[-0.03em] text-foreground sm:text-6xl lg:text-7xl"
+                />
                 <span className="font-[family-name:var(--font-mono)] text-2xl font-bold text-muted-foreground sm:text-3xl">
                   +
                 </span>
               </div>
-              <div className="mt-3 flex flex-wrap gap-1 sm:gap-1.5">
-                {["Buttons", "Cards", "Text", "Backgrounds", "Widgets", "Graphs"].map((tag) => (
-                  <span
-                    key={tag}
-                    className="rounded-full bg-foreground/5 px-2 py-0.5 text-[10px] font-semibold text-foreground sm:px-2.5 sm:py-1 sm:text-[11px]"
-                  >
-                    {tag}
-                  </span>
-                ))}
+              {/* Category marquees */}
+              <div className="-mx-4 mt-3 mb-2 space-y-0.5 sm:-mx-5 sm:mb-0 lg:-mx-6">
+                <Marquee
+                  pauseOnHover
+                  applyMask={false}
+                  className="[--duration:50s] [--gap:0.15rem]"
+                >
+                  {categories.map((cat, i) => (
+                    <Link
+                      key={`fwd-${i}`}
+                      href={cat.href}
+                      className="rounded-full border border-border bg-foreground/5 px-2 py-0.5 text-[10px] font-semibold text-foreground transition-colors hover:border-foreground/30 sm:px-2.5 sm:py-1 sm:text-[11px]"
+                    >
+                      {cat.label}
+                    </Link>
+                  ))}
+                </Marquee>
+                <Marquee
+                  reverse
+                  pauseOnHover
+                  applyMask={false}
+                  className="[--duration:55s] [--gap:0.15rem]"
+                >
+                  {[...categories].reverse().map((cat, i) => (
+                    <Link
+                      key={`rev-${i}`}
+                      href={cat.href}
+                      className="rounded-full border border-border bg-foreground/5 px-2 py-0.5 text-[10px] font-semibold text-foreground transition-colors hover:border-foreground/30 sm:px-2.5 sm:py-1 sm:text-[11px]"
+                    >
+                      {cat.label}
+                    </Link>
+                  ))}
+                </Marquee>
               </div>
             </div>
             <div className="-mx-4 -mb-4 mt-auto flex items-center justify-between border-t border-border bg-foreground/[0.03] px-4 py-3 sm:-mx-5 sm:-mb-5 sm:px-5 sm:py-4 lg:-mx-6 lg:-mb-6 lg:px-6">
@@ -270,47 +305,41 @@ export default function StatsBento() {
         {/* Built with care — full width */}
         <div className="mt-3 sm:mt-4">
           <BentoCard className="">
-            <div className="flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:items-end sm:gap-x-10 sm:gap-y-4">
-              <span className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground sm:w-full sm:text-xs">
-                Time invested
-              </span>
+            <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
+              {/* Left — statement */}
               <div>
-                <div className="flex items-baseline gap-1">
-                  {isInView && (
-                    <Counter
-                      targetValue={1100}
-                      direction="up"
-                      delay={200}
-                      format={Formatter.number}
-                      className="font-[family-name:var(--font-mono)] text-3xl font-bold leading-[1] tabular-nums text-foreground sm:text-4xl lg:text-5xl"
-                    />
-                  )}
-                  <span className="text-lg text-muted-foreground sm:text-xl">+</span>
-                </div>
-                <p className="mt-1 text-[12px] font-medium text-muted-foreground sm:text-[13px]">
-                  Hours of development
+                <h3 className="font-[family-name:var(--font-display)] text-[clamp(1.5rem,4vw,2.25rem)] leading-[1.1] text-foreground">
+                  We did the hard part.
+                </h3>
+                <p className="mt-1 text-[clamp(1.5rem,4vw,2.25rem)] leading-[1.1] text-muted-foreground font-[family-name:var(--font-display)]">
+                  So you don&apos;t have to.
                 </p>
               </div>
-              <div>
-                <div className="flex items-baseline gap-1">
-                  {isInView && (
-                    <Counter
-                      targetValue={300}
-                      direction="up"
-                      delay={400}
-                      format={Formatter.number}
-                      className="font-[family-name:var(--font-mono)] text-3xl font-bold leading-[1] tabular-nums text-foreground sm:text-4xl lg:text-5xl"
-                    />
-                  )}
-                  <span className="text-lg text-muted-foreground sm:text-xl">+</span>
+              {/* Right — numbers */}
+              <div className="flex gap-8 sm:gap-10">
+                <div>
+                  <div className="flex items-baseline gap-0.5">
+                    <span className="font-[family-name:var(--font-mono)] text-3xl font-bold leading-[1] tabular-nums text-foreground sm:text-4xl">
+                      1,100
+                    </span>
+                    <span className="text-lg text-muted-foreground">+</span>
+                  </div>
+                  <p className="mt-1 text-[12px] text-muted-foreground sm:text-[13px]">
+                    hours of dev
+                  </p>
                 </div>
-                <p className="mt-1 text-[12px] font-medium text-muted-foreground sm:text-[13px]">
-                  Hours of research
-                </p>
+                <div>
+                  <div className="flex items-baseline gap-0.5">
+                    <span className="font-[family-name:var(--font-mono)] text-3xl font-bold leading-[1] tabular-nums text-foreground sm:text-4xl">
+                      300
+                    </span>
+                    <span className="text-lg text-muted-foreground">+</span>
+                  </div>
+                  <p className="mt-1 text-[12px] text-muted-foreground sm:text-[13px]">
+                    hours of research
+                  </p>
+                </div>
               </div>
-              <p className="max-w-xs text-[13px] leading-relaxed text-muted-foreground sm:text-[14px]">
-                We did the hard part. You get the results.
-              </p>
             </div>
           </BentoCard>
         </div>

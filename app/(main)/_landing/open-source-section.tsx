@@ -1,17 +1,15 @@
 "use client";
 
-import { useInView } from "motion/react";
-import { useRef } from "react";
-
 import Marquee from "@/animata/container/marquee";
 import Counter, { Formatter } from "@/animata/text/counter";
 
-// First 30 contributors — enough to fill two marquee rows
+// All 44 contributors
 const avatars = [
   "17984567",
   "61934354",
   "23572874",
   "61041540",
+  "49699333",
   "68807624",
   "77476239",
   "92267442",
@@ -38,10 +36,20 @@ const avatars = [
   "46356108",
   "129254413",
   "52288761",
+  "136047863",
+  "145032457",
+  "115262737",
+  "153370098",
+  "101992909",
+  "161845983",
+  "16984453",
+  "59354376",
+  "59029978",
+  "112597601",
+  "121259738",
+  "104253746",
+  "39653112",
 ];
-
-const firstRow = avatars.slice(0, 15);
-const secondRow = avatars.slice(15, 30);
 
 function Avatar({ id }: { id: string }) {
   return (
@@ -70,29 +78,17 @@ function SquircleClipDef() {
   );
 }
 
-function Stat({
-  value,
-  label,
-  delay,
-  isInView,
-}: {
-  value: number;
-  label: string;
-  delay: number;
-  isInView: boolean;
-}) {
+function Stat({ value, label, delay }: { value: number; label: string; delay: number }) {
   return (
     <div className="text-center">
       <div className="font-[family-name:var(--font-mono)] text-2xl font-bold tabular-nums text-foreground sm:text-3xl lg:text-4xl">
-        {isInView && (
-          <Counter
-            targetValue={value}
-            direction="up"
-            delay={delay}
-            format={Formatter.number}
-            className="font-[family-name:var(--font-mono)] font-bold tabular-nums"
-          />
-        )}
+        <Counter
+          targetValue={value}
+          direction="up"
+          delay={delay}
+          format={Formatter.number}
+          className="font-[family-name:var(--font-mono)] font-bold tabular-nums"
+        />
       </div>
       <p className="mt-1 text-[13px] text-muted-foreground">{label}</p>
     </div>
@@ -100,11 +96,8 @@ function Stat({
 }
 
 export default function OpenSourceSection() {
-  const ref = useRef<HTMLDivElement>(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
-
   return (
-    <section ref={ref} className="border-t border-border py-20 sm:py-24 lg:py-32">
+    <section className="border-t border-border py-20 sm:py-24 lg:py-32">
       <SquircleClipDef />
       <div className="mx-auto max-w-6xl px-6">
         <div className="text-center">
@@ -119,10 +112,10 @@ export default function OpenSourceSection() {
         </div>
       </div>
 
-      {/* Marquee row 1 */}
+      {/* Marquee row 1 — all contributors, forward */}
       <div className="mt-12 sm:mt-14">
-        <Marquee pauseOnHover applyMask={false} className="[--duration:40s]">
-          {firstRow.map((id) => (
+        <Marquee pauseOnHover applyMask={false} className="[--duration:60s]">
+          {avatars.map((id) => (
             <Avatar key={id} id={id} />
           ))}
         </Marquee>
@@ -130,16 +123,16 @@ export default function OpenSourceSection() {
 
       {/* Stats */}
       <div className="mx-auto grid max-w-3xl grid-cols-2 gap-8 px-6 py-10 sm:grid-cols-4 sm:py-12">
-        <Stat value={2392} label="Stars" delay={0} isInView={isInView} />
-        <Stat value={196} label="Forks" delay={100} isInView={isInView} />
-        <Stat value={44} label="Contributors" delay={200} isInView={isInView} />
-        <Stat value={194} label="Components" delay={300} isInView={isInView} />
+        <Stat value={2392} label="Stars" delay={0} />
+        <Stat value={196} label="Forks" delay={100} />
+        <Stat value={44} label="Contributors" delay={200} />
+        <Stat value={194} label="Components" delay={300} />
       </div>
 
-      {/* Marquee row 2 — reverse */}
+      {/* Marquee row 2 — all contributors, reversed order + direction */}
       <div>
-        <Marquee reverse pauseOnHover applyMask={false} className="[--duration:45s]">
-          {secondRow.map((id) => (
+        <Marquee reverse pauseOnHover applyMask={false} className="[--duration:65s]">
+          {[...avatars].reverse().map((id) => (
             <Avatar key={id} id={id} />
           ))}
         </Marquee>

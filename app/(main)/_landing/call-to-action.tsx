@@ -45,7 +45,7 @@ export default function CallToActionSection() {
             href="/docs"
             className="inline-flex items-center justify-center rounded-full bg-[hsl(var(--accent))] px-8 py-3.5 text-[16px] font-semibold text-white transition-opacity hover:opacity-90"
           >
-            Get started — it&apos;s free
+            Get started now
           </Link>
           <Link
             href={siteConfig.links.github}

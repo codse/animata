@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, useMotionValue, useSpring } from "motion/react";
+import { motion, useInView, useMotionValue, useSpring } from "motion/react";
 import { useCallback, useEffect, useRef } from "react";
 
 import { cn } from "@/lib/utils";
@@ -12,6 +12,7 @@ function Number({
   delay,
   className,
   getHeight,
+  isInView,
 }: {
   value: string;
   index: number;
@@ -19,6 +20,7 @@ function Number({
   className?: string;
   total: number;
   delay?: number;
+  isInView: boolean;
 }) {
   const numberRef = useRef<HTMLDivElement>(null);
   const motionValue = useMotionValue(0);
@@ -30,7 +32,7 @@ function Number({
   const isRaw = String(+value) !== value;
 
   useEffect(() => {
-    if (isRaw || !numberRef.current) {
+    if (!isInView || isRaw || !numberRef.current) {
       return;
     }
 
@@ -48,7 +50,7 @@ function Number({
     const timer = setTimeout(update, (total - index) * Math.floor(Math.random() * delay));
 
     return () => clearTimeout(timer);
-  }, [value, isRaw, springValue, getHeight, index, total, delay]);
+  }, [value, isRaw, isInView, springValue, getHeight, index, total, delay]);
 
   if (isRaw) {
     return <span>{value}</span>;
@@ -83,6 +85,7 @@ export default function Ticker({
 }) {
   const parts = String(value).trim().split("");
   const divRef = useRef<HTMLDivElement>(null);
+  const isInView = useInView(divRef, { once: true });
   const getHeight = useCallback(() => divRef.current?.getBoundingClientRect().height ?? 0, []);
 
   return (
@@ -102,6 +105,7 @@ export default function Ticker({
             total={parts.length}
             className={numberClassName}
             delay={delay}
+            isInView={isInView}
           />
         ))}
       </div>
