@@ -488,6 +488,10 @@
   }
 }
 
+.preview {
+  @apply mb-4;
+}
+
 .preview-light {
   background-image:
     radial-gradient(#efefef 1px, transparent 1px), radial-gradient(#efefef 1px, transparent 1px);
