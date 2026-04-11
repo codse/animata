@@ -76,5 +76,13 @@ export default function Counter({
     });
   }, [springValue, format]);
 
-  return <span ref={ref} className={cn("text-4xl font-bold text-foreground", className)} />;
+  const initialDisplay = format
+    ? format(isGoingUp ? 0 : targetValue)
+    : String(isGoingUp ? 0 : targetValue);
+
+  return (
+    <span ref={ref} className={cn("text-4xl font-bold text-foreground", className)}>
+      {initialDisplay}
+    </span>
+  );
 }
