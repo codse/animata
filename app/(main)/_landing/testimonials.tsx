@@ -1,9 +1,6 @@
-import { Quote } from "lucide-react";
-import { useInView } from "motion/react";
-import { useTheme } from "next-themes";
-import { useRef } from "react";
+"use client";
 
-import { cn } from "@/lib/utils";
+import { Quote } from "lucide-react";
 
 const testimonials: {
   comment: string;
@@ -11,7 +8,7 @@ const testimonials: {
 }[] = [
   {
     comment:
-      "Animata looks amazing! The collection of animations and ease of customization are impressive. Kudos to the team for delivering such a fresh and useful resource! 🌟",
+      "Animata looks amazing! The collection of animations and ease of customization are impressive. Kudos to the team for delivering such a fresh and useful resource! \u{1F31F}",
     author: "Nik Italiya",
   },
   {
@@ -19,16 +16,16 @@ const testimonials: {
     author: "jack",
   },
   {
-    comment: "This is so cool 😍🙌",
+    comment: "This is so cool \u{1F60D}\u{1F64C}",
     author: "Sabin Baniya",
   },
   {
-    comment: "Added to the favorites 😍",
+    comment: "Added to the favorites \u{1F60D}",
     author: "Diego Ramiro",
   },
   {
     comment:
-      "I have to be honest, the UI is delivering the widgets and components very nicely. I really like it—kudos from me 👍🏻",
+      "I have to be honest, the UI is delivering the widgets and components very nicely. I really like it \u{2014} kudos from me \u{1F44D}\u{1F3FB}",
     author: "Shriansh Agarwal",
   },
   {
@@ -39,68 +36,44 @@ const testimonials: {
     comment: "I love it !!",
     author: "Guillaume Robert",
   },
+  {
+    comment: "Great animations, super easy to integrate. Bookmarked for all future projects.",
+    author: "Aman Raj",
+  },
+  {
+    comment: "Exactly what I was looking for — copy paste components that don't look generic.",
+    author: "Sara K.",
+  },
 ];
 
-function Testimonial({
-  comment,
-  author,
-  className,
-}: {
-  comment: string;
-  author: string;
-  className?: string;
-}) {
-  const divRef = useRef<HTMLDivElement>(null);
-  const isInView = useInView(divRef, {
-    once: true,
-  });
+function Testimonial({ comment, author }: { comment: string; author: string }) {
   return (
-    <div
-      ref={divRef}
-      key={`${isInView}-${author}`}
-      className={cn(
-        "flex h-fit w-fit max-w-sm flex-shrink-0 transform gap-2 rounded-xl border-2 border-border bg-background p-3 text-sm transition-all duration-1000 ease-in-out animate-in",
-        className,
-      )}
-    >
+    <div className="flex w-full gap-3 rounded-2xl border border-border bg-[hsl(var(--surface-card))] p-5 text-[14px] leading-relaxed transition-colors duration-300 hover:border-foreground/20 sm:p-6">
       <div className="flex-1">
         {comment}
-        <div className="mt-2 font-semibold">{author}</div>
+        <div className="mt-3 text-[13px] font-medium text-muted-foreground">— {author}</div>
       </div>
-      <Quote className="size-10 flex-shrink-0 opacity-5 dark:opacity-10" />
+      <Quote aria-hidden="true" className="size-5 flex-shrink-0 text-foreground/5" />
     </div>
   );
 }
 
 export default function Testimonials() {
-  const { theme } = useTheme();
-  const lineColor = theme === "dark" ? "#ffffff12" : "#444cf710";
-
   return (
-    <div
-      className="relative -mt-4 flex flex-col gap-2 overflow-hidden px-4 py-16"
-      style={{
-        backgroundImage: `linear-gradient(${lineColor} 1px, transparent 1px), linear-gradient(to right, ${lineColor} 1px, transparent 1px)`,
-        backgroundSize: "80px 30px",
-      }}
-    >
-      <div className="absolute inset-0 left-1/2 z-0 h-[200%] w-3/4 -translate-x-1/2 rounded-full bg-gradient-to-b from-background to-transparent mix-blend-screen blur-3xl dark:mix-blend-darken" />
-
-      <h3 className="mb-6 text-center text-3xl font-bold leading-none text-foreground md:text-4xl lg:text-5xl">
-        wall of love
-      </h3>
-      <div className="relative mx-auto flex max-w-3xl flex-wrap items-center justify-center gap-4">
-        {testimonials.map(({ comment, author }, index) => (
-          <Testimonial
-            className={cn({
-              "slide-in-from-right-full": index % 2 === 0,
-              "slide-in-from-left-full": index % 2 !== 0,
-            })}
-            key={index}
-            comment={comment}
-            author={author}
-          />
-        ))}
+    <div className="border-t border-border py-20 sm:py-24 lg:py-32">
+      <div className="mx-auto max-w-6xl px-6">
+        <div className="mb-12 sm:mb-14">
+          <h2 className="font-[family-name:var(--font-display)] text-[clamp(28px,5vw,44px)] leading-[1] text-foreground">
+            Loved by developers
+            <br />
+            <span className="text-muted-foreground">worldwide.</span>
+          </h2>
+        </div>
+        <div className="grid auto-rows-fr grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3">
+          {testimonials.map(({ comment, author }, index) => (
+            <Testimonial key={index} comment={comment} author={author} />
+          ))}
+        </div>
       </div>
     </div>
   );

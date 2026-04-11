@@ -1,12 +1,14 @@
-import { GitHubLogoIcon } from "@radix-ui/react-icons";
-import { Navigation } from "lucide-react";
+"use client";
+
 import { useInView } from "motion/react";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import AnimatedGradientText from "@/animata/text/animated-gradient-text";
+
 import GibberishText from "@/animata/text/gibberish-text";
 import ComponentLinkWrapper from "@/components/component-link-wrapper";
+import { Icons } from "@/components/icons";
 import RemountOnMouseIn from "@/components/remount-on-mouse-in";
+import { siteConfig } from "@/config/site";
 
 export default function CallToActionSection() {
   const headerRef = useRef<HTMLHeadingElement>(null);
@@ -20,37 +22,41 @@ export default function CallToActionSection() {
   }, [isInView]);
 
   return (
-    <section className="flex w-full flex-col gap-4 px-4 py-16 md:py-20">
-      <ComponentLinkWrapper link="/docs/text/gibberish-text" className="mx-auto">
-        <h1
-          ref={headerRef}
-          className="mx-auto w-fit px-0 py-4 text-center font-mono text-xl font-bold sm:text-3xl md:text-5xl"
-        >
-          <RemountOnMouseIn>
-            <GibberishText key={`in_${key}`} text="Start building today" />
-          </RemountOnMouseIn>
-        </h1>
-      </ComponentLinkWrapper>
+    <section className="border-t border-border py-20 sm:py-24 lg:py-32">
+      <div className="mx-auto flex max-w-2xl flex-col items-center px-6 text-center">
+        <ComponentLinkWrapper link="/docs/text/gibberish-text" className="mx-auto">
+          <h2
+            ref={headerRef}
+            className="px-0 py-2 text-center text-[clamp(22px,4vw,32px)] font-semibold tracking-tight text-foreground"
+          >
+            <RemountOnMouseIn>
+              <GibberishText key={`in_${key}`} text="Start building now" />
+            </RemountOnMouseIn>
+          </h2>
+        </ComponentLinkWrapper>
 
-      <div className="mx-auto flex w-full max-w-2xl flex-row items-center justify-center gap-4">
-        <Link
-          href="/docs"
-          className="relative flex aspect-square min-h-52 w-full flex-col items-center justify-center gap-4 overflow-hidden rounded-xl border border-border bg-gray-100/50 py-12 transition-all duration-100 hover:scale-105 hover:bg-gray-100/25 dark:border-zinc-600 dark:bg-zinc-800"
-        >
-          <Navigation className="size-10 md:size-14" />
-          <div className="text-balance px-4 text-center text-sm font-bold sm:text-base md:text-lg">
-            <AnimatedGradientText>Explore Components</AnimatedGradientText>
-          </div>
-        </Link>
-        <Link
-          href="https://github.com/codse/animata"
-          className="relative flex aspect-square min-h-52 w-full flex-col items-center justify-center gap-4 overflow-hidden rounded-xl border border-border bg-gray-100/50 py-12 transition-all duration-100 hover:scale-105 hover:bg-gray-100/25 dark:border-zinc-600 dark:bg-zinc-800"
-        >
-          <GitHubLogoIcon className="size-10 md:size-14" />
-          <div className="text-balance px-4 text-center text-sm font-bold sm:text-base md:text-lg">
-            <AnimatedGradientText>View code on GitHub</AnimatedGradientText>
-          </div>
-        </Link>
+        <p className="mt-4 max-w-md text-balance text-[15px] leading-relaxed text-muted-foreground">
+          Free forever. One command to add any component. The polish your users notice — without the
+          weeks of work.
+        </p>
+
+        <div className="mt-8 flex flex-col items-center gap-4 sm:flex-row">
+          <Link
+            href="/docs"
+            className="inline-flex items-center justify-center rounded-full bg-[hsl(var(--accent))] px-8 py-3.5 text-[16px] font-semibold text-white transition-opacity hover:opacity-90"
+          >
+            Get started — it&apos;s free
+          </Link>
+          <Link
+            href={siteConfig.links.github}
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex items-center gap-2 text-[15px] font-medium text-muted-foreground transition-colors hover:text-foreground"
+          >
+            <Icons.gitHub className="size-4" />
+            View on GitHub →
+          </Link>
+        </div>
       </div>
     </section>
   );
