@@ -5,6 +5,7 @@ import React, { Suspense } from "react";
 
 import CarbonAds from "@/components/ads";
 import { Icons } from "@/components/icons";
+import { docsConfig } from "@/config/docs";
 import { siteConfig } from "@/config/site";
 import { cn } from "@/lib/utils";
 
@@ -15,6 +16,9 @@ import StatsBento from "./_landing/stats-bento";
 const Testimonials = React.lazy(() => import("./_landing/testimonials"));
 const FAQSection = React.lazy(() => import("./_landing/faq-section"));
 const CallToActionSection = React.lazy(() => import("./_landing/call-to-action"));
+
+const componentsHref =
+  docsConfig.mainNav.find((item) => item.title === "Components")?.href ?? "/docs";
 
 function LazySection({
   component: Component,
@@ -53,7 +57,7 @@ function Hero() {
 
         <div className="mt-8 flex flex-col items-center gap-3 sm:mt-10 sm:flex-row sm:justify-center">
           <Link
-            href="/docs"
+            href={componentsHref}
             className="inline-flex w-full items-center justify-center rounded-full bg-[hsl(var(--accent))] px-8 py-3.5 text-[15px] font-semibold text-white transition-opacity hover:opacity-90 sm:w-auto"
           >
             Explore components
@@ -129,7 +133,7 @@ function WhySection() {
 
         <div className="mt-12 sm:mt-14">
           <Link
-            href="/docs"
+            href={componentsHref}
             className="text-[15px] font-medium text-[hsl(var(--link))] transition-colors hover:text-[hsl(var(--link-hover))]"
           >
             See all 194+ components →
@@ -166,7 +170,7 @@ export default function IndexPage() {
         </p>
         <div className="mt-4">
           <Link
-            href="/docs"
+            href={componentsHref}
             className="inline-flex items-center justify-center rounded-full bg-[hsl(var(--accent))] px-7 py-3 text-[15px] font-semibold text-white transition-opacity hover:opacity-90"
           >
             Explore components
