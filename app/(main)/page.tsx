@@ -47,8 +47,8 @@ function Hero() {
           Look better.
         </h1>
         <p className="mx-auto mt-6 max-w-md text-balance text-[clamp(15px,2vw,18px)] leading-[1.6] text-[hsl(var(--text-secondary))]">
-          The animated components you keep rebuilding from scratch? We already built them. 194 of
-          them. Just copy the code.
+          194+ animated React components you can copy into any project. Free, open source, and ready
+          to use.
         </p>
 
         <div className="mt-8 flex flex-col items-center gap-3 sm:mt-10 sm:flex-row sm:justify-center">
