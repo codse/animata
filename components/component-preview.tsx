@@ -276,7 +276,7 @@ function StoryRenderer({ name }: { name: string }) {
 
   if (error) {
     return (
-      <div className="preview relative flex min-h-[200px] w-full max-w-full items-center justify-center overflow-hidden rounded-lg border">
+      <div className="preview relative flex min-h-[200px] w-full max-w-full items-center justify-center overflow-x-auto overflow-y-hidden rounded-lg border">
         <div className="text-sm text-muted-foreground">{error}</div>
       </div>
     );
@@ -284,7 +284,7 @@ function StoryRenderer({ name }: { name: string }) {
 
   if (!storyData) {
     return (
-      <div className="preview relative flex min-h-[200px] w-full max-w-full items-center justify-center overflow-hidden rounded-lg border">
+      <div className="preview relative flex min-h-[200px] w-full max-w-full items-center justify-center overflow-x-auto overflow-y-hidden rounded-lg border">
         <div className="flex items-center text-sm text-muted-foreground">
           <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
           Loading...
@@ -305,7 +305,7 @@ function StoryRenderer({ name }: { name: string }) {
     <>
       <div
         key={argsKey}
-        className="preview relative flex min-h-[200px] w-full max-w-full items-center justify-center overflow-hidden rounded-lg border bg-dot-pattern p-4 has-[.full-content]:overflow-auto has-[.full-content]:p-0"
+        className="preview relative flex min-h-[200px] w-full max-w-full items-center justify-center overflow-x-auto overflow-y-hidden rounded-lg border bg-dot-pattern p-4 has-[.full-content]:overflow-auto has-[.full-content]:p-0"
       >
         {preview}
       </div>
@@ -322,7 +322,7 @@ function StoryRenderer({ name }: { name: string }) {
           {storyData.otherStories.map((story) => (
             <div key={story.name}>
               <div className="mb-2 font-mono text-xs text-muted-foreground">{story.name}</div>
-              <div className="preview relative flex min-h-[150px] w-full max-w-full items-center justify-center overflow-hidden rounded-lg border bg-dot-pattern p-4 has-[.full-content]:overflow-auto has-[.full-content]:p-0">
+              <div className="preview relative flex min-h-[150px] w-full max-w-full items-center justify-center overflow-x-auto overflow-y-hidden rounded-lg border bg-dot-pattern p-4 has-[.full-content]:overflow-auto has-[.full-content]:p-0">
                 {story.render(story.args)}
               </div>
             </div>
@@ -338,7 +338,7 @@ export function ComponentPreview({ name, className, ...props }: ComponentPreview
     <div className={cn("group relative my-4", className)} {...props}>
       <React.Suspense
         fallback={
-          <div className="preview relative flex min-h-[200px] w-full max-w-full items-center justify-center py-4 overflow-hidden rounded-lg border">
+          <div className="preview relative flex min-h-[200px] w-full max-w-full items-center justify-center py-4 overflow-x-auto overflow-y-hidden rounded-lg border">
             <div className="flex items-center text-sm text-muted-foreground">
               <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
               Loading...
