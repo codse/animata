@@ -270,7 +270,7 @@ export default function StatsBento() {
                 Categories
               </p>
               <span className="font-[family-name:var(--font-mono)] text-2xl font-bold tabular-nums text-foreground sm:text-3xl">
-                22
+                {categories.length}
               </span>
             </div>
           </BentoCard>

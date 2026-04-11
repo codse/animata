@@ -68,7 +68,7 @@ export default function ComponentGallery({
 
       <div className="flex snap-x snap-mandatory gap-5 overflow-x-auto pb-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         {cards.map((card) => (
-          <GalleryItem key={card.name} card={card} />
+          <GalleryItem key={card.href} card={card} />
         ))}
       </div>
     </div>
