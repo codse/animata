@@ -81,13 +81,13 @@ function SquircleClipDef() {
 function Stat({ value, label, delay }: { value: number; label: string; delay: number }) {
   return (
     <div className="text-center">
-      <div className="font-[family-name:var(--font-mono)] text-2xl font-bold tabular-nums text-foreground sm:text-3xl lg:text-4xl">
+      <div className="font-(family-name:--font-mono) text-2xl font-bold tabular-nums text-foreground sm:text-3xl lg:text-4xl">
         <Counter
           targetValue={value}
           direction="up"
           delay={delay}
           format={Formatter.number}
-          className="font-[family-name:var(--font-mono)] font-bold tabular-nums"
+          className="font-(family-name:--font-mono) font-bold tabular-nums"
         />
       </div>
       <p className="mt-1 text-[13px] text-muted-foreground">{label}</p>
@@ -101,12 +101,12 @@ export default function OpenSourceSection() {
       <SquircleClipDef />
       <div className="mx-auto max-w-6xl px-6">
         <div className="text-center">
-          <h2 className="font-[family-name:var(--font-display)] text-[clamp(28px,5vw,44px)] leading-[1] text-foreground">
+          <h2 className="font-(family-name:--font-display) text-[clamp(28px,5vw,44px)] leading-[1] text-foreground">
             Open source.
             <br />
             <span className="text-muted-foreground">Community driven.</span>
           </h2>
-          <p className="mx-auto mt-4 max-w-md text-[15px] leading-relaxed text-muted-foreground">
+          <p className="mx-auto mt-4 text-balance max-w-md text-[15px] leading-relaxed text-muted-foreground">
             Built by a growing community of developers who believe interfaces should feel alive.
           </p>
         </div>
