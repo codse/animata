@@ -9,6 +9,7 @@ import { docsConfig } from "@/config/docs";
 import { siteConfig } from "@/config/site";
 import { cn } from "@/lib/utils";
 
+import ExitIntentModal from "./_landing/exit-intent-modal";
 import OpenSourceSection from "./_landing/open-source-section";
 import Reveal from "./_landing/reveal";
 import StatsBento from "./_landing/stats-bento";
@@ -148,6 +149,8 @@ function WhySection() {
 export default function IndexPage() {
   return (
     <div id="main-content" className="relative overflow-x-clip bg-background">
+      <ExitIntentModal />
+
       {/* 1. Hook — "Components that feel alive" + one demo */}
       <Hero />
 
