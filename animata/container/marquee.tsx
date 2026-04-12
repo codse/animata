@@ -69,12 +69,15 @@ export default function Marquee({
         .marquee-vertical {
           animation: marquee-y var(--duration) infinite linear;
         }
+        .group\\/marquee:hover .marquee-pause-on-hover {
+          animation-play-state: paused;
+        }
       `}</style>
       {Array.from({ length: repeat }).map((_, index) => (
         <div
           key={`item-${index}`}
           className={cn("flex shrink-0 [gap:var(--gap)]", {
-            "group-hover/marquee:[animation-play-state:paused]": pauseOnHover,
+            "marquee-pause-on-hover": pauseOnHover,
             "marquee-horizontal flex-row": !vertical,
             "marquee-vertical flex-col": vertical,
           })}

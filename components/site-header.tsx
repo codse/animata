@@ -1,15 +1,10 @@
 "use client";
-import { CodeIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useTheme } from "next-themes";
-import { useRef } from "react";
+import { useEffect, useState } from "react";
 
-import AnimatedBorderTrail from "@/animata/container/animated-border-trail";
 import { CommandMenu } from "@/components/command-menu";
-import HeaderDockItem from "@/components/header-dock-item";
 import { Icons } from "@/components/icons";
-import { MainNav } from "@/components/main-nav";
 import { MobileNav } from "@/components/mobile-nav";
 import { ModeToggle } from "@/components/mode-toggle";
 import { docsConfig } from "@/config/docs";
@@ -17,95 +12,93 @@ import { siteConfig } from "@/config/site";
 import { cn } from "@/lib/utils";
 
 export function SiteHeader() {
-  const { resolvedTheme } = useTheme();
-  const headerRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
   const isIndexPage = pathname === "/";
+  const [scrolled, setScrolled] = useState(false);
 
-  const styles = {
-    // Once the animation ends, use CSS to properly position the header
-    top: "calc(100dvh - 96px)",
-    width: "fit-content",
-    height: "fit-content",
-    transform: "translateX(-50%)",
-  };
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 20);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   return (
     <>
-      <div
-        className={cn("h-fit w-full", {
-          "absolute left-0 top-2 z-10": isIndexPage,
-          "py-2": !isIndexPage,
-        })}
+      {/* Skip to content — accessibility */}
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-md focus:bg-background focus:px-4 focus:py-2 focus:text-sm focus:font-medium focus:text-foreground focus:shadow-lg"
       >
-        <div
-          className={cn(
-            "container flex w-full justify-between gap-4 border-b border-foreground/10 bg-background/15 py-2 backdrop-blur",
-          )}
-        >
-          <div className="flex items-center space-x-4">
-            <Link href="/">
-              <Icons.logo className="h-8 w-8" />
-            </Link>
-            {docsConfig.mainNav.map((item, index) => (
-              <Link
-                key={index}
-                href={item.href as string}
-                className="text-sm font-medium text-muted-foreground hover:underline"
-              >
-                {item.title}
-              </Link>
-            ))}
-          </div>
-          <AnimatedBorderTrail
-            trailColor={resolvedTheme === "dark" ? "white" : "black"}
-            className="rounded-full bg-foreground/30 p-0.5 transition-all duration-100 hover:scale-105 hover:opacity-95 active:scale-90 active:opacity-100"
-            contentClassName="rounded-full bg-transparent "
-          >
-            <Link
-              href={siteConfig.links.github}
-              target="_blank"
-              className="inline-block rounded-full bg-linear-to-br from-gray-100 from-5% via-zinc-50 via-60% to-slate-200 px-4 py-2 text-xs font-medium text-foreground dark:from-gray-900 dark:via-zinc-700 dark:to-slate-700"
-            >
-              Star us <span className="hidden sm:inline">on GitHub</span>
-            </Link>
-          </AnimatedBorderTrail>
-        </div>
-      </div>
+        Skip to content
+      </a>
+
       <header
-        style={styles}
         className={cn(
-          "fixed left-1/2 z-50 mx-auto rounded-2xl border border-muted-foreground bg-zinc-700 text-background shadow-sm shadow-muted-foreground dark:bg-white",
+          "sticky top-0 z-50 w-full border-b bg-background/80 backdrop-blur-lg backdrop-saturate-150 transition-[background-color,border-color] duration-300",
+          scrolled ? "border-border/50" : "border-transparent",
+          isIndexPage && !scrolled && "bg-transparent",
         )}
       >
-        <div ref={headerRef} className="flex h-14 w-fit max-w-fit items-center px-2">
-          <MainNav />
-          <MobileNav />
-          <div className="flex flex-1 items-center justify-between space-x-2">
-            <div className="w-full flex-1 md:w-auto md:flex-none">
-              <CommandMenu />
-            </div>
-            <nav className="flex items-center gap-2">
-              <Link href={docsConfig.mainNav[1].href ?? ""} rel="noreferrer">
-                <HeaderDockItem>
-                  <CodeIcon className="h-4 w-4" />
-                  <span className="sr-only">Components</span>
-                </HeaderDockItem>
-              </Link>
-              <Link href={siteConfig.links.github} target="_blank" rel="noreferrer">
-                <HeaderDockItem>
-                  <Icons.gitHub className="h-4 w-4" />
-                  <span className="sr-only">GitHub</span>
-                </HeaderDockItem>
-              </Link>
-              <Link href={siteConfig.links.twitter} target="_blank" rel="noreferrer">
-                <HeaderDockItem>
-                  <Icons.twitter className="h-3 w-3 fill-current" />
-                  <span className="sr-only">Twitter</span>
-                </HeaderDockItem>
-              </Link>
-              <ModeToggle />
+        <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-4 sm:px-6">
+          {/* Left — mobile nav + logo + nav links */}
+          <div className="flex items-center gap-4 sm:gap-6">
+            <MobileNav />
+            <Link
+              href="/"
+              className="flex items-center gap-2 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+              aria-label="animata home"
+            >
+              <Icons.logo className="h-6 w-6" />
+              <span className="text-sm font-semibold tracking-tight text-foreground">animata</span>
+            </Link>
+            <nav aria-label="Main navigation" className="hidden items-center gap-0.5 md:flex">
+              {docsConfig.mainNav.map((item, index) => {
+                const href = item.href as string;
+                const isActive = href === "/" ? pathname === "/" : pathname.startsWith(href);
+                return (
+                  <Link
+                    key={index}
+                    href={href}
+                    className={cn(
+                      "rounded-md px-3 py-1.5 text-[13px] font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+                      isActive
+                        ? "bg-foreground/10 text-foreground"
+                        : "text-muted-foreground hover:text-foreground",
+                    )}
+                    aria-current={isActive ? "page" : undefined}
+                  >
+                    {item.title}
+                  </Link>
+                );
+              })}
             </nav>
+          </div>
+
+          {/* Right — search + icons */}
+          <div className="flex items-center gap-1">
+            <CommandMenu />
+            <nav aria-label="External links" className="hidden items-center sm:flex">
+              <Link
+                href={siteConfig.links.github}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex h-9 w-9 items-center justify-center rounded-md text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              >
+                <Icons.gitHub className="h-[18px] w-[18px]" />
+                <span className="sr-only">GitHub</span>
+              </Link>
+              <Link
+                href={siteConfig.links.twitter}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex h-9 w-9 items-center justify-center rounded-md text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              >
+                <Icons.twitter className="h-[15px] w-[15px] fill-current" />
+                <span className="sr-only">Twitter</span>
+              </Link>
+            </nav>
+            <ModeToggle />
           </div>
         </div>
       </header>

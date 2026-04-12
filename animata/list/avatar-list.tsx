@@ -39,13 +39,22 @@ const data = [
   },
 ];
 
+interface AvatarData {
+  name: string;
+  position: string;
+  image: string;
+}
+
 export default function AvatarList({
   size = "md",
   className,
+  items,
 }: {
   size?: "sm" | "md" | "lg";
   className?: string;
+  items?: AvatarData[];
 }) {
+  const avatars = items ?? data;
   const sizes: Record<"sm" | "md" | "lg", string> = {
     lg: "m-3 size-6",
     md: "m-2 size-12",
@@ -54,10 +63,13 @@ export default function AvatarList({
 
   return (
     <div className={cn("flex py-12", className)}>
-      {data.map((item) => (
+      {avatars.map((item, index) => (
         <div
-          key={item.name}
-          className="group/avatar relative z-0 -ml-4 flex scale-100 items-center transition duration-200 ease-in-out hover:z-10 hover:scale-110"
+          key={`${item.name}-${index}`}
+          className={cn(
+            "group/avatar relative z-0 flex scale-100 items-center transition duration-200 ease-in-out hover:z-10 hover:scale-110",
+            index > 0 && "-ml-3",
+          )}
         >
           <div className="relative overflow-hidden rounded-full bg-white">
             <div className="bg-size pointer-events-none absolute h-full w-full animate-bg-position from-violet-500 from-30% via-cyan-400 via-50% to-pink-500 to-80% bg-[length:300%_auto] opacity-15 group-hover/avatar:bg-linear-to-r" />

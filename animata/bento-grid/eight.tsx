@@ -179,8 +179,8 @@ function FeatureEight() {
 
 export default function Eight() {
   return (
-    <div className="full-content w-full">
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-4 sm:grid-rows-3">
+    <div className="full-content w-full min-w-0">
+      <div className="grid w-full min-w-0 grid-cols-1 gap-3 sm:grid-cols-4 sm:grid-rows-3">
         <FeatureOne />
         <FeatureTwo />
         <FeatureThree />

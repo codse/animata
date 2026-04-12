@@ -3,6 +3,10 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+@theme {
+  --font-mono: "Lilex Variable", ui-monospace, monospace;
+}
+
 @utility container {
   width: 100%;
   margin-inline: auto;
@@ -74,6 +78,12 @@
 
   --transition-timing-function-slow: cubic-bezier(0.405, 0, 0.025, 1);
   --transition-timing-function-minor-spring: cubic-bezier(0.76, 0.34, 0.38, 1.64);
+  --transition-timing-function-apple: cubic-bezier(0.4, 0, 0.6, 1);
+
+  --radius-card: 18px;
+  --radius-section: 28px;
+  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.04), 0 4px 12px rgba(0, 0, 0, 0.06);
+  --shadow-card-hover: 0 2px 8px rgba(0, 0, 0, 0.06), 0 8px 24px rgba(0, 0, 0, 0.1);
 
   --transition-duration-mid: 3s;
   --transition-duration-long: 10s;
@@ -375,6 +385,19 @@
       transform: translateY(-40px);
     }
   }
+
+  --animate-section-reveal: section-reveal 0.6s var(--transition-timing-function-apple) both;
+
+  @keyframes section-reveal {
+    from {
+      opacity: 0;
+      transform: translateY(24px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
 }
 
 @layer base {
@@ -385,50 +408,88 @@
     @apply bg-background text-foreground;
   }
 
+  /* ─── LIGHT — Apple Podcasts inspired ─── */
   :root {
-    --background: 0 0% 98%;
-    --foreground: 240 10% 3.9%;
+    --background: 0 0% 100%;
+    --foreground: 0 0% 11%;
     --card: 0 0% 100%;
-    --card-foreground: 240 10% 3.9%;
+    --card-foreground: 0 0% 11%;
     --popover: 0 0% 100%;
-    --popover-foreground: 240 10% 3.9%;
-    --primary: 240 5.9% 10%;
-    --primary-foreground: 0 0% 98%;
-    --secondary: 240 4.8% 95.9%;
-    --secondary-foreground: 240 5.9% 10%;
-    --muted: 240 4.8% 95.9%;
-    --muted-foreground: 240 3.8% 46.1%;
-    --accent: 240 4.8% 95.9%;
-    --accent-foreground: 240 5.9% 10%;
-    --destructive: 0 84.2% 60.2%;
+    --popover-foreground: 0 0% 11%;
+    --primary: 0 0% 11%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 0 0% 96%;
+    --secondary-foreground: 0 0% 11%;
+    --muted: 0 0% 96%;
+    --muted-foreground: 0 0% 43%;
+    --accent: 262 83% 58%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 98%;
-    --border: 240 5.9% 90%;
-    --input: 240 5.9% 90%;
-    --ring: 240 5.9% 10%;
-    --radius: 0.5rem;
+    --border: 0 0% 90%;
+    --input: 0 0% 90%;
+    --ring: 262 83% 58%;
+    --radius: 0.75rem;
+
+    /* Surfaces */
+    --surface-alt: 0 0% 96%;
+    --surface-card: 0 0% 100%;
+    --surface-dark: 0 0% 7%;
+
+    /* Text */
+    --text-secondary: 0 0% 43%;
+
+    /* Links */
+    --link: 210 100% 40%;
+    --link-hover: 210 100% 32%;
+
+    /* Elevation */
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.06), 0 4px 16px rgba(0, 0, 0, 0.04);
+    --shadow-lg: 0 4px 12px rgba(0, 0, 0, 0.06), 0 12px 32px rgba(0, 0, 0, 0.08);
   }
 
+  /* ─── DARK — Opal inspired: pure black, minimal, precise ─── */
   .dark {
-    --background: 240 6.7% 10.9%;
-    --foreground: 0 0% 98%;
-    --card: 240 10% 3.9%;
-    --card-foreground: 0 0% 98%;
-    --popover: 240 10% 3.9%;
-    --popover-foreground: 0 0% 98%;
-    --primary: 0 0% 98%;
-    --primary-foreground: 240 5.9% 10%;
-    --secondary: 240 3.7% 15.9%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 240 3.7% 15.9%;
-    --muted-foreground: 240 5% 64.9%;
-    --accent: 240 3.7% 15.9%;
-    --accent-foreground: 0 0% 98%;
-    --destructive: 0 62.8% 30.6%;
+    --background: 0 0% 0%;
+    --foreground: 0 0% 96%;
+    --card: 0 0% 4%;
+    --card-foreground: 0 0% 96%;
+    --popover: 0 0% 4%;
+    --popover-foreground: 0 0% 96%;
+    --primary: 0 0% 96%;
+    --primary-foreground: 0 0% 0%;
+    --secondary: 0 0% 10%;
+    --secondary-foreground: 0 0% 96%;
+    --muted: 0 0% 10%;
+    --muted-foreground: 0 0% 45%;
+    --accent: 262 83% 65%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 62% 30%;
     --destructive-foreground: 0 0% 98%;
-    --border: 240 3.7% 15.9%;
-    --input: 240 3.7% 15.9%;
-    --ring: 240 4.9% 83.9%;
+    --border: 0 0% 12%;
+    --input: 0 0% 12%;
+    --ring: 262 83% 65%;
+
+    /* Surfaces */
+    --surface-alt: 0 0% 4%;
+    --surface-card: 0 0% 6%;
+    --surface-dark: 0 0% 2%;
+    --text-secondary: 0 0% 55%;
+
+    /* Links */
+    --link: 262 80% 70%;
+    --link-hover: 262 80% 80%;
+
+    /* Elevation — Opal uses no shadows, just border contrast */
+    --shadow-sm: none;
+    --shadow-md: none;
+    --shadow-lg: none;
   }
+}
+
+.preview {
+  @apply mb-4;
 }
 
 .preview-light {

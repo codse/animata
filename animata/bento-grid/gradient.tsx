@@ -126,7 +126,7 @@ function ConicGradient() {
 export default function Gradient() {
   return (
     <div className="bg-zinc-950 p-4">
-      <div className="grid grid-cols-1 gap-4 text-black sm:grid-cols-3 lg:grid-cols-3">
+      <div className="grid w-full min-w-0 grid-cols-1 gap-4 text-black sm:grid-cols-3">
         <GetGradient />
         <LinearGradient />
         <RadialGradient />
