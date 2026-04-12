@@ -169,6 +169,16 @@ interface OtherStory {
   args: Record<string, unknown>;
 }
 
+function StoryRender({
+  render,
+  args,
+}: {
+  render: (args: Record<string, unknown>) => React.ReactNode;
+  args: Record<string, unknown>;
+}) {
+  return <>{render(args)}</>;
+}
+
 interface StoryData {
   render: ((args: Record<string, unknown>) => React.ReactNode) | null;
   Component: React.ComponentType<Record<string, unknown>> | null;
@@ -295,11 +305,11 @@ function StoryRenderer({ name }: { name: string }) {
 
   const argsKey = JSON.stringify(args);
 
-  const preview = storyData.render
-    ? storyData.render(args)
-    : storyData.Component
-      ? React.createElement(storyData.Component, args)
-      : null;
+  const preview = storyData.render ? (
+    <StoryRender render={storyData.render} args={args} />
+  ) : storyData.Component ? (
+    React.createElement(storyData.Component, args)
+  ) : null;
 
   return (
     <>
@@ -323,7 +333,7 @@ function StoryRenderer({ name }: { name: string }) {
             <div key={story.name}>
               <div className="mb-2 font-mono text-xs text-muted-foreground">{story.name}</div>
               <div className="preview relative flex min-h-[150px] w-full max-w-full items-center justify-center overflow-x-auto overflow-y-hidden rounded-lg border bg-dot-pattern p-4 has-[.full-content]:overflow-auto has-[.full-content]:p-0">
-                {story.render(story.args)}
+                <StoryRender render={story.render} args={story.args} />
               </div>
             </div>
           ))}
