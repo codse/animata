@@ -114,6 +114,10 @@ const sidebarNav: SidebarNavItem[] = [
     items: createLinks("card"),
   },
   {
+    title: "Tabs",
+    items: createLinks("tabs"),
+  },
+  {
     title: "Section",
     items: createLinks("section"),
   },

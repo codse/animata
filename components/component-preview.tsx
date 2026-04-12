@@ -30,6 +30,7 @@ const CATEGORIES = [
   "progress",
   "section",
   "skeleton",
+  "tabs",
   "text",
   "widget",
 ];

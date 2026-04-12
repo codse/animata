@@ -4,7 +4,7 @@ import Link from "next/link";
 
 import Duolingo from "@/animata/button/duolingo";
 import ShiningButton from "@/animata/button/shining-button";
-import FluidTabs from "@/animata/card/fluid-tabs";
+import FluidTabs from "@/animata/tabs/fluid-tabs";
 import TextExplodeIMessage from "@/animata/text/text-explode-imessage";
 import TypingText from "@/animata/text/typing-text";
 import CarbonAds from "@/components/ads";
@@ -166,7 +166,7 @@ export function HeroVariantB() {
           </div>
         </ComponentLinkWrapper>
         <ComponentLinkWrapper
-          link="/docs/card/fluid-tabs"
+          link="/docs/tabs/fluid-tabs"
           aria-label="Fluid Tabs"
           className="group flex flex-col overflow-hidden rounded-2xl bg-[hsl(var(--surface-card))] shadow-[var(--shadow-md)]"
         >

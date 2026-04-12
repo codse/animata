@@ -1,9 +1,8 @@
 "use client";
 
 import Link from "next/link";
-
-import FluidTabs from "@/animata/card/fluid-tabs";
 import LEDBoard from "@/animata/card/led-board";
+import FluidTabs from "@/animata/tabs/fluid-tabs";
 import StaggeredLetter from "@/animata/text/staggered-letter";
 import ComponentLinkWrapper from "@/components/component-link-wrapper";
 import { cn } from "@/lib/utils";
@@ -71,7 +70,7 @@ export default function SectionTwo() {
             </div>
           </DemoCard>
 
-          <DemoCard href="/docs/card/fluid-tabs" label="Fluid Tabs">
+          <DemoCard href="/docs/tabs/fluid-tabs" label="Fluid Tabs">
             <div className="scale-110">
               <FluidTabs />
             </div>
