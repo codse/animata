@@ -11,10 +11,10 @@ interface SwapCardProps {
   secondImage?: string;
   firstImageClass?: string;
   secondImageClass?: string;
-  firsttitle?: string;
-  secondtitle?: string;
-  firstdescription?: string;
-  seconddescritpion?: string;
+  firstTitle?: string;
+  secondTitle?: string;
+  firstDescription?: string;
+  secondDescription?: string;
   story?: string;
 }
 
@@ -23,10 +23,10 @@ export default function SwapCard({
   secondImage = "",
   firstImageClass,
   secondImageClass,
-  firstdescription = "first description",
-  seconddescritpion = "second description",
-  firsttitle = "first title",
-  secondtitle = "second title",
+  firstDescription = "first description",
+  secondDescription = "second description",
+  firstTitle = "first title",
+  secondTitle = "second title",
   story = "Story",
 }: SwapCardProps) {
   const [isFirstBoxVisible, setIsFirstBoxVisible] = useState(true);
@@ -38,7 +38,7 @@ export default function SwapCard({
   return (
     <div className="h-[50%] w-96 rounded-md bg-gray-100 p-4">
       <div className="flex h-full w-full gap-4 overflow-hidden">
-        <button onClick={handleSwap} className="m-auto h-12 w-14 border-2 p-3">
+        <button onClick={handleSwap} type="button" className="m-auto h-12 w-14 border-2 p-3">
           {isFirstBoxVisible ? <LaptopMinimal color="black" /> : <LocateOff color="black" />}
         </button>
         <div className="relative h-80 w-80 overflow-hidden bg-none transition-transform duration-700 ease-in-out">
@@ -51,8 +51,8 @@ export default function SwapCard({
           >
             <FlipCard
               className="h-72"
-              title={firsttitle}
-              description={firstdescription}
+              title={firstTitle}
+              description={firstDescription}
               image={firstImage}
             />
           </div>
@@ -65,15 +65,20 @@ export default function SwapCard({
           >
             <FlipCard
               className="h-72"
-              title={secondtitle}
-              description={seconddescritpion}
+              title={secondTitle}
+              description={secondDescription}
               image={secondImage}
             />
           </div>
         </div>
       </div>
       <div className="mt-4 font-bold text-black">
-        <WaveReveal text={story} className="md:text-md text-md" />
+        <WaveReveal
+          mode="word"
+          duration="300ms"
+          text={story}
+          className="md:text-md text-md font-medium"
+        />
       </div>
     </div>
   );

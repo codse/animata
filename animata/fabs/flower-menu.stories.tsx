@@ -9,10 +9,10 @@ import {
   Twitter,
   Youtube,
 } from "lucide-react";
-import FlowerMenu from "@/animata/list/flower-menu";
+import FlowerMenu from "@/animata/fabs/flower-menu";
 
 const meta = {
-  title: "List/Flower Menu",
+  title: "Fabs/Flower Menu",
   component: FlowerMenu,
   parameters: {
     layout: "centered",

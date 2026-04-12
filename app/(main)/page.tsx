@@ -93,17 +93,17 @@ function WhySection() {
     {
       title: "Skip the build step",
       description:
-        "No npm install. No dependency to manage. Copy the code, paste it in, ship it. Your project stays lean.",
+        "No npm install, nothing to update. Copy the file into your repo and you own it from there.",
     },
     {
-      title: "Battle-tested in production",
+      title: "Used in real apps first",
       description:
-        "Every component shipped in a real product before it reached the library. You get code that actually works at scale.",
+        "Every component came out of a real product before it reached the library. If it's in here, it already had a user.",
     },
     {
-      title: "Accessible from day one",
+      title: "Accessibility, already in",
       description:
-        "Keyboard navigation, screen readers, reduced motion — handled. Ship inclusive interfaces without the extra sprint.",
+        "Keyboard focus, screen reader labels, reduced-motion fallbacks. All wired in before you copy anything.",
     },
   ];
 
