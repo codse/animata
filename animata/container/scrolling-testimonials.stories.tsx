@@ -1,5 +1,5 @@
+import type { Meta, StoryObj } from "@storybook/react";
 import ScrollingTestimonials from "@/animata/container/scrolling-testimonials";
-import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
   title: "Container/Scrolling Testimonials",

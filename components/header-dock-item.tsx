@@ -1,4 +1,4 @@
-import { motion, TargetAndTransition, VariantLabels } from "framer-motion";
+import { motion, type TargetAndTransition, type VariantLabels } from "motion/react";
 
 import { cn } from "@/lib/utils";
 

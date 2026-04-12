@@ -1,7 +1,6 @@
 "use client";
-import { useEffect, useState } from "react";
-import React from "react";
 import { LocateIcon, TruckIcon } from "lucide-react";
+import { useEffect, useState } from "react";
 
 import { cn } from "@/lib/utils";
 
@@ -56,14 +55,14 @@ const DeliveryCard = ({
             <div className="absolute left-0 top-1/2 size-3 -translate-y-1/2 rounded-full bg-yellow-300"></div>
             <div className="absolute right-0 top-1/2 z-10 size-3 -translate-y-1/2 rounded-full bg-gray-400"></div>
             <div
-              className="relative h-0.5 bg-yellow-300 transition-all ease-in-out [transition-duration:500ms]"
+              className="relative h-0.5 bg-yellow-300 transition ease-in-out [transition-duration:500ms]"
               style={{
                 width: `${adjustedProgress}%`,
               }}
             >
               <TruckIcon
                 className={cn(
-                  "absolute right-0 top-1/2 z-50 size-8 -translate-y-1/2 translate-x-1/2 rounded-full bg-yellow-300 p-1.5 text-gray-700 transition-all duration-500",
+                  "absolute right-0 top-1/2 z-50 size-8 -translate-y-1/2 translate-x-1/2 rounded-full bg-yellow-300 p-1.5 text-gray-700 transition duration-500",
                 )}
               />
             </div>

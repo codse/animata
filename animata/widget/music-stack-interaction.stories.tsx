@@ -1,5 +1,5 @@
+import type { Meta, StoryObj } from "@storybook/react";
 import MusicStackInteraction from "@/animata/widget/music-stack-interaction";
-import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
   title: "Widget/Music Stack Interaction",

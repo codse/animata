@@ -1,5 +1,5 @@
+import type { Meta, StoryObj } from "@storybook/react";
 import JitterText from "@/animata/text/jitter-text";
-import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
   title: "Text/Jitter Text",
@@ -17,6 +17,7 @@ type Story = StoryObj<typeof meta>;
 export const Primary: Story = {
   args: {
     text: "Jitter Text",
+    duration: 0.6,
     className: "text-6xl font-black",
   },
 };

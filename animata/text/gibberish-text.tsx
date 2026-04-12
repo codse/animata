@@ -32,16 +32,14 @@ const Letter = ({ letter, className }: { letter: string; className?: string }) =
   }, [letter]);
 
   return (
-    <span className={cn("whitespace-pre text-foreground", className)}>
+    <span
+      className={cn("inline-block w-[1ch] text-center whitespace-pre text-foreground", className)}
+    >
       {String.fromCharCode(code)}
     </span>
   );
 };
 
-/**
- * Animate each letter in the text using gibberish text effect.
- * Renders a random letter first and then animates it to the correct letter.
- */
 export default function GibberishText({ text, className }: GibberishTextProps) {
   return (
     <>

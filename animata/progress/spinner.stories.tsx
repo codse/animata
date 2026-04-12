@@ -1,5 +1,5 @@
+import type { Meta, StoryObj } from "@storybook/react";
 import Spinner from "@/animata/progress/spinner";
-import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
   title: "Progress/Spinner",
@@ -16,7 +16,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Primary: Story = {
   args: {
-    className: "bg-gradient-to-bl from-black to-blue-400",
+    className: "bg-linear-to-bl from-black to-blue-400",
     outerSize: "h-8 w-8",
     childSize: "h-6 w-6",
   },

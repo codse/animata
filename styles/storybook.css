@@ -1,67 +1,38 @@
-/** Fix/improve storybook styles for embedding */
+@reference "tailwindcss";
+
+/** Fix/improve storybook styles for embedding — !important overrides Storybook's own inline styles */
+
+/* biome-ignore lint/complexity/noImportantStyles: override Storybook inline styles */
 .sbdocs-wrapper {
-  @apply !p-0 font-sans;
+  @apply p-0! font-sans;
+  /* biome-ignore lint/complexity/noImportantStyles: override Storybook inline styles */
   display: block !important;
+  /* biome-ignore lint/complexity/noImportantStyles: override Storybook inline styles */
   min-height: unset !important;
 
   .sbdocs-content {
-    @apply !p-0;
+    @apply p-0!;
   }
 }
 
 .sb-preparing-docs {
-  @apply !p-0;
+  @apply p-0!;
 }
 
 .sb-previewBlock,
 .sb-argstableBlock {
-  @apply !mx-auto;
+  @apply mx-auto!;
+  /* biome-ignore lint/complexity/noImportantStyles: override Storybook inline styles */
   max-width: calc(100% - 4px) !important;
 }
 
-.embedded {
-  .sbdocs {
-    @apply !m-0;
-  }
-
-  .innerZoomElementWrapper {
-    @apply max-w-full;
-  }
-
-  .sb-anchor:not(:first-child) {
-    @apply mt-4;
-  }
-
-  .docs-story {
-    @apply flex items-center justify-center;
-
-    > div > div {
-      min-width: 90vw;
-      @apply flex max-w-full items-center justify-center;
-    }
-
-    .innerZoomElementWrapper:has(.storybook-fix) {
-      @apply flow-root w-full;
-      > div {
-        @apply mx-auto my-3;
-      }
-    }
-  }
-
-  .docblock-argstable {
-    @apply !mb-0;
-    max-width: calc(100% - 2px);
-
-    tr:not(:first-child),
-    tr td:nth-child(3) {
-      /* Fix responsive issue border-right: 1px solid hsla(203, 50%, 30%, 0.15); */
-    }
-
-    tr td:last-child,
-    tr th:last-child {
-      /* Fix responsive issue @apply hidden sm:visible; */
-    }
-  }
+#storybook-root {
+  width: 100%;
+  /* biome-ignore lint/complexity/noImportantStyles: override Storybook inline styles */
+  padding: 0 !important;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .sbdocs-preview > div > div {

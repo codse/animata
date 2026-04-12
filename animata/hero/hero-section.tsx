@@ -13,7 +13,7 @@ import WaterTracker from "../widget/water-tracker";
 // Button Component
 function Button({ children }: { children: React.ReactNode }) {
   return (
-    <UIButton className="w-32 bg-gradient-to-r from-blue-400 to-sky-300">
+    <UIButton className="w-32 bg-linear-to-r from-blue-400 to-sky-300">
       <p>{children}</p>
     </UIButton>
   );
@@ -82,7 +82,7 @@ function Card({ card, index, stackAlign }: { card: string; index: number; stackA
       style={{ boxShadow: index !== 2 ? "inset 0px -10px 30px 0px #1e293b" : "none" }}
       key={index}
       className={cn(
-        `absolute inset-0 text-center text-gray-800 z-${index} ${card} my-6 flex h-full w-full flex-col items-center justify-around rounded-2xl transition-all duration-700 ease-out`,
+        `absolute inset-0 text-center text-gray-800 z-${index} ${card} my-6 flex h-full w-full flex-col items-center justify-around rounded-2xl transition duration-700 ease-out`,
         card === "card1" && stackAlign && "ml-8 md:ml-0",
         card === "card2" && (!stackAlign ? "-rotate-[15deg]" : "-left-8 ml-8 rotate-0 md:ml-0"),
         card === "card3" && (!stackAlign ? "rotate-[15deg]" : "-left-16 ml-8 rotate-0 md:ml-0"),

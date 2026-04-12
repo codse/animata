@@ -1,5 +1,5 @@
+import type { Meta, StoryObj } from "@storybook/react";
 import Faq from "@/animata/accordion/faq";
-import { Meta, StoryObj } from "@storybook/react";
 
 const faqData = [
   {

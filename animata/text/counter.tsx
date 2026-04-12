@@ -1,5 +1,5 @@
+import { useInView, useMotionValue, useSpring } from "motion/react";
 import { useEffect, useRef } from "react";
-import { useInView, useMotionValue, useSpring } from "framer-motion";
 
 import { cn } from "@/lib/utils";
 
@@ -71,10 +71,18 @@ export default function Counter({
   useEffect(() => {
     springValue.on("change", (value) => {
       if (ref.current) {
-        ref.current.textContent = format ? format(value) : value;
+        ref.current.textContent = format ? format(value) : String(value);
       }
     });
   }, [springValue, format]);
 
-  return <span ref={ref} className={cn("text-4xl font-bold text-foreground", className)} />;
+  const initialDisplay = format
+    ? format(isGoingUp ? 0 : targetValue)
+    : String(isGoingUp ? 0 : targetValue);
+
+  return (
+    <span ref={ref} className={cn("text-4xl font-bold text-foreground", className)}>
+      {initialDisplay}
+    </span>
+  );
 }

@@ -13,11 +13,11 @@ interface ShowImageListItemProps {
 function RevealImageListItem({ text, images }: ShowImageListItemProps) {
   const container = "absolute right-8 -top-1 z-40 h-20 w-16";
   const effect =
-    "relative duration-500 delay-100 shadow-none group-hover:shadow-xl scale-0 group-hover:scale-100 opacity-0 group-hover:opacity-100 group-hover:w-full group-hover:h-full w-16 h-16 overflow-hidden transition-all rounded-md";
+    "relative duration-500 delay-100 shadow-none group-hover/reveal:shadow-xl scale-0 group-hover/reveal:scale-100 opacity-0 group-hover/reveal:opacity-100 group-hover/reveal:w-full group-hover/reveal:h-full w-16 h-16 overflow-hidden transition rounded-md";
 
   return (
-    <div className="group relative h-fit w-fit overflow-visible py-8">
-      <h1 className="text-7xl font-black text-foreground transition-all duration-500 group-hover:opacity-40">
+    <div className="group/reveal relative h-fit w-fit overflow-visible py-8">
+      <h1 className="text-7xl font-black text-foreground transition duration-500 group-hover/reveal:opacity-40">
         {text}
       </h1>
       <div className={container}>
@@ -28,7 +28,7 @@ function RevealImageListItem({ text, images }: ShowImageListItemProps) {
       <div
         className={cn(
           container,
-          "translate-x-0 translate-y-0 rotate-0 transition-all delay-150 duration-500 group-hover:translate-x-6 group-hover:translate-y-6 group-hover:rotate-12",
+          "translate-x-0 translate-y-0 rotate-0 transition delay-150 duration-500 group-hover/reveal:translate-x-6 group-hover/reveal:translate-y-6 group-hover/reveal:rotate-12",
         )}
       >
         <div className={cn(effect, "duration-200")}>

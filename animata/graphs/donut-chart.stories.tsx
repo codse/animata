@@ -1,5 +1,5 @@
+import type { Meta, StoryObj } from "@storybook/react";
 import DonutChart from "@/animata/graphs/donut-chart";
-import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
   title: "Graphs/Donut Chart",
@@ -18,5 +18,8 @@ export const Primary: Story = {
   args: {
     size: 200,
     progress: 30,
+    circleWidth: 16,
+    progressWidth: 16,
+    rounded: true,
   },
 };

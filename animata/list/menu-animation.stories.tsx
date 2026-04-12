@@ -1,5 +1,5 @@
+import type { Meta, StoryObj } from "@storybook/react";
 import MenuAnimation from "@/animata/list/menu-animation";
-import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
   title: "List/Menu Animation",
@@ -16,13 +16,6 @@ type Story = StoryObj<typeof meta>;
 
 export const Primary: Story = {
   args: {
-    menuItems: [
-      "Home",
-      "Features",
-      "Company",
-      "FAQs",
-      "Terms of Use",
-      "Get In Touch",
-    ],
+    menuItems: ["Home", "Features", "Company", "FAQs", "Terms of Use", "Get In Touch"],
   },
 };

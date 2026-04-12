@@ -11,7 +11,7 @@ export default function WideCard() {
         <div className="h-2 w-3/4 rounded-md bg-muted" />
         <div className="h-2 w-3/5 rounded-md bg-muted" />
       </div>
-      <div className="w-fit flex-shrink-0">
+      <div className="w-fit shrink-0">
         <button className="w-8 rounded-sm bg-green-500 p-2">
           <span className="block h-1.5 rounded-sm bg-muted" />
         </button>

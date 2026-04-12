@@ -1,5 +1,5 @@
+import type { Meta, StoryObj } from "@storybook/react";
 import Dot from "@/animata/background/dot";
-import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
   title: "Background/Dot",
@@ -21,5 +21,9 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Primary: Story = {
-  args: {},
+  args: {
+    color: "#cacaca",
+    size: 1,
+    spacing: 10,
+  },
 };

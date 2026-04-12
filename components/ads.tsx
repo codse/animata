@@ -1,16 +1,18 @@
 "use client";
 
-import { useEffect } from "react";
 import { usePathname } from "next/navigation";
+import { useEffect } from "react";
 
 export default function CarbonAds() {
-  const pathname = usePathname();
+  const _pathname = usePathname();
 
   useEffect(() => {
     // Skip loading ads in development environment
     if (
       typeof window !== "undefined" &&
-      (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1")
+      (window.location.hostname === "localhost" ||
+        window.location.hostname === "127.0.0.1" ||
+        window.location.hostname.startsWith("100."))
     ) {
       return;
     }
@@ -28,11 +30,11 @@ export default function CarbonAds() {
 
     return () => {
       const existingScript = document.getElementById("_carbonads_js");
-      if (existingScript && existingScript.parentNode) {
+      if (existingScript?.parentNode) {
         existingScript.parentNode.removeChild(existingScript);
       }
     };
-  }, [pathname]);
+  }, []);
 
   return <div id="carbon-container" />;
 }

@@ -1,5 +1,5 @@
+import type { Meta, StoryObj } from "@storybook/react";
 import ConfirmationMessage from "@/animata/feature-cards/confirmation-message";
-import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
   title: "Feature Cards/Confirmation Message",

@@ -2,7 +2,7 @@
 
 import { RotateCwIcon } from "lucide-react";
 
-import { Button, ButtonProps } from "@/components/ui/button";
+import { Button, type ButtonProps } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 export function ReloadButton({ className, variant = "secondary", ...props }: ButtonProps) {

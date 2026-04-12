@@ -1,5 +1,5 @@
+import type { Meta, StoryObj } from "@storybook/react";
 import StaggeredLetter from "@/animata/text/staggered-letter";
-import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
   title: "Text/Staggered Letter",
@@ -8,12 +8,22 @@ const meta = {
     layout: "centered",
   },
   tags: ["autodocs"],
-  argTypes: {},
+  argTypes: {
+    direction: {
+      control: { type: "select" },
+      options: ["up", "drop"],
+    },
+  },
 } satisfies Meta<typeof StaggeredLetter>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Primary: Story = {
-  args: {},
+  args: {
+    text: "Animata",
+    delay: 0.09,
+    applyMask: true,
+    direction: "drop",
+  },
 };

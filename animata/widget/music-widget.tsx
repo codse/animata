@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
 import { Music, Music2, Music3, Pause, Play, SkipBack, SkipForward } from "lucide-react";
+import { useState } from "react";
 
 import { absoluteUrl, cn } from "@/lib/utils";
 
@@ -40,7 +40,7 @@ export default function MusicWidget() {
   const { title, artist } = song;
 
   return (
-    <div className="flex h-52 w-52 flex-col rounded-3xl bg-gradient-to-bl from-indigo-200 to-indigo-600 p-4 text-white">
+    <div className="flex h-52 w-52 flex-col rounded-3xl bg-linear-to-bl from-indigo-200 to-indigo-600 p-4 text-white">
       <div className="relative flex flex-1 flex-col justify-between">
         <div className="flex">
           <div className="flex-1">
@@ -53,7 +53,7 @@ export default function MusicWidget() {
           <div className={cn("flex h-fit w-12 flex-wrap justify-center gap-1")}>
             <Music2
               size={16}
-              className={cn("text-white transition-all", {
+              className={cn("text-white transition", {
                 hidden: !play,
                 "delay-500 duration-1000 animate-in zoom-in direction-alternate-reverse repeat-infinite":
                   play,
@@ -61,7 +61,7 @@ export default function MusicWidget() {
             />
             <Music3
               size={14}
-              className={cn("text-white transition-all", {
+              className={cn("text-white transition", {
                 hidden: !play,
                 "duration-1000 animate-in zoom-in direction-alternate-reverse repeat-infinite":
                   play,
@@ -69,7 +69,7 @@ export default function MusicWidget() {
             />
             <Music
               size={18}
-              className={cn("text-white transition-all", {
+              className={cn("text-white transition", {
                 hidden: !play,
                 "delay-300 duration-1000 animate-in zoom-in direction-alternate-reverse repeat-infinite":
                   play,

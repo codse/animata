@@ -10,7 +10,7 @@ interface SectionItem {
 function Section({ label, value, color, total, stretch }: SectionItem & { total: number }) {
   return (
     <div
-      className={cn("relative w-full rounded-md transition-all", color, {
+      className={cn("relative w-full rounded-md transition", color, {
         "flex-1 text-gray-500": stretch,
       })}
       style={{ height: `${(value / total) * 100}%` }}
@@ -67,7 +67,7 @@ items[0].value = Math.max(0, total - items.slice(1).reduce((acc, item) => acc + 
 
 export default function StorageStatus() {
   return (
-    <div className="group flex h-96 w-32 flex-col gap-1 rounded-md bg-black p-1 text-white">
+    <div className="group/storage flex h-96 w-32 flex-col gap-1 rounded-md bg-black p-1 text-white">
       {items.map((item, index) => (
         <Section key={index} {...item} total={total} />
       ))}

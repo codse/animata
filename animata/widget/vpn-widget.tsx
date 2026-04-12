@@ -1,6 +1,6 @@
 "use client";
-import { useState } from "react";
 import { FlagIcon, ShieldBan, ShieldCheck } from "lucide-react";
+import { useState } from "react";
 
 import { cn } from "@/lib/utils";
 
@@ -38,7 +38,7 @@ function SlidingButton({ initialConnected = false, className }: SlidingButtonPro
       </div>
       <div
         className={cn(
-          "absolute z-10 flex h-11 w-36 flex-1 flex-col items-center justify-center rounded-[14px] bg-white py-2 transition-all duration-200 ease-in-out hover:bg-gray-50/95 active:bg-gray-50/70",
+          "absolute z-10 flex h-11 w-36 flex-1 flex-col items-center justify-center rounded-[14px] bg-white py-2 transition duration-200 ease-in-out hover:bg-gray-50/95 active:bg-gray-50/70",
           {
             "left-0.5": connected,
             "left-[34px]": !connected,
@@ -62,7 +62,7 @@ function SlidingButton({ initialConnected = false, className }: SlidingButtonPro
         <div
           className={cn("h-3 w-3 rounded-full bg-green-500 transition-opacity", {
             "opacity-0 duration-300": !connected,
-            "opacity-100 group-hover:animate-pulse": connected,
+            "opacity-100 group-hover/vpn:animate-pulse": connected,
           })}
         />
       </div>
@@ -79,12 +79,14 @@ export default function VpnConnection({
 }: VpnConnectionProps) {
   return (
     <div className={className}>
-      <div className={cn("group flex size-52 flex-col rounded-3xl bg-blue-900 p-0.5")}>
+      <div className={cn("group/vpn flex size-52 flex-col rounded-3xl bg-blue-900 p-0.5")}>
         <div className="flex items-center gap-2 px-4 pb-2 pt-4">
           <FlagIcon size={24} className="fill-yellow-500 text-yellow-500" />
           <h3 className={cn("text-xl font-semibold tracking-wide text-yellow-500")}>{userName}</h3>
         </div>
-        <div className={cn("group flex w-full flex-1 flex-col gap-1 rounded-[22px] bg-white p-3")}>
+        <div
+          className={cn("group/vpn flex w-full flex-1 flex-col gap-1 rounded-[22px] bg-white p-3")}
+        >
           <div
             className={cn(
               "inline-flex max-w-fit items-center justify-center gap-1 rounded-xl bg-green-100 px-2 text-sm font-semibold",

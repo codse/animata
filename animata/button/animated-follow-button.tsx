@@ -1,14 +1,21 @@
 "use client";
 
-import React, { useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion } from "motion/react";
+import type React from "react";
+import { useState } from "react";
 
-interface AnimatedFollowButtonProps {
+export interface AnimatedFollowButtonProps {
   initialText: React.ReactElement | string; // Text or element displayed initially
-  changeText: React.ReactElement | string;  // Text or element displayed after the button is clicked
+  changeText: React.ReactElement | string; // Text or element displayed after the button is clicked
   className?: string; // ClassName prop for custom button styling
   changeTextClassName?: string; // ClassName prop for custom styling of changeText
-  animationType?: "up-to-down" | "down-to-up" | "left-to-right" | "right-to-left" | "zoom-in" | "zoom-out"; // Prop to define animation type
+  animationType?:
+    | "up-to-down"
+    | "down-to-up"
+    | "left-to-right"
+    | "right-to-left"
+    | "zoom-in"
+    | "zoom-out"; // Prop to define animation type
 }
 
 const AnimatedFollowButton: React.FC<AnimatedFollowButtonProps> = ({
@@ -33,7 +40,6 @@ const AnimatedFollowButton: React.FC<AnimatedFollowButtonProps> = ({
         return { initial: { scale: 0.8 }, animate: { scale: 1 }, exit: { scale: 0.8 } }; // Zoom in animation
       case "zoom-out":
         return { initial: { scale: 1.2 }, animate: { scale: 1 }, exit: { scale: 1.2 } }; // Zoom out animation
-      case "up-to-down":
       default:
         return { initial: { y: -20 }, animate: { y: 0 }, exit: { y: -20 } }; // Default: Up to down animation
     }

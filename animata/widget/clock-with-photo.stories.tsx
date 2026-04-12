@@ -1,5 +1,5 @@
+import type { Meta, StoryObj } from "@storybook/react";
 import ClockWithPhoto from "@/animata/widget/clock-with-photo";
-import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
   title: "Widget/Clock With Photo",

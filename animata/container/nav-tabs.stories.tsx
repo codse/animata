@@ -1,5 +1,5 @@
+import type { Meta, StoryObj } from "@storybook/react";
 import NavTabs from "@/animata/container/nav-tabs";
-import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
   title: "Container/Nav Tabs",

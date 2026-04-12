@@ -5,25 +5,18 @@ labels: ["requires interaction", "hover", "click"]
 author: harimanok_
 ---
 
-<ComponentPreview name="text-swap-text--docs" />
+<ComponentPreview name="text-swap-text--primary" />
 
 ## Installation
 
 <Steps>
 
-<Step>Update `tailwind.config.js`</Step>
-```js
-theme: {
-    extend: {
-        colors: {
-        foreground: "hsl(var(--foreground))",
-     },
-       transitionTimingFunction: {
-        slow: "cubic-bezier(.405, 0, .025, 1)",
-        "minor-spring": "cubic-bezier(0.18,0.89,0.82,1.04)",
-     }
-    },
-  },
+<Step>Add to your CSS</Step>
+```css
+@theme {
+  --ease-slow: cubic-bezier(.405, 0, .025, 1);
+  --ease-minor-spring: cubic-bezier(0.18, 0.89, 0.82, 1.04);
+}
 ```
 
 <Step>Run the following command</Step>

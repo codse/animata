@@ -69,6 +69,34 @@ You can change the opacity of colors by using the opacity syntax, e.g., `text-gr
 
 Do not use custom colors unless needed. Tailwind already provides a wide range of colors which we can use.
 
+## Stories and argTypes
+
+Every component must have a `.stories.tsx` file with at least a `Primary` story export. When your component has props with union/literal types (e.g., `direction: "up" | "down"`), you must add `argTypes` with `options` so the props editor renders a select dropdown instead of a text input:
+
+```tsx
+const meta = {
+  title: "Text/Wave Reveal",
+  component: WaveReveal,
+  tags: ["autodocs"],
+  argTypes: {
+    direction: { control: { type: "select" }, options: ["up", "down"] },
+    mode: { control: { type: "select" }, options: ["letter", "word"] },
+  },
+} satisfies Meta<typeof WaveReveal>;
+```
+
+If a component renders full-width content that should fill the preview container edge-to-edge (no padding), add the `full-content` CSS class to the outermost wrapper in the story's render function:
+
+```tsx
+export const Primary: Story = {
+  render: (args) => (
+    <div className="full-content w-full">
+      <MyComponent {...args} />
+    </div>
+  ),
+};
+```
+
 ## PR review
 
 Make sure to self-review the PRs thoroughly before submitting them. Check for any linting errors, console logs, and unnecessary code.

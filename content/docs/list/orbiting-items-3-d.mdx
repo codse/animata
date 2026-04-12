@@ -4,7 +4,7 @@ description: List component with orbiting items. The items orbit around the cent
 author: Pikachu-345
 ---
 
-<ComponentPreview name="list-orbiting-items-3-d--docs" />
+<ComponentPreview name="list-orbiting-items-3-d--primary" />
 
 ## Installation
 
@@ -15,25 +15,15 @@ author: Pikachu-345
 npm install lucide-react
 ```
 
-<Step>Update `tailwind.config.js`</Step>
+<Step>Add to your CSS</Step>
 
-Add the following to your tailwind.config.js file.
-
-```json
-module.exports = {
-  theme: {
-    extend: {
-      keyframes: {
-        float: {
-          '0%, 100%': { transform: 'translateY(0)' },
-          '50%': { transform: 'translateY(-40px)' },
-        },
-      },
-      animation: {
-        float: 'float 3s ease-in-out infinite',
-      },
-    }
-  }
+```css
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-40px); }
+}
+@theme {
+  --animate-float: float 3s ease-in-out infinite;
 }
 ```
 

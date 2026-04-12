@@ -1,6 +1,6 @@
-import { HTMLAttributes, useState } from "react";
-import Link from "next/link";
 import { ArrowRight, CircleDashed } from "lucide-react";
+import Link from "next/link";
+import { type HTMLAttributes, useState } from "react";
 
 import { cn } from "@/lib/utils";
 
@@ -19,18 +19,18 @@ export function ComponentCard({
   return (
     <section
       className={cn(
-        "relative flex h-full flex-col border border-border bg-gray-50 dark:border-zinc-600 dark:bg-zinc-800",
+        "relative flex h-full flex-col border border-border bg-gray-50 shadow-[var(--shadow-card)] transition-shadow duration-300 hover:shadow-[var(--shadow-card-hover)] dark:border-zinc-600 dark:bg-zinc-800",
         className,
         {
-          "rounded-xl": rounded,
+          "rounded-[var(--radius-card)]": rounded,
         },
       )}
     >
       <header
         className={cn(
-          "flex flex-shrink-0 items-center gap-4 border-b bg-gray-100 p-4 dark:border-b-zinc-700 dark:bg-zinc-700",
+          "flex shrink-0 items-center gap-4 border-b bg-gray-100 p-4 dark:border-b-zinc-700 dark:bg-zinc-700",
           {
-            "rounded-tl-xl rounded-tr-xl": rounded,
+            "rounded-tl-[var(--radius-card)] rounded-tr-[var(--radius-card)]": rounded,
             "px-6": !rounded,
           },
         )}

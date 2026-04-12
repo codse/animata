@@ -1,18 +1,196 @@
 ---
 title: Best Practices
 date: 2024-06-24
-description: Best practices for animation development.
+description: Best practices for building animated components.
 ---
 
 <Callout>
-  This is a work in progress document. If you have any suggestions, feel free to reach out to us.
+  This is a living document. If something here is wrong or missing, open a PR.
 </Callout>
 
-1. Prefer CSS animations over JavaScript animations, unless you need to use JavaScript for complex animations.
-2. Try to use the `transform` & `opacity` properties for animations.
-3. Try to make usefull animations, don't overdo it.
-4. Remember, animations should enhance the user experience, not distract from it.
-5. Test your animations on different devices and browsers.
-6. Use the `prefers-reduced-motion` media query to disable animations for users who prefer reduced motion.
-7. Make sure the components look good in both light and dark mode.
-8. Make sure the hidden elements are accessible to screen readers.
+## Animation performance
+
+### Animate only `transform` and `opacity`
+
+Those two properties are composited on the GPU and skip layout and paint. Almost everything else (`width`, `height`, `top`, `left`, `margin`, `padding`, `box-shadow`, `filter`, `background-color`) will force the browser to redo layout or repaint on every frame. That's where jank comes from.
+
+```tsx
+// Good
+<div className="transition-[transform,opacity] duration-200 hover:-translate-y-1 hover:opacity-80" />
+
+// Bad: animating height triggers layout every frame
+<div className="transition-[height] duration-200 hover:h-20" />
+```
+
+If you really need a size change, `transform: scale()` is usually what you want. For collapsible content, `grid-template-rows: 0fr` to `1fr` is a newer trick that actually works.
+
+### Prefer CSS over JavaScript
+
+CSS transitions and keyframes run on the compositor thread, so they keep going even when the main thread is busy. Reach for JS when CSS genuinely can't express what you need: spring physics, gesture tracking, or animations whose target value depends on a runtime measurement.
+
+If you find yourself writing a `requestAnimationFrame` loop to animate a value that could be a CSS transition, back up.
+
+### Use `will-change` sparingly
+
+Only set `will-change: transform` when you have a measured stutter you're trying to fix. Leaving it on permanently reserves a compositor layer, which is a real memory cost on low-end devices. Remove it once the animation is done.
+
+### Don't thrash layout
+
+Batch reads before writes. Reading a layout property (`offsetHeight`, `getBoundingClientRect()`) after writing one forces a synchronous layout, and doing it in a loop is how you get 200 ms hitches.
+
+```tsx
+// Bad: read, write, read forces two layouts
+const a = el.offsetHeight;
+el.style.transform = "translateY(10px)";
+const b = el.offsetHeight;
+
+// Good: read all, then write all
+const a = el.offsetHeight;
+const b = el.offsetHeight;
+el.style.transform = "translateY(10px)";
+```
+
+### Use `requestAnimationFrame`, not `setTimeout`
+
+`setInterval` and `setTimeout` aren't synced to the display refresh, so animations driven by them will tear or skip frames. Use `requestAnimationFrame`, and always cancel it on cleanup.
+
+```tsx
+useEffect(() => {
+  let raf = 0;
+  const tick = () => {
+    // update state or DOM
+    raf = requestAnimationFrame(tick);
+  };
+  raf = requestAnimationFrame(tick);
+  return () => cancelAnimationFrame(raf);
+}, []);
+```
+
+### Use `IntersectionObserver` for scroll-triggered animations
+
+A `scroll` listener that runs on every frame is wasteful and usually unnecessary. `IntersectionObserver` is the right tool for "animate when this enters the viewport". Native CSS scroll-linked animations work too where browser support allows.
+
+## Accessibility
+
+### Respect `prefers-reduced-motion`
+
+Some users have this on for a reason. Gate non-essential motion behind it.
+
+```tsx
+<div className="motion-safe:animate-bounce motion-reduce:animate-none" />
+```
+
+```css
+@media (prefers-reduced-motion: reduce) {
+  .my-animation {
+    animation: none;
+    transition: none;
+  }
+}
+```
+
+### Don't hide content only via opacity
+
+A card at `opacity: 0` is still focusable and still read by screen readers. Pair the visual hide with `aria-hidden`, a `visibility: hidden` at the end of the transition, or just unmount the thing.
+
+### Keyboard parity
+
+If something responds to `:hover`, it needs to respond to `:focus-visible` too. Otherwise keyboard users can't reach it. This one bites me constantly during reviews.
+
+### Announce state changes
+
+When an animation carries meaning (loading finished, an item was added, a toast appeared), assistive tech needs to hear about it. `aria-live` or `role="status"` on the announcement region does the job.
+
+## Timing & easing
+
+- Microinteractions like hover, press, ripple: 100 to 200 ms.
+- UI transitions like menu open or tab switch: 200 to 300 ms.
+- Page or large layout transitions: 300 to 500 ms. Rarely more.
+- Easing: `ease-out` for things coming in, `ease-in` for things going away, `ease-in-out` for bidirectional moves.
+
+Avoid `linear` for UI motion. It feels mechanical. A cubic-bezier that matches the interaction almost always feels better.
+
+## React patterns
+
+### Follow the Rules of Hooks
+
+Hooks have to run in the same order every render. This includes indirect cases: if you call a function inline in JSX and that function uses hooks, those hooks belong to the calling component's hook list. Wrap the call in its own component instead.
+
+### Clean up effects
+
+Anything you create in an effect needs a cleanup: timers, listeners, observers, subscriptions. A leaked `setTimeout` will try to set state on an unmounted component and blow up in the console.
+
+```tsx
+useEffect(() => {
+  const id = setTimeout(() => setOpen(false), 300);
+  return () => clearTimeout(id);
+}, [open]);
+```
+
+### Use refs for values that don't render
+
+If you're tracking something that only a callback reads, like the last scroll position or a drag offset, keep it in a ref. Calling `setState` at 60 fps re-renders the whole subtree 60 times per second, which is not what you want.
+
+### Use stable keys
+
+`key={index}` is fine for static lists. For anything derived from data, make sure the key is actually unique. A weekday list with `day: "T"` twice (Tuesday, Thursday) will collide on the first render and React won't let you forget it.
+
+### Memoize on purpose
+
+`useMemo` and `useCallback` aren't free. Add them when the computation is measurably expensive or when reference identity matters for a downstream `memo` or effect dep. Wrapping `a + b` or `arr.length` is just noise.
+
+### Guard client-only APIs
+
+Anything that touches `window`, `matchMedia`, or `IntersectionObserver` has to run after mount. Put it in `useEffect` or behind `useSyncExternalStore`. Top-level access breaks SSR and causes hydration mismatches.
+
+```tsx
+"use client";
+useEffect(() => {
+  const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+  // ...
+}, []);
+```
+
+### Pipe dynamic values through CSS variables
+
+If a single number drives an animation (progress, hue, angle), set it as a CSS custom property and let CSS do the interpolation.
+
+```tsx
+<div style={{ "--progress": progress } as React.CSSProperties} />
+```
+
+Beats rebuilding a style object on every render, and the browser only recalculates the affected property.
+
+## Component quality
+
+### Light and dark mode
+
+Every component has to look right in both. Use the design tokens (`bg-background`, `text-foreground`, `border-border`) and stay away from hard-coded hex values. Actually toggle the `dark` class while you're building. It catches a lot.
+
+### Touch targets
+
+44×44 px is the minimum for anything a finger has to hit. Hover-only affordances don't work on phones, so always add a tap or focus path.
+
+### Non-interactive overlays
+
+Decorative animated layers (gradient washes, confetti, background glows) should have `pointer-events: none`. Otherwise they'll eat clicks from the things underneath.
+
+### Sensible defaults
+
+A component should render something useful with no props. If your defaults rely on network data, ship placeholder content instead.
+
+### Test on a slow device
+
+Chrome DevTools, Performance tab, CPU throttling 4× or 6×. If your animation stutters there, it'll stutter on someone's three-year-old Android. Profile, don't guess.
+
+## Common traps
+
+- Animating `height: auto`. It doesn't interpolate. Use `grid-template-rows: 0fr` → `1fr`, or measure and animate to a pixel value.
+- Forgetting `AnimatePresence` around a conditionally rendered motion child. Exit animations silently no-op.
+- `overflow: hidden` on a parent clipping a child's transform. This is the most common "why is my animation cut off" bug.
+- Rebuilding arrays or objects in the render path and passing them into animation props. Reference changes on every render, so transitions restart.
+- `whileHover` on touch. Phones don't hover. Add a tap equivalent.
+
+## When in doubt
+
+Animation should clarify, not decorate. If the interaction is fine without motion, the motion is extra. That's not a reason to skip it, but it is a reason to make sure it's doing actual work.

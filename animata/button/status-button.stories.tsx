@@ -1,5 +1,5 @@
+import type { Meta, StoryObj } from "@storybook/react";
 import StatusButton from "@/animata/button/status-button";
-import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
   title: "Button/Status Button",

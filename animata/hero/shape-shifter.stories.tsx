@@ -1,5 +1,5 @@
+import type { Meta, StoryObj } from "@storybook/react";
 import ShapeShifter from "@/animata/hero/shape-shifter";
-import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
   title: "Hero/Shape Shifter",

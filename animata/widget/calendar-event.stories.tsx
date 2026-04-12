@@ -1,5 +1,5 @@
+import type { Meta, StoryObj } from "@storybook/react";
 import CalendarEvent, { testCalendarEventProps } from "@/animata/widget/calendar-event";
-import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
   title: "Widget/Calendar event",

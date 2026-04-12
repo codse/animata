@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-import NewsletterSection from "@/app/_landing/newsletter";
+import NewsletterSection from "@/app/(main)/_landing/newsletter";
 import { Icons } from "@/components/icons";
 import { cn } from "@/lib/utils";
 
@@ -11,7 +11,7 @@ export function SiteFooter() {
   const pathname = usePathname();
   return (
     <footer
-      className={cn("container mb-36 flex flex-col justify-between py-4 md:py-6", {
+      className={cn("container flex flex-col justify-between pb-12 pt-4 md:pb-16 md:pt-6", {
         "border-t border-t-border": pathname === "/",
       })}
     >

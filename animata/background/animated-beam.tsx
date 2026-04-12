@@ -8,7 +8,7 @@ function Beam({ index }: { index: number }) {
   const flag = index % 8 === 0;
   return (
     <div
-      className={cn("h-full animate-meteor", {
+      className={cn("h-full", {
         "[--duration:7s]": flag,
         "[--duration:11s]": !flag,
       })}
@@ -16,6 +16,7 @@ function Beam({ index }: { index: number }) {
         width: "6px",
         transform: "translateY(-20%)",
         "--delay": `${index * 0.5}s`,
+        animation: "meteor var(--duration) var(--delay) ease-in-out infinite",
       }}
     >
       <div
@@ -27,7 +28,7 @@ function Beam({ index }: { index: number }) {
           "h-12": !flag,
         })}
       >
-        <div className="h-full w-full bg-gradient-to-b from-neutral-50/50 via-neutral-100 via-75% to-neutral-50" />
+        <div className="h-full w-full bg-linear-to-b from-neutral-50/50 via-neutral-100 via-75% to-neutral-50" />
       </div>
     </div>
   );
@@ -67,8 +68,14 @@ function Background() {
   return (
     <div
       ref={containerRef}
-      className="-z-1 absolute inset-0 flex h-full w-full flex-row justify-between bg-gradient-to-t from-indigo-900 to-indigo-950"
+      className="z-0 absolute inset-0 flex h-full w-full flex-row justify-between bg-linear-to-t from-indigo-900 to-indigo-950"
     >
+      <style>{`
+        @keyframes meteor {
+          0% { transform: translateY(-20%) translateX(-50%); }
+          100% { transform: translateY(300%) translateX(-50%); }
+        }
+      `}</style>
       <div
         style={{
           background:
@@ -77,7 +84,7 @@ function Background() {
         className="absolute inset-0 top-1/2 h-full w-full rounded-full opacity-40"
       />
       {Array.from({ length: count }, (_, i) => (
-        <div key={i} className="relative h-full w-px rotate-12 bg-gray-100 bg-opacity-10">
+        <div key={i} className="relative h-full w-px rotate-12 bg-gray-100/10">
           {(1 + i) % 4 === 0 && <Beam index={i + 1} />}
         </div>
       ))}
@@ -93,7 +100,7 @@ export default function AnimatedBeam({
   className?: string;
 }) {
   return (
-    <div className={cn("storybook-fix relative w-full overflow-hidden", className)}>
+    <div className={cn("full-content relative w-full overflow-hidden", className)}>
       <Background />
       <div className="relative h-full w-full">{children}</div>
     </div>

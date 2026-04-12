@@ -1,5 +1,5 @@
+import type { Meta, StoryObj } from "@storybook/react";
 import Report from "@/animata/skeleton/report";
-import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
   title: "Skeleton/Report",

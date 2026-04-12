@@ -1,5 +1,5 @@
+import type { Meta, StoryObj } from "@storybook/react";
 import AlgoliaBlueButton from "@/animata/button/algolia-blue-button";
-import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
   title: "Button/Algolia Blue Button",

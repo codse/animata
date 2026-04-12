@@ -1,9 +1,10 @@
 "use client";
 
-import * as React from "react";
+import { CircleIcon, FileIcon, LaptopIcon, MoonIcon, SunIcon } from "@radix-ui/react-icons";
 import { useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
-
+import type { ComponentPropsWithoutRef } from "react";
+import * as React from "react";
 import { Button } from "@/components/ui/button";
 import {
   CommandDialog,
@@ -16,10 +17,8 @@ import {
 } from "@/components/ui/command";
 import { docsConfig } from "@/config/docs";
 import { cn } from "@/lib/utils";
-import { DialogProps } from "@radix-ui/react-alert-dialog";
-import { CircleIcon, FileIcon, LaptopIcon, MoonIcon, SunIcon } from "@radix-ui/react-icons";
 
-export function CommandMenu({ ...props }: DialogProps) {
+export function CommandMenu({ ...props }: ComponentPropsWithoutRef<typeof CommandDialog>) {
   const router = useRouter();
   const [open, setOpen] = React.useState(false);
   const { setTheme } = useTheme();
@@ -55,13 +54,13 @@ export function CommandMenu({ ...props }: DialogProps) {
       <Button
         variant="outline"
         className={cn(
-          "relative h-10 w-full justify-start gap-2 rounded-xl border-none bg-zinc-600 px-4 text-sm font-normal text-background/75 shadow-none transition-all duration-300 hover:bg-zinc-600/75 hover:text-background dark:bg-slate-200/75 dark:hover:bg-slate-200",
+          "relative h-9 justify-start gap-2 rounded-lg border border-border bg-[hsl(var(--surface-alt))] px-3 text-sm font-normal text-muted-foreground shadow-none transition-colors hover:bg-[hsl(var(--surface-alt))] hover:text-foreground sm:h-10 sm:w-48 sm:px-4",
         )}
         onClick={() => setOpen(true)}
         {...props}
       >
         <span className="inline-flex flex-1">Search...</span>
-        <kbd className="pointer-events-none hidden flex-shrink-0 select-none items-center gap-1 rounded border border-muted-foreground bg-zinc-700 px-2 font-mono text-[10px] font-medium dark:bg-slate-200 sm:flex">
+        <kbd className="pointer-events-none hidden shrink-0 select-none items-center gap-1 rounded border border-border bg-background px-1.5 font-mono text-[10px] font-medium text-muted-foreground sm:flex">
           <span className="text-xs">⌘</span>K
         </kbd>
       </Button>

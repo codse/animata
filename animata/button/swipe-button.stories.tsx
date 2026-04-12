@@ -1,5 +1,5 @@
+import type { Meta, StoryObj } from "@storybook/react";
 import SwipeButton from "@/animata/button/swipe-button";
-import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
   title: "Button/Swipe Button",

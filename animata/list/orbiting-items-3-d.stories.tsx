@@ -1,6 +1,5 @@
-import OrbitingItems3D from "@/animata/list/orbiting-items-3-d";
-import { LucideIcons } from "@/animata/list/orbiting-items-3-d";
-import { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react";
+import OrbitingItems3D, { LucideIcons } from "@/animata/list/orbiting-items-3-d";
 
 const meta = {
   title: "List/Orbiting Items 3 D",

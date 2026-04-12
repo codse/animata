@@ -3,35 +3,29 @@ title: Wave Reveal
 description: Reveal letter or word one by one with a wave effect & optional blur effect.
 ---
 
-<ComponentPreview name="text-wave-reveal--docs" />
+<ComponentPreview name="text-wave-reveal--primary" />
 
 ## Installation
 
 <Steps>
 
-<Step>Update `tailwind.config.js`</Step>
-```js
-theme: {
-    extend: {
-        transitionTimingFunction: {
-        "minor-spring": "cubic-bezier(0.18,0.89,0.82,1.04)",
-      },
-      keyframes:{
-          "reveal-up": {
-          "0%": { opacity: "0", transform: "translateY(80%)" },
-          "100%": { opacity: "1", transform: "translateY(0)" },
-        },
-        "reveal-down": {
-          "0%": { opacity: "0", transform: "translateY(-80%)" },
-          "100%": { opacity: "1", transform: "translateY(0)" },
-        },
-          "content-blur": {
-          "0%": { filter: "blur(0.3rem)" },
-          "100%": { filter: "blur(0)" },
-        },
-      }
-    },
-  },
+<Step>Add to your CSS</Step>
+```css
+@keyframes reveal-up {
+  0% { opacity: 0; transform: translateY(80%); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+@keyframes reveal-down {
+  0% { opacity: 0; transform: translateY(-80%); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+@keyframes content-blur {
+  0% { filter: blur(0.3rem); }
+  100% { filter: blur(0); }
+}
+@theme {
+  --ease-minor-spring: cubic-bezier(0.18, 0.89, 0.82, 1.04);
+}
 ```
 
 <Step>Run the following command</Step>

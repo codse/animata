@@ -1,7 +1,6 @@
+import type { Meta, StoryObj } from "@storybook/react";
 import { useState } from "react";
-
 import ReminderScheduler from "@/animata/card/reminder-scheduler";
-import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
   title: "Card/Reminder Scheduler",

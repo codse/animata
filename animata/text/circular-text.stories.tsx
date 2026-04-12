@@ -1,5 +1,5 @@
+import type { Meta, StoryObj } from "@storybook/react";
 import CircularText from "@/animata/text/circular-text";
-import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
   title: "Text/Circular Text",
@@ -17,5 +17,7 @@ type Story = StoryObj<typeof meta>;
 export const Primary: Story = {
   args: {
     text: "CIRCULAR•TEXT•COMPONENT•",
+    spinDuration: 30,
+    radius: 5,
   },
 };

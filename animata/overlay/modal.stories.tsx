@@ -1,5 +1,5 @@
+import type { Meta, StoryObj } from "@storybook/react";
 import Modal from "@/animata/overlay/modal";
-import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
   title: "Overlay/Modal",
@@ -8,7 +8,12 @@ const meta = {
     layout: "centered",
   },
   tags: ["autodocs"],
-  argTypes: {},
+  argTypes: {
+    modalSize: {
+      control: { type: "select" },
+      options: ["sm", "lg"],
+    },
+  },
 } satisfies Meta<typeof Modal>;
 
 export default meta;

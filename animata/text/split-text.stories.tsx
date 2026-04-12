@@ -1,5 +1,5 @@
+import type { Meta, StoryObj } from "@storybook/react";
 import SplitText from "@/animata/text/split-text";
-import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
   title: "Text/Split Text",

@@ -1,5 +1,5 @@
+import type { Meta, StoryObj } from "@storybook/react";
 import DiscloseImage from "@/animata/image/disclose-image";
-import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
   title: "Image/Disclose Image",
@@ -19,5 +19,6 @@ export const Primary: Story = {
     src: "https://plus.unsplash.com/premium_vector-1689096860582-07eee139f9f1?bg=FFFFFF&w=800&auto=format&fit=crop&q=100&ixlib=rb-4.0.3",
     alt: "A beautiful image",
     doorClassName: "bg-yellow-200",
+    vertical: false,
   },
 };

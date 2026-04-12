@@ -1,4 +1,4 @@
-import { HTMLAttributes, useEffect, useState } from "react";
+import { type HTMLAttributes, useEffect, useState } from "react";
 
 import WaveReveal from "@/animata/text/wave-reveal";
 import { cn } from "@/lib/utils";
@@ -19,9 +19,9 @@ const List = ({ item, className, index, activeItem, ...props }: ImageProps) => {
   return (
     <div
       className={cn(
-        "relative flex h-full w-20 min-w-10 cursor-pointer overflow-hidden rounded-md transition-all delay-0 duration-300 ease-in-out",
+        "relative flex h-full w-20 min-w-10 cursor-pointer overflow-hidden rounded-md transition delay-0 duration-300 ease-in-out",
         {
-          "flex-grow": index === activeItem,
+          grow: index === activeItem,
         },
         className,
       )}

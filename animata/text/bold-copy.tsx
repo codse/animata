@@ -24,14 +24,14 @@ export default function BoldCopy({
   return (
     <div
       className={cn(
-        "group relative flex items-center justify-center bg-background px-2 py-2 md:px-6 md:py-4",
+        "group/bold relative flex items-center justify-center bg-background px-2 py-2 md:px-6 md:py-4",
         tourney.className,
         className,
       )}
     >
       <div
         className={cn(
-          "text-4xl font-bold uppercase text-foreground/15 transition-all group-hover:opacity-50 md:text-8xl",
+          "text-4xl font-bold uppercase text-foreground/15 transition-all group-hover/bold:opacity-50 md:text-8xl",
           backgroundTextClassName,
         )}
       >
@@ -39,7 +39,7 @@ export default function BoldCopy({
       </div>
       <div
         className={cn(
-          "text-md absolute font-bold uppercase text-foreground transition-all group-hover:text-4xl md:text-3xl group-hover:md:text-8xl",
+          "text-md absolute font-bold uppercase text-foreground transition-all duration-300 group-hover/bold:text-4xl md:text-3xl group-hover/bold:md:text-8xl",
           textClassName,
         )}
       >

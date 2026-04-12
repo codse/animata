@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
-import { motion } from "framer-motion";
+import type React from "react";
+import { useState } from "react";
 
 import { cn } from "@/lib/utils";
 
@@ -13,18 +13,6 @@ export interface TimelineEvent {
   [key: string]: unknown; // Allow additional custom fields
 }
 
-interface TimelineItemProps {
-  event: TimelineEvent;
-  isActive: boolean;
-  isFirst: boolean;
-  isLast: boolean;
-  onHover: (index: number | null) => void;
-  index: number;
-  activeIndex: number | null;
-  styles: TimelineStyles;
-  customRender?: (event: TimelineEvent) => React.ReactNode;
-}
-
 interface TimelineStyles {
   lineColor: string;
   activeLineColor: string;
@@ -32,67 +20,138 @@ interface TimelineStyles {
   activeDotColor: string;
   dotSize: string;
   titleColor: string;
+  activeTitleColor: string;
   descriptionColor: string;
   dateColor: string;
 }
 
+const DOT_DURATION = 0.12;
+const LINE_DURATION = 0.15;
+const STAGGER = 0.08;
+const LINE_OFFSET = 0.04;
+
+function computeDelays(
+  index: number,
+  active: number | null,
+  prev: number | null,
+): { dotDelay: number; lineDelay: number } {
+  const a = active ?? -1;
+  const p = prev ?? -1;
+
+  // Extending: top-to-bottom cascade from the previous frontier
+  if (a > p) {
+    if (p < 0) {
+      return { dotDelay: index * STAGGER, lineDelay: index * STAGGER + LINE_OFFSET };
+    }
+    return {
+      dotDelay: index > p ? (index - p) * STAGGER : 0,
+      lineDelay: index === p ? 0 : index > p ? (index - p) * STAGGER + LINE_OFFSET : 0,
+    };
+  }
+
+  // Retracting: bottom-to-top reverse cascade
+  if (a < p) {
+    return {
+      dotDelay: index <= p && index > a ? (p - index) * STAGGER : 0,
+      lineDelay: index >= Math.max(a, 0) && index < p ? (p - 1 - index) * STAGGER + LINE_OFFSET : 0,
+    };
+  }
+
+  return { dotDelay: 0, lineDelay: 0 };
+}
+
+interface TimelineItemProps {
+  event: TimelineEvent;
+  index: number;
+  isDotActive: boolean;
+  isLineActive: boolean;
+  isLast: boolean;
+  dotDelay: number;
+  lineDelay: number;
+  onEnter: () => void;
+  onClick?: () => void;
+  styles: TimelineStyles;
+  customRender?: (event: TimelineEvent) => React.ReactNode;
+}
+
 const TimelineItem: React.FC<TimelineItemProps> = ({
   event,
-  isActive,
+  isDotActive,
+  isLineActive,
   isLast,
-  onHover,
-  index,
-  activeIndex,
+  dotDelay,
+  lineDelay,
+  onEnter,
+  onClick,
   styles,
   customRender,
 }) => {
-  const fillDelay = activeIndex !== null ? Math.max(0, (index - 1) * 0.1) : 0;
-  const fillDuration = activeIndex !== null ? Math.max(0.2, 0.5 - index * 0.1) : 0.5;
+  const dotStyle: React.CSSProperties = {
+    width: styles.dotSize,
+    height: styles.dotSize,
+    borderColor: isDotActive ? styles.activeDotColor : styles.dotColor,
+    backgroundColor: isDotActive ? styles.activeDotColor : "hsl(var(--background))",
+    transform: isDotActive ? "scale(1.2)" : "scale(1)",
+    transitionProperty: "background-color, border-color, transform",
+    transitionDuration: `${DOT_DURATION}s`,
+    transitionDelay: `${dotDelay}s`,
+    transitionTimingFunction: "ease",
+  };
+
+  const lineFillStyle: React.CSSProperties = {
+    backgroundColor: styles.activeLineColor,
+    transform: isLineActive ? "scaleY(1)" : "scaleY(0)",
+    transformOrigin: "top",
+    transitionProperty: "transform",
+    transitionDuration: `${LINE_DURATION}s`,
+    transitionDelay: `${lineDelay}s`,
+    transitionTimingFunction: "ease-in-out",
+  };
+
+  const titleStyle: React.CSSProperties = {
+    color: isDotActive ? styles.activeTitleColor : styles.titleColor,
+    transitionProperty: "color",
+    transitionDuration: `${DOT_DURATION}s`,
+    transitionDelay: `${dotDelay}s`,
+  };
+
+  const clickable = Boolean(onClick);
 
   return (
-    <motion.div
+    // biome-ignore lint/a11y/noStaticElementInteractions: hover drives visual state; click is optional and handled with keyboard support when present
+    <div
       className="flex last:mb-0"
-      onHoverStart={() => onHover(index)}
-      onHoverEnd={() => onHover(null)}
-      initial={{ opacity: 0, y: 50 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
+      onMouseEnter={onEnter}
+      onFocus={onEnter}
+      onClick={onClick}
+      onKeyDown={
+        clickable
+          ? (e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                onClick?.();
+              }
+            }
+          : undefined
+      }
+      role={clickable ? "button" : undefined}
+      tabIndex={clickable ? 0 : undefined}
     >
       <div className="relative mr-4 flex flex-col items-center">
         <div
-          className={`absolute ${isLast ? "hidden" : "block"} bottom-0 top-0 w-1`}
+          className={cn("absolute bottom-0 top-0 w-1", isLast ? "hidden" : "block")}
           style={{ backgroundColor: styles.lineColor }}
         >
-          <motion.div
-            className="w-full origin-top"
-            initial={{ scaleY: 0 }}
-            animate={{ scaleY: isActive ? 1 : 0 }}
-            transition={{ duration: fillDuration, delay: fillDelay }}
-            style={{ height: "100%", backgroundColor: styles.activeLineColor }}
-          />
+          <div className="h-full w-full" style={lineFillStyle} />
         </div>
-        <motion.div
-          className="relative z-10 rounded-full border-4"
-          style={{
-            width: styles.dotSize,
-            height: styles.dotSize,
-            borderColor: isActive ? styles.activeDotColor : styles.dotColor,
-            backgroundColor: isActive ? styles.activeDotColor : "Background",
-          }}
-          animate={{
-            scale: isActive ? 1.2 : 1,
-            backgroundColor: isActive ? styles.activeDotColor : "Background",
-            borderColor: isActive ? styles.activeDotColor : styles.dotColor,
-          }}
-          transition={{ duration: fillDuration, delay: fillDelay }}
-        />
+        <div className="relative z-10 rounded-full border-4" style={dotStyle} />
       </div>
-      <div className={cn("flex-grow leading-5", !isLast && "mb-3")}>
+      <div className={cn("grow leading-5", !isLast && "mb-3")}>
         {customRender ? (
           customRender(event)
         ) : (
           <>
-            <h3 className="text-lg font-semibold" style={{ color: styles.titleColor }}>
+            <h3 className="text-lg font-semibold" style={titleStyle}>
               {event.title}
             </h3>
             <p style={{ color: styles.descriptionColor }}>{event.description}</p>
@@ -102,7 +161,7 @@ const TimelineItem: React.FC<TimelineItemProps> = ({
           </>
         )}
       </div>
-    </motion.div>
+    </div>
   );
 };
 
@@ -123,6 +182,7 @@ const defaultStyles: TimelineStyles = {
   activeDotColor: "#22c55e",
   dotSize: "1.5rem",
   titleColor: "inherit",
+  activeTitleColor: "#22c55e",
   descriptionColor: "inherit",
   dateColor: "inherit",
 };
@@ -136,31 +196,41 @@ export function AnimatedTimeline({
   onEventClick,
   initialActiveIndex,
 }: AnimatedTimelineProps) {
-  const [activeIndex, setActiveIndex] = useState<number | null>(initialActiveIndex ?? null);
+  const [state, setState] = useState<{ active: number | null; prev: number | null }>({
+    active: initialActiveIndex ?? null,
+    prev: null,
+  });
   const styles = { ...defaultStyles, ...customStyles };
 
-  const handleHover = (index: number | null) => {
-    setActiveIndex(index);
+  const setActive = (index: number | null) => {
+    setState((s) => (s.active === index ? s : { active: index, prev: s.active }));
     onEventHover?.(index !== null ? events[index] : null);
   };
 
   return (
-    <div className={`relative py-4 ${className}`}>
-      {events.map((event, index) => (
-        <div key={event.id} onClick={() => onEventClick?.(event)}>
+    // biome-ignore lint/a11y/noStaticElementInteractions: mouseLeave only clears hover state on the list container
+    <div className={`relative py-4 ${className}`} onMouseLeave={() => setActive(null)}>
+      {events.map((event, index) => {
+        const isDotActive = state.active !== null && index <= state.active;
+        const isLineActive = state.active !== null && index < state.active;
+        const { dotDelay, lineDelay } = computeDelays(index, state.active, state.prev);
+        return (
           <TimelineItem
+            key={event.id}
             event={event}
-            isActive={activeIndex !== null && index <= activeIndex}
-            isFirst={index === 0}
-            isLast={index === events.length - 1}
-            onHover={handleHover}
             index={index}
-            activeIndex={activeIndex}
+            isDotActive={isDotActive}
+            isLineActive={isLineActive}
+            isLast={index === events.length - 1}
+            dotDelay={dotDelay}
+            lineDelay={lineDelay}
+            onEnter={() => setActive(index)}
+            onClick={onEventClick ? () => onEventClick(event) : undefined}
             styles={styles}
             customRender={customEventRender}
           />
-        </div>
-      ))}
+        );
+      })}
     </div>
   );
 }

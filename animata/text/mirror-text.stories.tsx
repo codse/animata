@@ -1,5 +1,5 @@
+import type { Meta, StoryObj } from "@storybook/react";
 import MirrorText from "@/animata/text/mirror-text";
-import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
   title: "Text/Mirror Text",
@@ -8,7 +8,12 @@ const meta = {
     layout: "centered",
   },
   tags: ["autodocs"],
-  argTypes: {},
+  argTypes: {
+    direction: {
+      control: { type: "select" },
+      options: ["up", "down", "left", "right"],
+    },
+  },
 } satisfies Meta<typeof MirrorText>;
 
 export default meta;
@@ -17,5 +22,6 @@ type Story = StoryObj<typeof meta>;
 export const Primary: Story = {
   args: {
     text: "ANIMATA",
+    direction: "up",
   },
 };

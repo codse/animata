@@ -1,5 +1,5 @@
+import type { Meta, StoryObj } from "@storybook/react";
 import InteractiveGrid from "@/animata/background/interactive-grid";
-import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
   title: "Background/Interactive Grid",

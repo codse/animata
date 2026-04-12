@@ -1,5 +1,5 @@
+import type { Meta, StoryObj } from "@storybook/react";
 import RippleButton from "@/animata/button/ripple-button";
-import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
   title: "Button/Ripple Button",
@@ -17,7 +17,7 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-export const Homepage: Story = {
+export const Primary: Story = {
   args: {
     children: "Homepage",
   },

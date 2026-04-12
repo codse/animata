@@ -1,5 +1,6 @@
+import type { Meta, StoryObj } from "@storybook/react";
 import DirectionCard, { testDirectionProps } from "@/animata/widget/direction-card";
-import { Meta, StoryObj } from "@storybook/react";
+
 const meta = {
   title: "Widget/Direction Card",
   component: DirectionCard,
@@ -14,5 +15,8 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Primary: Story = {
-  args: testDirectionProps,
+  args: {
+    ...testDirectionProps,
+    duration: 5000,
+  },
 };

@@ -1,5 +1,5 @@
+import type { Meta, StoryObj } from "@storybook/react";
 import Notes from "@/animata/widget/notes";
-import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
   title: "Widget/Notes",

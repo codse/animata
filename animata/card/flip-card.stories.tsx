@@ -1,5 +1,5 @@
+import type { Meta, StoryObj } from "@storybook/react";
 import FlipCard from "@/animata/card/flip-card";
-import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
   title: "Card/Flip Card",
@@ -8,7 +8,9 @@ const meta = {
     layout: "centered",
   },
   tags: ["autodocs"],
-  argTypes: {},
+  argTypes: {
+    rotate: { control: { type: "select" }, options: ["x", "y"] },
+  },
 } satisfies Meta<typeof FlipCard>;
 
 export default meta;

@@ -1,5 +1,5 @@
+import type { Meta, StoryObj } from "@storybook/react";
 import TiltedCover from "@/animata/image/tilted-cover";
-import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
   title: "Image/Tilted Cover",
@@ -8,7 +8,12 @@ const meta = {
     layout: "centered",
   },
   tags: ["autodocs"],
-  argTypes: {},
+  argTypes: {
+    direction: {
+      control: { type: "select" },
+      options: ["left", "right"],
+    },
+  },
 } satisfies Meta<typeof TiltedCover>;
 
 export default meta;
@@ -16,6 +21,8 @@ type Story = StoryObj<typeof meta>;
 
 export const Primary: Story = {
   args: {
+    direction: "left",
+    tiltCover: true,
     image: {
       alt: "Statue of Liberty",
       src: "https://plus.unsplash.com/premium_vector-1689096845649-80579c8bb9ce?bg=FFFFFF&w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
@@ -23,7 +30,7 @@ export const Primary: Story = {
     children: (
       <div className="p-2">
         <div className="mb-2 text-sm font-semibold text-foreground">Statue of Liberty</div>
-        <p className="leading-2 text-sm text-muted-foreground">
+        <p className="text-sm text-muted-foreground">
           The Statue of Liberty is a colossal neoclassical sculpture on Liberty Island in New York
           Harbor, within New York City.{" "}
         </p>
@@ -42,7 +49,7 @@ export const Reverse: Story = {
     children: (
       <div className="p-2">
         <div className="mb-2 text-sm font-semibold text-foreground/80">Work desk</div>
-        <p className="leading-2 text-sm text-muted-foreground">
+        <p className="text-sm text-muted-foreground">
           A work desk with a laptop, a cup of coffee, and a plant.{" "}
         </p>
       </div>
@@ -63,7 +70,7 @@ export const Multiple: Story = {
         >
           <div className="p-2">
             <div className="mb-2 text-sm font-semibold text-foreground/80">Statue of Liberty</div>
-            <p className="leading-2 text-sm text-muted-foreground">
+            <p className="text-sm text-muted-foreground">
               The Statue of Liberty is a colossal neoclassical sculpture on Liberty Island in New
               York Harbor, within New York City.
             </p>
@@ -84,9 +91,7 @@ export const Multiple: Story = {
         >
           <div className="p-2">
             <div className="mb-2 text-sm font-semibold text-foreground/80">Custom</div>
-            <p className="leading-2 text-sm text-muted-foreground">
-              This is a non-image tilted cover.
-            </p>
+            <p className="text-sm text-muted-foreground">This is a non-image tilted cover.</p>
           </div>
         </TiltedCover>
 
@@ -99,7 +104,7 @@ export const Multiple: Story = {
         >
           <div className="p-2">
             <div className="mb-2 text-sm font-semibold text-foreground/80">Work desk</div>
-            <p className="leading-2 text-sm text-muted-foreground">
+            <p className="text-sm text-muted-foreground">
               A work desk with a laptop, a cup of coffee, and a plant.{" "}
             </p>
           </div>

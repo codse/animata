@@ -1,5 +1,5 @@
+import type { Meta, StoryObj } from "@storybook/react";
 import SkewImage from "@/animata/image/skew-image";
-import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
   title: "Image/Skew Image",

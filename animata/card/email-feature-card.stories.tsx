@@ -1,5 +1,5 @@
+import type { Meta, StoryObj } from "@storybook/react";
 import EmailFeatureCard from "@/animata/card/email-feature-card";
-import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
   title: "Card/Email Feature Card",

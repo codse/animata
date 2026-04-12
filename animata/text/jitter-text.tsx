@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 
 import { cn } from "@/lib/utils";
 
@@ -9,7 +9,7 @@ interface JitteryTextProps {
 }
 
 export default function JitterText({ text, duration, className }: JitteryTextProps) {
-  const animationDuration = 0.6 || duration;
+  const animationDuration = duration || 0.6;
   return (
     <div>
       <motion.span

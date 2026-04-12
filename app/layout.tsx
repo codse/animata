@@ -1,14 +1,24 @@
-import { Metadata, Viewport } from "next";
+import type { Metadata, Viewport } from "next";
+import { IBM_Plex_Sans, Young_Serif } from "next/font/google";
 
-import { CSPostHogProvider } from "@/app/providers";
 import { ThemeProvider } from "@/components/providers";
-import { SiteFooter } from "@/components/site-footer";
-import { SiteHeader } from "@/components/site-header";
-import { TailwindIndicator } from "@/components/tailwind-indicator";
 import { siteConfig } from "@/config/site";
 import { cn } from "@/lib/utils";
 
+import "@fontsource-variable/lilex";
 import "@/styles/globals.css";
+
+const ibmPlex = IBM_Plex_Sans({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-sans",
+});
+
+const youngSerif = Young_Serif({
+  subsets: ["latin"],
+  weight: ["400"],
+  variable: "--font-display",
+});
 
 export const metadata: Metadata = {
   title: {
@@ -78,29 +88,22 @@ interface RootLayoutProps {
 
 export default function RootLayout({ children }: RootLayoutProps) {
   return (
-    <>
-      <html lang="en" suppressHydrationWarning>
-        <head />
-        <CSPostHogProvider>
-          <body className={cn("min-h-screen bg-background font-sans antialiased")}>
-            <ThemeProvider
-              attribute="class"
-              defaultTheme="system"
-              enableSystem
-              disableTransitionOnChange
-            >
-              <div vaul-drawer-wrapper="">
-                <div className="relative flex min-h-screen flex-col bg-background">
-                  <SiteHeader />
-                  <main className="flex-1">{children}</main>
-                  <SiteFooter />
-                </div>
-              </div>
-              <TailwindIndicator />
-            </ThemeProvider>
-          </body>
-        </CSPostHogProvider>
-      </html>
-    </>
+    <html
+      lang="en"
+      suppressHydrationWarning
+      className={`${ibmPlex.variable} ${youngSerif.variable}`}
+    >
+      <head />
+      <body className={cn("min-h-screen bg-background antialiased", ibmPlex.className)}>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          {children}
+        </ThemeProvider>
+      </body>
+    </html>
   );
 }

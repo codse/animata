@@ -1,5 +1,5 @@
+import { AnimatePresence, motion } from "motion/react";
 import { useRef, useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
 
 import { cn } from "@/lib/utils";
 
@@ -28,7 +28,7 @@ export default function StaggeredCard({
   openingDelay = 0.1,
   ...props
 }: StaggeredCardProps) {
-  const easeOut = [0, 0, 0.2, 1];
+  const easeOut: [number, number, number, number] = [0, 0, 0.2, 1];
 
   const [open, setOpen] = useState(false);
   const [hoverRect, setHoverRect] = useState<DOMRect | null>(null);

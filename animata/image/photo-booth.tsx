@@ -1,4 +1,4 @@
-import { HtmlHTMLAttributes } from "react";
+import type { HtmlHTMLAttributes } from "react";
 
 import { cn } from "@/lib/utils";
 
@@ -8,7 +8,7 @@ interface PhotoBoothProps extends HtmlHTMLAttributes<HTMLDivElement> {
 const PhotoBooth = ({ collections, className, ...props }: PhotoBoothProps) => {
   return (
     <div
-      className="group flex w-full max-w-3xl justify-center rounded-lg bg-gray-100 p-3"
+      className="group/booth flex w-full max-w-3xl justify-center rounded-lg bg-gray-100 p-3"
       {...props}
     >
       <div className="grid min-w-full grid-cols-2 place-content-center place-items-center gap-5 p-3 sm:grid-cols-4">

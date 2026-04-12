@@ -52,7 +52,9 @@ export default function Cycling({
   title?: string;
 }) {
   return (
-    <div className={cn("group flex h-52 w-52 flex-col rounded-3xl bg-zinc-900 p-4", className)}>
+    <div
+      className={cn("group/cycling flex h-52 w-52 flex-col rounded-3xl bg-zinc-900 p-4", className)}
+    >
       <div className="flex justify-between gap-2">
         <div>
           <div className="rounded-full bg-yellow-400/10 p-2">
@@ -75,7 +77,7 @@ export default function Cycling({
           id="heart"
           width={16}
           height={16}
-          className="group-hover:animate-pulse group-active:animate-pulse"
+          className="group-hover/cycling:animate-pulse group-active/cycling:animate-pulse"
         >
           <defs>
             <clipPath id="a">

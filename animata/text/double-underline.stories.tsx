@@ -1,5 +1,5 @@
+import type { Meta, StoryObj } from "@storybook/react";
 import DoubleUnderline from "@/animata/text/double-underline";
-import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
   title: "Text/Double Underline",

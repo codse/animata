@@ -1,6 +1,6 @@
-import { allDocs } from "contentlayer/generated";
+import { docs as allDocs } from "#site/content";
 
-import { MainNavItem, SidebarNavItem } from "@/types";
+import type { MainNavItem, SidebarNavItem } from "@/types";
 
 interface DocsConfig {
   mainNav: MainNavItem[];
@@ -114,6 +114,10 @@ const sidebarNav: SidebarNavItem[] = [
     items: createLinks("card"),
   },
   {
+    title: "Tabs",
+    items: createLinks("tabs"),
+  },
+  {
     title: "Section",
     items: createLinks("section"),
   },
@@ -140,21 +144,21 @@ const sidebarNav: SidebarNavItem[] = [
   {
     icon: "button",
     title: "Button",
-    label: -1 + createLinks("button").length + "",
+    label: `${-1 + createLinks("button").length}`,
     href: "/docs/button",
     items: createLinks("button"),
   },
   {
     icon: "widget",
     title: "Widget",
-    label: -1 + createLinks("widget").length + "",
+    label: `${-1 + createLinks("widget").length}`,
     href: "/docs/widget",
     items: createLinks("widget"),
   },
   {
     icon: "bento",
     title: "Bento grid",
-    label: -1 + createLinks("bento-grid").length + "",
+    label: `${-1 + createLinks("bento-grid").length}`,
     href: "/docs/bento-grid",
     items: createLinks("bento-grid"),
   },

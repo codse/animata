@@ -36,7 +36,7 @@ export default function CalorieCounter({
         progressClassName="dark:text-cyan-300 text-green-400"
         className="relative m-2 flex items-center justify-center"
       />
-      <div className="goal absolute bottom-8 flex h-14 w-56 items-center justify-between rounded-xl border-gray-100 bg-gray-400 bg-opacity-10 bg-clip-padding px-4 backdrop-blur-sm backdrop-filter sm:w-64">
+      <div className="goal absolute bottom-8 flex h-14 w-56 items-center justify-between rounded-xl border-gray-100 bg-gray-400/10 bg-clip-padding px-4 backdrop-blur-sm backdrop-filter sm:w-64">
         <p className="dark:text-white">Your goal</p>
         <p className="font-bold text-orange-300">{goal}Cal</p>
       </div>

@@ -1,8 +1,5 @@
 "use client";
 
-import React, { ElementType, useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
-
 // default imports
 import {
   FigmaLogoIcon,
@@ -13,6 +10,8 @@ import {
   SquareIcon,
   TwitterLogoIcon,
 } from "@radix-ui/react-icons";
+import { AnimatePresence, motion } from "motion/react";
+import { type ElementType, useState } from "react";
 
 type IconSize = "1" | "2" | "3" | "4"; // source: https://www.radix-ui.com/themes/docs/components/icon-button
 
@@ -43,7 +42,7 @@ const getIconForTitle = (title: string) => {
     instagram: InstagramLogoIcon,
     linkedin: LinkedInLogoIcon,
     github: GitHubLogoIcon,
-    figma: FigmaLogoIcon
+    figma: FigmaLogoIcon,
   };
 
   // SquareIcon as default
@@ -84,7 +83,7 @@ export default function HoverInteraction({
       scale: 1,
       rotate: 0,
       transition: {
-        type: "spring",
+        type: "spring" as const,
         stiffness: 100,
         damping: 15,
         duration: 0.3,
@@ -101,12 +100,12 @@ export default function HoverInteraction({
 
   return (
     <motion.div
-      className="storybook-fix group relative flex min-h-[120px] w-full cursor-pointer items-center justify-center"
+      className="storybook-fix group/icon relative flex min-h-[120px] w-full cursor-pointer items-center justify-center"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
       <span
-        className={`relative text-center font-medium text-muted-foreground transition-colors duration-200 group-hover:text-black ${textSizeClass}`}
+        className={`relative text-center font-medium text-muted-foreground transition-colors duration-200 group-hover/icon:text-foreground ${textSizeClass}`}
       >
         {formattedTitle}
       </span>

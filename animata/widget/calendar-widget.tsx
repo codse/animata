@@ -1,6 +1,6 @@
-import React, { useEffect, useRef, useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
 import { Calendar as CalendarIcon, DotIcon } from "lucide-react";
+import { AnimatePresence, motion } from "motion/react";
+import { useEffect, useRef, useState } from "react";
 
 const monthArray = [
   "",
@@ -73,7 +73,7 @@ export default function CalendarWidget({
             <motion.button
               key={date}
               data-date={date}
-              className="flex w-10 flex-shrink-0 flex-col items-center justify-center gap-y-2 rounded-lg"
+              className="flex w-10 shrink-0 flex-col items-center justify-center gap-y-2 rounded-lg"
               onClick={() => {
                 setSelectedDate(date);
                 setShowEvents(true);

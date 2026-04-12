@@ -1,6 +1,6 @@
 "use client";
+import { motion } from "motion/react";
 import { useState } from "react";
-import { motion } from "framer-motion";
 
 import { cn } from "@/lib/utils";
 
@@ -27,7 +27,7 @@ const Tab = ({ text, selected, setSelected }: TabProps) => {
     <button
       onClick={() => setSelected(text)}
       className={cn(
-        "relative rounded-md p-2 text-sm transition-all",
+        "relative rounded-md p-2 text-sm transition",
         selected ? "text-white" : "text-slate-300 hover:font-black",
       )}
     >
@@ -36,7 +36,7 @@ const Tab = ({ text, selected, setSelected }: TabProps) => {
         <motion.span
           layoutId="tabs"
           transition={{ type: "spring", duration: 0.5 }}
-          className="absolute inset-0 rounded-sm bg-gradient-to-r from-indigo-600 to-pink-600"
+          className="absolute inset-0 rounded-sm bg-linear-to-r from-indigo-600 to-pink-600"
         />
       )}
     </button>

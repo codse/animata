@@ -1,7 +1,6 @@
+import type { Meta, StoryObj } from "@storybook/react";
 import { BadgeAlert } from "lucide-react";
-
 import MovingGradient from "@/animata/background/moving-gradient";
-import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
   title: "Background/Moving Gradient",
@@ -18,6 +17,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Primary: Story = {
   args: {
+    animated: true,
     className: "rounded-xl shadow-md",
     children: (
       <div className="w-64 p-4">

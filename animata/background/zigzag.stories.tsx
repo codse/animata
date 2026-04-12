@@ -1,5 +1,5 @@
+import type { Meta, StoryObj } from "@storybook/react";
 import Zigzag from "@/animata/background/zigzag";
-import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
   title: "Background/Zigzag",
@@ -29,5 +29,8 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Primary: Story = {
-  args: {},
+  args: {
+    color: "#cacaca",
+    size: 10,
+  },
 };

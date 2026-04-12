@@ -1,5 +1,5 @@
+import type { Meta, StoryObj } from "@storybook/react";
 import GithubCardShiny from "@/animata/card/github-card-shiny";
-import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
   title: "Card/Github Card Shiny",

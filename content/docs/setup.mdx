@@ -10,7 +10,7 @@ You don't need to install it as a dependency instead you can simply copy and pas
 
 1. **TailwindCSS**: We use TailwindCSS for styling. See the [TailwindCSS documentation](https://tailwindcss.com/docs/installation) for more information.
 
-2. **Framer Motion** (Optionally required): Some complex animations require Framer Motion. See the [Framer Motion documentation](https://www.framer.com/api/motion/) for more information.
+2. **Motion** (Optionally required): Some complex animations require the `motion` package. See the [Motion documentation](https://motion.dev/) for more information.
 
 3. **Lucide Icons** or **Radix Icon** (Optional): Some components use [Lucide Icons](https://lucide.dev/guide/packages/lucide-react) or [Radix Icons](https://radix-ui.com/icons). You can use any other icon library or SVG icons as well.
 
@@ -51,16 +51,12 @@ The root of your project can be anything (like `src` or `app`), but the `compone
 Install the required dependencies, if you haven't already:
 
 ```bash
-npm install tailwind-merge clsx lucide-react tailwindcss-animate
+npm install tailwind-merge clsx lucide-react
 ```
 
-Add `tailwindcss-animate` to the `plugins` array in your `tailwind.config.js` file:
-
-```js
-module.exports = {
-  plugins: [require("tailwindcss-animate")],
-};
-```
+<Callout>
+  Tailwind v4 includes animation utilities natively, so the `tailwindcss-animate` plugin is no longer needed.
+</Callout>
 
 ### Create utils.ts file
 
@@ -83,4 +79,4 @@ export function cn(...inputs: ClassValue[]) {
 
 2. If you see something that has been imported but not mentioned in the documentation, then it is a dependency that you need to install. If it starts with `@/` then it is Animata's component else it is an external dependency. In such case, you can submit a PR to update the documentation.
 
-3. If something is not working, then the docs is probably missing the `tailwind.config.js` updates. You can look for the entries that have been added to the `tailwind.config.js` in Animata's source code. You can create an issue or submit a PR to update the documentation.
+3. If something is not working, then the docs may be missing CSS configuration (custom `@keyframes` or `@theme` values). You can look for the relevant CSS entries in Animata's source code. You can create an issue or submit a PR to update the documentation.
