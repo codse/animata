@@ -50,7 +50,7 @@ export const Primary: Story = {
   },
   render: (args) => {
     return (
-      <>
+      <div className="flex flex-col gap-2">
         <strong className="text-blue-500">Bar chart</strong>
         <div className="group rounded border border-blue-100 bg-white p-2">
           {/** The height & width are important */}
@@ -58,7 +58,7 @@ export const Primary: Story = {
             <BarChart {...args} />
           </div>
         </div>
-      </>
+      </div>
     );
   },
 };
@@ -167,7 +167,7 @@ export const WithFilledBackground: Story = {
   },
   render: (args) => {
     return (
-      <>
+      <div className="flex flex-col gap-2">
         <strong className="text-blue-500">Bar chart</strong>
         <div className="group rounded border border-blue-100 bg-white p-2">
           {/** The height & width are important */}
@@ -175,7 +175,7 @@ export const WithFilledBackground: Story = {
             <BarChart {...args} />
           </div>
         </div>
-      </>
+      </div>
     );
   },
 };
