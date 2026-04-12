@@ -37,9 +37,9 @@ export default function ExpenseTracker({
         {new Date().getFullYear()}
       </h4>
       <div className="group/expense flex flex-1 items-end justify-between">
-        {spending.map((item) => (
+        {spending.map((item, index) => (
           <div
-            key={item.day}
+            key={index}
             className="flex cursor-pointer flex-col items-center transition-opacity hover:!opacity-100 group-hover/expense:opacity-50"
           >
             <div className="mb-1 text-xs text-foreground">{item.day}</div>
