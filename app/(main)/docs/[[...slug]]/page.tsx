@@ -147,7 +147,7 @@ export default async function DocPage({ params }: DocPageProps) {
             )}
           </div>
         ) : null}
-        <div className="relative w-fit overflow-y-hidden rounded-xl">
+        <div className="relative w-fit overflow-y-hidden">
           <CarbonAds />
         </div>
         <div className="pb-12">
