@@ -92,7 +92,7 @@ const Word = ({
               }),
             }}
           >
-            {letter}
+            {letter === " " ? "\u00A0" : letter}
           </span>
         );
       })}
@@ -158,7 +158,7 @@ const createAnimatedNodes = (args: ReducedValue, word: string, index: number): R
         length={length}
         delay={delay}
       />
-      {!isLast && " "}
+      {!isLast && "\u00A0"}
     </span>
   );
 
