@@ -39,5 +39,6 @@ next-env.d.ts
 
 *storybook.log
 public/preview
+public/r
 _internal/
 .superset/

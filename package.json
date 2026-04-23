@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "velite --watch & next dev & storybook dev -p 6006 --no-open & wait",
-    "prebuild": "velite && storybook build -o public/preview",
+    "prebuild": "velite && node ./scripts/build-registry.js && storybook build -o public/preview",
     "build": "next build --webpack",
     "start": "next start",
     "lint": "biome check .",
@@ -14,6 +14,7 @@
     "storybook": "storybook dev -p 6006",
     "storybook:build": "storybook build -o public/preview",
     "animata:new": "node ./scripts/create-new.js",
+    "registry:build": "node ./scripts/build-registry.js",
     "postinstall": "yarn prepare",
     "shadcn:add": "npx shadcn-ui@latest add",
     "prepare": "husky"
