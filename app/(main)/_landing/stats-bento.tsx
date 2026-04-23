@@ -313,9 +313,9 @@ export default function StatsBento() {
             <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
               {/* Left — statement */}
               <div>
-                <h3 className="font-[family-name:var(--font-display)] text-[clamp(1.5rem,4vw,2.25rem)] leading-[1.1] text-foreground">
+                <h2 className="font-[family-name:var(--font-display)] text-[clamp(1.5rem,4vw,2.25rem)] leading-[1.1] text-foreground">
                   We did the hard part.
-                </h3>
+                </h2>
                 <p className="mt-1 text-[clamp(1.5rem,4vw,2.25rem)] leading-[1.1] text-muted-foreground font-[family-name:var(--font-display)]">
                   So you don&apos;t have to.
                 </p>
