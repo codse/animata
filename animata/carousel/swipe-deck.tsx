@@ -217,12 +217,12 @@ export default function SwipeDeck({
           ref={deckRef}
           className={cn(
             "flex snap-x snap-mandatory gap-4 overflow-x-auto px-[9%] pb-2 pt-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden",
-            "touch-pan-y cursor-grab active:cursor-grabbing",
+            "touch-pan-x cursor-grab active:cursor-grabbing",
             {
               "select-none": isDragging,
             },
           )}
-          style={{ touchAction: "pan-y pinch-zoom" }}
+          style={{ touchAction: "auto" }}
           onPointerDown={(event) => {
             if (event.pointerType !== "mouse") {
               return;
