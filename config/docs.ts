@@ -94,7 +94,10 @@ const sidebarNav: SidebarNavItem[] = [
     ],
   },
   {
+    icon: "text",
     title: "Text",
+    label: `${-1 + createLinks("text").length}`,
+    href: "/docs/text",
     items: createLinks("text"),
   },
   {
