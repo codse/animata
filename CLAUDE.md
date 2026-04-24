@@ -22,7 +22,7 @@ The changelog lives at `content/docs/changelog/` — one MDX file per month plus
 
 ### Structure
 
-```
+```text
 content/docs/changelog/
   index.mdx        # overview page — shows 2 most recent months + table linking all others
   2026-04.mdx      # April 2026 (newest first)
@@ -69,7 +69,7 @@ Add to the relevant `YYYY-MM.mdx` file. No need to touch the index unless the su
 
 ## File map (quick reference)
 
-```
+```text
 animata/               # Component source (copy-paste friendly)
   container/           # Layout wrappers (marquee, dock, ribbon…)
   text/                # Text animation effects
@@ -84,7 +84,9 @@ components/
   site-header.tsx      # Top nav
   icons.tsx            # SVG icon set (logo is here — brand yellow #ffcc00)
 content/docs/
-  changelog.mdx        # ← KEEP THIS UPDATED
+  changelog/
+    index.mdx          # overview + table of all months — ← KEEP THIS UPDATED
+    YYYY-MM.mdx        # one file per month (e.g. 2026-04.mdx)
   contributing/        # Contributor guides
 config/
   docs.ts              # Sidebar nav config — register new component categories here
