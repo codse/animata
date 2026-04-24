@@ -58,8 +58,15 @@ function parseFrontmatter(src) {
 
 function extractBlocks(src, lang) {
   const blocks = [];
-  const re = new RegExp(`\`\`\`${lang}([^\\n]*)\\n([\\s\\S]*?)\`\`\``, "g");
-  for (const m of src.matchAll(re)) {
+  // Single-line fences: ```lang <body>``` — opening and closing on the same line.
+  // Must be tried first so the multi-line regex can't consume ``` as part of a body.
+  const singleRe = new RegExp(`\`\`\`${lang}[ \\t]+([^\\n\`]*?)\\s*\`\`\``, "g");
+  for (const m of src.matchAll(singleRe)) {
+    blocks.push({ meta: "", body: m[1] });
+  }
+  // Multi-line fences: ```lang<meta>\n<body>```
+  const multiRe = new RegExp(`\`\`\`${lang}([^\\n]*)\\n([\\s\\S]*?)\`\`\``, "g");
+  for (const m of src.matchAll(multiRe)) {
     blocks.push({ meta: m[1].trim(), body: m[2] });
   }
   return blocks;
