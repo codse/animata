@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
 
 import Marquee from "@/animata/container/marquee";
 import { cn } from "@/lib/utils";
@@ -42,13 +41,6 @@ interface AnnouncementRibbonProps extends React.HTMLAttributes<HTMLDivElement> {
    * @default true
    */
   pauseOnHover?: boolean;
-
-  /**
-   * When false, the ribbon renders immediately at full height with no slide-in.
-   * Use this when the ribbon is sticky at the top of the page.
-   * @default true
-   */
-  animated?: boolean;
 }
 
 function DefaultMessage() {
@@ -57,7 +49,7 @@ function DefaultMessage() {
       <span className="whitespace-nowrap px-12 font-(family-name:--font-display) font-light text-neutral-900">
         shadcn registry is live
       </span>
-      <span>&middot;</span>
+      <span className="text-neutral-900">&middot;</span>
     </span>
   );
 }
