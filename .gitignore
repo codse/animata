@@ -39,5 +39,9 @@ next-env.d.ts
 
 *storybook.log
 public/preview
+public/r
+public/docs
+public/llms.txt
+public/llms-full.txt
 _internal/
 .superset/
