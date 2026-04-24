@@ -5,24 +5,39 @@ export default function DoubleUnderline({
   children,
   ...props
 }: React.HTMLProps<HTMLSpanElement>) {
-  const common =
-    "absolute h-px w-full bg-blue-500 transition duration-200 group-hover/underline:opacity-50 dark:bg-white/70";
   return (
     <span
       {...props}
       className={cn(
-        "group/underline relative inline-block cursor-pointer text-blue-500",
+        "group/underline relative inline-block cursor-pointer",
+        "font-medium tracking-tight text-zinc-900 dark:text-zinc-100",
+        "transition-[letter-spacing,color] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]",
+        "hover:tracking-[-0.01em]",
         className,
       )}
     >
       {children}
+      {/* Bottom stroke — soft gradient, always present, fades a touch on hover */}
       <span
+        aria-hidden
         className={cn(
-          common,
-          "pointer-events-none left-0 top-[calc(100%_-_2px)] group-hover/underline:top-0",
+          "pointer-events-none absolute -bottom-[3px] left-0 h-px w-full",
+          "bg-gradient-to-r from-transparent via-current/70 to-transparent",
+          "transition-opacity duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]",
+          "group-hover/underline:opacity-50",
         )}
       />
-      <span className={cn(common, "-bottom-[2px] left-0")} />
+      {/* Top stroke — lifts from below to above the glyph on hover */}
+      <span
+        aria-hidden
+        className={cn(
+          "pointer-events-none absolute left-0 h-px w-full",
+          "bg-gradient-to-r from-transparent via-current to-transparent",
+          "top-[calc(100%-3px)] opacity-0",
+          "transition-[top,opacity] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]",
+          "group-hover/underline:-top-px group-hover/underline:opacity-100",
+        )}
+      />
     </span>
   );
 }
