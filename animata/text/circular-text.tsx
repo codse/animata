@@ -19,7 +19,7 @@ export default function CircularText({
     <motion.div
       key={spinDuration}
       className={cn(
-        "relative mx-auto flex h-[200px] w-[200px] origin-center cursor-pointer items-center justify-center rounded-full text-center font-bold text-foreground",
+        "relative mx-auto flex h-48 aspect-square origin-center cursor-pointer items-center justify-center rounded-full text-center font-bold text-foreground",
         className,
       )}
       initial={{ rotate: 0 }}
