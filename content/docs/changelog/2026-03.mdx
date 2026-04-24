@@ -14,4 +14,4 @@ Infrastructure-only month. No new components — the entire toolchain was upgrad
 
 **Storybook 10** updated the story format and dropped several deprecated APIs. Stories across the component library were updated to the new `satisfies Meta<typeof Component>` pattern. The autodocs setup was reconfigured to work with the new architecture.
 
-**Biome** replaced ESLint and Prettier as the single tool for linting and formatting. The configuration is in `biome.json`. The main behavioral difference is that Biome enforces import ordering, so existing files were reformatted on adoption. Going forward, `biome check --apply` handles both formatting and lint fixes in one pass.
+**Biome** replaced ESLint and Prettier as the single tool for linting and formatting. The configuration is in `biome.json`. The main behavioral difference is that Biome enforces import ordering, so existing files were reformatted on adoption. Going forward, `biome check --write` handles both formatting and lint fixes in one pass.
