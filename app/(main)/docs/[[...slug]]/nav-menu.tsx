@@ -10,6 +10,7 @@ import {
   SelectGroup,
   SelectItem,
   SelectLabel,
+  SelectSeparator,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
@@ -44,24 +45,44 @@ export default function NavMenu({
           {sideBarNavItems.map((item, index) => (
             <SelectGroup key={index}>
               <SelectLabel className="font-medium">{item.title}</SelectLabel>
-              {item?.items?.length &&
-                item.items.map((item) => (
-                  <SelectItem key={item.href} value={item.href ?? item.title}>
-                    {!item.disabled &&
-                      (item.href ? (
-                        <Link href={item.href} className="text-muted-foreground">
-                          {item.title}
-                          {item.label && (
+              {item?.items?.map((subItem) => {
+                if (subItem.items?.length) {
+                  return (
+                    <SelectGroup key={subItem.href}>
+                      <SelectSeparator />
+                      <SelectLabel className="font-medium">{subItem.title}</SelectLabel>
+                      {subItem.items.map((child) => (
+                        <SelectItem key={child.href} value={child.href ?? child.title}>
+                          {child.href ? (
+                            <Link href={child.href} className="text-muted-foreground">
+                              {child.title}
+                            </Link>
+                          ) : (
+                            child.title
+                          )}
+                        </SelectItem>
+                      ))}
+                    </SelectGroup>
+                  );
+                }
+                return (
+                  <SelectItem key={subItem.href} value={subItem.href ?? subItem.title}>
+                    {!subItem.disabled &&
+                      (subItem.href ? (
+                        <Link href={subItem.href} className="text-muted-foreground">
+                          {subItem.title}
+                          {subItem.label && (
                             <span className="ml-2 rounded-md bg-[#adfa1d] px-1.5 py-0.5 text-xs leading-none text-[#000000] no-underline group-hover:no-underline">
-                              {item.label}
+                              {subItem.label}
                             </span>
                           )}
                         </Link>
                       ) : (
-                        item.title
+                        subItem.title
                       ))}
                   </SelectItem>
-                ))}
+                );
+              })}
             </SelectGroup>
           ))}
         </SelectContent>
