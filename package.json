@@ -5,8 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "velite --watch & next dev & storybook dev -p 6006 --no-open & wait",
-    "prebuild": "velite && node ./scripts/build-registry.js && node ./scripts/build-docs-markdown.js && node ./scripts/build-llms-txt.js && storybook build -o public/preview",
-    "build": "next build --webpack",
+    "build": "velite && node ./scripts/build-registry.js && node ./scripts/build-docs-markdown.js && node ./scripts/build-llms-txt.js && storybook build -o public/preview && next build --webpack",
     "start": "next start",
     "lint": "biome check .",
     "lint:fix": "biome check --fix .",
