@@ -1,0 +1,15 @@
+---
+title: September 2024
+description: GlitchText, StaggeredCard, and the blog section.
+date: 2024-09-30
+---
+
+## New components
+
+[**`GlitchText`**](/docs/text/glitch-text) applies an RGB-channel-split glitch effect to text. The red, green, and blue layers offset independently on a randomized timing loop, creating a distorted digital aesthetic. The intensity and speed are configurable. Works best at larger sizes — the effect is too subtle to read at body text scale.
+
+[**`StaggeredCard`**](/docs/card/staggered-card) is a card that animates its children in with a sequential delay on mount. Each direct child gets a slightly later start than the one before it, so the card feels like it's assembling itself. The stagger interval is configurable.
+
+## Site
+
+Added a blog section at `/blog`. Posts are written in MDX and follow the same content pipeline as docs pages.

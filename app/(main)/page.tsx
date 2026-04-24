@@ -76,7 +76,7 @@ function Hero() {
 
         <p className="mt-5 text-center text-[13px] text-muted-foreground">
           <span className="mr-1.5 inline-block h-1.5 w-1.5 rounded-full bg-emerald-500" />
-          2,300+ stars · Trusted by shipping teams
+          2,506+ stars · Trusted by shipping teams
         </p>
 
         <div className="mt-8 flex justify-center">

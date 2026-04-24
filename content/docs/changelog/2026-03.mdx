@@ -1,0 +1,17 @@
+---
+title: March 2026
+description: Full stack upgrade — Next.js 16, Tailwind CSS v4, Storybook 10, and Biome.
+date: 2026-03-10
+---
+
+Infrastructure-only month. No new components — the entire toolchain was upgraded in one coordinated pass.
+
+## Stack upgrade
+
+**Next.js 16** brought improvements to the App Router's caching behavior and server component performance. The upgrade was straightforward; no breaking changes affected the component library itself.
+
+**Tailwind CSS v4** changed the configuration format significantly. The `tailwind.config.js` was replaced with CSS-native theme definitions in `globals.css`, using `@theme` blocks and CSS variables directly. Component class names that relied on arbitrary values were audited and updated. The `bg-gradient-to-r` utility became `bg-linear-to-r`, and a handful of plugin-based utilities were rewritten as native CSS.
+
+**Storybook 10** updated the story format and dropped several deprecated APIs. Stories across the component library were updated to the new `satisfies Meta<typeof Component>` pattern. The autodocs setup was reconfigured to work with the new architecture.
+
+**Biome** replaced ESLint and Prettier as the single tool for linting and formatting. The configuration is in `biome.json`. The main behavioral difference is that Biome enforces import ordering, so existing files were reformatted on adoption. Going forward, `biome check --write` handles both formatting and lint fixes in one pass.
