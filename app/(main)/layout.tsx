@@ -13,7 +13,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
     <CSPostHogProvider>
       <div vaul-drawer-wrapper="">
         <div className="relative flex min-h-screen flex-col bg-background">
-          <AnnouncementRibbon className="sticky top-0 z-60" />
+          <AnnouncementRibbon repeat={12} className="sticky top-0 z-60" />
           <SiteHeader />
           <main className="flex-1">{children}</main>
           <SiteFooter />
