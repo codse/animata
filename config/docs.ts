@@ -41,7 +41,19 @@ const sidebarNav: SidebarNavItem[] = [
       {
         title: "Changelog",
         href: "/docs/changelog",
-        items: [],
+        items: [
+          { title: "Overview", href: "/docs/changelog", items: [] },
+          { title: "April 2026", href: "/docs/changelog/2026-04", items: [] },
+          { title: "March 2026", href: "/docs/changelog/2026-03", items: [] },
+          { title: "January 2026", href: "/docs/changelog/2026-01", items: [] },
+          { title: "April 2025", href: "/docs/changelog/2025-04", items: [] },
+          { title: "March 2025", href: "/docs/changelog/2025-03", items: [] },
+          { title: "October 2024", href: "/docs/changelog/2024-10", items: [] },
+          { title: "September 2024", href: "/docs/changelog/2024-09", items: [] },
+          { title: "August 2024", href: "/docs/changelog/2024-08", items: [] },
+          { title: "July 2024", href: "/docs/changelog/2024-07", items: [] },
+          { title: "June 2024", href: "/docs/changelog/2024-06", items: [] },
+        ],
       },
     ],
   },
@@ -212,16 +224,16 @@ const sidebarNav: SidebarNavItem[] = [
 export const docsConfig: DocsConfig = {
   mainNav: [
     {
-      title: "Docs",
-      href: "/docs",
-    },
-    {
       title: "Components",
       href: sidebarNav[2].items?.[0]?.href ?? sidebarNav[2]?.href,
     },
     {
       title: "Blog",
       href: "/blog",
+    },
+    {
+      title: "Changelog",
+      href: "/docs/changelog",
     },
   ],
   sidebarNav,
