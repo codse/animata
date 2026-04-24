@@ -1,0 +1,73 @@
+---
+title: October 2024
+description: 28 new components from the Hacktoberfest contributor sprint.
+date: 2024-10-31
+---
+
+The biggest single month in Animata's history. 28 components were contributed by the community during Hacktoberfest 2024.
+
+## Buttons and interaction
+
+[**`RippleButton`**](/docs/button/ripple-button) adds a material-style circular ripple that expands from the click origin and fades out. Drop-in replacement for any button element.
+
+[**`SlidingArrowButton`**](/docs/button/slide-arrow-button) shows an arrow that slides in from off-screen on hover, replacing the label. Works well for directional CTAs where the motion reinforces the action.
+
+[**`AnimatedFollowButton`**](/docs/button/animated-follow-button) handles the follow/unfollow toggle pattern — the label and icon swap with a spring transition when state changes, and the button briefly shows a loading state between.
+
+[**`SpeedDial`**](/docs/fabs/speed-dial) is a floating action button that expands into a radial or vertical stack of secondary actions on press. Each action item has a tooltip label and configurable icon. Useful when you need multiple entry points without cluttering a toolbar.
+
+[**`FlowerMenu`**](/docs/fabs/flower-menu) is a variant on the speed dial concept where items bloom outward from the trigger in an arc. The open/close transition uses spring physics.
+
+## Cards
+
+[**`CommentReplyCard`**](/docs/card/comment-reply-card) renders a comment with its reply chain, including avatar, author name, timestamp, and a reply input at the bottom.
+
+[**`NotificationCard`**](/docs/card/notification-card) is a toast-style card with icon, title, message, and an optional action. Intended to be stacked or floated — the component doesn't include a notification manager, just the visual.
+
+[**`NoticeCard`**](/docs/card/notice-card) is a dismissible banner for inline notices. It takes a severity level (info, warning, error) and adjusts the icon and color accordingly.
+
+[**`EmailFeatureCard`**](/docs/card/email-feature-card) presents a feature highlight in the visual language of an email client — icon on the left, title and description on the right, with a subtle hover state.
+
+[**`CardComment`**](/docs/card/card-comment) shows a standalone comment with avatar, author, timestamp, body text, and a reaction row.
+
+[**`WebhookCard`**](/docs/card/webhooks-card) displays a webhook event — endpoint URL, method, status code, and a collapsible payload viewer.
+
+[**`SubscribeCard`**](/docs/feature-cards/subscribe-card) pairs a short value proposition with an email input and submit button. The submission state is animated.
+
+[**`SurveyCard`**](/docs/feature-cards/survey-card) steps through a short survey one question at a time. Each question can be multiple choice, rating, or free text. The progress indicator is animated between steps.
+
+[**`InteractiveCaseStudyCard`**](/docs/card/case-study-card) flips to reveal a case study on the back face. The front shows a teaser image and title; the back shows the full summary. The flip uses a CSS perspective transform.
+
+[**`ScoreCard`**](/docs/feature-cards/score-card) displays a numeric score or stat with an animated counter and a supporting label.
+
+## Widgets
+
+[**`TeamClock`**](/docs/widget/team-clock) shows the current time in multiple time zones simultaneously. Each zone has a label, a live time display, and a visual indicator for whether it's within business hours.
+
+[**`MusicStackWidget`**](/docs/widget/music-stack-interaction) shows a stack of album art cards that can be flipped through with playback controls. Designed as a UI component, not a real audio player — it calls your callbacks and you handle the audio.
+
+[**`FundWidget`**](/docs/widget/fund-widget) renders a funding progress bar with a current amount, goal, and percentage. The fill animates on mount.
+
+[**`TransactionList`**](/docs/list/transaction-list) shows a scrollable list of transactions, each with an icon, description, amount, and timestamp. New items animate in from the top.
+
+[**`ReminderScheduler`**](/docs/feature-cards/reminder-scheduler) combines a date picker, time picker, and a short text input into a single compact card for scheduling a reminder.
+
+[**`ConfirmationMessage`**](/docs/feature-cards/confirmation-message) overlays a success or error state with an animated icon and message. Typically shown after a form submission or async action.
+
+## Navigation and layout
+
+[**`FluidTabs`**](/docs/tabs/fluid-tabs) is a tab bar where the active indicator slides smoothly between tabs rather than jumping. The indicator width matches each tab's content width.
+
+[**`AnimatedDock`**](/docs/container/animated-dock) replicates the macOS dock's magnification behavior. Items near the cursor scale up based on proximity.
+
+[**`OrbitingItems3D`**](/docs/list/orbiting-items-3-d) places elements around a 3D orbital path that rotates continuously.
+
+[**`AnimatedTimeline`**](/docs/progress/animatedtimeline) renders a vertical timeline where each entry animates in with a staggered delay on scroll into view.
+
+[**`VerticalTilePreloader`**](/docs/preloader/vertical-tiles) is a full-screen entry animation where tiles slide down sequentially to reveal the page beneath.
+
+[**`ContentScanComponent`**](/docs/feature-cards/content-scan) overlays an animated horizontal scan line on any content, suggesting a machine-reading or biometric scan.
+
+[**`IntegrationPills`**](/docs/card/integration-pills) renders a horizontal scrolling row of service logos with an enter animation. Commonly used in landing pages to show integrations.
+
+[**`PricingComponent`**](/docs/section/pricing) is a three-tier pricing table with a monthly/annual toggle. The highlighted tier has a distinct treatment. All copy is configurable through props.

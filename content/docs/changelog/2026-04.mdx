@@ -1,0 +1,25 @@
+---
+title: April 2026
+description: shadcn registry launch, announcement ribbon, and site revamp.
+date: 2026-04-24
+---
+
+Big month. The shadcn registry went live, which changes how people actually get components into their projects. There's also a new announcement ribbon component, and the site got a meaningful speed and accessibility pass.
+
+## shadcn registry
+
+Every Animata component now has a registry URL. Instead of copying files by hand, you pass the URL straight to the shadcn CLI:
+
+```bash
+npx shadcn add https://animata.design/r/container/marquee.json
+```
+
+It resolves imports and dependencies automatically. The URL pattern is `https://animata.design/r/{category}/{name}.json` — works for every component in the library.
+
+## New component: [announcement ribbon](/docs/container/announcement-ribbon)
+
+A sticky top-of-page banner for announcements. It uses the [Marquee](/docs/container/marquee) component internally for the scrolling track, so it inherits all the same pause-on-hover and repeat behavior. There's a badge slot on the left, scrolling content in the middle (accepts any React node), and an optional link CTA on the right. The whole thing is brand yellow — works on both light and dark backgrounds.
+
+## Site updates
+
+The landing page is faster and more accessible. Keyboard navigation is cleaner, the heading structure is consistent for screen readers, and several layout shifts on first load were fixed.
