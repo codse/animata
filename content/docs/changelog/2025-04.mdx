@@ -1,0 +1,11 @@
+---
+title: April 2025
+description: Two bug fixes.
+date: 2025-04-25
+---
+
+## Bug fixes
+
+The mobile navigation had an overflow issue that caused horizontal scrolling on screens narrower than 375px. The root cause was a fixed-width element in the header that didn't collapse at small breakpoints — fixed by switching to `min-w-0` and letting the flex container handle the constraint.
+
+`AnimatedGradientText` was missing the `bg-position` keyframe registration in the Tailwind config, which caused the gradient animation to be static in production builds. The animation was already defined in the component but the config-level registration was dropped during a previous cleanup. It's back.

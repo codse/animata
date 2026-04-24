@@ -74,28 +74,50 @@ export function MobileNav() {
             {docsConfig.sidebarNav.map((item, index) => (
               <div key={index} className="flex flex-col space-y-3 pt-6">
                 <h4 className="font-medium">{item.title}</h4>
-                {item?.items?.length &&
-                  item.items.map((item) => (
-                    <React.Fragment key={item.href}>
-                      {!item.disabled &&
-                        (item.href ? (
+                {item?.items?.map((subItem) => {
+                  if (subItem.items?.length) {
+                    return (
+                      <React.Fragment key={subItem.href ?? subItem.title}>
+                        <span className="text-xs font-medium text-muted-foreground/60">
+                          {subItem.title}
+                        </span>
+                        {subItem.items.map((child) =>
+                          !child.disabled && child.href ? (
+                            <MobileLink
+                              key={child.href}
+                              href={child.href}
+                              onOpenChange={setOpen}
+                              className="pl-3 text-muted-foreground"
+                            >
+                              {child.title}
+                            </MobileLink>
+                          ) : null,
+                        )}
+                      </React.Fragment>
+                    );
+                  }
+                  return (
+                    <React.Fragment key={subItem.href}>
+                      {!subItem.disabled &&
+                        (subItem.href ? (
                           <MobileLink
-                            href={item.href}
+                            href={subItem.href}
                             onOpenChange={setOpen}
                             className="text-muted-foreground"
                           >
-                            {item.title}
-                            {item.label && (
+                            {subItem.title}
+                            {subItem.label && (
                               <span className="ml-2 rounded-md bg-[#adfa1d] px-1.5 py-0.5 text-xs leading-none text-[#000000] no-underline group-hover:no-underline">
-                                {item.label}
+                                {subItem.label}
                               </span>
                             )}
                           </MobileLink>
                         ) : (
-                          item.title
+                          subItem.title
                         ))}
                     </React.Fragment>
-                  ))}
+                  );
+                })}
               </div>
             ))}
           </div>

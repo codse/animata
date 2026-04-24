@@ -10,7 +10,7 @@ export default function DocsLayout({ children }: DocsLayoutProps) {
   return (
     <div className="border-b border-border">
       <div className="mx-auto w-full max-w-6xl flex-1 items-start px-4 sm:px-6 md:grid md:grid-cols-[220px_minmax(0,1fr)] md:gap-4 lg:grid-cols-[240px_minmax(0,1fr)] lg:gap-6">
-        <aside className="fixed top-14 z-30 -ml-2 hidden h-[calc(100vh-3.5rem)] w-full shrink-0 md:sticky md:block">
+        <aside className="fixed top-[6.25rem] z-30 -ml-2 hidden h-[calc(100vh-6.25rem)] w-full shrink-0 md:sticky md:block">
           <ScrollArea className="h-full py-6 pr-6 lg:py-8">
             <DocsSidebarNav items={docsConfig.sidebarNav} />
           </ScrollArea>

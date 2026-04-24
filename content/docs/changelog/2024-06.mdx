@@ -1,0 +1,37 @@
+---
+title: June 2024
+description: Beta launch with 16 founding components.
+date: 2024-06-28
+---
+
+Animata launched in public beta on June 28, 2024. The idea was simple: a collection of animated React components that you copy directly into your project. No package to install, no abstraction layer you can't see into. Just code you own from the moment you paste it.
+
+## Founding components
+
+[**`Marquee`**](/docs/container/marquee) is the horizontal and vertical infinite scroll component. It handles the seamless loop by repeating content and uses a CSS animation on the compositor thread. A gradient mask fades the edges. This was the first component in the library and established the pattern that most others follow — CSS-first, no JavaScript animation where CSS is sufficient.
+
+[**`CyclingText`**](/docs/text/cycle-text) rotates through a list of words in place, animating between them with a flip or fade. Commonly used in hero sections to cycle through a product's key benefits.
+
+[**`TextBorderAnimation`**](/docs/text/text-border-animation) draws an animated border around text using an SVG path that traces the outline of the letters on hover or loop.
+
+[**`MenuAnimation`**](/docs/list/menu-animation) is a navigation menu with enter and exit transitions on the list items. Items stagger in on open and stagger out on close.
+
+[**`FlippingText`**](/docs/text/text-flip) flips between two strings with a 3D flip on the Y axis. Useful anywhere a value updates and you want the change to feel intentional rather than instant.
+
+[**`CardSpread`**](/docs/card/card-spread) shows a stack of cards that fan out on hover, revealing the cards behind the top one.
+
+[**`EightItemsBentoGrid`**](/docs/bento-grid/eight) is a responsive asymmetric grid layout for eight cells.
+
+[**`ThreeItemBentoGrid`**](/docs/bento-grid/three) is the smaller variant — one large cell and two smaller ones.
+
+[**`AvatarList`**](/docs/list/avatar-list) stacks avatar images with a small overlap, showing up to a configurable limit with a `+N` overflow indicator.
+
+[**`OrbitingList`**](/docs/list/orbiting-items) places items around a circular path centered on a fixed element.
+
+[**`SwapTextCard`**](/docs/card/swap-text-card) shows a card where a line of text swaps to a different value on hover using a vertical slide animation.
+
+[**`DeliveryStatusCard`**](/docs/widget/delivery-card) shows a package delivery progress tracker with a step indicator, estimated delivery date, and current status label.
+
+[**`SecurityAlertWidget`**](/docs/widget/security-alert) is a notification card for security events — icon, severity, title, and a message body. The border pulses on a loop to indicate an active alert.
+
+[**`ExpandableCarousel`**](/docs/carousel/expandable) is a carousel where the focused item expands to a larger size and the surrounding items compress proportionally.

@@ -1,0 +1,21 @@
+---
+title: August 2024
+description: Four new text animation effects and a TypingText improvement.
+date: 2024-08-28
+---
+
+This month focused on text effects — specifically ones that feel more playful or expressive than a standard fade-in.
+
+## New components
+
+[**`JumpingText`**](/docs/text/jumping-text-instagram) makes individual characters jump in sequence, either continuously on a loop or triggered by hover. The jump height, duration, and stagger between characters are all configurable.
+
+[**`TextExplosion`**](/docs/text/text-explode-imessage) breaks the text into individual characters, explodes them outward to random positions, then snaps them back into place. The explosion uses randomized angles and distances per character so each trigger looks slightly different. Best used sparingly — as a one-shot reveal, not an idle loop.
+
+[**`JitterText`**](/docs/text/jitter-text) makes characters vibrate independently with small random offsets, loosely in the style of the iMessage typing indicator applied to a full string. The jitter magnitude is configurable.
+
+[**`RevealTextOnScroll`**](/docs/text/scroll-reveal) masks text behind a clip that opens as the element enters the viewport. The reveal direction (up, down, left, right) and threshold are configurable.
+
+## Improvement
+
+[`TypingText`](/docs/text/typing-text) gained a `hideCursor` prop. When set, the blinking cursor is removed after the full string has been typed. Previously the cursor remained visible indefinitely, which looked odd in contexts where the component was used as a static display after the animation completed.

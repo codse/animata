@@ -35,7 +35,7 @@ export function SiteHeader() {
 
       <header
         className={cn(
-          "sticky top-0 z-50 w-full border-b bg-background/80 backdrop-blur-lg backdrop-saturate-150 transition-[background-color,border-color] duration-300",
+          "sticky top-11 z-50 w-full border-b bg-background/80 backdrop-blur-lg backdrop-saturate-150 transition-[background-color,border-color] duration-300",
           scrolled ? "border-border/50" : "border-transparent",
           isIndexPage && !scrolled && "bg-transparent",
         )}

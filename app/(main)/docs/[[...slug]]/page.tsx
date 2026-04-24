@@ -155,7 +155,7 @@ export default async function DocPage({ params }: DocPageProps) {
 
           <div className="my-3 text-right">
             <Link
-              href={`https://github.com/codse/animata/edit/main/content/docs/${doc.slugAsParams}.mdx`}
+              href={`https://github.com/codse/animata/edit/main/content/${doc.path}.mdx`}
               target="_blank"
               rel="noreferrer"
               className="text-sm text-secondary-foreground underline"
@@ -168,9 +168,9 @@ export default async function DocPage({ params }: DocPageProps) {
       </div>
       {doc.toc && (
         <div className="hidden text-sm xl:block">
-          <div className="sticky top-16 -mt-10 pt-4">
+          <div className="sticky top-[6.25rem] -mt-10 pt-4">
             <ScrollArea className="pb-10">
-              <div className="sticky top-16 -mt-10 h-[calc(100vh-3.5rem)] py-12">
+              <div className="sticky top-[6.25rem] -mt-10 h-[calc(100vh-6.25rem)] py-12">
                 <DashboardTableOfContents toc={toc} />
               </div>
             </ScrollArea>

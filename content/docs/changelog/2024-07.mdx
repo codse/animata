@@ -1,0 +1,47 @@
+---
+title: July 2024
+description: 16 new components including interactive cursor effects, SVG animations, and new buttons.
+date: 2024-07-28
+---
+
+A broad expansion across several categories. The interactive components this month lean into cursor-driven effects — things that only make sense on pointer devices and degrade gracefully on touch.
+
+## Interactive and cursor effects
+
+[**`InteractiveGrid`**](/docs/background/interactive-grid) renders a grid of cells that scale or highlight based on cursor proximity. Each cell calculates its distance from the pointer and applies a transform proportional to that distance.
+
+[**`CursorTracker`**](/docs/container/cursor-tracker) places a child element at the pointer position, lerping toward the target so movement is smooth rather than locked pixel-for-pixel to the cursor.
+
+[**`ImageTrail`**](/docs/image/trailing-image) spawns copies of an image at the cursor position as it moves, fading each copy out after a short delay. The trail length, fade duration, and source image are configurable.
+
+[**`AnimatedBeam`**](/docs/background/animated-beam) draws an SVG line between two DOM elements, with an animated gradient that moves along the path. It uses `ResizeObserver` to keep the endpoints accurate as layout changes.
+
+[**`AnimatedBorderTrail`**](/docs/container/animated-border-trail) wraps any element in a border where a glowing point traces the perimeter continuously.
+
+## Display and layout
+
+[**`LedBoard`**](/docs/card/led-board) scrolls a string of characters across a grid of circular dots styled to look like a physical LED matrix. Speed and dot color are configurable.
+
+[**`ProductFeaturesHero`**](/docs/hero/product-features) cycles through a list of features, animating between them. The active feature is highlighted in a right-side panel while the list stays visible on the left.
+
+[**`HeroSection`**](/docs/hero/hero-section) is a full-bleed hero layout with headline, subheadline, CTA button, and an optional background effect slot.
+
+## Text effects
+
+[**`StaggeredLetterAnimation`**](/docs/text/staggered-letter) animates each character in a string with a sequential delay on enter.
+
+[**`SplitTextEffect`**](/docs/text/split-text) separates a string into two halves that move apart on hover and snap back on leave.
+
+## Buttons and cards
+
+[**`StatusButton`**](/docs/button/status-button) cycles through a defined list of states — idle, loading, success, error — with animated transitions between them.
+
+[**`AIButton`**](/docs/button/ai-button) is a button with a shimmer animation that suggests something is processing. The shimmer runs indefinitely until you change the button to an idle or complete state.
+
+[**`SwapCard`**](/docs/feature-cards/swap-card) flips between two content panels on hover or click using a CSS 3D transform.
+
+[**`GitHubCards`**](/docs/card/github-card-shiny) renders a GitHub repository card showing repo name, description, star count, fork count, and primary language.
+
+[**`TransitionList`**](/docs/list/transition-list) animates list items in and out on mount/unmount.
+
+[**`SplitTextEffect`**](/docs/text/split-text) splits a string in two on hover.
