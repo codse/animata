@@ -26,6 +26,7 @@ import { CopyProxy } from "@/components/copy-proxy";
 import { AnimataRenderer } from "@/components/dynamic-animata";
 import { FrameworkDocs } from "@/components/framework-docs";
 import PreviewContainer from "@/components/preview-container";
+import { RegistryInstall } from "@/components/registry-install";
 import {
   Accordion,
   AccordionContent,
@@ -199,6 +200,7 @@ const components = {
   ComponentPreview,
   ComponentExample,
   ComponentSource,
+  RegistryInstall,
   AspectRatio,
   CodeBlockWrapper: ({ ...props }) => <CodeBlockWrapper className="rounded-md border" {...props} />,
   Step: ({ className, ...props }: ComponentProps<"h3">) => (

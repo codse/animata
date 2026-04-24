@@ -1,0 +1,18 @@
+/r/*
+  Cache-Control: public, max-age=300, s-maxage=86400, stale-while-revalidate=604800
+  Access-Control-Allow-Origin: *
+
+/docs/*.md
+  Content-Type: text/markdown; charset=utf-8
+  Cache-Control: public, max-age=300, s-maxage=86400, stale-while-revalidate=604800
+  Access-Control-Allow-Origin: *
+
+/llms.txt
+  Content-Type: text/markdown; charset=utf-8
+  Cache-Control: public, max-age=300, s-maxage=86400, stale-while-revalidate=604800
+  Access-Control-Allow-Origin: *
+
+/llms-full.txt
+  Content-Type: text/markdown; charset=utf-8
+  Cache-Control: public, max-age=300, s-maxage=86400, stale-while-revalidate=604800
+  Access-Control-Allow-Origin: *

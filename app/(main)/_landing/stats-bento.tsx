@@ -126,7 +126,7 @@ function OrbitItem({
 function FrameworkOrbit() {
   return (
     <div className="relative flex h-40 w-full items-center justify-center overflow-hidden rounded-xl border border-border bg-[hsl(var(--surface-alt))] sm:h-48">
-      <Icons.logo className="z-10 h-8 w-8 rounded-full bg-gradient-to-br from-violet-500 to-indigo-600 p-1.5 shadow-lg sm:h-10 sm:w-10 sm:p-2" />
+      <Icons.logo className="z-10 h-8 w-8 rounded-full bg-linear-to-br from-violet-500 to-indigo-600 p-1.5 shadow-lg sm:h-10 sm:w-10 sm:p-2" />
       {frameworkItems.map((item, i) => (
         <OrbitItem key={item.key} index={i} total={frameworkItems.length} duration={35}>
           {item.icon}
@@ -161,11 +161,11 @@ export default function StatsBento() {
               Loved by developers worldwide
             </span>
             <div className="mt-3">
-              <strong className="font-[family-name:var(--font-mono)] text-2xl font-bold tabular-nums text-foreground sm:text-3xl lg:text-4xl">
+              <strong className="font-(family-name:--font-mono) text-2xl font-bold tabular-nums text-foreground sm:text-3xl lg:text-4xl">
                 <RemountOnMouseIn>
                   <Ticker
                     value="2,392+"
-                    className="font-[family-name:var(--font-mono)] font-bold tabular-nums"
+                    className="font-(family-name:--font-mono) font-bold tabular-nums"
                   />
                 </RemountOnMouseIn>
               </strong>
@@ -228,10 +228,10 @@ export default function StatsBento() {
                     direction="up"
                     delay={0}
                     format={Formatter.number}
-                    className="font-[family-name:var(--font-mono)] text-5xl font-bold leading-[1] tabular-nums tracking-[-0.03em] text-foreground sm:text-6xl lg:text-7xl"
+                    className="font-(family-name:--font-mono) text-5xl font-bold leading-none tabular-nums tracking-[-0.03em] text-foreground sm:text-6xl lg:text-7xl"
                   />
                 </RemountOnMouseIn>
-                <span className="font-[family-name:var(--font-mono)] text-2xl font-bold text-muted-foreground sm:text-3xl">
+                <span className="font-(family-name:--font-mono) text-2xl font-bold text-muted-foreground sm:text-3xl">
                   +
                 </span>
               </div>
@@ -270,11 +270,11 @@ export default function StatsBento() {
                 </Marquee>
               </div>
             </div>
-            <div className="-mx-4 -mb-4 mt-auto flex items-center justify-between border-t border-border bg-foreground/[0.03] px-4 py-3 sm:-mx-5 sm:-mb-5 sm:px-5 sm:py-4 lg:-mx-6 lg:-mb-6 lg:px-6">
+            <div className="-mx-4 -mb-4 mt-auto flex items-center justify-between border-t border-border bg-foreground/3 px-4 py-3 sm:-mx-5 sm:-mb-5 sm:px-5 sm:py-4 lg:-mx-6 lg:-mb-6 lg:px-6">
               <p className="text-[10px] font-semibold uppercase tracking-wide text-muted-foreground sm:text-[11px]">
                 Categories
               </p>
-              <span className="font-[family-name:var(--font-mono)] text-2xl font-bold tabular-nums text-foreground sm:text-3xl">
+              <span className="font-(family-name:--font-mono) text-2xl font-bold tabular-nums text-foreground sm:text-3xl">
                 {categories.length}
               </span>
             </div>
@@ -313,10 +313,10 @@ export default function StatsBento() {
             <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
               {/* Left — statement */}
               <div>
-                <h3 className="font-[family-name:var(--font-display)] text-[clamp(1.5rem,4vw,2.25rem)] leading-[1.1] text-foreground">
+                <h2 className="font-(family-name:--font-display) text-[clamp(1.5rem,4vw,2.25rem)] leading-[1.1] text-foreground">
                   We did the hard part.
-                </h3>
-                <p className="mt-1 text-[clamp(1.5rem,4vw,2.25rem)] leading-[1.1] text-muted-foreground font-[family-name:var(--font-display)]">
+                </h2>
+                <p className="mt-1 text-[clamp(1.5rem,4vw,2.25rem)] leading-[1.1] text-muted-foreground font-(family-name:--font-display)">
                   So you don&apos;t have to.
                 </p>
               </div>
@@ -324,7 +324,7 @@ export default function StatsBento() {
               <div className="flex gap-8 sm:gap-10">
                 <div>
                   <div className="flex items-baseline gap-0.5">
-                    <span className="font-[family-name:var(--font-mono)] text-3xl font-bold leading-[1] tabular-nums text-foreground sm:text-4xl">
+                    <span className="font-(family-name:--font-mono) text-3xl font-bold leading-none tabular-nums text-foreground sm:text-4xl">
                       1,100
                     </span>
                     <span className="text-lg text-muted-foreground">+</span>
@@ -335,7 +335,7 @@ export default function StatsBento() {
                 </div>
                 <div>
                   <div className="flex items-baseline gap-0.5">
-                    <span className="font-[family-name:var(--font-mono)] text-3xl font-bold leading-[1] tabular-nums text-foreground sm:text-4xl">
+                    <span className="font-(family-name:--font-mono) text-3xl font-bold leading-none tabular-nums text-foreground sm:text-4xl">
                       300
                     </span>
                     <span className="text-lg text-muted-foreground">+</span>
