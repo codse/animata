@@ -86,20 +86,38 @@ export function CommandMenu({ ...props }: ComponentPropsWithoutRef<typeof Comman
           </CommandGroup>
           {docsConfig.sidebarNav.map((group) => (
             <CommandGroup key={group.title} heading={group.title}>
-              {group.items?.map((navItem) => (
-                <CommandItem
-                  key={navItem.href}
-                  value={navItem.title}
-                  onSelect={() => {
-                    runCommand(() => router.push(navItem.href as string));
-                  }}
-                >
-                  <div className="mr-2 flex h-4 w-4 items-center justify-center">
-                    <CircleIcon className="h-3 w-3" />
-                  </div>
-                  {navItem.title}
-                </CommandItem>
-              ))}
+              {group.items?.flatMap((navItem) => {
+                if (navItem.items?.length) {
+                  return navItem.items.map((child) => (
+                    <CommandItem
+                      key={child.href}
+                      value={`${navItem.title} ${child.title}`}
+                      onSelect={() => {
+                        runCommand(() => router.push(child.href as string));
+                      }}
+                    >
+                      <div className="mr-2 flex h-4 w-4 items-center justify-center">
+                        <CircleIcon className="h-3 w-3" />
+                      </div>
+                      {child.title}
+                    </CommandItem>
+                  ));
+                }
+                return [
+                  <CommandItem
+                    key={navItem.href}
+                    value={navItem.title}
+                    onSelect={() => {
+                      runCommand(() => router.push(navItem.href as string));
+                    }}
+                  >
+                    <div className="mr-2 flex h-4 w-4 items-center justify-center">
+                      <CircleIcon className="h-3 w-3" />
+                    </div>
+                    {navItem.title}
+                  </CommandItem>,
+                ];
+              })}
             </CommandGroup>
           ))}
           <CommandSeparator />
