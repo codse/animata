@@ -164,7 +164,7 @@ export default function StatsBento() {
               <strong className="font-(family-name:--font-mono) text-2xl font-bold tabular-nums text-foreground sm:text-3xl lg:text-4xl">
                 <RemountOnMouseIn>
                   <Ticker
-                    value="2,392+"
+                    value="2,506+"
                     className="font-(family-name:--font-mono) font-bold tabular-nums"
                   />
                 </RemountOnMouseIn>
