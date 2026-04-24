@@ -25,6 +25,7 @@ import { CopyButton, CopyNpmCommandButton, CopyTouchCommandButton } from "@/comp
 import { CopyProxy } from "@/components/copy-proxy";
 import { AnimataRenderer } from "@/components/dynamic-animata";
 import { FrameworkDocs } from "@/components/framework-docs";
+import { InView } from "@/components/in-view";
 import PreviewContainer from "@/components/preview-container";
 import { RegistryInstall } from "@/components/registry-install";
 import {
@@ -117,6 +118,7 @@ const components = {
   Alert,
   AlertTitle,
   AlertDescription,
+  InView,
   PreviewContainer,
   ...baseComponents,
   pre: ({
@@ -264,7 +266,7 @@ const components = {
   ComponentList: ({ children, className }: { children: React.ReactNode; className?: string }) => {
     return (
       <div
-        className={cn("relative grid max-w-full gap-4 sm:grid-cols-2 lg:grid-cols-3", className)}
+        className={cn("relative grid max-w-full gap-4 sm:grid-cols-2 lg:grid-cols-2", className)}
       >
         {children}
       </div>
@@ -279,12 +281,19 @@ interface MdxProps {
 }
 
 function stripImports(code: string) {
-  const importRegex = /^import\s+(\w+)\s+from\s+["']@\/animata\/([^"']+)["'];?\s*$/gm;
+  const animataRegex = /^import\s+(\w+)\s+from\s+["']@\/animata\/([^"']+)["'];?\s*$/gm;
   const imports: Array<{ name: string; subpath: string }> = [];
-  const strippedCode = code.replace(importRegex, (_, name, subpath) => {
+  let strippedCode = code.replace(animataRegex, (_, name, subpath) => {
     imports.push({ name, subpath });
     return "";
   });
+  // Also strip imports from @/components/ — these components are registered
+  // directly in the `components` map above (e.g. InView), so the import line
+  // in the MDX source would otherwise leave MDXRemote unable to resolve them.
+  strippedCode = strippedCode.replace(
+    /^import\s+\{?\s*\w+(?:\s*,\s*\w+)*\s*\}?\s+from\s+["']@\/components\/[^"']+["'];?\s*$/gm,
+    "",
+  );
   return { strippedCode, imports };
 }
 
