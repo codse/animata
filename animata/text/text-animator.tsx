@@ -363,7 +363,13 @@ async function runGenericLoop(c: LoopController, spec: TextAnimationSpec, sample
   const { stage, runtime } = c;
   const target = spec.target ?? "per-character";
   const microDelay = spec.swap?.microDelayMs ?? 0;
+  // For crossfade swaps the new sample's enter starts `overlapMs` before the
+  // old sample's exit completes; the two titles share the stage's "title"
+  // grid area during that window. Other modes wait for exit + microDelay
+  // before the swap.
+  const overlap = spec.swap?.mode === "crossfade" ? (spec.swap?.overlapMs ?? 0) : 0;
   let currentIndex = 0;
+  let currentTitle: HTMLElement | null = null;
   let currentUnits: HTMLSpanElement[] = [];
 
   const enterSample = (text: string): number => {
@@ -371,6 +377,7 @@ async function runGenericLoop(c: LoopController, spec: TextAnimationSpec, sample
     applyPhaseStart(units, "enter", spec, stage, runtime.tileYTravel);
     clearStage(stage);
     stage.appendChild(title);
+    currentTitle = title;
     currentUnits = units;
     return animatePhase(c, units, "enter", spec);
   };
@@ -379,17 +386,47 @@ async function runGenericLoop(c: LoopController, spec: TextAnimationSpec, sample
   await sleep(c, firstEnter + runtime.tileHoldMs);
 
   while (!c.cancelled) {
+    const oldTitle = currentTitle;
     const exitTotal = currentUnits.length ? animatePhase(c, currentUnits, "exit", spec) : 0;
-    currentIndex = (currentIndex + 1) % samples.length;
-    const next = makeTitle(stage.ownerDocument, samples[currentIndex], target);
-    applyPhaseStart(next.units, "enter", spec, stage, runtime.tileYTravel);
-    await sleep(c, exitTotal + microDelay);
-    if (c.cancelled) break;
-    clearStage(stage);
-    stage.appendChild(next.title);
-    currentUnits = next.units;
-    const nextEnter = animatePhase(c, next.units, "enter", spec);
-    await sleep(c, nextEnter + runtime.tileGapMs);
+
+    if (overlap > 0 && oldTitle) {
+      // Crossfade: start the new enter while the old exit is still finishing.
+      await sleep(c, Math.max(0, exitTotal - overlap));
+      if (c.cancelled) break;
+
+      currentIndex = (currentIndex + 1) % samples.length;
+      const next = makeTitle(stage.ownerDocument, samples[currentIndex], target);
+      applyPhaseStart(next.units, "enter", spec, stage, runtime.tileYTravel);
+      // Mount alongside the still-exiting old title; both share grid-area "title".
+      stage.appendChild(next.title);
+      const nextEnter = animatePhase(c, next.units, "enter", spec);
+
+      // Drop the old title once its exit finishes (which is `overlap` ms from now).
+      schedule(c, () => oldTitle.remove(), overlap);
+
+      currentTitle = next.title;
+      currentUnits = next.units;
+
+      await sleep(c, nextEnter + runtime.tileHoldMs);
+    } else {
+      // Non-overlapping: wait for exit + microDelay, swap, gap, then enter.
+      await sleep(c, exitTotal + microDelay);
+      if (c.cancelled) break;
+
+      currentIndex = (currentIndex + 1) % samples.length;
+      const next = makeTitle(stage.ownerDocument, samples[currentIndex], target);
+      applyPhaseStart(next.units, "enter", spec, stage, runtime.tileYTravel);
+      clearStage(stage);
+      stage.appendChild(next.title);
+      currentTitle = next.title;
+      currentUnits = next.units;
+
+      await sleep(c, runtime.tileGapMs);
+      if (c.cancelled) break;
+
+      const nextEnter = animatePhase(c, next.units, "enter", spec);
+      await sleep(c, nextEnter + runtime.tileHoldMs);
+    }
   }
 }
 
