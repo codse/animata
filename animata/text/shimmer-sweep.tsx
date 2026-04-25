@@ -60,13 +60,17 @@ export interface ShimmerSweepProps {
   enter?: Partial<TextAnimationPhaseSpec>;
   /** Override exit phase (merged with default). */
   exit?: Partial<TextAnimationPhaseSpec>;
-  /** Global speed multiplier. Default 0.72. */
+  /** Global speed multiplier. Defaults to the runtime default (0.72) when omitted. */
   speed?: number;
-  /** Hold time between enter and exit in ms. */
+  /** Hold time between enter and exit in ms. Defaults to the runtime default (550) when omitted. */
   holdMs?: number;
-  /** Gap between cycles in ms. */
+  /** Gap between cycles in ms. Defaults to the runtime default (320) when omitted. */
   gapMs?: number;
-  /** Y-travel multiplier for all transforms. */
+  /**
+   * Y-travel multiplier for all transforms. This preset only animates
+   * `xPx` and `blurPx`, so this prop is a no-op here — kept for API symmetry
+   * with the rest of the text presets.
+   */
   yTravel?: number;
   className?: string;
 }
@@ -84,8 +88,18 @@ export default function ShimmerSweep({
   const spec = useMemo<TextAnimationSpec>(
     () => ({
       ...BASE_SPEC,
-      enter: { ...BASE_SPEC.enter, ...enter },
-      exit: { ...BASE_SPEC.exit, ...exit },
+      enter: {
+        ...BASE_SPEC.enter,
+        ...enter,
+        from: { ...BASE_SPEC.enter.from, ...enter?.from },
+        to: { ...BASE_SPEC.enter.to, ...enter?.to },
+      },
+      exit: {
+        ...BASE_SPEC.exit,
+        ...exit,
+        from: { ...BASE_SPEC.exit.from, ...exit?.from },
+        to: { ...BASE_SPEC.exit.to, ...exit?.to },
+      },
     }),
     [enter, exit],
   );
