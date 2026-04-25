@@ -13,7 +13,7 @@ const BASE_SPEC: TextAnimationSpec = {
   enter: {
     durationMs: 180,
     staggerMs: 78,
-    easing: "steps(1, end)",
+    easing: "steps(1, jump-start)",
     from: {
       opacity: 0,
       yPx: 0,
@@ -28,7 +28,7 @@ const BASE_SPEC: TextAnimationSpec = {
   exit: {
     durationMs: 140,
     staggerMs: 78,
-    easing: "steps(1, end)",
+    easing: "steps(1, jump-start)",
     from: {
       opacity: 1,
       yPx: 0,
@@ -48,9 +48,9 @@ const BASE_SPEC: TextAnimationSpec = {
 };
 
 const DEFAULT_SAMPLES: readonly string[] = [
-  "Layered navigation.",
-  "Hierarchy made clear.",
-  "Depth with restraint.",
+  "Step swaps on the y-axis.",
+  "No easing, just rhythm.",
+  "Editorial pacing.",
 ];
 
 export interface SharedAxisYProps {

@@ -41,16 +41,15 @@ const BASE_SPEC: TextAnimationSpec = {
     },
   },
   swap: {
-    mode: "crossfade",
-    overlapMs: 170,
+    mode: "sequential",
     microDelayMs: 35,
   },
 };
 
 const DEFAULT_SAMPLES: readonly string[] = [
-  "Clear in, airy out.",
-  "Lightweight typography.",
-  "Exit with grace.",
+  "Lands clean, leaves airy.",
+  "Drifts up on the way out.",
+  "Light type, lighter exit.",
 ];
 
 export interface BlurOutUpProps {

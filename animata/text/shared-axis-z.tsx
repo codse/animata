@@ -41,16 +41,15 @@ const BASE_SPEC: TextAnimationSpec = {
     },
   },
   swap: {
-    mode: "crossfade",
-    overlapMs: 100,
+    mode: "sequential",
     microDelayMs: 20,
   },
 };
 
 const DEFAULT_SAMPLES: readonly string[] = [
-  "Zooming between states.",
-  "Elevate and settle.",
-  "Scale with purpose.",
+  "Recedes, then returns.",
+  "Steps forward, then back.",
+  "A subtle shift in depth.",
 ];
 
 export interface SharedAxisZProps {

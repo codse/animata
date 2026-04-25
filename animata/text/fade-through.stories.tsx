@@ -13,7 +13,6 @@ type Story = StoryObj<typeof meta>;
 
 export const Primary: Story = {
   args: {
-    text: "Calm transitions.",
     speed: 0.72,
     holdMs: 550,
     gapMs: 320,

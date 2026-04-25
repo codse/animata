@@ -45,16 +45,15 @@ const BASE_SPEC: TextAnimationSpec = {
     },
   },
   swap: {
-    mode: "crossfade",
-    overlapMs: 20,
+    mode: "sequential",
     microDelayMs: 60,
   },
 };
 
 const DEFAULT_SAMPLES: readonly string[] = [
-  "Calm transitions.",
-  "Fade through content.",
-  "Focus shifts smoothly.",
+  "Old fades, new arrives.",
+  "A clean swap of copy.",
+  "Replaces without seams.",
 ];
 
 export interface FadeThroughProps {

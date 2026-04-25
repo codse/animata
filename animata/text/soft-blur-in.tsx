@@ -41,15 +41,14 @@ const BASE_SPEC: TextAnimationSpec = {
     },
   },
   swap: {
-    mode: "crossfade",
-    overlapMs: 300,
+    mode: "sequential",
   },
 };
 
 const DEFAULT_SAMPLES: readonly string[] = [
-  "Think different.",
-  "Built to flow.",
-  "Motion with intent.",
+  "Coming into focus.",
+  "Edges sharpen up.",
+  "Letters land softly.",
 ];
 
 export interface SoftBlurInProps {

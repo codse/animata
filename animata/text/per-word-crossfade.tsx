@@ -37,16 +37,15 @@ const BASE_SPEC: TextAnimationSpec = {
     },
   },
   swap: {
-    mode: "crossfade",
-    overlapMs: 170,
+    mode: "sequential",
     microDelayMs: 70,
   },
 };
 
 const DEFAULT_SAMPLES: readonly string[] = [
-  "Beautifully simple.",
-  "Designed for focus.",
-  "Built for people.",
+  "A phrase, then another.",
+  "Words trade places.",
+  "Calm replacements.",
 ];
 
 export interface PerWordCrossfadeProps {

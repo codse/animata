@@ -43,7 +43,7 @@ const BASE_SPEC: TextAnimationSpec = {
   },
 };
 
-const DEFAULT_SAMPLES: readonly string[] = ["Signal", "Header", "Vector"];
+const DEFAULT_SAMPLES: readonly string[] = ["Drop", "Above", "Title"];
 
 export interface TopDownLettersProps {
   /** Text(s) to animate. String = single, array = cycle through. */

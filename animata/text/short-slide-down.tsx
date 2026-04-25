@@ -70,9 +70,9 @@ const BASE_SPEC: TextAnimationSpec = {
 };
 
 const DEFAULT_PHRASES: readonly (readonly string[])[] = [
-  ["Drop", "into", "place"],
-  ["Words", "settle", "lower"],
-  ["Build", "from", "above"],
+  ["Lands", "top", "first"],
+  ["Stacks", "into", "place"],
+  ["Drops", "line", "gently"],
 ];
 
 export interface ShortSlideDownProps {

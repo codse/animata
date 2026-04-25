@@ -65,9 +65,9 @@ const BASE_SPEC: TextAnimationSpec = {
 };
 
 const DEFAULT_PHRASES: readonly (readonly string[])[] = [
-  ["Words", "push", "left"],
-  ["Type", "locks", "center"],
-  ["Build", "the", "line"],
+  ["Each", "word", "arrives"],
+  ["Center", "holds", "still"],
+  ["Builds", "one", "line"],
 ];
 
 export interface KineticCenterBuildProps {

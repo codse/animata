@@ -45,16 +45,15 @@ const BASE_SPEC: TextAnimationSpec = {
     },
   },
   swap: {
-    mode: "crossfade",
-    overlapMs: 160,
+    mode: "sequential",
     microDelayMs: 35,
   },
 };
 
 const DEFAULT_SAMPLES: readonly string[] = [
-  "Focus resolves clearly.",
-  "Detail emerges.",
-  "Then softly recedes.",
+  "Pulls into focus.",
+  "A camera-style resolve.",
+  "Then a quiet defocus.",
 ];
 
 export interface FocusBlurResolveProps {
