@@ -15,9 +15,11 @@ export interface UnderlineHoverTextProps {
    */
   hoverTextColor?: string;
   /**
-   * Color class for the underline stroke on hover. Plain class like
-   * `bg-zinc-900` — the component handles the hover trigger itself, so passing
-   * a `hover:`-prefixed class is unnecessary and just gets stripped.
+   * Background color class applied to the underline stroke. Pass a plain
+   * class like `bg-zinc-900` (or any `bg-*`). The component drives visibility
+   * itself via the parent's `:hover` — if you pass a `hover:`-prefixed class
+   * here it'll never apply (the stroke element is not the hovered element)
+   * and the stroke will appear colorless on hover.
    */
   hoverColor?: string;
   fontSize?: string;

@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import LineByLineSlide from "@/animata/text/line-by-line-slide";
 
 const meta = {
-  title: "Text/Line By Line Slide",
+  title: "Text/Line-by-Line Slide",
   component: LineByLineSlide,
   parameters: { layout: "centered" },
   tags: ["autodocs"],

@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import PerCharacterRise from "@/animata/text/per-character-rise";
 
 const meta = {
-  title: "Text/Per Character Rise",
+  title: "Text/Per-Character Rise",
   component: PerCharacterRise,
   parameters: { layout: "centered" },
   tags: ["autodocs"],

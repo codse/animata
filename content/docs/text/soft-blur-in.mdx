@@ -1,5 +1,5 @@
 ---
-title: Soft Blur
+title: Soft Blur In
 description: "Per-character fade-in with a gentle blur and upward motion. Apple's signature hero-title reveal."
 author: pixelpoint
 ---
@@ -15,6 +15,28 @@ author: pixelpoint
 ### Manual
 
 <Steps>
+
+<Step>Install the shared runtime</Step>
+
+Every preset in the text category shares its WAAPI loop + scoped stage
+styles with the same `text-animator` runtime. Skip this step if you
+already added it for another text preset.
+
+```bash
+mkdir -p components/animata/text && touch components/animata/text/text-animator.tsx components/animata/text/text-animator.css
+```
+
+Paste the runtime into `text-animator.tsx`:
+
+```tsx file=<rootDir>/animata/text/text-animator.tsx
+
+```
+
+And the styles into `text-animator.css`:
+
+```css file=<rootDir>/animata/text/text-animator.css
+
+```
 
 <Step>Run the following command</Step>
 

@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import BottomUpLetters from "@/animata/text/bottom-up-letters";
 
 const meta = {
-  title: "Text/Bottom Up Letters",
+  title: "Text/Bottom-Up Letters",
   component: BottomUpLetters,
   parameters: { layout: "centered" },
   tags: ["autodocs"],

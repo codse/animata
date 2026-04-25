@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import PerWordCrossfade from "@/animata/text/per-word-crossfade";
 
 const meta = {
-  title: "Text/Per Word Crossfade",
+  title: "Text/Per-Word Crossfade",
   component: PerWordCrossfade,
   parameters: { layout: "centered" },
   tags: ["autodocs"],

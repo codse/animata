@@ -100,7 +100,7 @@ const PRESETS: Preset[] = [
   },
   {
     id: "shared-axis-y",
-    title: "Word Cut Staircase",
+    title: "Shared Axis Y",
     description: "Per-word hard-cut transition with staircase timing for sharp editorial swaps.",
     Component: SharedAxisY,
   },
