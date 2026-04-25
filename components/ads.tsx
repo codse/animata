@@ -33,5 +33,5 @@ export default function CarbonAds() {
     };
   }, []);
 
-  return <div id="carbon-container" className="min-h-48 m-2" />;
+  return <div id="carbon-container" className="min-h-48 mt-2" />;
 }
