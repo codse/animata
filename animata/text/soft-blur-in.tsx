@@ -41,8 +41,7 @@ const BASE_SPEC: TextAnimationSpec = {
     },
   },
   swap: {
-    mode: "crossfade",
-    overlapMs: 300,
+    mode: "sequential",
   },
 };
 
