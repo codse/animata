@@ -13,7 +13,7 @@ export default function SplitText({
   const timer = useRef<NodeJS.Timeout>(undefined);
 
   const letterClassName =
-    "inline h-1/2 select-none overflow-y-hidden leading-none transition duration-300 ease-out";
+    "inline h-1/2 select-none overflow-y-hidden leading-none transition duration-300 ease-out whitespace-pre";
 
   return (
     <div
@@ -54,7 +54,7 @@ export default function SplitText({
                   (index === activeIndex - 2 || index === activeIndex + 2),
               })}
             >
-              {letter === " " ? "\u0A00" : letter}
+              {letter}
             </span>
 
             {/** bottom half */}
