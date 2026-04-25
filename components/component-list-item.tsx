@@ -113,7 +113,7 @@ export default function ComponentListItem({
         {!alwaysVisible ? <DisplayInView>{children}</DisplayInView> : children}
         {Component && (
           <Suspense fallback={<div className="h-full w-full" />}>
-            <Component {...props} />
+            <Component />
           </Suspense>
         )}
       </div>

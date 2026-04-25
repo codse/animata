@@ -51,7 +51,7 @@ function Hero() {
           Look better.
         </h1>
         <p className="mx-auto mt-6 max-w-md text-balance text-[clamp(15px,2vw,18px)] leading-[1.6] text-[hsl(var(--text-secondary))]">
-          194+ animated React components you can copy into any project. Free, open source, and ready
+          158+ animated React components you can copy into any project. Free, open source, and ready
           to use.
         </p>
 
@@ -136,7 +136,7 @@ function WhySection() {
             href={componentsHref}
             className="text-[15px] font-medium text-[hsl(var(--link))] transition-colors hover:text-[hsl(var(--link-hover))]"
           >
-            See all 194+ components →
+            See all 158+ components →
           </Link>
         </div>
       </div>

@@ -162,7 +162,7 @@ function PropsEditor({
                 className="h-7 flex-1 rounded border bg-background px-2 font-mono text-xs"
               />
             ) : Array.isArray(value) || typeof value === "object" ? (
-              <span className="h-fit flex 1 rounded border bg-muted p-2 font-mono text-xs overflow-auto">
+              <span className="h-fit rounded border bg-muted p-2 font-mono text-xs overflow-auto">
                 {JSON.stringify(value)}
               </span>
             ) : (

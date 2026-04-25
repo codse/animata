@@ -219,7 +219,7 @@ export default function StatsBento() {
             </div>
           </BentoCard>
 
-          {/* Card 2: 194+ Components + Categories */}
+          {/* Card 2: 158+ Components + Categories */}
           <BentoCard className="flex flex-col">
             <div className="flex-1">
               <span className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground sm:text-xs">

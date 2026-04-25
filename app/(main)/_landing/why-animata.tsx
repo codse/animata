@@ -11,7 +11,7 @@ const cards = [
   },
   {
     title: "Free & Open Source",
-    description: "MIT licensed, community-driven. 194+ components and growing.",
+    description: "MIT licensed, community-driven. 158+ components and growing.",
   },
 ];
 
