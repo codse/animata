@@ -264,11 +264,17 @@ const components = {
     />
   ),
   ComponentList: ({ children, className }: { children: React.ReactNode; className?: string }) => {
+    // `@container` establishes a container-query context so consumers can use
+    // `@sm:grid-cols-N` etc. against this list's own width — useful when the
+    // docs sidebar narrows the surrounding viewport. The viewport-based
+    // default keeps existing widget/skeleton/etc. indexes at 3 cols on lg.
     return (
-      <div
-        className={cn("relative grid max-w-full gap-4 sm:grid-cols-2 lg:grid-cols-2", className)}
-      >
-        {children}
+      <div className="@container">
+        <div
+          className={cn("relative grid max-w-full gap-4 sm:grid-cols-2 lg:grid-cols-3", className)}
+        >
+          {children}
+        </div>
       </div>
     );
   },
