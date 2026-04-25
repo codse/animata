@@ -18,7 +18,7 @@ export default function SplitText({
   return (
     <div
       className={cn(
-        "relative mx-auto cursor-sword text-4xl font-black uppercase text-yellow-500 md:text-5xl lg:text-9xl",
+        "relative mx-auto text-4xl font-black uppercase text-yellow-500 md:text-5xl lg:text-9xl",
         className,
       )}
     >
@@ -39,7 +39,7 @@ export default function SplitText({
               });
             }}
             key={`${letter}-${index}`}
-            className="relative inline-flex h-full cursor-sword flex-col leading-none"
+            className="relative inline-flex h-full flex-col leading-none"
             aria-hidden
           >
             {/** top half */}

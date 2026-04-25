@@ -24,6 +24,10 @@ const categories = docsConfig.sidebarNav
     count: item.items?.length ?? 0,
   }));
 
+const components = docsConfig.sidebarNav
+  .filter((item) => item.title !== "Getting Started" && item.title !== "Contributing")
+  .reduce((acc, group) => acc + (group.items?.length ?? 0), 0);
+
 const stargazers = [
   {
     name: "@jattinmanhas",
@@ -224,7 +228,7 @@ export default function StatsBento() {
               <div className="mt-2 flex items-baseline gap-1">
                 <RemountOnMouseIn>
                   <Counter
-                    targetValue={194}
+                    targetValue={components}
                     direction="up"
                     delay={0}
                     format={Formatter.number}

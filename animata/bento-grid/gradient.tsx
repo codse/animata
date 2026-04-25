@@ -31,7 +31,7 @@ function BentoCard({
   return (
     <MovingGradient
       animated={false}
-      className={cn("rounded-md", className)}
+      className={className}
       gradientClassName={cn("opacity-10", gradient)}
     >
       <section className="flex h-full flex-col gap-2 p-4">
@@ -57,7 +57,7 @@ function GetGradient() {
       className="sm:col-span-1 sm:row-span-2"
       gradient="from-cyan-900 via-60% via-sky-600 to-indigo-600"
     >
-      <div className="group/grid relative flex cursor-pointer flex-col justify-end rounded-md bg-zinc-950 p-2 text-2xl tracking-tight text-gray-100 md:text-4xl">
+      <div className="group/grid relative flex cursor-pointer flex-col justify-end bg-zinc-950 p-2.5 text-2xl tracking-tight text-gray-100 md:text-4xl">
         <div className="font-light">Get</div>
         <div className="-mt-2 font-bold">Gradients</div>
         <div className="flex h-6 w-6 items-center justify-center rounded-full border bg-white transition duration-700 group-hover/grid:rotate-[360] md:h-8 md:w-8">

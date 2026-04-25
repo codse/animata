@@ -201,7 +201,7 @@ export default function WaveReveal({
   return (
     <div
       className={cn(
-        "relative flex flex-wrap justify-center whitespace-pre px-2 text-4xl font-black md:px-6 md:text-7xl",
+        "relative flex flex-wrap justify-center whitespace-pre px-2 text-4xl font-medium md:px-6 md:text-7xl",
         className,
       )}
     >

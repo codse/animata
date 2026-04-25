@@ -34,7 +34,9 @@ const Letter = ({ letter, className }: { letter: string; className?: string }) =
   const char = String.fromCharCode(code);
 
   return (
-    <span className={cn("inline-block min-w-[1ch] text-center text-foreground", className)}>
+    <span
+      className={cn("inline-block min-w-[1ch] font-mono text-center text-foreground", className)}
+    >
       {char === " " ? "\u00A0" : char}
     </span>
   );
