@@ -13,7 +13,6 @@ type Story = StoryObj<typeof meta>;
 
 export const Primary: Story = {
   args: {
-    text: "Focus resolves clearly.",
     speed: 0.72,
     holdMs: 550,
     gapMs: 320,

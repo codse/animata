@@ -13,7 +13,6 @@ type Story = StoryObj<typeof meta>;
 
 export const Primary: Story = {
   args: {
-    text: "Designed to move.\nBuilt to focus.",
     speed: 0.72,
     holdMs: 550,
     gapMs: 320,
