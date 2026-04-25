@@ -18,23 +18,18 @@ author: pixelpoint
 
 <Step>Install the shared runtime</Step>
 
-Every preset in the text category shares its WAAPI loop + scoped stage
-styles with the same `text-animator` runtime. Skip this step if you
-already added it for another text preset.
+Every preset in the text category shares its WAAPI loop with the same
+`text-animator` runtime (styles are inlined into the file via a
+`<style>` block). Skip this step if you already added it for another
+text preset.
 
 ```bash
-mkdir -p components/animata/text && touch components/animata/text/text-animator.tsx components/animata/text/text-animator.css
+mkdir -p components/animata/text && touch components/animata/text/text-animator.tsx
 ```
 
 Paste the runtime into `text-animator.tsx`:
 
 ```tsx file=<rootDir>/animata/text/text-animator.tsx
-
-```
-
-And the styles into `text-animator.css`:
-
-```css file=<rootDir>/animata/text/text-animator.css
 
 ```
 

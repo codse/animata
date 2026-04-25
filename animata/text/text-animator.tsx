@@ -4,7 +4,68 @@ import { useEffect, useRef, useState } from "react";
 
 import { cn } from "@/lib/utils";
 
-import "./text-animator.css";
+const STYLES = `
+.text-animation-stage {
+  container-type: inline-size;
+  display: grid;
+  grid-template-areas: "title";
+  height: 100%;
+  min-height: 0;
+  padding: clamp(1rem, 5cqi, 1.5rem);
+  perspective: 900px;
+  place-items: center;
+  width: 100%;
+}
+.text-animation-title {
+  font-size: clamp(1.375rem, 10cqi, 2.125rem);
+  font-variant-numeric: tabular-nums;
+  font-weight: 580;
+  grid-area: title;
+  letter-spacing: -0.022em;
+  line-height: 1.08;
+  margin: 0;
+  max-width: min(92%, 18ch);
+  pointer-events: none;
+  text-align: center;
+  text-wrap: balance;
+  transform-style: preserve-3d;
+}
+.text-animation-unit {
+  backface-visibility: hidden;
+  display: inline-block;
+  transform-origin: 50% 55%;
+  white-space: pre;
+  will-change: transform, opacity, filter;
+}
+.text-animation-unit.line {
+  display: block;
+}
+.text-animation-kinetic-line {
+  height: 72px;
+  position: relative;
+  width: min(92%, 270px);
+}
+.text-animation-kinetic-stack {
+  height: 132px;
+  position: relative;
+  width: min(92%, 270px);
+}
+.text-animation-kinetic-word {
+  backface-visibility: hidden;
+  font-size: clamp(1.375rem, 10cqi, 2.125rem);
+  font-weight: 580;
+  left: 50%;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  position: absolute;
+  top: 50%;
+  white-space: nowrap;
+  will-change: transform, opacity, filter;
+}
+.text-animation-fallback {
+  opacity: 0.74;
+}
+`;
 
 export type TextAnimationTarget = "whole" | "per-character" | "per-word" | "per-line";
 
@@ -952,6 +1013,8 @@ export default function TextAnimator({
         className,
       )}
     >
+      {/* biome-ignore lint/security/noDangerouslySetInnerHtml: static stylesheet, no user input */}
+      <style dangerouslySetInnerHTML={{ __html: STYLES }} />
       <div ref={stageRef} className={cn("text-animation-stage absolute inset-0", stageClassName)}>
         {failed && samples?.[0] ? (
           <h3 className="text-animation-title text-animation-fallback">{samples[0]}</h3>
