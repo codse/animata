@@ -107,7 +107,7 @@ export default function ShortSlideDown({
     }),
     [build],
   );
-  const effectivePhrases = useMemo(() => phrases ?? (DEFAULT_PHRASES as string[][]), [phrases]);
+  const effectivePhrases = useMemo(() => phrases ?? DEFAULT_PHRASES.map((p) => [...p]), [phrases]);
   return (
     <TextAnimator
       spec={spec}

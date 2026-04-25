@@ -82,7 +82,7 @@ export default function Typewriter({
     [enter, exit],
   );
   const samples = useMemo(() => {
-    if (text == null) return DEFAULT_SAMPLES as string[];
+    if (text == null) return [...DEFAULT_SAMPLES];
     return Array.isArray(text) ? text : [text];
   }, [text]);
   return (
