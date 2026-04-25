@@ -46,9 +46,9 @@ const BASE_SPEC: TextAnimationSpec = {
 };
 
 const DEFAULT_SAMPLES: readonly string[] = [
-  "Think different.",
-  "Built to flow.",
-  "Motion with intent.",
+  "Coming into focus.",
+  "Edges sharpen up.",
+  "Letters land softly.",
 ];
 
 export interface SoftBlurInProps {

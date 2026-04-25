@@ -47,9 +47,9 @@ const BASE_SPEC: TextAnimationSpec = {
 };
 
 const DEFAULT_SAMPLES: readonly string[] = [
-  "Designed to move.\nBuilt to focus.",
-  "Quiet motion.\nStrong hierarchy.",
-  "Premium feel.\nEvery frame.",
+  "Two lines\nrise as one.",
+  "A headline\nlifts into view.",
+  "Clean reveal,\nclean exit.",
 ];
 
 export interface MaskRevealUpProps {

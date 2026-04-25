@@ -43,9 +43,9 @@ const BASE_SPEC: TextAnimationSpec = {
 };
 
 const DEFAULT_SAMPLES: readonly string[] = [
-  "Beautifully simple.",
-  "Designed for focus.",
-  "Built for people.",
+  "A phrase, then another.",
+  "Words trade places.",
+  "Calm replacements.",
 ];
 
 export interface PerWordCrossfadeProps {

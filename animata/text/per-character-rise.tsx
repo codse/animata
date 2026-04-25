@@ -42,9 +42,9 @@ const BASE_SPEC: TextAnimationSpec = {
 };
 
 const DEFAULT_SAMPLES: readonly string[] = [
-  "One more thing.",
-  "Fast and fluid.",
-  "Sharp by design.",
+  "Each letter rises in.",
+  "Rises into place.",
+  "Crisp on every beat.",
 ];
 
 export interface PerCharacterRiseProps {

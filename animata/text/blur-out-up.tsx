@@ -47,9 +47,9 @@ const BASE_SPEC: TextAnimationSpec = {
 };
 
 const DEFAULT_SAMPLES: readonly string[] = [
-  "Clear in, airy out.",
-  "Lightweight typography.",
-  "Exit with grace.",
+  "Lands clean, leaves airy.",
+  "Drifts up on the way out.",
+  "Light type, lighter exit.",
 ];
 
 export interface BlurOutUpProps {

@@ -44,9 +44,9 @@ const BASE_SPEC: TextAnimationSpec = {
 };
 
 const DEFAULT_SAMPLES: readonly string[] = [
-  "Welcome to motion.",
-  "Small details matter.",
-  "Quietly premium.",
+  "A whisper of motion.",
+  "Barely a gesture.",
+  "Subtle by design.",
 ];
 
 export interface MicroScaleFadeProps {

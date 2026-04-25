@@ -54,9 +54,9 @@ const BASE_SPEC: TextAnimationSpec = {
 };
 
 const DEFAULT_SAMPLES: readonly string[] = [
-  "Move with intent.",
-  "Words glide across.",
-  "Build the rhythm.",
+  "Slides in as one piece.",
+  "Reveals together, in turn.",
+  "One motion, three words.",
 ];
 
 export interface ShortSlideRightProps {

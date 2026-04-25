@@ -48,9 +48,9 @@ const BASE_SPEC: TextAnimationSpec = {
 };
 
 const DEFAULT_SAMPLES: readonly string[] = [
-  "Shiny details.",
-  "Glide with intent.",
-  "Soft and precise.",
+  "Drifts in from the left.",
+  "Carries a soft shine.",
+  "Sweeps across the line.",
 ];
 
 export interface ShimmerSweepProps {

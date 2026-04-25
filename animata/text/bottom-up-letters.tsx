@@ -43,7 +43,7 @@ const BASE_SPEC: TextAnimationSpec = {
   },
 };
 
-const DEFAULT_SAMPLES: readonly string[] = ["Shift", "Stage", "Letter"];
+const DEFAULT_SAMPLES: readonly string[] = ["Climb", "Lift", "Stack"];
 
 export interface BottomUpLettersProps {
   /** Text(s) to animate. String = single, array = cycle through. */

@@ -47,9 +47,9 @@ const BASE_SPEC: TextAnimationSpec = {
 };
 
 const DEFAULT_SAMPLES: readonly string[] = [
-  "Quietly refined.",
-  "Polished transitions.",
-  "A soft close.",
+  "Settles in, then bows out.",
+  "A restrained sign-off.",
+  "Closes without fanfare.",
 ];
 
 export interface ScaleDownFadeProps {

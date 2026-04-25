@@ -44,9 +44,9 @@ const BASE_SPEC: TextAnimationSpec = {
 };
 
 const DEFAULT_SAMPLES: readonly string[] = [
-  "Fast. Crisp. Fluid.",
-  "Pop into place.",
-  "Smooth by default.",
+  "Lands with a small bounce.",
+  "Settles after the spring.",
+  "A gentle overshoot.",
 ];
 
 export interface SpringScaleInProps {

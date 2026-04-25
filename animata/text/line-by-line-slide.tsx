@@ -44,9 +44,9 @@ const BASE_SPEC: TextAnimationSpec = {
 };
 
 const DEFAULT_SAMPLES: readonly string[] = [
-  "Think different.\nDo more.",
-  "Built for speed.\nMade to last.",
-  "Clear ideas.\nClean motion.",
+  "Each line\nslides in turn.",
+  "Top arrives,\nthen the next.",
+  "Reads top down,\nleft to right.",
 ];
 
 export interface LineByLineSlideProps {

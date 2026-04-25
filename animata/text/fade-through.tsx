@@ -51,9 +51,9 @@ const BASE_SPEC: TextAnimationSpec = {
 };
 
 const DEFAULT_SAMPLES: readonly string[] = [
-  "Calm transitions.",
-  "Fade through content.",
-  "Focus shifts smoothly.",
+  "Old fades, new arrives.",
+  "A clean swap of copy.",
+  "Replaces without seams.",
 ];
 
 export interface FadeThroughProps {

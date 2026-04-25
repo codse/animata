@@ -48,9 +48,9 @@ const BASE_SPEC: TextAnimationSpec = {
 };
 
 const DEFAULT_SAMPLES: readonly string[] = [
-  "Layered navigation.",
-  "Hierarchy made clear.",
-  "Depth with restraint.",
+  "Step swaps on the y-axis.",
+  "No easing, just rhythm.",
+  "Editorial pacing.",
 ];
 
 export interface SharedAxisYProps {

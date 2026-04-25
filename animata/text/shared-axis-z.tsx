@@ -47,9 +47,9 @@ const BASE_SPEC: TextAnimationSpec = {
 };
 
 const DEFAULT_SAMPLES: readonly string[] = [
-  "Zooming between states.",
-  "Elevate and settle.",
-  "Scale with purpose.",
+  "Recedes, then returns.",
+  "Steps forward, then back.",
+  "A subtle shift in depth.",
 ];
 
 export interface SharedAxisZProps {

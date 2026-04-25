@@ -51,9 +51,9 @@ const BASE_SPEC: TextAnimationSpec = {
 };
 
 const DEFAULT_SAMPLES: readonly string[] = [
-  "Focus resolves clearly.",
-  "Detail emerges.",
-  "Then softly recedes.",
+  "Pulls into focus.",
+  "A camera-style resolve.",
+  "Then a quiet defocus.",
 ];
 
 export interface FocusBlurResolveProps {
