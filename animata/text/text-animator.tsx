@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import { cn } from "@/lib/utils";
 
@@ -961,6 +961,21 @@ export default function TextAnimator({
   const stageRef = useRef<HTMLDivElement | null>(null);
   const [failed, setFailed] = useState(false);
 
+  // Track samples/phrases by their *content* rather than array reference so
+  // a parent that hands us a fresh-but-identical array on every render
+  // doesn't tear down and restart the animation. / are sentinels
+  // unlikely to appear in user-supplied copy.
+  const samplesKey = useMemo(() => samples?.join("") ?? "", [samples]);
+  const phrasesKey = useMemo(() => phrases?.map((p) => p.join("")).join("") ?? "", [phrases]);
+
+  // Refs let the effect read the latest samples/phrases without listing them
+  // as deps (we drive re-runs via the content keys above).
+  const samplesRef = useRef(samples);
+  const phrasesRef = useRef(phrases);
+  samplesRef.current = samples;
+  phrasesRef.current = phrases;
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: samplesKey/phrasesKey track content; samples/phrases are read live from refs.
   useEffect(() => {
     const stage = stageRef.current;
     if (!stage) return;
@@ -976,8 +991,10 @@ export default function TextAnimator({
 
     const controller = createLoop(stage, runtime);
     const renderer = spec.customRenderer;
-    const effectiveSamples = samples?.length ? samples : ["Animation"];
-    const effectivePhrases = phrases?.length ? phrases : [["Build", "the", "line"]];
+    const liveSamples = samplesRef.current;
+    const livePhrases = phrasesRef.current;
+    const effectiveSamples = liveSamples?.length ? liveSamples : ["Animation"];
+    const effectivePhrases = livePhrases?.length ? livePhrases : [["Build", "the", "line"]];
 
     const launch = () => {
       let loop: Promise<void>;
@@ -1004,7 +1021,7 @@ export default function TextAnimator({
     return () => {
       cleanupLoop(controller);
     };
-  }, [spec, samples, phrases, speed, holdMs, gapMs, yTravel]);
+  }, [spec, samplesKey, phrasesKey, speed, holdMs, gapMs, yTravel]);
 
   return (
     <div
