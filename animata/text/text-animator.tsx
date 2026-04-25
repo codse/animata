@@ -109,6 +109,7 @@ type LoopController = {
   cancelled: boolean;
   stage: HTMLElement;
   timers: Set<number>;
+  pendingResolvers: Set<() => void>;
   runtime: typeof DEFAULT_RUNTIME;
 };
 
@@ -282,7 +283,14 @@ function animatePhase(
 }
 
 function createLoop(stage: HTMLElement, runtime: typeof DEFAULT_RUNTIME): LoopController {
-  return { animations: new Set(), cancelled: false, stage, timers: new Set(), runtime };
+  return {
+    animations: new Set(),
+    cancelled: false,
+    stage,
+    timers: new Set(),
+    pendingResolvers: new Set(),
+    runtime,
+  };
 }
 
 function cleanupLoop(c: LoopController) {
@@ -295,6 +303,12 @@ function cleanupLoop(c: LoopController) {
     a.cancel();
   });
   c.animations.clear();
+  // Resolve any in-flight sleep() promises so awaiting loop functions can
+  // observe the cancellation flag and unwind, releasing closures + DOM refs.
+  c.pendingResolvers.forEach((resolve) => {
+    resolve();
+  });
+  c.pendingResolvers.clear();
   clearStage(c.stage);
 }
 
@@ -315,7 +329,14 @@ function schedule(c: LoopController, cb: () => void, delay: number) {
 
 function sleep(c: LoopController, delay: number): Promise<void> {
   if (c.cancelled || delay <= 0) return Promise.resolve();
-  return new Promise((resolve) => schedule(c, resolve, delay));
+  return new Promise((resolve) => {
+    const wrapped = () => {
+      c.pendingResolvers.delete(wrapped);
+      resolve();
+    };
+    c.pendingResolvers.add(wrapped);
+    schedule(c, wrapped, delay);
+  });
 }
 
 function waitForAnimations(animations: Animation[]) {
