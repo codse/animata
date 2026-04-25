@@ -31,11 +31,13 @@ const Letter = ({ letter, className }: { letter: string; className?: string }) =
     return () => clearInterval(interval);
   }, [letter]);
 
+  const char = String.fromCharCode(code);
+
   return (
     <span
-      className={cn("inline-block w-[1ch] text-center whitespace-pre text-foreground", className)}
+      className={cn("inline-block min-w-[1ch] font-mono text-center text-foreground", className)}
     >
-      {String.fromCharCode(code)}
+      {char === " " ? "\u00A0" : char}
     </span>
   );
 };

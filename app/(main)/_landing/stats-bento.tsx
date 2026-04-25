@@ -24,6 +24,10 @@ const categories = docsConfig.sidebarNav
     count: item.items?.length ?? 0,
   }));
 
+const components = docsConfig.sidebarNav
+  .filter((item) => item.title !== "Getting Started" && item.title !== "Contributing")
+  .reduce((acc, group) => acc + (group.items?.length ?? 0), 0);
+
 const stargazers = [
   {
     name: "@jattinmanhas",
@@ -215,7 +219,7 @@ export default function StatsBento() {
             </div>
           </BentoCard>
 
-          {/* Card 2: 194+ Components + Categories */}
+          {/* Card 2: 158+ Components + Categories */}
           <BentoCard className="flex flex-col">
             <div className="flex-1">
               <span className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground sm:text-xs">
@@ -224,7 +228,7 @@ export default function StatsBento() {
               <div className="mt-2 flex items-baseline gap-1">
                 <RemountOnMouseIn>
                   <Counter
-                    targetValue={194}
+                    targetValue={components}
                     direction="up"
                     delay={0}
                     format={Formatter.number}

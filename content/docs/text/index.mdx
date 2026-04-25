@@ -1,0 +1,239 @@
+---
+title: Text animations overview
+description: A collection of text effects — per-character reveals, per-word swaps, kinetic phrase builds, and editorial transitions. Drop-in text animation presets built on the Web Animations API.
+author: hari
+---
+
+import AnimatedGradientText from "@/animata/text/animated-gradient-text";
+import BlurOutUp from "@/animata/text/blur-out-up";
+import BoldCopy from "@/animata/text/bold-copy";
+import BottomUpLetters from "@/animata/text/bottom-up-letters";
+import CircularText from "@/animata/text/circular-text";
+import Counter from "@/animata/text/counter";
+import CycleText from "@/animata/text/cycle-text";
+import DoubleUnderline from "@/animata/text/double-underline";
+import FadeThrough from "@/animata/text/fade-through";
+import FocusBlurResolve from "@/animata/text/focus-blur-resolve";
+import GibberishText from "@/animata/text/gibberish-text";
+import GlitchText from "@/animata/text/glitch-text";
+import JitterText from "@/animata/text/jitter-text";
+import JumpingTextInstagram from "@/animata/text/jumping-text-instagram";
+import KineticCenterBuild from "@/animata/text/kinetic-center-build";
+import LineByLineSlide from "@/animata/text/line-by-line-slide";
+import MaskRevealUp from "@/animata/text/mask-reveal-up";
+import MicroScaleFade from "@/animata/text/micro-scale-fade";
+import MirrorText from "@/animata/text/mirror-text";
+import PerCharacterRise from "@/animata/text/per-character-rise";
+import PerWordCrossfade from "@/animata/text/per-word-crossfade";
+import ScaleDownFade from "@/animata/text/scale-down-fade";
+import SharedAxisY from "@/animata/text/shared-axis-y";
+import SharedAxisZ from "@/animata/text/shared-axis-z";
+import ShimmerSweep from "@/animata/text/shimmer-sweep";
+import ShortSlideDown from "@/animata/text/short-slide-down";
+import ShortSlideRight from "@/animata/text/short-slide-right";
+import SoftBlurIn from "@/animata/text/soft-blur-in";
+import SplitText from "@/animata/text/split-text";
+import SpringScaleIn from "@/animata/text/spring-scale-in";
+import SwapText from "@/animata/text/swap-text";
+import TextBorderAnimation from "@/animata/text/text-border-animation";
+import TextExplodeImessage from "@/animata/text/text-explode-imessage";
+import TextFlip from "@/animata/text/text-flip";
+import Ticker from "@/animata/text/ticker";
+import TopDownLetters from "@/animata/text/top-down-letters";
+import Typewriter from "@/animata/text/typewriter";
+import TypingText from "@/animata/text/typing-text";
+import UnderlineHoverText from "@/animata/text/underline-hover-text";
+import WaveReveal from "@/animata/text/wave-reveal";
+import InView from "@/components/in-view";
+
+<ComponentList className="grid-cols-1 sm:grid-cols-1 lg:grid-cols-1 @3xl:grid-cols-2">
+  <ComponentListItem copyId="animated-gradient-text" href="/docs/text/animated-gradient-text">
+    <AnimatedGradientText className="text-3xl md:text-4xl font-bold">Gradient Text</AnimatedGradientText>
+  </ComponentListItem>
+
+  <ComponentListItem copyId="blur-out-up" href="/docs/text/blur-out-up">
+    <BlurOutUp />
+  </ComponentListItem>
+
+  <ComponentListItem copyId="bold-copy" href="/docs/text/bold-copy">
+    <BoldCopy text="Animata" size="md" />
+  </ComponentListItem>
+
+  <ComponentListItem copyId="bottom-up-letters" href="/docs/text/bottom-up-letters">
+    <BottomUpLetters />
+  </ComponentListItem>
+
+  <ComponentListItem copyId="circular-text" href="/docs/text/circular-text">
+    <CircularText text="CIRCULAR•TEXT•COMPONENT•" spinDuration={30} radius={5} />
+  </ComponentListItem>
+
+  <ComponentListItem copyId="counter" href="/docs/text/counter">
+    <Counter targetValue={1000} direction="up" delay={0} />
+  </ComponentListItem>
+
+  <ComponentListItem copyId="cycle-text" href="/docs/text/cycle-text">
+    <CycleText />
+  </ComponentListItem>
+
+  <ComponentListItem copyId="double-underline" href="/docs/text/double-underline">
+    <DoubleUnderline className="text-xl md:text-2xl font-bold">Built using</DoubleUnderline>
+  </ComponentListItem>
+
+  <ComponentListItem copyId="fade-through" href="/docs/text/fade-through">
+    <FadeThrough />
+  </ComponentListItem>
+
+  <ComponentListItem copyId="focus-blur-resolve" href="/docs/text/focus-blur-resolve">
+    <FocusBlurResolve />
+  </ComponentListItem>
+
+  <ComponentListItem copyId="gibberish-text" href="/docs/text/gibberish-text">
+    <InView>
+      <GibberishText text="Hello World" className="text-2xl sm:text-3xl md:text-4xl font-black" />
+    </InView>
+  </ComponentListItem>
+
+  <ComponentListItem copyId="glitch-text" href="/docs/text/glitch-text">
+    <InView>
+      <GlitchText text="1000 Stars" starCount={40} className="text-2xl sm:text-3xl md:text-4xl" />
+    </InView>
+  </ComponentListItem>
+
+  <ComponentListItem copyId="jitter-text" href="/docs/text/jitter-text">
+    <JitterText text="Jitter Text" duration={0.6} className="text-3xl md:text-4xl font-black" />
+  </ComponentListItem>
+
+  <ComponentListItem copyId="jumping-text-instagram" href="/docs/text/jumping-text-instagram">
+    <InView>
+      <JumpingTextInstagram text="Jumping text" mode="word" className="text-xl sm:text-2xl md:text-3xl" />
+    </InView>
+  </ComponentListItem>
+
+  <ComponentListItem copyId="kinetic-center-build" href="/docs/text/kinetic-center-build">
+    <KineticCenterBuild />
+  </ComponentListItem>
+
+  <ComponentListItem copyId="line-by-line-slide" href="/docs/text/line-by-line-slide">
+    <LineByLineSlide />
+  </ComponentListItem>
+
+  <ComponentListItem copyId="mask-reveal-up" href="/docs/text/mask-reveal-up">
+    <MaskRevealUp />
+  </ComponentListItem>
+
+  <ComponentListItem copyId="micro-scale-fade" href="/docs/text/micro-scale-fade">
+    <MicroScaleFade />
+  </ComponentListItem>
+
+  <ComponentListItem copyId="mirror-text" href="/docs/text/mirror-text">
+    <MirrorText text="ANIMATA" direction="up" />
+  </ComponentListItem>
+
+  <ComponentListItem copyId="per-character-rise" href="/docs/text/per-character-rise">
+    <PerCharacterRise />
+  </ComponentListItem>
+
+  <ComponentListItem copyId="per-word-crossfade" href="/docs/text/per-word-crossfade">
+    <PerWordCrossfade />
+  </ComponentListItem>
+
+  <ComponentListItem copyId="scale-down-fade" href="/docs/text/scale-down-fade">
+    <ScaleDownFade />
+  </ComponentListItem>
+
+  <ComponentListItem copyId="shared-axis-y" href="/docs/text/shared-axis-y">
+    <SharedAxisY />
+  </ComponentListItem>
+
+  <ComponentListItem copyId="shared-axis-z" href="/docs/text/shared-axis-z">
+    <SharedAxisZ />
+  </ComponentListItem>
+
+  <ComponentListItem copyId="shimmer-sweep" href="/docs/text/shimmer-sweep">
+    <ShimmerSweep />
+  </ComponentListItem>
+
+  <ComponentListItem copyId="short-slide-down" href="/docs/text/short-slide-down">
+    <ShortSlideDown />
+  </ComponentListItem>
+
+  <ComponentListItem copyId="short-slide-right" href="/docs/text/short-slide-right">
+    <ShortSlideRight />
+  </ComponentListItem>
+
+  <ComponentListItem copyId="soft-blur-in" href="/docs/text/soft-blur-in">
+    <SoftBlurIn />
+  </ComponentListItem>
+
+  <ComponentListItem copyId="split-text" href="/docs/text/split-text">
+    <InView>
+      <SplitText text="ANIMATA" className="text-xl sm:text-3xl md:text-4xl lg:text-5xl" />
+    </InView>
+  </ComponentListItem>
+
+  <ComponentListItem copyId="spring-scale-in" href="/docs/text/spring-scale-in">
+    <SpringScaleIn />
+  </ComponentListItem>
+
+  <ComponentListItem copyId="swap-text" href="/docs/text/swap-text">
+    <SwapText initialText="Open" finalText="Close" supportsHover={true} disableClick={false} />
+  </ComponentListItem>
+
+  <ComponentListItem copyId="text-border-animation" href="/docs/text/text-border-animation">
+    <TextBorderAnimation text="Programming" />
+  </ComponentListItem>
+
+  <ComponentListItem copyId="text-explode-imessage" href="/docs/text/text-explode-imessage">
+    <TextExplodeImessage text="iMessage explode 🎉" mode="loop" className="text-red-500" />
+  </ComponentListItem>
+
+  <ComponentListItem copyId="text-flip" href="/docs/text/text-flip">
+    <TextFlip />
+  </ComponentListItem>
+
+  <ComponentListItem copyId="ticker" href="/docs/text/ticker">
+    <InView>
+      <Ticker value="456.78" delay={0} className="text-3xl sm:text-4xl md:text-6xl font-black" />
+    </InView>
+  </ComponentListItem>
+
+  <ComponentListItem copyId="top-down-letters" href="/docs/text/top-down-letters">
+    <TopDownLetters />
+  </ComponentListItem>
+
+  <ComponentListItem copyId="typewriter" href="/docs/text/typewriter">
+    <Typewriter />
+  </ComponentListItem>
+
+  <ComponentListItem copyId="typing-text" href="/docs/text/typing-text">
+    <div className="min-w-96 max-w-96 rounded-sm bg-gray-800 px-4 py-2 text-yellow-400 shadow-lg">
+      <TypingText
+        text="> yarn add @animata/awesomeness"
+        delay={32}
+        repeat={true}
+        alwaysVisibleCount={1}
+        waitTime={1000}
+      />
+    </div>
+  </ComponentListItem>
+
+  <ComponentListItem copyId="underline-hover-text" href="/docs/text/underline-hover-text">
+    <UnderlineHoverText
+      text="Hover over me"
+      fontSize="text-xl md:text-2xl"
+      fontWeight="font-medium"
+    />
+  </ComponentListItem>
+
+  <ComponentListItem copyId="wave-reveal" href="/docs/text/wave-reveal">
+    <WaveReveal
+      text="Hello World"
+      direction="down"
+      mode="letter"
+      duration="200ms"
+      delay={0}
+      blur={true}
+      className="text-foreground text-3xl md:text-4xl"
+    />
+  </ComponentListItem>
+</ComponentList>

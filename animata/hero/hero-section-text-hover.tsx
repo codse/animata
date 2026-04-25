@@ -84,7 +84,7 @@ const HeroSectionTextHover: React.FC<HeroCardProps> = ({ className }) => {
                   <span
                     key={index}
                     className={cn(
-                      "pointer-events-none absolute transform text-lg transition-transform duration-500 group-hover/hero:scale-110 sm:text-2xl md:text-4xl",
+                      "pointer-events-none absolute transform text-lg transition-transform duration-300 ease-[cubic-bezier(0.5,1.8,0.4,1)] group-hover/hero:scale-110 sm:text-2xl md:text-4xl",
                       dest.position,
                     )}
                   >
@@ -104,7 +104,7 @@ const HeroSectionTextHover: React.FC<HeroCardProps> = ({ className }) => {
                   <span
                     key={index}
                     className={cn(
-                      "pointer-events-none absolute transform text-lg transition-transform duration-500 group-hover/hero:scale-110 sm:text-2xl md:text-4xl",
+                      "pointer-events-none absolute transform text-lg transition-transform duration-300 ease-[cubic-bezier(0.5,1.8,0.4,1)] group-hover/hero:scale-110 sm:text-2xl md:text-4xl",
                       gem.position,
                     )}
                   >
@@ -115,7 +115,10 @@ const HeroSectionTextHover: React.FC<HeroCardProps> = ({ className }) => {
             </div>
           </div>
         </div>
-        <button className="cursor-pointer rounded-3xl bg-orange-400 px-4 py-2 font-mono tracking-tighter hover:bg-orange-500">
+        <button
+          className="cursor-pointer rounded-3xl bg-yellow-400 px-4 py-2 font-mono tracking-tighter hover:bg-yellow-500"
+          type="button"
+        >
           Begin your journey
         </button>
       </div>

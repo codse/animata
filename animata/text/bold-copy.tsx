@@ -6,13 +6,30 @@ const tourney = Tourney({
   subsets: ["latin"],
 });
 
+const sizePresets = {
+  sm: {
+    title: "text-sm group-hover/bold:text-xl md:text-lg group-hover/bold:md:text-2xl",
+    background: "text-xl md:text-2xl",
+  },
+  md: {
+    title: "text-base group-hover/bold:text-2xl md:text-xl group-hover/bold:md:text-4xl",
+    background: "text-2xl md:text-4xl",
+  },
+  xl: {
+    title: "text-lg group-hover/bold:text-4xl md:text-3xl group-hover/bold:md:text-8xl",
+    background: "text-4xl md:text-8xl",
+  },
+} as const;
+
 export default function BoldCopy({
   text = "animata",
+  size = "xl",
   className,
   textClassName,
   backgroundTextClassName,
 }: {
   text: string;
+  size?: keyof typeof sizePresets;
   className?: string;
   textClassName?: string;
   backgroundTextClassName?: string;
@@ -20,6 +37,8 @@ export default function BoldCopy({
   if (!text?.length) {
     return null;
   }
+
+  const preset = size && size in sizePresets ? sizePresets[size] : sizePresets.xl;
 
   return (
     <div
@@ -31,7 +50,8 @@ export default function BoldCopy({
     >
       <div
         className={cn(
-          "text-4xl font-bold uppercase text-foreground/15 transition-all group-hover/bold:opacity-50 md:text-8xl",
+          "font-bold uppercase text-foreground/15 transition-all group-hover/bold:opacity-50 select-none",
+          preset.background,
           backgroundTextClassName,
         )}
       >
@@ -39,7 +59,8 @@ export default function BoldCopy({
       </div>
       <div
         className={cn(
-          "text-md absolute font-bold uppercase text-foreground transition-all duration-300 group-hover/bold:text-4xl md:text-3xl group-hover/bold:md:text-8xl",
+          "absolute font-bold uppercase text-foreground transition-all duration-300",
+          preset.title,
           textClassName,
         )}
       >

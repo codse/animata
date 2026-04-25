@@ -64,7 +64,7 @@ export function HeroVariantA() {
             Components with personality. For sites with personality.
           </h1>
           <p className="mt-5 max-w-[400px] text-[16px] leading-[1.6] text-[hsl(var(--text-secondary))]">
-            194+ animated React components. Copy the code, drop it in your project. Every
+            158+ animated React components. Copy the code, drop it in your project. Every
             interaction feels intentional.
           </p>
           <HeroCTAs />
@@ -120,13 +120,13 @@ export function HeroVariantB() {
     <HeroShell>
       <div className="mx-auto max-w-3xl text-center">
         <p className="mb-4 text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
-          194+ animated components
+          158+ animated components
         </p>
         <h1 className="font-[family-name:var(--font-display)] text-[clamp(2.5rem,6vw,4.5rem)] leading-[1] tracking-[-0.03em] text-foreground">
           Make every click feel like something.
         </h1>
         <p className="mx-auto mt-5 max-w-lg text-[17px] leading-[1.6] text-[hsl(var(--text-secondary))]">
-          194+ animated React components. Copy the code, paste into your project. Every interaction
+          158+ animated React components. Copy the code, paste into your project. Every interaction
           delights.
         </p>
         <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
@@ -222,7 +222,7 @@ export function HeroVariantC() {
             <span className="text-[hsl(var(--accent))]">Yours won&apos;t.</span>
           </h1>
           <p className="mt-5 max-w-[420px] text-[16px] leading-[1.6] text-[hsl(var(--text-secondary))]">
-            194+ animated React components that feel hand-crafted. Copy the code, paste it in. Ship
+            158+ animated React components that feel hand-crafted. Copy the code, paste it in. Ship
             something people notice.
           </p>
           <HeroCTAs />

@@ -9,7 +9,7 @@ export default function SectionOne() {
       <div className="mx-auto max-w-7xl px-4 lg:px-[67px]">
         <div className="mb-8">
           <p className="text-xs font-bold uppercase tracking-[0.2em] text-[hsl(var(--accent))]">
-            194+ components
+            158+ components
           </p>
           <h2 className="mt-2 font-[family-name:var(--font-display)] text-[clamp(24px,4vw,36px)] leading-tight tracking-[-0.02em] text-foreground">
             Every one is live. Every one is free.

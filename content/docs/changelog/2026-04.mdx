@@ -1,10 +1,97 @@
 ---
 title: April 2026
-description: shadcn registry launch, announcement ribbon, and site revamp.
-date: 2026-04-24
+description: 20 new text animation presets, shadcn registry launch, announcement ribbon, site revamp.
+date: 2026-04-25
 ---
 
-Big month. The shadcn registry went live, which changed how people got components into their projects. There was also a new announcement ribbon component, and the site got a meaningful speed and accessibility pass.
+Big month. Twenty new text animation presets landed, built on a shared WAAPI runtime. The shadcn registry also went live, changing how people get components into their projects. There was also a new announcement ribbon component, and the site got a meaningful speed and accessibility pass.
+
+## Text animations
+
+Twenty new presets built on a shared `TextAnimator` runtime. The timing model is consistent across all of them — swap one for another without rewriting anything.
+
+<div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2px', margin: '24px 0' }}>
+  <div style={{ padding: '14px 20px 14px 0', borderBottom: '1px solid var(--border)', lineHeight: '1.65' }}>
+    <a href="/docs/text/blur-out-up" style={{ fontWeight: 600 }}>Blur Out Up</a>
+    <div style={{ marginTop: '4px', color: 'var(--muted-foreground)', fontSize: '0.875em' }}>Words arrive clean and depart upward with increasing blur for airy exits.</div>
+  </div>
+  <div style={{ padding: '14px 0 14px 20px', borderBottom: '1px solid var(--border)', lineHeight: '1.65' }}>
+    <a href="/docs/text/bottom-up-letters" style={{ fontWeight: 600 }}>Bottom-Up Letters</a>
+    <div style={{ marginTop: '4px', color: 'var(--muted-foreground)', fontSize: '0.875em' }}>Letters rise from below in a pronounced staircase, one symbol at a time.</div>
+  </div>
+  <div style={{ padding: '14px 20px 14px 0', borderBottom: '1px solid var(--border)', lineHeight: '1.65' }}>
+    <a href="/docs/text/fade-through" style={{ fontWeight: 600 }}>Fade Through</a>
+    <div style={{ marginTop: '4px', color: 'var(--muted-foreground)', fontSize: '0.875em' }}>Material-style transition: old text fades out, new text fades in with a soft delay.</div>
+  </div>
+  <div style={{ padding: '14px 0 14px 20px', borderBottom: '1px solid var(--border)', lineHeight: '1.65' }}>
+    <a href="/docs/text/focus-blur-resolve" style={{ fontWeight: 600 }}>Focus Blur Resolve</a>
+    <div style={{ marginTop: '4px', color: 'var(--muted-foreground)', fontSize: '0.875em' }}>Heavy blur pulls into crisp text, then softly blurs out on exit.</div>
+  </div>
+  <div style={{ padding: '14px 20px 14px 0', borderBottom: '1px solid var(--border)', lineHeight: '1.65' }}>
+    <a href="/docs/text/kinetic-center-build" style={{ fontWeight: 600 }}>Kinetic Center Build</a>
+    <div style={{ marginTop: '4px', color: 'var(--muted-foreground)', fontSize: '0.875em' }}>Each new word enters from the right and pushes the line until the phrase locks centered.</div>
+  </div>
+  <div style={{ padding: '14px 0 14px 20px', borderBottom: '1px solid var(--border)', lineHeight: '1.65' }}>
+    <a href="/docs/text/line-by-line-slide" style={{ fontWeight: 600 }}>Line-by-Line Slide</a>
+    <div style={{ marginTop: '4px', color: 'var(--muted-foreground)', fontSize: '0.875em' }}>Lines enter from the left with a staggered slide and exit right for a flowing paragraph reveal.</div>
+  </div>
+  <div style={{ padding: '14px 20px 14px 0', borderBottom: '1px solid var(--border)', lineHeight: '1.65' }}>
+    <a href="/docs/text/mask-reveal-up" style={{ fontWeight: 600 }}>Mask Reveal Up</a>
+    <div style={{ marginTop: '4px', color: 'var(--muted-foreground)', fontSize: '0.875em' }}>Lines reveal upward with a soft masked feel and compact stagger.</div>
+  </div>
+  <div style={{ padding: '14px 0 14px 20px', borderBottom: '1px solid var(--border)', lineHeight: '1.65' }}>
+    <a href="/docs/text/micro-scale-fade" style={{ fontWeight: 600 }}>Micro Scale Fade</a>
+    <div style={{ marginTop: '4px', color: 'var(--muted-foreground)', fontSize: '0.875em' }}>Tiny scale pop used as subtle premium polish for labels and headings.</div>
+  </div>
+  <div style={{ padding: '14px 20px 14px 0', borderBottom: '1px solid var(--border)', lineHeight: '1.65' }}>
+    <a href="/docs/text/per-character-rise" style={{ fontWeight: 600 }}>Per-Character Rise</a>
+    <div style={{ marginTop: '4px', color: 'var(--muted-foreground)', fontSize: '0.875em' }}>Letters slide up from below with no blur — crisp and kinetic, tvOS-style.</div>
+  </div>
+  <div style={{ padding: '14px 0 14px 20px', borderBottom: '1px solid var(--border)', lineHeight: '1.65' }}>
+    <a href="/docs/text/per-word-crossfade" style={{ fontWeight: 600 }}>Per-Word Crossfade</a>
+    <div style={{ marginTop: '4px', color: 'var(--muted-foreground)', fontSize: '0.875em' }}>Words fade into place one after another with a short vertical drift.</div>
+  </div>
+  <div style={{ padding: '14px 20px 14px 0', borderBottom: '1px solid var(--border)', lineHeight: '1.65' }}>
+    <a href="/docs/text/scale-down-fade" style={{ fontWeight: 600 }}>Scale Down Fade</a>
+    <div style={{ marginTop: '4px', color: 'var(--muted-foreground)', fontSize: '0.875em' }}>Subtle settle-in with a restrained scale-down fade on exit.</div>
+  </div>
+  <div style={{ padding: '14px 0 14px 20px', borderBottom: '1px solid var(--border)', lineHeight: '1.65' }}>
+    <a href="/docs/text/shared-axis-y" style={{ fontWeight: 600 }}>Shared Axis Y</a>
+    <div style={{ marginTop: '4px', color: 'var(--muted-foreground)', fontSize: '0.875em' }}>Per-word hard-cut transition with staircase timing for sharp editorial swaps.</div>
+  </div>
+  <div style={{ padding: '14px 20px 14px 0', borderBottom: '1px solid var(--border)', lineHeight: '1.65' }}>
+    <a href="/docs/text/shared-axis-z" style={{ fontWeight: 600 }}>Shared Axis Z</a>
+    <div style={{ marginTop: '4px', color: 'var(--muted-foreground)', fontSize: '0.875em' }}>Scale-based shared-axis transition for focus shifts and depth changes.</div>
+  </div>
+  <div style={{ padding: '14px 0 14px 20px', borderBottom: '1px solid var(--border)', lineHeight: '1.65' }}>
+    <a href="/docs/text/shimmer-sweep" style={{ fontWeight: 600 }}>Shimmer Sweep</a>
+    <div style={{ marginTop: '4px', color: 'var(--muted-foreground)', fontSize: '0.875em' }}>A subtle light sweep across a headline, gliding from left to center.</div>
+  </div>
+  <div style={{ padding: '14px 20px 14px 0', borderBottom: '1px solid var(--border)', lineHeight: '1.65' }}>
+    <a href="/docs/text/short-slide-down" style={{ fontWeight: 600 }}>Short Slide Down</a>
+    <div style={{ marginTop: '4px', color: 'var(--muted-foreground)', fontSize: '0.875em' }}>Each new word drops in from above and pushes the stack until a three-line composition locks centered.</div>
+  </div>
+  <div style={{ padding: '14px 0 14px 20px', borderBottom: '1px solid var(--border)', lineHeight: '1.65' }}>
+    <a href="/docs/text/short-slide-right" style={{ fontWeight: 600 }}>Short Slide Right</a>
+    <div style={{ marginTop: '4px', color: 'var(--muted-foreground)', fontSize: '0.875em' }}>The whole phrase glides in from the left; words reveal in sequence through opacity only.</div>
+  </div>
+  <div style={{ padding: '14px 20px 14px 0', borderBottom: '1px solid var(--border)', lineHeight: '1.65' }}>
+    <a href="/docs/text/soft-blur-in" style={{ fontWeight: 600 }}>Soft Blur In</a>
+    <div style={{ marginTop: '4px', color: 'var(--muted-foreground)', fontSize: '0.875em' }}>Per-character fade-in with a gentle blur and upward drift — Apple's signature hero-title reveal.</div>
+  </div>
+  <div style={{ padding: '14px 0 14px 20px', borderBottom: '1px solid var(--border)', lineHeight: '1.65' }}>
+    <a href="/docs/text/spring-scale-in" style={{ fontWeight: 600 }}>Spring Scale In</a>
+    <div style={{ marginTop: '4px', color: 'var(--muted-foreground)', fontSize: '0.875em' }}>Words pop in with a soft overshoot scale, like a physical spring settling.</div>
+  </div>
+  <div style={{ padding: '14px 20px 14px 0', lineHeight: '1.65' }}>
+    <a href="/docs/text/top-down-letters" style={{ fontWeight: 600 }}>Top-Down Letters</a>
+    <div style={{ marginTop: '4px', color: 'var(--muted-foreground)', fontSize: '0.875em' }}>Letters descend from above in a pronounced staircase, one symbol at a time.</div>
+  </div>
+  <div style={{ padding: '14px 0 14px 20px', lineHeight: '1.65' }}>
+    <a href="/docs/text/typewriter" style={{ fontWeight: 600 }}>Typewriter</a>
+    <div style={{ marginTop: '4px', color: 'var(--muted-foreground)', fontSize: '0.875em' }}>Per-character stepped reveal with a minimal editorial typing rhythm.</div>
+  </div>
+</div>
 
 ## shadcn registry
 
