@@ -2,7 +2,6 @@ import { ChevronRightIcon, ExternalLinkIcon } from "@radix-ui/react-icons";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import Balancer from "react-wrap-balancer";
 import { docs as allDocs } from "#site/content";
 import NavMenu from "@/app/(main)/docs/[[...slug]]/nav-menu";
 import CarbonAds from "@/components/ads";
@@ -86,10 +85,7 @@ export default async function DocPage({ params }: DocPageProps) {
   const toc = await getTableOfContents(doc.content);
 
   return (
-    <main
-      id="main-content"
-      className="relative py-6 lg:gap-10 lg:py-8 xl:grid xl:grid-cols-[1fr_150px]"
-    >
+    <main id="main-content" className="relative py-6 lg:gap-10 lg:py-8 xl:grid">
       <div className="mx-auto w-full min-w-0">
         <div className="mb-4 flex items-center space-x-1 text-sm text-muted-foreground">
           <div className="overflow-hidden text-ellipsis whitespace-nowrap">Docs</div>
@@ -103,9 +99,7 @@ export default async function DocPage({ params }: DocPageProps) {
         <div className="space-y-2">
           <h1 className={cn("scroll-m-20 text-4xl font-bold tracking-tight")}>{doc.title}</h1>
           {doc.description && (
-            <p className="w-full text-muted-foreground">
-              <Balancer>{doc.description}</Balancer>
-            </p>
+            <p className="w-full text-balance text-muted-foreground">{doc.description}</p>
           )}
           <div
             className={cn("flex items-center space-x-2 text-sm text-muted-foreground", {

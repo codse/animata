@@ -32,7 +32,7 @@ export default function MirrorText({
   return (
     <div
       className={cn(
-        "group/mirror relative w-full justify-end overflow-hidden p-6 text-foreground",
+        "group/mirror relative w-fit justify-end overflow-hidden p-6 text-foreground",
         containerClassName,
       )}
     >

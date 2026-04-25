@@ -41,7 +41,7 @@ export const Formatter = {
 
 export default function Counter({
   format = Formatter.number,
-  targetValue,
+  targetValue = 1000,
   direction = "up",
   delay = 0,
   className,

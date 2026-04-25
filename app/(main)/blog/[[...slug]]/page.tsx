@@ -2,7 +2,6 @@ import { ChevronRightIcon, ExternalLinkIcon } from "@radix-ui/react-icons";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import Balancer from "react-wrap-balancer";
 import { blogs as allBlogs } from "#site/content";
 import NavMenu from "@/app/(main)/docs/[[...slug]]/nav-menu";
 import { Mdx } from "@/components/mdx-components";
@@ -96,9 +95,7 @@ export default async function BlogPage({ params }: BlogPageProps) {
         <div className="space-y-2">
           <h1 className={cn("scroll-m-20 text-4xl font-bold tracking-tight")}>{blog.title}</h1>
           {blog.description && (
-            <p className="text-lg text-muted-foreground">
-              <Balancer>{blog.description}</Balancer>
-            </p>
+            <p className="text-lg text-balance text-muted-foreground">{blog.description}</p>
           )}
           <div
             className={cn("flex items-center space-x-2 text-sm text-muted-foreground", {

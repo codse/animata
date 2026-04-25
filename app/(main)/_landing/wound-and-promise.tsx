@@ -2,7 +2,7 @@ const steps = [
   {
     number: "1",
     title: "Browse",
-    description: "Pick any component from 194+ options",
+    description: "Pick any component from 158+ options",
   },
   {
     number: "2",

@@ -1,6 +1,7 @@
 import type { CompileOptions } from "@mdx-js/mdx";
 import Link from "next/link";
 import { MDXRemote } from "next-mdx-remote/rsc";
+import type React from "react";
 import type { ComponentProps, HTMLAttributes } from "react";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import rehypePrettyCode, {
@@ -13,7 +14,6 @@ import remarkGfm from "remark-gfm";
 import type { NpmCommands, TouchCommands, UnistNode, UnistTree } from "types/unist";
 import { visit } from "unist-util-visit";
 import { VFile } from "vfile";
-
 import Modal from "@/animata/overlay/modal";
 import { Callout } from "@/components/callout";
 import { CodeBlockWrapper } from "@/components/code-block-wrapper";
@@ -25,6 +25,7 @@ import { CopyButton, CopyNpmCommandButton, CopyTouchCommandButton } from "@/comp
 import { CopyProxy } from "@/components/copy-proxy";
 import { AnimataRenderer } from "@/components/dynamic-animata";
 import { FrameworkDocs } from "@/components/framework-docs";
+import { InView } from "@/components/in-view";
 import PreviewContainer from "@/components/preview-container";
 import { RegistryInstall } from "@/components/registry-install";
 import {
@@ -38,7 +39,6 @@ import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import type { Event } from "@/lib/events";
 import { cn } from "@/lib/utils";
-
 import { baseComponents } from "./mdx-base-components";
 
 const setupCodeSnippet = () => (tree: UnistTree) => {
@@ -117,8 +117,22 @@ const components = {
   Alert,
   AlertTitle,
   AlertDescription,
+  InView,
   PreviewContainer,
   ...baseComponents,
+  ChangeLogComponents: ({ children }: { children: React.ReactNode }) => {
+    return <div className="grid md:grid-cols-2 gap-2 py-2">{children}</div>;
+  },
+  ChangeLogEntry: ({ href, children }: { children: React.ReactNode; href: string }) => {
+    return (
+      <Link
+        href={href}
+        className="block hover:[&_h3]:underline p-2 rounded-sm bg-muted [&_h3]:text-sm [&_h3]:font-medium [&_p]:text-muted-foreground [&_p]:text-sm"
+      >
+        {children}
+      </Link>
+    );
+  },
   pre: ({
     className,
     __rawString__,
@@ -263,10 +277,15 @@ const components = {
   ),
   ComponentList: ({ children, className }: { children: React.ReactNode; className?: string }) => {
     return (
-      <div
-        className={cn("relative grid max-w-full gap-4 sm:grid-cols-2 lg:grid-cols-3", className)}
-      >
-        {children}
+      <div className="@container">
+        <div
+          className={cn(
+            "relative grid max-w-full border border-muted bg-muted gap-0.5 overflow-hidden sm:grid-cols-2 lg:grid-cols-3",
+            className,
+          )}
+        >
+          {children}
+        </div>
       </div>
     );
   },
@@ -279,12 +298,19 @@ interface MdxProps {
 }
 
 function stripImports(code: string) {
-  const importRegex = /^import\s+(\w+)\s+from\s+["']@\/animata\/([^"']+)["'];?\s*$/gm;
+  const animataRegex = /^import\s+(\w+)\s+from\s+["']@\/animata\/([^"']+)["'];?\s*$/gm;
   const imports: Array<{ name: string; subpath: string }> = [];
-  const strippedCode = code.replace(importRegex, (_, name, subpath) => {
+  let strippedCode = code.replace(animataRegex, (_, name, subpath) => {
     imports.push({ name, subpath });
     return "";
   });
+  // Also strip imports from @/components/ — these components are registered
+  // directly in the `components` map above (e.g. InView), so the import line
+  // in the MDX source would otherwise leave MDXRemote unable to resolve them.
+  strippedCode = strippedCode.replace(
+    /^import\s+\{?\s*\w+(?:\s*,\s*\w+)*\s*\}?\s+from\s+["']@\/components\/[^"']+["'];?\s*$/gm,
+    "",
+  );
   return { strippedCode, imports };
 }
 

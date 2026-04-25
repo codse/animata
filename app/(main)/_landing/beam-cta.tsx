@@ -16,7 +16,7 @@ export default function BeamCta() {
               Free &amp; Open Source
             </h2>
             <p className="mt-4 text-[17px] leading-[1.47] text-white/70">
-              194+ components, MIT licensed. Copy, paste, ship.
+              158+ components, MIT licensed. Copy, paste, ship.
             </p>
             <div className="mt-10 flex flex-col items-center gap-4 sm:flex-row">
               <Link

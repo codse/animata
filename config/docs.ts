@@ -19,6 +19,7 @@ const createLinks = (category: string) => {
       title: doc.title,
       sortId: doc.slug === `/docs/${category}` ? "000" : doc.title,
       href: doc.slug,
+      label: doc.labels?.includes("new") ? "new" : undefined,
       items: [],
     }))
     .sort(sortAlphabetically);
@@ -94,7 +95,10 @@ const sidebarNav: SidebarNavItem[] = [
     ],
   },
   {
+    icon: "text",
     title: "Text",
+    label: `${-1 + createLinks("text").length}`,
+    href: "/docs/text",
     items: createLinks("text"),
   },
   {

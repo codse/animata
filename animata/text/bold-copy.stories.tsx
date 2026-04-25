@@ -8,7 +8,11 @@ const meta = {
     layout: "centered",
   },
   tags: ["autodocs"],
-  argTypes: {},
+  argTypes: {
+    size: {
+      options: ["sm", "md", "xl"],
+    },
+  },
 } satisfies Meta<typeof BoldCopy>;
 
 export default meta;
@@ -17,5 +21,8 @@ type Story = StoryObj<typeof meta>;
 export const Primary: Story = {
   args: {
     text: "Animata",
+    size: "md",
+    backgroundTextClassName: "",
+    textClassName: "",
   },
 };

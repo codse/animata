@@ -1,11 +1,8 @@
 "use client";
 
-import { usePathname } from "next/navigation";
 import { useEffect } from "react";
 
 export default function CarbonAds() {
-  const _pathname = usePathname();
-
   useEffect(() => {
     // Skip loading ads in development environment
     if (
@@ -36,5 +33,5 @@ export default function CarbonAds() {
     };
   }, []);
 
-  return <div id="carbon-container" />;
+  return <div id="carbon-container" className="min-h-48 mt-2" />;
 }

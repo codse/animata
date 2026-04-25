@@ -48,7 +48,7 @@ function FeatureThree() {
 
 export default function Three() {
   return (
-    <div className="grid w-full min-w-0 grid-cols-1 grid-rows-1 gap-3 sm:grid-cols-2 sm:grid-rows-2">
+    <div className="grid w-fit min-w-0 grid-cols-1 grid-rows-1 gap-3 sm:grid-cols-2 sm:grid-rows-2">
       <FeatureOne />
       <FeatureTwo />
       <FeatureThree />
