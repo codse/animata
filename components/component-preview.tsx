@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { Fragment } from "react";
 
 import { Icons } from "@/components/icons";
 import { cn } from "@/lib/utils";
@@ -78,7 +78,12 @@ function PropsEditor({
     // Allow args with options even if value type isn't primitive
     if (argTypes[key]?.options) return true;
     const val = args[key];
-    return typeof val === "boolean" || typeof val === "number" || typeof val === "string";
+    return (
+      typeof val === "boolean" ||
+      typeof val === "number" ||
+      typeof val === "string" ||
+      Array.isArray(val)
+    );
   });
 
   if (editableArgs.length === 0) return null;
@@ -101,12 +106,12 @@ function PropsEditor({
           </button>
         )}
       </div>
-      <div className="grid gap-2">
+      <div className="grid gap-2 grid-cols-[auto_1fr]">
         {editableArgs.map(([key, value]) => (
-          <div key={key} className="flex items-center gap-3">
+          <Fragment key={key}>
             <label
               htmlFor={`prop-${key}`}
-              className="min-w-[120px] text-right font-mono text-xs text-muted-foreground"
+              className="min-w-[120px] flex items-center justify-end font-mono text-xs text-muted-foreground"
             >
               {key}
             </label>
@@ -148,7 +153,7 @@ function PropsEditor({
                 onChange={(e) => onChange(key, Number(e.target.value))}
                 className="h-7 w-24 rounded border bg-background px-2 font-mono text-xs"
               />
-            ) : (
+            ) : typeof value === "string" ? (
               <input
                 id={`prop-${key}`}
                 type="text"
@@ -156,8 +161,14 @@ function PropsEditor({
                 onChange={(e) => onChange(key, e.target.value)}
                 className="h-7 flex-1 rounded border bg-background px-2 font-mono text-xs"
               />
+            ) : Array.isArray(value) || typeof value === "object" ? (
+              <span className="h-fit flex 1 rounded border bg-muted p-2 font-mono text-xs overflow-auto">
+                {JSON.stringify(value)}
+              </span>
+            ) : (
+              <span>Unsupported value</span>
             )}
-          </div>
+          </Fragment>
         ))}
       </div>
     </div>

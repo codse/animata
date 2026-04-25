@@ -11,7 +11,6 @@ import { cn } from "@/lib/utils";
 
 import ExitIntentModal from "./_landing/exit-intent-modal";
 import OpenSourceSection from "./_landing/open-source-section";
-import Reveal from "./_landing/reveal";
 import StatsBento from "./_landing/stats-bento";
 
 const Testimonials = React.lazy(() => import("./_landing/testimonials"));
@@ -46,7 +45,7 @@ function Hero() {
   return (
     <section className="px-6 pb-12 pt-16 sm:pb-16 sm:pt-20">
       <div className="mx-auto max-w-3xl text-center">
-        <h1 className="font-[family-name:var(--font-display)] text-[clamp(2.75rem,7vw,4.5rem)] leading-[1.05] tracking-[-0.01em] text-foreground">
+        <h1 className="font-(family-name:--font-display) text-[clamp(2.75rem,7vw,4.5rem)] leading-[1.05] tracking-[-0.01em] text-foreground">
           Ship faster.
           <br />
           Look better.
@@ -110,7 +109,7 @@ function WhySection() {
   return (
     <section className="border-t border-border bg-[hsl(var(--surface-alt))] py-20 sm:py-24 lg:py-32">
       <div className="mx-auto max-w-6xl px-6">
-        <h2 className="font-[family-name:var(--font-display)] text-[clamp(28px,5vw,44px)] leading-[1] text-foreground">
+        <h2 className="font-(family-name:--font-display) text-[clamp(28px,5vw,44px)] leading-none text-foreground">
           Why teams
           <br />
           <span className="text-muted-foreground">choose animata.</span>
@@ -119,7 +118,7 @@ function WhySection() {
         <div className="mt-14 grid gap-10 sm:mt-16 sm:grid-cols-3 sm:gap-8">
           {reasons.map((reason, i) => (
             <div key={reason.title} className="border-t border-border pt-6">
-              <span className="font-[family-name:var(--font-mono)] text-[13px] text-muted-foreground">
+              <span className="font-(family-name:--font-mono) text-[13px] text-muted-foreground">
                 0{i + 1}
               </span>
               <h3 className="mt-2 text-[18px] font-semibold text-foreground sm:text-[20px]">
