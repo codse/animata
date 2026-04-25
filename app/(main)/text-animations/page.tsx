@@ -21,7 +21,6 @@ import ShortSlideRight from "@/animata/text/short-slide-right";
 import SoftBlurIn from "@/animata/text/soft-blur-in";
 import SpringScaleIn from "@/animata/text/spring-scale-in";
 import TopDownLetters from "@/animata/text/top-down-letters";
-import Typewriter from "@/animata/text/typewriter";
 
 type Preset = {
   id: string;
@@ -71,12 +70,6 @@ const PRESETS: Preset[] = [
     description:
       "Each line enters from the left with a staggered slide and exits to the right for a flowing paragraph reveal.",
     Component: LineByLineSlide,
-  },
-  {
-    id: "typewriter",
-    title: "Typewriter",
-    description: "Per-character stepped reveal with a minimal editorial typing rhythm.",
-    Component: Typewriter,
   },
   {
     id: "micro-scale-fade",
