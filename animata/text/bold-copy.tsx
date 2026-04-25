@@ -12,7 +12,7 @@ const sizePresets = {
     background: "text-xl md:text-2xl",
   },
   md: {
-    title: "text-md group-hover/bold:text-2xl md:text-xl group-hover/bold:md:text-4xl",
+    title: "text-base group-hover/bold:text-2xl md:text-xl group-hover/bold:md:text-4xl",
     background: "text-2xl md:text-4xl",
   },
   xl: {
