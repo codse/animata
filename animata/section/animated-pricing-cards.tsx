@@ -60,6 +60,8 @@ const defaultPlans: PricingPlan[] = [
 ];
 
 export default function AnimatedPricingCards({ plans = defaultPlans }: AnimatedPricingCardsProps) {
+  const safePlans = Array.isArray(plans) ? plans : defaultPlans;
+
   return (
     <section className="w-full px-4 py-16 sm:py-20 lg:py-24">
       <div className="mx-auto max-w-7xl">
@@ -73,7 +75,7 @@ export default function AnimatedPricingCards({ plans = defaultPlans }: AnimatedP
         </div>
 
         <div className="grid gap-6 md:grid-cols-3 lg:gap-8">
-          {plans.map((plan, index) => (
+          {safePlans.map((plan, index) => (
             <motion.article
               key={plan.name}
               initial={{ opacity: 0, y: 20 }}
@@ -116,7 +118,7 @@ export default function AnimatedPricingCards({ plans = defaultPlans }: AnimatedP
                     className="flex items-center gap-3 text-sm text-muted-foreground"
                   >
                     <svg
-                      className="h-5 w-5 flex-shrink-0 text-primary"
+                      className="h-5 w-5 shrink-0 text-primary"
                       fill="currentColor"
                       viewBox="0 0 20 20"
                     >
