@@ -1,5 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import AnimatedPricingCards from "@/animata/section/animated-pricing-cards";
+import AnimatedPricingCards, {
+  type AnimatedPricingCardsProps,
+} from "@/animata/section/animated-pricing-cards";
 
 const meta = {
   title: "Section/Animated Pricing Cards",
@@ -14,7 +16,8 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Primary: Story = {
-  render: (args) => (
+  args: {},
+  render: (args: AnimatedPricingCardsProps) => (
     <div className="full-content w-full bg-background">
       <AnimatedPricingCards {...args} />
     </div>
@@ -63,7 +66,7 @@ export const CustomPlans: Story = {
       },
     ],
   },
-  render: (args) => (
+  render: (args: AnimatedPricingCardsProps) => (
     <div className="full-content w-full bg-background">
       <AnimatedPricingCards {...args} />
     </div>

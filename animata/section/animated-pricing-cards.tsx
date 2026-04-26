@@ -3,7 +3,7 @@
 import { motion } from "motion/react";
 import { cn } from "@/lib/utils";
 
-interface PricingPlan {
+export interface PricingPlan {
   name: string;
   price: string;
   period?: string;
@@ -13,7 +13,7 @@ interface PricingPlan {
   ctaText?: string;
 }
 
-interface AnimatedPricingCardsProps {
+export interface AnimatedPricingCardsProps {
   plans?: PricingPlan[];
 }
 
