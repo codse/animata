@@ -8,6 +8,6 @@ export function getFooterCategories(
     .filter((nav) => !excludedTitles.includes(nav.title))
     .map((cat) => ({
       title: cat.title,
-      href: cat.items?.[0]?.href || "#",
+      href: cat.items?.[0]?.href ?? "/docs",
     }));
 }
