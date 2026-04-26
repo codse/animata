@@ -1,0 +1,113 @@
+---
+title: Animated Pricing Cards
+description: A responsive pricing section with smooth hover animations, "Most Popular" badge, and premium SaaS design.
+author: AnimataContributor
+published: true
+---
+
+<ComponentPreview name="section-animated-pricing-cards--primary" />
+
+## Overview
+
+Animated Pricing Cards is a production-ready pricing section component designed for SaaS and startup landing pages. It features three responsive pricing tiers with smooth hover lift animations, keyboard accessibility, and a highlighted "Most Popular" card. The component respects user motion preferences and includes sensible default pricing plans.
+
+## Usage
+
+```tsx
+import AnimatedPricingCards from "@/animata/section/animated-pricing-cards";
+
+export default function PricingPage() {
+  return <AnimatedPricingCards />;
+}
+```
+
+### Custom Plans
+
+Pass custom pricing plans via the `plans` prop:
+
+```tsx
+<AnimatedPricingCards
+  plans={[
+    {
+      name: "Basic",
+      price: "$19",
+      period: "/month",
+      description: "For individuals",
+      features: ["Feature 1", "Feature 2"],
+      ctaText: "Get Started",
+    },
+    {
+      name: "Pro",
+      price: "$49",
+      period: "/month",
+      description: "For teams",
+      features: ["All Basic features", "Feature 3"],
+      highlighted: true,
+      ctaText: "Start Trial",
+    },
+  ]}
+/>
+```
+
+## Features
+
+- **Responsive Layout** — Works seamlessly on mobile, tablet, and desktop
+- **Hover Lift Animation** — Subtle transform animation on hover (with motion-safe detection)
+- **Highlighted Card** — Middle card features a "Most Popular" badge and scale effect
+- **Dark Mode** — Full dark mode support using Tailwind tokens
+- **Accessibility** — Semantic HTML, keyboard focus states, and reduced-motion support
+- **Premium Design** — Clean spacing, typography, and visual hierarchy
+- **Easy Customization** — Pass custom plans and CTA text
+- **Default Content** — Renders meaningful pricing tiers without configuration
+
+## Accessibility
+
+- Uses semantic `<section>` and `<article>` elements
+- All buttons include visible focus states via `focus-visible`
+- Respects `prefers-reduced-motion` with `motion-safe` and `motion-reduce` classes
+- Checkmark icons included for visual feature confirmation
+- Text contrast meets WCAG AA standards
+
+## Component Props
+
+```typescript
+interface PricingPlan {
+  name: string;
+  price: string;
+  period?: string;
+  description: string;
+  features: string[];
+  highlighted?: boolean;
+  ctaText?: string;
+}
+
+interface AnimatedPricingCardsProps {
+  plans?: PricingPlan[];
+}
+```
+
+## Animation Details
+
+- **Stagger delay**: 100ms between cards on initial load
+- **Hover effect**: `-translate-y-2` (8px lift) with 300ms transition
+- **Button click**: Scale to 0.98 on tap, 1.02 on hover
+- **Viewport animation**: Triggers when cards enter viewport
+- **Motion handling**: All animations respect `prefers-reduced-motion`
+
+## Styling
+
+The component uses only Tailwind CSS classes:
+
+- **Colors**: `bg-background`, `text-foreground`, `border-border`, `text-muted-foreground`, `bg-primary`
+- **Spacing**: Responsive padding and gaps
+- **Shadows**: Subtle shadows that enhance on hover
+- **Rounded corners**: 2xl border radius for premium feel
+- **Typography**: Bold headings with proper size hierarchy
+
+## Browser Support
+
+Works in all modern browsers that support:
+- CSS Grid and Flexbox
+- CSS Custom Properties
+- Framer Motion
+- ES2020+ JavaScript
