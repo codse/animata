@@ -22,6 +22,24 @@ export function SiteFooter() {
       })}
     >
       <NewsletterSection />
+
+      <nav aria-label="Footer Navigation" className="mx-auto mt-16 w-full max-w-6xl">
+        <div className="grid grid-cols-2 gap-x-4 gap-y-2 md:grid-cols-4 lg:grid-cols-5">
+          {footerCategories.map(({ href, title }) => (
+            <Link
+              href={href}
+              key={title}
+              className={cn(
+                "text-sm text-muted-foreground",
+                "hover:text-foreground focus:text-white px-4 py-2",
+              )}
+            >
+              {title}
+            </Link>
+          ))}
+        </div>
+      </nav>
+
       <div className="group mx-auto mt-16 w-fit">
         <div className="flex gap-1">
           <div className="flex gap-1">
@@ -55,12 +73,6 @@ export function SiteFooter() {
         identification purposes only. Use of these names,trademarks and brands does not imply
         endorsement.
       </small>
-
-      {footerCategories.map(({ href, title }) => (
-        <Link href={href} key={title}>
-          {title}
-        </Link>
-      ))}
     </footer>
   );
 }
