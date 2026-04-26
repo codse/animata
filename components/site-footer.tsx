@@ -31,7 +31,7 @@ export function SiteFooter() {
               key={title}
               className={cn(
                 "text-sm text-muted-foreground",
-                "hover:text-foreground focus:text-white px-4 py-2",
+                "hover:text-foreground focus:text-foreground px-4 py-2",
               )}
             >
               {title}
