@@ -5,10 +5,16 @@ import { usePathname } from "next/navigation";
 
 import NewsletterSection from "@/app/(main)/_landing/newsletter";
 import { Icons } from "@/components/icons";
+import { docsConfig } from "@/config/docs";
+import { getFooterCategories } from "@/lib/docs";
 import { cn } from "@/lib/utils";
 
 export function SiteFooter() {
+  const footerCategories: { title: string; href: string }[] = getFooterCategories(
+    docsConfig.sidebarNav,
+  );
   const pathname = usePathname();
+
   return (
     <footer
       className={cn("container flex flex-col justify-between pb-12 pt-4 md:pb-16 md:pt-6", {
@@ -49,6 +55,12 @@ export function SiteFooter() {
         identification purposes only. Use of these names,trademarks and brands does not imply
         endorsement.
       </small>
+
+      {footerCategories.map(({ href, title }) => (
+        <Link href={href} key={title}>
+          {title}
+        </Link>
+      ))}
     </footer>
   );
 }
