@@ -5,10 +5,16 @@ import { usePathname } from "next/navigation";
 
 import NewsletterSection from "@/app/(main)/_landing/newsletter";
 import { Icons } from "@/components/icons";
+import { docsConfig } from "@/config/docs";
+import { getFooterCategories } from "@/lib/docs";
 import { cn } from "@/lib/utils";
 
 export function SiteFooter() {
+  const footerCategories: { title: string; href: string }[] = getFooterCategories(
+    docsConfig.sidebarNav,
+  );
   const pathname = usePathname();
+
   return (
     <footer
       className={cn("container flex flex-col justify-between pb-12 pt-4 md:pb-16 md:pt-6", {
@@ -16,6 +22,24 @@ export function SiteFooter() {
       })}
     >
       <NewsletterSection />
+
+      <nav aria-label="Footer Navigation" className="mx-auto mt-16 w-full max-w-6xl">
+        <div className="grid grid-cols-2 gap-x-4 gap-y-2 md:grid-cols-4 lg:grid-cols-5">
+          {footerCategories.map(({ href, title }) => (
+            <Link
+              href={href}
+              key={title}
+              className={cn(
+                "text-sm text-muted-foreground",
+                "hover:text-foreground focus:text-foreground px-4 py-2",
+              )}
+            >
+              {title}
+            </Link>
+          ))}
+        </div>
+      </nav>
+
       <div className="group mx-auto mt-16 w-fit">
         <div className="flex gap-1">
           <div className="flex gap-1">

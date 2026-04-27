@@ -240,20 +240,22 @@ export default function StatsBento() {
                 </span>
               </div>
               {/* Category marquees */}
-              <div className="-mx-4 mt-3 mb-2 space-y-0.5 sm:-mx-5 sm:mb-0 lg:-mx-6">
+              <div
+                className="-mx-4 mt-3 mb-2 space-y-0.5 sm:-mx-5 sm:mb-0 lg:-mx-6"
+                aria-hidden="true"
+              >
                 <Marquee
                   pauseOnHover
                   applyMask={false}
                   className="[--duration:50s] [--gap:0.15rem]"
                 >
                   {categories.map((cat, i) => (
-                    <Link
+                    <div
                       key={`fwd-${i}`}
-                      href={cat.href}
-                      className="rounded-full border border-border bg-foreground/5 px-2 py-0.5 text-[10px] font-semibold text-foreground transition-colors hover:border-foreground/30 sm:px-2.5 sm:py-1 sm:text-[11px]"
+                      className="rounded-full border border-border bg-foreground/5 px-2 py-0.5 text-[10px] font-semibold text-foreground transition-colors sm:px-2.5 sm:py-1 sm:text-[11px]"
                     >
                       {cat.label}
-                    </Link>
+                    </div>
                   ))}
                 </Marquee>
                 <Marquee
@@ -263,13 +265,12 @@ export default function StatsBento() {
                   className="[--duration:55s] [--gap:0.15rem]"
                 >
                   {[...categories].reverse().map((cat, i) => (
-                    <Link
+                    <div
                       key={`rev-${i}`}
-                      href={cat.href}
-                      className="rounded-full border border-border bg-foreground/5 px-2 py-0.5 text-[10px] font-semibold text-foreground transition-colors hover:border-foreground/30 sm:px-2.5 sm:py-1 sm:text-[11px]"
+                      className="rounded-full border border-border bg-foreground/5 px-2 py-0.5 text-[10px] font-semibold text-foreground transition-colors sm:px-2.5 sm:py-1 sm:text-[11px]"
                     >
                       {cat.label}
-                    </Link>
+                    </div>
                   ))}
                 </Marquee>
               </div>
