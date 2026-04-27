@@ -252,7 +252,7 @@ export default function StatsBento() {
                   {categories.map((cat, i) => (
                     <div
                       key={`fwd-${i}`}
-                      className="rounded-full border border-border bg-foreground/5 px-2 py-0.5 text-[10px] font-semibold text-foreground transition-colors hover:border-foreground/30 sm:px-2.5 sm:py-1 sm:text-[11px]"
+                      className="rounded-full border border-border bg-foreground/5 px-2 py-0.5 text-[10px] font-semibold text-foreground transition-colors sm:px-2.5 sm:py-1 sm:text-[11px]"
                     >
                       {cat.label}
                     </div>
@@ -267,7 +267,7 @@ export default function StatsBento() {
                   {[...categories].reverse().map((cat, i) => (
                     <div
                       key={`rev-${i}`}
-                      className="rounded-full border border-border bg-foreground/5 px-2 py-0.5 text-[10px] font-semibold text-foreground transition-colors hover:border-foreground/30 sm:px-2.5 sm:py-1 sm:text-[11px]"
+                      className="rounded-full border border-border bg-foreground/5 px-2 py-0.5 text-[10px] font-semibold text-foreground transition-colors sm:px-2.5 sm:py-1 sm:text-[11px]"
                     >
                       {cat.label}
                     </div>
