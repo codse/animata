@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { type CSSProperties, useEffect, useState } from "react";
 
 import AnimatedBorderTrail from "@/animata/container/animated-border-trail";
 import Marquee from "@/animata/container/marquee";
@@ -87,42 +87,32 @@ function OrbitItem({
   duration: number;
   children: React.ReactNode;
 }) {
-  const startAngle = Math.round((index / total) * 360);
-  const [angle, setAngle] = useState(startAngle);
-  const [mounted, setMounted] = useState(false);
+  const delay = (duration / total) * index * -1;
 
-  useEffect(() => {
-    setMounted(true);
-    const id = setInterval(() => setAngle((a) => (a + 1) % 360), duration);
-    return () => clearInterval(id);
-  }, [duration]);
-
-  const rad = (angle * Math.PI) / 180;
-  const x = 35 * Math.cos(rad);
-  const y = 15 * Math.sin(rad);
-  const tilt = (-30 * Math.PI) / 180;
-  const xT = x * Math.cos(tilt) - y * Math.sin(tilt);
-  const yT = x * Math.sin(tilt) + y * Math.cos(tilt);
-  const depth = (Math.sin(rad) + 1) / 2;
-
-  // Round to 2 decimals to prevent hydration mismatch
-  const left = Math.round((50 + xT) * 100) / 100;
-  const top = Math.round((50 + yT) * 100) / 100;
-  const scale = Math.round((0.7 + depth * 0.5) * 100) / 100;
-  const op = Math.round((0.35 + depth * 0.65) * 100) / 100;
+  const orbitContainerStyle: CSSProperties = {
+    top: "50%",
+    left: "50%",
+    animation: `
+          orbit-move ${duration}s linear infinite,
+          orbit-indexes ${duration}s linear infinite
+        `,
+    animationDelay: `${delay}s, ${delay}s`,
+    transformStyle: "preserve-3d",
+  };
+  const itemCorrectionStyle: CSSProperties = {
+    animation: `counter-rotate ${duration}s linear infinite`,
+    animationDelay: `${delay}s`,
+    backfaceVisibility: "hidden",
+  };
 
   return (
-    <div
-      className="absolute flex h-8 w-8 items-center justify-center rounded-full border border-border bg-[hsl(var(--surface-card))] sm:h-10 sm:w-10"
-      style={{
-        left: `${left}%`,
-        top: `${top}%`,
-        transform: `translate(-50%, -50%) scale(${scale})`,
-        zIndex: Math.round(depth * 10),
-        opacity: op,
-      }}
-    >
-      {children}
+    <div className="absolute" style={orbitContainerStyle}>
+      <div
+        className="flex h-8 w-8 items-center justify-center rounded-full border border-border bg-[hsl(var(--surface-card))] sm:h-10 sm:w-10"
+        style={itemCorrectionStyle}
+      >
+        {children}
+      </div>
     </div>
   );
 }
@@ -130,9 +120,9 @@ function OrbitItem({
 function FrameworkOrbit() {
   return (
     <div className="relative flex h-40 w-full items-center justify-center overflow-hidden rounded-xl border border-border bg-[hsl(var(--surface-alt))] sm:h-48">
-      <Icons.logo className="z-10 h-8 w-8 rounded-full bg-linear-to-br from-violet-500 to-indigo-600 p-1.5 shadow-lg sm:h-10 sm:w-10 sm:p-2" />
+      <Icons.logo className="relative z-10 h-8 w-8 rounded-full bg-linear-to-br from-violet-500 to-indigo-600 p-1.5 shadow-lg sm:h-10 sm:w-10 sm:p-2" />
       {frameworkItems.map((item, i) => (
-        <OrbitItem key={item.key} index={i} total={frameworkItems.length} duration={35}>
+        <OrbitItem key={item.key} index={i} total={frameworkItems.length} duration={12}>
           {item.icon}
         </OrbitItem>
       ))}
@@ -240,22 +230,20 @@ export default function StatsBento() {
                 </span>
               </div>
               {/* Category marquees */}
-              <div
-                className="-mx-4 mt-3 mb-2 space-y-0.5 sm:-mx-5 sm:mb-0 lg:-mx-6"
-                aria-hidden="true"
-              >
+              <div className="-mx-4 mt-3 mb-2 space-y-0.5 sm:-mx-5 sm:mb-0 lg:-mx-6">
                 <Marquee
                   pauseOnHover
                   applyMask={false}
                   className="[--duration:50s] [--gap:0.15rem]"
                 >
                   {categories.map((cat, i) => (
-                    <div
+                    <Link
                       key={`fwd-${i}`}
-                      className="rounded-full border border-border bg-foreground/5 px-2 py-0.5 text-[10px] font-semibold text-foreground transition-colors sm:px-2.5 sm:py-1 sm:text-[11px]"
+                      href={cat.href}
+                      className="rounded-full border border-border bg-foreground/5 px-2 py-0.5 text-[10px] font-semibold text-foreground transition-colors hover:border-foreground/30 sm:px-2.5 sm:py-1 sm:text-[11px]"
                     >
                       {cat.label}
-                    </div>
+                    </Link>
                   ))}
                 </Marquee>
                 <Marquee
@@ -265,12 +253,13 @@ export default function StatsBento() {
                   className="[--duration:55s] [--gap:0.15rem]"
                 >
                   {[...categories].reverse().map((cat, i) => (
-                    <div
+                    <Link
                       key={`rev-${i}`}
-                      className="rounded-full border border-border bg-foreground/5 px-2 py-0.5 text-[10px] font-semibold text-foreground transition-colors sm:px-2.5 sm:py-1 sm:text-[11px]"
+                      href={cat.href}
+                      className="rounded-full border border-border bg-foreground/5 px-2 py-0.5 text-[10px] font-semibold text-foreground transition-colors hover:border-foreground/30 sm:px-2.5 sm:py-1 sm:text-[11px]"
                     >
                       {cat.label}
-                    </div>
+                    </Link>
                   ))}
                 </Marquee>
               </div>

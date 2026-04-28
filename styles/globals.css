@@ -563,3 +563,53 @@
 [style*="opacity: 1"] > .scroll-file {
   @apply text-blue-300 dark:text-blue-500;
 }
+
+@layer utilities {
+  @keyframes orbit-move {
+    from {
+      transform: translate(-50%, -50%) rotateY(-40deg) rotateX(70deg) rotateZ(0deg)
+        translateX(100px);
+    }
+    to {
+      transform: translate(-50%, -50%) rotateY(-40deg) rotateX(70deg) rotateZ(360deg)
+        translateX(100px);
+    }
+  }
+
+  @keyframes counter-rotate {
+    0% {
+      transform: rotateZ(0deg) rotateX(-70deg) rotateY(40deg) scale(1);
+      opacity: 1;
+    }
+    25% {
+      transform: rotateZ(-90deg) rotateX(-70deg) rotateY(40deg) scale(1.2);
+      opacity: 1;
+    }
+    50% {
+      transform: rotateZ(-180deg) rotateX(-70deg) rotateY(40deg) scale(0.8);
+      opacity: 0.3;
+    }
+    75% {
+      transform: rotateZ(-270deg) rotateX(-70deg) rotateY(40deg) scale(0.8);
+      opacity: 0.3;
+    }
+    100% {
+      transform: rotateZ(-360deg) rotateX(-70deg) rotateY(40deg) scale(1);
+      opacity: 1;
+    }
+  }
+}
+
+@layer utilities {
+  @keyframes orbit-indexes {
+    0%,
+    25%,
+    100% {
+      z-index: 11;
+    }
+    50%,
+    99% {
+      z-index: 9;
+    }
+  }
+}
