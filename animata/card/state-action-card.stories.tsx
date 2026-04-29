@@ -14,19 +14,19 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const TaskManager: Story = {
+export const Taskmanager: Story = {
   args: {
     useCase: "task",
   },
 };
 
-export const SocialCard: Story = {
+export const Socialcard: Story = {
   args: {
     useCase: "social",
   },
 };
 
-export const OrderCard: Story = {
+export const Ordercard: Story = {
   args: {
     useCase: "order",
   },

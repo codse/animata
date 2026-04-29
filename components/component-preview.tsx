@@ -5,6 +5,8 @@ import React from "react";
 import { Icons } from "@/components/icons";
 import { cn } from "@/lib/utils";
 
+const Spinner = Icons.spinner;
+
 interface ComponentPreviewProps extends React.HTMLAttributes<HTMLDivElement> {
   name: string;
 }
@@ -65,13 +67,13 @@ function PropsEditor({
   argTypes,
   onChange,
   onReset,
-}: {
+}: Readonly<{
   args: Record<string, unknown>;
   initialArgs: Record<string, unknown>;
   argTypes: Record<string, ArgType>;
   onChange: (key: string, value: unknown) => void;
   onReset: () => void;
-}) {
+}>) {
   const editableArgs = Object.entries(args).filter(([key]) => {
     if (HIDDEN_PROPS.has(key)) return false;
     if (argTypes[key]?.table?.disable) return false;
@@ -84,6 +86,68 @@ function PropsEditor({
   if (editableArgs.length === 0) return null;
 
   const hasChanges = editableArgs.some(([key]) => args[key] !== initialArgs[key]);
+
+  const renderControl = (key: string, value: unknown) => {
+    if (argTypes[key]?.options) {
+      return (
+        <select
+          id={`prop-${key}`}
+          value={String(value)}
+          onChange={(e) => onChange(key, e.target.value)}
+          className="h-7 rounded border bg-background px-2 font-mono text-xs"
+        >
+          {argTypes[key]?.options?.map((opt) => (
+            <option key={opt} value={opt}>
+              {opt}
+            </option>
+          ))}
+        </select>
+      );
+    }
+
+    if (typeof value === "boolean") {
+      return (
+        <button
+          id={`prop-${key}`}
+          type="button"
+          onClick={() => onChange(key, !value)}
+          className={cn(
+            "h-5 w-9 rounded-full transition-colors",
+            value ? "bg-primary" : "bg-muted-foreground/30",
+          )}
+        >
+          <div
+            className={cn(
+              "h-4 w-4 rounded-full bg-white shadow-sm transition-transform",
+              value ? "translate-x-4.5" : "translate-x-0.5",
+            )}
+          />
+        </button>
+      );
+    }
+
+    if (typeof value === "number") {
+      return (
+        <input
+          id={`prop-${key}`}
+          type="number"
+          value={value}
+          onChange={(e) => onChange(key, Number(e.target.value))}
+          className="h-7 w-24 rounded border bg-background px-2 font-mono text-xs"
+        />
+      );
+    }
+
+    return (
+      <input
+        id={`prop-${key}`}
+        type="text"
+        value={String(value)}
+        onChange={(e) => onChange(key, e.target.value)}
+        className="h-7 flex-1 rounded border bg-background px-2 font-mono text-xs"
+      />
+    );
+  };
 
   return (
     <div className="border-t bg-muted/30 px-4 py-3">
@@ -110,53 +174,7 @@ function PropsEditor({
             >
               {key}
             </label>
-            {argTypes[key]?.options ? (
-              <select
-                id={`prop-${key}`}
-                value={String(value)}
-                onChange={(e) => onChange(key, e.target.value)}
-                className="h-7 rounded border bg-background px-2 font-mono text-xs"
-              >
-                {argTypes[key]?.options?.map((opt) => (
-                  <option key={opt} value={opt}>
-                    {opt}
-                  </option>
-                ))}
-              </select>
-            ) : typeof value === "boolean" ? (
-              <button
-                id={`prop-${key}`}
-                type="button"
-                onClick={() => onChange(key, !value)}
-                className={cn(
-                  "h-5 w-9 rounded-full transition-colors",
-                  value ? "bg-primary" : "bg-muted-foreground/30",
-                )}
-              >
-                <div
-                  className={cn(
-                    "h-4 w-4 rounded-full bg-white shadow-sm transition-transform",
-                    value ? "translate-x-4.5" : "translate-x-0.5",
-                  )}
-                />
-              </button>
-            ) : typeof value === "number" ? (
-              <input
-                id={`prop-${key}`}
-                type="number"
-                value={value}
-                onChange={(e) => onChange(key, Number(e.target.value))}
-                className="h-7 w-24 rounded border bg-background px-2 font-mono text-xs"
-              />
-            ) : (
-              <input
-                id={`prop-${key}`}
-                type="text"
-                value={String(value)}
-                onChange={(e) => onChange(key, e.target.value)}
-                className="h-7 flex-1 rounded border bg-background px-2 font-mono text-xs"
-              />
-            )}
+            {renderControl(key, value)}
           </div>
         ))}
       </div>
@@ -173,10 +191,10 @@ interface OtherStory {
 function StoryRender({
   render,
   args,
-}: {
+}: Readonly<{
   render: (args: Record<string, unknown>) => React.ReactNode;
   args: Record<string, unknown>;
-}) {
+}>) {
   return <>{render(args)}</>;
 }
 
@@ -189,7 +207,7 @@ interface StoryData {
 }
 
 function formatStoryName(exportName: string): string {
-  return exportName.replace(/([A-Z])/g, " $1").trim();
+  return exportName.replaceAll(/([A-Z])/g, " $1").trim();
 }
 
 type StoryExport = {
@@ -249,7 +267,7 @@ function loadStoryModule(mod: Record<string, unknown>, exportName: string): Stor
   };
 }
 
-function StoryRenderer({ name }: { name: string }) {
+function StoryRenderer({ name }: Readonly<{ name: string }>) {
   const [storyData, setStoryData] = React.useState<StoryData | null>(null);
   const [args, setArgs] = React.useState<Record<string, unknown>>({});
   const [error, setError] = React.useState<string | null>(null);
@@ -287,7 +305,7 @@ function StoryRenderer({ name }: { name: string }) {
 
   if (error) {
     return (
-      <div className="preview relative flex min-h-[200px] w-full max-w-full items-center justify-center overflow-x-auto overflow-y-hidden rounded-lg border">
+      <div className="preview relative flex min-h-[480px] w-full max-w-full items-start justify-center overflow-auto rounded-lg border p-4">
         <div className="text-sm text-muted-foreground">{error}</div>
       </div>
     );
@@ -295,9 +313,9 @@ function StoryRenderer({ name }: { name: string }) {
 
   if (!storyData) {
     return (
-      <div className="preview relative flex min-h-[200px] w-full max-w-full items-center justify-center overflow-x-auto overflow-y-hidden rounded-lg border">
+      <div className="preview relative flex min-h-[480px] w-full max-w-full items-start justify-center overflow-auto rounded-lg border p-4">
         <div className="flex items-center text-sm text-muted-foreground">
-          <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+          <Spinner className="mr-2 h-4 w-4 animate-spin" />
           Loading...
         </div>
       </div>
@@ -306,17 +324,19 @@ function StoryRenderer({ name }: { name: string }) {
 
   const argsKey = JSON.stringify(args);
 
-  const preview = storyData.render ? (
-    <StoryRender render={storyData.render} args={args} />
-  ) : storyData.Component ? (
-    React.createElement(storyData.Component, args)
-  ) : null;
+  let preview: React.ReactNode = null;
+
+  if (storyData.render) {
+    preview = <StoryRender render={storyData.render} args={args} />;
+  } else if (storyData.Component) {
+    preview = React.createElement(storyData.Component, args);
+  }
 
   return (
     <>
       <div
         key={argsKey}
-        className="preview relative flex min-h-[200px] w-full max-w-full items-center justify-center overflow-x-auto overflow-y-hidden rounded-lg border bg-dot-pattern p-4 has-[.full-content]:overflow-auto has-[.full-content]:p-0"
+        className="preview relative flex min-h-[480px] w-full max-w-full items-start justify-center overflow-auto rounded-lg border bg-dot-pattern p-8 has-[.full-content]:p-0"
       >
         {preview}
       </div>
@@ -333,7 +353,7 @@ function StoryRenderer({ name }: { name: string }) {
           {storyData.otherStories.map((story) => (
             <div key={story.name}>
               <div className="mb-2 font-mono text-xs text-muted-foreground">{story.name}</div>
-              <div className="preview relative flex min-h-[150px] w-full max-w-full items-center justify-center overflow-x-auto overflow-y-hidden rounded-lg border bg-dot-pattern p-4 has-[.full-content]:overflow-auto has-[.full-content]:p-0">
+              <div className="preview relative flex min-h-[320px] w-full max-w-full items-start justify-center overflow-auto rounded-lg border bg-dot-pattern p-6 has-[.full-content]:p-0">
                 <StoryRender render={story.render} args={story.args} />
               </div>
             </div>
@@ -344,14 +364,14 @@ function StoryRenderer({ name }: { name: string }) {
   );
 }
 
-export function ComponentPreview({ name, className, ...props }: ComponentPreviewProps) {
+export function ComponentPreview({ name, className, ...props }: Readonly<ComponentPreviewProps>) {
   return (
     <div className={cn("group relative my-4", className)} {...props}>
       <React.Suspense
         fallback={
           <div className="preview relative flex min-h-[200px] w-full max-w-full items-center justify-center py-4 overflow-x-auto overflow-y-hidden rounded-lg border">
             <div className="flex items-center text-sm text-muted-foreground">
-              <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+              <Spinner className="mr-2 h-4 w-4 animate-spin" />
               Loading...
             </div>
           </div>

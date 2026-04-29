@@ -1,0 +1,59 @@
+---
+title: Dropdown Menu
+description: A flexible dropdown menu with smooth entrance and exit motion, keyboard navigation, and accessible menu semantics.
+author: YourTwitterUsername
+---
+
+<PreviewContainer>
+	<DropdownMenu
+		label="Open menu"
+		items={[
+			{
+				label: "Profile",
+				description: "View your account details",
+				onSelect: () => {},
+			},
+			{
+				label: "Settings",
+				description: "Adjust preferences and permissions",
+				onSelect: () => {},
+			},
+			{
+				label: "Documentation",
+				description: "Open the docs in a new tab",
+				href: "https://nextjs.org/docs",
+			},
+			{ label: "Danger zone", description: "Disabled action example", disabled: true },
+		]}
+	/>
+</PreviewContainer>
+
+## Installation
+
+<Steps>
+<Step>Install dependencies</Step>
+
+```bash
+npm install motion lucide-react
+```
+
+<Step>Create the component file</Step>
+
+```bash
+mkdir -p components/animata/overlay && touch components/animata/overlay/dropdown-menu.tsx
+```
+
+<Step>Paste the code</Step>
+
+Open the newly created file and paste the following code:
+
+```jsx file=<rootDir>/animata/overlay/dropdown-menu.tsx
+
+```
+
+</Steps>
+
+## Credits
+
+Built by [Ujjwal Basnet](https://github.com/leazi99)
+]

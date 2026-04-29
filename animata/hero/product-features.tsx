@@ -89,10 +89,10 @@ export default function ProductFeatures() {
         className="flex max-w-md flex-col items-center gap-2 text-center"
       >
         <h1 className="text-3xl font-black text-orange-600">Pots of Joy: Ceramic Chic!</h1>
-        <Balancer className="block text-lg text-neutral-500">
+        <div className="block text-lg text-neutral-500">
           Quirky ceramics for happy spaces. From sleek vases to funky mugs, we&apos;ve got your
           shelves covered.
-        </Balancer>
+        </div>
       </motion.header>
 
       <motion.div

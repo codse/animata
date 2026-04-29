@@ -13,7 +13,7 @@ import remarkGfm from "remark-gfm";
 import type { NpmCommands, TouchCommands, UnistNode, UnistTree } from "types/unist";
 import { visit } from "unist-util-visit";
 import { VFile } from "vfile";
-
+import DropdownMenu from "@/animata/overlay/dropdown-menu";
 import Modal from "@/animata/overlay/modal";
 import { Callout } from "@/components/callout";
 import { CodeBlockWrapper } from "@/components/code-block-wrapper";
@@ -51,13 +51,16 @@ const setupCodeSnippet = () => (tree: UnistTree) => {
       const meta = (codeEl as UnistNode & { data?: { meta?: string } }).data?.meta;
       if (meta) {
         const regex = /event="([^"]*)"/;
-        const match = meta.match(regex);
+        const match = regex.exec(meta);
         if (match) {
           (node as UnistNode & { __event__?: string }).__event__ = match[1];
-          (codeEl as UnistNode & { data?: { meta?: string } }).data!.meta = meta.replace(regex, "");
+          (codeEl as UnistNode & { data?: { meta?: string } }).data!.meta = meta.replaceAll(
+            regex,
+            "",
+          );
         }
 
-        const copyId = meta.match(/copyId="([^"]*)"/);
+        const copyId = /copyId="([^"]*)"/.exec(meta);
         if (copyId) {
           (node as UnistNode & { __copyId__?: string }).__copyId__ = copyId[1];
         }
@@ -69,43 +72,47 @@ const setupCodeSnippet = () => (tree: UnistTree) => {
 };
 
 const postProcess = () => (tree: UnistTree) => {
-  visit(tree, "element", (node: UnistNode) => {
-    const rawNode = node as UnistNode & { __rawString__?: string; __copyId__?: string };
-    if (rawNode.__rawString__) {
-      if (node.tagName !== "pre") {
-        const [pre] = node.children ?? [];
-        if (pre?.tagName !== "pre") {
-          return;
-        }
-        if (!pre.properties) pre.properties = {};
-        pre.properties.__copyId__ = rawNode.__copyId__;
-        pre.properties.__rawString__ = rawNode.__rawString__;
-        Reflect.deleteProperty(rawNode, "__rawString__");
-        Reflect.deleteProperty(rawNode, "__copyId__");
+  visit(tree, "element", handlePostProcessNode);
+};
 
-        const rawString = pre.properties.__rawString__ as string | undefined;
+const handlePostProcessNode = (node: UnistNode) => {
+  const rawNode = node as UnistNode & { __rawString__?: string; __copyId__?: string };
 
-        if (rawString?.startsWith("mkdir")) {
-          const path = rawString.split(" ").pop();
-          if (!path) {
-            return;
-          }
+  if (!rawNode.__rawString__ || node.tagName === "pre") {
+    return;
+  }
 
-          const filename = path.split("/").pop() ?? "";
-          const dir = path.replace(`/${filename}`, "");
-          pre.properties.__windows__ = `mkdir "${dir}" && type null > ${path}`;
-          pre.properties.__unix__ = `mkdir -p ${dir} && touch ${path}`;
-        }
+  const [pre] = node.children ?? [];
+  if (pre?.tagName !== "pre") {
+    return;
+  }
 
-        if (rawString?.startsWith("npm install")) {
-          pre.properties.__npmCommand__ = rawString;
-          pre.properties.__yarnCommand__ = rawString.replace("npm install", "yarn add");
-          pre.properties.__pnpmCommand__ = rawString.replace("npm install", "pnpm add");
-          pre.properties.__bunCommand__ = rawString.replace("npm install", "bun add");
-        }
-      }
+  pre.properties ??= {};
+  pre.properties.__copyId__ = rawNode.__copyId__;
+  pre.properties.__rawString__ = rawNode.__rawString__;
+  Reflect.deleteProperty(rawNode, "__rawString__");
+  Reflect.deleteProperty(rawNode, "__copyId__");
+
+  const rawString = pre.properties.__rawString__ as string | undefined;
+
+  if (rawString?.startsWith("mkdir")) {
+    const path = rawString.split(" ").pop();
+    if (!path) {
+      return;
     }
-  });
+
+    const filename = path.split("/").pop() ?? "";
+    const dir = path.replace(`/${filename}`, "");
+    pre.properties.__windows__ = `mkdir "${dir}" && type null > ${path}`;
+    pre.properties.__unix__ = `mkdir -p ${dir} && touch ${path}`;
+  }
+
+  if (rawString?.startsWith("npm install")) {
+    pre.properties.__npmCommand__ = rawString;
+    pre.properties.__yarnCommand__ = rawString.replaceAll("npm install", "yarn add");
+    pre.properties.__pnpmCommand__ = rawString.replaceAll("npm install", "pnpm add");
+    pre.properties.__bunCommand__ = rawString.replaceAll("npm install", "bun add");
+  }
 };
 
 const components = {
@@ -208,7 +215,9 @@ const components = {
         className,
       )}
       {...props}
-    />
+    >
+      {props.children}
+    </h3>
   ),
   Steps: ({ ...props }) => (
     <div
@@ -247,6 +256,7 @@ const components = {
   FrameworkDocs: ({ className, ...props }: ComponentProps<typeof FrameworkDocs>) => (
     <FrameworkDocs className={cn(className)} {...props} />
   ),
+  DropdownMenu: ({ ...props }: ComponentProps<typeof DropdownMenu>) => <DropdownMenu {...props} />,
   Link: ({ className, ...props }: ComponentProps<typeof Link>) => (
     <Link className={cn("font-medium underline underline-offset-4", className)} {...props} />
   ),
@@ -279,7 +289,7 @@ interface MdxProps {
 function stripImports(code: string) {
   const importRegex = /^import\s+(\w+)\s+from\s+["']@\/animata\/([^"']+)["'];?\s*$/gm;
   const imports: Array<{ name: string; subpath: string }> = [];
-  const strippedCode = code.replace(importRegex, (_, name, subpath) => {
+  const strippedCode = code.replaceAll(importRegex, (_, name, subpath) => {
     imports.push({ name, subpath });
     return "";
   });
@@ -311,9 +321,7 @@ const mdxOptions: Omit<CompileOptions, "outputFormat" | "providerImportSource"> 
           if (node.children.length === 0) {
             node.children = [{ type: "text", value: " " }];
           }
-          if (!node.properties.className) {
-            node.properties.className = ["line"];
-          }
+          node.properties.className ??= ["line"];
         },
         onVisitHighlightedLine(node: LineElement) {
           (node.properties.className as string[]).push("line--highlighted");
@@ -336,7 +344,7 @@ const mdxOptions: Omit<CompileOptions, "outputFormat" | "providerImportSource"> 
   ],
 };
 
-export async function Mdx({ code, filePath }: MdxProps) {
+export async function Mdx({ code, filePath }: Readonly<MdxProps>) {
   const { strippedCode, imports } = stripImports(code);
   const dynamicComponents = imports.length > 0 ? resolveImports(imports) : {};
 
