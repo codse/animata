@@ -76,6 +76,7 @@
     "unist-builder": "^4.0.0",
     "vaul": "^1.1.2",
     "velite": "^0.2.3",
+    "yarn": "^1.22.22",
     "zod": "^3.24.0"
   },
   "devDependencies": {
