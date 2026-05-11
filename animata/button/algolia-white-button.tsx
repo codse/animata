@@ -15,7 +15,7 @@ export default function AlgoliaWhiteButton() {
           box-shadow: #D6D6E7 0 3px 7px inset;
         }
       `}</style>
-      Alglia White
+      Algolia White
     </button>
   );
 }
