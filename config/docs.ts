@@ -82,6 +82,16 @@ const sidebarNav: SidebarNavItem[] = [
     ],
   },
   {
+    title: "Featured",
+    items: [
+      {
+        title: "Animated Feature Grid",
+        href: "/docs/section/animated-feature-grid",
+        items: [],
+      },
+    ],
+  },
+  {
     title: "Text",
     items: createLinks("text"),
   },

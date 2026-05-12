@@ -28,13 +28,6 @@ type DropdownMenuProps = {
   itemClassName?: string;
 };
 
-const placementClasses: Record<NonNullable<DropdownMenuProps["placement"]>, string> = {
-  "bottom-start": "left-0 top-full mt-2 origin-top-left",
-  "bottom-end": "right-0 top-full mt-2 origin-top-right",
-  "top-start": "bottom-full left-0 mb-2 origin-bottom-left",
-  "top-end": "bottom-full right-0 mb-2 origin-bottom-right",
-};
-
 const defaultItems: DropdownMenuItem[] = [
   {
     label: "Profile",
@@ -92,6 +85,8 @@ export default function DropdownMenu({
   const menuRef = useRef<HTMLDivElement>(null);
   const menuId = useId();
   const triggerId = `${menuId}-trigger`;
+  const menuAboveTrigger = placement.startsWith("top");
+  const menuSpacingClass = menuAboveTrigger ? "mb-2" : "mt-2";
 
   const closeMenu = useCallback(() => {
     setOpen(false);
@@ -252,6 +247,7 @@ export default function DropdownMenu({
     };
   }, [activeIndex, closeMenu, menuItems, open]);
 
+
   useEffect(() => {
     if (!open) {
       return;
@@ -275,7 +271,7 @@ export default function DropdownMenu({
   return (
     <div
       ref={wrapperRef}
-      className={cn("relative inline-flex", className)}
+      className={cn("relative inline-flex flex-col items-start gap-1", className)}
       onPointerEnter={() => {
         if (triggerMode === "hover") {
           openMenu();
@@ -287,151 +283,301 @@ export default function DropdownMenu({
         }
       }}
     >
-      <button
-        ref={triggerRef}
-        id={triggerId}
-        type="button"
-        aria-haspopup="menu"
-        aria-expanded={open}
-        aria-controls={menuId}
-        aria-label={ariaLabel}
-        onClick={handleTriggerClick}
-        onKeyDown={handleTriggerKeyDown}
-        className={cn(
-          "inline-flex items-center gap-2 rounded-full border border-border bg-background px-4 py-2 text-sm font-medium text-foreground shadow-sm transition-colors hover:bg-muted focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
-          triggerClassName,
-        )}
-      >
-        {label}
-        <ChevronDown
-          className={cn("size-4 transition-transform duration-200", open && "rotate-180")}
-        />
-      </button>
+      {menuAboveTrigger ? (
+        <>
+          <AnimatePresence>
+            {open && (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.96, y: -6 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.96, y: -6 }}
+                transition={{ type: "spring", stiffness: 500, damping: 35, mass: 0.7 }}
+                className={cn(
+                  "relative z-10 w-fit min-w-44 max-w-64 overflow-hidden rounded-2xl border border-border bg-popover p-0.5 text-popover-foreground shadow-xl backdrop-blur-sm",
+                  "max-h-72 overflow-y-auto",
+                  menuSpacingClass,
+                  menuClassName,
+                )}
+              >
+                <div
+                  ref={menuRef}
+                  id={menuId}
+                  role="menu"
+                  aria-labelledby={triggerId}
+                  aria-activedescendant={activeIndex >= 0 ? `${menuId}-item-${activeIndex}` : undefined}
+                  aria-orientation="vertical"
+                  tabIndex={-1}
+                  onKeyDown={handleMenuKeyDown}
+                  className="outline-hidden"
+                >
+                  {menuItems.map((item, index) => {
+                    const isActive = index === activeIndex;
+                    const itemId = `${menuId}-item-${index}`;
+                    let activeStateClass = "text-foreground/80 hover:bg-muted hover:text-foreground";
 
-      <AnimatePresence>
-        {open && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.96, y: -6 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.96, y: -6 }}
-            transition={{ type: "spring", stiffness: 500, damping: 35, mass: 0.7 }}
+                    if (item.disabled) {
+                      activeStateClass = "cursor-not-allowed opacity-50";
+                    } else if (isActive) {
+                      activeStateClass = "bg-primary/10 text-primary";
+                    }
+                    const sharedClassName = cn(
+                      "relative flex w-full items-start gap-1.5 rounded-xl px-2 py-1.5 text-left text-sm outline-hidden transition-colors duration-150",
+                      activeStateClass,
+                      itemClassName,
+                    );
+
+                    const content = (
+                      <>
+                        {isActive && (
+                          <motion.span
+                            layoutId={`${menuId}-active-indicator`}
+                            className="absolute inset-y-2 left-2 w-1 rounded-full bg-primary"
+                          />
+                        )}
+                        <span className={cn("flex min-w-0 flex-1 flex-col", isActive && "pl-2") }>
+                          <span
+                            className={cn(
+                              "font-medium transition-colors duration-150",
+                              isActive && "underline decoration-primary/60 underline-offset-4",
+                            )}
+                          >
+                            {item.label}
+                          </span>
+                          {item.description ? (
+                            <span className="mt-0.5 line-clamp-2 text-xs text-muted-foreground">
+                              {item.description}
+                            </span>
+                          ) : null}
+                        </span>
+                      </>
+                    );
+
+                    if (item.disabled) {
+                      return (
+                        <div
+                          key={itemId}
+                          id={itemId}
+                          role="menuitem"
+                          aria-disabled="true"
+                          tabIndex={-1}
+                          data-active={isActive}
+                          className={sharedClassName}
+                          onMouseEnter={() => setActiveIndex(index)}
+                        >
+                          {content}
+                        </div>
+                      );
+                    }
+
+                    if (item.href) {
+                      return (
+                        <Link
+                          key={itemId}
+                          id={itemId}
+                          href={item.href}
+                          role="menuitem"
+                          tabIndex={-1}
+                          data-active={isActive}
+                          onMouseEnter={() => setActiveIndex(index)}
+                          onFocus={() => setActiveIndex(index)}
+                          onClick={() => selectItem(item)}
+                          className={sharedClassName}
+                        >
+                          {content}
+                        </Link>
+                      );
+                    }
+
+                    return (
+                      <button
+                        key={itemId}
+                        id={itemId}
+                        type="button"
+                        role="menuitem"
+                        tabIndex={-1}
+                        data-active={isActive}
+                        onMouseEnter={() => setActiveIndex(index)}
+                        onFocus={() => setActiveIndex(index)}
+                        onClick={() => selectItem(item)}
+                        className={sharedClassName}
+                      >
+                        {content}
+                      </button>
+                    );
+                  })}
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+          <button
+            ref={triggerRef}
+            id={triggerId}
+            type="button"
+            aria-haspopup="menu"
+            aria-expanded={open}
+            aria-controls={menuId}
+            aria-label={ariaLabel}
+            onClick={handleTriggerClick}
+            onKeyDown={handleTriggerKeyDown}
             className={cn(
-              "absolute z-50 min-w-56 overflow-hidden rounded-2xl border border-border bg-popover p-2 text-popover-foreground shadow-xl backdrop-blur-sm",
-              "max-h-[min(24rem,calc(100vh-6rem))] w-max max-w-[min(24rem,calc(100vw-1rem))] overflow-y-auto",
-              placementClasses[placement],
-              menuClassName,
+              "inline-flex items-center gap-2 rounded-full border border-border bg-background px-4 py-2 text-sm font-medium text-foreground shadow-sm transition-colors hover:bg-muted focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+              triggerClassName,
             )}
           >
-            <div
-              ref={menuRef}
-              id={menuId}
-              role="menu"
-              aria-labelledby={triggerId}
-              aria-activedescendant={activeIndex >= 0 ? `${menuId}-item-${activeIndex}` : undefined}
-              aria-orientation="vertical"
-              tabIndex={-1}
-              onKeyDown={handleMenuKeyDown}
-              className="outline-hidden"
-            >
-              {menuItems.map((item, index) => {
-                const isActive = index === activeIndex;
-                const itemId = `${menuId}-item-${index}`;
-                let activeStateClass = "text-foreground/80 hover:bg-muted hover:text-foreground";
+            {label}
+            <ChevronDown
+              className={cn("size-4 transition-transform duration-200", open && "rotate-180")}
+            />
+          </button>
+        </>
+      ) : (
+        <>
+          <button
+            ref={triggerRef}
+            id={triggerId}
+            type="button"
+            aria-haspopup="menu"
+            aria-expanded={open}
+            aria-controls={menuId}
+            aria-label={ariaLabel}
+            onClick={handleTriggerClick}
+            onKeyDown={handleTriggerKeyDown}
+            className={cn(
+              "inline-flex items-center gap-2 rounded-full border border-border bg-background px-4 py-2 text-sm font-medium text-foreground shadow-sm transition-colors hover:bg-muted focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+              triggerClassName,
+            )}
+          >
+            {label}
+            <ChevronDown
+              className={cn("size-4 transition-transform duration-200", open && "rotate-180")}
+            />
+          </button>
+          <AnimatePresence>
+            {open && (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.96, y: -6 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.96, y: -6 }}
+                transition={{ type: "spring", stiffness: 500, damping: 35, mass: 0.7 }}
+                className={cn(
+                  "relative z-10 w-fit min-w-44 max-w-64 overflow-hidden rounded-2xl border border-border bg-popover p-0.5 text-popover-foreground shadow-xl backdrop-blur-sm",
+                  "max-h-72 overflow-y-auto",
+                  menuSpacingClass,
+                  menuClassName,
+                )}
+              >
+                <div
+                  ref={menuRef}
+                  id={menuId}
+                  role="menu"
+                  aria-labelledby={triggerId}
+                  aria-activedescendant={activeIndex >= 0 ? `${menuId}-item-${activeIndex}` : undefined}
+                  aria-orientation="vertical"
+                  tabIndex={-1}
+                  onKeyDown={handleMenuKeyDown}
+                  className="outline-hidden"
+                >
+                  {menuItems.map((item, index) => {
+                    const isActive = index === activeIndex;
+                    const itemId = `${menuId}-item-${index}`;
+                    let activeStateClass = "text-foreground/80 hover:bg-muted hover:text-foreground";
 
-                if (item.disabled) {
-                  activeStateClass = "cursor-not-allowed opacity-50";
-                } else if (isActive) {
-                  activeStateClass = "bg-primary/10 text-primary";
-                }
-                const sharedClassName = cn(
-                  "relative flex w-full items-start gap-3 rounded-xl px-3 py-2.5 text-left text-sm outline-hidden transition-colors duration-150",
-                  activeStateClass,
-                  itemClassName,
-                );
+                    if (item.disabled) {
+                      activeStateClass = "cursor-not-allowed opacity-50";
+                    } else if (isActive) {
+                      activeStateClass = "bg-primary/10 text-primary";
+                    }
+                    const sharedClassName = cn(
+                      "relative flex w-full items-start gap-1.5 rounded-xl px-2 py-1.5 text-left text-sm outline-hidden transition-colors duration-150",
+                      activeStateClass,
+                      itemClassName,
+                    );
 
-                const content = (
-                  <>
-                    {isActive && (
-                      <motion.span
-                        layoutId={`${menuId}-active-indicator`}
-                        className="absolute inset-y-2 left-2 w-1 rounded-full bg-primary"
-                      />
-                    )}
-                    <span className={cn("flex min-w-0 flex-1 flex-col", isActive && "pl-3")}>
-                      <span
-                        className={cn(
-                          "font-medium transition-colors duration-150",
-                          isActive && "underline decoration-primary/60 underline-offset-4",
+                    const content = (
+                      <>
+                        {isActive && (
+                          <motion.span
+                            layoutId={`${menuId}-active-indicator`}
+                            className="absolute inset-y-2 left-2 w-1 rounded-full bg-primary"
+                          />
                         )}
-                      >
-                        {item.label}
-                      </span>
-                      {item.description ? (
-                        <span className="mt-0.5 line-clamp-2 text-xs text-muted-foreground">
-                          {item.description}
+                        <span className={cn("flex min-w-0 flex-1 flex-col", isActive && "pl-2") }>
+                          <span
+                            className={cn(
+                              "font-medium transition-colors duration-150",
+                              isActive && "underline decoration-primary/60 underline-offset-4",
+                            )}
+                          >
+                            {item.label}
+                          </span>
+                          {item.description ? (
+                            <span className="mt-0.5 line-clamp-2 text-xs text-muted-foreground">
+                              {item.description}
+                            </span>
+                          ) : null}
                         </span>
-                      ) : null}
-                    </span>
-                  </>
-                );
+                      </>
+                    );
 
-                if (item.disabled) {
-                  return (
-                    <div
-                      key={itemId}
-                      id={itemId}
-                      role="menuitem"
-                      aria-disabled="true"
-                      tabIndex={-1}
-                      data-active={isActive}
-                      className={sharedClassName}
-                      onMouseEnter={() => setActiveIndex(index)}
-                    >
-                      {content}
-                    </div>
-                  );
-                }
+                    if (item.disabled) {
+                      return (
+                        <div
+                          key={itemId}
+                          id={itemId}
+                          role="menuitem"
+                          aria-disabled="true"
+                          tabIndex={-1}
+                          data-active={isActive}
+                          className={sharedClassName}
+                          onMouseEnter={() => setActiveIndex(index)}
+                        >
+                          {content}
+                        </div>
+                      );
+                    }
 
-                if (item.href) {
-                  return (
-                    <Link
-                      key={itemId}
-                      id={itemId}
-                      href={item.href}
-                      role="menuitem"
-                      tabIndex={-1}
-                      data-active={isActive}
-                      onMouseEnter={() => setActiveIndex(index)}
-                      onFocus={() => setActiveIndex(index)}
-                      onClick={() => selectItem(item)}
-                      className={sharedClassName}
-                    >
-                      {content}
-                    </Link>
-                  );
-                }
+                    if (item.href) {
+                      return (
+                        <Link
+                          key={itemId}
+                          id={itemId}
+                          href={item.href}
+                          role="menuitem"
+                          tabIndex={-1}
+                          data-active={isActive}
+                          onMouseEnter={() => setActiveIndex(index)}
+                          onFocus={() => setActiveIndex(index)}
+                          onClick={() => selectItem(item)}
+                          className={sharedClassName}
+                        >
+                          {content}
+                        </Link>
+                      );
+                    }
 
-                return (
-                  <button
-                    key={itemId}
-                    id={itemId}
-                    type="button"
-                    role="menuitem"
-                    tabIndex={-1}
-                    data-active={isActive}
-                    onMouseEnter={() => setActiveIndex(index)}
-                    onFocus={() => setActiveIndex(index)}
-                    onClick={() => selectItem(item)}
-                    className={sharedClassName}
-                  >
-                    {content}
-                  </button>
-                );
-              })}
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+                    return (
+                      <button
+                        key={itemId}
+                        id={itemId}
+                        type="button"
+                        role="menuitem"
+                        tabIndex={-1}
+                        data-active={isActive}
+                        onMouseEnter={() => setActiveIndex(index)}
+                        onFocus={() => setActiveIndex(index)}
+                        onClick={() => selectItem(item)}
+                        className={sharedClassName}
+                      >
+                        {content}
+                      </button>
+                    );
+                  })}
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </>
+      )}
     </div>
   );
 }

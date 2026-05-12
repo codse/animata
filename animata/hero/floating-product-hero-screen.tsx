@@ -45,28 +45,28 @@ const defaultCards: FloatingProductHeroCard[] = [
   {
     title: "Newsletter automation",
     subtitle: "Generate layouts, assets, and launch-ready flows from a single prompt.",
-    accent: "from-orange-300 via-orange-200 to-orange-100",
+    accent: "from-rose-300/50 via-orange-300/30 to-amber-200/10",
     badge: "New",
     height: 214,
   },
   {
     title: "Social graphics",
     subtitle: "Create beautiful campaign graphics without needing a full design stack.",
-    accent: "from-sky-200 via-sky-100 to-blue-100",
+    accent: "from-sky-300/50 via-cyan-300/20 to-blue-200/10",
     badge: "AI",
     height: 226,
   },
   {
     title: "Speaking coach",
     subtitle: "Practice delivery and get live feedback on clarity, pacing, and confidence.",
-    accent: "from-violet-200 via-purple-100 to-indigo-100",
+    accent: "from-violet-300/50 via-fuchsia-300/20 to-indigo-200/10",
     badge: "Pro",
     height: 206,
   },
   {
     title: "Workflow builder",
     subtitle: "Sketch a product, automate the boring parts, then ship with confidence.",
-    accent: "from-emerald-200 via-teal-100 to-cyan-100",
+    accent: "from-emerald-300/40 via-teal-300/20 to-cyan-200/10",
     badge: "Beta",
     height: 232,
   },
@@ -117,13 +117,13 @@ function TopActionButton({
     <motion.button
       type="button"
       onClick={onClick}
-      whileHover={reduceMotion ? undefined : { y: -2, scale: 1.03 }}
-      whileTap={reduceMotion ? undefined : { scale: 0.97 }}
+      whileHover={reduceMotion ? undefined : { y: -1, scale: 1.01 }}
+      whileTap={reduceMotion ? undefined : { scale: 0.98 }}
       className={cn(
-        "inline-flex items-center justify-center rounded-xl px-4 py-2 text-sm font-semibold transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60",
+        "inline-flex items-center justify-center rounded-lg px-4 py-2 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60",
         isSolid
-          ? "bg-gradient-to-b from-white/20 to-white/10 text-white shadow-lg hover:shadow-xl hover:from-white/25 hover:to-white/15 border border-white/15"
-          : "text-white/75 hover:text-white border border-white/5 hover:border-white/15 hover:bg-white/5",
+          ? "bg-white/10 text-white hover:bg-white/15"
+          : "text-white/80 hover:text-white",
       )}
     >
       {children}
@@ -148,13 +148,13 @@ function HeroCtaButton({
     <motion.button
       type="button"
       onClick={onClick}
-      whileHover={reduceMotion ? undefined : { y: -3, scale: 1.03 }}
-      whileTap={reduceMotion ? undefined : { scale: 0.96 }}
+      whileHover={reduceMotion ? undefined : { y: -2, scale: 1.02 }}
+      whileTap={reduceMotion ? undefined : { scale: 0.98 }}
       className={cn(
-        "inline-flex h-14 items-center justify-center rounded-full px-8 text-base font-semibold transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950",
+        "inline-flex h-14 items-center justify-center rounded-full px-8 text-base font-medium transition-shadow focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60",
         primary
-          ? "bg-gradient-to-b from-white to-slate-100 text-slate-950 shadow-[0_8px_16px_rgba(255,255,255,0.2),0_4px_8px_rgba(0,0,0,0.15)] hover:shadow-[0_12px_24px_rgba(255,255,255,0.3),0_6px_12px_rgba(0,0,0,0.2)]"
-          : "border border-white/20 bg-white/8 text-white backdrop-blur-sm shadow-lg hover:bg-white/12 hover:border-white/30",
+          ? "bg-white text-slate-950 shadow-[0_20px_40px_rgba(255,255,255,0.25)] hover:shadow-[0_24px_44px_rgba(255,255,255,0.3)]"
+          : "border border-white/15 bg-white/5 text-white hover:bg-white/10",
       )}
     >
       {children}
@@ -178,31 +178,30 @@ function PreviewCard({
 
   return (
     <motion.div
-      initial={animationEnabled && !reduceMotion ? { opacity: 0, scale: 0.88, y: 20 } : false}
+      initial={animationEnabled && !reduceMotion ? { opacity: 0, scale: 0.92, y: 14 } : false}
       animate={animationEnabled && !reduceMotion ? { opacity: 1, scale: 1, y: 0 } : undefined}
-      transition={{ duration: 0.7, delay: 0.2 + index * 0.1, ease: [0.23, 0.86, 0.39, 0.96] }}
-      whileHover={reduceMotion ? undefined : { scale: 1.05, y: -4 }}
+      transition={{ duration: 0.7, delay: 0.15 + index * 0.08, ease: "easeOut" }}
       className={cn(
-        "absolute w-[185px] overflow-hidden rounded-[24px] border border-white/15 bg-white/97 shadow-[0_20px_70px_rgba(0,0,0,0.35),0_8px_32px_rgba(0,0,0,0.2)] backdrop-blur-xl",
+        "absolute w-[185px] overflow-hidden rounded-[18px] border border-white/25 bg-white/95 shadow-[0_24px_60px_rgba(0,0,0,0.22)] backdrop-blur-sm",
         isLeft ? "-left-8" : "-right-8",
         isTop ? "top-0" : "bottom-0",
       )}
       style={{ height: card.height ?? 210, zIndex: 20 - index }}
     >
-      <div className={cn("h-full bg-linear-to-br p-4", card.accent ?? "from-white to-slate-50") }>
+      <div className={cn("h-full bg-linear-to-br p-3", card.accent ?? "from-white to-slate-100") }>
         <div className="flex items-start justify-between gap-2">
-          <div className="rounded-full border border-black/8 bg-white/60 px-2.5 py-1 text-[10px] font-bold uppercase tracking-widest text-slate-700 shadow-sm">
+          <div className="rounded-full border border-black/5 bg-black/5 px-2 py-0.5 text-[10px] font-medium uppercase tracking-[0.16em] text-slate-700">
             {card.badge ?? "Preview"}
           </div>
-          <div className="flex h-6 w-6 items-center justify-center rounded-full border border-black/8 bg-white/70 text-[10px] font-bold text-slate-700 shadow-sm">
+          <div className="flex h-6 w-6 items-center justify-center rounded-full border border-black/5 bg-white/70 text-[10px] font-semibold text-slate-700">
             {String(index + 1).padStart(2, "0")}
           </div>
         </div>
 
-        <div className="mt-3 rounded-[16px] border border-black/8 bg-white/85 p-3 shadow-md">
+        <div className="mt-3 rounded-[14px] border border-black/5 bg-white/80 p-3 shadow-sm">
           <div className="flex items-center gap-2">
-            <div className="h-2 w-2 rounded-full bg-emerald-500 shadow-sm" />
-            <div className="h-2 w-2 rounded-full bg-sky-500 shadow-sm" />
+            <div className="h-2 w-2 rounded-full bg-emerald-500" />
+            <div className="h-2 w-2 rounded-full bg-sky-500" />
             <div className="h-2 w-2 rounded-full bg-slate-300" />
           </div>
           <div className="mt-4 space-y-2">
@@ -210,13 +209,13 @@ function PreviewCard({
             <div className="h-2 w-full rounded-full bg-slate-200" />
             <div className="h-2 w-4/5 rounded-full bg-slate-200" />
             <div className="mt-4 grid grid-cols-2 gap-2">
-              <div className="h-16 rounded-xl bg-gradient-to-br from-slate-100 to-slate-50" />
-              <div className="h-16 rounded-xl bg-gradient-to-br from-slate-100 to-slate-50" />
+              <div className="h-16 rounded-xl bg-slate-100" />
+              <div className="h-16 rounded-xl bg-slate-100" />
             </div>
           </div>
         </div>
 
-        <p className="mt-3 text-[11px] leading-4 font-medium text-slate-700">{card.subtitle}</p>
+        <p className="mt-3 text-[11px] leading-4 text-slate-800">{card.subtitle}</p>
       </div>
     </motion.div>
   );
@@ -229,38 +228,42 @@ function PromptPanel({
   reduceMotion: boolean;
   animationEnabled: boolean;
 }>) {
+  const lineVariants = animationEnabled && !reduceMotion ? { opacity: 1, y: 0 } : undefined;
+
   return (
     <motion.div
-      initial={animationEnabled ? { opacity: 0, y: 30, scale: 0.92 } : false}
+      initial={animationEnabled ? { opacity: 0, y: 24, scale: 0.985 } : false}
       animate={animationEnabled ? { opacity: 1, y: 0, scale: 1 } : undefined}
-      transition={{ duration: 0.9, ease: [0.23, 0.86, 0.39, 0.96] }}
-      className="relative mx-auto w-full max-w-[720px] rounded-[32px] border border-white/15 bg-gradient-to-b from-slate-900/85 via-slate-900/80 to-slate-950/90 p-8 shadow-[0_32px_96px_rgba(0,0,0,0.5),inset_0_1px_1px_rgba(255,255,255,0.1)] backdrop-blur-2xl"
+      transition={{ duration: 0.8, ease: "easeOut" }}
+      className="relative mx-auto w-full max-w-[700px] rounded-[24px] border border-white/10 bg-[#20272d]/95 p-5 shadow-[0_24px_80px_rgba(0,0,0,0.45)] backdrop-blur-xl"
     >
-      <div className="flex items-center gap-2 text-xs text-white/60">
-        <span className="rounded-full border border-white/20 bg-white/8 px-3.5 py-1.5 font-semibold">Get suggestions</span>
-        <span className="rounded-full border border-white/10 bg-transparent px-3.5 py-1.5 font-semibold text-white/40">
+      <div className="flex items-center gap-2 text-xs text-white/70">
+        <span className="rounded-full border border-white/15 bg-white/5 px-3 py-1">Get suggestions</span>
+        <span className="rounded-full border border-white/10 bg-transparent px-3 py-1 text-white/45">
           Write a prompt
         </span>
       </div>
 
-      <div className="mt-6 space-y-3 text-left text-[26px] leading-[1.28] tracking-[-0.02em] text-white sm:text-[30px] md:text-[36px]">
-        <div className="text-white/55 font-medium">
-          Make me <span className="bg-gradient-to-r from-sky-300 to-sky-400 bg-clip-text text-transparent font-bold">an automation</span>
-        </div>
-        <div className="text-white/55 font-medium">
-          for <span className="bg-gradient-to-r from-emerald-300 to-teal-400 bg-clip-text text-transparent font-bold">newsletter publishers</span>
-        </div>
-        <div className="text-white/55 font-medium">
-          that helps <span className="bg-gradient-to-r from-purple-300 to-violet-400 bg-clip-text text-transparent font-bold">create beautiful graphics for</span>
-        </div>
-        <div className="font-bold text-white">social media without design skills</div>
+      <div className="mt-5 space-y-2 text-left text-[24px] leading-[1.32] tracking-[-0.04em] text-white sm:text-[28px] md:text-[32px]">
+        <motion.div initial={false} animate={lineVariants} className="text-white/50">
+          Make me <span className="border-b-2 border-sky-400 text-white">an automation</span>
+        </motion.div>
+        <motion.div initial={false} animate={lineVariants} className="text-white/50">
+          for <span className="border-b-2 border-emerald-400 text-white">newsletter publishers</span>
+        </motion.div>
+        <motion.div initial={false} animate={lineVariants} className="text-white/50">
+          that helps <span className="border-b-2 border-violet-400 text-white">create beautiful graphics for</span>
+        </motion.div>
+        <motion.div initial={false} animate={lineVariants} className="text-white">
+          social media without design skills
+        </motion.div>
       </div>
 
-      <div className="mt-6 max-w-[460px] text-sm text-white/70 font-medium">
-        <span className="bg-gradient-to-r from-amber-300 to-orange-400 bg-clip-text text-transparent">Include A/B testing capabilities</span>
+      <div className="mt-4 max-w-[420px] text-sm text-white/75">
+        <span className="border-b-2 border-amber-300 pb-1">Include A/B testing capabilities</span>
       </div>
 
-      <div className="mt-8 flex justify-center">
+      <div className="mt-6 flex justify-center">
         <HeroCtaButton variant="primary" reduceMotion={!!reduceMotion}>
           Start building with AI
         </HeroCtaButton>
@@ -356,27 +359,31 @@ export function FloatingProductHero({
       style={{ minHeight }}
     >
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_18%,rgba(55,65,81,0.32),transparent_30%),radial-gradient(circle_at_50%_34%,rgba(15,23,42,0.76),transparent_52%),linear-gradient(to_bottom,#0b1117,#0b1117)]" />
-      <div className="absolute inset-0 opacity-[0.08] bg-[linear-gradient(rgba(255,255,255,0.22)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.22)_1px,transparent_1px)] bg-size-[72px_72px]" />
+      <div className="absolute inset-0 opacity-[0.08] [background-image:linear-gradient(rgba(255,255,255,0.22)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.22)_1px,transparent_1px)] [background-size:72px_72px]" />
 
       <div className="relative mx-auto flex w-full max-w-[1240px] flex-col px-4 py-4 sm:px-6 lg:px-8">
         <TopBar navLinks={navLinks} reduceMotion={!!reduceMotion} onPrimaryCta={onPrimaryCta} />
 
         <div className="relative flex min-h-[calc(100vh-80px)] flex-col items-center justify-center pt-10">
           <motion.div
-            initial={shouldAnimate ? { opacity: 0, y: 20 } : false}
+            initial={shouldAnimate ? { opacity: 0, y: 12 } : false}
             animate={shouldAnimate ? { opacity: 1, y: 0 } : undefined}
-            transition={{ duration: 0.8, ease: [0.23, 0.86, 0.39, 0.96] }}
+            transition={{ duration: 0.7, ease: "easeOut" }}
             className="mx-auto max-w-3xl text-center"
           >
-            <h1 className="text-balance bg-gradient-to-b from-white via-white to-white/80 bg-clip-text text-transparent text-[clamp(2.8rem,7vw,5.5rem)] font-black tracking-[-0.08em] leading-[1.1]">
+            <h1 className="text-balance text-[clamp(2.7rem,6vw,5.2rem)] font-semibold tracking-[-0.06em] text-white">
               {title}
             </h1>
-            <p className="mx-auto mt-6 max-w-2xl text-pretty text-lg leading-relaxed text-white/70 sm:text-xl font-medium">
+            <p className="mx-auto mt-5 max-w-2xl text-pretty text-lg leading-8 text-white/65 sm:text-xl">
               {subtitle}
             </p>
           </motion.div>
 
-          <div onPointerMove={handlePointerMove} onPointerLeave={resetPointer} className="relative mt-10 w-full px-4 sm:px-6 lg:px-0">
+          <div
+            onPointerMove={handlePointerMove}
+            onPointerLeave={resetPointer}
+            className="relative mt-10 w-full px-4 sm:px-6 lg:px-0"
+          >
             <motion.div
               style={shouldAnimate ? { x: springX, y: springY } : undefined}
               className="relative mx-auto w-full max-w-[780px]"
@@ -402,10 +409,10 @@ export function FloatingProductHero({
           <LogoStrip logos={logos} />
 
           <motion.div
-            initial={shouldAnimate ? { opacity: 0, y: 16 } : false}
+            initial={shouldAnimate ? { opacity: 0, y: 10 } : false}
             animate={shouldAnimate ? { opacity: 1, y: 0 } : undefined}
-            transition={{ delay: 0.3, duration: 0.7, ease: [0.23, 0.86, 0.39, 0.96] }}
-            className="mt-10 flex flex-col items-center gap-4 sm:flex-row sm:gap-3"
+            transition={{ delay: 0.25, duration: 0.6 }}
+            className="mt-8 flex flex-col items-center gap-3 sm:flex-row"
           >
             <HeroCtaButton variant="primary" reduceMotion={!!reduceMotion} onClick={onPrimaryCta}>
               {primaryCtaText}

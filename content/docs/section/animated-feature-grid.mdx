@@ -1,0 +1,91 @@
+---
+title: Animated Feature Grid
+description: A premium interactive feature grid with cursor-follow spotlight glow, hover lift, animated borders, and a mobile-friendly fallback
+labels: ["requires interaction", "hover", "animations", "responsive"]
+author: Animata
+published: true
+---
+
+<ComponentPreview name="section-animated-feature-grid--primary" />
+
+## Installation
+
+<Steps>
+
+<Step>Install dependencies</Step>
+
+```bash
+npm install motion lucide-react
+```
+
+<Step>Use the component package</Step>
+
+The reusable source lives in `components/animated-feature-grid`.
+
+<Step>Copy the component files</Step>
+
+If you want the Animata-style local wrapper as well, copy the files into `components/animata/section`.
+
+```bash
+mkdir -p components/animata/section && touch components/animata/section/animated-feature-grid.tsx
+```
+
+<Step>Paste the code</Step>
+
+Open the newly created file and paste the following code:
+
+```jsx file=<rootDir>/animata/section/animated-feature-grid.tsx
+
+```
+
+</Steps>
+
+## Features
+
+- Cursor-follow spotlight glow with smooth spring interpolation
+- Independent hover lift and shadow expansion per card
+- Animated border reveal on hover and keyboard focus
+- Static ambient fallback on touch devices
+- Reduced-motion friendly and keyboard accessible
+
+## Usage
+
+```tsx
+import AnimatedFeatureGrid, { type FeatureGridItem } from "@/animata/section/animated-feature-grid";
+import { Sparkles } from "lucide-react";
+
+const items: FeatureGridItem[] = [
+  {
+    icon: <Sparkles className="size-5" />,
+    title: "Cursor spotlight",
+    description: "A refined spotlight follows the cursor with smooth motion.",
+  },
+];
+
+export default function Page() {
+  return <AnimatedFeatureGrid title="Features" items={items} />;
+}
+```
+
+## Props
+
+```typescript
+interface AnimatedFeatureGridProps {
+  title?: string;
+  description?: string;
+  eyebrow?: string;
+  items: readonly FeatureGridItem[];
+  columns?: 2 | 3 | 4;
+  className?: string;
+  gridClassName?: string;
+  headerClassName?: string;
+  renderFooter?: ReactNode;
+}
+
+interface FeatureGridItem {
+  icon: ReactNode;
+  title: string;
+  description: string;
+  tone?: "blue" | "cyan" | "emerald" | "violet" | "amber" | "rose";
+}
+```

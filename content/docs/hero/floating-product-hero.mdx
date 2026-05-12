@@ -1,137 +1,83 @@
 ---
 title: Floating Product Hero
 description: A premium SaaS/AI landing page hero section with floating glassmorphic cards, parallax effects, and smooth animations
-labels: ["requires-interaction", "hover", "animations", "parallax", "accessibility"]
+labels: ["requires-interaction", "hover", "animations", "parallax"]
 author: Animata
 published: true
 ---
 
 <ComponentPreview name="hero-floating-product-hero--default" />
 
-## Overview
-
-The Floating Product Hero is a production-ready hero section component inspired by premium landing pages like Stripe, Linear, Vercel, and Framer. It combines:
-
-- **Centered Hero Content**: Large headlines, supporting text, and dual CTAs
-- **Floating Background Cards**: Reusable glassmorphic panels with animations
-- **Smooth Animations**: Entrance effects, infinite floating motion, and parallax tracking
-- **Dark Mode Design**: Modern aesthetic with gradient accents and glassmorphism
-- **Accessibility**: Respects `prefers-reduced-motion` and maintains keyboard navigation
-- **Responsive Design**: Adapts seamlessly from mobile to desktop
-
-## Key Features
-
-### 🎨 Design Elements
-
-- **Glassmorphism Cards**: Semi-transparent with backdrop blur and soft borders
-- **Gradient Text**: Modern gradient headlines for visual impact
-- **Glow Effects**: Subtle shadow and light effects on hover
-- **Dark Theme**: Premium dark background with radial gradient accents
-- **Depth & Layering**: Multiple background layers create visual hierarchy
-
-### 🎬 Animations
-
-- **Floating Motion**: Vertical oscillation with slight rotation
-- **Entrance Animation**: Fade-in and scale-up with staggered delays
-- **Parallax Tracking**: Mouse movement affects card positions
-- **Button Interactions**: Hover scale, lift, and glow effects
-- **Scroll Indicator**: Animated arrow guiding users to explore
-
-### ♿ Accessibility
-
-- Respects `prefers-reduced-motion` media query
-- Keyboard accessible buttons and links
-- High contrast text for readability
-- Semantic HTML structure
-- ARIA-friendly components
-
-### 📱 Responsive Design
-
-- **Desktop**: Full floating and parallax effects
-- **Tablet**: Optimized card positioning
-- **Mobile**: Stack layout with reduced animations
-
 ## Installation
 
 <Steps>
 
-<Step>Ensure dependencies are installed</Step>
+<Step>Run the following command</Step>
 
-This component requires `motion` (Framer Motion v12+) and Tailwind CSS. They should already be in your project.
-
-```bash
-npm install motion tailwind-css
-# or
-yarn add motion tailwind-css
-```
-
-<Step>Copy the component file</Step>
+It will create a new file `floating-product-hero.tsx` inside the `components/animata/hero` directory.
 
 ```bash
-cp animata/hero/floating-product-hero.tsx your-project/components/
+mkdir -p components/animata/hero && touch components/animata/hero/floating-product-hero.tsx
 ```
 
-Or manually copy the code from the example below.
+<Step>Paste the code</Step>
 
-<Step>Use the component</Step>
+Open the newly created file and paste the following code:
+
+```jsx file=<rootDir>/animata/hero/floating-product-hero.tsx
+
+```
+
+</Steps>
+
+## Features
+
+- **Glassmorphic Cards**: Semi-transparent with backdrop blur and soft borders
+- **Smooth Animations**: Entrance effects, infinite floating motion, and parallax tracking
+- **Floating Motion**: Vertical oscillation with slight rotation on infinite loop
+- **Parallax Effect**: Mouse movement affects card positions for depth illusion
+- **Dark Mode**: Premium dark background with radial gradient accents
+- **Responsive**: Adapts from mobile to desktop with optimized animations
+- **Accessible**: Respects `prefers-reduced-motion` and maintains keyboard navigation
+
+## Component Props
+
+```typescript
+interface FloatingProductHeroProps {
+  title?: string;              // Main headline
+  subtitle?: string;           // Supporting paragraph
+  primaryCtaText?: string;     // Primary button text
+  secondaryCtaText?: string;   // Secondary button text
+  onPrimaryCta?: () => void;   // Primary button click handler
+  onSecondaryCta?: () => void; // Secondary button click handler
+  showAllCards?: boolean;      // Show/hide floating cards
+  theme?: "dark" | "light";   // Color theme
+  animationEnabled?: boolean;  // Enable/disable animations
+  className?: string;          // Custom CSS classes
+  minHeight?: string;          // Custom height
+}
+```
+
+## Basic Usage
 
 ```jsx
-import { FloatingProductHero } from '@/animata/hero/floating-product-hero';
+import { FloatingProductHero } from "@/animata/hero/floating-product-hero";
 
 export default function Page() {
   return (
     <FloatingProductHero
       title="Build the Future Faster"
-      subtitle="Experience cutting-edge design with smooth animations and premium aesthetics."
+      subtitle="Experience cutting-edge design with smooth animations."
       primaryCtaText="Get Started"
       secondaryCtaText="Learn More"
-      onPrimaryCta={() => console.log('Primary CTA clicked')}
-      onSecondaryCta={() => console.log('Secondary CTA clicked')}
+      onPrimaryCta={() => console.log("Primary CTA")}
+      onSecondaryCta={() => console.log("Secondary CTA")}
     />
   );
 }
 ```
 
-</Steps>
-
-## Component Code
-
-<CodeBlock file="animata/hero/floating-product-hero.tsx" />
-
-## Props
-
-### FloatingProductHeroProps
-
-```typescript
-interface FloatingProductHeroProps {
-  // Content
-  title?: string;              // Main headline (default: "Build the Future Faster")
-  subtitle?: string;           // Supporting paragraph
-  primaryCtaText?: string;     // Primary button text (default: "Get Started Free")
-  secondaryCtaText?: string;   // Secondary button text (default: "View Demo")
-
-  // Callbacks
-  onPrimaryCta?: () => void;   // Primary button click handler
-  onSecondaryCta?: () => void; // Secondary button click handler
-
-  // Display
-  showAllCards?: boolean;      // Show/hide floating cards (default: true)
-  theme?: 'dark' | 'light';   // Color theme (default: 'dark')
-  animationEnabled?: boolean;  // Enable/disable animations (default: true)
-
-  // Styling
-  className?: string;          // Additional CSS classes
-  minHeight?: string;          // Minimum height (default: '100vh')
-}
-```
-
-## Usage Examples
-
-### Basic Usage
-
-```jsx
-<FloatingProductHero />
-```
+## Customization
 
 ### Custom Content
 
@@ -141,311 +87,24 @@ interface FloatingProductHeroProps {
   subtitle="Deploy intelligent applications with AI-powered insights."
   primaryCtaText="Start Building"
   secondaryCtaText="Read Docs"
-  onPrimaryCta={() => router.push('/signup')}
-  onSecondaryCta={() => router.push('/docs')}
 />
 ```
 
 ### Disable Animations
 
 ```jsx
-<FloatingProductHero
-  animationEnabled={false}
-  showAllCards={false}
-/>
+<FloatingProductHero animationEnabled={false} showAllCards={false} />
 ```
 
-### Custom Styling
-
-```jsx
-<FloatingProductHero
-  className="my-custom-class"
-  minHeight="80vh"
-/>
-```
-
-### With Router Integration
-
-```jsx
-import { useRouter } from 'next/navigation';
-import { FloatingProductHero } from '@/animata/hero/floating-product-hero';
-
-export default function HeroSection() {
-  const router = useRouter();
-
-  return (
-    <FloatingProductHero
-      title="Transform Your Business"
-      subtitle="Join thousands of companies accelerating growth with our platform."
-      onPrimaryCta={() => router.push('/signup')}
-      onSecondaryCta={() => router.push('/pricing')}
-    />
-  );
-}
-```
-
-## Animations Explained
-
-### Floating Animation
-
-Each floating card has a subtle vertical animation:
-
-```
-y: [-15, 15, -15] over 6-8 seconds
-rotate: [-2, 2, -2] over 6-8 seconds
-```
-
-The `depth` prop multiplies the animation scale, creating a depth illusion.
-
-### Parallax Effect
-
-Mouse movement is tracked and converted to local card offsets:
-
-```
-x/y offset = (normalizedMousePosition * depth * 10)
-```
-
-Higher depth cards move more, creating parallax depth.
-
-### Entrance Animation
-
-Cards fade in and scale up on mount:
-
-```
-opacity: 0 → 1
-scale: 0.8 → 1
-delay: staggered by 0.1-0.2 seconds
-```
-
-### Button Hover Effect
-
-Primary CTA button has a multi-effect hover state:
-
-```
-scale: 1 → 1.05
-y: 0 → -2px (lift)
-shadow: enhanced + colored glow
-```
-
-## Performance Optimization
-
-### Transform & Will-Change
-
-All animations use CSS transforms and `will-change`:
-
-```css
-will-change: transform;
-transform: translate3d(x, y, 0);
-```
-
-This ensures GPU acceleration and smooth 60fps animations.
-
-### Reduced Motion
-
-The component automatically disables animations when `prefers-reduced-motion` is set:
-
-```js
-const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-// Animations conditionally applied
-animate={prefersReducedMotion ? {} : { y: [0, 10, 0] }}
-```
-
-### No Jank
-
-- Motion values use framer-motion's optimized engine
-- Parallax updates use refs to avoid re-renders
-- Cards use absolute positioning (paint layers don't recalculate)
-- GPU-accelerated blur effects
-
-## Customization
-
-### Change Card Positions
-
-Edit the `position` prop in each card component:
-
-```jsx
-<FloatingCard
-  position={{ top: '20%', left: '10%' }}
-  // ...
->
-```
-
-### Adjust Animation Speed
-
-Modify the `transition.duration` in motion components:
-
-```jsx
-animate={{ y: [0, 20, 0] }}
-transition={{ duration: 4 }} // Faster (default: 6-8)
-```
-
-### Custom Card Content
-
-Extend FloatingCard to create custom card types:
-
-```jsx
-function CustomCard() {
-  return (
-    <FloatingCard
-      id="custom"
-      position={{ top: '40%', right: '10%' }}
-      delay={0.5}
-      depth={1.2}
-    >
-      {/* Your custom content */}
-      <div>Custom Card</div>
-    </FloatingCard>
-  );
-}
-```
-
-### Change Colors
-
-Update gradient classes in the component:
-
-```jsx
-// From
-bg-gradient-to-r from-cyan-500 to-blue-600
-
-// To (custom)
-bg-gradient-to-r from-purple-500 to-pink-600
-```
-
-## Accessibility Features
-
-### Keyboard Navigation
-
-All buttons are natively keyboard accessible:
-
-```
-Tab - Focus navigation
-Enter/Space - Activate button
-```
-
-### Screen Reader Support
-
-Semantic HTML and descriptive text ensure screen reader compatibility:
-
-```jsx
-<button className="...">
-  Get Started Free →
-</button>
-```
-
-### Color Contrast
-
-Text maintains WCAG AA contrast ratios:
-
-- Text on dark backgrounds: `text-slate-100` / `text-white`
-- Focus indicators: Visible on all interactive elements
-- Gradients: Readable over backgrounds
-
-### Motion Preferences
-
-Respects user motion preferences:
-
-```
-prefers-reduced-motion: reduce
-→ Disables floating, parallax, and micro-interactions
-```
-
-## Browser Support
-
-- Chrome/Edge: Latest 2 versions ✅
-- Firefox: Latest 2 versions ✅
-- Safari: Latest 2 versions ✅
-- Mobile browsers: Latest versions ✅
-
-Requires CSS Grid, Backdrop Filter, and CSS Gradients support.
-
-## Related Components
-
-- [Hero Section](./hero-section)
-- [Product Features](./product-features)
-- [Hero Section with Text Hover](./hero-section-text-hover)
-- [Shape Shifter Hero](./shape-shifter)
-
-## Storybook
-
-View interactive examples in Storybook:
-
-- Default Hero
-- Without Animations
-- Without Cards
-- Tech Product Variant
-- AI Product Variant
-- Mobile/Tablet Views
-
-Run Storybook with:
-
-```bash
-npm run storybook
-```
-
-Then navigate to: `Hero/Floating Product Hero`
-
-## Tips & Best Practices
-
-✅ **Do:**
-
-- Use meaningful, concise headlines
-- Keep subtitles to 1-2 sentences
-- Test on actual devices for performance
-- Customize colors to match your brand
-- Provide feedback for CTA clicks (loading states, navigation)
-
-❌ **Don't:**
-
-- Autoplay videos in background (performance hit)
-- Use too many animations on smaller screens
-- Reduce text contrast for aesthetic reasons
-- Force animations for users with motion preferences
-- Nest expensive computations in animation frames
-
-## Performance Tips
-
-1. **Lazy Load**: Only render when in viewport
-2. **Optimize Images**: Use WebP format for cards
-3. **Debounce Mouse Tracking**: Consider throttling parallax updates
-4. **Use Code Splitting**: Load hero separately
-5. **Monitor Performance**: Use Lighthouse/Web Vitals
-
-## Troubleshooting
-
-### Animations Not Smooth?
-
-- Check GPU acceleration with DevTools Performance tab
-- Ensure `will-change: transform` is applied
-- Verify no layout recalculations during animations
-
-### Cards Overlapping Incorrectly?
-
-- Check `z-index` values (background: 0, content: 20)
-- Verify `position: absolute` on cards
-- Ensure container has `position: relative`
-
-### Parallax Not Working?
-
-- Verify mouse event listeners are attached
-- Check `mousePosition` state updates
-- Ensure `depth` prop is > 0
-
-### Mobile Animations Janky?
-
-- Reduce animation complexity
-- Disable parallax on mobile (media queries)
-- Use `animationEnabled` prop conditionally
+## Accessibility
+
+- Respects `prefers-reduced-motion` media query
+- Keyboard accessible buttons
+- High contrast text (WCAG AA)
+- Semantic HTML structure
 
 ## Credits
 
-Built with React, Tailwind CSS, and Framer Motion (motion).
+Built by [Ujjwal Basnet](https://github.com/leazi99)
 
 Inspired by landing pages from Stripe, Linear, Vercel, and Framer.
-
----
-
-## See Also
-
-- [Storybook Stories](https://github.com/animata/animata/blob/main/animata/hero/floating-product-hero.stories.tsx)
-- [Component Source](https://github.com/animata/animata/blob/main/animata/hero/floating-product-hero.tsx)

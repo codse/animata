@@ -59,7 +59,11 @@ export default function ShoppingList({
   }[];
 }) {
   return (
-    <div className="h-64 w-48 rounded-3xl border bg-white p-4 font-sans shadow-sm">
+    <div
+      role="group"
+      tabIndex={0}
+      className="h-64 w-48 rounded-3xl border bg-white p-4 font-sans shadow-lg transition-transform duration-200 ease-[cubic-bezier(0.2,0.9,0.2,1)] hover:-translate-y-1 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+    >
       <div className="text-lg font-bold tracking-wide text-zinc-950">
         {title || "Shopping list"}
       </div>
