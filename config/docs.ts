@@ -44,6 +44,7 @@ const sidebarNav: SidebarNavItem[] = [
         href: "/docs/changelog",
         items: [
           { title: "Overview", href: "/docs/changelog", items: [] },
+          { title: "May 2026", href: "/docs/changelog/2026-05", items: [] },
           { title: "April 2026", href: "/docs/changelog/2026-04", items: [] },
           { title: "March 2026", href: "/docs/changelog/2026-03", items: [] },
           { title: "January 2026", href: "/docs/changelog/2026-01", items: [] },
