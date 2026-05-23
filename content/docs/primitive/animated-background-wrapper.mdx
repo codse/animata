@@ -1,0 +1,76 @@
+---
+title: Animated Background Wrapper
+description: Drop-in animated backgrounds for hero sections, CTAs, and feature cards. Four variants — aurora, beam, grid, particles — with intensity control and full reduced-motion support.
+author: KeenIsHere
+labels: ["new"]
+---
+
+<ComponentPreview name="primitive-animated-background-wrapper--primary" />
+
+## Installation
+
+### CLI
+
+<RegistryInstall category="primitive" name="animated-background-wrapper" />
+
+### Manual
+
+<Steps>
+
+<Step>Run the following command</Step>
+
+It will create a new file called `animated-background-wrapper.tsx` inside the `components/animata/primitive` directory.
+
+```bash
+mkdir -p components/animata/primitive && touch components/animata/primitive/animated-background-wrapper.tsx
+```
+
+<Step>Paste the code</Step>
+
+Open the newly created file and paste the following code:
+
+```jsx file=<rootDir>/animata/primitive/animated-background-wrapper.tsx
+
+```
+
+</Steps>
+
+## Usage
+
+Wrap any section with the component. It renders the aurora variant by default with no props needed.
+
+```tsx
+import AnimatedBackgroundWrapper from "@/animata/primitive/animated-background-wrapper";
+
+export default function Hero() {
+  return (
+    <AnimatedBackgroundWrapper variant="aurora" intensity="medium">
+      <div className="py-20 text-center">
+        <h1>Your content here</h1>
+      </div>
+    </AnimatedBackgroundWrapper>
+  );
+}
+```
+
+## Variants
+
+| Variant | Effect | Best for |
+| --- | --- | --- |
+| `aurora` | Drifting colour blobs (default) | Hero sections, dark backgrounds |
+| `beam` | Diagonal spotlight sweep | CTAs, feature highlights |
+| `grid` | 3-D perspective grid | Technical / dev-focused sections |
+| `particles` | Floating dust particles | Full-page backgrounds |
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `variant` | `"aurora" \| "beam" \| "grid" \| "particles"` | `"aurora"` | Background effect |
+| `intensity` | `"subtle" \| "medium" \| "strong"` | `"medium"` | Opacity multiplier (0.5× / 1× / 1.5×) |
+| `className` | `string` | — | Extra classes on the wrapper |
+| `children` | `ReactNode` | showcase | Content rendered above the background |
+
+## Credits
+
+Built by [KeenIsHere](https://github.com/KeenIsHere)

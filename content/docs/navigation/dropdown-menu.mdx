@@ -2,24 +2,90 @@
 title: Dropdown Menu
 description: A flexible dropdown menu with keyboard navigation and smooth animations.
 labels: ["requires interaction", "click"]
+author: AnimataContributor
+published: true
 ---
+
+<ComponentPreview name="navigation-dropdown-menu--primary" />
+
+## Overview
+
+Dropdown Menu is an accessible, animated menu component for triggering contextual actions. It supports keyboard navigation (Arrow keys, Enter, Escape), click-outside to dismiss, and smooth open/close animations via Framer Motion. All animations are suppressed when `prefers-reduced-motion` is enabled.
+
+## Features
+
+- Animated open/close with `opacity` and `translateY` via Framer Motion
+- Full keyboard navigation: Arrow Up/Down to move, Enter to select, Escape to close
+- Click-outside detection to auto-dismiss
+- Left or right alignment relative to trigger button
+- `prefers-reduced-motion` aware — no animation when set
+- Icon support per menu item
+- Dark mode: full Tailwind token support
+- Zero-props render: 4 default items built in
 
 ## Usage
 
-Copy the component into your project and import it.
-
-```typescript
+```tsx
 import DropdownMenu from "@/animata/navigation/dropdown-menu";
+
+export default function Page() {
+  return <DropdownMenu />;
+}
+```
+
+With custom items:
+
+```tsx
+import { User, Settings, LogOut } from "lucide-react";
+import DropdownMenu from "@/animata/navigation/dropdown-menu";
+
+export default function Page() {
+  return (
+    <DropdownMenu
+      triggerLabel="Account"
+      align="right"
+      items={[
+        { label: "Profile", icon: <User className="h-4 w-4" />, onClick: () => {} },
+        { label: "Settings", icon: <Settings className="h-4 w-4" />, onClick: () => {} },
+        { label: "Sign Out", icon: <LogOut className="h-4 w-4" />, onClick: () => {} },
+      ]}
+    />
+  );
+}
 ```
 
 ## Props
 
 | Prop | Type | Default | Description |
-|---|---|---|---|
-| items | MenuItem[] | [] | Array of menu items |
-| triggerLabel | string | "Options" | Button label |
-| align | "left" \| "right" | "left" | Dropdown alignment |
+|------|------|---------|-------------|
+| items | MenuItem[] | 4 built-in items | Array of menu items to display |
+| triggerLabel | string | "Options" | Label text on the trigger button |
+| align | "left" \| "right" | "left" | Dropdown alignment relative to trigger |
+
+## Types
+
+```typescript
+interface MenuItem {
+  label: string;
+  icon?: React.ReactNode;
+  onClick?: () => void;
+}
+
+interface DropdownMenuProps {
+  items?: MenuItem[];
+  triggerLabel?: string;
+  align?: "left" | "right";
+}
+```
 
 ## Accessibility
 
-Fully keyboard navigable. Respects prefers-reduced-motion.
+- `aria-haspopup="menu"` and `aria-expanded` on the trigger button
+- `role="menu"` on the dropdown, `role="menuitem"` on each item
+- Arrow Up/Down cycles through items, Enter activates, Escape closes and returns focus to trigger
+- Focus returns to trigger on close
+- All motion respects `prefers-reduced-motion`
+
+## Credits
+
+Built by [Keen Sha](https://github.com/KeenIsHere).

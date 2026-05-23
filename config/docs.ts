@@ -204,6 +204,14 @@ const sidebarNav: SidebarNavItem[] = [
     title: "Floating Action Buttons",
     items: createLinks("fabs"),
   },
+  {
+    title: "Navigation",
+    items: createLinks("navigation"),
+  },
+  {
+    title: "Primitive",
+    items: createLinks("primitive"),
+  },
 ]
   .filter((category) => Boolean(category.items?.length || category.label))
   .sort((a, b) => {
