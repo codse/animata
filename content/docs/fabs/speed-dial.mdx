@@ -1,6 +1,6 @@
 ---
 title: Speed Dial
-description: Expandable FAB menu with CSS-staggered actions and keyboard navigation.
+description: FAB that expands into a row of actions on click. CSS stagger, no hover gate.
 author: masabinhok
 labels: ["requires interaction", "click"]
 ---
@@ -42,13 +42,13 @@ Open the newly created file and paste the following code:
 
 ## How it works
 
-The trigger is a real button with `aria-expanded`, `aria-haspopup="menu"`, and `aria-controls` pointing at the action list. Actions mount only while open — no hover-only gate — so touch and keyboard users get the same menu.
+Click opens the menu; hover doesn't. That matters on touch devices. The trigger is a `<button>` with `aria-expanded`, `aria-haspopup="menu"`, and `aria-controls` pointing at the action list, which only mounts while open.
 
-Each action is a `role="menuitem"` button at `size-11` (44×44 px) with `aria-label` and an `sr-only` duplicate — labels stay visually hidden. The menu is **absolutely positioned** from the trigger (`left-full`, `bottom-full`, etc.) so opening never shifts the FAB.
+Each action is a `role="menuitem"` at `size-11` (44×44 px). Labels live in `aria-label` and an `sr-only` span, not beside the icon. The action list is positioned absolutely (`left-full`, `bottom-full`, and so on relative to `direction`) so the FAB doesn't jump when items appear.
 
-Enter motion is plain CSS in a scoped `<style>` block: direction-keyed `@keyframes`, `120ms` duration, and per-item stagger via `animation-delay: calc(12ms + var(--i) * 22ms)`. No Motion dependency. The plus icon rotates 45° with `transition-transform duration-150`. `@media (prefers-reduced-motion: reduce)` disables the keyframes.
+Motion is CSS only: direction-specific `@keyframes` in a scoped `<style>` block, 120ms per item, staggered with `animation-delay: calc(12ms + var(--i) * 22ms)`. No Motion package. The plus icon rotates 45° via `transition-transform` over 150ms. Reduced-motion users get the layout without the keyframes.
 
-Keyboard: arrow keys move focus along the chosen `direction` axis; `Home` / `End` jump to the first or last item; `Escape` or an outside tap closes and returns focus to the trigger.
+Keyboard: arrows move along the axis you picked with `direction`; Home and End hit the first and last item; Escape or an outside tap closes and refocuses the trigger.
 
 ## Credits
 

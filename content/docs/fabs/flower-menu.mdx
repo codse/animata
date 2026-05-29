@@ -1,7 +1,8 @@
 ---
 title: Flower Menu
-description: A circular flower menu with several icons and a central close button.
+description: Circular FAB that fans links out from a center toggle. CSS stagger, keyboard nav.
 author: arjuncodess
+labels: ["requires interaction", "click"]
 ---
 
 <ComponentPreview name="fabs-flower-menu--primary" />
@@ -33,6 +34,14 @@ Open the newly created file and paste the following code:
 ```
 
 </Steps>
+
+## How it works
+
+The old version hid a checkbox behind the hamburger. This one uses a plain `<button>` with `aria-expanded`, `aria-haspopup="menu"`, and `aria-controls` wired to the petal list.
+
+Each link is a `role="menuitem"` and needs a `label` prop (surfaced as `aria-label` plus an `sr-only` span). Every petal shares the same center point. The `<li>` gets `rotate(angle) translateX(-orbit)`; the link inside counter-rotates so the icon stays upright. Open stagger is `10ms + index × 20ms` on `transition-delay`; close runs the same delays in reverse. Default duration is 220ms (the original was 500ms or more).
+
+Container width and height are computed from `togglerSize`, `petalGap`, and how many items you pass in, so petals don't clip at the edge. `togglerSize` won't go below 44px. Arrow keys move focus around the ring; Escape or a tap outside closes the menu and sends focus back to the trigger. With `prefers-reduced-motion: reduce`, the petal transitions are turned off.
 
 ## Credits
 
