@@ -24,6 +24,43 @@ Those two properties are composited on the GPU and skip layout and paint. Almost
 
 If you really need a size change, `transform: scale()` is usually what you want. For collapsible content, `grid-template-rows: 0fr` to `1fr` is a newer trick that actually works.
 
+### Use specific Tailwind transition utilities
+
+Bare `transition` only covers color, background-color, border-color, and outline-color. It does **not** animate `transform`, `opacity`, `filter`, or layout properties — so hover moves often look broken or snap instantly.
+
+Pick the utility that matches what actually changes:
+
+```tsx
+// transform only — translate, scale, rotate
+<div className="transition-transform duration-200 hover:scale-105" />
+
+// colors only — text, bg, border
+<button className="transition-colors duration-200 hover:bg-accent hover:text-accent-foreground" />
+
+// opacity only
+<span className="transition-opacity duration-150 opacity-70 hover:opacity-100" />
+
+// mixed transform + opacity (or width/height/clip-path)
+<div className="transition-all duration-300 hover:-translate-y-1 hover:opacity-80" />
+
+// precise pair when you know exactly what animates
+<div className="transition-[transform,opacity] duration-200 hover:-translate-y-1 hover:opacity-80" />
+```
+
+Avoid bare `transition` in component class strings. If both color and transform change, use `transition-all` or list the properties explicitly.
+
+### Docs code blocks show line numbers
+
+Fenced code in MDX gets line numbers automatically after syntax highlighting. Opt out per block with the `hideLineNumbers` meta keyword:
+
+````md
+```tsx hideLineNumbers
+export function tiny() { return null }
+```
+````
+
+Imported source blocks (`file=<rootDir>/...`) include line numbers too. To highlight specific lines, use range meta: ` ```tsx {1,3-5} `.
+
 ### Prefer CSS over JavaScript
 
 CSS transitions and keyframes run on the compositor thread, so they keep going even when the main thread is busy. Reach for JS when CSS genuinely can't express what you need: spring physics, gesture tracking, or animations whose target value depends on a runtime measurement.

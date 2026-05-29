@@ -27,7 +27,7 @@ export default function ArrowButton({
       style={{ borderColor: borderColor }}
       {...props}
       className={cn(
-        "group relative inline-flex items-center justify-center overflow-hidden rounded-full border-2 border-purple-400 bg-background px-6 py-3 font-medium shadow-md transition duration-300 ease-out",
+        "group relative inline-flex items-center justify-center overflow-hidden rounded-full border-2 border-purple-400 bg-background px-6 py-3 font-medium shadow-md transition-transform duration-300 ease-out",
         className,
       )}
     >
@@ -42,7 +42,7 @@ export default function ArrowButton({
       <span
         style={{ color: textColor }}
         className={cn(
-          "absolute flex h-full w-full transform items-center justify-center font-bold transition duration-300 ease-in-out group-hover:translate-x-full",
+          "absolute flex h-full w-full transform items-center justify-center font-bold transition-transform duration-300 ease-in-out group-hover:translate-x-full",
         )}
       >
         {text}

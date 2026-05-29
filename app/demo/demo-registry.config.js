@@ -45,4 +45,19 @@ export const DEMO_REGISTRY = [
       },
     ],
   },
+  {
+    key: "browse/cinema-row",
+    groupSlug: "browse",
+    itemSlug: "cinema-row",
+    label: "Stream · premiere browse",
+    components: [
+      {
+        docSlug: "container/marquee",
+        category: "Container",
+        name: "Marquee",
+        description:
+          "Two vertical columns — forward and reverse — carrying critic quote chips beside the editorial copy block.",
+      },
+    ],
+  },
 ];

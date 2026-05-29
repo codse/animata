@@ -19,7 +19,7 @@ const Button = ({ item, index, activeIndex, onTabClick }: ButtonProps) => {
     >
       <span
         className={cn(
-          "flex h-10 cursor-pointer items-center justify-center rounded-md border-2 bg-white p-3 transition",
+          "flex h-10 cursor-pointer items-center justify-center rounded-md border-2 bg-white p-3 transition-all",
           {
             "border-2 border-indigo-500 text-indigo-600": index === activeIndex,
             "origin-top-right ease-in hover:rotate-6 text-black": index !== activeIndex,

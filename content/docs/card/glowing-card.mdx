@@ -18,12 +18,15 @@ author: AashishKatila
 <Steps>
 
 <Step>Add to your CSS</Step>
-Add the following to your CSS file.
+Add the following to your CSS file (Tailwind v4 `@theme`; v3 users can mirror the same values in `tailwind.config.js` under `theme.extend`).
 
 ```css
 @theme {
   --shadow-glow: 0 0 20px rgba(255, 204, 112, 0.7), 0 0 40px rgba(200, 80, 192, 0.5), 0 0 60px rgba(65, 88, 208, 0.3);
   --shadow-glow2: 0 0 20px rgba(50, 255, 50, 0.7), 0 0 40px rgba(20, 200, 20, 0.5), 0 0 60px rgba(5, 150, 5, 0.3);
+  --blur-20: 20px;
+  --blur-25: 25px;
+  --brightness-150: 1.5;
 }
 ```
 
@@ -44,6 +47,14 @@ Open the newly created file and paste the following code:
 ```
 
 </Steps>
+
+## How it works
+
+The outer wrapper paints a gradient and uses `p-0.5` so the gradient reads as a border around the inner panel. On hover, `shadow-glow` (a multi-stop box shadow defined in `@theme`) and `brightness-150` ramp up over 500ms.
+
+Inside, a second copy of the same gradient sits `absolute inset-0` with `blur-20` — that layer was stacking as a normal block sibling before, which broke the layout. Pinning it behind the content (`relative` + `overflow-hidden` on the inner shell) restores the soft bloom under the card face. Pass `fromColor`, `viaColor`, and `toColor` to retint both the border and the blur wash.
+
+`prefers-reduced-motion`: no special branch — hover still changes shadow and brightness; only the 500ms transitions are decorative.
 
 ## Credits
 

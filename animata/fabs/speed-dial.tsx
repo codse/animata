@@ -2,107 +2,238 @@
 
 import { Plus } from "lucide-react";
 import type React from "react";
-import { useState } from "react";
+import { useCallback, useEffect, useId, useRef, useState } from "react";
 
-interface SpeedialProps {
-  direction: string;
-  actionButtons: Array<{
-    icon: React.ReactNode;
-    label: string;
-    key: string;
-    action: () => void;
-  }>;
+import { cn } from "@/lib/utils";
+
+type Direction = "up" | "down" | "left" | "right";
+
+interface SpeedDialAction {
+  icon: React.ReactNode;
+  label: string;
+  key: string;
+  action: () => void;
 }
 
-interface TooltipProps {
-  text: string;
-  children: React.ReactNode;
-  direction: string;
+interface SpeedDialProps extends React.HTMLAttributes<HTMLDivElement> {
+  direction?: Direction;
+  actionButtons: SpeedDialAction[];
+  /** Accessible name for the main toggle when closed. */
+  triggerLabel?: string;
 }
 
-const Tooltip: React.FC<TooltipProps> = ({ text, children, direction }) => {
-  const [visible, setVisible] = useState(false);
+const shellClass =
+  "flex size-11 shrink-0 touch-manipulation items-center justify-center rounded-xl border border-border/80 bg-background/85 text-foreground shadow-lg backdrop-blur-xl transition-colors hover:bg-accent/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background active:scale-[0.97]";
 
-  const showTooltip = () => setVisible(true);
-  const hideTooltip = () => setVisible(false);
-
-  return (
-    <div onMouseEnter={showTooltip} onMouseLeave={hideTooltip} className="relative inline-block">
-      {children}
-      {visible && (
-        <div
-          className={` ${
-            direction === "up" || direction === "down"
-              ? "absolute left-full top-1/2 z-10 ml-2 -translate-y-1/2 transform rounded bg-gray-800 px-2 py-1 text-sm text-white"
-              : "absolute bottom-full left-1/2 z-10 mb-2 -translate-x-1/2 transform rounded bg-gray-800 px-2 py-1 text-sm text-white"
-          } `}
-        >
-          {text}
-        </div>
-      )}
-    </div>
-  );
+const menuAnchorClass: Record<Direction, string> = {
+  up: "bottom-full left-1/2 mb-2 -translate-x-1/2 origin-bottom",
+  down: "top-full left-1/2 mt-2 -translate-x-1/2 origin-top",
+  left: "right-full top-1/2 mr-2 -translate-y-1/2 origin-right",
+  right: "left-full top-1/2 ml-2 -translate-y-1/2 origin-left",
 };
 
-export default function Speeddial({ direction, actionButtons }: SpeedialProps) {
-  const [isHovered, setIsHovered] = useState(false);
+const menuLayoutClass: Record<Direction, string> = {
+  up: "flex flex-col-reverse items-center gap-2.5",
+  down: "flex flex-col items-center gap-2.5",
+  left: "flex flex-row-reverse items-center gap-2.5",
+  right: "flex flex-row items-center gap-2.5",
+};
 
-  const getAnimation = () => {
-    switch (direction) {
-      case "up":
-        return "origin-bottom flex-col order-0";
-      case "down":
-        return "origin-top flex-col order-2";
-      case "left":
-        return "origin-right order-0";
-      case "right":
-        return "origin-left order-2";
+function arrowKeysForDirection(direction: Direction) {
+  if (direction === "up") return { prev: "ArrowDown", next: "ArrowUp" };
+  if (direction === "down") return { prev: "ArrowUp", next: "ArrowDown" };
+  if (direction === "left") return { prev: "ArrowRight", next: "ArrowLeft" };
+  return { prev: "ArrowLeft", next: "ArrowRight" };
+}
+
+export default function SpeedDial({
+  direction = "right",
+  actionButtons,
+  triggerLabel = "Open actions menu",
+  className,
+  ...props
+}: SpeedDialProps) {
+  const menuId = useId();
+  const rootRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const itemRefs = useRef<Array<HTMLButtonElement | null>>([]);
+  const [open, setOpen] = useState(false);
+
+  const close = useCallback(() => {
+    setOpen(false);
+    triggerRef.current?.focus();
+  }, []);
+
+  const toggle = useCallback(() => {
+    setOpen((value) => !value);
+  }, []);
+
+  useEffect(() => {
+    if (!open) return;
+
+    const onPointerDown = (event: PointerEvent) => {
+      if (rootRef.current?.contains(event.target as Node)) return;
+      setOpen(false);
+    };
+
+    document.addEventListener("pointerdown", onPointerDown);
+    return () => document.removeEventListener("pointerdown", onPointerDown);
+  }, [open]);
+
+  useEffect(() => {
+    if (!open) return;
+    itemRefs.current[0]?.focus();
+  }, [open]);
+
+  const focusItem = (index: number) => {
+    const count = actionButtons.length;
+    if (count === 0) return;
+    const next = (index + count) % count;
+    itemRefs.current[next]?.focus();
+  };
+
+  const onMenuKeyDown = (event: React.KeyboardEvent<HTMLUListElement>) => {
+    const { prev, next } = arrowKeysForDirection(direction);
+    const activeIndex = itemRefs.current.findIndex((node) => node === document.activeElement);
+
+    switch (event.key) {
+      case "Escape":
+        event.preventDefault();
+        close();
+        break;
+      case "Tab":
+        setOpen(false);
+        break;
+      case "Home":
+        event.preventDefault();
+        itemRefs.current[0]?.focus();
+        break;
+      case "End":
+        event.preventDefault();
+        itemRefs.current[actionButtons.length - 1]?.focus();
+        break;
       default:
-        return "";
+        if (event.key === prev) {
+          event.preventDefault();
+          focusItem(activeIndex <= 0 ? actionButtons.length - 1 : activeIndex - 1);
+        } else if (event.key === next) {
+          event.preventDefault();
+          focusItem(activeIndex < 0 ? 0 : activeIndex + 1);
+        }
     }
   };
 
-  const handleMouseEnter = () => setIsHovered(true);
-  const handleMouseLeave = () => setIsHovered(false);
-
-  const getGlassyClasses = () => {
-    return "backdrop-filter backdrop-blur-xl bg-white border border-white rounded-xl shadow-lg transition duration-300";
-  };
-
-  //customize your action buttons here
-
   return (
     <div
-      onMouseLeave={handleMouseLeave}
-      className={`relative mb-3 flex w-fit items-center gap-3 ${
-        direction === "up" || direction === "down" ? "flex-col" : "flex-row"
-      }`}
+      ref={rootRef}
+      className={cn("relative inline-flex", className)}
+      data-direction={direction}
+      {...props}
     >
+      <style>{`
+        @keyframes speed-dial-in-up {
+          from { opacity: 0; transform: translateY(10px) scale(0.82); }
+          to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        @keyframes speed-dial-in-down {
+          from { opacity: 0; transform: translateY(-10px) scale(0.82); }
+          to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        @keyframes speed-dial-in-left {
+          from { opacity: 0; transform: translateX(10px) scale(0.82); }
+          to { opacity: 1; transform: translateX(0) scale(1); }
+        }
+        @keyframes speed-dial-in-right {
+          from { opacity: 0; transform: translateX(-10px) scale(0.82); }
+          to { opacity: 1; transform: translateX(0) scale(1); }
+        }
+        [data-direction="up"] .speed-dial-item { animation-name: speed-dial-in-up; }
+        [data-direction="down"] .speed-dial-item { animation-name: speed-dial-in-down; }
+        [data-direction="left"] .speed-dial-item { animation-name: speed-dial-in-left; }
+        [data-direction="right"] .speed-dial-item { animation-name: speed-dial-in-right; }
+        .speed-dial-item {
+          animation-duration: 120ms;
+          animation-timing-function: cubic-bezier(0.2, 0, 0, 1);
+          animation-fill-mode: both;
+          animation-delay: calc(12ms + var(--i) * 22ms);
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .speed-dial-item {
+            animation: none;
+            opacity: 1;
+            transform: none;
+          }
+          .speed-dial-trigger-icon {
+            transition: none;
+          }
+        }
+      `}</style>
+
       <button
-        onMouseEnter={handleMouseEnter}
-        className={`${getGlassyClasses()} order-0 order-1 flex items-center p-3 text-gray-800 transition duration-300 hover:bg-slate-100`}
+        ref={triggerRef}
+        type="button"
+        className={cn(shellClass, "relative z-20")}
+        aria-expanded={open}
+        aria-haspopup="menu"
+        aria-controls={menuId}
+        aria-label={open ? "Close actions menu" : triggerLabel}
+        onClick={toggle}
       >
-        <Plus size={20} />
+        <span
+          aria-hidden="true"
+          className={cn(
+            "speed-dial-trigger-icon flex items-center justify-center transition-transform duration-150 ease-out",
+            open && "rotate-45",
+          )}
+        >
+          <Plus className="size-5" strokeWidth={2.25} />
+        </span>
       </button>
 
-      {/* Speed Dial Actions */}
-      <div
-        className={`${
-          isHovered ? "scale-100 opacity-100" : "scale-0 opacity-0"
-        } flex items-center gap-3 transition duration-500 ease-in-out ${getAnimation()}`}
-      >
-        {actionButtons.map((action, index) => (
-          <Tooltip text={action.label} key={index} direction={direction}>
-            <button
-              key={index}
-              onClick={action.action}
-              className={`${getGlassyClasses()} flex items-center p-3 text-gray-800 transition duration-300 hover:bg-slate-100`}
+      {open ? (
+        <ul
+          id={menuId}
+          role="menu"
+          aria-orientation={direction === "up" || direction === "down" ? "vertical" : "horizontal"}
+          onKeyDown={onMenuKeyDown}
+          className={cn(
+            "absolute z-10 m-0 list-none p-0",
+            menuAnchorClass[direction],
+            menuLayoutClass[direction],
+          )}
+        >
+          {actionButtons.map((action, index) => (
+            <li
+              key={action.key}
+              role="none"
+              className="speed-dial-item list-none"
+              style={{ "--i": index } as React.CSSProperties}
             >
-              {action.icon}
-            </button>
-          </Tooltip>
-        ))}
-      </div>
+              <button
+                ref={(node) => {
+                  itemRefs.current[index] = node;
+                }}
+                type="button"
+                role="menuitem"
+                className={shellClass}
+                aria-label={action.label}
+                onClick={() => {
+                  action.action();
+                  close();
+                }}
+              >
+                <span className="sr-only">{action.label}</span>
+                <span
+                  aria-hidden="true"
+                  className="flex size-5 items-center justify-center [&>svg]:size-5"
+                >
+                  {action.icon}
+                </span>
+              </button>
+            </li>
+          ))}
+        </ul>
+      ) : null}
     </div>
   );
 }

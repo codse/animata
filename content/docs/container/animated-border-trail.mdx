@@ -15,27 +15,6 @@ author: harimanok_
 ### Manual
 
 <Steps>
-<Step>Add this CSS for `angle` property</Step>
-
-```css
-@property --angle {
-  syntax: "<angle>";
-  initial-value: 0deg;
-  inherits: false;
-}
-```
-
-<Step>Add to your CSS</Step>
-
-```css
-@keyframes trail {
-  0% { --angle: 0deg; }
-  100% { --angle: 360deg; }
-}
-@theme {
-  --animate-trail: trail var(--duration) linear infinite;
-}
-```
 
 <Step>Run the following command</Step>
 
@@ -45,7 +24,7 @@ It will create a new file `animated-border-trail.tsx` inside the `components/ani
 mkdir -p components/animata/container && touch components/animata/container/animated-border-trail.tsx
 ```
 
-<Step>Paste the code</Step>{" "}
+<Step>Paste the code</Step>
 
 Open the newly created file and paste the following code:
 
@@ -55,11 +34,21 @@ Open the newly created file and paste the following code:
 
 </Steps>
 
+## How it works
+
+No global CSS setup is required. The component ships a scoped `<style>` block with `@property --border-trail-angle` and a `@keyframes border-trail` rule — both are needed because Tailwind utilities cannot register typed custom properties or animate them.
+
+The trail layer is an absolutely positioned `conic-gradient` whose start angle reads `--border-trail-angle`. Keyframes sweep that property from `0deg` to `360deg`; duration comes from the `duration` prop via an inline `animation` style so each instance can run at its own speed without a separate `@theme` token.
+
+The inner panel sits above the gradient (`relative` + inset rounding) so only a 1px ring of the spinning conic shows through as the border trail. Adjust `trailColor` and `trailSize` to change the highlight colour and arc length.
+
+`prefers-reduced-motion`: consider wrapping with a static border variant in your app — the component does not pause the loop automatically.
+
 ## Credits
 
 Built by [hari](https://github.com/hari)
 
-@jh3yy on [Twitter](https://x.com/jh3yy/status/1814041895011533056)
+Inspired by @jh3yy on [Twitter](https://x.com/jh3yy/status/1814041895011533056)
 
 I tried using his method but the transition in the border looked weird in my case so, I created this version.
 

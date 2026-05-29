@@ -67,7 +67,7 @@ export default function AvatarList({
         <div
           key={`${item.name}-${index}`}
           className={cn(
-            "group/avatar relative z-0 flex scale-100 items-center transition duration-200 ease-in-out hover:z-10 hover:scale-110",
+            "group/avatar relative z-0 flex scale-100 items-center transition-transform duration-200 ease-in-out hover:z-10 hover:scale-110",
             index > 0 && "-ml-3",
           )}
         >
@@ -80,7 +80,7 @@ export default function AvatarList({
               className={cn("rounded-full object-cover", sizes[size] ?? sizes.md)}
             />
           </div>
-          <div className="absolute bottom-full left-1/2 -translate-x-1/2 translate-y-2 transform whitespace-nowrap rounded bg-slate-900 p-2 text-white opacity-0 transition duration-300 ease-in-out group-hover/avatar:-translate-y-2 group-hover/avatar:opacity-100 dark:bg-slate-100 dark:text-slate-900">
+          <div className="absolute bottom-full left-1/2 -translate-x-1/2 translate-y-2 transform whitespace-nowrap rounded bg-slate-900 p-2 text-white opacity-0 transition-all duration-300 ease-in-out group-hover/avatar:-translate-y-2 group-hover/avatar:opacity-100 dark:bg-slate-100 dark:text-slate-900">
             <div className="text-sm font-semibold">{item.name}</div>
             <div className="text-sm">{item.position}</div>
           </div>

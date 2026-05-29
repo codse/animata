@@ -1,7 +1,8 @@
 ---
 title: Speed Dial
-description: Speed Dial
+description: Expandable FAB menu with CSS-staggered actions and keyboard navigation.
 author: masabinhok
+labels: ["requires interaction", "click"]
 ---
 
 <ComponentPreview name="fabs-speed-dial--primary" />
@@ -38,6 +39,16 @@ Open the newly created file and paste the following code:
 ```
 
 </Steps>
+
+## How it works
+
+The trigger is a real button with `aria-expanded`, `aria-haspopup="menu"`, and `aria-controls` pointing at the action list. Actions mount only while open — no hover-only gate — so touch and keyboard users get the same menu.
+
+Each action is a `role="menuitem"` button at `size-11` (44×44 px) with `aria-label` and an `sr-only` duplicate — labels stay visually hidden. The menu is **absolutely positioned** from the trigger (`left-full`, `bottom-full`, etc.) so opening never shifts the FAB.
+
+Enter motion is plain CSS in a scoped `<style>` block: direction-keyed `@keyframes`, `120ms` duration, and per-item stagger via `animation-delay: calc(12ms + var(--i) * 22ms)`. No Motion dependency. The plus icon rotates 45° with `transition-transform duration-150`. `@media (prefers-reduced-motion: reduce)` disables the keyframes.
+
+Keyboard: arrow keys move focus along the chosen `direction` axis; `Home` / `End` jump to the first or last item; `Escape` or an outside tap closes and returns focus to the trigger.
 
 ## Credits
 

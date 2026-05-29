@@ -1,5 +1,7 @@
 import type React from "react";
 
+import { cn } from "@/lib/utils";
+
 interface GlowCardProps extends React.HTMLAttributes<HTMLDivElement> {
   /**
    * Starting gradient color.
@@ -19,24 +21,32 @@ export default function GlowingCard({
   fromColor = "#4158D0",
   viaColor = "#C850C0",
   toColor = "#FFCC70",
+  className,
+  ...props
 }: GlowCardProps) {
+  const gradient = `linear-gradient(to right, ${fromColor}, ${viaColor}, ${toColor})`;
+
   return (
     <div
-      className="rounded-3xl bg-linear-to-r p-0.5 hover:shadow-glow hover:brightness-150"
-      style={{
-        transition: " box-shadow 0.5s ease",
-        backgroundImage: `linear-gradient(to right, ${fromColor}, ${viaColor}, ${toColor})`,
-      }}
+      className={cn(
+        "rounded-3xl p-0.5 transition-[box-shadow,filter] duration-500 ease-in-out hover:shadow-glow hover:brightness-150",
+        className,
+      )}
+      style={{ backgroundImage: gradient }}
+      {...props}
     >
-      <div
-        className="blur-20 inset-0 h-full w-full rounded-3xl bg-linear-to-r from-[#4158D0] via-[#C850C0] to-[#FFCC70]"
-        style={{ transition: "filter 0.5s ease" }}
-      />
-      <div className="flex h-64 w-56 flex-col gap-2 rounded-3xl bg-blue-950 p-4">
-        <div className="mb-2 text-xl font-bold text-gray-50">Glowing</div>
+      <div className="relative w-56 overflow-hidden rounded-[calc(1.5rem-2px)]">
+        <div
+          aria-hidden
+          className="blur-20 pointer-events-none absolute inset-0 rounded-[calc(1.5rem-2px)] transition-[filter] duration-500 ease-in-out"
+          style={{ backgroundImage: gradient }}
+        />
+        <div className="relative flex h-64 flex-col gap-2 bg-blue-950 p-4">
+          <div className="mb-2 text-xl font-bold text-gray-50">Glowing</div>
 
-        <div className="flex-1 text-sm font-medium text-gray-100/80">
-          A glowing card is a card that glows.
+          <div className="flex-1 text-sm font-medium text-gray-100/80">
+            A glowing card is a card that glows.
+          </div>
         </div>
       </div>
     </div>

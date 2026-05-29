@@ -28,15 +28,22 @@
   box-decoration-break: clone;
 }
 
-.line {
+.line,
+[data-line] {
   @apply inline-block min-h-[1rem] w-full px-4 py-0.5;
 }
 
-pre [data-line-numbers] .line {
-  @apply px-2;
+[data-rehype-pretty-code-figure] code[data-line-numbers] {
+  counter-reset: line;
 }
 
-pre [data-line-numbers] > .line::before {
+[data-rehype-pretty-code-figure] code[data-line-numbers] > .line,
+[data-rehype-pretty-code-figure] code[data-line-numbers] > [data-line] {
+  @apply pl-2 pr-4;
+}
+
+[data-rehype-pretty-code-figure] code[data-line-numbers] > .line::before,
+[data-rehype-pretty-code-figure] code[data-line-numbers] > [data-line]::before {
   @apply text-xs text-zinc-50/40;
   counter-increment: line;
   content: counter(line);
@@ -44,6 +51,22 @@ pre [data-line-numbers] > .line::before {
   width: 1.8rem;
   margin-right: 1.4rem;
   text-align: right;
+  user-select: none;
+}
+
+[data-rehype-pretty-code-figure] code[data-line-numbers-max-digits="2"] > .line::before,
+[data-rehype-pretty-code-figure] code[data-line-numbers-max-digits="2"] > [data-line]::before {
+  width: 2.25rem;
+}
+
+[data-rehype-pretty-code-figure] code[data-line-numbers-max-digits="3"] > .line::before,
+[data-rehype-pretty-code-figure] code[data-line-numbers-max-digits="3"] > [data-line]::before {
+  width: 2.75rem;
+}
+
+[data-rehype-pretty-code-figure] code[data-line-numbers-max-digits="4"] > .line::before,
+[data-rehype-pretty-code-figure] code[data-line-numbers-max-digits="4"] > [data-line]::before {
+  width: 3.25rem;
 }
 
 pre .line--highlighted {

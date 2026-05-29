@@ -67,6 +67,22 @@ export const DEMO_GROUPS: DemoGroup[] = [
       },
     ],
   },
+  {
+    slug: "browse",
+    label: "Browse",
+    title: "Browse layouts",
+    phrase:
+      "Streaming premiere browse — overscale type, horizontal poster row, dual vertical marquees.",
+    themeColor: "#000000",
+    items: [
+      {
+        slug: "cinema-row",
+        label: "Stream · premiere browse",
+        themeColor: "#000000",
+        ...lazyDemo(() => import("./library/browse/cinema-row")),
+      },
+    ],
+  },
 ];
 
 export type DemoItemWithGroup = DemoItem & { group: DemoGroup };

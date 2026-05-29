@@ -59,9 +59,10 @@ export default function CardSpread() {
   return (
     <div
       className={cn(
-        "group/spread relative flex min-h-80 min-w-52 items-center transition duration-500 ease-in-out",
+        "group/spread relative flex min-h-80 min-w-52 items-center transition-all duration-500 ease-in-out",
         {
-          "origin-bottom transition duration-500 ease-in-out hover:-rotate-[15deg]": !isExpanded,
+          "origin-bottom transition-transform duration-500 ease-in-out hover:-rotate-[15deg]":
+            !isExpanded,
           "gap-3": isExpanded,
         },
       )}
@@ -75,7 +76,7 @@ export default function CardSpread() {
               e.preventDefault();
             }}
             className={cn(
-              "transition duration-500 ease-in-out",
+              "transition-all duration-500 ease-in-out",
               {
                 absolute: !isExpanded,
                 "origin-bottom": !isExpanded,

@@ -46,6 +46,48 @@ import {
 import { cn } from "@/lib/utils";
 import { baseComponents } from "./mdx-base-components";
 
+/** Add line-number gutters to fenced code blocks unless hideLineNumbers is in meta. */
+const rehypeEnableLineNumbers = () => (tree: UnistTree) => {
+  visit(
+    tree,
+    (
+      node: UnistNode & {
+        type?: string;
+        tagName?: string;
+        properties?: Record<string, unknown>;
+        children?: UnistNode[];
+      },
+    ) => {
+      if (node.type !== "element" || node.tagName !== "code") return;
+
+      const lang = node.properties?.["data-language"];
+      if (typeof lang !== "string" || !lang) return;
+
+      const rawMeta =
+        typeof node.data?.meta === "string"
+          ? node.data.meta
+          : typeof (node.data?.meta as { __raw?: string } | undefined)?.__raw === "string"
+            ? (node.data.meta as { __raw: string }).__raw
+            : "";
+      if (rawMeta.includes("hideLineNumbers")) return;
+
+      const lines = (node.children ?? []).filter(
+        (child) =>
+          child.type === "element" &&
+          (child.properties?.["data-line"] !== undefined ||
+            (Array.isArray(child.properties?.className) &&
+              child.properties.className.includes("line"))),
+      );
+
+      if (lines.length === 0) return;
+
+      node.properties ??= {};
+      node.properties["data-line-numbers"] = "";
+      node.properties["data-line-numbers-max-digits"] = String(lines.length).length;
+    },
+  );
+};
+
 const setupCodeSnippet = () => (tree: UnistTree) => {
   visit(tree, (node: UnistNode) => {
     if (node?.type === "element" && node?.tagName === "pre") {
@@ -363,6 +405,7 @@ const mdxOptions: Omit<CompileOptions, "outputFormat" | "providerImportSource"> 
         },
       } satisfies PrettyCodeOptions,
     ],
+    rehypeEnableLineNumbers,
     [
       rehypeAutolinkHeadings,
       {

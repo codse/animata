@@ -909,4 +909,800 @@ export default function LaunchShift() {
 <span class="line"></span></code></pre>`,
     },
   ],
+  "browse/cinema-row": [
+    {
+      name: "cinema-row.tsx",
+      path: "app/demo/library/browse/cinema-row.tsx",
+      language: "tsx",
+      code: `"use client";
+
+import { PlayIcon } from "lucide-react";
+import { IBM_Plex_Sans } from "next/font/google";
+import { useEffect, useState } from "react";
+
+import Marquee from "@/animata/container/marquee";
+import { cn } from "@/lib/utils";
+
+import { CinemaRowNotes } from "./cinema-row-notes";
+
+const sans = IBM_Plex_Sans({
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+  variable: "--font-sans",
+  display: "swap",
+});
+
+const FEATURED = {
+  eyebrow: "Original film",
+  title: "Infinite Horizon",
+  tagline: "When the signal returns, nothing on Earth is where they left it.",
+  runtime: "2h 14m · Sci‑Fi · Dolby Vision",
+};
+
+const PREMIERES = [
+  {
+    title: "Glass Orchard",
+    genre: "Drama",
+    gradient: "linear-gradient(160deg, oklch(0.42 0.12 250) 0%, oklch(0.22 0.06 280) 100%)",
+  },
+  {
+    title: "Midnight Relay",
+    genre: "Thriller",
+    gradient: "linear-gradient(160deg, oklch(0.35 0.08 25) 0%, oklch(0.18 0.04 15) 100%)",
+  },
+  {
+    title: "North Archive",
+    genre: "Documentary",
+    gradient: "linear-gradient(160deg, oklch(0.55 0.06 210) 0%, oklch(0.28 0.04 230) 100%)",
+  },
+  {
+    title: "Soft Circuit",
+    genre: "Romance",
+    gradient: "linear-gradient(160deg, oklch(0.62 0.14 340) 0%, oklch(0.32 0.08 320) 100%)",
+  },
+  {
+    title: "Harbor Line",
+    genre: "Crime",
+    gradient: "linear-gradient(160deg, oklch(0.38 0.05 160) 0%, oklch(0.16 0.03 190) 100%)",
+  },
+  {
+    title: "Second Sun",
+    genre: "Sci‑Fi",
+    gradient: "linear-gradient(160deg, oklch(0.48 0.16 55) 0%, oklch(0.24 0.08 40) 100%)",
+  },
+  {
+    title: "Quiet Union",
+    genre: "Indie",
+    gradient: "linear-gradient(160deg, oklch(0.52 0.04 280) 0%, oklch(0.24 0.03 260) 100%)",
+  },
+] as const;
+
+const QUOTES = [
+  { text: "A widescreen poem.", source: "The Frame" },
+  { text: "Refuses to blink.", source: "Celluloid" },
+  { text: "Sound you feel in your chest.", source: "Playback" },
+  { text: "The rare blockbuster with a pulse.", source: "Premiere" },
+  { text: "Every frame is a poster.", source: "Lens Culture" },
+  { text: "Turn the volume up.", source: "Signal" },
+  { text: "IMAX without leaving the couch.", source: "Home Screen" },
+  { text: "Cast chemistry for the ages.", source: "Rolling Reel" },
+] as const;
+
+function QuoteChip({ text, source }: { text: string; source: string }) {
+  return (
+    <figure className="w-40 shrink-0 rounded-2xl border border-white/10 bg-white/[0.035] px-4 py-3 sm:w-44">
+      <blockquote className="text-[13px] leading-snug text-white/82">&ldquo;{text}&rdquo;</blockquote>
+      <figcaption className="mt-2 text-[11px] font-medium tracking-wide text-white/38 uppercase">
+        {source}
+      </figcaption>
+    </figure>
+  );
+}
+
+function PosterCard({
+  title,
+  genre,
+  gradient,
+}: {
+  title: string;
+  genre: string;
+  gradient: string;
+}) {
+  return (
+    <article className="w-[9.75rem] shrink-0 snap-start sm:w-[11.25rem]">
+      <div
+        className="aspect-[2/3] overflow-hidden rounded-xl ring-1 ring-white/10"
+        style={{ backgroundImage: gradient }}
+      />
+      <h3 className="mt-2.5 truncate text-[15px] font-medium text-white/92">{title}</h3>
+      <p className="text-[13px] text-white/42">{genre}</p>
+    </article>
+  );
+}
+
+export default function CinemaRow() {
+  const [reducedMotion, setReducedMotion] = useState(false);
+
+  useEffect(() => {
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const apply = () => setReducedMotion(mq.matches);
+    apply();
+    mq.addEventListener("change", apply);
+    return () => mq.removeEventListener("change", apply);
+  }, []);
+
+  return (
+    <>
+      <div
+        className={cn(
+          sans.variable,
+          sans.className,
+          "min-h-svh bg-black text-white selection:bg-white/20",
+        )}
+      >
+        {/* Hero — overscale premiere typography */}
+        <section className="relative isolate overflow-hidden">
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_120%_80%_at_50%_-10%,oklch(0.28_0.08_280_/_0.55)_0%,transparent_58%),linear-gradient(to_bottom,oklch(0.12_0.02_280)_0%,black_72%)]"
+          />
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-linear-to-t from-black to-transparent"
+          />
+
+          <div className="relative z-10 flex min-h-[min(88svh,920px)] flex-col justify-end px-5 pb-[calc(var(--demo-chrome-reserve,5rem)+2.5rem)] pt-[max(1.25rem,env(safe-area-inset-top))] sm:px-8">
+            <p className="text-[13px] font-medium tracking-[0.08em] text-white/45 uppercase">
+              {FEATURED.eyebrow}
+            </p>
+            <h1 className="mt-3 max-w-[11ch] text-balance text-[clamp(3.25rem,14vw,7.5rem)] leading-[0.9] font-semibold tracking-[-0.045em]">
+              {FEATURED.title}
+            </h1>
+            <p className="mt-5 max-w-[34ch] text-[17px] leading-snug text-white/58 sm:text-[19px]">
+              {FEATURED.tagline}
+            </p>
+            <p className="mt-3 text-[13px] text-white/38">{FEATURED.runtime}</p>
+
+            <div className="mt-8 flex flex-wrap items-center gap-3">
+              <button
+                type="button"
+                className="inline-flex h-11 touch-manipulation items-center gap-2 rounded-full bg-white px-6 text-[14px] font-semibold text-black transition-transform active:scale-[0.98]"
+              >
+                <PlayIcon aria-hidden="true" className="size-4 fill-current" />
+                Play
+              </button>
+              <button
+                type="button"
+                className="inline-flex h-11 touch-manipulation items-center justify-center rounded-full border border-white/18 bg-white/[0.04] px-6 text-[14px] font-medium text-white/78 transition-colors hover:bg-white/[0.08] active:scale-[0.98]"
+              >
+                Add to Up Next
+              </button>
+            </div>
+          </div>
+        </section>
+
+        {/* Horizontal poster row */}
+        <section className="pb-6 pt-2" aria-labelledby="premieres-heading">
+          <div className="mb-4 flex items-end justify-between gap-4 px-5 sm:px-8">
+            <h2 id="premieres-heading" className="text-[22px] font-semibold tracking-[-0.02em]">
+              Premieres
+            </h2>
+            <span className="text-[13px] text-white/38">Swipe to browse</span>
+          </div>
+
+          <div className="overflow-x-auto overscroll-x-contain pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            <div className="flex w-max snap-x snap-mandatory gap-4 px-5 sm:gap-5 sm:px-8">
+              {PREMIERES.map((film) => (
+                <PosterCard key={film.title} {...film} />
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Editorial copy + opposing vertical marquees */}
+        <section
+          className="border-t border-white/[0.06] px-5 py-20 sm:px-8 sm:py-28"
+          aria-labelledby="editorial-heading"
+        >
+          <div className="mx-auto grid max-w-6xl gap-12 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)] lg:items-center lg:gap-16">
+            <div className="max-w-md">
+              <p className="text-[13px] font-medium tracking-[0.08em] text-white/42 uppercase">
+                The craft
+              </p>
+              <h2
+                id="editorial-heading"
+                className="mt-3 text-balance text-[clamp(2rem,5vw,3rem)] leading-[1.05] font-semibold tracking-[-0.03em]"
+              >
+                Built for the big screen. Tuned for your living room.
+              </h2>
+              <p className="mt-5 text-[16px] leading-relaxed text-white/52">
+                This browse layout pairs overscale premiere type with a snap-scrolling poster rail,
+                then lets critic lines drift in opposite directions beside long-form copy — the
+                rhythm streaming homepages use to feel cinematic without hiding the catalog.
+              </p>
+              <p className="mt-4 text-[16px] leading-relaxed text-white/52">
+                The dual marquees are the same{" "}
+                <span className="text-white/72">Marquee</span> primitive twice: one column runs
+                upward, the other reverses downward so motion never feels like a single conveyor
+                belt.
+              </p>
+            </div>
+
+            <div className="grid h-[min(32rem,68vh)] min-h-[22rem] grid-cols-2 gap-3 sm:gap-4">
+              {reducedMotion ? (
+                <>
+                  <div className="flex flex-col gap-3 overflow-hidden rounded-2xl border border-white/[0.06] bg-white/[0.02] p-3">
+                    {QUOTES.slice(0, 4).map((quote) => (
+                      <QuoteChip key={quote.source} {...quote} />
+                    ))}
+                  </div>
+                  <div className="flex flex-col gap-3 overflow-hidden rounded-2xl border border-white/[0.06] bg-white/[0.02] p-3">
+                    {QUOTES.slice(4).map((quote) => (
+                      <QuoteChip key={quote.source} {...quote} />
+                    ))}
+                  </div>
+                </>
+              ) : (
+                <>
+                  <Marquee
+                    vertical
+                    pauseOnHover
+                    applyMask={false}
+                    className="h-full rounded-2xl border border-white/[0.06] bg-white/[0.02] p-2 [--duration:26s] [--gap:14px]"
+                  >
+                    {QUOTES.map((quote) => (
+                      <QuoteChip key={\`up-\${quote.source}\`} {...quote} />
+                    ))}
+                  </Marquee>
+                  <Marquee
+                    vertical
+                    reverse
+                    pauseOnHover
+                    applyMask={false}
+                    className="h-full rounded-2xl border border-white/[0.06] bg-white/[0.02] p-2 [--duration:31s] [--gap:14px]"
+                  >
+                    {QUOTES.map((quote) => (
+                      <QuoteChip key={\`down-\${quote.source}\`} {...quote} />
+                    ))}
+                  </Marquee>
+                </>
+              )}
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <CinemaRowNotes />
+    </>
+  );
+}
+`,
+      htmlLight: `<pre class="shiki github-light" tabindex="0"><code><span class="line"><span style="color:#032F62">"use client"</span><span style="color:#24292E">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49">import</span><span style="color:#24292E"> { PlayIcon } </span><span style="color:#D73A49">from</span><span style="color:#032F62"> "lucide-react"</span><span style="color:#24292E">;</span></span>
+<span class="line"><span style="color:#D73A49">import</span><span style="color:#24292E"> { IBM_Plex_Sans } </span><span style="color:#D73A49">from</span><span style="color:#032F62"> "next/font/google"</span><span style="color:#24292E">;</span></span>
+<span class="line"><span style="color:#D73A49">import</span><span style="color:#24292E"> { useEffect, useState } </span><span style="color:#D73A49">from</span><span style="color:#032F62"> "react"</span><span style="color:#24292E">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49">import</span><span style="color:#24292E"> Marquee </span><span style="color:#D73A49">from</span><span style="color:#032F62"> "@/animata/container/marquee"</span><span style="color:#24292E">;</span></span>
+<span class="line"><span style="color:#D73A49">import</span><span style="color:#24292E"> { cn } </span><span style="color:#D73A49">from</span><span style="color:#032F62"> "@/lib/utils"</span><span style="color:#24292E">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49">import</span><span style="color:#24292E"> { CinemaRowNotes } </span><span style="color:#D73A49">from</span><span style="color:#032F62"> "./cinema-row-notes"</span><span style="color:#24292E">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49">const</span><span style="color:#005CC5"> sans</span><span style="color:#D73A49"> =</span><span style="color:#6F42C1"> IBM_Plex_Sans</span><span style="color:#24292E">({</span></span>
+<span class="line"><span style="color:#24292E">  subsets: [</span><span style="color:#032F62">"latin"</span><span style="color:#24292E">],</span></span>
+<span class="line"><span style="color:#24292E">  weight: [</span><span style="color:#032F62">"400"</span><span style="color:#24292E">, </span><span style="color:#032F62">"500"</span><span style="color:#24292E">, </span><span style="color:#032F62">"600"</span><span style="color:#24292E">],</span></span>
+<span class="line"><span style="color:#24292E">  variable: </span><span style="color:#032F62">"--font-sans"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">  display: </span><span style="color:#032F62">"swap"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">});</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49">const</span><span style="color:#005CC5"> FEATURED</span><span style="color:#D73A49"> =</span><span style="color:#24292E"> {</span></span>
+<span class="line"><span style="color:#24292E">  eyebrow: </span><span style="color:#032F62">"Original film"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">  title: </span><span style="color:#032F62">"Infinite Horizon"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">  tagline: </span><span style="color:#032F62">"When the signal returns, nothing on Earth is where they left it."</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">  runtime: </span><span style="color:#032F62">"2h 14m · Sci‑Fi · Dolby Vision"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">};</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49">const</span><span style="color:#005CC5"> PREMIERES</span><span style="color:#D73A49"> =</span><span style="color:#24292E"> [</span></span>
+<span class="line"><span style="color:#24292E">  {</span></span>
+<span class="line"><span style="color:#24292E">    title: </span><span style="color:#032F62">"Glass Orchard"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">    genre: </span><span style="color:#032F62">"Drama"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">    gradient: </span><span style="color:#032F62">"linear-gradient(160deg, oklch(0.42 0.12 250) 0%, oklch(0.22 0.06 280) 100%)"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">  },</span></span>
+<span class="line"><span style="color:#24292E">  {</span></span>
+<span class="line"><span style="color:#24292E">    title: </span><span style="color:#032F62">"Midnight Relay"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">    genre: </span><span style="color:#032F62">"Thriller"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">    gradient: </span><span style="color:#032F62">"linear-gradient(160deg, oklch(0.35 0.08 25) 0%, oklch(0.18 0.04 15) 100%)"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">  },</span></span>
+<span class="line"><span style="color:#24292E">  {</span></span>
+<span class="line"><span style="color:#24292E">    title: </span><span style="color:#032F62">"North Archive"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">    genre: </span><span style="color:#032F62">"Documentary"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">    gradient: </span><span style="color:#032F62">"linear-gradient(160deg, oklch(0.55 0.06 210) 0%, oklch(0.28 0.04 230) 100%)"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">  },</span></span>
+<span class="line"><span style="color:#24292E">  {</span></span>
+<span class="line"><span style="color:#24292E">    title: </span><span style="color:#032F62">"Soft Circuit"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">    genre: </span><span style="color:#032F62">"Romance"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">    gradient: </span><span style="color:#032F62">"linear-gradient(160deg, oklch(0.62 0.14 340) 0%, oklch(0.32 0.08 320) 100%)"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">  },</span></span>
+<span class="line"><span style="color:#24292E">  {</span></span>
+<span class="line"><span style="color:#24292E">    title: </span><span style="color:#032F62">"Harbor Line"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">    genre: </span><span style="color:#032F62">"Crime"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">    gradient: </span><span style="color:#032F62">"linear-gradient(160deg, oklch(0.38 0.05 160) 0%, oklch(0.16 0.03 190) 100%)"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">  },</span></span>
+<span class="line"><span style="color:#24292E">  {</span></span>
+<span class="line"><span style="color:#24292E">    title: </span><span style="color:#032F62">"Second Sun"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">    genre: </span><span style="color:#032F62">"Sci‑Fi"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">    gradient: </span><span style="color:#032F62">"linear-gradient(160deg, oklch(0.48 0.16 55) 0%, oklch(0.24 0.08 40) 100%)"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">  },</span></span>
+<span class="line"><span style="color:#24292E">  {</span></span>
+<span class="line"><span style="color:#24292E">    title: </span><span style="color:#032F62">"Quiet Union"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">    genre: </span><span style="color:#032F62">"Indie"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">    gradient: </span><span style="color:#032F62">"linear-gradient(160deg, oklch(0.52 0.04 280) 0%, oklch(0.24 0.03 260) 100%)"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">  },</span></span>
+<span class="line"><span style="color:#24292E">] </span><span style="color:#D73A49">as</span><span style="color:#D73A49"> const</span><span style="color:#24292E">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49">const</span><span style="color:#005CC5"> QUOTES</span><span style="color:#D73A49"> =</span><span style="color:#24292E"> [</span></span>
+<span class="line"><span style="color:#24292E">  { text: </span><span style="color:#032F62">"A widescreen poem."</span><span style="color:#24292E">, source: </span><span style="color:#032F62">"The Frame"</span><span style="color:#24292E"> },</span></span>
+<span class="line"><span style="color:#24292E">  { text: </span><span style="color:#032F62">"Refuses to blink."</span><span style="color:#24292E">, source: </span><span style="color:#032F62">"Celluloid"</span><span style="color:#24292E"> },</span></span>
+<span class="line"><span style="color:#24292E">  { text: </span><span style="color:#032F62">"Sound you feel in your chest."</span><span style="color:#24292E">, source: </span><span style="color:#032F62">"Playback"</span><span style="color:#24292E"> },</span></span>
+<span class="line"><span style="color:#24292E">  { text: </span><span style="color:#032F62">"The rare blockbuster with a pulse."</span><span style="color:#24292E">, source: </span><span style="color:#032F62">"Premiere"</span><span style="color:#24292E"> },</span></span>
+<span class="line"><span style="color:#24292E">  { text: </span><span style="color:#032F62">"Every frame is a poster."</span><span style="color:#24292E">, source: </span><span style="color:#032F62">"Lens Culture"</span><span style="color:#24292E"> },</span></span>
+<span class="line"><span style="color:#24292E">  { text: </span><span style="color:#032F62">"Turn the volume up."</span><span style="color:#24292E">, source: </span><span style="color:#032F62">"Signal"</span><span style="color:#24292E"> },</span></span>
+<span class="line"><span style="color:#24292E">  { text: </span><span style="color:#032F62">"IMAX without leaving the couch."</span><span style="color:#24292E">, source: </span><span style="color:#032F62">"Home Screen"</span><span style="color:#24292E"> },</span></span>
+<span class="line"><span style="color:#24292E">  { text: </span><span style="color:#032F62">"Cast chemistry for the ages."</span><span style="color:#24292E">, source: </span><span style="color:#032F62">"Rolling Reel"</span><span style="color:#24292E"> },</span></span>
+<span class="line"><span style="color:#24292E">] </span><span style="color:#D73A49">as</span><span style="color:#D73A49"> const</span><span style="color:#24292E">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49">function</span><span style="color:#6F42C1"> QuoteChip</span><span style="color:#24292E">({ </span><span style="color:#E36209">text</span><span style="color:#24292E">, </span><span style="color:#E36209">source</span><span style="color:#24292E"> }</span><span style="color:#D73A49">:</span><span style="color:#24292E"> { </span><span style="color:#E36209">text</span><span style="color:#D73A49">:</span><span style="color:#005CC5"> string</span><span style="color:#24292E">; </span><span style="color:#E36209">source</span><span style="color:#D73A49">:</span><span style="color:#005CC5"> string</span><span style="color:#24292E"> }) {</span></span>
+<span class="line"><span style="color:#D73A49">  return</span><span style="color:#24292E"> (</span></span>
+<span class="line"><span style="color:#24292E">    &#x3C;</span><span style="color:#22863A">figure</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"w-40 shrink-0 rounded-2xl border border-white/10 bg-white/[0.035] px-4 py-3 sm:w-44"</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">      &#x3C;</span><span style="color:#22863A">blockquote</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"text-[13px] leading-snug text-white/82"</span><span style="color:#24292E">></span><span style="color:#005CC5">&#x26;ldquo;</span><span style="color:#24292E">{text}</span><span style="color:#005CC5">&#x26;rdquo;</span><span style="color:#24292E">&#x3C;/</span><span style="color:#22863A">blockquote</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">      &#x3C;</span><span style="color:#22863A">figcaption</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"mt-2 text-[11px] font-medium tracking-wide text-white/38 uppercase"</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">        {source}</span></span>
+<span class="line"><span style="color:#24292E">      &#x3C;/</span><span style="color:#22863A">figcaption</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">    &#x3C;/</span><span style="color:#22863A">figure</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">  );</span></span>
+<span class="line"><span style="color:#24292E">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49">function</span><span style="color:#6F42C1"> PosterCard</span><span style="color:#24292E">({</span></span>
+<span class="line"><span style="color:#E36209">  title</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#E36209">  genre</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#E36209">  gradient</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">}</span><span style="color:#D73A49">:</span><span style="color:#24292E"> {</span></span>
+<span class="line"><span style="color:#E36209">  title</span><span style="color:#D73A49">:</span><span style="color:#005CC5"> string</span><span style="color:#24292E">;</span></span>
+<span class="line"><span style="color:#E36209">  genre</span><span style="color:#D73A49">:</span><span style="color:#005CC5"> string</span><span style="color:#24292E">;</span></span>
+<span class="line"><span style="color:#E36209">  gradient</span><span style="color:#D73A49">:</span><span style="color:#005CC5"> string</span><span style="color:#24292E">;</span></span>
+<span class="line"><span style="color:#24292E">}) {</span></span>
+<span class="line"><span style="color:#D73A49">  return</span><span style="color:#24292E"> (</span></span>
+<span class="line"><span style="color:#24292E">    &#x3C;</span><span style="color:#22863A">article</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"w-[9.75rem] shrink-0 snap-start sm:w-[11.25rem]"</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">      &#x3C;</span><span style="color:#22863A">div</span></span>
+<span class="line"><span style="color:#6F42C1">        className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"aspect-[2/3] overflow-hidden rounded-xl ring-1 ring-white/10"</span></span>
+<span class="line"><span style="color:#6F42C1">        style</span><span style="color:#D73A49">=</span><span style="color:#24292E">{{ backgroundImage: gradient }}</span></span>
+<span class="line"><span style="color:#24292E">      /></span></span>
+<span class="line"><span style="color:#24292E">      &#x3C;</span><span style="color:#22863A">h3</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"mt-2.5 truncate text-[15px] font-medium text-white/92"</span><span style="color:#24292E">>{title}&#x3C;/</span><span style="color:#22863A">h3</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">      &#x3C;</span><span style="color:#22863A">p</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"text-[13px] text-white/42"</span><span style="color:#24292E">>{genre}&#x3C;/</span><span style="color:#22863A">p</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">    &#x3C;/</span><span style="color:#22863A">article</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">  );</span></span>
+<span class="line"><span style="color:#24292E">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49">export</span><span style="color:#D73A49"> default</span><span style="color:#D73A49"> function</span><span style="color:#6F42C1"> CinemaRow</span><span style="color:#24292E">() {</span></span>
+<span class="line"><span style="color:#D73A49">  const</span><span style="color:#24292E"> [</span><span style="color:#005CC5">reducedMotion</span><span style="color:#24292E">, </span><span style="color:#005CC5">setReducedMotion</span><span style="color:#24292E">] </span><span style="color:#D73A49">=</span><span style="color:#6F42C1"> useState</span><span style="color:#24292E">(</span><span style="color:#005CC5">false</span><span style="color:#24292E">);</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6F42C1">  useEffect</span><span style="color:#24292E">(() </span><span style="color:#D73A49">=></span><span style="color:#24292E"> {</span></span>
+<span class="line"><span style="color:#D73A49">    const</span><span style="color:#005CC5"> mq</span><span style="color:#D73A49"> =</span><span style="color:#24292E"> window.</span><span style="color:#6F42C1">matchMedia</span><span style="color:#24292E">(</span><span style="color:#032F62">"(prefers-reduced-motion: reduce)"</span><span style="color:#24292E">);</span></span>
+<span class="line"><span style="color:#D73A49">    const</span><span style="color:#6F42C1"> apply</span><span style="color:#D73A49"> =</span><span style="color:#24292E"> () </span><span style="color:#D73A49">=></span><span style="color:#6F42C1"> setReducedMotion</span><span style="color:#24292E">(mq.matches);</span></span>
+<span class="line"><span style="color:#6F42C1">    apply</span><span style="color:#24292E">();</span></span>
+<span class="line"><span style="color:#24292E">    mq.</span><span style="color:#6F42C1">addEventListener</span><span style="color:#24292E">(</span><span style="color:#032F62">"change"</span><span style="color:#24292E">, apply);</span></span>
+<span class="line"><span style="color:#D73A49">    return</span><span style="color:#24292E"> () </span><span style="color:#D73A49">=></span><span style="color:#24292E"> mq.</span><span style="color:#6F42C1">removeEventListener</span><span style="color:#24292E">(</span><span style="color:#032F62">"change"</span><span style="color:#24292E">, apply);</span></span>
+<span class="line"><span style="color:#24292E">  }, []);</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49">  return</span><span style="color:#24292E"> (</span></span>
+<span class="line"><span style="color:#24292E">    &#x3C;></span></span>
+<span class="line"><span style="color:#24292E">      &#x3C;</span><span style="color:#22863A">div</span></span>
+<span class="line"><span style="color:#6F42C1">        className</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#6F42C1">cn</span><span style="color:#24292E">(</span></span>
+<span class="line"><span style="color:#24292E">          sans.variable,</span></span>
+<span class="line"><span style="color:#24292E">          sans.className,</span></span>
+<span class="line"><span style="color:#032F62">          "min-h-svh bg-black text-white selection:bg-white/20"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">        )}</span></span>
+<span class="line"><span style="color:#24292E">      ></span></span>
+<span class="line"><span style="color:#24292E">        {</span><span style="color:#6A737D">/* Hero — overscale premiere typography */</span><span style="color:#24292E">}</span></span>
+<span class="line"><span style="color:#24292E">        &#x3C;</span><span style="color:#22863A">section</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"relative isolate overflow-hidden"</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">          &#x3C;</span><span style="color:#22863A">div</span></span>
+<span class="line"><span style="color:#6F42C1">            aria-hidden</span><span style="color:#D73A49">=</span><span style="color:#032F62">"true"</span></span>
+<span class="line"><span style="color:#6F42C1">            className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_120%_80%_at_50%_-10%,oklch(0.28_0.08_280_/_0.55)_0%,transparent_58%),linear-gradient(to_bottom,oklch(0.12_0.02_280)_0%,black_72%)]"</span></span>
+<span class="line"><span style="color:#24292E">          /></span></span>
+<span class="line"><span style="color:#24292E">          &#x3C;</span><span style="color:#22863A">div</span></span>
+<span class="line"><span style="color:#6F42C1">            aria-hidden</span><span style="color:#D73A49">=</span><span style="color:#032F62">"true"</span></span>
+<span class="line"><span style="color:#6F42C1">            className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-linear-to-t from-black to-transparent"</span></span>
+<span class="line"><span style="color:#24292E">          /></span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#24292E">          &#x3C;</span><span style="color:#22863A">div</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"relative z-10 flex min-h-[min(88svh,920px)] flex-col justify-end px-5 pb-[calc(var(--demo-chrome-reserve,5rem)+2.5rem)] pt-[max(1.25rem,env(safe-area-inset-top))] sm:px-8"</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">            &#x3C;</span><span style="color:#22863A">p</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"text-[13px] font-medium tracking-[0.08em] text-white/45 uppercase"</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">              {</span><span style="color:#005CC5">FEATURED</span><span style="color:#24292E">.eyebrow}</span></span>
+<span class="line"><span style="color:#24292E">            &#x3C;/</span><span style="color:#22863A">p</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">            &#x3C;</span><span style="color:#22863A">h1</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"mt-3 max-w-[11ch] text-balance text-[clamp(3.25rem,14vw,7.5rem)] leading-[0.9] font-semibold tracking-[-0.045em]"</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">              {</span><span style="color:#005CC5">FEATURED</span><span style="color:#24292E">.title}</span></span>
+<span class="line"><span style="color:#24292E">            &#x3C;/</span><span style="color:#22863A">h1</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">            &#x3C;</span><span style="color:#22863A">p</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"mt-5 max-w-[34ch] text-[17px] leading-snug text-white/58 sm:text-[19px]"</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">              {</span><span style="color:#005CC5">FEATURED</span><span style="color:#24292E">.tagline}</span></span>
+<span class="line"><span style="color:#24292E">            &#x3C;/</span><span style="color:#22863A">p</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">            &#x3C;</span><span style="color:#22863A">p</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"mt-3 text-[13px] text-white/38"</span><span style="color:#24292E">>{</span><span style="color:#005CC5">FEATURED</span><span style="color:#24292E">.runtime}&#x3C;/</span><span style="color:#22863A">p</span><span style="color:#24292E">></span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#24292E">            &#x3C;</span><span style="color:#22863A">div</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"mt-8 flex flex-wrap items-center gap-3"</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">              &#x3C;</span><span style="color:#22863A">button</span></span>
+<span class="line"><span style="color:#6F42C1">                type</span><span style="color:#D73A49">=</span><span style="color:#032F62">"button"</span></span>
+<span class="line"><span style="color:#6F42C1">                className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"inline-flex h-11 touch-manipulation items-center gap-2 rounded-full bg-white px-6 text-[14px] font-semibold text-black transition-transform active:scale-[0.98]"</span></span>
+<span class="line"><span style="color:#24292E">              ></span></span>
+<span class="line"><span style="color:#24292E">                &#x3C;</span><span style="color:#005CC5">PlayIcon</span><span style="color:#6F42C1"> aria-hidden</span><span style="color:#D73A49">=</span><span style="color:#032F62">"true"</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"size-4 fill-current"</span><span style="color:#24292E"> /></span></span>
+<span class="line"><span style="color:#24292E">                Play</span></span>
+<span class="line"><span style="color:#24292E">              &#x3C;/</span><span style="color:#22863A">button</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">              &#x3C;</span><span style="color:#22863A">button</span></span>
+<span class="line"><span style="color:#6F42C1">                type</span><span style="color:#D73A49">=</span><span style="color:#032F62">"button"</span></span>
+<span class="line"><span style="color:#6F42C1">                className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"inline-flex h-11 touch-manipulation items-center justify-center rounded-full border border-white/18 bg-white/[0.04] px-6 text-[14px] font-medium text-white/78 transition-colors hover:bg-white/[0.08] active:scale-[0.98]"</span></span>
+<span class="line"><span style="color:#24292E">              ></span></span>
+<span class="line"><span style="color:#24292E">                Add to Up Next</span></span>
+<span class="line"><span style="color:#24292E">              &#x3C;/</span><span style="color:#22863A">button</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">            &#x3C;/</span><span style="color:#22863A">div</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">          &#x3C;/</span><span style="color:#22863A">div</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">        &#x3C;/</span><span style="color:#22863A">section</span><span style="color:#24292E">></span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#24292E">        {</span><span style="color:#6A737D">/* Horizontal poster row */</span><span style="color:#24292E">}</span></span>
+<span class="line"><span style="color:#24292E">        &#x3C;</span><span style="color:#22863A">section</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"pb-6 pt-2"</span><span style="color:#6F42C1"> aria-labelledby</span><span style="color:#D73A49">=</span><span style="color:#032F62">"premieres-heading"</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">          &#x3C;</span><span style="color:#22863A">div</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"mb-4 flex items-end justify-between gap-4 px-5 sm:px-8"</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">            &#x3C;</span><span style="color:#22863A">h2</span><span style="color:#6F42C1"> id</span><span style="color:#D73A49">=</span><span style="color:#032F62">"premieres-heading"</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"text-[22px] font-semibold tracking-[-0.02em]"</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">              Premieres</span></span>
+<span class="line"><span style="color:#24292E">            &#x3C;/</span><span style="color:#22863A">h2</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">            &#x3C;</span><span style="color:#22863A">span</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"text-[13px] text-white/38"</span><span style="color:#24292E">>Swipe to browse&#x3C;/</span><span style="color:#22863A">span</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">          &#x3C;/</span><span style="color:#22863A">div</span><span style="color:#24292E">></span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#24292E">          &#x3C;</span><span style="color:#22863A">div</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"overflow-x-auto overscroll-x-contain pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&#x26;::-webkit-scrollbar]:hidden"</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">            &#x3C;</span><span style="color:#22863A">div</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"flex w-max snap-x snap-mandatory gap-4 px-5 sm:gap-5 sm:px-8"</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">              {</span><span style="color:#005CC5">PREMIERES</span><span style="color:#24292E">.</span><span style="color:#6F42C1">map</span><span style="color:#24292E">((</span><span style="color:#E36209">film</span><span style="color:#24292E">) </span><span style="color:#D73A49">=></span><span style="color:#24292E"> (</span></span>
+<span class="line"><span style="color:#24292E">                &#x3C;</span><span style="color:#005CC5">PosterCard</span><span style="color:#6F42C1"> key</span><span style="color:#D73A49">=</span><span style="color:#24292E">{film.title} {</span><span style="color:#D73A49">...</span><span style="color:#24292E">film} /></span></span>
+<span class="line"><span style="color:#24292E">              ))}</span></span>
+<span class="line"><span style="color:#24292E">            &#x3C;/</span><span style="color:#22863A">div</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">          &#x3C;/</span><span style="color:#22863A">div</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">        &#x3C;/</span><span style="color:#22863A">section</span><span style="color:#24292E">></span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#24292E">        {</span><span style="color:#6A737D">/* Editorial copy + opposing vertical marquees */</span><span style="color:#24292E">}</span></span>
+<span class="line"><span style="color:#24292E">        &#x3C;</span><span style="color:#22863A">section</span></span>
+<span class="line"><span style="color:#6F42C1">          className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"border-t border-white/[0.06] px-5 py-20 sm:px-8 sm:py-28"</span></span>
+<span class="line"><span style="color:#6F42C1">          aria-labelledby</span><span style="color:#D73A49">=</span><span style="color:#032F62">"editorial-heading"</span></span>
+<span class="line"><span style="color:#24292E">        ></span></span>
+<span class="line"><span style="color:#24292E">          &#x3C;</span><span style="color:#22863A">div</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"mx-auto grid max-w-6xl gap-12 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)] lg:items-center lg:gap-16"</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">            &#x3C;</span><span style="color:#22863A">div</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"max-w-md"</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">              &#x3C;</span><span style="color:#22863A">p</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"text-[13px] font-medium tracking-[0.08em] text-white/42 uppercase"</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">                The craft</span></span>
+<span class="line"><span style="color:#24292E">              &#x3C;/</span><span style="color:#22863A">p</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">              &#x3C;</span><span style="color:#22863A">h2</span></span>
+<span class="line"><span style="color:#6F42C1">                id</span><span style="color:#D73A49">=</span><span style="color:#032F62">"editorial-heading"</span></span>
+<span class="line"><span style="color:#6F42C1">                className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"mt-3 text-balance text-[clamp(2rem,5vw,3rem)] leading-[1.05] font-semibold tracking-[-0.03em]"</span></span>
+<span class="line"><span style="color:#24292E">              ></span></span>
+<span class="line"><span style="color:#24292E">                Built for the big screen. Tuned for your living room.</span></span>
+<span class="line"><span style="color:#24292E">              &#x3C;/</span><span style="color:#22863A">h2</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">              &#x3C;</span><span style="color:#22863A">p</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"mt-5 text-[16px] leading-relaxed text-white/52"</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">                This browse layout pairs overscale premiere type with a snap-scrolling poster rail,</span></span>
+<span class="line"><span style="color:#24292E">                then lets critic lines drift in opposite directions beside long-form copy — the</span></span>
+<span class="line"><span style="color:#24292E">                rhythm streaming homepages use to feel cinematic without hiding the catalog.</span></span>
+<span class="line"><span style="color:#24292E">              &#x3C;/</span><span style="color:#22863A">p</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">              &#x3C;</span><span style="color:#22863A">p</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"mt-4 text-[16px] leading-relaxed text-white/52"</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">                The dual marquees are the same{</span><span style="color:#032F62">" "</span><span style="color:#24292E">}</span></span>
+<span class="line"><span style="color:#24292E">                &#x3C;</span><span style="color:#22863A">span</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"text-white/72"</span><span style="color:#24292E">>Marquee&#x3C;/</span><span style="color:#22863A">span</span><span style="color:#24292E">> primitive twice: one column runs</span></span>
+<span class="line"><span style="color:#24292E">                upward, the other reverses downward so motion never feels like a single conveyor</span></span>
+<span class="line"><span style="color:#24292E">                belt.</span></span>
+<span class="line"><span style="color:#24292E">              &#x3C;/</span><span style="color:#22863A">p</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">            &#x3C;/</span><span style="color:#22863A">div</span><span style="color:#24292E">></span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#24292E">            &#x3C;</span><span style="color:#22863A">div</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"grid h-[min(32rem,68vh)] min-h-[22rem] grid-cols-2 gap-3 sm:gap-4"</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">              {reducedMotion </span><span style="color:#D73A49">?</span><span style="color:#24292E"> (</span></span>
+<span class="line"><span style="color:#24292E">                &#x3C;></span></span>
+<span class="line"><span style="color:#24292E">                  &#x3C;</span><span style="color:#22863A">div</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"flex flex-col gap-3 overflow-hidden rounded-2xl border border-white/[0.06] bg-white/[0.02] p-3"</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">                    {</span><span style="color:#005CC5">QUOTES</span><span style="color:#24292E">.</span><span style="color:#6F42C1">slice</span><span style="color:#24292E">(</span><span style="color:#005CC5">0</span><span style="color:#24292E">, </span><span style="color:#005CC5">4</span><span style="color:#24292E">).</span><span style="color:#6F42C1">map</span><span style="color:#24292E">((</span><span style="color:#E36209">quote</span><span style="color:#24292E">) </span><span style="color:#D73A49">=></span><span style="color:#24292E"> (</span></span>
+<span class="line"><span style="color:#24292E">                      &#x3C;</span><span style="color:#005CC5">QuoteChip</span><span style="color:#6F42C1"> key</span><span style="color:#D73A49">=</span><span style="color:#24292E">{quote.source} {</span><span style="color:#D73A49">...</span><span style="color:#24292E">quote} /></span></span>
+<span class="line"><span style="color:#24292E">                    ))}</span></span>
+<span class="line"><span style="color:#24292E">                  &#x3C;/</span><span style="color:#22863A">div</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">                  &#x3C;</span><span style="color:#22863A">div</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"flex flex-col gap-3 overflow-hidden rounded-2xl border border-white/[0.06] bg-white/[0.02] p-3"</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">                    {</span><span style="color:#005CC5">QUOTES</span><span style="color:#24292E">.</span><span style="color:#6F42C1">slice</span><span style="color:#24292E">(</span><span style="color:#005CC5">4</span><span style="color:#24292E">).</span><span style="color:#6F42C1">map</span><span style="color:#24292E">((</span><span style="color:#E36209">quote</span><span style="color:#24292E">) </span><span style="color:#D73A49">=></span><span style="color:#24292E"> (</span></span>
+<span class="line"><span style="color:#24292E">                      &#x3C;</span><span style="color:#005CC5">QuoteChip</span><span style="color:#6F42C1"> key</span><span style="color:#D73A49">=</span><span style="color:#24292E">{quote.source} {</span><span style="color:#D73A49">...</span><span style="color:#24292E">quote} /></span></span>
+<span class="line"><span style="color:#24292E">                    ))}</span></span>
+<span class="line"><span style="color:#24292E">                  &#x3C;/</span><span style="color:#22863A">div</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">                &#x3C;/></span></span>
+<span class="line"><span style="color:#24292E">              ) </span><span style="color:#D73A49">:</span><span style="color:#24292E"> (</span></span>
+<span class="line"><span style="color:#24292E">                &#x3C;></span></span>
+<span class="line"><span style="color:#24292E">                  &#x3C;</span><span style="color:#005CC5">Marquee</span></span>
+<span class="line"><span style="color:#6F42C1">                    vertical</span></span>
+<span class="line"><span style="color:#6F42C1">                    pauseOnHover</span></span>
+<span class="line"><span style="color:#6F42C1">                    applyMask</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#005CC5">false</span><span style="color:#24292E">}</span></span>
+<span class="line"><span style="color:#6F42C1">                    className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"h-full rounded-2xl border border-white/[0.06] bg-white/[0.02] p-2 [--duration:26s] [--gap:14px]"</span></span>
+<span class="line"><span style="color:#24292E">                  ></span></span>
+<span class="line"><span style="color:#24292E">                    {</span><span style="color:#005CC5">QUOTES</span><span style="color:#24292E">.</span><span style="color:#6F42C1">map</span><span style="color:#24292E">((</span><span style="color:#E36209">quote</span><span style="color:#24292E">) </span><span style="color:#D73A49">=></span><span style="color:#24292E"> (</span></span>
+<span class="line"><span style="color:#24292E">                      &#x3C;</span><span style="color:#005CC5">QuoteChip</span><span style="color:#6F42C1"> key</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#032F62">\`up-\${</span><span style="color:#24292E">quote</span><span style="color:#032F62">.</span><span style="color:#24292E">source</span><span style="color:#032F62">}\`</span><span style="color:#24292E">} {</span><span style="color:#D73A49">...</span><span style="color:#24292E">quote} /></span></span>
+<span class="line"><span style="color:#24292E">                    ))}</span></span>
+<span class="line"><span style="color:#24292E">                  &#x3C;/</span><span style="color:#005CC5">Marquee</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">                  &#x3C;</span><span style="color:#005CC5">Marquee</span></span>
+<span class="line"><span style="color:#6F42C1">                    vertical</span></span>
+<span class="line"><span style="color:#6F42C1">                    reverse</span></span>
+<span class="line"><span style="color:#6F42C1">                    pauseOnHover</span></span>
+<span class="line"><span style="color:#6F42C1">                    applyMask</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#005CC5">false</span><span style="color:#24292E">}</span></span>
+<span class="line"><span style="color:#6F42C1">                    className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"h-full rounded-2xl border border-white/[0.06] bg-white/[0.02] p-2 [--duration:31s] [--gap:14px]"</span></span>
+<span class="line"><span style="color:#24292E">                  ></span></span>
+<span class="line"><span style="color:#24292E">                    {</span><span style="color:#005CC5">QUOTES</span><span style="color:#24292E">.</span><span style="color:#6F42C1">map</span><span style="color:#24292E">((</span><span style="color:#E36209">quote</span><span style="color:#24292E">) </span><span style="color:#D73A49">=></span><span style="color:#24292E"> (</span></span>
+<span class="line"><span style="color:#24292E">                      &#x3C;</span><span style="color:#005CC5">QuoteChip</span><span style="color:#6F42C1"> key</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#032F62">\`down-\${</span><span style="color:#24292E">quote</span><span style="color:#032F62">.</span><span style="color:#24292E">source</span><span style="color:#032F62">}\`</span><span style="color:#24292E">} {</span><span style="color:#D73A49">...</span><span style="color:#24292E">quote} /></span></span>
+<span class="line"><span style="color:#24292E">                    ))}</span></span>
+<span class="line"><span style="color:#24292E">                  &#x3C;/</span><span style="color:#005CC5">Marquee</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">                &#x3C;/></span></span>
+<span class="line"><span style="color:#24292E">              )}</span></span>
+<span class="line"><span style="color:#24292E">            &#x3C;/</span><span style="color:#22863A">div</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">          &#x3C;/</span><span style="color:#22863A">div</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">        &#x3C;/</span><span style="color:#22863A">section</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">      &#x3C;/</span><span style="color:#22863A">div</span><span style="color:#24292E">></span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#24292E">      &#x3C;</span><span style="color:#005CC5">CinemaRowNotes</span><span style="color:#24292E"> /></span></span>
+<span class="line"><span style="color:#24292E">    &#x3C;/></span></span>
+<span class="line"><span style="color:#24292E">  );</span></span>
+<span class="line"><span style="color:#24292E">}</span></span>
+<span class="line"></span></code></pre>`,
+      htmlDark: `<pre class="shiki github-dark" tabindex="0"><code><span class="line"><span style="color:#9ECBFF">"use client"</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">import</span><span style="color:#E1E4E8"> { PlayIcon } </span><span style="color:#F97583">from</span><span style="color:#9ECBFF"> "lucide-react"</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#F97583">import</span><span style="color:#E1E4E8"> { IBM_Plex_Sans } </span><span style="color:#F97583">from</span><span style="color:#9ECBFF"> "next/font/google"</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#F97583">import</span><span style="color:#E1E4E8"> { useEffect, useState } </span><span style="color:#F97583">from</span><span style="color:#9ECBFF"> "react"</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">import</span><span style="color:#E1E4E8"> Marquee </span><span style="color:#F97583">from</span><span style="color:#9ECBFF"> "@/animata/container/marquee"</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#F97583">import</span><span style="color:#E1E4E8"> { cn } </span><span style="color:#F97583">from</span><span style="color:#9ECBFF"> "@/lib/utils"</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">import</span><span style="color:#E1E4E8"> { CinemaRowNotes } </span><span style="color:#F97583">from</span><span style="color:#9ECBFF"> "./cinema-row-notes"</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">const</span><span style="color:#79B8FF"> sans</span><span style="color:#F97583"> =</span><span style="color:#B392F0"> IBM_Plex_Sans</span><span style="color:#E1E4E8">({</span></span>
+<span class="line"><span style="color:#E1E4E8">  subsets: [</span><span style="color:#9ECBFF">"latin"</span><span style="color:#E1E4E8">],</span></span>
+<span class="line"><span style="color:#E1E4E8">  weight: [</span><span style="color:#9ECBFF">"400"</span><span style="color:#E1E4E8">, </span><span style="color:#9ECBFF">"500"</span><span style="color:#E1E4E8">, </span><span style="color:#9ECBFF">"600"</span><span style="color:#E1E4E8">],</span></span>
+<span class="line"><span style="color:#E1E4E8">  variable: </span><span style="color:#9ECBFF">"--font-sans"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">  display: </span><span style="color:#9ECBFF">"swap"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">});</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">const</span><span style="color:#79B8FF"> FEATURED</span><span style="color:#F97583"> =</span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#E1E4E8">  eyebrow: </span><span style="color:#9ECBFF">"Original film"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">  title: </span><span style="color:#9ECBFF">"Infinite Horizon"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">  tagline: </span><span style="color:#9ECBFF">"When the signal returns, nothing on Earth is where they left it."</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">  runtime: </span><span style="color:#9ECBFF">"2h 14m · Sci‑Fi · Dolby Vision"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">};</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">const</span><span style="color:#79B8FF"> PREMIERES</span><span style="color:#F97583"> =</span><span style="color:#E1E4E8"> [</span></span>
+<span class="line"><span style="color:#E1E4E8">  {</span></span>
+<span class="line"><span style="color:#E1E4E8">    title: </span><span style="color:#9ECBFF">"Glass Orchard"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">    genre: </span><span style="color:#9ECBFF">"Drama"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">    gradient: </span><span style="color:#9ECBFF">"linear-gradient(160deg, oklch(0.42 0.12 250) 0%, oklch(0.22 0.06 280) 100%)"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">  },</span></span>
+<span class="line"><span style="color:#E1E4E8">  {</span></span>
+<span class="line"><span style="color:#E1E4E8">    title: </span><span style="color:#9ECBFF">"Midnight Relay"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">    genre: </span><span style="color:#9ECBFF">"Thriller"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">    gradient: </span><span style="color:#9ECBFF">"linear-gradient(160deg, oklch(0.35 0.08 25) 0%, oklch(0.18 0.04 15) 100%)"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">  },</span></span>
+<span class="line"><span style="color:#E1E4E8">  {</span></span>
+<span class="line"><span style="color:#E1E4E8">    title: </span><span style="color:#9ECBFF">"North Archive"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">    genre: </span><span style="color:#9ECBFF">"Documentary"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">    gradient: </span><span style="color:#9ECBFF">"linear-gradient(160deg, oklch(0.55 0.06 210) 0%, oklch(0.28 0.04 230) 100%)"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">  },</span></span>
+<span class="line"><span style="color:#E1E4E8">  {</span></span>
+<span class="line"><span style="color:#E1E4E8">    title: </span><span style="color:#9ECBFF">"Soft Circuit"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">    genre: </span><span style="color:#9ECBFF">"Romance"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">    gradient: </span><span style="color:#9ECBFF">"linear-gradient(160deg, oklch(0.62 0.14 340) 0%, oklch(0.32 0.08 320) 100%)"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">  },</span></span>
+<span class="line"><span style="color:#E1E4E8">  {</span></span>
+<span class="line"><span style="color:#E1E4E8">    title: </span><span style="color:#9ECBFF">"Harbor Line"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">    genre: </span><span style="color:#9ECBFF">"Crime"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">    gradient: </span><span style="color:#9ECBFF">"linear-gradient(160deg, oklch(0.38 0.05 160) 0%, oklch(0.16 0.03 190) 100%)"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">  },</span></span>
+<span class="line"><span style="color:#E1E4E8">  {</span></span>
+<span class="line"><span style="color:#E1E4E8">    title: </span><span style="color:#9ECBFF">"Second Sun"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">    genre: </span><span style="color:#9ECBFF">"Sci‑Fi"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">    gradient: </span><span style="color:#9ECBFF">"linear-gradient(160deg, oklch(0.48 0.16 55) 0%, oklch(0.24 0.08 40) 100%)"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">  },</span></span>
+<span class="line"><span style="color:#E1E4E8">  {</span></span>
+<span class="line"><span style="color:#E1E4E8">    title: </span><span style="color:#9ECBFF">"Quiet Union"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">    genre: </span><span style="color:#9ECBFF">"Indie"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">    gradient: </span><span style="color:#9ECBFF">"linear-gradient(160deg, oklch(0.52 0.04 280) 0%, oklch(0.24 0.03 260) 100%)"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">  },</span></span>
+<span class="line"><span style="color:#E1E4E8">] </span><span style="color:#F97583">as</span><span style="color:#F97583"> const</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">const</span><span style="color:#79B8FF"> QUOTES</span><span style="color:#F97583"> =</span><span style="color:#E1E4E8"> [</span></span>
+<span class="line"><span style="color:#E1E4E8">  { text: </span><span style="color:#9ECBFF">"A widescreen poem."</span><span style="color:#E1E4E8">, source: </span><span style="color:#9ECBFF">"The Frame"</span><span style="color:#E1E4E8"> },</span></span>
+<span class="line"><span style="color:#E1E4E8">  { text: </span><span style="color:#9ECBFF">"Refuses to blink."</span><span style="color:#E1E4E8">, source: </span><span style="color:#9ECBFF">"Celluloid"</span><span style="color:#E1E4E8"> },</span></span>
+<span class="line"><span style="color:#E1E4E8">  { text: </span><span style="color:#9ECBFF">"Sound you feel in your chest."</span><span style="color:#E1E4E8">, source: </span><span style="color:#9ECBFF">"Playback"</span><span style="color:#E1E4E8"> },</span></span>
+<span class="line"><span style="color:#E1E4E8">  { text: </span><span style="color:#9ECBFF">"The rare blockbuster with a pulse."</span><span style="color:#E1E4E8">, source: </span><span style="color:#9ECBFF">"Premiere"</span><span style="color:#E1E4E8"> },</span></span>
+<span class="line"><span style="color:#E1E4E8">  { text: </span><span style="color:#9ECBFF">"Every frame is a poster."</span><span style="color:#E1E4E8">, source: </span><span style="color:#9ECBFF">"Lens Culture"</span><span style="color:#E1E4E8"> },</span></span>
+<span class="line"><span style="color:#E1E4E8">  { text: </span><span style="color:#9ECBFF">"Turn the volume up."</span><span style="color:#E1E4E8">, source: </span><span style="color:#9ECBFF">"Signal"</span><span style="color:#E1E4E8"> },</span></span>
+<span class="line"><span style="color:#E1E4E8">  { text: </span><span style="color:#9ECBFF">"IMAX without leaving the couch."</span><span style="color:#E1E4E8">, source: </span><span style="color:#9ECBFF">"Home Screen"</span><span style="color:#E1E4E8"> },</span></span>
+<span class="line"><span style="color:#E1E4E8">  { text: </span><span style="color:#9ECBFF">"Cast chemistry for the ages."</span><span style="color:#E1E4E8">, source: </span><span style="color:#9ECBFF">"Rolling Reel"</span><span style="color:#E1E4E8"> },</span></span>
+<span class="line"><span style="color:#E1E4E8">] </span><span style="color:#F97583">as</span><span style="color:#F97583"> const</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">function</span><span style="color:#B392F0"> QuoteChip</span><span style="color:#E1E4E8">({ </span><span style="color:#FFAB70">text</span><span style="color:#E1E4E8">, </span><span style="color:#FFAB70">source</span><span style="color:#E1E4E8"> }</span><span style="color:#F97583">:</span><span style="color:#E1E4E8"> { </span><span style="color:#FFAB70">text</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> string</span><span style="color:#E1E4E8">; </span><span style="color:#FFAB70">source</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> string</span><span style="color:#E1E4E8"> }) {</span></span>
+<span class="line"><span style="color:#F97583">  return</span><span style="color:#E1E4E8"> (</span></span>
+<span class="line"><span style="color:#E1E4E8">    &#x3C;</span><span style="color:#85E89D">figure</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"w-40 shrink-0 rounded-2xl border border-white/10 bg-white/[0.035] px-4 py-3 sm:w-44"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">      &#x3C;</span><span style="color:#85E89D">blockquote</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"text-[13px] leading-snug text-white/82"</span><span style="color:#E1E4E8">></span><span style="color:#79B8FF">&#x26;ldquo;</span><span style="color:#E1E4E8">{text}</span><span style="color:#79B8FF">&#x26;rdquo;</span><span style="color:#E1E4E8">&#x3C;/</span><span style="color:#85E89D">blockquote</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">      &#x3C;</span><span style="color:#85E89D">figcaption</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"mt-2 text-[11px] font-medium tracking-wide text-white/38 uppercase"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">        {source}</span></span>
+<span class="line"><span style="color:#E1E4E8">      &#x3C;/</span><span style="color:#85E89D">figcaption</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">    &#x3C;/</span><span style="color:#85E89D">figure</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">  );</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">function</span><span style="color:#B392F0"> PosterCard</span><span style="color:#E1E4E8">({</span></span>
+<span class="line"><span style="color:#FFAB70">  title</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#FFAB70">  genre</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#FFAB70">  gradient</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span><span style="color:#F97583">:</span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#FFAB70">  title</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> string</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#FFAB70">  genre</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> string</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#FFAB70">  gradient</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> string</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#E1E4E8">}) {</span></span>
+<span class="line"><span style="color:#F97583">  return</span><span style="color:#E1E4E8"> (</span></span>
+<span class="line"><span style="color:#E1E4E8">    &#x3C;</span><span style="color:#85E89D">article</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"w-[9.75rem] shrink-0 snap-start sm:w-[11.25rem]"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">      &#x3C;</span><span style="color:#85E89D">div</span></span>
+<span class="line"><span style="color:#B392F0">        className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"aspect-[2/3] overflow-hidden rounded-xl ring-1 ring-white/10"</span></span>
+<span class="line"><span style="color:#B392F0">        style</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{{ backgroundImage: gradient }}</span></span>
+<span class="line"><span style="color:#E1E4E8">      /></span></span>
+<span class="line"><span style="color:#E1E4E8">      &#x3C;</span><span style="color:#85E89D">h3</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"mt-2.5 truncate text-[15px] font-medium text-white/92"</span><span style="color:#E1E4E8">>{title}&#x3C;/</span><span style="color:#85E89D">h3</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">      &#x3C;</span><span style="color:#85E89D">p</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"text-[13px] text-white/42"</span><span style="color:#E1E4E8">>{genre}&#x3C;/</span><span style="color:#85E89D">p</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">    &#x3C;/</span><span style="color:#85E89D">article</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">  );</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">export</span><span style="color:#F97583"> default</span><span style="color:#F97583"> function</span><span style="color:#B392F0"> CinemaRow</span><span style="color:#E1E4E8">() {</span></span>
+<span class="line"><span style="color:#F97583">  const</span><span style="color:#E1E4E8"> [</span><span style="color:#79B8FF">reducedMotion</span><span style="color:#E1E4E8">, </span><span style="color:#79B8FF">setReducedMotion</span><span style="color:#E1E4E8">] </span><span style="color:#F97583">=</span><span style="color:#B392F0"> useState</span><span style="color:#E1E4E8">(</span><span style="color:#79B8FF">false</span><span style="color:#E1E4E8">);</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#B392F0">  useEffect</span><span style="color:#E1E4E8">(() </span><span style="color:#F97583">=></span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#F97583">    const</span><span style="color:#79B8FF"> mq</span><span style="color:#F97583"> =</span><span style="color:#E1E4E8"> window.</span><span style="color:#B392F0">matchMedia</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"(prefers-reduced-motion: reduce)"</span><span style="color:#E1E4E8">);</span></span>
+<span class="line"><span style="color:#F97583">    const</span><span style="color:#B392F0"> apply</span><span style="color:#F97583"> =</span><span style="color:#E1E4E8"> () </span><span style="color:#F97583">=></span><span style="color:#B392F0"> setReducedMotion</span><span style="color:#E1E4E8">(mq.matches);</span></span>
+<span class="line"><span style="color:#B392F0">    apply</span><span style="color:#E1E4E8">();</span></span>
+<span class="line"><span style="color:#E1E4E8">    mq.</span><span style="color:#B392F0">addEventListener</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"change"</span><span style="color:#E1E4E8">, apply);</span></span>
+<span class="line"><span style="color:#F97583">    return</span><span style="color:#E1E4E8"> () </span><span style="color:#F97583">=></span><span style="color:#E1E4E8"> mq.</span><span style="color:#B392F0">removeEventListener</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"change"</span><span style="color:#E1E4E8">, apply);</span></span>
+<span class="line"><span style="color:#E1E4E8">  }, []);</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">  return</span><span style="color:#E1E4E8"> (</span></span>
+<span class="line"><span style="color:#E1E4E8">    &#x3C;></span></span>
+<span class="line"><span style="color:#E1E4E8">      &#x3C;</span><span style="color:#85E89D">div</span></span>
+<span class="line"><span style="color:#B392F0">        className</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#B392F0">cn</span><span style="color:#E1E4E8">(</span></span>
+<span class="line"><span style="color:#E1E4E8">          sans.variable,</span></span>
+<span class="line"><span style="color:#E1E4E8">          sans.className,</span></span>
+<span class="line"><span style="color:#9ECBFF">          "min-h-svh bg-black text-white selection:bg-white/20"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">        )}</span></span>
+<span class="line"><span style="color:#E1E4E8">      ></span></span>
+<span class="line"><span style="color:#E1E4E8">        {</span><span style="color:#6A737D">/* Hero — overscale premiere typography */</span><span style="color:#E1E4E8">}</span></span>
+<span class="line"><span style="color:#E1E4E8">        &#x3C;</span><span style="color:#85E89D">section</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"relative isolate overflow-hidden"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">          &#x3C;</span><span style="color:#85E89D">div</span></span>
+<span class="line"><span style="color:#B392F0">            aria-hidden</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"true"</span></span>
+<span class="line"><span style="color:#B392F0">            className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_120%_80%_at_50%_-10%,oklch(0.28_0.08_280_/_0.55)_0%,transparent_58%),linear-gradient(to_bottom,oklch(0.12_0.02_280)_0%,black_72%)]"</span></span>
+<span class="line"><span style="color:#E1E4E8">          /></span></span>
+<span class="line"><span style="color:#E1E4E8">          &#x3C;</span><span style="color:#85E89D">div</span></span>
+<span class="line"><span style="color:#B392F0">            aria-hidden</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"true"</span></span>
+<span class="line"><span style="color:#B392F0">            className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-linear-to-t from-black to-transparent"</span></span>
+<span class="line"><span style="color:#E1E4E8">          /></span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">          &#x3C;</span><span style="color:#85E89D">div</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"relative z-10 flex min-h-[min(88svh,920px)] flex-col justify-end px-5 pb-[calc(var(--demo-chrome-reserve,5rem)+2.5rem)] pt-[max(1.25rem,env(safe-area-inset-top))] sm:px-8"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">            &#x3C;</span><span style="color:#85E89D">p</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"text-[13px] font-medium tracking-[0.08em] text-white/45 uppercase"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">              {</span><span style="color:#79B8FF">FEATURED</span><span style="color:#E1E4E8">.eyebrow}</span></span>
+<span class="line"><span style="color:#E1E4E8">            &#x3C;/</span><span style="color:#85E89D">p</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">            &#x3C;</span><span style="color:#85E89D">h1</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"mt-3 max-w-[11ch] text-balance text-[clamp(3.25rem,14vw,7.5rem)] leading-[0.9] font-semibold tracking-[-0.045em]"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">              {</span><span style="color:#79B8FF">FEATURED</span><span style="color:#E1E4E8">.title}</span></span>
+<span class="line"><span style="color:#E1E4E8">            &#x3C;/</span><span style="color:#85E89D">h1</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">            &#x3C;</span><span style="color:#85E89D">p</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"mt-5 max-w-[34ch] text-[17px] leading-snug text-white/58 sm:text-[19px]"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">              {</span><span style="color:#79B8FF">FEATURED</span><span style="color:#E1E4E8">.tagline}</span></span>
+<span class="line"><span style="color:#E1E4E8">            &#x3C;/</span><span style="color:#85E89D">p</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">            &#x3C;</span><span style="color:#85E89D">p</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"mt-3 text-[13px] text-white/38"</span><span style="color:#E1E4E8">>{</span><span style="color:#79B8FF">FEATURED</span><span style="color:#E1E4E8">.runtime}&#x3C;/</span><span style="color:#85E89D">p</span><span style="color:#E1E4E8">></span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">            &#x3C;</span><span style="color:#85E89D">div</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"mt-8 flex flex-wrap items-center gap-3"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">              &#x3C;</span><span style="color:#85E89D">button</span></span>
+<span class="line"><span style="color:#B392F0">                type</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"button"</span></span>
+<span class="line"><span style="color:#B392F0">                className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"inline-flex h-11 touch-manipulation items-center gap-2 rounded-full bg-white px-6 text-[14px] font-semibold text-black transition-transform active:scale-[0.98]"</span></span>
+<span class="line"><span style="color:#E1E4E8">              ></span></span>
+<span class="line"><span style="color:#E1E4E8">                &#x3C;</span><span style="color:#79B8FF">PlayIcon</span><span style="color:#B392F0"> aria-hidden</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"true"</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"size-4 fill-current"</span><span style="color:#E1E4E8"> /></span></span>
+<span class="line"><span style="color:#E1E4E8">                Play</span></span>
+<span class="line"><span style="color:#E1E4E8">              &#x3C;/</span><span style="color:#85E89D">button</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">              &#x3C;</span><span style="color:#85E89D">button</span></span>
+<span class="line"><span style="color:#B392F0">                type</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"button"</span></span>
+<span class="line"><span style="color:#B392F0">                className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"inline-flex h-11 touch-manipulation items-center justify-center rounded-full border border-white/18 bg-white/[0.04] px-6 text-[14px] font-medium text-white/78 transition-colors hover:bg-white/[0.08] active:scale-[0.98]"</span></span>
+<span class="line"><span style="color:#E1E4E8">              ></span></span>
+<span class="line"><span style="color:#E1E4E8">                Add to Up Next</span></span>
+<span class="line"><span style="color:#E1E4E8">              &#x3C;/</span><span style="color:#85E89D">button</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">            &#x3C;/</span><span style="color:#85E89D">div</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">          &#x3C;/</span><span style="color:#85E89D">div</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">        &#x3C;/</span><span style="color:#85E89D">section</span><span style="color:#E1E4E8">></span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">        {</span><span style="color:#6A737D">/* Horizontal poster row */</span><span style="color:#E1E4E8">}</span></span>
+<span class="line"><span style="color:#E1E4E8">        &#x3C;</span><span style="color:#85E89D">section</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"pb-6 pt-2"</span><span style="color:#B392F0"> aria-labelledby</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"premieres-heading"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">          &#x3C;</span><span style="color:#85E89D">div</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"mb-4 flex items-end justify-between gap-4 px-5 sm:px-8"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">            &#x3C;</span><span style="color:#85E89D">h2</span><span style="color:#B392F0"> id</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"premieres-heading"</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"text-[22px] font-semibold tracking-[-0.02em]"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">              Premieres</span></span>
+<span class="line"><span style="color:#E1E4E8">            &#x3C;/</span><span style="color:#85E89D">h2</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">            &#x3C;</span><span style="color:#85E89D">span</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"text-[13px] text-white/38"</span><span style="color:#E1E4E8">>Swipe to browse&#x3C;/</span><span style="color:#85E89D">span</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">          &#x3C;/</span><span style="color:#85E89D">div</span><span style="color:#E1E4E8">></span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">          &#x3C;</span><span style="color:#85E89D">div</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"overflow-x-auto overscroll-x-contain pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&#x26;::-webkit-scrollbar]:hidden"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">            &#x3C;</span><span style="color:#85E89D">div</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"flex w-max snap-x snap-mandatory gap-4 px-5 sm:gap-5 sm:px-8"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">              {</span><span style="color:#79B8FF">PREMIERES</span><span style="color:#E1E4E8">.</span><span style="color:#B392F0">map</span><span style="color:#E1E4E8">((</span><span style="color:#FFAB70">film</span><span style="color:#E1E4E8">) </span><span style="color:#F97583">=></span><span style="color:#E1E4E8"> (</span></span>
+<span class="line"><span style="color:#E1E4E8">                &#x3C;</span><span style="color:#79B8FF">PosterCard</span><span style="color:#B392F0"> key</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{film.title} {</span><span style="color:#F97583">...</span><span style="color:#E1E4E8">film} /></span></span>
+<span class="line"><span style="color:#E1E4E8">              ))}</span></span>
+<span class="line"><span style="color:#E1E4E8">            &#x3C;/</span><span style="color:#85E89D">div</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">          &#x3C;/</span><span style="color:#85E89D">div</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">        &#x3C;/</span><span style="color:#85E89D">section</span><span style="color:#E1E4E8">></span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">        {</span><span style="color:#6A737D">/* Editorial copy + opposing vertical marquees */</span><span style="color:#E1E4E8">}</span></span>
+<span class="line"><span style="color:#E1E4E8">        &#x3C;</span><span style="color:#85E89D">section</span></span>
+<span class="line"><span style="color:#B392F0">          className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"border-t border-white/[0.06] px-5 py-20 sm:px-8 sm:py-28"</span></span>
+<span class="line"><span style="color:#B392F0">          aria-labelledby</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"editorial-heading"</span></span>
+<span class="line"><span style="color:#E1E4E8">        ></span></span>
+<span class="line"><span style="color:#E1E4E8">          &#x3C;</span><span style="color:#85E89D">div</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"mx-auto grid max-w-6xl gap-12 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)] lg:items-center lg:gap-16"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">            &#x3C;</span><span style="color:#85E89D">div</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"max-w-md"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">              &#x3C;</span><span style="color:#85E89D">p</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"text-[13px] font-medium tracking-[0.08em] text-white/42 uppercase"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">                The craft</span></span>
+<span class="line"><span style="color:#E1E4E8">              &#x3C;/</span><span style="color:#85E89D">p</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">              &#x3C;</span><span style="color:#85E89D">h2</span></span>
+<span class="line"><span style="color:#B392F0">                id</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"editorial-heading"</span></span>
+<span class="line"><span style="color:#B392F0">                className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"mt-3 text-balance text-[clamp(2rem,5vw,3rem)] leading-[1.05] font-semibold tracking-[-0.03em]"</span></span>
+<span class="line"><span style="color:#E1E4E8">              ></span></span>
+<span class="line"><span style="color:#E1E4E8">                Built for the big screen. Tuned for your living room.</span></span>
+<span class="line"><span style="color:#E1E4E8">              &#x3C;/</span><span style="color:#85E89D">h2</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">              &#x3C;</span><span style="color:#85E89D">p</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"mt-5 text-[16px] leading-relaxed text-white/52"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">                This browse layout pairs overscale premiere type with a snap-scrolling poster rail,</span></span>
+<span class="line"><span style="color:#E1E4E8">                then lets critic lines drift in opposite directions beside long-form copy — the</span></span>
+<span class="line"><span style="color:#E1E4E8">                rhythm streaming homepages use to feel cinematic without hiding the catalog.</span></span>
+<span class="line"><span style="color:#E1E4E8">              &#x3C;/</span><span style="color:#85E89D">p</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">              &#x3C;</span><span style="color:#85E89D">p</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"mt-4 text-[16px] leading-relaxed text-white/52"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">                The dual marquees are the same{</span><span style="color:#9ECBFF">" "</span><span style="color:#E1E4E8">}</span></span>
+<span class="line"><span style="color:#E1E4E8">                &#x3C;</span><span style="color:#85E89D">span</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"text-white/72"</span><span style="color:#E1E4E8">>Marquee&#x3C;/</span><span style="color:#85E89D">span</span><span style="color:#E1E4E8">> primitive twice: one column runs</span></span>
+<span class="line"><span style="color:#E1E4E8">                upward, the other reverses downward so motion never feels like a single conveyor</span></span>
+<span class="line"><span style="color:#E1E4E8">                belt.</span></span>
+<span class="line"><span style="color:#E1E4E8">              &#x3C;/</span><span style="color:#85E89D">p</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">            &#x3C;/</span><span style="color:#85E89D">div</span><span style="color:#E1E4E8">></span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">            &#x3C;</span><span style="color:#85E89D">div</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"grid h-[min(32rem,68vh)] min-h-[22rem] grid-cols-2 gap-3 sm:gap-4"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">              {reducedMotion </span><span style="color:#F97583">?</span><span style="color:#E1E4E8"> (</span></span>
+<span class="line"><span style="color:#E1E4E8">                &#x3C;></span></span>
+<span class="line"><span style="color:#E1E4E8">                  &#x3C;</span><span style="color:#85E89D">div</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"flex flex-col gap-3 overflow-hidden rounded-2xl border border-white/[0.06] bg-white/[0.02] p-3"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">                    {</span><span style="color:#79B8FF">QUOTES</span><span style="color:#E1E4E8">.</span><span style="color:#B392F0">slice</span><span style="color:#E1E4E8">(</span><span style="color:#79B8FF">0</span><span style="color:#E1E4E8">, </span><span style="color:#79B8FF">4</span><span style="color:#E1E4E8">).</span><span style="color:#B392F0">map</span><span style="color:#E1E4E8">((</span><span style="color:#FFAB70">quote</span><span style="color:#E1E4E8">) </span><span style="color:#F97583">=></span><span style="color:#E1E4E8"> (</span></span>
+<span class="line"><span style="color:#E1E4E8">                      &#x3C;</span><span style="color:#79B8FF">QuoteChip</span><span style="color:#B392F0"> key</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{quote.source} {</span><span style="color:#F97583">...</span><span style="color:#E1E4E8">quote} /></span></span>
+<span class="line"><span style="color:#E1E4E8">                    ))}</span></span>
+<span class="line"><span style="color:#E1E4E8">                  &#x3C;/</span><span style="color:#85E89D">div</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">                  &#x3C;</span><span style="color:#85E89D">div</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"flex flex-col gap-3 overflow-hidden rounded-2xl border border-white/[0.06] bg-white/[0.02] p-3"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">                    {</span><span style="color:#79B8FF">QUOTES</span><span style="color:#E1E4E8">.</span><span style="color:#B392F0">slice</span><span style="color:#E1E4E8">(</span><span style="color:#79B8FF">4</span><span style="color:#E1E4E8">).</span><span style="color:#B392F0">map</span><span style="color:#E1E4E8">((</span><span style="color:#FFAB70">quote</span><span style="color:#E1E4E8">) </span><span style="color:#F97583">=></span><span style="color:#E1E4E8"> (</span></span>
+<span class="line"><span style="color:#E1E4E8">                      &#x3C;</span><span style="color:#79B8FF">QuoteChip</span><span style="color:#B392F0"> key</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{quote.source} {</span><span style="color:#F97583">...</span><span style="color:#E1E4E8">quote} /></span></span>
+<span class="line"><span style="color:#E1E4E8">                    ))}</span></span>
+<span class="line"><span style="color:#E1E4E8">                  &#x3C;/</span><span style="color:#85E89D">div</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">                &#x3C;/></span></span>
+<span class="line"><span style="color:#E1E4E8">              ) </span><span style="color:#F97583">:</span><span style="color:#E1E4E8"> (</span></span>
+<span class="line"><span style="color:#E1E4E8">                &#x3C;></span></span>
+<span class="line"><span style="color:#E1E4E8">                  &#x3C;</span><span style="color:#79B8FF">Marquee</span></span>
+<span class="line"><span style="color:#B392F0">                    vertical</span></span>
+<span class="line"><span style="color:#B392F0">                    pauseOnHover</span></span>
+<span class="line"><span style="color:#B392F0">                    applyMask</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#79B8FF">false</span><span style="color:#E1E4E8">}</span></span>
+<span class="line"><span style="color:#B392F0">                    className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"h-full rounded-2xl border border-white/[0.06] bg-white/[0.02] p-2 [--duration:26s] [--gap:14px]"</span></span>
+<span class="line"><span style="color:#E1E4E8">                  ></span></span>
+<span class="line"><span style="color:#E1E4E8">                    {</span><span style="color:#79B8FF">QUOTES</span><span style="color:#E1E4E8">.</span><span style="color:#B392F0">map</span><span style="color:#E1E4E8">((</span><span style="color:#FFAB70">quote</span><span style="color:#E1E4E8">) </span><span style="color:#F97583">=></span><span style="color:#E1E4E8"> (</span></span>
+<span class="line"><span style="color:#E1E4E8">                      &#x3C;</span><span style="color:#79B8FF">QuoteChip</span><span style="color:#B392F0"> key</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#9ECBFF">\`up-\${</span><span style="color:#E1E4E8">quote</span><span style="color:#9ECBFF">.</span><span style="color:#E1E4E8">source</span><span style="color:#9ECBFF">}\`</span><span style="color:#E1E4E8">} {</span><span style="color:#F97583">...</span><span style="color:#E1E4E8">quote} /></span></span>
+<span class="line"><span style="color:#E1E4E8">                    ))}</span></span>
+<span class="line"><span style="color:#E1E4E8">                  &#x3C;/</span><span style="color:#79B8FF">Marquee</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">                  &#x3C;</span><span style="color:#79B8FF">Marquee</span></span>
+<span class="line"><span style="color:#B392F0">                    vertical</span></span>
+<span class="line"><span style="color:#B392F0">                    reverse</span></span>
+<span class="line"><span style="color:#B392F0">                    pauseOnHover</span></span>
+<span class="line"><span style="color:#B392F0">                    applyMask</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#79B8FF">false</span><span style="color:#E1E4E8">}</span></span>
+<span class="line"><span style="color:#B392F0">                    className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"h-full rounded-2xl border border-white/[0.06] bg-white/[0.02] p-2 [--duration:31s] [--gap:14px]"</span></span>
+<span class="line"><span style="color:#E1E4E8">                  ></span></span>
+<span class="line"><span style="color:#E1E4E8">                    {</span><span style="color:#79B8FF">QUOTES</span><span style="color:#E1E4E8">.</span><span style="color:#B392F0">map</span><span style="color:#E1E4E8">((</span><span style="color:#FFAB70">quote</span><span style="color:#E1E4E8">) </span><span style="color:#F97583">=></span><span style="color:#E1E4E8"> (</span></span>
+<span class="line"><span style="color:#E1E4E8">                      &#x3C;</span><span style="color:#79B8FF">QuoteChip</span><span style="color:#B392F0"> key</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#9ECBFF">\`down-\${</span><span style="color:#E1E4E8">quote</span><span style="color:#9ECBFF">.</span><span style="color:#E1E4E8">source</span><span style="color:#9ECBFF">}\`</span><span style="color:#E1E4E8">} {</span><span style="color:#F97583">...</span><span style="color:#E1E4E8">quote} /></span></span>
+<span class="line"><span style="color:#E1E4E8">                    ))}</span></span>
+<span class="line"><span style="color:#E1E4E8">                  &#x3C;/</span><span style="color:#79B8FF">Marquee</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">                &#x3C;/></span></span>
+<span class="line"><span style="color:#E1E4E8">              )}</span></span>
+<span class="line"><span style="color:#E1E4E8">            &#x3C;/</span><span style="color:#85E89D">div</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">          &#x3C;/</span><span style="color:#85E89D">div</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">        &#x3C;/</span><span style="color:#85E89D">section</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">      &#x3C;/</span><span style="color:#85E89D">div</span><span style="color:#E1E4E8">></span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">      &#x3C;</span><span style="color:#79B8FF">CinemaRowNotes</span><span style="color:#E1E4E8"> /></span></span>
+<span class="line"><span style="color:#E1E4E8">    &#x3C;/></span></span>
+<span class="line"><span style="color:#E1E4E8">  );</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span>
+<span class="line"></span></code></pre>`,
+    },
+  ],
 };

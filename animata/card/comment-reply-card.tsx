@@ -189,7 +189,7 @@ export default function CommentReplyCard({ initialComments }: { initialComments:
               />
               <button
                 onClick={handleAddComment}
-                className="ml-2 rounded-3xl bg-yellow-400 px-4 py-1 font-semibold text-black transition hover:bg-yellow-500"
+                className="ml-2 rounded-3xl bg-yellow-400 px-4 py-1 font-semibold text-black transition-colors hover:bg-yellow-500"
               >
                 Send
               </button>
