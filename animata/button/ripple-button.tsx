@@ -81,7 +81,7 @@ export default function RippleButton({ children, ...props }: RippleButtonProps) 
   return (
     <button
       ref={buttonRef}
-      className="font-jost duration-[600ms] relative flex items-center justify-center overflow-hidden rounded-full bg-[#cbfe7e] p-[1.3rem] text-[1.2rem] font-medium text-[#0e352e] transition hover:text-white"
+      className="font-jost duration-[300ms] relative flex items-center justify-center overflow-hidden rounded-full bg-[#cbfe7e] p-[1.3rem] text-[1.2rem] font-medium text-[#0e352e] transition hover:text-white"
       onMouseEnter={(e) => {
         if (e.target === e.currentTarget) {
           createRipple(e);
@@ -108,10 +108,10 @@ export default function RippleButton({ children, ...props }: RippleButtonProps) 
           transition: transform 50ms linear;
         }
         .ripple-enter {
-          animation: ripple-enter 600ms ease-out forwards;
+          animation: ripple-enter 250ms ease-out forwards;
         }
         .ripple-leave {
-          animation: ripple-leave 600ms ease-out forwards;
+          animation: ripple-leave 250ms ease-out forwards;
         }
         @keyframes ripple-enter {
           from { transform: scale(0); opacity: 1; }
