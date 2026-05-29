@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 
@@ -26,13 +26,21 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   if (!found) return { title: "Demo - animata" };
 
   const title = `${found.group.label} · ${found.item.label} — animata`;
-  const themeColor = demoThemeColor(found.item, found.group);
   return {
     title,
     description: found.group.phrase,
-    themeColor,
     robots: { index: false, follow: false },
     openGraph: { title, description: found.group.phrase },
+  };
+}
+
+export async function generateViewport({ params }: PageProps): Promise<Viewport> {
+  const { group: groupSlug, item: itemSlug } = await params;
+  const found = findItem(groupSlug, itemSlug);
+  if (!found) return {};
+
+  return {
+    themeColor: demoThemeColor(found.item, found.group),
   };
 }
 

@@ -95,8 +95,8 @@ export default function RootLayout({ children }: RootLayoutProps) {
       className={`${ibmPlex.variable} ${youngSerif.variable}`}
     >
       <head />
-      <NuqsAdapter>
-        <body className={cn("min-h-screen bg-background antialiased", ibmPlex.className)}>
+      <body className={cn("min-h-screen bg-background antialiased", ibmPlex.className)}>
+        <NuqsAdapter>
           <ThemeProvider
             attribute="class"
             defaultTheme="system"
@@ -105,8 +105,8 @@ export default function RootLayout({ children }: RootLayoutProps) {
           >
             {children}
           </ThemeProvider>
-        </body>
-      </NuqsAdapter>
+        </NuqsAdapter>
+      </body>
     </html>
   );
 }
