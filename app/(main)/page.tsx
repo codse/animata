@@ -19,7 +19,6 @@ const CallToActionSection = React.lazy(() => import("./_landing/call-to-action")
 
 const componentsHref =
   docsConfig.mainNav.find((item) => item.title === "Components")?.href ?? "/docs";
-const demosHref = docsConfig.mainNav.find((item) => item.title === "Demos")?.href ?? "/demo";
 
 function LazySection({
   component: Component,
@@ -62,12 +61,6 @@ function Hero() {
             className="inline-flex w-full items-center justify-center rounded-full bg-[hsl(var(--accent))] px-8 py-3.5 text-[15px] font-semibold text-white transition-opacity hover:opacity-90 sm:w-auto"
           >
             Explore components
-          </Link>
-          <Link
-            href={demosHref}
-            className="inline-flex w-full items-center justify-center rounded-full border border-border px-8 py-3.5 text-[15px] font-semibold text-foreground transition-colors hover:bg-foreground/[0.04] sm:w-auto"
-          >
-            View live demos
           </Link>
           <Link
             href={siteConfig.links.github}

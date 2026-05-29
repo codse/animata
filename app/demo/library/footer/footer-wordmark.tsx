@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 
 import BoidsEcosystem from "@/animata/background/boids-ecosystem";
+import SiblingFocusNav from "@/animata/container/sibling-focus-nav";
 import { siteConfig } from "@/config/site";
 import { cn } from "@/lib/utils";
 
@@ -39,15 +40,6 @@ const BOID_PALETTE = [
   "oklch(0.68 0.08 262)",
   "oklch(0.58 0.1 260)",
 ];
-
-const footerLinkNavClassName = cn(
-  "[&:hover>a]:opacity-30 [&:focus-within>a]:opacity-30",
-  "[&>a:hover]:opacity-100 [&>a:focus-visible]:opacity-100",
-);
-
-const footerLinkClassName = cn(
-  "inline-flex min-h-11 touch-manipulation items-center outline-none transition-opacity duration-200 ease-out focus-visible:ring-2 focus-visible:ring-ring motion-reduce:transition-none",
-);
 
 const LINKS = [
   { href: "/docs", label: "Docs" },
@@ -147,12 +139,9 @@ export default function FooterWordmarkDemo() {
             <div className="relative z-10 flex h-full min-h-[inherit] flex-col px-6 pb-[calc(var(--demo-chrome-reserve,5rem)+0.5rem)] pt-8 sm:px-8 sm:pt-10 lg:px-10">
               <div className="@container/footer mx-auto flex w-full max-w-6xl flex-1 flex-col">
                 <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between lg:gap-6">
-                  <nav
+                  <SiblingFocusNav
                     aria-label="Footer"
-                    className={cn(
-                      footerLinkNavClassName,
-                      "grid grid-cols-1 gap-y-0.5 min-[26rem]:grid-cols-2 min-[26rem]:gap-x-4 lg:flex lg:flex-wrap lg:gap-x-6 lg:gap-y-2",
-                    )}
+                    className="grid grid-cols-1 gap-y-0.5 min-[26rem]:grid-cols-2 min-[26rem]:gap-x-4 lg:flex lg:flex-wrap lg:gap-x-6 lg:gap-y-2"
                   >
                     {LINKS.map((link) => (
                       <Link
@@ -161,7 +150,7 @@ export default function FooterWordmarkDemo() {
                         target={link.external ? "_blank" : undefined}
                         rel={link.external ? "noreferrer" : undefined}
                         className={cn(
-                          footerLinkClassName,
+                          SiblingFocusNav.linkClassName,
                           "gap-1.5 rounded-sm text-[13px] font-medium tracking-[0.015em] text-white/92 focus-visible:outline-white/70 focus-visible:ring-offset-0 lg:min-h-0 lg:text-[12px] lg:tracking-[0.02em]",
                         )}
                       >
@@ -173,7 +162,7 @@ export default function FooterWordmarkDemo() {
                         <span className="leading-none">{link.label}</span>
                       </Link>
                     ))}
-                  </nav>
+                  </SiblingFocusNav>
                   <p className="font-mono text-[11px] leading-relaxed tracking-[0.04em] text-white/78 lg:shrink-0 lg:text-right lg:text-[10px] lg:tracking-[0.06em] lg:text-white/72 lg:whitespace-nowrap">
                     © {new Date().getFullYear()} {siteConfig.name}, Inc. All rights reserved.
                   </p>

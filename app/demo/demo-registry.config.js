@@ -21,6 +21,13 @@ export const DEMO_REGISTRY = [
         description:
           "Canvas flock that parts around the cursor. Here it sits behind the gradient at about 22% opacity, dot agents, cool white/blue palette.",
       },
+      {
+        docSlug: "container/sibling-focus-nav",
+        category: "Container",
+        name: "Sibling Focus Nav",
+        description:
+          "Dims sibling links on nav hover or keyboard focus so the active item reads at full opacity — the Lucien-style arrow link row.",
+      },
     ],
   },
   {

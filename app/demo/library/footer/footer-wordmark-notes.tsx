@@ -52,7 +52,7 @@ export function FooterWordmarkNotes() {
 
       <DemoNotes.Section id="components" index={2} title="Components used">
         <DemoNotes.Prose>
-          <p>One Animata piece — boids behind the gradient. The rest is layout and CSS.</p>
+          <p>Two Animata pieces — boids and SiblingFocusNav. The rest is layout and CSS.</p>
         </DemoNotes.Prose>
         <DemoNotes.ComponentLinks demoKey={DEMO_KEY} />
         <DemoNotes.Prose>

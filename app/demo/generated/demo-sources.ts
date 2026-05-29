@@ -23,6 +23,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 
 import BoidsEcosystem from "@/animata/background/boids-ecosystem";
+import SiblingFocusNav from "@/animata/container/sibling-focus-nav";
 import { siteConfig } from "@/config/site";
 import { cn } from "@/lib/utils";
 
@@ -56,15 +57,6 @@ const BOID_PALETTE = [
   "oklch(0.68 0.08 262)",
   "oklch(0.58 0.1 260)",
 ];
-
-const footerLinkNavClassName = cn(
-  "[&:hover>a]:opacity-30 [&:focus-within>a]:opacity-30",
-  "[&>a:hover]:opacity-100 [&>a:focus-visible]:opacity-100",
-);
-
-const footerLinkClassName = cn(
-  "inline-flex min-h-11 touch-manipulation items-center outline-none transition-opacity duration-200 ease-out focus-visible:ring-2 focus-visible:ring-ring motion-reduce:transition-none",
-);
 
 const LINKS = [
   { href: "/docs", label: "Docs" },
@@ -164,12 +156,9 @@ export default function FooterWordmarkDemo() {
             <div className="relative z-10 flex h-full min-h-[inherit] flex-col px-6 pb-[calc(var(--demo-chrome-reserve,5rem)+0.5rem)] pt-8 sm:px-8 sm:pt-10 lg:px-10">
               <div className="@container/footer mx-auto flex w-full max-w-6xl flex-1 flex-col">
                 <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between lg:gap-6">
-                  <nav
+                  <SiblingFocusNav
                     aria-label="Footer"
-                    className={cn(
-                      footerLinkNavClassName,
-                      "grid grid-cols-1 gap-y-0.5 min-[26rem]:grid-cols-2 min-[26rem]:gap-x-4 lg:flex lg:flex-wrap lg:gap-x-6 lg:gap-y-2",
-                    )}
+                    className="grid grid-cols-1 gap-y-0.5 min-[26rem]:grid-cols-2 min-[26rem]:gap-x-4 lg:flex lg:flex-wrap lg:gap-x-6 lg:gap-y-2"
                   >
                     {LINKS.map((link) => (
                       <Link
@@ -178,7 +167,7 @@ export default function FooterWordmarkDemo() {
                         target={link.external ? "_blank" : undefined}
                         rel={link.external ? "noreferrer" : undefined}
                         className={cn(
-                          footerLinkClassName,
+                          SiblingFocusNav.linkClassName,
                           "gap-1.5 rounded-sm text-[13px] font-medium tracking-[0.015em] text-white/92 focus-visible:outline-white/70 focus-visible:ring-offset-0 lg:min-h-0 lg:text-[12px] lg:tracking-[0.02em]",
                         )}
                       >
@@ -190,7 +179,7 @@ export default function FooterWordmarkDemo() {
                         <span className="leading-none">{link.label}</span>
                       </Link>
                     ))}
-                  </nav>
+                  </SiblingFocusNav>
                   <p className="font-mono text-[11px] leading-relaxed tracking-[0.04em] text-white/78 lg:shrink-0 lg:text-right lg:text-[10px] lg:tracking-[0.06em] lg:text-white/72 lg:whitespace-nowrap">
                     © {new Date().getFullYear()} {siteConfig.name}, Inc. All rights reserved.
                   </p>
@@ -218,6 +207,7 @@ export default function FooterWordmarkDemo() {
 <span class="line"><span style="color:#D73A49">import</span><span style="color:#24292E"> { useEffect, useState } </span><span style="color:#D73A49">from</span><span style="color:#032F62"> "react"</span><span style="color:#24292E">;</span></span>
 <span class="line"></span>
 <span class="line"><span style="color:#D73A49">import</span><span style="color:#24292E"> BoidsEcosystem </span><span style="color:#D73A49">from</span><span style="color:#032F62"> "@/animata/background/boids-ecosystem"</span><span style="color:#24292E">;</span></span>
+<span class="line"><span style="color:#D73A49">import</span><span style="color:#24292E"> SiblingFocusNav </span><span style="color:#D73A49">from</span><span style="color:#032F62"> "@/animata/container/sibling-focus-nav"</span><span style="color:#24292E">;</span></span>
 <span class="line"><span style="color:#D73A49">import</span><span style="color:#24292E"> { siteConfig } </span><span style="color:#D73A49">from</span><span style="color:#032F62"> "@/config/site"</span><span style="color:#24292E">;</span></span>
 <span class="line"><span style="color:#D73A49">import</span><span style="color:#24292E"> { cn } </span><span style="color:#D73A49">from</span><span style="color:#032F62"> "@/lib/utils"</span><span style="color:#24292E">;</span></span>
 <span class="line"></span>
@@ -251,15 +241,6 @@ export default function FooterWordmarkDemo() {
 <span class="line"><span style="color:#032F62">  "oklch(0.68 0.08 262)"</span><span style="color:#24292E">,</span></span>
 <span class="line"><span style="color:#032F62">  "oklch(0.58 0.1 260)"</span><span style="color:#24292E">,</span></span>
 <span class="line"><span style="color:#24292E">];</span></span>
-<span class="line"></span>
-<span class="line"><span style="color:#D73A49">const</span><span style="color:#005CC5"> footerLinkNavClassName</span><span style="color:#D73A49"> =</span><span style="color:#6F42C1"> cn</span><span style="color:#24292E">(</span></span>
-<span class="line"><span style="color:#032F62">  "[&#x26;:hover>a]:opacity-30 [&#x26;:focus-within>a]:opacity-30"</span><span style="color:#24292E">,</span></span>
-<span class="line"><span style="color:#032F62">  "[&#x26;>a:hover]:opacity-100 [&#x26;>a:focus-visible]:opacity-100"</span><span style="color:#24292E">,</span></span>
-<span class="line"><span style="color:#24292E">);</span></span>
-<span class="line"></span>
-<span class="line"><span style="color:#D73A49">const</span><span style="color:#005CC5"> footerLinkClassName</span><span style="color:#D73A49"> =</span><span style="color:#6F42C1"> cn</span><span style="color:#24292E">(</span></span>
-<span class="line"><span style="color:#032F62">  "inline-flex min-h-11 touch-manipulation items-center outline-none transition-opacity duration-200 ease-out focus-visible:ring-2 focus-visible:ring-ring motion-reduce:transition-none"</span><span style="color:#24292E">,</span></span>
-<span class="line"><span style="color:#24292E">);</span></span>
 <span class="line"></span>
 <span class="line"><span style="color:#D73A49">const</span><span style="color:#005CC5"> LINKS</span><span style="color:#D73A49"> =</span><span style="color:#24292E"> [</span></span>
 <span class="line"><span style="color:#24292E">  { href: </span><span style="color:#032F62">"/docs"</span><span style="color:#24292E">, label: </span><span style="color:#032F62">"Docs"</span><span style="color:#24292E"> },</span></span>
@@ -359,12 +340,9 @@ export default function FooterWordmarkDemo() {
 <span class="line"><span style="color:#24292E">            &#x3C;</span><span style="color:#22863A">div</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"relative z-10 flex h-full min-h-[inherit] flex-col px-6 pb-[calc(var(--demo-chrome-reserve,5rem)+0.5rem)] pt-8 sm:px-8 sm:pt-10 lg:px-10"</span><span style="color:#24292E">></span></span>
 <span class="line"><span style="color:#24292E">              &#x3C;</span><span style="color:#22863A">div</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"@container/footer mx-auto flex w-full max-w-6xl flex-1 flex-col"</span><span style="color:#24292E">></span></span>
 <span class="line"><span style="color:#24292E">                &#x3C;</span><span style="color:#22863A">div</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between lg:gap-6"</span><span style="color:#24292E">></span></span>
-<span class="line"><span style="color:#24292E">                  &#x3C;</span><span style="color:#22863A">nav</span></span>
+<span class="line"><span style="color:#24292E">                  &#x3C;</span><span style="color:#005CC5">SiblingFocusNav</span></span>
 <span class="line"><span style="color:#6F42C1">                    aria-label</span><span style="color:#D73A49">=</span><span style="color:#032F62">"Footer"</span></span>
-<span class="line"><span style="color:#6F42C1">                    className</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#6F42C1">cn</span><span style="color:#24292E">(</span></span>
-<span class="line"><span style="color:#24292E">                      footerLinkNavClassName,</span></span>
-<span class="line"><span style="color:#032F62">                      "grid grid-cols-1 gap-y-0.5 min-[26rem]:grid-cols-2 min-[26rem]:gap-x-4 lg:flex lg:flex-wrap lg:gap-x-6 lg:gap-y-2"</span><span style="color:#24292E">,</span></span>
-<span class="line"><span style="color:#24292E">                    )}</span></span>
+<span class="line"><span style="color:#6F42C1">                    className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"grid grid-cols-1 gap-y-0.5 min-[26rem]:grid-cols-2 min-[26rem]:gap-x-4 lg:flex lg:flex-wrap lg:gap-x-6 lg:gap-y-2"</span></span>
 <span class="line"><span style="color:#24292E">                  ></span></span>
 <span class="line"><span style="color:#24292E">                    {</span><span style="color:#005CC5">LINKS</span><span style="color:#24292E">.</span><span style="color:#6F42C1">map</span><span style="color:#24292E">((</span><span style="color:#E36209">link</span><span style="color:#24292E">) </span><span style="color:#D73A49">=></span><span style="color:#24292E"> (</span></span>
 <span class="line"><span style="color:#24292E">                      &#x3C;</span><span style="color:#005CC5">Link</span></span>
@@ -373,7 +351,7 @@ export default function FooterWordmarkDemo() {
 <span class="line"><span style="color:#6F42C1">                        target</span><span style="color:#D73A49">=</span><span style="color:#24292E">{link.external </span><span style="color:#D73A49">?</span><span style="color:#032F62"> "_blank"</span><span style="color:#D73A49"> :</span><span style="color:#005CC5"> undefined</span><span style="color:#24292E">}</span></span>
 <span class="line"><span style="color:#6F42C1">                        rel</span><span style="color:#D73A49">=</span><span style="color:#24292E">{link.external </span><span style="color:#D73A49">?</span><span style="color:#032F62"> "noreferrer"</span><span style="color:#D73A49"> :</span><span style="color:#005CC5"> undefined</span><span style="color:#24292E">}</span></span>
 <span class="line"><span style="color:#6F42C1">                        className</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#6F42C1">cn</span><span style="color:#24292E">(</span></span>
-<span class="line"><span style="color:#24292E">                          footerLinkClassName,</span></span>
+<span class="line"><span style="color:#24292E">                          SiblingFocusNav.linkClassName,</span></span>
 <span class="line"><span style="color:#032F62">                          "gap-1.5 rounded-sm text-[13px] font-medium tracking-[0.015em] text-white/92 focus-visible:outline-white/70 focus-visible:ring-offset-0 lg:min-h-0 lg:text-[12px] lg:tracking-[0.02em]"</span><span style="color:#24292E">,</span></span>
 <span class="line"><span style="color:#24292E">                        )}</span></span>
 <span class="line"><span style="color:#24292E">                      ></span></span>
@@ -385,7 +363,7 @@ export default function FooterWordmarkDemo() {
 <span class="line"><span style="color:#24292E">                        &#x3C;</span><span style="color:#22863A">span</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"leading-none"</span><span style="color:#24292E">>{link.label}&#x3C;/</span><span style="color:#22863A">span</span><span style="color:#24292E">></span></span>
 <span class="line"><span style="color:#24292E">                      &#x3C;/</span><span style="color:#005CC5">Link</span><span style="color:#24292E">></span></span>
 <span class="line"><span style="color:#24292E">                    ))}</span></span>
-<span class="line"><span style="color:#24292E">                  &#x3C;/</span><span style="color:#22863A">nav</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">                  &#x3C;/</span><span style="color:#005CC5">SiblingFocusNav</span><span style="color:#24292E">></span></span>
 <span class="line"><span style="color:#24292E">                  &#x3C;</span><span style="color:#22863A">p</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"font-mono text-[11px] leading-relaxed tracking-[0.04em] text-white/78 lg:shrink-0 lg:text-right lg:text-[10px] lg:tracking-[0.06em] lg:text-white/72 lg:whitespace-nowrap"</span><span style="color:#24292E">></span></span>
 <span class="line"><span style="color:#24292E">                    © {</span><span style="color:#D73A49">new</span><span style="color:#6F42C1"> Date</span><span style="color:#24292E">().</span><span style="color:#6F42C1">getFullYear</span><span style="color:#24292E">()} {siteConfig.name}, Inc. All rights reserved.</span></span>
 <span class="line"><span style="color:#24292E">                  &#x3C;/</span><span style="color:#22863A">p</span><span style="color:#24292E">></span></span>
@@ -413,6 +391,7 @@ export default function FooterWordmarkDemo() {
 <span class="line"><span style="color:#F97583">import</span><span style="color:#E1E4E8"> { useEffect, useState } </span><span style="color:#F97583">from</span><span style="color:#9ECBFF"> "react"</span><span style="color:#E1E4E8">;</span></span>
 <span class="line"></span>
 <span class="line"><span style="color:#F97583">import</span><span style="color:#E1E4E8"> BoidsEcosystem </span><span style="color:#F97583">from</span><span style="color:#9ECBFF"> "@/animata/background/boids-ecosystem"</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#F97583">import</span><span style="color:#E1E4E8"> SiblingFocusNav </span><span style="color:#F97583">from</span><span style="color:#9ECBFF"> "@/animata/container/sibling-focus-nav"</span><span style="color:#E1E4E8">;</span></span>
 <span class="line"><span style="color:#F97583">import</span><span style="color:#E1E4E8"> { siteConfig } </span><span style="color:#F97583">from</span><span style="color:#9ECBFF"> "@/config/site"</span><span style="color:#E1E4E8">;</span></span>
 <span class="line"><span style="color:#F97583">import</span><span style="color:#E1E4E8"> { cn } </span><span style="color:#F97583">from</span><span style="color:#9ECBFF"> "@/lib/utils"</span><span style="color:#E1E4E8">;</span></span>
 <span class="line"></span>
@@ -446,15 +425,6 @@ export default function FooterWordmarkDemo() {
 <span class="line"><span style="color:#9ECBFF">  "oklch(0.68 0.08 262)"</span><span style="color:#E1E4E8">,</span></span>
 <span class="line"><span style="color:#9ECBFF">  "oklch(0.58 0.1 260)"</span><span style="color:#E1E4E8">,</span></span>
 <span class="line"><span style="color:#E1E4E8">];</span></span>
-<span class="line"></span>
-<span class="line"><span style="color:#F97583">const</span><span style="color:#79B8FF"> footerLinkNavClassName</span><span style="color:#F97583"> =</span><span style="color:#B392F0"> cn</span><span style="color:#E1E4E8">(</span></span>
-<span class="line"><span style="color:#9ECBFF">  "[&#x26;:hover>a]:opacity-30 [&#x26;:focus-within>a]:opacity-30"</span><span style="color:#E1E4E8">,</span></span>
-<span class="line"><span style="color:#9ECBFF">  "[&#x26;>a:hover]:opacity-100 [&#x26;>a:focus-visible]:opacity-100"</span><span style="color:#E1E4E8">,</span></span>
-<span class="line"><span style="color:#E1E4E8">);</span></span>
-<span class="line"></span>
-<span class="line"><span style="color:#F97583">const</span><span style="color:#79B8FF"> footerLinkClassName</span><span style="color:#F97583"> =</span><span style="color:#B392F0"> cn</span><span style="color:#E1E4E8">(</span></span>
-<span class="line"><span style="color:#9ECBFF">  "inline-flex min-h-11 touch-manipulation items-center outline-none transition-opacity duration-200 ease-out focus-visible:ring-2 focus-visible:ring-ring motion-reduce:transition-none"</span><span style="color:#E1E4E8">,</span></span>
-<span class="line"><span style="color:#E1E4E8">);</span></span>
 <span class="line"></span>
 <span class="line"><span style="color:#F97583">const</span><span style="color:#79B8FF"> LINKS</span><span style="color:#F97583"> =</span><span style="color:#E1E4E8"> [</span></span>
 <span class="line"><span style="color:#E1E4E8">  { href: </span><span style="color:#9ECBFF">"/docs"</span><span style="color:#E1E4E8">, label: </span><span style="color:#9ECBFF">"Docs"</span><span style="color:#E1E4E8"> },</span></span>
@@ -554,12 +524,9 @@ export default function FooterWordmarkDemo() {
 <span class="line"><span style="color:#E1E4E8">            &#x3C;</span><span style="color:#85E89D">div</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"relative z-10 flex h-full min-h-[inherit] flex-col px-6 pb-[calc(var(--demo-chrome-reserve,5rem)+0.5rem)] pt-8 sm:px-8 sm:pt-10 lg:px-10"</span><span style="color:#E1E4E8">></span></span>
 <span class="line"><span style="color:#E1E4E8">              &#x3C;</span><span style="color:#85E89D">div</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"@container/footer mx-auto flex w-full max-w-6xl flex-1 flex-col"</span><span style="color:#E1E4E8">></span></span>
 <span class="line"><span style="color:#E1E4E8">                &#x3C;</span><span style="color:#85E89D">div</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between lg:gap-6"</span><span style="color:#E1E4E8">></span></span>
-<span class="line"><span style="color:#E1E4E8">                  &#x3C;</span><span style="color:#85E89D">nav</span></span>
+<span class="line"><span style="color:#E1E4E8">                  &#x3C;</span><span style="color:#79B8FF">SiblingFocusNav</span></span>
 <span class="line"><span style="color:#B392F0">                    aria-label</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"Footer"</span></span>
-<span class="line"><span style="color:#B392F0">                    className</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#B392F0">cn</span><span style="color:#E1E4E8">(</span></span>
-<span class="line"><span style="color:#E1E4E8">                      footerLinkNavClassName,</span></span>
-<span class="line"><span style="color:#9ECBFF">                      "grid grid-cols-1 gap-y-0.5 min-[26rem]:grid-cols-2 min-[26rem]:gap-x-4 lg:flex lg:flex-wrap lg:gap-x-6 lg:gap-y-2"</span><span style="color:#E1E4E8">,</span></span>
-<span class="line"><span style="color:#E1E4E8">                    )}</span></span>
+<span class="line"><span style="color:#B392F0">                    className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"grid grid-cols-1 gap-y-0.5 min-[26rem]:grid-cols-2 min-[26rem]:gap-x-4 lg:flex lg:flex-wrap lg:gap-x-6 lg:gap-y-2"</span></span>
 <span class="line"><span style="color:#E1E4E8">                  ></span></span>
 <span class="line"><span style="color:#E1E4E8">                    {</span><span style="color:#79B8FF">LINKS</span><span style="color:#E1E4E8">.</span><span style="color:#B392F0">map</span><span style="color:#E1E4E8">((</span><span style="color:#FFAB70">link</span><span style="color:#E1E4E8">) </span><span style="color:#F97583">=></span><span style="color:#E1E4E8"> (</span></span>
 <span class="line"><span style="color:#E1E4E8">                      &#x3C;</span><span style="color:#79B8FF">Link</span></span>
@@ -568,7 +535,7 @@ export default function FooterWordmarkDemo() {
 <span class="line"><span style="color:#B392F0">                        target</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{link.external </span><span style="color:#F97583">?</span><span style="color:#9ECBFF"> "_blank"</span><span style="color:#F97583"> :</span><span style="color:#79B8FF"> undefined</span><span style="color:#E1E4E8">}</span></span>
 <span class="line"><span style="color:#B392F0">                        rel</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{link.external </span><span style="color:#F97583">?</span><span style="color:#9ECBFF"> "noreferrer"</span><span style="color:#F97583"> :</span><span style="color:#79B8FF"> undefined</span><span style="color:#E1E4E8">}</span></span>
 <span class="line"><span style="color:#B392F0">                        className</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#B392F0">cn</span><span style="color:#E1E4E8">(</span></span>
-<span class="line"><span style="color:#E1E4E8">                          footerLinkClassName,</span></span>
+<span class="line"><span style="color:#E1E4E8">                          SiblingFocusNav.linkClassName,</span></span>
 <span class="line"><span style="color:#9ECBFF">                          "gap-1.5 rounded-sm text-[13px] font-medium tracking-[0.015em] text-white/92 focus-visible:outline-white/70 focus-visible:ring-offset-0 lg:min-h-0 lg:text-[12px] lg:tracking-[0.02em]"</span><span style="color:#E1E4E8">,</span></span>
 <span class="line"><span style="color:#E1E4E8">                        )}</span></span>
 <span class="line"><span style="color:#E1E4E8">                      ></span></span>
@@ -580,7 +547,7 @@ export default function FooterWordmarkDemo() {
 <span class="line"><span style="color:#E1E4E8">                        &#x3C;</span><span style="color:#85E89D">span</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"leading-none"</span><span style="color:#E1E4E8">>{link.label}&#x3C;/</span><span style="color:#85E89D">span</span><span style="color:#E1E4E8">></span></span>
 <span class="line"><span style="color:#E1E4E8">                      &#x3C;/</span><span style="color:#79B8FF">Link</span><span style="color:#E1E4E8">></span></span>
 <span class="line"><span style="color:#E1E4E8">                    ))}</span></span>
-<span class="line"><span style="color:#E1E4E8">                  &#x3C;/</span><span style="color:#85E89D">nav</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">                  &#x3C;/</span><span style="color:#79B8FF">SiblingFocusNav</span><span style="color:#E1E4E8">></span></span>
 <span class="line"><span style="color:#E1E4E8">                  &#x3C;</span><span style="color:#85E89D">p</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"font-mono text-[11px] leading-relaxed tracking-[0.04em] text-white/78 lg:shrink-0 lg:text-right lg:text-[10px] lg:tracking-[0.06em] lg:text-white/72 lg:whitespace-nowrap"</span><span style="color:#E1E4E8">></span></span>
 <span class="line"><span style="color:#E1E4E8">                    © {</span><span style="color:#F97583">new</span><span style="color:#B392F0"> Date</span><span style="color:#E1E4E8">().</span><span style="color:#B392F0">getFullYear</span><span style="color:#E1E4E8">()} {siteConfig.name}, Inc. All rights reserved.</span></span>
 <span class="line"><span style="color:#E1E4E8">                  &#x3C;/</span><span style="color:#85E89D">p</span><span style="color:#E1E4E8">></span></span>

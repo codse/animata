@@ -1,17 +1,19 @@
 ---
 title: May 2026
-description: Boids Ecosystem and live demos at /demo with recipe notes and registry links.
+description: Tailwind CSS 4.3, Boids Ecosystem, Sibling Focus Nav, and live demos at /demo.
 date: 2026-05-21
 ---
 
-May skewed toward motion backgrounds and a new place to show components in context, not just copy them out of the docs.
+Upgraded the docs and site toolchain dependencies. Tailwind CSS moved to 4.3 (with matching `@tailwindcss/postcss`), and `tailwind-merge` to 3.6. All seventeen installed shadcn/ui primitives were re-synced from the official registry using URLs like `https://animata.design/r/{category}/{name}.json`, keeping `@radix-ui/react-*` imports per the new-york style (not the experimental unified `radix-ui` migration). Command palette and dialog were refreshed together so `cmdk` and `@radix-ui/react-dialog` types stayed aligned. The `shadcn:add` script now calls `shadcn@latest` instead of the deprecated `shadcn-ui` CLI. Fixed the command palette dialog scaling from the top-left corner by dropping legacy `slide-in-from-*` transforms on `DialogContent` that conflicted with centered `translate` under Tailwind v4 and `tw-animate-css`. Restored `CardTitle` and `CardDescription` as `<h3>` and `<p>` after the registry sync had replaced them with generic `<div>`s.
 
 Added **[Boids Ecosystem](/docs/background/boids-ecosystem)**, a canvas flock built on Craig Reynolds' separation, alignment, and cohesion rules. Agents steer as a school, part around the cursor, and drift toward optional attractor wells you can place or tweak at runtime. Attractor coords are normalized `0..1`, so callers never need the canvas pixel size. An `agentsRef` callback exposes the live agent array for reads from the parent without a React re-render every frame. Shape toggles between triangle (reads as flock) and dot (reads as ambient activity). Palette, background, count, and cursor radius are props; `prefers-reduced-motion` falls back to a static field.
 
-Shipped **live demo mode** at `/demo`. Full-page compositions that sit next to the install-and-copy docs lane, not inside it. `/demo` opens the first registered demo; `/demo/{group}/{item}` drops site chrome so the layout owns the viewport. Bottom chrome fades in on pointer activity with prev/next, a searchable picker, refresh, fullscreen, and home. Shortcuts: `H`, `.`, `R`, `F`, arrow keys. First visit shows a one-time onboarding modal in `localStorage` with the shortcuts and a link to [contributing live demos](/docs/contributing/demos).
+Added **[Sibling Focus Nav](/docs/container/sibling-focus-nav)**, a `<nav>` wrapper that dims or blurs sibling links on group hover or `:focus-within`, then brings the active link back on hover or `:focus-visible`. Two modes: `opacity` (default) and `blur`. Pure CSS on the nav, no state. Use `SiblingFocusNav.Link`, or `getLinkClassName()` with Next.js `Link`.
+
+Shipped **live demo mode** at `/demo`. Full-page compositions that sit next to the install-and-copy docs lane, not inside it. `/demo/{group}/{item}` drops site chrome so the layout owns the viewport. Bottom chrome fades in on pointer activity with prev/next, a searchable picker, refresh, fullscreen, and home. Shortcuts: `H`, `.`, `R`, `F`, arrow keys. First visit shows a one-time onboarding modal in `localStorage` with the shortcuts and a link to [contributing live demos](/docs/contributing/demos).
 
 Scroll past a demo and you get **recipe notes**: prose, component links, and an optional Shiki **source panel** from `demo-sources.config.js`, with GitHub blob links on each file tab. `demo-registry.config.js` is the map for demo ↔ component links. Recipe notes pull docs through `<DemoNotes.ComponentLinks>`; component pages pick up **Used in demos** badges. Production `yarn build` validates the registry.
 
-First demos: **[Superhuman · platform hero](/demo/hero/launch-shift)** and **[Footer wordmark](/demo/footer/footer-wordmark)** — both run Boids Ecosystem with different palettes and density. Recipe notes cover layout, type, and how the flock is wired.
+First demos: **[Superhuman · platform hero](/demo/hero/launch-shift)** and **[Footer wordmark](/demo/footer/footer-wordmark)** — both run Boids Ecosystem with different palettes and density. The footer demo also uses Sibling Focus Nav for the Lucien-style link row.
 
 Docs prose now uses **Instrument Sans** in the docs shell and **premium silver inline code chips** for backtick tokens — gradient fill, matched HSL type, and spacing that does not leak into fenced Shiki blocks.

@@ -1,0 +1,78 @@
+---
+title: Sibling Focus Nav
+description: A nav row that dims or blurs sibling links on hover or keyboard focus, spotlighting the active item.
+author: hari
+labels: ["new", "hover"]
+---
+
+<ComponentPreview name="container-sibling-focus-nav--primary" />
+
+## Installation
+
+### CLI
+
+<RegistryInstall category="container" name="sibling-focus-nav" />
+
+### Manual
+
+<Steps>
+
+<Step>Run the following command</Step>
+
+```bash
+mkdir -p components/animata/container && touch components/animata/container/sibling-focus-nav.tsx
+```
+
+<Step>Paste the code</Step>
+
+Open the newly created file and paste the following code:
+
+```jsx file=<rootDir>/animata/container/sibling-focus-nav.tsx
+
+```
+
+</Steps>
+
+## Usage
+
+The primitive owns the group spotlight mechanic. You own the links — plain `<a>` tags or framework routers, as long as they render as direct `<a>` children.
+
+Pass `mode="opacity"` (default) or `mode="blur"` on the nav. Links pick up the matching transition classes automatically when you use `SiblingFocusNav.Link`.
+
+```tsx
+import SiblingFocusNav from "@/animata/container/sibling-focus-nav";
+
+<SiblingFocusNav mode="blur" aria-label="Footer" className="gap-x-6">
+  <SiblingFocusNav.Link href="/docs">Docs</SiblingFocusNav.Link>
+  <SiblingFocusNav.Link href="/changelog">Changelog</SiblingFocusNav.Link>
+</SiblingFocusNav>
+```
+
+With Next.js `Link`, merge the mode-aware class helper onto each child anchor:
+
+```tsx
+import Link from "next/link";
+import SiblingFocusNav from "@/animata/container/sibling-focus-nav";
+
+<SiblingFocusNav mode="opacity" aria-label="Footer">
+  <Link href="/docs" className={SiblingFocusNav.getLinkClassName("opacity")}>
+    Docs
+  </Link>
+</SiblingFocusNav>
+```
+
+## How it works
+
+Pure CSS on the `<nav>` — no JavaScript state. Both modes animate with `duration-200 ease-out`; `prefers-reduced-motion` disables the transition and, in blur mode, skips the filter effect.
+
+**Opacity** — on hover, `[&:hover>a]:opacity-30` dims every direct link; the item under the cursor resets with `[&>a:hover]:opacity-100`. Links use `transition-opacity`.
+
+**Blur** — same sibling spotlight with `[&:hover>a]:blur-sm` / `[&>a:hover]:blur-none`. Links use `blur-0` and `transition-[filter]`.
+
+For keyboard users in either mode, `[&:focus-within>a]` applies the sibling effect when any link has focus, and `[&>a:focus-visible]` keeps the focused link at full strength. Tab through the row and the spotlight follows focus the same way hover follows the pointer.
+
+`SiblingFocusNav.Link` adds `min-h-11`, `touch-manipulation`, and a `focus-visible` ring. Override with your own classes on each link.
+
+## Credits
+
+Built by [hari](https://github.com/hari)
