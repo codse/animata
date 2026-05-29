@@ -147,8 +147,8 @@ export default function FooterWordmarkDemo() {
                       <Link
                         key={link.label}
                         href={link.href}
-                        target={link.external ? "_blank" : undefined}
-                        rel={link.external ? "noreferrer" : undefined}
+                        target={"external" in link && link.external ? "_blank" : undefined}
+                        rel={"external" in link && link.external ? "noreferrer" : undefined}
                         className={cn(
                           SiblingFocusNav.linkClassName,
                           "gap-1.5 rounded-sm text-[13px] font-medium tracking-[0.015em] text-white/92 focus-visible:outline-white/70 focus-visible:ring-offset-0 lg:min-h-0 lg:text-[12px] lg:tracking-[0.02em]",
