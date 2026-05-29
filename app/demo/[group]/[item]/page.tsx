@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { Suspense } from "react";
 
 import { DemoExperience } from "@/app/demo/demo-experience";
 import { DEMO_GROUPS, demoThemeColor, findItem } from "@/app/demo/demos";
@@ -17,7 +18,6 @@ export function generateStaticParams() {
 
 interface PageProps {
   params: Promise<{ group: string; item: string }>;
-  searchParams: Promise<{ fullscreen?: string }>;
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
@@ -36,19 +36,14 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   };
 }
 
-export default async function DemoItemPage({ params, searchParams }: PageProps) {
+export default async function DemoItemPage({ params }: PageProps) {
   const { group: groupSlug, item: itemSlug } = await params;
-  const { fullscreen } = await searchParams;
   const found = findItem(groupSlug, itemSlug);
   if (!found) notFound();
 
-  const isFullscreen = fullscreen === "1" || fullscreen === "true";
-
   return (
-    <DemoExperience
-      groupSlug={found.group.slug}
-      itemSlug={found.item.slug}
-      isFullscreen={isFullscreen}
-    />
+    <Suspense fallback={null}>
+      <DemoExperience groupSlug={found.group.slug} itemSlug={found.item.slug} />
+    </Suspense>
   );
 }

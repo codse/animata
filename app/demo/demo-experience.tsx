@@ -12,7 +12,7 @@ import {
   XIcon,
 } from "lucide-react";
 import { animate, motion } from "motion/react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import type { CSSProperties } from "react";
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
@@ -42,7 +42,6 @@ import {
 interface DemoExperienceProps {
   groupSlug: string;
   itemSlug: string;
-  isFullscreen?: boolean;
 }
 
 const CHROME_IDLE_MS = 2200;
@@ -152,8 +151,11 @@ function useIdleChrome(options: { enabled: boolean; suspended: boolean }) {
   return { visible: alwaysVisible || visible, wake };
 }
 
-export function DemoExperience({ groupSlug, itemSlug, isFullscreen = false }: DemoExperienceProps) {
+export function DemoExperience({ groupSlug, itemSlug }: DemoExperienceProps) {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const isFullscreen =
+    searchParams.get("fullscreen") === "1" || searchParams.get("fullscreen") === "true";
   const [refreshKey, setRefreshKey] = useState(0);
   const [isPickerOpen, setIsPickerOpen] = useState(false);
 
