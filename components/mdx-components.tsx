@@ -38,6 +38,11 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import type { Event } from "@/lib/events";
+import {
+  inlineCodeClassName,
+  inlineCodePreResetClasses,
+  isInlineCodeElement,
+} from "@/lib/inline-code";
 import { cn } from "@/lib/utils";
 import { baseComponents } from "./mdx-base-components";
 
@@ -163,7 +168,9 @@ const components = {
       <>
         <pre
           className={cn(
-            "mb-4 mt-6 max-h-[650px] overflow-x-auto rounded-lg bg-zinc-800 py-4 [&_code]:bg-transparent",
+            "mb-4 mt-6 max-h-[650px] overflow-x-auto rounded-lg bg-zinc-800 py-4",
+            inlineCodePreResetClasses,
+            "[&_code]:font-mono [&_code]:text-sm",
             className,
           )}
           {...props}
@@ -199,15 +206,13 @@ const components = {
       </>
     );
   },
-  code: ({ className, ...props }: HTMLAttributes<HTMLElement>) => (
-    <code
-      className={cn(
-        "relative rounded bg-zinc-800 px-2 py-[0.2rem] font-mono text-sm text-white",
-        className,
-      )}
-      {...props}
-    />
-  ),
+  code: ({ className, ...props }: HTMLAttributes<HTMLElement>) => {
+    if (!isInlineCodeElement({ className, ...props })) {
+      return <code className={className} {...props} />;
+    }
+
+    return <code className={cn(inlineCodeClassName, className)} {...props} />;
+  },
   Image: ({ alt, ...props }: ComponentProps<"img">) => <img alt={alt} {...props} />,
   Modal,
   Callout,
@@ -299,18 +304,25 @@ interface MdxProps {
 
 function stripImports(code: string) {
   const animataRegex = /^import\s+(\w+)\s+from\s+["']@\/animata\/([^"']+)["'];?\s*$/gm;
+  const componentsRegex =
+    /^import\s+\{?\s*\w+(?:\s*,\s*\w+)*\s*\}?\s+from\s+["']@\/components\/[^"']+["'];?\s*$/gm;
   const imports: Array<{ name: string; subpath: string }> = [];
-  let strippedCode = code.replace(animataRegex, (_, name, subpath) => {
-    imports.push({ name, subpath });
-    return "";
-  });
-  // Also strip imports from @/components/ — these components are registered
-  // directly in the `components` map above (e.g. InView), so the import line
-  // in the MDX source would otherwise leave MDXRemote unable to resolve them.
-  strippedCode = strippedCode.replace(
-    /^import\s+\{?\s*\w+(?:\s*,\s*\w+)*\s*\}?\s+from\s+["']@\/components\/[^"']+["'];?\s*$/gm,
-    "",
-  );
+
+  const stripFromSegment = (segment: string) => {
+    let stripped = segment.replace(animataRegex, (_, name, subpath) => {
+      imports.push({ name, subpath });
+      return "";
+    });
+    stripped = stripped.replace(componentsRegex, "");
+    return stripped;
+  };
+
+  // Only strip top-level MDX imports — not lines inside fenced code blocks.
+  const strippedCode = code
+    .split(/(```[\s\S]*?```)/g)
+    .map((part) => (part.startsWith("```") ? part : stripFromSegment(part)))
+    .join("");
+
   return { strippedCode, imports };
 }
 

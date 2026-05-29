@@ -2255,6 +2255,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@fontsource-variable/instrument-sans@npm:^5.2.8":
+  version: 5.2.8
+  resolution: "@fontsource-variable/instrument-sans@npm:5.2.8"
+  checksum: 10c0/6d9411b3390c6b7b4634eb8f41b159e869353bd6f0118ec7cc16aaa5d102ef136806392b564ba9aeefdb599c4b63ff6ef14fe1ddab2ab91f43c774923c695bba
+  languageName: node
+  linkType: hard
+
 "@fontsource-variable/lilex@npm:^5.2.1":
   version: 5.2.1
   resolution: "@fontsource-variable/lilex@npm:5.2.1"
@@ -4028,6 +4035,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@standard-schema/spec@npm:1.0.0":
+  version: 1.0.0
+  resolution: "@standard-schema/spec@npm:1.0.0"
+  checksum: 10c0/a1ab9a8bdc09b5b47aa8365d0e0ec40cc2df6437be02853696a0e377321653b0d3ac6f079a8c67d5ddbe9821025584b1fb71d9cc041a6666a96f1fadf2ece15f
+  languageName: node
+  linkType: hard
+
 "@storybook/addon-docs@npm:^10.2.15":
   version: 10.3.5
   resolution: "@storybook/addon-docs@npm:10.3.5"
@@ -5682,6 +5696,7 @@ __metadata:
     "@commitlint/cli": "npm:^19.3.0"
     "@commitlint/config-conventional": "npm:^19.2.2"
     "@emotion/is-prop-valid": "npm:^1.2.2"
+    "@fontsource-variable/instrument-sans": "npm:^5.2.8"
     "@fontsource-variable/lilex": "npm:^5.2.1"
     "@phosphor-icons/react": "npm:^2.1.10"
     "@radix-ui/react-accordion": "npm:^1.2.12"
@@ -5731,6 +5746,7 @@ __metadata:
     next: "npm:^16.1.5"
     next-mdx-remote: "npm:^6.0.0"
     next-themes: "npm:^0.4.6"
+    nuqs: "npm:^2.8.9"
     ora: "npm:^8.0.1"
     playwright: "npm:^1.59.1"
     posthog-js: "npm:^1.225.0"
@@ -10642,6 +10658,33 @@ __metadata:
   dependencies:
     boolbase: "npm:^1.0.0"
   checksum: 10c0/5fee7ff309727763689cfad844d979aedd2204a817fbaaf0e1603794a7c20db28548d7b024692f953557df6ce4a0ee4ae46cd8ebd9b36cfb300b9226b567c479
+  languageName: node
+  linkType: hard
+
+"nuqs@npm:^2.8.9":
+  version: 2.8.9
+  resolution: "nuqs@npm:2.8.9"
+  dependencies:
+    "@standard-schema/spec": "npm:1.0.0"
+  peerDependencies:
+    "@remix-run/react": ">=2"
+    "@tanstack/react-router": ^1
+    next: ">=14.2.0"
+    react: ">=18.2.0 || ^19.0.0-0"
+    react-router: ^5 || ^6 || ^7
+    react-router-dom: ^5 || ^6 || ^7
+  peerDependenciesMeta:
+    "@remix-run/react":
+      optional: true
+    "@tanstack/react-router":
+      optional: true
+    next:
+      optional: true
+    react-router:
+      optional: true
+    react-router-dom:
+      optional: true
+  checksum: 10c0/1de53ba6cca7af326b17cd6c92501c6cfcd0abbe7e399319b228b07644b24e57bf3bba63fbf1cabaa27f77e40bcf15d5a3792e7767c800161903ef2e09b3ad85
   languageName: node
   linkType: hard
 

@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 import { docs as allDocs } from "#site/content";
 import NavMenu from "@/app/(main)/docs/[[...slug]]/nav-menu";
 import CarbonAds from "@/components/ads";
+import { DocDemoLinks } from "@/components/doc-demo-links";
 import { Mdx } from "@/components/mdx-components";
 import { DocsPager } from "@/components/pager";
 import { DashboardTableOfContents } from "@/components/toc";
@@ -141,6 +142,7 @@ export default async function DocPage({ params }: DocPageProps) {
             )}
           </div>
         ) : null}
+        <DocDemoLinks docSlug={doc.slugAsParams} />
         <div className="relative w-fit overflow-y-hidden">
           <CarbonAds />
         </div>

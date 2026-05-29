@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
 interface AnnouncementRibbonProps extends React.HTMLAttributes<HTMLDivElement> {
   /**
    * Content to scroll in the ribbon. Accepts any React node.
-   * Defaults to the shadcn registry announcement.
+   * Defaults to the May 2026 changelog announcement.
    */
   message?: React.ReactNode;
 
@@ -26,7 +26,7 @@ interface AnnouncementRibbonProps extends React.HTMLAttributes<HTMLDivElement> {
 
   /**
    * URL for the CTA link.
-   * @default "/docs/changelog/2026-04"
+   * @default "/docs/changelog/2026-05"
    */
   ctaHref?: string;
 
@@ -47,7 +47,7 @@ function DefaultMessage() {
   return (
     <span>
       <span className="whitespace-nowrap px-12 font-(family-name:--font-display) font-light text-neutral-900">
-        shadcn registry is live
+        New components and live demos
       </span>
       <span className="text-neutral-900">&middot;</span>
     </span>
@@ -58,7 +58,7 @@ export default function AnnouncementRibbon({
   message,
   badge = "NEW",
   ctaText = "Learn more",
-  ctaHref = "/docs/changelog/2026-04",
+  ctaHref = "/docs/changelog/2026-05",
   repeat = 5,
   pauseOnHover = true,
   className,

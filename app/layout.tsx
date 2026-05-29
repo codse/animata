@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { IBM_Plex_Sans, Young_Serif } from "next/font/google";
+import { NuqsAdapter } from "nuqs/adapters/next/app";
 
 import { ThemeProvider } from "@/components/providers";
 import { siteConfig } from "@/config/site";
@@ -94,16 +95,18 @@ export default function RootLayout({ children }: RootLayoutProps) {
       className={`${ibmPlex.variable} ${youngSerif.variable}`}
     >
       <head />
-      <body className={cn("min-h-screen bg-background antialiased", ibmPlex.className)}>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          {children}
-        </ThemeProvider>
-      </body>
+      <NuqsAdapter>
+        <body className={cn("min-h-screen bg-background antialiased", ibmPlex.className)}>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            {children}
+          </ThemeProvider>
+        </body>
+      </NuqsAdapter>
     </html>
   );
 }

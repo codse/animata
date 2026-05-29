@@ -11,9 +11,22 @@ const nextConfig = {
   // Webpack config (velite plugin)
   webpack: (config) => {
     config.plugins.push(new VeliteWebpackPlugin());
+    config.plugins.push(new DemoSourcesWebpackPlugin());
     return config;
   },
 };
+
+class DemoSourcesWebpackPlugin {
+  static started = false;
+  apply(/** @type {import('webpack').Compiler} */ compiler) {
+    compiler.hooks.beforeCompile.tapPromise("DemoSourcesWebpackPlugin", async () => {
+      if (DemoSourcesWebpackPlugin.started) return;
+      DemoSourcesWebpackPlugin.started = true;
+      const { buildDemoSources } = await import("./scripts/build-demo-sources.js");
+      await buildDemoSources();
+    });
+  }
+}
 
 class VeliteWebpackPlugin {
   static started = false;

@@ -1,0 +1,112 @@
+---
+title: Live demos
+date: 2026-05-28
+description: How live demos work, how they link to component docs, and how to add one.
+---
+
+Animata has two ways to find things:
+
+| Lane | URL | Purpose |
+| --- | --- | --- |
+| Component docs | `/docs/background/boids-ecosystem` | Install, preview, API, copy-paste — the reference |
+| Live demos | `/demo/footer/footer-wordmark` | Full-page composition + recipe notes — the context |
+
+Demos are not a docs sidebar category. They live at `/demo`, link out to component docs, and component docs link back when a demo uses that primitive.
+
+## How a demo is structured
+
+```mdx
+app/demo/
+  demos.ts                    # routes, groups, lazy imports
+  demo-registry.config.js     # demo ↔ component links
+  demo-sources.config.js      # files for the Shiki source panel
+  demo-notes.tsx              # recipe UI primitives
+  demo-source-panel.tsx       # syntax-highlighted source viewer
+  library/
+    footer/footer-wordmark.tsx       # live composition
+    footer/footer-wordmark-notes.tsx # recipe content below the demo
+  page.tsx                    # /demo — redirects to first demo
+  [group]/[item]/page.tsx     # immersive demo shell
+```
+
+When someone opens a demo:
+
+1. `DemoExperience` renders the composition full-bleed with bottom chrome (picker, refresh, home).
+2. Scroll past the composition and you hit `DemoNotes` — prose, component links, optional source panel.
+3. `DemoSourcePanel` pulls highlighted code from `app/demo/generated/demo-sources.ts`, built from `demo-sources.config.js`.
+
+## Two-way linking (`demo-registry`)
+
+Every demo ↔ component relationship goes in `app/demo/demo-registry.config.js`.
+
+Each entry maps one live demo to the Animata primitives it uses:
+
+```js
+{
+  key: "footer/footer-wordmark",   // must match demos.ts route + DEMO_SOURCE_FILES key
+  groupSlug: "footer",
+  itemSlug: "footer-wordmark",
+  label: "Footer wordmark",        // short label on component doc pages
+  components: [
+    {
+      docSlug: "background/boids-ecosystem",  // content/docs/{docSlug}.mdx
+      category: "Background",
+      name: "Boids Ecosystem",
+      description: "How this demo uses the primitive — shown in recipe notes.",
+    },
+  ],
+}
+```
+
+Demo → docs: in recipe notes, pull links from the registry:
+
+```tsx
+<DemoNotes.ComponentLinks demoKey="footer/footer-wordmark" />
+```
+
+Docs → demo: component pages show "Used in demos" badges when their `docSlug` is in the registry (`components/doc-demo-links.tsx`).
+
+Update the registry once. Don't hand-write duplicate links in MDX for either direction.
+
+## Adding a new demo
+
+1. Composition — `app/demo/library/{group}/{name}.tsx`
+2. Register route — add group/item in `app/demo/demos.ts`
+3. Registry — add an entry in `demo-registry.config.js` for every Animata primitive used
+4. Recipe notes (recommended) — `{name}-notes.tsx` with `DemoNotes.*` + `ComponentLinks`
+5. Source panel (optional) — add key + file paths to `demo-sources.config.js`, then `node scripts/build-demo-sources.js`
+6. Validate — `node scripts/validate-demo-registry.js` (also runs in production `yarn build`)
+
+### Checklist before shipping
+
+- [ ] `key` is `{groupSlug}/{itemSlug}` and matches `demos.ts`
+- [ ] Every `docSlug` has a published `content/docs/{docSlug}.mdx` file
+- [ ] Recipe uses `<DemoNotes.ComponentLinks demoKey="…" />`, not hard-coded doc URLs
+- [ ] Demo shows up in the bottom chrome picker via `DEMO_GROUPS`
+- [ ] No new `/docs/demo/*` pages — recipes belong on the live demo, not a separate docs route
+
+## What demos are for
+
+Ship a live demo when a primitive only reads right in context: a footer wordmark with boids behind it, a hero with a specific palette and motion, a scroll sequence that needs real copy.
+
+Stick to component docs when someone just wants to install one primitive and wire it up themselves.
+
+## Gallery vs immersive routes
+
+- `/demo` — redirects to the first registered demo
+- `/demo/{group}/{item}` — immersive route; the demo owns the viewport and chrome
+- First visit opens a one-time onboarding modal (shortcuts + contributing link), stored in `localStorage`
+
+The main nav Demos link goes to `/demo`.
+
+## Keyboard shortcuts (demo chrome)
+
+| Key | Action |
+| --- | --- |
+| `H` | Home |
+| `.` | Browse demos |
+| `R` | Refresh composition |
+| `F` | Open fullscreen |
+| `←` `→` | Previous / next demo |
+
+On mobile, swipe the screen edges to cycle demos.

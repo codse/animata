@@ -1,0 +1,1036 @@
+"use client";
+
+import * as DialogPrimitive from "@radix-ui/react-dialog";
+import {
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  LayoutGridIcon,
+  type LucideIcon,
+  Maximize2Icon,
+  RefreshCwIcon,
+  SearchIcon,
+  XIcon,
+} from "lucide-react";
+import { animate, motion } from "motion/react";
+import { useRouter } from "next/navigation";
+import type { CSSProperties } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
+import { DemoOnboardingModal } from "@/app/demo/demo-onboarding-modal";
+import { Icons } from "@/components/icons";
+import {
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+  Command as CommandRoot,
+} from "@/components/ui/command";
+import { Dialog, DialogOverlay, DialogPortal } from "@/components/ui/dialog";
+import { cn } from "@/lib/utils";
+import {
+  DEMO_GROUPS,
+  DEMO_ITEMS,
+  type DemoGroup,
+  type DemoItem,
+  type DemoItemWithGroup,
+  demoThemeColor,
+  getItemIndex,
+  itemHref,
+} from "./demos";
+
+interface DemoExperienceProps {
+  groupSlug: string;
+  itemSlug: string;
+  isFullscreen?: boolean;
+}
+
+const CHROME_IDLE_MS = 2200;
+const EDGE_SWIPE_PX = 28;
+const EDGE_SWIPE_MIN = 72;
+
+function isTypingTarget(target: EventTarget | null) {
+  if (!(target instanceof HTMLElement)) return false;
+  const tag = target.tagName;
+  return tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT" || target.isContentEditable;
+}
+
+function navigateWithTransition(router: ReturnType<typeof useRouter>, href: string) {
+  if (typeof document !== "undefined" && "startViewTransition" in document) {
+    document.startViewTransition(() => {
+      router.push(href);
+    });
+    return;
+  }
+
+  router.push(href);
+}
+
+function useReducedMotion() {
+  const [reduced, setReduced] = useState(false);
+
+  useEffect(() => {
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const apply = () => setReduced(mq.matches);
+    apply();
+    mq.addEventListener("change", apply);
+    return () => mq.removeEventListener("change", apply);
+  }, []);
+
+  return reduced;
+}
+
+function useThemeColor(color: string) {
+  useEffect(() => {
+    let meta = document.querySelector('meta[name="theme-color"]');
+    if (!meta) {
+      meta = document.createElement("meta");
+      meta.setAttribute("name", "theme-color");
+      document.head.appendChild(meta);
+    }
+
+    const previous = meta.getAttribute("content");
+    meta.setAttribute("content", color);
+
+    return () => {
+      if (previous) meta?.setAttribute("content", previous);
+    };
+  }, [color]);
+}
+
+function useIdleChrome(options: { enabled: boolean; suspended: boolean }) {
+  const reducedMotion = useReducedMotion();
+  const [visible, setVisible] = useState(true);
+  const timerRef = useRef<number | null>(null);
+
+  const clearTimer = useCallback(() => {
+    if (timerRef.current) {
+      window.clearTimeout(timerRef.current);
+      timerRef.current = null;
+    }
+  }, []);
+
+  const scheduleHide = useCallback(() => {
+    clearTimer();
+    if (!options.enabled || options.suspended || reducedMotion) return;
+    timerRef.current = window.setTimeout(() => setVisible(false), CHROME_IDLE_MS);
+  }, [clearTimer, options.enabled, options.suspended, reducedMotion]);
+
+  const wake = useCallback(() => {
+    if (!options.enabled) return;
+    setVisible(true);
+    scheduleHide();
+  }, [options.enabled, scheduleHide]);
+
+  useEffect(() => {
+    if (!options.enabled || reducedMotion) {
+      setVisible(true);
+      clearTimer();
+      return;
+    }
+
+    wake();
+    return clearTimer;
+  }, [options.enabled, reducedMotion, wake, clearTimer]);
+
+  useEffect(() => {
+    if (!options.enabled || reducedMotion) return;
+
+    const onActivity = () => wake();
+    window.addEventListener("pointermove", onActivity);
+    window.addEventListener("touchstart", onActivity, { passive: true });
+    window.addEventListener("keydown", onActivity);
+
+    return () => {
+      window.removeEventListener("pointermove", onActivity);
+      window.removeEventListener("touchstart", onActivity);
+      window.removeEventListener("keydown", onActivity);
+    };
+  }, [options.enabled, reducedMotion, wake]);
+
+  const alwaysVisible = !options.enabled || reducedMotion;
+  return { visible: alwaysVisible || visible, wake };
+}
+
+export function DemoExperience({ groupSlug, itemSlug, isFullscreen = false }: DemoExperienceProps) {
+  const router = useRouter();
+  const [refreshKey, setRefreshKey] = useState(0);
+  const [isPickerOpen, setIsPickerOpen] = useState(false);
+
+  const activeItemIndex = Math.max(getItemIndex(groupSlug, itemSlug), 0);
+  const activeItem = DEMO_ITEMS[activeItemIndex] ?? DEMO_ITEMS[0];
+  const activeGroup = activeItem.group;
+  const themeColor = demoThemeColor(activeItem, activeGroup);
+  const totalDemos = DEMO_ITEMS.length;
+  const canCycle = totalDemos > 1;
+  const fullscreenHref = `${itemHref(activeGroup, activeItem)}?fullscreen=1`;
+
+  const chromeEnabled = !isFullscreen;
+  const { visible: chromeVisible, wake: wakeChrome } = useIdleChrome({
+    enabled: chromeEnabled,
+    suspended: isPickerOpen,
+  });
+
+  useThemeColor(themeColor);
+
+  const hrefFor = useCallback((group: DemoGroup, item: DemoItem) => itemHref(group, item), []);
+
+  const refreshDemo = useCallback(() => {
+    setRefreshKey((current) => current + 1);
+  }, []);
+
+  const openFullscreenDemo = useCallback(() => {
+    window.open(fullscreenHref, "_blank", "noopener,noreferrer");
+  }, [fullscreenHref]);
+
+  const goHome = useCallback(() => {
+    navigateWithTransition(router, "/");
+  }, [router]);
+
+  const navigateToItem = useCallback(
+    (target: DemoItemWithGroup) => {
+      setIsPickerOpen(false);
+      window.scrollTo({ top: 0, left: 0, behavior: "instant" as ScrollBehavior });
+      const href = hrefFor(target.group, target);
+      if (target.group.slug !== activeGroup.slug || target.slug !== activeItem.slug) {
+        navigateWithTransition(router, href);
+      }
+    },
+    [activeGroup.slug, activeItem.slug, hrefFor, router],
+  );
+
+  const cycleDemo = useCallback(
+    (direction: 1 | -1) => {
+      const next =
+        DEMO_ITEMS[(activeItemIndex + direction + DEMO_ITEMS.length) % DEMO_ITEMS.length];
+      navigateToItem(next);
+    },
+    [activeItemIndex, navigateToItem],
+  );
+
+  useEffect(() => {
+    DEMO_ITEMS[activeItemIndex - 1]?.load();
+    DEMO_ITEMS[activeItemIndex + 1]?.load();
+  }, [activeItemIndex]);
+
+  useEffect(() => {
+    if (isFullscreen) return;
+
+    const onKey = (event: globalThis.KeyboardEvent) => {
+      if (isTypingTarget(event.target)) return;
+
+      const key = event.key.toLowerCase();
+
+      if (key === "k" && (event.metaKey || event.ctrlKey)) {
+        event.preventDefault();
+        setIsPickerOpen((open) => !open);
+        wakeChrome();
+        return;
+      }
+
+      if (event.metaKey || event.ctrlKey || event.altKey) return;
+
+      if (key === "." || key === "/") {
+        event.preventDefault();
+        setIsPickerOpen(true);
+        wakeChrome();
+        return;
+      }
+
+      if (event.key === "Escape") {
+        setIsPickerOpen(false);
+        return;
+      }
+
+      if (event.repeat && (key === "r" || key === "f")) return;
+
+      if (event.key === "ArrowRight") {
+        event.preventDefault();
+        cycleDemo(1);
+      } else if (event.key === "ArrowLeft") {
+        event.preventDefault();
+        cycleDemo(-1);
+      } else if (key === "r") {
+        event.preventDefault();
+        refreshDemo();
+      } else if (key === "f") {
+        event.preventDefault();
+        openFullscreenDemo();
+      } else if (key === "h") {
+        event.preventDefault();
+        goHome();
+      }
+    };
+
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [isFullscreen, cycleDemo, refreshDemo, openFullscreenDemo, goHome, wakeChrome]);
+
+  useEffect(() => {
+    if (isFullscreen) return;
+
+    let startX = 0;
+    let startY = 0;
+    let edge: "left" | "right" | null = null;
+
+    const onTouchStart = (event: TouchEvent) => {
+      const touch = event.touches[0];
+      if (!touch) return;
+
+      if (touch.clientX <= EDGE_SWIPE_PX) edge = "left";
+      else if (touch.clientX >= window.innerWidth - EDGE_SWIPE_PX) edge = "right";
+      else edge = null;
+
+      startX = touch.clientX;
+      startY = touch.clientY;
+    };
+
+    const onTouchEnd = (event: TouchEvent) => {
+      if (!edge) return;
+      const touch = event.changedTouches[0];
+      if (!touch) return;
+
+      const dx = touch.clientX - startX;
+      const dy = touch.clientY - startY;
+
+      if (Math.abs(dy) > Math.abs(dx)) {
+        edge = null;
+        return;
+      }
+
+      if (edge === "left" && dx > EDGE_SWIPE_MIN) cycleDemo(-1);
+      if (edge === "right" && dx < -EDGE_SWIPE_MIN) cycleDemo(1);
+      edge = null;
+    };
+
+    window.addEventListener("touchstart", onTouchStart, { passive: true });
+    window.addEventListener("touchend", onTouchEnd);
+    return () => {
+      window.removeEventListener("touchstart", onTouchStart);
+      window.removeEventListener("touchend", onTouchEnd);
+    };
+  }, [isFullscreen, cycleDemo]);
+
+  const ActiveDemo = activeItem.Component;
+
+  return (
+    <main className="demo-shell relative min-h-svh bg-transparent">
+      <DemoShellStyles />
+
+      <div
+        key={`${activeItem.group.slug}-${activeItem.slug}-${refreshKey}`}
+        className="demo-canvas"
+      >
+        <ActiveDemo />
+      </div>
+
+      {!isFullscreen ? (
+        <>
+          <DemoOnboardingModal />
+          <DemoWakeStrip visible={!chromeVisible} onWake={wakeChrome} />
+          <DemoChromeBar
+            visible={chromeVisible}
+            canCycle={canCycle}
+            activeIndex={activeItemIndex}
+            totalDemos={totalDemos}
+            fullscreenHref={fullscreenHref}
+            refreshKey={refreshKey}
+            onHome={goHome}
+            onPrev={() => cycleDemo(-1)}
+            onNext={() => cycleDemo(1)}
+            onOpenPicker={() => {
+              setIsPickerOpen(true);
+              wakeChrome();
+            }}
+            onRefresh={refreshDemo}
+          />
+          <DemoPicker
+            open={isPickerOpen}
+            activeItem={activeItem}
+            activeGroup={activeGroup}
+            accentColor={themeColor}
+            onOpenChange={setIsPickerOpen}
+            onSelect={navigateToItem}
+            onPrefetch={(entry) => entry.load()}
+          />
+        </>
+      ) : null}
+    </main>
+  );
+}
+
+function DemoWakeStrip({ visible, onWake }: { visible: boolean; onWake: () => void }) {
+  if (!visible) return null;
+
+  return (
+    <button
+      type="button"
+      aria-label="Show demo controls"
+      onPointerEnter={onWake}
+      onFocus={onWake}
+      onClick={onWake}
+      className="fixed inset-x-0 bottom-0 z-40 flex h-20 touch-manipulation flex-col items-center justify-end gap-2 bg-transparent pb-[max(0.65rem,env(safe-area-inset-bottom))] outline-none md:h-16"
+    >
+      <span
+        aria-hidden="true"
+        className="h-1 w-7 rounded-full bg-white/30 opacity-70 shadow-[0_0_12px_rgb(255_255_255_/_0.25)]"
+      />
+      <span className="font-mono text-[10px] tracking-[0.04em] text-white/35 md:hidden">
+        tap for controls
+      </span>
+    </button>
+  );
+}
+
+interface DemoChromeBarProps {
+  visible: boolean;
+  canCycle: boolean;
+  activeIndex: number;
+  totalDemos: number;
+  fullscreenHref: string;
+  refreshKey: number;
+  onHome: () => void;
+  onPrev: () => void;
+  onNext: () => void;
+  onOpenPicker: () => void;
+  onRefresh: () => void;
+}
+
+function DemoChromeBar({
+  visible,
+  canCycle,
+  activeIndex,
+  totalDemos,
+  fullscreenHref,
+  refreshKey,
+  onHome,
+  onPrev,
+  onNext,
+  onOpenPicker,
+  onRefresh,
+}: DemoChromeBarProps) {
+  const [chromeTip, setChromeTip] = useState<{ label: string; anchor: HTMLElement } | null>(null);
+
+  const showChromeTip = useCallback((label: string, anchor: HTMLElement) => {
+    setChromeTip({ label, anchor });
+  }, []);
+
+  const hideChromeTip = useCallback(() => {
+    setChromeTip(null);
+  }, []);
+
+  return (
+    <motion.div
+      initial={false}
+      animate={{
+        opacity: visible ? 1 : 0,
+        y: visible ? 0 : 12,
+      }}
+      transition={{ duration: 0.32, ease: [0.22, 1, 0.36, 1] }}
+      aria-hidden={!visible}
+      className={cn(
+        "demo-chrome-bar pointer-events-none fixed inset-x-0 bottom-0 z-50 flex justify-center px-3 pb-[max(1rem,env(safe-area-inset-bottom))] sm:px-4",
+        !visible && "pointer-events-none",
+      )}
+    >
+      <div
+        role="group"
+        aria-label="Demo controls"
+        className={cn(
+          "demo-chrome-pill pointer-events-auto flex max-w-full items-center gap-0.5 overflow-x-auto rounded-full border border-white/14 bg-[#121212]/72 p-1 text-white/88 shadow-[0_8px_32px_-8px_rgb(0_0_0_/_0.55)] backdrop-blur-xl [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden",
+          visible && "pointer-events-auto",
+        )}
+        onMouseLeave={hideChromeTip}
+      >
+        <PillHomeButton onClick={onHome} onShowTip={showChromeTip} />
+        <ChromeDivider />
+        {canCycle ? (
+          <>
+            <PillIconButton
+              label="Previous demo"
+              icon={ChevronLeftIcon}
+              onClick={onPrev}
+              onShowTip={showChromeTip}
+              className="md:hidden"
+            />
+            <span
+              aria-hidden="true"
+              className="min-w-9 px-0.5 text-center font-mono text-[11px] tabular-nums text-white/50 md:hidden"
+            >
+              {activeIndex + 1}/{totalDemos}
+            </span>
+            <PillIconButton
+              label="Next demo"
+              icon={ChevronRightIcon}
+              onClick={onNext}
+              onShowTip={showChromeTip}
+              className="md:hidden"
+            />
+            <ChromeDivider className="md:hidden" />
+          </>
+        ) : null}
+        {canCycle ? (
+          <>
+            <PillIconButton
+              label="Previous demo"
+              icon={ChevronLeftIcon}
+              keyShortcut="←"
+              onClick={onPrev}
+              onShowTip={showChromeTip}
+              className="hidden md:grid"
+            />
+            <PillIconButton
+              label="Next demo"
+              icon={ChevronRightIcon}
+              keyShortcut="→"
+              onClick={onNext}
+              onShowTip={showChromeTip}
+              className="hidden md:grid"
+            />
+            <ChromeDivider className="hidden md:block" />
+          </>
+        ) : null}
+        <PillIconButton
+          label="Browse demos"
+          icon={LayoutGridIcon}
+          keyShortcut="."
+          onClick={onOpenPicker}
+          onShowTip={showChromeTip}
+        />
+        <ChromeDivider />
+        <PillRefreshButton refreshKey={refreshKey} onClick={onRefresh} onShowTip={showChromeTip} />
+        <PillIconLink
+          label="Open fullscreen"
+          icon={Maximize2Icon}
+          keyShortcut="F"
+          href={fullscreenHref}
+          target="_blank"
+          rel="noreferrer"
+          onShowTip={showChromeTip}
+          className="hidden sm:grid"
+        />
+      </div>
+      <DemoChromeTooltip tip={chromeTip} />
+    </motion.div>
+  );
+}
+
+function ChromeDivider({ className }: { className?: string }) {
+  return (
+    <span aria-hidden="true" className={cn("mx-0.5 h-4 w-px shrink-0 bg-white/12", className)} />
+  );
+}
+
+interface DemoPickerProps {
+  open: boolean;
+  activeItem: DemoItemWithGroup;
+  activeGroup: DemoGroup;
+  accentColor: string;
+  onOpenChange: (open: boolean) => void;
+  onSelect: (item: DemoItemWithGroup) => void;
+  onPrefetch: (item: DemoItemWithGroup) => void;
+}
+
+function DemoPicker({
+  open,
+  activeItem,
+  activeGroup,
+  accentColor,
+  onOpenChange,
+  onSelect,
+  onPrefetch,
+}: DemoPickerProps) {
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogPortal>
+        <DialogOverlay className="bg-black/50 backdrop-blur-[3px] sm:bg-black/45" />
+        <DialogPrimitive.Content
+          style={{ "--demo-accent": accentColor } as CSSProperties}
+          aria-describedby={undefined}
+          className={cn(
+            "demo-picker-shell fixed z-50 grid w-full gap-0 overflow-hidden border border-white/12 bg-[#141414]/96 text-white shadow-[0_28px_90px_-28px_rgb(0_0_0_/_0.88)] backdrop-blur-2xl outline-none",
+            "inset-x-0 bottom-0 top-auto max-h-[min(88svh,680px)] translate-x-0 translate-y-0 rounded-t-[28px] border-b-0",
+            "data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:slide-out-to-bottom-4",
+            "data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:slide-in-from-bottom-4",
+            "sm:inset-x-auto sm:bottom-auto sm:top-[50%] sm:left-[50%] sm:max-w-[min(92vw,28rem)] sm:translate-x-[-50%] sm:translate-y-[-50%] sm:rounded-[24px] sm:border-b",
+            "sm:data-[state=closed]:slide-out-to-bottom-0 sm:data-[state=closed]:zoom-out-95 sm:data-[state=open]:slide-in-from-bottom-0 sm:data-[state=open]:zoom-in-95",
+          )}
+        >
+          <div className="sm:hidden">
+            <div aria-hidden="true" className="mx-auto mt-2.5 h-1 w-10 rounded-full bg-white/18" />
+          </div>
+
+          <div className="flex items-start justify-between gap-3 border-b border-white/8 px-4 pb-3 pt-3 sm:pt-4">
+            <div className="min-w-0">
+              <DialogPrimitive.Title className="text-[15px] font-medium tracking-[-0.02em] text-white">
+                Browse demos
+              </DialogPrimitive.Title>
+              <DialogPrimitive.Description className="mt-0.5 text-[12px] text-white/45">
+                {DEMO_ITEMS.length} live {DEMO_ITEMS.length === 1 ? "experience" : "experiences"}
+              </DialogPrimitive.Description>
+            </div>
+            <button
+              type="button"
+              aria-label="Close demo picker"
+              onClick={() => onOpenChange(false)}
+              className="grid size-9 shrink-0 touch-manipulation place-items-center rounded-full text-white/55 transition-colors hover:bg-white/10 hover:text-white"
+            >
+              <XIcon aria-hidden="true" className="size-4" />
+            </button>
+          </div>
+
+          <CommandRoot className="bg-transparent">
+            <div className="px-3 pt-3">
+              <div className="demo-picker-search flex items-center gap-2 rounded-2xl border border-white/8 bg-white/[0.04] px-3">
+                <SearchIcon aria-hidden="true" className="size-4 shrink-0 text-white/35" />
+                <CommandInput
+                  placeholder="Search by name or category…"
+                  className="h-11 border-0 bg-transparent px-0 text-[15px] text-white placeholder:text-white/35 focus:ring-0"
+                />
+              </div>
+            </div>
+
+            <CommandList className="demo-picker-list max-h-[min(52svh,420px)] px-2 pb-2 pt-2">
+              <CommandEmpty className="rounded-2xl bg-white/[0.03] py-10 text-sm text-white/45">
+                No demos match that search.
+              </CommandEmpty>
+              {DEMO_GROUPS.map((group) => (
+                <CommandGroup
+                  key={group.slug}
+                  heading={`${group.label} · ${group.items.length}`}
+                  className="pb-1 [&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:py-2 [&_[cmdk-group-heading]]:text-[10px] [&_[cmdk-group-heading]]:font-semibold [&_[cmdk-group-heading]]:tracking-[0.12em] [&_[cmdk-group-heading]]:text-white/40"
+                >
+                  {group.items.map((rawItem) => {
+                    const flatIndex = getItemIndex(group.slug, rawItem.slug);
+                    const entry = DEMO_ITEMS[flatIndex];
+                    const isActive =
+                      entry.slug === activeItem.slug && entry.group.slug === activeGroup.slug;
+                    const itemAccent = demoThemeColor(entry, group);
+
+                    return (
+                      <CommandItem
+                        key={entry.slug}
+                        value={`${group.label} ${entry.label} ${group.phrase}`}
+                        onMouseEnter={() => onPrefetch(entry)}
+                        onFocus={() => onPrefetch(entry)}
+                        onSelect={() => onSelect(entry)}
+                        className={cn(
+                          "demo-picker-item mx-0.5 cursor-pointer rounded-2xl px-3 py-2.5 aria-selected:bg-white/[0.07] data-[selected=true]:bg-white/[0.07]",
+                          isActive && "demo-picker-item-live bg-white/[0.05]",
+                        )}
+                        style={
+                          isActive ? ({ "--item-accent": itemAccent } as CSSProperties) : undefined
+                        }
+                      >
+                        <span
+                          aria-hidden="true"
+                          className={cn(
+                            "mt-1.5 size-1.5 shrink-0 rounded-full bg-white/20",
+                            isActive &&
+                              "bg-[var(--item-accent)] shadow-[0_0_10px_color-mix(in_srgb,var(--item-accent)_70%,transparent)]",
+                          )}
+                        />
+                        <span className="min-w-0 flex-1">
+                          <span className="block truncate text-[13px] font-medium tracking-[-0.015em] text-white/92">
+                            {entry.label}
+                          </span>
+                          <span className="mt-0.5 block truncate text-[12px] leading-snug text-white/42">
+                            {group.phrase}
+                          </span>
+                        </span>
+                        {isActive ? (
+                          <span className="shrink-0 self-center rounded-full border border-white/10 bg-white/[0.06] px-2 py-0.5 text-[10px] font-medium text-white/72">
+                            live
+                          </span>
+                        ) : null}
+                      </CommandItem>
+                    );
+                  })}
+                </CommandGroup>
+              ))}
+            </CommandList>
+          </CommandRoot>
+
+          <div className="border-t border-white/8 px-4 py-2.5">
+            <p className="text-center font-mono text-[10px] leading-relaxed text-white/35 sm:hidden">
+              Swipe screen edges · tap grid to browse
+            </p>
+            <p className="hidden text-center font-mono text-[10px] leading-relaxed text-white/35 sm:block">
+              H home · ← → cycle · . picker · R refresh · F fullscreen
+            </p>
+          </div>
+        </DialogPrimitive.Content>
+      </DialogPortal>
+    </Dialog>
+  );
+}
+
+function formatDemoTooltipLabel(label: string, keyShortcut?: string) {
+  if (!keyShortcut) return label;
+
+  if (/^[a-z]$/i.test(keyShortcut)) {
+    const key = keyShortcut.toUpperCase();
+    const words = label.split(" ");
+
+    for (let index = 0; index < words.length; index += 1) {
+      const word = words[index];
+      if (word?.[0]?.toUpperCase() === key) {
+        words[index] = `(${key})${word.slice(1)}`;
+        return words.join(" ");
+      }
+    }
+
+    if (label[0]?.toUpperCase() === key) {
+      return `(${key})${label.slice(1)}`;
+    }
+  }
+
+  return `${label} (${keyShortcut})`;
+}
+
+function DemoChromeTooltip({ tip }: { tip: { label: string; anchor: HTMLElement } | null }) {
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+
+  useLayoutEffect(() => {
+    if (!tip) return;
+
+    const updatePosition = () => {
+      const rect = tip.anchor.getBoundingClientRect();
+      setPosition({
+        x: rect.left + rect.width / 2,
+        y: rect.top - 6,
+      });
+    };
+
+    updatePosition();
+    window.addEventListener("scroll", updatePosition, true);
+    window.addEventListener("resize", updatePosition);
+
+    return () => {
+      window.removeEventListener("scroll", updatePosition, true);
+      window.removeEventListener("resize", updatePosition);
+    };
+  }, [tip]);
+
+  if (!tip || typeof document === "undefined") return null;
+
+  return createPortal(
+    <div
+      role="tooltip"
+      style={{
+        position: "fixed",
+        left: position.x,
+        top: position.y,
+        transform: "translate(-50%, -100%)",
+        zIndex: 60,
+      }}
+      className="pointer-events-none whitespace-nowrap rounded-[5px] border border-white/12 bg-[#121212] px-3 py-1.5 text-[0.7rem] leading-none text-white"
+    >
+      {tip.label}
+    </div>,
+    document.body,
+  );
+}
+
+interface PillIconButtonProps {
+  label: string;
+  icon: LucideIcon;
+  keyShortcut?: string;
+  className?: string;
+  onClick: () => void;
+  onShowTip: (label: string, anchor: HTMLElement) => void;
+}
+
+function PillHomeButton({
+  onClick,
+  onShowTip,
+}: {
+  onClick: () => void;
+  onShowTip: (label: string, anchor: HTMLElement) => void;
+}) {
+  const reducedMotion = useReducedMotion();
+  const logoRef = useRef<HTMLSpanElement>(null);
+  const swingRef = useRef<ReturnType<typeof animate> | null>(null);
+  const tipLabel = formatDemoTooltipLabel("Home", "H");
+
+  const revealTip = (anchor: HTMLElement) => {
+    onShowTip(tipLabel, anchor);
+  };
+
+  const swingLogo = useCallback(() => {
+    if (reducedMotion || !logoRef.current) return;
+
+    swingRef.current?.stop();
+    swingRef.current = animate(
+      logoRef.current,
+      { rotate: [18, -12, 7, -3, 1, 0] },
+      {
+        duration: 1.15,
+        ease: [0.22, 1.12, 0.36, 1],
+        times: [0, 0.24, 0.46, 0.68, 0.86, 1],
+      },
+    );
+  }, [reducedMotion]);
+
+  useEffect(() => {
+    return () => {
+      swingRef.current?.stop();
+    };
+  }, []);
+
+  return (
+    <button
+      type="button"
+      aria-label="Back to animata home"
+      aria-keyshortcuts="H"
+      onClick={onClick}
+      onMouseEnter={(event) => {
+        revealTip(event.currentTarget);
+        swingLogo();
+      }}
+      onFocus={(event) => {
+        revealTip(event.currentTarget);
+        swingLogo();
+      }}
+      className="grid size-9 shrink-0 touch-manipulation place-items-center rounded-full text-white/62 outline-none transition-[color,background-color] duration-150 hover:bg-white/10 hover:text-white focus-visible:bg-white/10 focus-visible:text-white"
+    >
+      <span
+        ref={logoRef}
+        aria-hidden="true"
+        className="inline-block origin-top will-change-transform"
+        style={{ transformOrigin: "top center" }}
+      >
+        <Icons.logo className="size-3.5" />
+      </span>
+    </button>
+  );
+}
+
+function PillRefreshButton({
+  refreshKey,
+  onClick,
+  onShowTip,
+}: {
+  refreshKey: number;
+  onClick: () => void;
+  onShowTip: (label: string, anchor: HTMLElement) => void;
+}) {
+  const reducedMotion = useReducedMotion();
+  const iconRef = useRef<HTMLSpanElement>(null);
+  const rotationRef = useRef(0);
+  const tipLabel = formatDemoTooltipLabel("Refresh demo", "R");
+
+  const revealTip = (anchor: HTMLElement) => {
+    onShowTip(tipLabel, anchor);
+  };
+
+  useEffect(() => {
+    if (refreshKey === 0 || reducedMotion || !iconRef.current) return;
+
+    rotationRef.current += 180;
+    animate(
+      iconRef.current,
+      { rotate: rotationRef.current },
+      { duration: 0.42, ease: [0.22, 1, 0.36, 1] },
+    );
+  }, [refreshKey, reducedMotion]);
+
+  return (
+    <button
+      type="button"
+      aria-label="Refresh demo"
+      aria-keyshortcuts="R"
+      onClick={onClick}
+      onMouseEnter={(event) => revealTip(event.currentTarget)}
+      onFocus={(event) => revealTip(event.currentTarget)}
+      className="grid size-9 shrink-0 touch-manipulation place-items-center rounded-full text-white/62 outline-none transition-[color,background-color] duration-150 hover:bg-white/10 hover:text-white focus-visible:bg-white/10 focus-visible:text-white active:scale-95"
+    >
+      <span
+        ref={iconRef}
+        aria-hidden="true"
+        className="inline-flex origin-center will-change-transform"
+      >
+        <RefreshCwIcon className="size-3.5" />
+      </span>
+    </button>
+  );
+}
+
+function PillIconButton({
+  label,
+  icon: Icon,
+  keyShortcut,
+  className,
+  onClick,
+  onShowTip,
+}: PillIconButtonProps) {
+  const tipLabel = formatDemoTooltipLabel(label, keyShortcut);
+
+  const revealTip = (anchor: HTMLElement) => {
+    onShowTip(tipLabel, anchor);
+  };
+
+  return (
+    <button
+      type="button"
+      aria-label={label}
+      aria-keyshortcuts={keyShortcut}
+      onClick={onClick}
+      onMouseEnter={(event) => revealTip(event.currentTarget)}
+      onFocus={(event) => revealTip(event.currentTarget)}
+      className={cn(
+        "grid size-9 shrink-0 touch-manipulation place-items-center rounded-full text-white/62 outline-none transition-[color,background-color,transform] duration-150 hover:bg-white/10 hover:text-white focus-visible:bg-white/10 focus-visible:text-white active:scale-95",
+        className,
+      )}
+    >
+      <Icon aria-hidden="true" className="size-3.5" />
+    </button>
+  );
+}
+
+interface PillIconLinkProps {
+  label: string;
+  icon: LucideIcon;
+  keyShortcut?: string;
+  href: string;
+  target?: string;
+  rel?: string;
+  className?: string;
+  onShowTip: (label: string, anchor: HTMLElement) => void;
+}
+
+function PillIconLink({
+  label,
+  icon: Icon,
+  keyShortcut,
+  href,
+  target,
+  rel,
+  className,
+  onShowTip,
+}: PillIconLinkProps) {
+  const tipLabel = formatDemoTooltipLabel(label, keyShortcut);
+
+  const revealTip = (anchor: HTMLElement) => {
+    onShowTip(tipLabel, anchor);
+  };
+
+  return (
+    <a
+      aria-label={label}
+      aria-keyshortcuts={keyShortcut}
+      href={href}
+      target={target}
+      rel={rel}
+      onMouseEnter={(event) => revealTip(event.currentTarget)}
+      onFocus={(event) => revealTip(event.currentTarget)}
+      className={cn(
+        "grid size-9 shrink-0 touch-manipulation place-items-center rounded-full text-white/62 outline-none transition-[color,background-color,transform] duration-150 hover:bg-white/10 hover:text-white focus-visible:bg-white/10 focus-visible:text-white active:scale-95",
+        className,
+      )}
+    >
+      <Icon aria-hidden="true" className="size-3.5" />
+    </a>
+  );
+}
+
+function DemoShellStyles() {
+  return (
+    <style>{`
+      .demo-shell {
+        --demo-chrome-reserve: calc(4.75rem + env(safe-area-inset-bottom, 0px));
+        --demo-chrome-height: 2.75rem;
+        --demo-chrome-gap: 1rem;
+      }
+
+      .demo-canvas {
+        view-transition-name: demo-canvas;
+      }
+
+      ::view-transition-old(demo-canvas),
+      ::view-transition-new(demo-canvas) {
+        animation-duration: 280ms;
+        animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+      }
+
+      ::view-transition-old(demo-canvas) {
+        animation-name: demo-fade-out;
+      }
+
+      ::view-transition-new(demo-canvas) {
+        animation-name: demo-fade-in;
+      }
+
+      @keyframes demo-fade-out {
+        from { opacity: 1; }
+        to { opacity: 0; }
+      }
+
+      @keyframes demo-fade-in {
+        from { opacity: 0; }
+        to { opacity: 1; }
+      }
+
+      .demo-picker-shell {
+        isolation: isolate;
+      }
+
+      .demo-picker-shell::before {
+        content: "";
+        pointer-events: none;
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        background:
+          linear-gradient(180deg, rgb(255 255 255 / 0.08), transparent 22%),
+          radial-gradient(circle at 50% 0%, rgb(255 255 255 / 0.06), transparent 42%);
+      }
+
+      .demo-picker-search [cmdk-input-wrapper] {
+        border: 0;
+        padding: 0;
+      }
+
+      .demo-picker-search [cmdk-input-wrapper] svg {
+        display: none;
+      }
+
+      .demo-picker-list {
+        scrollbar-width: thin;
+        scrollbar-color: rgb(255 255 255 / 0.14) transparent;
+      }
+
+      .demo-picker-list::-webkit-scrollbar {
+        width: 6px;
+      }
+
+      .demo-picker-list::-webkit-scrollbar-thumb {
+        border-radius: 999px;
+        background: rgb(255 255 255 / 0.12);
+      }
+
+      .demo-picker-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 0.625rem;
+      }
+
+      .demo-picker-item-live {
+        box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.08);
+      }
+
+      .demo-chrome-pill {
+        min-height: 2.75rem;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        ::view-transition-old(demo-canvas),
+        ::view-transition-new(demo-canvas),
+        .demo-chrome-bar {
+          animation: none !important;
+          transition: none !important;
+        }
+      }
+    `}</style>
+  );
+}

@@ -79,6 +79,11 @@ const sidebarNav: SidebarNavItem[] = [
         items: [],
       },
       {
+        title: "Live demos",
+        href: "/docs/contributing/demos",
+        items: [],
+      },
+      {
         title: "Folder structure",
         href: "/docs/contributing/folder-structure",
         items: [],
@@ -231,6 +236,10 @@ export const docsConfig: DocsConfig = {
     {
       title: "Components",
       href: sidebarNav[2].items?.[0]?.href ?? sidebarNav[2]?.href,
+    },
+    {
+      title: "Demos",
+      href: "/demo",
     },
     {
       title: "Blog",
