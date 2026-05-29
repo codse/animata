@@ -71,7 +71,12 @@ export interface FocusBlurResolveProps {
   gapMs?: number;
   /** Y-travel multiplier for all transforms. Defaults to the runtime default (0.58) when omitted. */
   yTravel?: number;
+  /** Outer wrapper — overrides default `aspect-video` centering when embedding in layouts. */
   className?: string;
+  /** Passed to the inner `.text-animation-stage` grid. */
+  stageClassName?: string;
+  /** Merged onto the animated title node — use `!text-*` to override preset sizing. */
+  titleClassName?: string;
 }
 
 export default function FocusBlurResolve({
@@ -83,6 +88,8 @@ export default function FocusBlurResolve({
   gapMs,
   yTravel,
   className,
+  stageClassName,
+  titleClassName,
 }: FocusBlurResolveProps = {}) {
   const spec = useMemo<TextAnimationSpec>(
     () => ({
@@ -115,6 +122,8 @@ export default function FocusBlurResolve({
       gapMs={gapMs}
       yTravel={yTravel}
       className={className}
+      stageClassName={stageClassName}
+      titleClassName={titleClassName}
     />
   );
 }

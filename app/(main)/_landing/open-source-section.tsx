@@ -2,6 +2,7 @@
 
 import Marquee from "@/animata/container/marquee";
 import Counter, { Formatter } from "@/animata/text/counter";
+import { siteStats } from "@/config/site-stats";
 
 // All 44 contributors
 const avatars = [
@@ -123,10 +124,10 @@ export default function OpenSourceSection() {
 
       {/* Stats */}
       <div className="mx-auto grid max-w-3xl grid-cols-2 gap-8 px-6 py-10 sm:grid-cols-4 sm:py-12">
-        <Stat value={2506} label="Stars" delay={0} />
+        <Stat value={siteStats.githubStars} label="Stars" delay={0} />
         <Stat value={196} label="Forks" delay={100} />
         <Stat value={44} label="Contributors" delay={200} />
-        <Stat value={194} label="Components" delay={300} />
+        <Stat value={siteStats.componentCount} label="Components" delay={300} />
       </div>
 
       {/* Marquee row 2 — all contributors, reversed order + direction */}

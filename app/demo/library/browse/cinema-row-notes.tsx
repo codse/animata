@@ -4,28 +4,64 @@ import { DEMO_SOURCES } from "@/app/demo/generated/demo-sources";
 
 const DEMO_KEY = "browse/cinema-row";
 
-const MARQUEE_SNIPPET = `<div className="grid h-[min(32rem,68vh)] grid-cols-2 gap-3">
-  <Marquee vertical pauseOnHover applyMask={false} className="h-full [--duration:26s] [--gap:14px]">
-    {QUOTES.map((quote) => (
-      <QuoteChip key={\`up-\${quote.source}\`} {...quote} />
-    ))}
-  </Marquee>
-  <Marquee vertical reverse pauseOnHover applyMask={false} className="h-full [--duration:31s] [--gap:14px]">
-    {QUOTES.map((quote) => (
-      <QuoteChip key={\`down-\${quote.source}\`} {...quote} />
+const HERO_SEQUENCE_SNIPPET = `function heroSequenceDelays() {
+  const titleEnd =
+    HERO_TITLE_DELAY_MS +
+    (HERO_TITLE_WORDS - 1) * HERO_WORD_STAGGER_MS +
+    HERO_WORD_DURATION_MS;
+
+  return {
+    eyebrow: 0,
+    title: HERO_TITLE_DELAY_MS,
+    tagline: titleEnd - 220,
+    runtime: titleEnd - 40,
+    ctaPrimary: titleEnd + 120,
+    ctaSecondary: titleEnd + 220,
+    premieresLabel: ctaSecondary + 140,
+    premieresMeta: ctaSecondary + 220,
+    premieresRail: ctaSecondary + 260,
+  };
+}
+
+<WaveReveal
+  text={FEATURED.title}
+  mode="word"
+  direction="up"
+  blur
+  duration="700ms"
+  delay={delays.title}
+  className="..."
+/>
+<p className="cinema-hero-rise" style={{ animationDelay: \`\${delays.tagline}ms\` }}>
+  {FEATURED.tagline}
+</p>`;
+
+const PREMIERES_SNIPPET = `<div className="overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_5%,black_95%,transparent)]">
+  <Marquee
+    pauseOnHover
+    applyMask={false}
+    className="py-1 pl-5 [--duration:38s] [--gap:1rem] sm:pl-8 sm:[--gap:1.25rem]"
+  >
+    {PREMIERES.map((film) => (
+      <PosterCard key={film.title} {...film} />
     ))}
   </Marquee>
 </div>`;
 
-const SCROLL_ROW_SNIPPET = `<div className="overflow-x-auto snap-x snap-mandatory [-ms-overflow-style:none] [scrollbar-width:none]">
-  <div className="flex w-max gap-4 px-5 snap-x snap-mandatory">
-    {PREMIERES.map((film) => (
-      <article key={film.title} className="w-[11.25rem] shrink-0 snap-start">
-        <div className="aspect-[2/3] rounded-xl ring-1 ring-white/10" style={{ backgroundImage: film.gradient }} />
-      </article>
+const STILLS_SNIPPET = `<MarqueeWell className="h-full min-h-0 max-w-fit">
+  <Marquee vertical pauseOnHover applyMask={false} className="h-full p-0 [--duration:32s] [--gap:12px]">
+    {STILLS_LEFT.map((still) => (
+      <LandscapeStill key={still.title} {...still} variant="wide" />
     ))}
-  </div>
-</div>`;
+  </Marquee>
+</MarqueeWell>
+<MarqueeWell tone="amber" className="h-full min-h-0 max-w-fit">
+  <Marquee vertical reverse pauseOnHover applyMask={false} className="h-full p-0 [--duration:38s] [--gap:12px]">
+    {STILLS_RIGHT.map((still) => (
+      <LandscapeStill key={still.title} {...still} variant="tall" />
+    ))}
+  </Marquee>
+</MarqueeWell>`;
 
 export function CinemaRowNotes() {
   const sources = DEMO_SOURCES[DEMO_KEY] ?? [];
@@ -35,22 +71,17 @@ export function CinemaRowNotes() {
       <DemoNotes.Header
         id="demo-notes-title"
         eyebrow="Recipe"
-        title="Stream · premiere browse"
-        description="Apple TV-style browse page — overscale premiere type, snap-scrolling poster rail, editorial copy with opposing vertical marquees. Fictional titles; not affiliated with Apple."
+        title="Stream browse"
+        description="Apple TV-style layout: gradient hero with staggered premiere copy, a scrolling poster rail, then a craft panel with twin vertical still columns. TMDB art — demo only."
       />
 
       <DemoNotes.Section id="concept" index={1} title="Concept">
         <DemoNotes.Prose>
           <p>
-            Streaming homepages lead with one title at cinema scale, park a swipeable poster row
-            underneath, then break into editorial sections where copy sits beside motion. This demo
-            follows that rhythm on a black field with oklch poster gradients instead of licensed key
-            art.
-          </p>
-          <p>
-            The hero is local typography and buttons. The premieres row is native horizontal scroll
-            with <code>snap-x</code> — thumb-driven, not auto-scrolling. The footer pairs long-form
-            copy with two <code>Marquee</code> columns running in opposite directions.
+            Three bands on one page. The hero is type on a violet radial scrim — eyebrow, title,
+            tagline, runtime, and CTAs stagger in after load. Below that, premieres scroll
+            horizontally. The craft panel pairs short copy with two still columns drifting in
+            opposite directions.
           </p>
         </DemoNotes.Prose>
       </DemoNotes.Section>
@@ -58,8 +89,11 @@ export function CinemaRowNotes() {
       <DemoNotes.Section id="components" index={2} title="Components used">
         <DemoNotes.Prose>
           <p>
-            One Animata primitive: vertical <code>Marquee</code> twice (forward +{" "}
-            <code>reverse</code>). Hero, poster cards, snap row, and quote chips are local.
+            <code>WaveReveal</code> (<code>mode="word"</code>) on the hero title.{" "}
+            <code>Marquee</code> on the premieres rail and both still columns (
+            <code>pauseOnHover</code>, <code>applyMask={"{false}"}</code> — local masks instead).
+            Hero rise/fall and delay math live in the demo file as <code>cinema-hero-rise</code>{" "}
+            plus <code>heroSequenceDelays()</code>.
           </p>
         </DemoNotes.Prose>
         <DemoNotes.ComponentLinks demoKey={DEMO_KEY} />
@@ -68,24 +102,41 @@ export function CinemaRowNotes() {
       <DemoNotes.Section id="build" index={3} title="How it's built">
         <DemoNotes.Prose>
           <p>
-            Headline uses <code>clamp(3.25rem, 14vw, 7.5rem)</code> with tight negative tracking.
-            Bottom padding references <code>var(--demo-chrome-reserve)</code> so demo chrome never
-            covers the Play row.
+            <code>heroSequenceDelays()</code> derives every entrance offset from the title word
+            count and <code>WaveReveal</code> timing — eyebrow through the premieres rail share one
+            sequence. <code>cinema-hero-rise</code> is a local keyframe (blur +{" "}
+            <code>translateY</code>) on everything except the title words.
           </p>
           <p>
-            Marquees get different durations (26s vs 31s) so the columns don&apos;t feel locked in
-            phase. <code>applyMask={false}</code> keeps quote chips fully visible inside the
-            bordered wells. <code>prefers-reduced-motion</code> swaps both columns for static
-            stacks.
+            The premieres wrapper uses a black-edge <code>mask-image</code> because{" "}
+            <code>Marquee</code>&apos;s built-in mask reads as a gray wash on black.{" "}
+            <code>Premieres</code> and <code>Now playing</code> get their own rise delays; the rail
+            follows slightly after.
+          </p>
+          <p>
+            Still columns sit in <code>MarqueeWell</code> trays (violet left, amber right). Left
+            column is <code>aspect-video</code>; right is taller (<code>aspect-[5/3]</code>) and
+            scrolls <code>reverse</code>. On small screens the wells sit in a{" "}
+            <code>flex justify-evenly</code> row; from <code>md</code> they grid inside the craft
+            panel beside the copy.
+          </p>
+          <p>
+            <code>prefers-reduced-motion</code> drops the marquees to static scroll stacks and
+            renders the hero without stagger.
           </p>
         </DemoNotes.Prose>
-        <DemoNotes.Code caption="Opposing vertical marquees">{MARQUEE_SNIPPET}</DemoNotes.Code>
-        <DemoNotes.Code caption="Snap poster rail">{SCROLL_ROW_SNIPPET}</DemoNotes.Code>
+        <DemoNotes.Code caption="Hero delay sequence + WaveReveal">
+          {HERO_SEQUENCE_SNIPPET}
+        </DemoNotes.Code>
+        <DemoNotes.Code caption="Premieres rail — custom edge mask">
+          {PREMIERES_SNIPPET}
+        </DemoNotes.Code>
+        <DemoNotes.Code caption="Craft panel still columns">{STILLS_SNIPPET}</DemoNotes.Code>
       </DemoNotes.Section>
 
       <DemoNotes.Section id="source" index={4} title="Full source">
         <DemoNotes.Prose>
-          <p>Pulled from the demo file at build time. Copy what you need below.</p>
+          <p>Synced from the demo file at build time. Take whatever you need below.</p>
         </DemoNotes.Prose>
         <DemoNotes.Bleed>
           <DemoSourcePanel files={sources} />

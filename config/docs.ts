@@ -1,6 +1,10 @@
 import { docs as allDocs } from "#site/content";
 
+import { DEFAULT_GROUP, DEFAULT_ITEM, itemHref } from "@/app/demo/demos";
 import type { MainNavItem, SidebarNavItem } from "@/types";
+
+const defaultDemoHref =
+  DEFAULT_GROUP && DEFAULT_ITEM ? itemHref(DEFAULT_GROUP, DEFAULT_ITEM) : "/demo";
 
 interface DocsConfig {
   mainNav: MainNavItem[];
@@ -239,7 +243,7 @@ export const docsConfig: DocsConfig = {
     },
     {
       title: "Demos",
-      href: "/demo",
+      href: defaultDemoHref,
     },
     {
       title: "Blog",

@@ -56,7 +56,13 @@ export const DEMO_REGISTRY = [
         category: "Container",
         name: "Marquee",
         description:
-          "Two vertical columns — forward and reverse — carrying critic quote chips beside the editorial copy block.",
+          "Horizontal premieres poster rail plus asymmetric vertical still columns — all pause on hover.",
+      },
+      {
+        docSlug: "text/wave-reveal",
+        category: "Text",
+        name: "Wave Reveal",
+        description: "Premiere title — three words reveal upward with blur, one shot on load.",
       },
     ],
   },

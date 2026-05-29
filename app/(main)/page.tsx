@@ -7,6 +7,7 @@ import CarbonAds from "@/components/ads";
 import { Icons } from "@/components/icons";
 import { docsConfig } from "@/config/docs";
 import { siteConfig } from "@/config/site";
+import { siteStats } from "@/config/site-stats";
 import { cn } from "@/lib/utils";
 
 import ExitIntentModal from "./_landing/exit-intent-modal";
@@ -51,8 +52,8 @@ function Hero() {
           Look better.
         </h1>
         <p className="mx-auto mt-6 max-w-md text-balance text-[clamp(15px,2vw,18px)] leading-[1.6] text-[hsl(var(--text-secondary))]">
-          158+ animated React components you can copy into any project. Free, open source, and ready
-          to use.
+          {siteStats.componentsFormatted} animated React components you can copy into any project.
+          Free, open source, and ready to use.
         </p>
 
         <div className="mt-8 flex flex-col items-center gap-3 sm:mt-10 sm:flex-row sm:justify-center">
@@ -75,7 +76,7 @@ function Hero() {
 
         <p className="mt-5 text-center text-[13px] text-muted-foreground">
           <span className="mr-1.5 inline-block h-1.5 w-1.5 rounded-full bg-emerald-500" />
-          2,506+ stars · Trusted by shipping teams
+          {siteStats.githubStarsFormatted} stars · Trusted by shipping teams
         </p>
 
         <div className="mt-8 flex justify-center">
@@ -136,7 +137,7 @@ function WhySection() {
             href={componentsHref}
             className="text-[15px] font-medium text-[hsl(var(--link))] transition-colors hover:text-[hsl(var(--link-hover))]"
           >
-            See all 158+ components →
+            See all {siteStats.componentsFormatted} components →
           </Link>
         </div>
       </div>

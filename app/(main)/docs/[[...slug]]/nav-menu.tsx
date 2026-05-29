@@ -15,26 +15,38 @@ import {
 } from "@/components/ui/select";
 import type { SidebarNavItem } from "@/types";
 
-export default function NavMenu({
-  value,
-  sideBarNavItems,
-  baseRoute,
-}: {
-  value: string;
-  sideBarNavItems: SidebarNavItem[];
-  baseRoute: "docs" | "blog";
-}) {
+type NavMenuProps =
+  | {
+      title: string;
+      value?: never;
+      sideBarNavItems?: never;
+      baseRoute?: never;
+    }
+  | {
+      title?: never;
+      value: string;
+      sideBarNavItems: SidebarNavItem[];
+      baseRoute: "docs" | "blog";
+    };
+
+export default function NavMenu(props: NavMenuProps) {
+  if ("title" in props) {
+    return <span className="truncate font-medium text-foreground">{props.title}</span>;
+  }
+
+  const { value, sideBarNavItems, baseRoute } = props;
   const router = useRouter();
   const [navigating, setNavigating] = useState(false);
+
   return (
     <>
       <div className="text-foreground">
         <Select
           defaultValue={`/${baseRoute}${value ? `/${value}` : ""}`}
-          onValueChange={(value) => {
-            if (value) {
+          onValueChange={(nextValue) => {
+            if (nextValue) {
               setNavigating(true);
-              router.push(value);
+              router.push(nextValue);
             }
           }}
         >

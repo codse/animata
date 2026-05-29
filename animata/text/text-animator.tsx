@@ -83,6 +83,8 @@ export interface TextAnimatorProps {
   phrases?: string[][];
   className?: string;
   stageClassName?: string;
+  /** Merged onto each animated `h3.text-animation-title` node the runtime creates. */
+  titleClassName?: string;
   speed?: number;
   holdMs?: number;
   gapMs?: number;
@@ -111,6 +113,7 @@ type LoopController = {
   timers: Set<number>;
   pendingResolvers: Set<() => void>;
   runtime: typeof DEFAULT_RUNTIME;
+  titleClassName?: string;
 };
 
 type KineticStageFrame = { filter: string; opacity: number; transform: string };
@@ -204,9 +207,14 @@ function materializeTileFrame(
   return k;
 }
 
-function makeTitle(doc: Document, text: string, target: TextAnimationTarget) {
+function makeTitle(
+  doc: Document,
+  text: string,
+  target: TextAnimationTarget,
+  titleClassName?: string,
+) {
   const title = doc.createElement("h3");
-  title.className = "text-animation-title";
+  title.className = cn("text-animation-title", titleClassName);
   const units: HTMLSpanElement[] = [];
   splitTextByTarget(text, target).forEach((part) => {
     const unit = doc.createElement("span");
@@ -282,7 +290,11 @@ function animatePhase(
   return duration + Math.max(0, units.length - 1) * delayStep;
 }
 
-function createLoop(stage: HTMLElement, runtime: typeof DEFAULT_RUNTIME): LoopController {
+function createLoop(
+  stage: HTMLElement,
+  runtime: typeof DEFAULT_RUNTIME,
+  titleClassName?: string,
+): LoopController {
   return {
     animations: new Set(),
     cancelled: false,
@@ -290,6 +302,7 @@ function createLoop(stage: HTMLElement, runtime: typeof DEFAULT_RUNTIME): LoopCo
     timers: new Set(),
     pendingResolvers: new Set(),
     runtime,
+    titleClassName,
   };
 }
 
@@ -394,7 +407,7 @@ async function runGenericLoop(c: LoopController, spec: TextAnimationSpec, sample
   let currentUnits: HTMLSpanElement[] = [];
 
   const enterSample = (text: string): number => {
-    const { title, units } = makeTitle(stage.ownerDocument, text, target);
+    const { title, units } = makeTitle(stage.ownerDocument, text, target, c.titleClassName);
     applyPhaseStart(units, "enter", spec, stage, runtime.tileYTravel);
     clearStage(stage);
     stage.appendChild(title);
@@ -416,7 +429,7 @@ async function runGenericLoop(c: LoopController, spec: TextAnimationSpec, sample
       if (c.cancelled) break;
 
       currentIndex = (currentIndex + 1) % samples.length;
-      const next = makeTitle(stage.ownerDocument, samples[currentIndex], target);
+      const next = makeTitle(stage.ownerDocument, samples[currentIndex], target, c.titleClassName);
       applyPhaseStart(next.units, "enter", spec, stage, runtime.tileYTravel);
       // Mount alongside the still-exiting old title; both share grid-area "title".
       stage.appendChild(next.title);
@@ -435,7 +448,7 @@ async function runGenericLoop(c: LoopController, spec: TextAnimationSpec, sample
       if (c.cancelled) break;
 
       currentIndex = (currentIndex + 1) % samples.length;
-      const next = makeTitle(stage.ownerDocument, samples[currentIndex], target);
+      const next = makeTitle(stage.ownerDocument, samples[currentIndex], target, c.titleClassName);
       applyPhaseStart(next.units, "enter", spec, stage, runtime.tileYTravel);
       clearStage(stage);
       stage.appendChild(next.title);
@@ -474,7 +487,12 @@ async function runSharedSlideOpacityLoop(
   let currentIndex = 0;
 
   const enterPhrase = async (text: string): Promise<HTMLHeadingElement> => {
-    const { title, units } = makeTitle(stage.ownerDocument, text, spec.target ?? "per-word");
+    const { title, units } = makeTitle(
+      stage.ownerDocument,
+      text,
+      spec.target ?? "per-word",
+      c.titleClassName,
+    );
     const fromFrame = titleFrame(enter.from, runtime.tileYTravel);
     const toFrame = titleFrame(enter.to, runtime.tileYTravel);
     Object.assign(title.style, fromFrame);
@@ -892,6 +910,7 @@ export default function TextAnimator({
   phrases,
   className,
   stageClassName,
+  titleClassName,
   speed,
   holdMs,
   gapMs,
@@ -930,7 +949,7 @@ export default function TextAnimator({
       tileYTravel: yTravel ?? DEFAULT_RUNTIME.tileYTravel,
     };
 
-    const controller = createLoop(stage, runtime);
+    const controller = createLoop(stage, runtime, titleClassName);
     const renderer = spec.customRenderer;
     const liveSamples = samplesRef.current;
     const livePhrases = phrasesRef.current;
@@ -962,7 +981,7 @@ export default function TextAnimator({
     return () => {
       cleanupLoop(controller);
     };
-  }, [spec, samplesKey, phrasesKey, speed, holdMs, gapMs, yTravel]);
+  }, [spec, samplesKey, phrasesKey, speed, holdMs, gapMs, yTravel, titleClassName]);
 
   return (
     <div
@@ -973,7 +992,9 @@ export default function TextAnimator({
     >
       <div ref={stageRef} className={cn("text-animation-stage absolute inset-0", stageClassName)}>
         {failed && effectiveSamples[0] ? (
-          <h3 className="text-animation-title text-animation-fallback">{effectiveSamples[0]}</h3>
+          <h3 className={cn("text-animation-title text-animation-fallback", titleClassName)}>
+            {effectiveSamples[0]}
+          </h3>
         ) : null}
       </div>
     </div>

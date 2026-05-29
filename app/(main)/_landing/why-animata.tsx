@@ -1,5 +1,7 @@
 "use client";
 
+import { siteStats } from "@/config/site-stats";
+
 const cards = [
   {
     title: "Copy & Paste",
@@ -11,7 +13,7 @@ const cards = [
   },
   {
     title: "Free & Open Source",
-    description: "MIT licensed, community-driven. 158+ components and growing.",
+    description: `MIT licensed, community-driven. ${siteStats.componentsFormatted} components and growing.`,
   },
 ];
 

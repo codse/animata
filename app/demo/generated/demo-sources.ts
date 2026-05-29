@@ -920,6 +920,7 @@ import { PlayIcon } from "lucide-react";
 import { IBM_Plex_Sans } from "next/font/google";
 import { useEffect, useState } from "react";
 
+import FocusBlurResolve from "@/animata/text/focus-blur-resolve";
 import Marquee from "@/animata/container/marquee";
 import { cn } from "@/lib/utils";
 
@@ -932,68 +933,126 @@ const sans = IBM_Plex_Sans({
   display: "swap",
 });
 
+const TMDB_POSTER = (path: string) => \`https://media.themoviedb.org/t/p/w500\${path}\`;
+const TMDB_BACKDROP = (path: string) => \`https://media.themoviedb.org/t/p/w780\${path}\`;
+
 const FEATURED = {
-  eyebrow: "Original film",
-  title: "Infinite Horizon",
-  tagline: "When the signal returns, nothing on Earth is where they left it.",
-  runtime: "2h 14m · Sci‑Fi · Dolby Vision",
+  eyebrow: "Now streaming",
+  title: "Dune: Part Two",
+  tagline: "The desert remembers. So does Paul.",
+  runtime: "2h 47m · Sci‑Fi",
+  backdrop: TMDB_BACKDROP("/eZ239CUp1d6OryZEBPnO2n87gMG.jpg"),
 };
 
+const HERO_BACKDROPS = [
+  { title: "Dune: Part Two", image: TMDB_BACKDROP("/eZ239CUp1d6OryZEBPnO2n87gMG.jpg") },
+  { title: "Sinners", image: TMDB_BACKDROP("/nAxGnGHOsfzufThz20zgmRwKur3.jpg") },
+  { title: "Oppenheimer", image: TMDB_BACKDROP("/neeNHeXjMF5fXoCJRsOmkNGC7q.jpg") },
+  { title: "Blade Runner 2049", image: TMDB_BACKDROP("/mVr0UiqyltcfqxbAUcLl9zWL8ah.jpg") },
+  { title: "Interstellar", image: TMDB_BACKDROP("/5XNQBqnBwPA9yT0jZ0p3s8bbLh0.jpg") },
+  { title: "Mad Max: Fury Road", image: TMDB_BACKDROP("/uT895WNwm0aIJRtGizcQhrejWUo.jpg") },
+  { title: "Parasite", image: TMDB_BACKDROP("/TU9NIjwzjoKPwQHoHshkFcQUCG.jpg") },
+  { title: "Spider-Verse", image: TMDB_BACKDROP("/9xfDWXAUbFXQK585JvByT5pEAhe.jpg") },
+] as const;
+
+const STILLS_LEFT = [
+  { title: "Anora", image: TMDB_BACKDROP("/qvyOfwTC3qdbzkqdXWSSEMHtjBZ.jpg") },
+  { title: "Challengers", image: TMDB_BACKDROP("/tq8COKsI99Bivjd4CZIYVGoKcIx.jpg") },
+  { title: "The Substance", image: TMDB_BACKDROP("/8ODNt5olCeIqBYTP3GgXEQYTfeX.jpg") },
+  { title: "Everything Everywhere", image: TMDB_BACKDROP("/ss0Os3uWJfQAENILHZUdX8Tt1OC.jpg") },
+  { title: "Poor Things", image: TMDB_BACKDROP("/zh6IdheEYinU4TPtorWsjx6qPQE.jpg") },
+  { title: "The Batman", image: TMDB_BACKDROP("/rvtdN5XkWAfGX6xDuPL6yYS2seK.jpg") },
+] as const;
+
+const STILLS_RIGHT = [
+  { title: "Top Gun: Maverick", image: TMDB_BACKDROP("/AaV1YIdWKnjAIAOe8UUKBFm327v.jpg") },
+  { title: "Banshees of Inisherin", image: TMDB_BACKDROP("/1vXD5HXqkhvsXFHE7KmCPZGPR1e.jpg") },
+  { title: "Sinners", image: TMDB_BACKDROP("/nAxGnGHOsfzufThz20zgmRwKur3.jpg") },
+  { title: "Oppenheimer", image: TMDB_BACKDROP("/neeNHeXjMF5fXoCJRsOmkNGC7q.jpg") },
+  { title: "Interstellar", image: TMDB_BACKDROP("/5XNQBqnBwPA9yT0jZ0p3s8bbLh0.jpg") },
+  { title: "Mad Max: Fury Road", image: TMDB_BACKDROP("/uT895WNwm0aIJRtGizcQhrejWUo.jpg") },
+] as const;
+
 const PREMIERES = [
+  { title: "Sinners", genre: "Horror", poster: TMDB_POSTER("/fWPgbnt2LSqkQ6cdQc0SZN9CpLm.jpg") },
+  { title: "Anora", genre: "Drama", poster: TMDB_POSTER("/oN0o3owobFjePDc5vMdLRAd0jkd.jpg") },
+  { title: "Challengers", genre: "Drama", poster: TMDB_POSTER("/H6vke7zGiuLsz4v4RPeReb9rsv.jpg") },
   {
-    title: "Glass Orchard",
-    genre: "Drama",
-    gradient: "linear-gradient(160deg, oklch(0.42 0.12 250) 0%, oklch(0.22 0.06 280) 100%)",
+    title: "The Substance",
+    genre: "Horror",
+    poster: TMDB_POSTER("/lqoMzCcZYEFK729d6qzt349fB4o.jpg"),
   },
+  { title: "Oppenheimer", genre: "Biography", poster: TMDB_POSTER("/8Gxv8gSFCU0XGDykEGv7zR1n2ua.jpg") },
   {
-    title: "Midnight Relay",
-    genre: "Thriller",
-    gradient: "linear-gradient(160deg, oklch(0.35 0.08 25) 0%, oklch(0.18 0.04 15) 100%)",
-  },
-  {
-    title: "North Archive",
-    genre: "Documentary",
-    gradient: "linear-gradient(160deg, oklch(0.55 0.06 210) 0%, oklch(0.28 0.04 230) 100%)",
-  },
-  {
-    title: "Soft Circuit",
-    genre: "Romance",
-    gradient: "linear-gradient(160deg, oklch(0.62 0.14 340) 0%, oklch(0.32 0.08 320) 100%)",
-  },
-  {
-    title: "Harbor Line",
-    genre: "Crime",
-    gradient: "linear-gradient(160deg, oklch(0.38 0.05 160) 0%, oklch(0.16 0.03 190) 100%)",
-  },
-  {
-    title: "Second Sun",
+    title: "Everything Everywhere All at Once",
     genre: "Sci‑Fi",
-    gradient: "linear-gradient(160deg, oklch(0.48 0.16 55) 0%, oklch(0.24 0.08 40) 100%)",
+    poster: TMDB_POSTER("/u68AjlvlutfEIcpmbYpKcdi09ut.jpg"),
+  },
+  { title: "Parasite", genre: "Thriller", poster: TMDB_POSTER("/7IiTTgloJzvGI1TAYymCfbfl3vT.jpg") },
+  {
+    title: "Spider-Man: Across the Spider-Verse",
+    genre: "Animation",
+    poster: TMDB_POSTER("/8Vt6mWEReuy4Of61Lnj5Xj704m8.jpg"),
   },
   {
-    title: "Quiet Union",
-    genre: "Indie",
-    gradient: "linear-gradient(160deg, oklch(0.52 0.04 280) 0%, oklch(0.24 0.03 260) 100%)",
+    title: "Blade Runner 2049",
+    genre: "Sci‑Fi",
+    poster: TMDB_POSTER("/gajva2L0rPYkEWjzgFlBXCAVBE5.jpg"),
+  },
+  { title: "Interstellar", genre: "Sci‑Fi", poster: TMDB_POSTER("/yQvGrMoipbRoddT0ZR8tPoR7NfX.jpg") },
+  { title: "Poor Things", genre: "Comedy", poster: TMDB_POSTER("/kCGlIMHnOm8JPXq3rXM6c5wMxcT.jpg") },
+  {
+    title: "Mad Max: Fury Road",
+    genre: "Action",
+    poster: TMDB_POSTER("/hA2ple9q4qnwxp3hKVNhroipsir.jpg"),
   },
 ] as const;
 
-const QUOTES = [
-  { text: "A widescreen poem.", source: "The Frame" },
-  { text: "Refuses to blink.", source: "Celluloid" },
-  { text: "Sound you feel in your chest.", source: "Playback" },
-  { text: "The rare blockbuster with a pulse.", source: "Premiere" },
-  { text: "Every frame is a poster.", source: "Lens Culture" },
-  { text: "Turn the volume up.", source: "Signal" },
-  { text: "IMAX without leaving the couch.", source: "Home Screen" },
-  { text: "Cast chemistry for the ages.", source: "Rolling Reel" },
-] as const;
+function CinemaContent({
+  className,
+  children,
+}: {
+  className?: string;
+  children: React.ReactNode;
+}) {
+  return <div className={cn("mx-auto w-full max-w-6xl px-5 sm:px-8", className)}>{children}</div>;
+}
 
-function QuoteChip({ text, source }: { text: string; source: string }) {
+function BackdropSlide({ title, image }: { title: string; image: string }) {
   return (
-    <figure className="w-40 shrink-0 rounded-2xl border border-white/10 bg-white/[0.035] px-4 py-3 sm:w-44">
-      <blockquote className="text-[13px] leading-snug text-white/82">&ldquo;{text}&rdquo;</blockquote>
-      <figcaption className="mt-2 text-[11px] font-medium tracking-wide text-white/38 uppercase">
-        {source}
+    <div className="relative h-[min(88svh,920px)] w-[clamp(14rem,42vw,36rem)] shrink-0 overflow-hidden">
+      <img src={image} alt="" aria-hidden="true" className="h-full w-full object-cover" />
+      <span className="sr-only">{title}</span>
+    </div>
+  );
+}
+
+function LandscapeStill({
+  title,
+  image,
+  variant = "wide",
+}: {
+  title: string;
+  image: string;
+  variant?: "wide" | "tall";
+}) {
+  return (
+    <figure
+      className={cn(
+        "group relative w-full shrink-0 overflow-hidden rounded-2xl ring-1 ring-white/12",
+        variant === "tall" ? "aspect-[5/3]" : "aspect-video",
+      )}
+    >
+      <img
+        src={image}
+        alt={\`\${title} still\`}
+        loading="lazy"
+        decoding="async"
+        className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
+      />
+      <div className="pointer-events-none absolute inset-0 bg-linear-to-t from-black/75 via-black/10 to-transparent" />
+      <figcaption className="absolute inset-x-0 bottom-0 truncate px-3 pb-2.5 text-[11px] font-semibold tracking-[0.06em] text-white/88 uppercase">
+        {title}
       </figcaption>
     </figure>
   );
@@ -1002,21 +1061,168 @@ function QuoteChip({ text, source }: { text: string; source: string }) {
 function PosterCard({
   title,
   genre,
-  gradient,
+  poster,
 }: {
   title: string;
   genre: string;
-  gradient: string;
+  poster: string;
 }) {
   return (
     <article className="w-[9.75rem] shrink-0 snap-start sm:w-[11.25rem]">
-      <div
-        className="aspect-[2/3] overflow-hidden rounded-xl ring-1 ring-white/10"
-        style={{ backgroundImage: gradient }}
-      />
+      <div className="aspect-[2/3] overflow-hidden rounded-xl ring-1 ring-white/10">
+        <img
+          src={poster}
+          alt={\`\${title} poster\`}
+          loading="lazy"
+          decoding="async"
+          className="h-full w-full object-cover"
+        />
+      </div>
       <h3 className="mt-2.5 truncate text-[15px] font-medium text-white/92">{title}</h3>
       <p className="text-[13px] text-white/42">{genre}</p>
     </article>
+  );
+}
+
+function MarqueeWell({
+  children,
+  className,
+  tone = "violet",
+}: {
+  children: React.ReactNode;
+  className?: string;
+  tone?: "violet" | "amber";
+}) {
+  const wellColor =
+    tone === "violet" ? "oklch(0.14 0.03 285)" : "oklch(0.15 0.028 55)";
+
+  return (
+    <div
+      className={cn(
+        "relative min-h-[18rem] overflow-hidden rounded-[1.35rem] shadow-[inset_0_1px_0_oklch(1_0_0/0.07)] ring-1 ring-white/10",
+        className,
+      )}
+      style={{ backgroundColor: wellColor }}
+    >
+      {children}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 top-0 z-10 h-14 bg-linear-to-b to-transparent"
+        style={{
+          backgroundImage: \`linear-gradient(to bottom, \${wellColor} 0%, color-mix(in oklch, \${wellColor} 85%, transparent) 55%, transparent 100%)\`,
+        }}
+      />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-20 bg-linear-to-t to-transparent"
+        style={{
+          backgroundImage: \`linear-gradient(to top, \${wellColor} 0%, color-mix(in oklch, \${wellColor} 90%, transparent) 60%, transparent 100%)\`,
+        }}
+      />
+    </div>
+  );
+}
+
+function StillMarqueeColumn({
+  stills,
+  reverse = false,
+  duration,
+  variant,
+}: {
+  stills: readonly { title: string; image: string }[];
+  reverse?: boolean;
+  duration: string;
+  variant: "wide" | "tall";
+}) {
+  return (
+    <Marquee
+      vertical
+      reverse={reverse}
+      pauseOnHover
+      applyMask={false}
+      className={cn("h-full p-2.5 sm:p-3", duration)}
+    >
+      {stills.map((still) => (
+        <LandscapeStill key={\`\${reverse ? "rev" : "fwd"}-\${still.title}\`} {...still} variant={variant} />
+      ))}
+    </Marquee>
+  );
+}
+
+function VerticalStillGallery({
+  reducedMotion,
+  className,
+}: {
+  reducedMotion: boolean;
+  className?: string;
+}) {
+  if (reducedMotion) {
+    return (
+      <div className={cn("grid h-full min-h-[18rem] grid-cols-2 gap-2 sm:gap-2.5", className)}>
+        <MarqueeWell className="h-full min-h-0 overflow-y-auto">
+          <div className="flex flex-col gap-2.5 p-2.5 sm:p-3">
+            {STILLS_LEFT.slice(0, 3).map((still) => (
+              <LandscapeStill key={still.title} {...still} variant="wide" />
+            ))}
+          </div>
+        </MarqueeWell>
+        <MarqueeWell tone="amber" className="h-full min-h-0 overflow-y-auto">
+          <div className="flex flex-col gap-2.5 p-2.5 sm:p-3">
+            {STILLS_RIGHT.slice(0, 3).map((still) => (
+              <LandscapeStill key={still.title} {...still} variant="tall" />
+            ))}
+          </div>
+        </MarqueeWell>
+      </div>
+    );
+  }
+
+  return (
+    <div
+      className={cn(
+        "grid h-full min-h-[18rem] grid-cols-2 items-stretch gap-2 sm:min-h-[22rem] sm:gap-2.5 md:min-h-[min(26rem,46vh)]",
+        className,
+      )}
+    >
+      <MarqueeWell className="h-full min-h-0">
+        <StillMarqueeColumn stills={STILLS_LEFT} duration="[--duration:32s] [--gap:12px]" variant="wide" />
+      </MarqueeWell>
+      <MarqueeWell tone="amber" className="h-full min-h-0 md:translate-y-3">
+        <StillMarqueeColumn
+          stills={STILLS_RIGHT}
+          reverse
+          duration="[--duration:38s] [--gap:12px]"
+          variant="tall"
+        />
+      </MarqueeWell>
+    </div>
+  );
+}
+
+function CraftFeaturePanel({ reducedMotion }: { reducedMotion: boolean }) {
+  return (
+    <div className="@container overflow-hidden rounded-[1.35rem] border border-white/10 bg-[oklch(0.12_0.025_285)] shadow-[inset_0_1px_0_oklch(1_0_0/0.05)]">
+      <div className="grid md:grid-cols-[minmax(0,11.5rem)_minmax(0,1fr)] lg:grid-cols-[minmax(0,15rem)_minmax(0,1fr)]">
+        <div className="flex flex-col justify-end gap-3 border-b border-white/8 p-5 sm:p-6 md:border-r md:border-b-0 md:p-6 lg:p-8">
+          <p className="text-[13px] font-medium tracking-[0.08em] text-white/42 uppercase">
+            The craft
+          </p>
+          <h2
+            id="editorial-heading"
+            className="text-balance text-[clamp(1.5rem,4.5cqi,2.25rem)] leading-[1.08] font-semibold tracking-[-0.03em]"
+          >
+            Big-screen rhythm. Living-room scale.
+          </h2>
+          <p className="text-[14px] leading-relaxed text-white/52 sm:text-[15px]">
+            Three motion layers — hero, rail, twin columns — one browse page.
+          </p>
+        </div>
+
+        <div className="min-h-[18rem] p-2.5 sm:min-h-[22rem] sm:p-3 md:min-h-[min(26rem,46vh)]">
+          <VerticalStillGallery reducedMotion={reducedMotion} className="h-full" />
+        </div>
+      </div>
+    </div>
   );
 }
 
@@ -1040,8 +1246,27 @@ export default function CinemaRow() {
           "min-h-svh bg-black text-white selection:bg-white/20",
         )}
       >
-        {/* Hero — overscale premiere typography */}
+        {/* Hero — backdrop marquee + premiere type */}
         <section className="relative isolate overflow-hidden">
+          <div aria-hidden="true" className="absolute inset-0 overflow-hidden">
+            {reducedMotion ? (
+              <img
+                src={FEATURED.backdrop}
+                alt=""
+                className="h-full w-full object-cover object-[50%_20%] opacity-40"
+              />
+            ) : (
+              <Marquee
+                pauseOnHover
+                applyMask={false}
+                className="h-full [--duration:48s] [--gap:0px]"
+              >
+                {HERO_BACKDROPS.map((slide) => (
+                  <BackdropSlide key={slide.title} {...slide} />
+                ))}
+              </Marquee>
+            )}
+          </div>
           <div
             aria-hidden="true"
             className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_120%_80%_at_50%_-10%,oklch(0.28_0.08_280_/_0.55)_0%,transparent_58%),linear-gradient(to_bottom,oklch(0.12_0.02_280)_0%,black_72%)]"
@@ -1051,14 +1276,28 @@ export default function CinemaRow() {
             className="pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-linear-to-t from-black to-transparent"
           />
 
-          <div className="relative z-10 flex min-h-[min(88svh,920px)] flex-col justify-end px-5 pb-[calc(var(--demo-chrome-reserve,5rem)+2.5rem)] pt-[max(1.25rem,env(safe-area-inset-top))] sm:px-8">
+          <CinemaContent className="relative z-10 flex min-h-[min(88svh,920px)] flex-col justify-end pb-[calc(var(--demo-chrome-reserve,5rem)+2.5rem)] pt-[max(1.25rem,env(safe-area-inset-top))]">
             <p className="text-[13px] font-medium tracking-[0.08em] text-white/45 uppercase">
               {FEATURED.eyebrow}
             </p>
-            <h1 className="mt-3 max-w-[11ch] text-balance text-[clamp(3.25rem,14vw,7.5rem)] leading-[0.9] font-semibold tracking-[-0.045em]">
-              {FEATURED.title}
-            </h1>
-            <p className="mt-5 max-w-[34ch] text-[17px] leading-snug text-white/58 sm:text-[19px]">
+            {reducedMotion ? (
+              <h1 className="mt-3 max-w-[11ch] -translate-x-[0.13ex] text-balance text-[clamp(3.25rem,14vw,7.5rem)] leading-[0.9] font-semibold tracking-[-0.045em]">
+                {FEATURED.title}
+              </h1>
+            ) : (
+              <div className="mt-3 max-w-[11ch] -translate-x-[0.13ex]">
+                <FocusBlurResolve
+                  text={FEATURED.title}
+                  holdMs={12000}
+                  gapMs={2400}
+                  className="aspect-auto h-auto w-full items-start justify-start overflow-visible text-white"
+                  stageClassName="relative inset-auto h-auto min-h-0 w-full place-items-start p-0"
+                  titleClassName="!text-left !font-semibold !tracking-[-0.045em] !text-[clamp(3.25rem,14vw,7.5rem)] !leading-[0.9]"
+                />
+                <h1 className="sr-only">{FEATURED.title}</h1>
+              </div>
+            )}
+            <p className="mt-5 max-w-[28ch] text-[17px] leading-snug text-white/58 sm:text-[19px]">
               {FEATURED.tagline}
             </p>
             <p className="mt-3 text-[13px] text-white/38">{FEATURED.runtime}</p>
@@ -1078,97 +1317,35 @@ export default function CinemaRow() {
                 Add to Up Next
               </button>
             </div>
-          </div>
+          </CinemaContent>
         </section>
 
         {/* Horizontal poster row */}
         <section className="pb-6 pt-2" aria-labelledby="premieres-heading">
-          <div className="mb-4 flex items-end justify-between gap-4 px-5 sm:px-8">
+          <CinemaContent className="mb-4 flex items-end justify-between gap-4">
             <h2 id="premieres-heading" className="text-[22px] font-semibold tracking-[-0.02em]">
               Premieres
             </h2>
-            <span className="text-[13px] text-white/38">Swipe to browse</span>
-          </div>
+            <span className="text-[13px] text-white/38">Swipe</span>
+          </CinemaContent>
 
-          <div className="overflow-x-auto overscroll-x-contain pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-            <div className="flex w-max snap-x snap-mandatory gap-4 px-5 sm:gap-5 sm:px-8">
+          <CinemaContent className="overflow-x-auto overscroll-x-contain pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            <div className="flex w-max snap-x snap-mandatory gap-4 sm:gap-5">
               {PREMIERES.map((film) => (
                 <PosterCard key={film.title} {...film} />
               ))}
             </div>
-          </div>
+          </CinemaContent>
         </section>
 
-        {/* Editorial copy + opposing vertical marquees */}
+        {/* Editorial + opposing vertical still marquees */}
         <section
-          className="border-t border-white/[0.06] px-5 py-20 sm:px-8 sm:py-28"
+          className="border-t border-white/[0.06] py-16 sm:py-24"
           aria-labelledby="editorial-heading"
         >
-          <div className="mx-auto grid max-w-6xl gap-12 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)] lg:items-center lg:gap-16">
-            <div className="max-w-md">
-              <p className="text-[13px] font-medium tracking-[0.08em] text-white/42 uppercase">
-                The craft
-              </p>
-              <h2
-                id="editorial-heading"
-                className="mt-3 text-balance text-[clamp(2rem,5vw,3rem)] leading-[1.05] font-semibold tracking-[-0.03em]"
-              >
-                Built for the big screen. Tuned for your living room.
-              </h2>
-              <p className="mt-5 text-[16px] leading-relaxed text-white/52">
-                This browse layout pairs overscale premiere type with a snap-scrolling poster rail,
-                then lets critic lines drift in opposite directions beside long-form copy — the
-                rhythm streaming homepages use to feel cinematic without hiding the catalog.
-              </p>
-              <p className="mt-4 text-[16px] leading-relaxed text-white/52">
-                The dual marquees are the same{" "}
-                <span className="text-white/72">Marquee</span> primitive twice: one column runs
-                upward, the other reverses downward so motion never feels like a single conveyor
-                belt.
-              </p>
-            </div>
-
-            <div className="grid h-[min(32rem,68vh)] min-h-[22rem] grid-cols-2 gap-3 sm:gap-4">
-              {reducedMotion ? (
-                <>
-                  <div className="flex flex-col gap-3 overflow-hidden rounded-2xl border border-white/[0.06] bg-white/[0.02] p-3">
-                    {QUOTES.slice(0, 4).map((quote) => (
-                      <QuoteChip key={quote.source} {...quote} />
-                    ))}
-                  </div>
-                  <div className="flex flex-col gap-3 overflow-hidden rounded-2xl border border-white/[0.06] bg-white/[0.02] p-3">
-                    {QUOTES.slice(4).map((quote) => (
-                      <QuoteChip key={quote.source} {...quote} />
-                    ))}
-                  </div>
-                </>
-              ) : (
-                <>
-                  <Marquee
-                    vertical
-                    pauseOnHover
-                    applyMask={false}
-                    className="h-full rounded-2xl border border-white/[0.06] bg-white/[0.02] p-2 [--duration:26s] [--gap:14px]"
-                  >
-                    {QUOTES.map((quote) => (
-                      <QuoteChip key={\`up-\${quote.source}\`} {...quote} />
-                    ))}
-                  </Marquee>
-                  <Marquee
-                    vertical
-                    reverse
-                    pauseOnHover
-                    applyMask={false}
-                    className="h-full rounded-2xl border border-white/[0.06] bg-white/[0.02] p-2 [--duration:31s] [--gap:14px]"
-                  >
-                    {QUOTES.map((quote) => (
-                      <QuoteChip key={\`down-\${quote.source}\`} {...quote} />
-                    ))}
-                  </Marquee>
-                </>
-              )}
-            </div>
-          </div>
+          <CinemaContent>
+            <CraftFeaturePanel reducedMotion={reducedMotion} />
+          </CinemaContent>
         </section>
       </div>
 
@@ -1183,6 +1360,7 @@ export default function CinemaRow() {
 <span class="line"><span style="color:#D73A49">import</span><span style="color:#24292E"> { IBM_Plex_Sans } </span><span style="color:#D73A49">from</span><span style="color:#032F62"> "next/font/google"</span><span style="color:#24292E">;</span></span>
 <span class="line"><span style="color:#D73A49">import</span><span style="color:#24292E"> { useEffect, useState } </span><span style="color:#D73A49">from</span><span style="color:#032F62"> "react"</span><span style="color:#24292E">;</span></span>
 <span class="line"></span>
+<span class="line"><span style="color:#D73A49">import</span><span style="color:#24292E"> FocusBlurResolve </span><span style="color:#D73A49">from</span><span style="color:#032F62"> "@/animata/text/focus-blur-resolve"</span><span style="color:#24292E">;</span></span>
 <span class="line"><span style="color:#D73A49">import</span><span style="color:#24292E"> Marquee </span><span style="color:#D73A49">from</span><span style="color:#032F62"> "@/animata/container/marquee"</span><span style="color:#24292E">;</span></span>
 <span class="line"><span style="color:#D73A49">import</span><span style="color:#24292E"> { cn } </span><span style="color:#D73A49">from</span><span style="color:#032F62"> "@/lib/utils"</span><span style="color:#24292E">;</span></span>
 <span class="line"></span>
@@ -1195,68 +1373,126 @@ export default function CinemaRow() {
 <span class="line"><span style="color:#24292E">  display: </span><span style="color:#032F62">"swap"</span><span style="color:#24292E">,</span></span>
 <span class="line"><span style="color:#24292E">});</span></span>
 <span class="line"></span>
+<span class="line"><span style="color:#D73A49">const</span><span style="color:#6F42C1"> TMDB_POSTER</span><span style="color:#D73A49"> =</span><span style="color:#24292E"> (</span><span style="color:#E36209">path</span><span style="color:#D73A49">:</span><span style="color:#005CC5"> string</span><span style="color:#24292E">) </span><span style="color:#D73A49">=></span><span style="color:#032F62"> \`https://media.themoviedb.org/t/p/w500\${</span><span style="color:#24292E">path</span><span style="color:#032F62">}\`</span><span style="color:#24292E">;</span></span>
+<span class="line"><span style="color:#D73A49">const</span><span style="color:#6F42C1"> TMDB_BACKDROP</span><span style="color:#D73A49"> =</span><span style="color:#24292E"> (</span><span style="color:#E36209">path</span><span style="color:#D73A49">:</span><span style="color:#005CC5"> string</span><span style="color:#24292E">) </span><span style="color:#D73A49">=></span><span style="color:#032F62"> \`https://media.themoviedb.org/t/p/w780\${</span><span style="color:#24292E">path</span><span style="color:#032F62">}\`</span><span style="color:#24292E">;</span></span>
+<span class="line"></span>
 <span class="line"><span style="color:#D73A49">const</span><span style="color:#005CC5"> FEATURED</span><span style="color:#D73A49"> =</span><span style="color:#24292E"> {</span></span>
-<span class="line"><span style="color:#24292E">  eyebrow: </span><span style="color:#032F62">"Original film"</span><span style="color:#24292E">,</span></span>
-<span class="line"><span style="color:#24292E">  title: </span><span style="color:#032F62">"Infinite Horizon"</span><span style="color:#24292E">,</span></span>
-<span class="line"><span style="color:#24292E">  tagline: </span><span style="color:#032F62">"When the signal returns, nothing on Earth is where they left it."</span><span style="color:#24292E">,</span></span>
-<span class="line"><span style="color:#24292E">  runtime: </span><span style="color:#032F62">"2h 14m · Sci‑Fi · Dolby Vision"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">  eyebrow: </span><span style="color:#032F62">"Now streaming"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">  title: </span><span style="color:#032F62">"Dune: Part Two"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">  tagline: </span><span style="color:#032F62">"The desert remembers. So does Paul."</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">  runtime: </span><span style="color:#032F62">"2h 47m · Sci‑Fi"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">  backdrop: </span><span style="color:#6F42C1">TMDB_BACKDROP</span><span style="color:#24292E">(</span><span style="color:#032F62">"/eZ239CUp1d6OryZEBPnO2n87gMG.jpg"</span><span style="color:#24292E">),</span></span>
 <span class="line"><span style="color:#24292E">};</span></span>
 <span class="line"></span>
+<span class="line"><span style="color:#D73A49">const</span><span style="color:#005CC5"> HERO_BACKDROPS</span><span style="color:#D73A49"> =</span><span style="color:#24292E"> [</span></span>
+<span class="line"><span style="color:#24292E">  { title: </span><span style="color:#032F62">"Dune: Part Two"</span><span style="color:#24292E">, image: </span><span style="color:#6F42C1">TMDB_BACKDROP</span><span style="color:#24292E">(</span><span style="color:#032F62">"/eZ239CUp1d6OryZEBPnO2n87gMG.jpg"</span><span style="color:#24292E">) },</span></span>
+<span class="line"><span style="color:#24292E">  { title: </span><span style="color:#032F62">"Sinners"</span><span style="color:#24292E">, image: </span><span style="color:#6F42C1">TMDB_BACKDROP</span><span style="color:#24292E">(</span><span style="color:#032F62">"/nAxGnGHOsfzufThz20zgmRwKur3.jpg"</span><span style="color:#24292E">) },</span></span>
+<span class="line"><span style="color:#24292E">  { title: </span><span style="color:#032F62">"Oppenheimer"</span><span style="color:#24292E">, image: </span><span style="color:#6F42C1">TMDB_BACKDROP</span><span style="color:#24292E">(</span><span style="color:#032F62">"/neeNHeXjMF5fXoCJRsOmkNGC7q.jpg"</span><span style="color:#24292E">) },</span></span>
+<span class="line"><span style="color:#24292E">  { title: </span><span style="color:#032F62">"Blade Runner 2049"</span><span style="color:#24292E">, image: </span><span style="color:#6F42C1">TMDB_BACKDROP</span><span style="color:#24292E">(</span><span style="color:#032F62">"/mVr0UiqyltcfqxbAUcLl9zWL8ah.jpg"</span><span style="color:#24292E">) },</span></span>
+<span class="line"><span style="color:#24292E">  { title: </span><span style="color:#032F62">"Interstellar"</span><span style="color:#24292E">, image: </span><span style="color:#6F42C1">TMDB_BACKDROP</span><span style="color:#24292E">(</span><span style="color:#032F62">"/5XNQBqnBwPA9yT0jZ0p3s8bbLh0.jpg"</span><span style="color:#24292E">) },</span></span>
+<span class="line"><span style="color:#24292E">  { title: </span><span style="color:#032F62">"Mad Max: Fury Road"</span><span style="color:#24292E">, image: </span><span style="color:#6F42C1">TMDB_BACKDROP</span><span style="color:#24292E">(</span><span style="color:#032F62">"/uT895WNwm0aIJRtGizcQhrejWUo.jpg"</span><span style="color:#24292E">) },</span></span>
+<span class="line"><span style="color:#24292E">  { title: </span><span style="color:#032F62">"Parasite"</span><span style="color:#24292E">, image: </span><span style="color:#6F42C1">TMDB_BACKDROP</span><span style="color:#24292E">(</span><span style="color:#032F62">"/TU9NIjwzjoKPwQHoHshkFcQUCG.jpg"</span><span style="color:#24292E">) },</span></span>
+<span class="line"><span style="color:#24292E">  { title: </span><span style="color:#032F62">"Spider-Verse"</span><span style="color:#24292E">, image: </span><span style="color:#6F42C1">TMDB_BACKDROP</span><span style="color:#24292E">(</span><span style="color:#032F62">"/9xfDWXAUbFXQK585JvByT5pEAhe.jpg"</span><span style="color:#24292E">) },</span></span>
+<span class="line"><span style="color:#24292E">] </span><span style="color:#D73A49">as</span><span style="color:#D73A49"> const</span><span style="color:#24292E">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49">const</span><span style="color:#005CC5"> STILLS_LEFT</span><span style="color:#D73A49"> =</span><span style="color:#24292E"> [</span></span>
+<span class="line"><span style="color:#24292E">  { title: </span><span style="color:#032F62">"Anora"</span><span style="color:#24292E">, image: </span><span style="color:#6F42C1">TMDB_BACKDROP</span><span style="color:#24292E">(</span><span style="color:#032F62">"/qvyOfwTC3qdbzkqdXWSSEMHtjBZ.jpg"</span><span style="color:#24292E">) },</span></span>
+<span class="line"><span style="color:#24292E">  { title: </span><span style="color:#032F62">"Challengers"</span><span style="color:#24292E">, image: </span><span style="color:#6F42C1">TMDB_BACKDROP</span><span style="color:#24292E">(</span><span style="color:#032F62">"/tq8COKsI99Bivjd4CZIYVGoKcIx.jpg"</span><span style="color:#24292E">) },</span></span>
+<span class="line"><span style="color:#24292E">  { title: </span><span style="color:#032F62">"The Substance"</span><span style="color:#24292E">, image: </span><span style="color:#6F42C1">TMDB_BACKDROP</span><span style="color:#24292E">(</span><span style="color:#032F62">"/8ODNt5olCeIqBYTP3GgXEQYTfeX.jpg"</span><span style="color:#24292E">) },</span></span>
+<span class="line"><span style="color:#24292E">  { title: </span><span style="color:#032F62">"Everything Everywhere"</span><span style="color:#24292E">, image: </span><span style="color:#6F42C1">TMDB_BACKDROP</span><span style="color:#24292E">(</span><span style="color:#032F62">"/ss0Os3uWJfQAENILHZUdX8Tt1OC.jpg"</span><span style="color:#24292E">) },</span></span>
+<span class="line"><span style="color:#24292E">  { title: </span><span style="color:#032F62">"Poor Things"</span><span style="color:#24292E">, image: </span><span style="color:#6F42C1">TMDB_BACKDROP</span><span style="color:#24292E">(</span><span style="color:#032F62">"/zh6IdheEYinU4TPtorWsjx6qPQE.jpg"</span><span style="color:#24292E">) },</span></span>
+<span class="line"><span style="color:#24292E">  { title: </span><span style="color:#032F62">"The Batman"</span><span style="color:#24292E">, image: </span><span style="color:#6F42C1">TMDB_BACKDROP</span><span style="color:#24292E">(</span><span style="color:#032F62">"/rvtdN5XkWAfGX6xDuPL6yYS2seK.jpg"</span><span style="color:#24292E">) },</span></span>
+<span class="line"><span style="color:#24292E">] </span><span style="color:#D73A49">as</span><span style="color:#D73A49"> const</span><span style="color:#24292E">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49">const</span><span style="color:#005CC5"> STILLS_RIGHT</span><span style="color:#D73A49"> =</span><span style="color:#24292E"> [</span></span>
+<span class="line"><span style="color:#24292E">  { title: </span><span style="color:#032F62">"Top Gun: Maverick"</span><span style="color:#24292E">, image: </span><span style="color:#6F42C1">TMDB_BACKDROP</span><span style="color:#24292E">(</span><span style="color:#032F62">"/AaV1YIdWKnjAIAOe8UUKBFm327v.jpg"</span><span style="color:#24292E">) },</span></span>
+<span class="line"><span style="color:#24292E">  { title: </span><span style="color:#032F62">"Banshees of Inisherin"</span><span style="color:#24292E">, image: </span><span style="color:#6F42C1">TMDB_BACKDROP</span><span style="color:#24292E">(</span><span style="color:#032F62">"/1vXD5HXqkhvsXFHE7KmCPZGPR1e.jpg"</span><span style="color:#24292E">) },</span></span>
+<span class="line"><span style="color:#24292E">  { title: </span><span style="color:#032F62">"Sinners"</span><span style="color:#24292E">, image: </span><span style="color:#6F42C1">TMDB_BACKDROP</span><span style="color:#24292E">(</span><span style="color:#032F62">"/nAxGnGHOsfzufThz20zgmRwKur3.jpg"</span><span style="color:#24292E">) },</span></span>
+<span class="line"><span style="color:#24292E">  { title: </span><span style="color:#032F62">"Oppenheimer"</span><span style="color:#24292E">, image: </span><span style="color:#6F42C1">TMDB_BACKDROP</span><span style="color:#24292E">(</span><span style="color:#032F62">"/neeNHeXjMF5fXoCJRsOmkNGC7q.jpg"</span><span style="color:#24292E">) },</span></span>
+<span class="line"><span style="color:#24292E">  { title: </span><span style="color:#032F62">"Interstellar"</span><span style="color:#24292E">, image: </span><span style="color:#6F42C1">TMDB_BACKDROP</span><span style="color:#24292E">(</span><span style="color:#032F62">"/5XNQBqnBwPA9yT0jZ0p3s8bbLh0.jpg"</span><span style="color:#24292E">) },</span></span>
+<span class="line"><span style="color:#24292E">  { title: </span><span style="color:#032F62">"Mad Max: Fury Road"</span><span style="color:#24292E">, image: </span><span style="color:#6F42C1">TMDB_BACKDROP</span><span style="color:#24292E">(</span><span style="color:#032F62">"/uT895WNwm0aIJRtGizcQhrejWUo.jpg"</span><span style="color:#24292E">) },</span></span>
+<span class="line"><span style="color:#24292E">] </span><span style="color:#D73A49">as</span><span style="color:#D73A49"> const</span><span style="color:#24292E">;</span></span>
+<span class="line"></span>
 <span class="line"><span style="color:#D73A49">const</span><span style="color:#005CC5"> PREMIERES</span><span style="color:#D73A49"> =</span><span style="color:#24292E"> [</span></span>
+<span class="line"><span style="color:#24292E">  { title: </span><span style="color:#032F62">"Sinners"</span><span style="color:#24292E">, genre: </span><span style="color:#032F62">"Horror"</span><span style="color:#24292E">, poster: </span><span style="color:#6F42C1">TMDB_POSTER</span><span style="color:#24292E">(</span><span style="color:#032F62">"/fWPgbnt2LSqkQ6cdQc0SZN9CpLm.jpg"</span><span style="color:#24292E">) },</span></span>
+<span class="line"><span style="color:#24292E">  { title: </span><span style="color:#032F62">"Anora"</span><span style="color:#24292E">, genre: </span><span style="color:#032F62">"Drama"</span><span style="color:#24292E">, poster: </span><span style="color:#6F42C1">TMDB_POSTER</span><span style="color:#24292E">(</span><span style="color:#032F62">"/oN0o3owobFjePDc5vMdLRAd0jkd.jpg"</span><span style="color:#24292E">) },</span></span>
+<span class="line"><span style="color:#24292E">  { title: </span><span style="color:#032F62">"Challengers"</span><span style="color:#24292E">, genre: </span><span style="color:#032F62">"Drama"</span><span style="color:#24292E">, poster: </span><span style="color:#6F42C1">TMDB_POSTER</span><span style="color:#24292E">(</span><span style="color:#032F62">"/H6vke7zGiuLsz4v4RPeReb9rsv.jpg"</span><span style="color:#24292E">) },</span></span>
 <span class="line"><span style="color:#24292E">  {</span></span>
-<span class="line"><span style="color:#24292E">    title: </span><span style="color:#032F62">"Glass Orchard"</span><span style="color:#24292E">,</span></span>
-<span class="line"><span style="color:#24292E">    genre: </span><span style="color:#032F62">"Drama"</span><span style="color:#24292E">,</span></span>
-<span class="line"><span style="color:#24292E">    gradient: </span><span style="color:#032F62">"linear-gradient(160deg, oklch(0.42 0.12 250) 0%, oklch(0.22 0.06 280) 100%)"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">    title: </span><span style="color:#032F62">"The Substance"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">    genre: </span><span style="color:#032F62">"Horror"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">    poster: </span><span style="color:#6F42C1">TMDB_POSTER</span><span style="color:#24292E">(</span><span style="color:#032F62">"/lqoMzCcZYEFK729d6qzt349fB4o.jpg"</span><span style="color:#24292E">),</span></span>
 <span class="line"><span style="color:#24292E">  },</span></span>
+<span class="line"><span style="color:#24292E">  { title: </span><span style="color:#032F62">"Oppenheimer"</span><span style="color:#24292E">, genre: </span><span style="color:#032F62">"Biography"</span><span style="color:#24292E">, poster: </span><span style="color:#6F42C1">TMDB_POSTER</span><span style="color:#24292E">(</span><span style="color:#032F62">"/8Gxv8gSFCU0XGDykEGv7zR1n2ua.jpg"</span><span style="color:#24292E">) },</span></span>
 <span class="line"><span style="color:#24292E">  {</span></span>
-<span class="line"><span style="color:#24292E">    title: </span><span style="color:#032F62">"Midnight Relay"</span><span style="color:#24292E">,</span></span>
-<span class="line"><span style="color:#24292E">    genre: </span><span style="color:#032F62">"Thriller"</span><span style="color:#24292E">,</span></span>
-<span class="line"><span style="color:#24292E">    gradient: </span><span style="color:#032F62">"linear-gradient(160deg, oklch(0.35 0.08 25) 0%, oklch(0.18 0.04 15) 100%)"</span><span style="color:#24292E">,</span></span>
-<span class="line"><span style="color:#24292E">  },</span></span>
-<span class="line"><span style="color:#24292E">  {</span></span>
-<span class="line"><span style="color:#24292E">    title: </span><span style="color:#032F62">"North Archive"</span><span style="color:#24292E">,</span></span>
-<span class="line"><span style="color:#24292E">    genre: </span><span style="color:#032F62">"Documentary"</span><span style="color:#24292E">,</span></span>
-<span class="line"><span style="color:#24292E">    gradient: </span><span style="color:#032F62">"linear-gradient(160deg, oklch(0.55 0.06 210) 0%, oklch(0.28 0.04 230) 100%)"</span><span style="color:#24292E">,</span></span>
-<span class="line"><span style="color:#24292E">  },</span></span>
-<span class="line"><span style="color:#24292E">  {</span></span>
-<span class="line"><span style="color:#24292E">    title: </span><span style="color:#032F62">"Soft Circuit"</span><span style="color:#24292E">,</span></span>
-<span class="line"><span style="color:#24292E">    genre: </span><span style="color:#032F62">"Romance"</span><span style="color:#24292E">,</span></span>
-<span class="line"><span style="color:#24292E">    gradient: </span><span style="color:#032F62">"linear-gradient(160deg, oklch(0.62 0.14 340) 0%, oklch(0.32 0.08 320) 100%)"</span><span style="color:#24292E">,</span></span>
-<span class="line"><span style="color:#24292E">  },</span></span>
-<span class="line"><span style="color:#24292E">  {</span></span>
-<span class="line"><span style="color:#24292E">    title: </span><span style="color:#032F62">"Harbor Line"</span><span style="color:#24292E">,</span></span>
-<span class="line"><span style="color:#24292E">    genre: </span><span style="color:#032F62">"Crime"</span><span style="color:#24292E">,</span></span>
-<span class="line"><span style="color:#24292E">    gradient: </span><span style="color:#032F62">"linear-gradient(160deg, oklch(0.38 0.05 160) 0%, oklch(0.16 0.03 190) 100%)"</span><span style="color:#24292E">,</span></span>
-<span class="line"><span style="color:#24292E">  },</span></span>
-<span class="line"><span style="color:#24292E">  {</span></span>
-<span class="line"><span style="color:#24292E">    title: </span><span style="color:#032F62">"Second Sun"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">    title: </span><span style="color:#032F62">"Everything Everywhere All at Once"</span><span style="color:#24292E">,</span></span>
 <span class="line"><span style="color:#24292E">    genre: </span><span style="color:#032F62">"Sci‑Fi"</span><span style="color:#24292E">,</span></span>
-<span class="line"><span style="color:#24292E">    gradient: </span><span style="color:#032F62">"linear-gradient(160deg, oklch(0.48 0.16 55) 0%, oklch(0.24 0.08 40) 100%)"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">    poster: </span><span style="color:#6F42C1">TMDB_POSTER</span><span style="color:#24292E">(</span><span style="color:#032F62">"/u68AjlvlutfEIcpmbYpKcdi09ut.jpg"</span><span style="color:#24292E">),</span></span>
+<span class="line"><span style="color:#24292E">  },</span></span>
+<span class="line"><span style="color:#24292E">  { title: </span><span style="color:#032F62">"Parasite"</span><span style="color:#24292E">, genre: </span><span style="color:#032F62">"Thriller"</span><span style="color:#24292E">, poster: </span><span style="color:#6F42C1">TMDB_POSTER</span><span style="color:#24292E">(</span><span style="color:#032F62">"/7IiTTgloJzvGI1TAYymCfbfl3vT.jpg"</span><span style="color:#24292E">) },</span></span>
+<span class="line"><span style="color:#24292E">  {</span></span>
+<span class="line"><span style="color:#24292E">    title: </span><span style="color:#032F62">"Spider-Man: Across the Spider-Verse"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">    genre: </span><span style="color:#032F62">"Animation"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">    poster: </span><span style="color:#6F42C1">TMDB_POSTER</span><span style="color:#24292E">(</span><span style="color:#032F62">"/8Vt6mWEReuy4Of61Lnj5Xj704m8.jpg"</span><span style="color:#24292E">),</span></span>
 <span class="line"><span style="color:#24292E">  },</span></span>
 <span class="line"><span style="color:#24292E">  {</span></span>
-<span class="line"><span style="color:#24292E">    title: </span><span style="color:#032F62">"Quiet Union"</span><span style="color:#24292E">,</span></span>
-<span class="line"><span style="color:#24292E">    genre: </span><span style="color:#032F62">"Indie"</span><span style="color:#24292E">,</span></span>
-<span class="line"><span style="color:#24292E">    gradient: </span><span style="color:#032F62">"linear-gradient(160deg, oklch(0.52 0.04 280) 0%, oklch(0.24 0.03 260) 100%)"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">    title: </span><span style="color:#032F62">"Blade Runner 2049"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">    genre: </span><span style="color:#032F62">"Sci‑Fi"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">    poster: </span><span style="color:#6F42C1">TMDB_POSTER</span><span style="color:#24292E">(</span><span style="color:#032F62">"/gajva2L0rPYkEWjzgFlBXCAVBE5.jpg"</span><span style="color:#24292E">),</span></span>
+<span class="line"><span style="color:#24292E">  },</span></span>
+<span class="line"><span style="color:#24292E">  { title: </span><span style="color:#032F62">"Interstellar"</span><span style="color:#24292E">, genre: </span><span style="color:#032F62">"Sci‑Fi"</span><span style="color:#24292E">, poster: </span><span style="color:#6F42C1">TMDB_POSTER</span><span style="color:#24292E">(</span><span style="color:#032F62">"/yQvGrMoipbRoddT0ZR8tPoR7NfX.jpg"</span><span style="color:#24292E">) },</span></span>
+<span class="line"><span style="color:#24292E">  { title: </span><span style="color:#032F62">"Poor Things"</span><span style="color:#24292E">, genre: </span><span style="color:#032F62">"Comedy"</span><span style="color:#24292E">, poster: </span><span style="color:#6F42C1">TMDB_POSTER</span><span style="color:#24292E">(</span><span style="color:#032F62">"/kCGlIMHnOm8JPXq3rXM6c5wMxcT.jpg"</span><span style="color:#24292E">) },</span></span>
+<span class="line"><span style="color:#24292E">  {</span></span>
+<span class="line"><span style="color:#24292E">    title: </span><span style="color:#032F62">"Mad Max: Fury Road"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">    genre: </span><span style="color:#032F62">"Action"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">    poster: </span><span style="color:#6F42C1">TMDB_POSTER</span><span style="color:#24292E">(</span><span style="color:#032F62">"/hA2ple9q4qnwxp3hKVNhroipsir.jpg"</span><span style="color:#24292E">),</span></span>
 <span class="line"><span style="color:#24292E">  },</span></span>
 <span class="line"><span style="color:#24292E">] </span><span style="color:#D73A49">as</span><span style="color:#D73A49"> const</span><span style="color:#24292E">;</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#D73A49">const</span><span style="color:#005CC5"> QUOTES</span><span style="color:#D73A49"> =</span><span style="color:#24292E"> [</span></span>
-<span class="line"><span style="color:#24292E">  { text: </span><span style="color:#032F62">"A widescreen poem."</span><span style="color:#24292E">, source: </span><span style="color:#032F62">"The Frame"</span><span style="color:#24292E"> },</span></span>
-<span class="line"><span style="color:#24292E">  { text: </span><span style="color:#032F62">"Refuses to blink."</span><span style="color:#24292E">, source: </span><span style="color:#032F62">"Celluloid"</span><span style="color:#24292E"> },</span></span>
-<span class="line"><span style="color:#24292E">  { text: </span><span style="color:#032F62">"Sound you feel in your chest."</span><span style="color:#24292E">, source: </span><span style="color:#032F62">"Playback"</span><span style="color:#24292E"> },</span></span>
-<span class="line"><span style="color:#24292E">  { text: </span><span style="color:#032F62">"The rare blockbuster with a pulse."</span><span style="color:#24292E">, source: </span><span style="color:#032F62">"Premiere"</span><span style="color:#24292E"> },</span></span>
-<span class="line"><span style="color:#24292E">  { text: </span><span style="color:#032F62">"Every frame is a poster."</span><span style="color:#24292E">, source: </span><span style="color:#032F62">"Lens Culture"</span><span style="color:#24292E"> },</span></span>
-<span class="line"><span style="color:#24292E">  { text: </span><span style="color:#032F62">"Turn the volume up."</span><span style="color:#24292E">, source: </span><span style="color:#032F62">"Signal"</span><span style="color:#24292E"> },</span></span>
-<span class="line"><span style="color:#24292E">  { text: </span><span style="color:#032F62">"IMAX without leaving the couch."</span><span style="color:#24292E">, source: </span><span style="color:#032F62">"Home Screen"</span><span style="color:#24292E"> },</span></span>
-<span class="line"><span style="color:#24292E">  { text: </span><span style="color:#032F62">"Cast chemistry for the ages."</span><span style="color:#24292E">, source: </span><span style="color:#032F62">"Rolling Reel"</span><span style="color:#24292E"> },</span></span>
-<span class="line"><span style="color:#24292E">] </span><span style="color:#D73A49">as</span><span style="color:#D73A49"> const</span><span style="color:#24292E">;</span></span>
+<span class="line"><span style="color:#D73A49">function</span><span style="color:#6F42C1"> CinemaContent</span><span style="color:#24292E">({</span></span>
+<span class="line"><span style="color:#E36209">  className</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#E36209">  children</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">}</span><span style="color:#D73A49">:</span><span style="color:#24292E"> {</span></span>
+<span class="line"><span style="color:#E36209">  className</span><span style="color:#D73A49">?:</span><span style="color:#005CC5"> string</span><span style="color:#24292E">;</span></span>
+<span class="line"><span style="color:#E36209">  children</span><span style="color:#D73A49">:</span><span style="color:#6F42C1"> React</span><span style="color:#24292E">.</span><span style="color:#6F42C1">ReactNode</span><span style="color:#24292E">;</span></span>
+<span class="line"><span style="color:#24292E">}) {</span></span>
+<span class="line"><span style="color:#D73A49">  return</span><span style="color:#24292E"> &#x3C;</span><span style="color:#22863A">div</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#6F42C1">cn</span><span style="color:#24292E">(</span><span style="color:#032F62">"mx-auto w-full max-w-6xl px-5 sm:px-8"</span><span style="color:#24292E">, className)}>{children}&#x3C;/</span><span style="color:#22863A">div</span><span style="color:#24292E">>;</span></span>
+<span class="line"><span style="color:#24292E">}</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#D73A49">function</span><span style="color:#6F42C1"> QuoteChip</span><span style="color:#24292E">({ </span><span style="color:#E36209">text</span><span style="color:#24292E">, </span><span style="color:#E36209">source</span><span style="color:#24292E"> }</span><span style="color:#D73A49">:</span><span style="color:#24292E"> { </span><span style="color:#E36209">text</span><span style="color:#D73A49">:</span><span style="color:#005CC5"> string</span><span style="color:#24292E">; </span><span style="color:#E36209">source</span><span style="color:#D73A49">:</span><span style="color:#005CC5"> string</span><span style="color:#24292E"> }) {</span></span>
+<span class="line"><span style="color:#D73A49">function</span><span style="color:#6F42C1"> BackdropSlide</span><span style="color:#24292E">({ </span><span style="color:#E36209">title</span><span style="color:#24292E">, </span><span style="color:#E36209">image</span><span style="color:#24292E"> }</span><span style="color:#D73A49">:</span><span style="color:#24292E"> { </span><span style="color:#E36209">title</span><span style="color:#D73A49">:</span><span style="color:#005CC5"> string</span><span style="color:#24292E">; </span><span style="color:#E36209">image</span><span style="color:#D73A49">:</span><span style="color:#005CC5"> string</span><span style="color:#24292E"> }) {</span></span>
 <span class="line"><span style="color:#D73A49">  return</span><span style="color:#24292E"> (</span></span>
-<span class="line"><span style="color:#24292E">    &#x3C;</span><span style="color:#22863A">figure</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"w-40 shrink-0 rounded-2xl border border-white/10 bg-white/[0.035] px-4 py-3 sm:w-44"</span><span style="color:#24292E">></span></span>
-<span class="line"><span style="color:#24292E">      &#x3C;</span><span style="color:#22863A">blockquote</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"text-[13px] leading-snug text-white/82"</span><span style="color:#24292E">></span><span style="color:#005CC5">&#x26;ldquo;</span><span style="color:#24292E">{text}</span><span style="color:#005CC5">&#x26;rdquo;</span><span style="color:#24292E">&#x3C;/</span><span style="color:#22863A">blockquote</span><span style="color:#24292E">></span></span>
-<span class="line"><span style="color:#24292E">      &#x3C;</span><span style="color:#22863A">figcaption</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"mt-2 text-[11px] font-medium tracking-wide text-white/38 uppercase"</span><span style="color:#24292E">></span></span>
-<span class="line"><span style="color:#24292E">        {source}</span></span>
+<span class="line"><span style="color:#24292E">    &#x3C;</span><span style="color:#22863A">div</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"relative h-[min(88svh,920px)] w-[clamp(14rem,42vw,36rem)] shrink-0 overflow-hidden"</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">      &#x3C;</span><span style="color:#22863A">img</span><span style="color:#6F42C1"> src</span><span style="color:#D73A49">=</span><span style="color:#24292E">{image} </span><span style="color:#6F42C1">alt</span><span style="color:#D73A49">=</span><span style="color:#032F62">""</span><span style="color:#6F42C1"> aria-hidden</span><span style="color:#D73A49">=</span><span style="color:#032F62">"true"</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"h-full w-full object-cover"</span><span style="color:#24292E"> /></span></span>
+<span class="line"><span style="color:#24292E">      &#x3C;</span><span style="color:#22863A">span</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"sr-only"</span><span style="color:#24292E">>{title}&#x3C;/</span><span style="color:#22863A">span</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">    &#x3C;/</span><span style="color:#22863A">div</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">  );</span></span>
+<span class="line"><span style="color:#24292E">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49">function</span><span style="color:#6F42C1"> LandscapeStill</span><span style="color:#24292E">({</span></span>
+<span class="line"><span style="color:#E36209">  title</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#E36209">  image</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#E36209">  variant</span><span style="color:#D73A49"> =</span><span style="color:#032F62"> "wide"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">}</span><span style="color:#D73A49">:</span><span style="color:#24292E"> {</span></span>
+<span class="line"><span style="color:#E36209">  title</span><span style="color:#D73A49">:</span><span style="color:#005CC5"> string</span><span style="color:#24292E">;</span></span>
+<span class="line"><span style="color:#E36209">  image</span><span style="color:#D73A49">:</span><span style="color:#005CC5"> string</span><span style="color:#24292E">;</span></span>
+<span class="line"><span style="color:#E36209">  variant</span><span style="color:#D73A49">?:</span><span style="color:#032F62"> "wide"</span><span style="color:#D73A49"> |</span><span style="color:#032F62"> "tall"</span><span style="color:#24292E">;</span></span>
+<span class="line"><span style="color:#24292E">}) {</span></span>
+<span class="line"><span style="color:#D73A49">  return</span><span style="color:#24292E"> (</span></span>
+<span class="line"><span style="color:#24292E">    &#x3C;</span><span style="color:#22863A">figure</span></span>
+<span class="line"><span style="color:#6F42C1">      className</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#6F42C1">cn</span><span style="color:#24292E">(</span></span>
+<span class="line"><span style="color:#032F62">        "group relative w-full shrink-0 overflow-hidden rounded-2xl ring-1 ring-white/12"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">        variant </span><span style="color:#D73A49">===</span><span style="color:#032F62"> "tall"</span><span style="color:#D73A49"> ?</span><span style="color:#032F62"> "aspect-[5/3]"</span><span style="color:#D73A49"> :</span><span style="color:#032F62"> "aspect-video"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">      )}</span></span>
+<span class="line"><span style="color:#24292E">    ></span></span>
+<span class="line"><span style="color:#24292E">      &#x3C;</span><span style="color:#22863A">img</span></span>
+<span class="line"><span style="color:#6F42C1">        src</span><span style="color:#D73A49">=</span><span style="color:#24292E">{image}</span></span>
+<span class="line"><span style="color:#6F42C1">        alt</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#032F62">\`\${</span><span style="color:#24292E">title</span><span style="color:#032F62">} still\`</span><span style="color:#24292E">}</span></span>
+<span class="line"><span style="color:#6F42C1">        loading</span><span style="color:#D73A49">=</span><span style="color:#032F62">"lazy"</span></span>
+<span class="line"><span style="color:#6F42C1">        decoding</span><span style="color:#D73A49">=</span><span style="color:#032F62">"async"</span></span>
+<span class="line"><span style="color:#6F42C1">        className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"</span></span>
+<span class="line"><span style="color:#24292E">      /></span></span>
+<span class="line"><span style="color:#24292E">      &#x3C;</span><span style="color:#22863A">div</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"pointer-events-none absolute inset-0 bg-linear-to-t from-black/75 via-black/10 to-transparent"</span><span style="color:#24292E"> /></span></span>
+<span class="line"><span style="color:#24292E">      &#x3C;</span><span style="color:#22863A">figcaption</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"absolute inset-x-0 bottom-0 truncate px-3 pb-2.5 text-[11px] font-semibold tracking-[0.06em] text-white/88 uppercase"</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">        {title}</span></span>
 <span class="line"><span style="color:#24292E">      &#x3C;/</span><span style="color:#22863A">figcaption</span><span style="color:#24292E">></span></span>
 <span class="line"><span style="color:#24292E">    &#x3C;/</span><span style="color:#22863A">figure</span><span style="color:#24292E">></span></span>
 <span class="line"><span style="color:#24292E">  );</span></span>
@@ -1265,21 +1501,168 @@ export default function CinemaRow() {
 <span class="line"><span style="color:#D73A49">function</span><span style="color:#6F42C1"> PosterCard</span><span style="color:#24292E">({</span></span>
 <span class="line"><span style="color:#E36209">  title</span><span style="color:#24292E">,</span></span>
 <span class="line"><span style="color:#E36209">  genre</span><span style="color:#24292E">,</span></span>
-<span class="line"><span style="color:#E36209">  gradient</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#E36209">  poster</span><span style="color:#24292E">,</span></span>
 <span class="line"><span style="color:#24292E">}</span><span style="color:#D73A49">:</span><span style="color:#24292E"> {</span></span>
 <span class="line"><span style="color:#E36209">  title</span><span style="color:#D73A49">:</span><span style="color:#005CC5"> string</span><span style="color:#24292E">;</span></span>
 <span class="line"><span style="color:#E36209">  genre</span><span style="color:#D73A49">:</span><span style="color:#005CC5"> string</span><span style="color:#24292E">;</span></span>
-<span class="line"><span style="color:#E36209">  gradient</span><span style="color:#D73A49">:</span><span style="color:#005CC5"> string</span><span style="color:#24292E">;</span></span>
+<span class="line"><span style="color:#E36209">  poster</span><span style="color:#D73A49">:</span><span style="color:#005CC5"> string</span><span style="color:#24292E">;</span></span>
 <span class="line"><span style="color:#24292E">}) {</span></span>
 <span class="line"><span style="color:#D73A49">  return</span><span style="color:#24292E"> (</span></span>
 <span class="line"><span style="color:#24292E">    &#x3C;</span><span style="color:#22863A">article</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"w-[9.75rem] shrink-0 snap-start sm:w-[11.25rem]"</span><span style="color:#24292E">></span></span>
-<span class="line"><span style="color:#24292E">      &#x3C;</span><span style="color:#22863A">div</span></span>
-<span class="line"><span style="color:#6F42C1">        className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"aspect-[2/3] overflow-hidden rounded-xl ring-1 ring-white/10"</span></span>
-<span class="line"><span style="color:#6F42C1">        style</span><span style="color:#D73A49">=</span><span style="color:#24292E">{{ backgroundImage: gradient }}</span></span>
-<span class="line"><span style="color:#24292E">      /></span></span>
+<span class="line"><span style="color:#24292E">      &#x3C;</span><span style="color:#22863A">div</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"aspect-[2/3] overflow-hidden rounded-xl ring-1 ring-white/10"</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">        &#x3C;</span><span style="color:#22863A">img</span></span>
+<span class="line"><span style="color:#6F42C1">          src</span><span style="color:#D73A49">=</span><span style="color:#24292E">{poster}</span></span>
+<span class="line"><span style="color:#6F42C1">          alt</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#032F62">\`\${</span><span style="color:#24292E">title</span><span style="color:#032F62">} poster\`</span><span style="color:#24292E">}</span></span>
+<span class="line"><span style="color:#6F42C1">          loading</span><span style="color:#D73A49">=</span><span style="color:#032F62">"lazy"</span></span>
+<span class="line"><span style="color:#6F42C1">          decoding</span><span style="color:#D73A49">=</span><span style="color:#032F62">"async"</span></span>
+<span class="line"><span style="color:#6F42C1">          className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"h-full w-full object-cover"</span></span>
+<span class="line"><span style="color:#24292E">        /></span></span>
+<span class="line"><span style="color:#24292E">      &#x3C;/</span><span style="color:#22863A">div</span><span style="color:#24292E">></span></span>
 <span class="line"><span style="color:#24292E">      &#x3C;</span><span style="color:#22863A">h3</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"mt-2.5 truncate text-[15px] font-medium text-white/92"</span><span style="color:#24292E">>{title}&#x3C;/</span><span style="color:#22863A">h3</span><span style="color:#24292E">></span></span>
 <span class="line"><span style="color:#24292E">      &#x3C;</span><span style="color:#22863A">p</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"text-[13px] text-white/42"</span><span style="color:#24292E">>{genre}&#x3C;/</span><span style="color:#22863A">p</span><span style="color:#24292E">></span></span>
 <span class="line"><span style="color:#24292E">    &#x3C;/</span><span style="color:#22863A">article</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">  );</span></span>
+<span class="line"><span style="color:#24292E">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49">function</span><span style="color:#6F42C1"> MarqueeWell</span><span style="color:#24292E">({</span></span>
+<span class="line"><span style="color:#E36209">  children</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#E36209">  className</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#E36209">  tone</span><span style="color:#D73A49"> =</span><span style="color:#032F62"> "violet"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">}</span><span style="color:#D73A49">:</span><span style="color:#24292E"> {</span></span>
+<span class="line"><span style="color:#E36209">  children</span><span style="color:#D73A49">:</span><span style="color:#6F42C1"> React</span><span style="color:#24292E">.</span><span style="color:#6F42C1">ReactNode</span><span style="color:#24292E">;</span></span>
+<span class="line"><span style="color:#E36209">  className</span><span style="color:#D73A49">?:</span><span style="color:#005CC5"> string</span><span style="color:#24292E">;</span></span>
+<span class="line"><span style="color:#E36209">  tone</span><span style="color:#D73A49">?:</span><span style="color:#032F62"> "violet"</span><span style="color:#D73A49"> |</span><span style="color:#032F62"> "amber"</span><span style="color:#24292E">;</span></span>
+<span class="line"><span style="color:#24292E">}) {</span></span>
+<span class="line"><span style="color:#D73A49">  const</span><span style="color:#005CC5"> wellColor</span><span style="color:#D73A49"> =</span></span>
+<span class="line"><span style="color:#24292E">    tone </span><span style="color:#D73A49">===</span><span style="color:#032F62"> "violet"</span><span style="color:#D73A49"> ?</span><span style="color:#032F62"> "oklch(0.14 0.03 285)"</span><span style="color:#D73A49"> :</span><span style="color:#032F62"> "oklch(0.15 0.028 55)"</span><span style="color:#24292E">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49">  return</span><span style="color:#24292E"> (</span></span>
+<span class="line"><span style="color:#24292E">    &#x3C;</span><span style="color:#22863A">div</span></span>
+<span class="line"><span style="color:#6F42C1">      className</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#6F42C1">cn</span><span style="color:#24292E">(</span></span>
+<span class="line"><span style="color:#032F62">        "relative min-h-[18rem] overflow-hidden rounded-[1.35rem] shadow-[inset_0_1px_0_oklch(1_0_0/0.07)] ring-1 ring-white/10"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">        className,</span></span>
+<span class="line"><span style="color:#24292E">      )}</span></span>
+<span class="line"><span style="color:#6F42C1">      style</span><span style="color:#D73A49">=</span><span style="color:#24292E">{{ backgroundColor: wellColor }}</span></span>
+<span class="line"><span style="color:#24292E">    ></span></span>
+<span class="line"><span style="color:#24292E">      {children}</span></span>
+<span class="line"><span style="color:#24292E">      &#x3C;</span><span style="color:#22863A">div</span></span>
+<span class="line"><span style="color:#6F42C1">        aria-hidden</span><span style="color:#D73A49">=</span><span style="color:#032F62">"true"</span></span>
+<span class="line"><span style="color:#6F42C1">        className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"pointer-events-none absolute inset-x-0 top-0 z-10 h-14 bg-linear-to-b to-transparent"</span></span>
+<span class="line"><span style="color:#6F42C1">        style</span><span style="color:#D73A49">=</span><span style="color:#24292E">{{</span></span>
+<span class="line"><span style="color:#24292E">          backgroundImage: </span><span style="color:#032F62">\`linear-gradient(to bottom, \${</span><span style="color:#24292E">wellColor</span><span style="color:#032F62">} 0%, color-mix(in oklch, \${</span><span style="color:#24292E">wellColor</span><span style="color:#032F62">} 85%, transparent) 55%, transparent 100%)\`</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">        }}</span></span>
+<span class="line"><span style="color:#24292E">      /></span></span>
+<span class="line"><span style="color:#24292E">      &#x3C;</span><span style="color:#22863A">div</span></span>
+<span class="line"><span style="color:#6F42C1">        aria-hidden</span><span style="color:#D73A49">=</span><span style="color:#032F62">"true"</span></span>
+<span class="line"><span style="color:#6F42C1">        className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"pointer-events-none absolute inset-x-0 bottom-0 z-10 h-20 bg-linear-to-t to-transparent"</span></span>
+<span class="line"><span style="color:#6F42C1">        style</span><span style="color:#D73A49">=</span><span style="color:#24292E">{{</span></span>
+<span class="line"><span style="color:#24292E">          backgroundImage: </span><span style="color:#032F62">\`linear-gradient(to top, \${</span><span style="color:#24292E">wellColor</span><span style="color:#032F62">} 0%, color-mix(in oklch, \${</span><span style="color:#24292E">wellColor</span><span style="color:#032F62">} 90%, transparent) 60%, transparent 100%)\`</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">        }}</span></span>
+<span class="line"><span style="color:#24292E">      /></span></span>
+<span class="line"><span style="color:#24292E">    &#x3C;/</span><span style="color:#22863A">div</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">  );</span></span>
+<span class="line"><span style="color:#24292E">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49">function</span><span style="color:#6F42C1"> StillMarqueeColumn</span><span style="color:#24292E">({</span></span>
+<span class="line"><span style="color:#E36209">  stills</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#E36209">  reverse</span><span style="color:#D73A49"> =</span><span style="color:#005CC5"> false</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#E36209">  duration</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#E36209">  variant</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">}</span><span style="color:#D73A49">:</span><span style="color:#24292E"> {</span></span>
+<span class="line"><span style="color:#E36209">  stills</span><span style="color:#D73A49">:</span><span style="color:#D73A49"> readonly</span><span style="color:#24292E"> { </span><span style="color:#E36209">title</span><span style="color:#D73A49">:</span><span style="color:#005CC5"> string</span><span style="color:#24292E">; </span><span style="color:#E36209">image</span><span style="color:#D73A49">:</span><span style="color:#005CC5"> string</span><span style="color:#24292E"> }[];</span></span>
+<span class="line"><span style="color:#E36209">  reverse</span><span style="color:#D73A49">?:</span><span style="color:#005CC5"> boolean</span><span style="color:#24292E">;</span></span>
+<span class="line"><span style="color:#E36209">  duration</span><span style="color:#D73A49">:</span><span style="color:#005CC5"> string</span><span style="color:#24292E">;</span></span>
+<span class="line"><span style="color:#E36209">  variant</span><span style="color:#D73A49">:</span><span style="color:#032F62"> "wide"</span><span style="color:#D73A49"> |</span><span style="color:#032F62"> "tall"</span><span style="color:#24292E">;</span></span>
+<span class="line"><span style="color:#24292E">}) {</span></span>
+<span class="line"><span style="color:#D73A49">  return</span><span style="color:#24292E"> (</span></span>
+<span class="line"><span style="color:#24292E">    &#x3C;</span><span style="color:#005CC5">Marquee</span></span>
+<span class="line"><span style="color:#6F42C1">      vertical</span></span>
+<span class="line"><span style="color:#6F42C1">      reverse</span><span style="color:#D73A49">=</span><span style="color:#24292E">{reverse}</span></span>
+<span class="line"><span style="color:#6F42C1">      pauseOnHover</span></span>
+<span class="line"><span style="color:#6F42C1">      applyMask</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#005CC5">false</span><span style="color:#24292E">}</span></span>
+<span class="line"><span style="color:#6F42C1">      className</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#6F42C1">cn</span><span style="color:#24292E">(</span><span style="color:#032F62">"h-full p-2.5 sm:p-3"</span><span style="color:#24292E">, duration)}</span></span>
+<span class="line"><span style="color:#24292E">    ></span></span>
+<span class="line"><span style="color:#24292E">      {stills.</span><span style="color:#6F42C1">map</span><span style="color:#24292E">((</span><span style="color:#E36209">still</span><span style="color:#24292E">) </span><span style="color:#D73A49">=></span><span style="color:#24292E"> (</span></span>
+<span class="line"><span style="color:#24292E">        &#x3C;</span><span style="color:#005CC5">LandscapeStill</span><span style="color:#6F42C1"> key</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#032F62">\`\${</span><span style="color:#24292E">reverse</span><span style="color:#D73A49"> ?</span><span style="color:#032F62"> "rev"</span><span style="color:#D73A49"> :</span><span style="color:#032F62"> "fwd"}-\${</span><span style="color:#24292E">still</span><span style="color:#032F62">.</span><span style="color:#24292E">title</span><span style="color:#032F62">}\`</span><span style="color:#24292E">} {</span><span style="color:#D73A49">...</span><span style="color:#24292E">still} </span><span style="color:#6F42C1">variant</span><span style="color:#D73A49">=</span><span style="color:#24292E">{variant} /></span></span>
+<span class="line"><span style="color:#24292E">      ))}</span></span>
+<span class="line"><span style="color:#24292E">    &#x3C;/</span><span style="color:#005CC5">Marquee</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">  );</span></span>
+<span class="line"><span style="color:#24292E">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49">function</span><span style="color:#6F42C1"> VerticalStillGallery</span><span style="color:#24292E">({</span></span>
+<span class="line"><span style="color:#E36209">  reducedMotion</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#E36209">  className</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">}</span><span style="color:#D73A49">:</span><span style="color:#24292E"> {</span></span>
+<span class="line"><span style="color:#E36209">  reducedMotion</span><span style="color:#D73A49">:</span><span style="color:#005CC5"> boolean</span><span style="color:#24292E">;</span></span>
+<span class="line"><span style="color:#E36209">  className</span><span style="color:#D73A49">?:</span><span style="color:#005CC5"> string</span><span style="color:#24292E">;</span></span>
+<span class="line"><span style="color:#24292E">}) {</span></span>
+<span class="line"><span style="color:#D73A49">  if</span><span style="color:#24292E"> (reducedMotion) {</span></span>
+<span class="line"><span style="color:#D73A49">    return</span><span style="color:#24292E"> (</span></span>
+<span class="line"><span style="color:#24292E">      &#x3C;</span><span style="color:#22863A">div</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#6F42C1">cn</span><span style="color:#24292E">(</span><span style="color:#032F62">"grid h-full min-h-[18rem] grid-cols-2 gap-2 sm:gap-2.5"</span><span style="color:#24292E">, className)}></span></span>
+<span class="line"><span style="color:#24292E">        &#x3C;</span><span style="color:#005CC5">MarqueeWell</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"h-full min-h-0 overflow-y-auto"</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">          &#x3C;</span><span style="color:#22863A">div</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"flex flex-col gap-2.5 p-2.5 sm:p-3"</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">            {</span><span style="color:#005CC5">STILLS_LEFT</span><span style="color:#24292E">.</span><span style="color:#6F42C1">slice</span><span style="color:#24292E">(</span><span style="color:#005CC5">0</span><span style="color:#24292E">, </span><span style="color:#005CC5">3</span><span style="color:#24292E">).</span><span style="color:#6F42C1">map</span><span style="color:#24292E">((</span><span style="color:#E36209">still</span><span style="color:#24292E">) </span><span style="color:#D73A49">=></span><span style="color:#24292E"> (</span></span>
+<span class="line"><span style="color:#24292E">              &#x3C;</span><span style="color:#005CC5">LandscapeStill</span><span style="color:#6F42C1"> key</span><span style="color:#D73A49">=</span><span style="color:#24292E">{still.title} {</span><span style="color:#D73A49">...</span><span style="color:#24292E">still} </span><span style="color:#6F42C1">variant</span><span style="color:#D73A49">=</span><span style="color:#032F62">"wide"</span><span style="color:#24292E"> /></span></span>
+<span class="line"><span style="color:#24292E">            ))}</span></span>
+<span class="line"><span style="color:#24292E">          &#x3C;/</span><span style="color:#22863A">div</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">        &#x3C;/</span><span style="color:#005CC5">MarqueeWell</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">        &#x3C;</span><span style="color:#005CC5">MarqueeWell</span><span style="color:#6F42C1"> tone</span><span style="color:#D73A49">=</span><span style="color:#032F62">"amber"</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"h-full min-h-0 overflow-y-auto"</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">          &#x3C;</span><span style="color:#22863A">div</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"flex flex-col gap-2.5 p-2.5 sm:p-3"</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">            {</span><span style="color:#005CC5">STILLS_RIGHT</span><span style="color:#24292E">.</span><span style="color:#6F42C1">slice</span><span style="color:#24292E">(</span><span style="color:#005CC5">0</span><span style="color:#24292E">, </span><span style="color:#005CC5">3</span><span style="color:#24292E">).</span><span style="color:#6F42C1">map</span><span style="color:#24292E">((</span><span style="color:#E36209">still</span><span style="color:#24292E">) </span><span style="color:#D73A49">=></span><span style="color:#24292E"> (</span></span>
+<span class="line"><span style="color:#24292E">              &#x3C;</span><span style="color:#005CC5">LandscapeStill</span><span style="color:#6F42C1"> key</span><span style="color:#D73A49">=</span><span style="color:#24292E">{still.title} {</span><span style="color:#D73A49">...</span><span style="color:#24292E">still} </span><span style="color:#6F42C1">variant</span><span style="color:#D73A49">=</span><span style="color:#032F62">"tall"</span><span style="color:#24292E"> /></span></span>
+<span class="line"><span style="color:#24292E">            ))}</span></span>
+<span class="line"><span style="color:#24292E">          &#x3C;/</span><span style="color:#22863A">div</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">        &#x3C;/</span><span style="color:#005CC5">MarqueeWell</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">      &#x3C;/</span><span style="color:#22863A">div</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">    );</span></span>
+<span class="line"><span style="color:#24292E">  }</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49">  return</span><span style="color:#24292E"> (</span></span>
+<span class="line"><span style="color:#24292E">    &#x3C;</span><span style="color:#22863A">div</span></span>
+<span class="line"><span style="color:#6F42C1">      className</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#6F42C1">cn</span><span style="color:#24292E">(</span></span>
+<span class="line"><span style="color:#032F62">        "grid h-full min-h-[18rem] grid-cols-2 items-stretch gap-2 sm:min-h-[22rem] sm:gap-2.5 md:min-h-[min(26rem,46vh)]"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">        className,</span></span>
+<span class="line"><span style="color:#24292E">      )}</span></span>
+<span class="line"><span style="color:#24292E">    ></span></span>
+<span class="line"><span style="color:#24292E">      &#x3C;</span><span style="color:#005CC5">MarqueeWell</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"h-full min-h-0"</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">        &#x3C;</span><span style="color:#005CC5">StillMarqueeColumn</span><span style="color:#6F42C1"> stills</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#005CC5">STILLS_LEFT</span><span style="color:#24292E">} </span><span style="color:#6F42C1">duration</span><span style="color:#D73A49">=</span><span style="color:#032F62">"[--duration:32s] [--gap:12px]"</span><span style="color:#6F42C1"> variant</span><span style="color:#D73A49">=</span><span style="color:#032F62">"wide"</span><span style="color:#24292E"> /></span></span>
+<span class="line"><span style="color:#24292E">      &#x3C;/</span><span style="color:#005CC5">MarqueeWell</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">      &#x3C;</span><span style="color:#005CC5">MarqueeWell</span><span style="color:#6F42C1"> tone</span><span style="color:#D73A49">=</span><span style="color:#032F62">"amber"</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"h-full min-h-0 md:translate-y-3"</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">        &#x3C;</span><span style="color:#005CC5">StillMarqueeColumn</span></span>
+<span class="line"><span style="color:#6F42C1">          stills</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#005CC5">STILLS_RIGHT</span><span style="color:#24292E">}</span></span>
+<span class="line"><span style="color:#6F42C1">          reverse</span></span>
+<span class="line"><span style="color:#6F42C1">          duration</span><span style="color:#D73A49">=</span><span style="color:#032F62">"[--duration:38s] [--gap:12px]"</span></span>
+<span class="line"><span style="color:#6F42C1">          variant</span><span style="color:#D73A49">=</span><span style="color:#032F62">"tall"</span></span>
+<span class="line"><span style="color:#24292E">        /></span></span>
+<span class="line"><span style="color:#24292E">      &#x3C;/</span><span style="color:#005CC5">MarqueeWell</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">    &#x3C;/</span><span style="color:#22863A">div</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">  );</span></span>
+<span class="line"><span style="color:#24292E">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49">function</span><span style="color:#6F42C1"> CraftFeaturePanel</span><span style="color:#24292E">({ </span><span style="color:#E36209">reducedMotion</span><span style="color:#24292E"> }</span><span style="color:#D73A49">:</span><span style="color:#24292E"> { </span><span style="color:#E36209">reducedMotion</span><span style="color:#D73A49">:</span><span style="color:#005CC5"> boolean</span><span style="color:#24292E"> }) {</span></span>
+<span class="line"><span style="color:#D73A49">  return</span><span style="color:#24292E"> (</span></span>
+<span class="line"><span style="color:#24292E">    &#x3C;</span><span style="color:#22863A">div</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"@container overflow-hidden rounded-[1.35rem] border border-white/10 bg-[oklch(0.12_0.025_285)] shadow-[inset_0_1px_0_oklch(1_0_0/0.05)]"</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">      &#x3C;</span><span style="color:#22863A">div</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"grid md:grid-cols-[minmax(0,11.5rem)_minmax(0,1fr)] lg:grid-cols-[minmax(0,15rem)_minmax(0,1fr)]"</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">        &#x3C;</span><span style="color:#22863A">div</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"flex flex-col justify-end gap-3 border-b border-white/8 p-5 sm:p-6 md:border-r md:border-b-0 md:p-6 lg:p-8"</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">          &#x3C;</span><span style="color:#22863A">p</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"text-[13px] font-medium tracking-[0.08em] text-white/42 uppercase"</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">            The craft</span></span>
+<span class="line"><span style="color:#24292E">          &#x3C;/</span><span style="color:#22863A">p</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">          &#x3C;</span><span style="color:#22863A">h2</span></span>
+<span class="line"><span style="color:#6F42C1">            id</span><span style="color:#D73A49">=</span><span style="color:#032F62">"editorial-heading"</span></span>
+<span class="line"><span style="color:#6F42C1">            className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"text-balance text-[clamp(1.5rem,4.5cqi,2.25rem)] leading-[1.08] font-semibold tracking-[-0.03em]"</span></span>
+<span class="line"><span style="color:#24292E">          ></span></span>
+<span class="line"><span style="color:#24292E">            Big-screen rhythm. Living-room scale.</span></span>
+<span class="line"><span style="color:#24292E">          &#x3C;/</span><span style="color:#22863A">h2</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">          &#x3C;</span><span style="color:#22863A">p</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"text-[14px] leading-relaxed text-white/52 sm:text-[15px]"</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">            Three motion layers — hero, rail, twin columns — one browse page.</span></span>
+<span class="line"><span style="color:#24292E">          &#x3C;/</span><span style="color:#22863A">p</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">        &#x3C;/</span><span style="color:#22863A">div</span><span style="color:#24292E">></span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#24292E">        &#x3C;</span><span style="color:#22863A">div</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"min-h-[18rem] p-2.5 sm:min-h-[22rem] sm:p-3 md:min-h-[min(26rem,46vh)]"</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">          &#x3C;</span><span style="color:#005CC5">VerticalStillGallery</span><span style="color:#6F42C1"> reducedMotion</span><span style="color:#D73A49">=</span><span style="color:#24292E">{reducedMotion} </span><span style="color:#6F42C1">className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"h-full"</span><span style="color:#24292E"> /></span></span>
+<span class="line"><span style="color:#24292E">        &#x3C;/</span><span style="color:#22863A">div</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">      &#x3C;/</span><span style="color:#22863A">div</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">    &#x3C;/</span><span style="color:#22863A">div</span><span style="color:#24292E">></span></span>
 <span class="line"><span style="color:#24292E">  );</span></span>
 <span class="line"><span style="color:#24292E">}</span></span>
 <span class="line"></span>
@@ -1303,8 +1686,27 @@ export default function CinemaRow() {
 <span class="line"><span style="color:#032F62">          "min-h-svh bg-black text-white selection:bg-white/20"</span><span style="color:#24292E">,</span></span>
 <span class="line"><span style="color:#24292E">        )}</span></span>
 <span class="line"><span style="color:#24292E">      ></span></span>
-<span class="line"><span style="color:#24292E">        {</span><span style="color:#6A737D">/* Hero — overscale premiere typography */</span><span style="color:#24292E">}</span></span>
+<span class="line"><span style="color:#24292E">        {</span><span style="color:#6A737D">/* Hero — backdrop marquee + premiere type */</span><span style="color:#24292E">}</span></span>
 <span class="line"><span style="color:#24292E">        &#x3C;</span><span style="color:#22863A">section</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"relative isolate overflow-hidden"</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">          &#x3C;</span><span style="color:#22863A">div</span><span style="color:#6F42C1"> aria-hidden</span><span style="color:#D73A49">=</span><span style="color:#032F62">"true"</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"absolute inset-0 overflow-hidden"</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">            {reducedMotion </span><span style="color:#D73A49">?</span><span style="color:#24292E"> (</span></span>
+<span class="line"><span style="color:#24292E">              &#x3C;</span><span style="color:#22863A">img</span></span>
+<span class="line"><span style="color:#6F42C1">                src</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#005CC5">FEATURED</span><span style="color:#24292E">.backdrop}</span></span>
+<span class="line"><span style="color:#6F42C1">                alt</span><span style="color:#D73A49">=</span><span style="color:#032F62">""</span></span>
+<span class="line"><span style="color:#6F42C1">                className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"h-full w-full object-cover object-[50%_20%] opacity-40"</span></span>
+<span class="line"><span style="color:#24292E">              /></span></span>
+<span class="line"><span style="color:#24292E">            ) </span><span style="color:#D73A49">:</span><span style="color:#24292E"> (</span></span>
+<span class="line"><span style="color:#24292E">              &#x3C;</span><span style="color:#005CC5">Marquee</span></span>
+<span class="line"><span style="color:#6F42C1">                pauseOnHover</span></span>
+<span class="line"><span style="color:#6F42C1">                applyMask</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#005CC5">false</span><span style="color:#24292E">}</span></span>
+<span class="line"><span style="color:#6F42C1">                className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"h-full [--duration:48s] [--gap:0px]"</span></span>
+<span class="line"><span style="color:#24292E">              ></span></span>
+<span class="line"><span style="color:#24292E">                {</span><span style="color:#005CC5">HERO_BACKDROPS</span><span style="color:#24292E">.</span><span style="color:#6F42C1">map</span><span style="color:#24292E">((</span><span style="color:#E36209">slide</span><span style="color:#24292E">) </span><span style="color:#D73A49">=></span><span style="color:#24292E"> (</span></span>
+<span class="line"><span style="color:#24292E">                  &#x3C;</span><span style="color:#005CC5">BackdropSlide</span><span style="color:#6F42C1"> key</span><span style="color:#D73A49">=</span><span style="color:#24292E">{slide.title} {</span><span style="color:#D73A49">...</span><span style="color:#24292E">slide} /></span></span>
+<span class="line"><span style="color:#24292E">                ))}</span></span>
+<span class="line"><span style="color:#24292E">              &#x3C;/</span><span style="color:#005CC5">Marquee</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">            )}</span></span>
+<span class="line"><span style="color:#24292E">          &#x3C;/</span><span style="color:#22863A">div</span><span style="color:#24292E">></span></span>
 <span class="line"><span style="color:#24292E">          &#x3C;</span><span style="color:#22863A">div</span></span>
 <span class="line"><span style="color:#6F42C1">            aria-hidden</span><span style="color:#D73A49">=</span><span style="color:#032F62">"true"</span></span>
 <span class="line"><span style="color:#6F42C1">            className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_120%_80%_at_50%_-10%,oklch(0.28_0.08_280_/_0.55)_0%,transparent_58%),linear-gradient(to_bottom,oklch(0.12_0.02_280)_0%,black_72%)]"</span></span>
@@ -1314,14 +1716,28 @@ export default function CinemaRow() {
 <span class="line"><span style="color:#6F42C1">            className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-linear-to-t from-black to-transparent"</span></span>
 <span class="line"><span style="color:#24292E">          /></span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#24292E">          &#x3C;</span><span style="color:#22863A">div</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"relative z-10 flex min-h-[min(88svh,920px)] flex-col justify-end px-5 pb-[calc(var(--demo-chrome-reserve,5rem)+2.5rem)] pt-[max(1.25rem,env(safe-area-inset-top))] sm:px-8"</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">          &#x3C;</span><span style="color:#005CC5">CinemaContent</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"relative z-10 flex min-h-[min(88svh,920px)] flex-col justify-end pb-[calc(var(--demo-chrome-reserve,5rem)+2.5rem)] pt-[max(1.25rem,env(safe-area-inset-top))]"</span><span style="color:#24292E">></span></span>
 <span class="line"><span style="color:#24292E">            &#x3C;</span><span style="color:#22863A">p</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"text-[13px] font-medium tracking-[0.08em] text-white/45 uppercase"</span><span style="color:#24292E">></span></span>
 <span class="line"><span style="color:#24292E">              {</span><span style="color:#005CC5">FEATURED</span><span style="color:#24292E">.eyebrow}</span></span>
 <span class="line"><span style="color:#24292E">            &#x3C;/</span><span style="color:#22863A">p</span><span style="color:#24292E">></span></span>
-<span class="line"><span style="color:#24292E">            &#x3C;</span><span style="color:#22863A">h1</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"mt-3 max-w-[11ch] text-balance text-[clamp(3.25rem,14vw,7.5rem)] leading-[0.9] font-semibold tracking-[-0.045em]"</span><span style="color:#24292E">></span></span>
-<span class="line"><span style="color:#24292E">              {</span><span style="color:#005CC5">FEATURED</span><span style="color:#24292E">.title}</span></span>
-<span class="line"><span style="color:#24292E">            &#x3C;/</span><span style="color:#22863A">h1</span><span style="color:#24292E">></span></span>
-<span class="line"><span style="color:#24292E">            &#x3C;</span><span style="color:#22863A">p</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"mt-5 max-w-[34ch] text-[17px] leading-snug text-white/58 sm:text-[19px]"</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">            {reducedMotion </span><span style="color:#D73A49">?</span><span style="color:#24292E"> (</span></span>
+<span class="line"><span style="color:#24292E">              &#x3C;</span><span style="color:#22863A">h1</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"mt-3 max-w-[11ch] -translate-x-[0.13ex] text-balance text-[clamp(3.25rem,14vw,7.5rem)] leading-[0.9] font-semibold tracking-[-0.045em]"</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">                {</span><span style="color:#005CC5">FEATURED</span><span style="color:#24292E">.title}</span></span>
+<span class="line"><span style="color:#24292E">              &#x3C;/</span><span style="color:#22863A">h1</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">            ) </span><span style="color:#D73A49">:</span><span style="color:#24292E"> (</span></span>
+<span class="line"><span style="color:#24292E">              &#x3C;</span><span style="color:#22863A">div</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"mt-3 max-w-[11ch] -translate-x-[0.13ex]"</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">                &#x3C;</span><span style="color:#005CC5">FocusBlurResolve</span></span>
+<span class="line"><span style="color:#6F42C1">                  text</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#005CC5">FEATURED</span><span style="color:#24292E">.title}</span></span>
+<span class="line"><span style="color:#6F42C1">                  holdMs</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#005CC5">12000</span><span style="color:#24292E">}</span></span>
+<span class="line"><span style="color:#6F42C1">                  gapMs</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#005CC5">2400</span><span style="color:#24292E">}</span></span>
+<span class="line"><span style="color:#6F42C1">                  className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"aspect-auto h-auto w-full items-start justify-start overflow-visible text-white"</span></span>
+<span class="line"><span style="color:#6F42C1">                  stageClassName</span><span style="color:#D73A49">=</span><span style="color:#032F62">"relative inset-auto h-auto min-h-0 w-full place-items-start p-0"</span></span>
+<span class="line"><span style="color:#6F42C1">                  titleClassName</span><span style="color:#D73A49">=</span><span style="color:#032F62">"!text-left !font-semibold !tracking-[-0.045em] !text-[clamp(3.25rem,14vw,7.5rem)] !leading-[0.9]"</span></span>
+<span class="line"><span style="color:#24292E">                /></span></span>
+<span class="line"><span style="color:#24292E">                &#x3C;</span><span style="color:#22863A">h1</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"sr-only"</span><span style="color:#24292E">>{</span><span style="color:#005CC5">FEATURED</span><span style="color:#24292E">.title}&#x3C;/</span><span style="color:#22863A">h1</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">              &#x3C;/</span><span style="color:#22863A">div</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">            )}</span></span>
+<span class="line"><span style="color:#24292E">            &#x3C;</span><span style="color:#22863A">p</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"mt-5 max-w-[28ch] text-[17px] leading-snug text-white/58 sm:text-[19px]"</span><span style="color:#24292E">></span></span>
 <span class="line"><span style="color:#24292E">              {</span><span style="color:#005CC5">FEATURED</span><span style="color:#24292E">.tagline}</span></span>
 <span class="line"><span style="color:#24292E">            &#x3C;/</span><span style="color:#22863A">p</span><span style="color:#24292E">></span></span>
 <span class="line"><span style="color:#24292E">            &#x3C;</span><span style="color:#22863A">p</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"mt-3 text-[13px] text-white/38"</span><span style="color:#24292E">>{</span><span style="color:#005CC5">FEATURED</span><span style="color:#24292E">.runtime}&#x3C;/</span><span style="color:#22863A">p</span><span style="color:#24292E">></span></span>
@@ -1341,97 +1757,35 @@ export default function CinemaRow() {
 <span class="line"><span style="color:#24292E">                Add to Up Next</span></span>
 <span class="line"><span style="color:#24292E">              &#x3C;/</span><span style="color:#22863A">button</span><span style="color:#24292E">></span></span>
 <span class="line"><span style="color:#24292E">            &#x3C;/</span><span style="color:#22863A">div</span><span style="color:#24292E">></span></span>
-<span class="line"><span style="color:#24292E">          &#x3C;/</span><span style="color:#22863A">div</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">          &#x3C;/</span><span style="color:#005CC5">CinemaContent</span><span style="color:#24292E">></span></span>
 <span class="line"><span style="color:#24292E">        &#x3C;/</span><span style="color:#22863A">section</span><span style="color:#24292E">></span></span>
 <span class="line"></span>
 <span class="line"><span style="color:#24292E">        {</span><span style="color:#6A737D">/* Horizontal poster row */</span><span style="color:#24292E">}</span></span>
 <span class="line"><span style="color:#24292E">        &#x3C;</span><span style="color:#22863A">section</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"pb-6 pt-2"</span><span style="color:#6F42C1"> aria-labelledby</span><span style="color:#D73A49">=</span><span style="color:#032F62">"premieres-heading"</span><span style="color:#24292E">></span></span>
-<span class="line"><span style="color:#24292E">          &#x3C;</span><span style="color:#22863A">div</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"mb-4 flex items-end justify-between gap-4 px-5 sm:px-8"</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">          &#x3C;</span><span style="color:#005CC5">CinemaContent</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"mb-4 flex items-end justify-between gap-4"</span><span style="color:#24292E">></span></span>
 <span class="line"><span style="color:#24292E">            &#x3C;</span><span style="color:#22863A">h2</span><span style="color:#6F42C1"> id</span><span style="color:#D73A49">=</span><span style="color:#032F62">"premieres-heading"</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"text-[22px] font-semibold tracking-[-0.02em]"</span><span style="color:#24292E">></span></span>
 <span class="line"><span style="color:#24292E">              Premieres</span></span>
 <span class="line"><span style="color:#24292E">            &#x3C;/</span><span style="color:#22863A">h2</span><span style="color:#24292E">></span></span>
-<span class="line"><span style="color:#24292E">            &#x3C;</span><span style="color:#22863A">span</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"text-[13px] text-white/38"</span><span style="color:#24292E">>Swipe to browse&#x3C;/</span><span style="color:#22863A">span</span><span style="color:#24292E">></span></span>
-<span class="line"><span style="color:#24292E">          &#x3C;/</span><span style="color:#22863A">div</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">            &#x3C;</span><span style="color:#22863A">span</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"text-[13px] text-white/38"</span><span style="color:#24292E">>Swipe&#x3C;/</span><span style="color:#22863A">span</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">          &#x3C;/</span><span style="color:#005CC5">CinemaContent</span><span style="color:#24292E">></span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#24292E">          &#x3C;</span><span style="color:#22863A">div</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"overflow-x-auto overscroll-x-contain pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&#x26;::-webkit-scrollbar]:hidden"</span><span style="color:#24292E">></span></span>
-<span class="line"><span style="color:#24292E">            &#x3C;</span><span style="color:#22863A">div</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"flex w-max snap-x snap-mandatory gap-4 px-5 sm:gap-5 sm:px-8"</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">          &#x3C;</span><span style="color:#005CC5">CinemaContent</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"overflow-x-auto overscroll-x-contain pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&#x26;::-webkit-scrollbar]:hidden"</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">            &#x3C;</span><span style="color:#22863A">div</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"flex w-max snap-x snap-mandatory gap-4 sm:gap-5"</span><span style="color:#24292E">></span></span>
 <span class="line"><span style="color:#24292E">              {</span><span style="color:#005CC5">PREMIERES</span><span style="color:#24292E">.</span><span style="color:#6F42C1">map</span><span style="color:#24292E">((</span><span style="color:#E36209">film</span><span style="color:#24292E">) </span><span style="color:#D73A49">=></span><span style="color:#24292E"> (</span></span>
 <span class="line"><span style="color:#24292E">                &#x3C;</span><span style="color:#005CC5">PosterCard</span><span style="color:#6F42C1"> key</span><span style="color:#D73A49">=</span><span style="color:#24292E">{film.title} {</span><span style="color:#D73A49">...</span><span style="color:#24292E">film} /></span></span>
 <span class="line"><span style="color:#24292E">              ))}</span></span>
 <span class="line"><span style="color:#24292E">            &#x3C;/</span><span style="color:#22863A">div</span><span style="color:#24292E">></span></span>
-<span class="line"><span style="color:#24292E">          &#x3C;/</span><span style="color:#22863A">div</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">          &#x3C;/</span><span style="color:#005CC5">CinemaContent</span><span style="color:#24292E">></span></span>
 <span class="line"><span style="color:#24292E">        &#x3C;/</span><span style="color:#22863A">section</span><span style="color:#24292E">></span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#24292E">        {</span><span style="color:#6A737D">/* Editorial copy + opposing vertical marquees */</span><span style="color:#24292E">}</span></span>
+<span class="line"><span style="color:#24292E">        {</span><span style="color:#6A737D">/* Editorial + opposing vertical still marquees */</span><span style="color:#24292E">}</span></span>
 <span class="line"><span style="color:#24292E">        &#x3C;</span><span style="color:#22863A">section</span></span>
-<span class="line"><span style="color:#6F42C1">          className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"border-t border-white/[0.06] px-5 py-20 sm:px-8 sm:py-28"</span></span>
+<span class="line"><span style="color:#6F42C1">          className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"border-t border-white/[0.06] py-16 sm:py-24"</span></span>
 <span class="line"><span style="color:#6F42C1">          aria-labelledby</span><span style="color:#D73A49">=</span><span style="color:#032F62">"editorial-heading"</span></span>
 <span class="line"><span style="color:#24292E">        ></span></span>
-<span class="line"><span style="color:#24292E">          &#x3C;</span><span style="color:#22863A">div</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"mx-auto grid max-w-6xl gap-12 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)] lg:items-center lg:gap-16"</span><span style="color:#24292E">></span></span>
-<span class="line"><span style="color:#24292E">            &#x3C;</span><span style="color:#22863A">div</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"max-w-md"</span><span style="color:#24292E">></span></span>
-<span class="line"><span style="color:#24292E">              &#x3C;</span><span style="color:#22863A">p</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"text-[13px] font-medium tracking-[0.08em] text-white/42 uppercase"</span><span style="color:#24292E">></span></span>
-<span class="line"><span style="color:#24292E">                The craft</span></span>
-<span class="line"><span style="color:#24292E">              &#x3C;/</span><span style="color:#22863A">p</span><span style="color:#24292E">></span></span>
-<span class="line"><span style="color:#24292E">              &#x3C;</span><span style="color:#22863A">h2</span></span>
-<span class="line"><span style="color:#6F42C1">                id</span><span style="color:#D73A49">=</span><span style="color:#032F62">"editorial-heading"</span></span>
-<span class="line"><span style="color:#6F42C1">                className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"mt-3 text-balance text-[clamp(2rem,5vw,3rem)] leading-[1.05] font-semibold tracking-[-0.03em]"</span></span>
-<span class="line"><span style="color:#24292E">              ></span></span>
-<span class="line"><span style="color:#24292E">                Built for the big screen. Tuned for your living room.</span></span>
-<span class="line"><span style="color:#24292E">              &#x3C;/</span><span style="color:#22863A">h2</span><span style="color:#24292E">></span></span>
-<span class="line"><span style="color:#24292E">              &#x3C;</span><span style="color:#22863A">p</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"mt-5 text-[16px] leading-relaxed text-white/52"</span><span style="color:#24292E">></span></span>
-<span class="line"><span style="color:#24292E">                This browse layout pairs overscale premiere type with a snap-scrolling poster rail,</span></span>
-<span class="line"><span style="color:#24292E">                then lets critic lines drift in opposite directions beside long-form copy — the</span></span>
-<span class="line"><span style="color:#24292E">                rhythm streaming homepages use to feel cinematic without hiding the catalog.</span></span>
-<span class="line"><span style="color:#24292E">              &#x3C;/</span><span style="color:#22863A">p</span><span style="color:#24292E">></span></span>
-<span class="line"><span style="color:#24292E">              &#x3C;</span><span style="color:#22863A">p</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"mt-4 text-[16px] leading-relaxed text-white/52"</span><span style="color:#24292E">></span></span>
-<span class="line"><span style="color:#24292E">                The dual marquees are the same{</span><span style="color:#032F62">" "</span><span style="color:#24292E">}</span></span>
-<span class="line"><span style="color:#24292E">                &#x3C;</span><span style="color:#22863A">span</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"text-white/72"</span><span style="color:#24292E">>Marquee&#x3C;/</span><span style="color:#22863A">span</span><span style="color:#24292E">> primitive twice: one column runs</span></span>
-<span class="line"><span style="color:#24292E">                upward, the other reverses downward so motion never feels like a single conveyor</span></span>
-<span class="line"><span style="color:#24292E">                belt.</span></span>
-<span class="line"><span style="color:#24292E">              &#x3C;/</span><span style="color:#22863A">p</span><span style="color:#24292E">></span></span>
-<span class="line"><span style="color:#24292E">            &#x3C;/</span><span style="color:#22863A">div</span><span style="color:#24292E">></span></span>
-<span class="line"></span>
-<span class="line"><span style="color:#24292E">            &#x3C;</span><span style="color:#22863A">div</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"grid h-[min(32rem,68vh)] min-h-[22rem] grid-cols-2 gap-3 sm:gap-4"</span><span style="color:#24292E">></span></span>
-<span class="line"><span style="color:#24292E">              {reducedMotion </span><span style="color:#D73A49">?</span><span style="color:#24292E"> (</span></span>
-<span class="line"><span style="color:#24292E">                &#x3C;></span></span>
-<span class="line"><span style="color:#24292E">                  &#x3C;</span><span style="color:#22863A">div</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"flex flex-col gap-3 overflow-hidden rounded-2xl border border-white/[0.06] bg-white/[0.02] p-3"</span><span style="color:#24292E">></span></span>
-<span class="line"><span style="color:#24292E">                    {</span><span style="color:#005CC5">QUOTES</span><span style="color:#24292E">.</span><span style="color:#6F42C1">slice</span><span style="color:#24292E">(</span><span style="color:#005CC5">0</span><span style="color:#24292E">, </span><span style="color:#005CC5">4</span><span style="color:#24292E">).</span><span style="color:#6F42C1">map</span><span style="color:#24292E">((</span><span style="color:#E36209">quote</span><span style="color:#24292E">) </span><span style="color:#D73A49">=></span><span style="color:#24292E"> (</span></span>
-<span class="line"><span style="color:#24292E">                      &#x3C;</span><span style="color:#005CC5">QuoteChip</span><span style="color:#6F42C1"> key</span><span style="color:#D73A49">=</span><span style="color:#24292E">{quote.source} {</span><span style="color:#D73A49">...</span><span style="color:#24292E">quote} /></span></span>
-<span class="line"><span style="color:#24292E">                    ))}</span></span>
-<span class="line"><span style="color:#24292E">                  &#x3C;/</span><span style="color:#22863A">div</span><span style="color:#24292E">></span></span>
-<span class="line"><span style="color:#24292E">                  &#x3C;</span><span style="color:#22863A">div</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"flex flex-col gap-3 overflow-hidden rounded-2xl border border-white/[0.06] bg-white/[0.02] p-3"</span><span style="color:#24292E">></span></span>
-<span class="line"><span style="color:#24292E">                    {</span><span style="color:#005CC5">QUOTES</span><span style="color:#24292E">.</span><span style="color:#6F42C1">slice</span><span style="color:#24292E">(</span><span style="color:#005CC5">4</span><span style="color:#24292E">).</span><span style="color:#6F42C1">map</span><span style="color:#24292E">((</span><span style="color:#E36209">quote</span><span style="color:#24292E">) </span><span style="color:#D73A49">=></span><span style="color:#24292E"> (</span></span>
-<span class="line"><span style="color:#24292E">                      &#x3C;</span><span style="color:#005CC5">QuoteChip</span><span style="color:#6F42C1"> key</span><span style="color:#D73A49">=</span><span style="color:#24292E">{quote.source} {</span><span style="color:#D73A49">...</span><span style="color:#24292E">quote} /></span></span>
-<span class="line"><span style="color:#24292E">                    ))}</span></span>
-<span class="line"><span style="color:#24292E">                  &#x3C;/</span><span style="color:#22863A">div</span><span style="color:#24292E">></span></span>
-<span class="line"><span style="color:#24292E">                &#x3C;/></span></span>
-<span class="line"><span style="color:#24292E">              ) </span><span style="color:#D73A49">:</span><span style="color:#24292E"> (</span></span>
-<span class="line"><span style="color:#24292E">                &#x3C;></span></span>
-<span class="line"><span style="color:#24292E">                  &#x3C;</span><span style="color:#005CC5">Marquee</span></span>
-<span class="line"><span style="color:#6F42C1">                    vertical</span></span>
-<span class="line"><span style="color:#6F42C1">                    pauseOnHover</span></span>
-<span class="line"><span style="color:#6F42C1">                    applyMask</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#005CC5">false</span><span style="color:#24292E">}</span></span>
-<span class="line"><span style="color:#6F42C1">                    className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"h-full rounded-2xl border border-white/[0.06] bg-white/[0.02] p-2 [--duration:26s] [--gap:14px]"</span></span>
-<span class="line"><span style="color:#24292E">                  ></span></span>
-<span class="line"><span style="color:#24292E">                    {</span><span style="color:#005CC5">QUOTES</span><span style="color:#24292E">.</span><span style="color:#6F42C1">map</span><span style="color:#24292E">((</span><span style="color:#E36209">quote</span><span style="color:#24292E">) </span><span style="color:#D73A49">=></span><span style="color:#24292E"> (</span></span>
-<span class="line"><span style="color:#24292E">                      &#x3C;</span><span style="color:#005CC5">QuoteChip</span><span style="color:#6F42C1"> key</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#032F62">\`up-\${</span><span style="color:#24292E">quote</span><span style="color:#032F62">.</span><span style="color:#24292E">source</span><span style="color:#032F62">}\`</span><span style="color:#24292E">} {</span><span style="color:#D73A49">...</span><span style="color:#24292E">quote} /></span></span>
-<span class="line"><span style="color:#24292E">                    ))}</span></span>
-<span class="line"><span style="color:#24292E">                  &#x3C;/</span><span style="color:#005CC5">Marquee</span><span style="color:#24292E">></span></span>
-<span class="line"><span style="color:#24292E">                  &#x3C;</span><span style="color:#005CC5">Marquee</span></span>
-<span class="line"><span style="color:#6F42C1">                    vertical</span></span>
-<span class="line"><span style="color:#6F42C1">                    reverse</span></span>
-<span class="line"><span style="color:#6F42C1">                    pauseOnHover</span></span>
-<span class="line"><span style="color:#6F42C1">                    applyMask</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#005CC5">false</span><span style="color:#24292E">}</span></span>
-<span class="line"><span style="color:#6F42C1">                    className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"h-full rounded-2xl border border-white/[0.06] bg-white/[0.02] p-2 [--duration:31s] [--gap:14px]"</span></span>
-<span class="line"><span style="color:#24292E">                  ></span></span>
-<span class="line"><span style="color:#24292E">                    {</span><span style="color:#005CC5">QUOTES</span><span style="color:#24292E">.</span><span style="color:#6F42C1">map</span><span style="color:#24292E">((</span><span style="color:#E36209">quote</span><span style="color:#24292E">) </span><span style="color:#D73A49">=></span><span style="color:#24292E"> (</span></span>
-<span class="line"><span style="color:#24292E">                      &#x3C;</span><span style="color:#005CC5">QuoteChip</span><span style="color:#6F42C1"> key</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#032F62">\`down-\${</span><span style="color:#24292E">quote</span><span style="color:#032F62">.</span><span style="color:#24292E">source</span><span style="color:#032F62">}\`</span><span style="color:#24292E">} {</span><span style="color:#D73A49">...</span><span style="color:#24292E">quote} /></span></span>
-<span class="line"><span style="color:#24292E">                    ))}</span></span>
-<span class="line"><span style="color:#24292E">                  &#x3C;/</span><span style="color:#005CC5">Marquee</span><span style="color:#24292E">></span></span>
-<span class="line"><span style="color:#24292E">                &#x3C;/></span></span>
-<span class="line"><span style="color:#24292E">              )}</span></span>
-<span class="line"><span style="color:#24292E">            &#x3C;/</span><span style="color:#22863A">div</span><span style="color:#24292E">></span></span>
-<span class="line"><span style="color:#24292E">          &#x3C;/</span><span style="color:#22863A">div</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">          &#x3C;</span><span style="color:#005CC5">CinemaContent</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">            &#x3C;</span><span style="color:#005CC5">CraftFeaturePanel</span><span style="color:#6F42C1"> reducedMotion</span><span style="color:#D73A49">=</span><span style="color:#24292E">{reducedMotion} /></span></span>
+<span class="line"><span style="color:#24292E">          &#x3C;/</span><span style="color:#005CC5">CinemaContent</span><span style="color:#24292E">></span></span>
 <span class="line"><span style="color:#24292E">        &#x3C;/</span><span style="color:#22863A">section</span><span style="color:#24292E">></span></span>
 <span class="line"><span style="color:#24292E">      &#x3C;/</span><span style="color:#22863A">div</span><span style="color:#24292E">></span></span>
 <span class="line"></span>
@@ -1446,6 +1800,7 @@ export default function CinemaRow() {
 <span class="line"><span style="color:#F97583">import</span><span style="color:#E1E4E8"> { IBM_Plex_Sans } </span><span style="color:#F97583">from</span><span style="color:#9ECBFF"> "next/font/google"</span><span style="color:#E1E4E8">;</span></span>
 <span class="line"><span style="color:#F97583">import</span><span style="color:#E1E4E8"> { useEffect, useState } </span><span style="color:#F97583">from</span><span style="color:#9ECBFF"> "react"</span><span style="color:#E1E4E8">;</span></span>
 <span class="line"></span>
+<span class="line"><span style="color:#F97583">import</span><span style="color:#E1E4E8"> FocusBlurResolve </span><span style="color:#F97583">from</span><span style="color:#9ECBFF"> "@/animata/text/focus-blur-resolve"</span><span style="color:#E1E4E8">;</span></span>
 <span class="line"><span style="color:#F97583">import</span><span style="color:#E1E4E8"> Marquee </span><span style="color:#F97583">from</span><span style="color:#9ECBFF"> "@/animata/container/marquee"</span><span style="color:#E1E4E8">;</span></span>
 <span class="line"><span style="color:#F97583">import</span><span style="color:#E1E4E8"> { cn } </span><span style="color:#F97583">from</span><span style="color:#9ECBFF"> "@/lib/utils"</span><span style="color:#E1E4E8">;</span></span>
 <span class="line"></span>
@@ -1458,68 +1813,126 @@ export default function CinemaRow() {
 <span class="line"><span style="color:#E1E4E8">  display: </span><span style="color:#9ECBFF">"swap"</span><span style="color:#E1E4E8">,</span></span>
 <span class="line"><span style="color:#E1E4E8">});</span></span>
 <span class="line"></span>
+<span class="line"><span style="color:#F97583">const</span><span style="color:#B392F0"> TMDB_POSTER</span><span style="color:#F97583"> =</span><span style="color:#E1E4E8"> (</span><span style="color:#FFAB70">path</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> string</span><span style="color:#E1E4E8">) </span><span style="color:#F97583">=></span><span style="color:#9ECBFF"> \`https://media.themoviedb.org/t/p/w500\${</span><span style="color:#E1E4E8">path</span><span style="color:#9ECBFF">}\`</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#F97583">const</span><span style="color:#B392F0"> TMDB_BACKDROP</span><span style="color:#F97583"> =</span><span style="color:#E1E4E8"> (</span><span style="color:#FFAB70">path</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> string</span><span style="color:#E1E4E8">) </span><span style="color:#F97583">=></span><span style="color:#9ECBFF"> \`https://media.themoviedb.org/t/p/w780\${</span><span style="color:#E1E4E8">path</span><span style="color:#9ECBFF">}\`</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"></span>
 <span class="line"><span style="color:#F97583">const</span><span style="color:#79B8FF"> FEATURED</span><span style="color:#F97583"> =</span><span style="color:#E1E4E8"> {</span></span>
-<span class="line"><span style="color:#E1E4E8">  eyebrow: </span><span style="color:#9ECBFF">"Original film"</span><span style="color:#E1E4E8">,</span></span>
-<span class="line"><span style="color:#E1E4E8">  title: </span><span style="color:#9ECBFF">"Infinite Horizon"</span><span style="color:#E1E4E8">,</span></span>
-<span class="line"><span style="color:#E1E4E8">  tagline: </span><span style="color:#9ECBFF">"When the signal returns, nothing on Earth is where they left it."</span><span style="color:#E1E4E8">,</span></span>
-<span class="line"><span style="color:#E1E4E8">  runtime: </span><span style="color:#9ECBFF">"2h 14m · Sci‑Fi · Dolby Vision"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">  eyebrow: </span><span style="color:#9ECBFF">"Now streaming"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">  title: </span><span style="color:#9ECBFF">"Dune: Part Two"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">  tagline: </span><span style="color:#9ECBFF">"The desert remembers. So does Paul."</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">  runtime: </span><span style="color:#9ECBFF">"2h 47m · Sci‑Fi"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">  backdrop: </span><span style="color:#B392F0">TMDB_BACKDROP</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"/eZ239CUp1d6OryZEBPnO2n87gMG.jpg"</span><span style="color:#E1E4E8">),</span></span>
 <span class="line"><span style="color:#E1E4E8">};</span></span>
 <span class="line"></span>
+<span class="line"><span style="color:#F97583">const</span><span style="color:#79B8FF"> HERO_BACKDROPS</span><span style="color:#F97583"> =</span><span style="color:#E1E4E8"> [</span></span>
+<span class="line"><span style="color:#E1E4E8">  { title: </span><span style="color:#9ECBFF">"Dune: Part Two"</span><span style="color:#E1E4E8">, image: </span><span style="color:#B392F0">TMDB_BACKDROP</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"/eZ239CUp1d6OryZEBPnO2n87gMG.jpg"</span><span style="color:#E1E4E8">) },</span></span>
+<span class="line"><span style="color:#E1E4E8">  { title: </span><span style="color:#9ECBFF">"Sinners"</span><span style="color:#E1E4E8">, image: </span><span style="color:#B392F0">TMDB_BACKDROP</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"/nAxGnGHOsfzufThz20zgmRwKur3.jpg"</span><span style="color:#E1E4E8">) },</span></span>
+<span class="line"><span style="color:#E1E4E8">  { title: </span><span style="color:#9ECBFF">"Oppenheimer"</span><span style="color:#E1E4E8">, image: </span><span style="color:#B392F0">TMDB_BACKDROP</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"/neeNHeXjMF5fXoCJRsOmkNGC7q.jpg"</span><span style="color:#E1E4E8">) },</span></span>
+<span class="line"><span style="color:#E1E4E8">  { title: </span><span style="color:#9ECBFF">"Blade Runner 2049"</span><span style="color:#E1E4E8">, image: </span><span style="color:#B392F0">TMDB_BACKDROP</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"/mVr0UiqyltcfqxbAUcLl9zWL8ah.jpg"</span><span style="color:#E1E4E8">) },</span></span>
+<span class="line"><span style="color:#E1E4E8">  { title: </span><span style="color:#9ECBFF">"Interstellar"</span><span style="color:#E1E4E8">, image: </span><span style="color:#B392F0">TMDB_BACKDROP</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"/5XNQBqnBwPA9yT0jZ0p3s8bbLh0.jpg"</span><span style="color:#E1E4E8">) },</span></span>
+<span class="line"><span style="color:#E1E4E8">  { title: </span><span style="color:#9ECBFF">"Mad Max: Fury Road"</span><span style="color:#E1E4E8">, image: </span><span style="color:#B392F0">TMDB_BACKDROP</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"/uT895WNwm0aIJRtGizcQhrejWUo.jpg"</span><span style="color:#E1E4E8">) },</span></span>
+<span class="line"><span style="color:#E1E4E8">  { title: </span><span style="color:#9ECBFF">"Parasite"</span><span style="color:#E1E4E8">, image: </span><span style="color:#B392F0">TMDB_BACKDROP</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"/TU9NIjwzjoKPwQHoHshkFcQUCG.jpg"</span><span style="color:#E1E4E8">) },</span></span>
+<span class="line"><span style="color:#E1E4E8">  { title: </span><span style="color:#9ECBFF">"Spider-Verse"</span><span style="color:#E1E4E8">, image: </span><span style="color:#B392F0">TMDB_BACKDROP</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"/9xfDWXAUbFXQK585JvByT5pEAhe.jpg"</span><span style="color:#E1E4E8">) },</span></span>
+<span class="line"><span style="color:#E1E4E8">] </span><span style="color:#F97583">as</span><span style="color:#F97583"> const</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">const</span><span style="color:#79B8FF"> STILLS_LEFT</span><span style="color:#F97583"> =</span><span style="color:#E1E4E8"> [</span></span>
+<span class="line"><span style="color:#E1E4E8">  { title: </span><span style="color:#9ECBFF">"Anora"</span><span style="color:#E1E4E8">, image: </span><span style="color:#B392F0">TMDB_BACKDROP</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"/qvyOfwTC3qdbzkqdXWSSEMHtjBZ.jpg"</span><span style="color:#E1E4E8">) },</span></span>
+<span class="line"><span style="color:#E1E4E8">  { title: </span><span style="color:#9ECBFF">"Challengers"</span><span style="color:#E1E4E8">, image: </span><span style="color:#B392F0">TMDB_BACKDROP</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"/tq8COKsI99Bivjd4CZIYVGoKcIx.jpg"</span><span style="color:#E1E4E8">) },</span></span>
+<span class="line"><span style="color:#E1E4E8">  { title: </span><span style="color:#9ECBFF">"The Substance"</span><span style="color:#E1E4E8">, image: </span><span style="color:#B392F0">TMDB_BACKDROP</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"/8ODNt5olCeIqBYTP3GgXEQYTfeX.jpg"</span><span style="color:#E1E4E8">) },</span></span>
+<span class="line"><span style="color:#E1E4E8">  { title: </span><span style="color:#9ECBFF">"Everything Everywhere"</span><span style="color:#E1E4E8">, image: </span><span style="color:#B392F0">TMDB_BACKDROP</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"/ss0Os3uWJfQAENILHZUdX8Tt1OC.jpg"</span><span style="color:#E1E4E8">) },</span></span>
+<span class="line"><span style="color:#E1E4E8">  { title: </span><span style="color:#9ECBFF">"Poor Things"</span><span style="color:#E1E4E8">, image: </span><span style="color:#B392F0">TMDB_BACKDROP</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"/zh6IdheEYinU4TPtorWsjx6qPQE.jpg"</span><span style="color:#E1E4E8">) },</span></span>
+<span class="line"><span style="color:#E1E4E8">  { title: </span><span style="color:#9ECBFF">"The Batman"</span><span style="color:#E1E4E8">, image: </span><span style="color:#B392F0">TMDB_BACKDROP</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"/rvtdN5XkWAfGX6xDuPL6yYS2seK.jpg"</span><span style="color:#E1E4E8">) },</span></span>
+<span class="line"><span style="color:#E1E4E8">] </span><span style="color:#F97583">as</span><span style="color:#F97583"> const</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">const</span><span style="color:#79B8FF"> STILLS_RIGHT</span><span style="color:#F97583"> =</span><span style="color:#E1E4E8"> [</span></span>
+<span class="line"><span style="color:#E1E4E8">  { title: </span><span style="color:#9ECBFF">"Top Gun: Maverick"</span><span style="color:#E1E4E8">, image: </span><span style="color:#B392F0">TMDB_BACKDROP</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"/AaV1YIdWKnjAIAOe8UUKBFm327v.jpg"</span><span style="color:#E1E4E8">) },</span></span>
+<span class="line"><span style="color:#E1E4E8">  { title: </span><span style="color:#9ECBFF">"Banshees of Inisherin"</span><span style="color:#E1E4E8">, image: </span><span style="color:#B392F0">TMDB_BACKDROP</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"/1vXD5HXqkhvsXFHE7KmCPZGPR1e.jpg"</span><span style="color:#E1E4E8">) },</span></span>
+<span class="line"><span style="color:#E1E4E8">  { title: </span><span style="color:#9ECBFF">"Sinners"</span><span style="color:#E1E4E8">, image: </span><span style="color:#B392F0">TMDB_BACKDROP</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"/nAxGnGHOsfzufThz20zgmRwKur3.jpg"</span><span style="color:#E1E4E8">) },</span></span>
+<span class="line"><span style="color:#E1E4E8">  { title: </span><span style="color:#9ECBFF">"Oppenheimer"</span><span style="color:#E1E4E8">, image: </span><span style="color:#B392F0">TMDB_BACKDROP</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"/neeNHeXjMF5fXoCJRsOmkNGC7q.jpg"</span><span style="color:#E1E4E8">) },</span></span>
+<span class="line"><span style="color:#E1E4E8">  { title: </span><span style="color:#9ECBFF">"Interstellar"</span><span style="color:#E1E4E8">, image: </span><span style="color:#B392F0">TMDB_BACKDROP</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"/5XNQBqnBwPA9yT0jZ0p3s8bbLh0.jpg"</span><span style="color:#E1E4E8">) },</span></span>
+<span class="line"><span style="color:#E1E4E8">  { title: </span><span style="color:#9ECBFF">"Mad Max: Fury Road"</span><span style="color:#E1E4E8">, image: </span><span style="color:#B392F0">TMDB_BACKDROP</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"/uT895WNwm0aIJRtGizcQhrejWUo.jpg"</span><span style="color:#E1E4E8">) },</span></span>
+<span class="line"><span style="color:#E1E4E8">] </span><span style="color:#F97583">as</span><span style="color:#F97583"> const</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"></span>
 <span class="line"><span style="color:#F97583">const</span><span style="color:#79B8FF"> PREMIERES</span><span style="color:#F97583"> =</span><span style="color:#E1E4E8"> [</span></span>
+<span class="line"><span style="color:#E1E4E8">  { title: </span><span style="color:#9ECBFF">"Sinners"</span><span style="color:#E1E4E8">, genre: </span><span style="color:#9ECBFF">"Horror"</span><span style="color:#E1E4E8">, poster: </span><span style="color:#B392F0">TMDB_POSTER</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"/fWPgbnt2LSqkQ6cdQc0SZN9CpLm.jpg"</span><span style="color:#E1E4E8">) },</span></span>
+<span class="line"><span style="color:#E1E4E8">  { title: </span><span style="color:#9ECBFF">"Anora"</span><span style="color:#E1E4E8">, genre: </span><span style="color:#9ECBFF">"Drama"</span><span style="color:#E1E4E8">, poster: </span><span style="color:#B392F0">TMDB_POSTER</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"/oN0o3owobFjePDc5vMdLRAd0jkd.jpg"</span><span style="color:#E1E4E8">) },</span></span>
+<span class="line"><span style="color:#E1E4E8">  { title: </span><span style="color:#9ECBFF">"Challengers"</span><span style="color:#E1E4E8">, genre: </span><span style="color:#9ECBFF">"Drama"</span><span style="color:#E1E4E8">, poster: </span><span style="color:#B392F0">TMDB_POSTER</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"/H6vke7zGiuLsz4v4RPeReb9rsv.jpg"</span><span style="color:#E1E4E8">) },</span></span>
 <span class="line"><span style="color:#E1E4E8">  {</span></span>
-<span class="line"><span style="color:#E1E4E8">    title: </span><span style="color:#9ECBFF">"Glass Orchard"</span><span style="color:#E1E4E8">,</span></span>
-<span class="line"><span style="color:#E1E4E8">    genre: </span><span style="color:#9ECBFF">"Drama"</span><span style="color:#E1E4E8">,</span></span>
-<span class="line"><span style="color:#E1E4E8">    gradient: </span><span style="color:#9ECBFF">"linear-gradient(160deg, oklch(0.42 0.12 250) 0%, oklch(0.22 0.06 280) 100%)"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">    title: </span><span style="color:#9ECBFF">"The Substance"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">    genre: </span><span style="color:#9ECBFF">"Horror"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">    poster: </span><span style="color:#B392F0">TMDB_POSTER</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"/lqoMzCcZYEFK729d6qzt349fB4o.jpg"</span><span style="color:#E1E4E8">),</span></span>
 <span class="line"><span style="color:#E1E4E8">  },</span></span>
+<span class="line"><span style="color:#E1E4E8">  { title: </span><span style="color:#9ECBFF">"Oppenheimer"</span><span style="color:#E1E4E8">, genre: </span><span style="color:#9ECBFF">"Biography"</span><span style="color:#E1E4E8">, poster: </span><span style="color:#B392F0">TMDB_POSTER</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"/8Gxv8gSFCU0XGDykEGv7zR1n2ua.jpg"</span><span style="color:#E1E4E8">) },</span></span>
 <span class="line"><span style="color:#E1E4E8">  {</span></span>
-<span class="line"><span style="color:#E1E4E8">    title: </span><span style="color:#9ECBFF">"Midnight Relay"</span><span style="color:#E1E4E8">,</span></span>
-<span class="line"><span style="color:#E1E4E8">    genre: </span><span style="color:#9ECBFF">"Thriller"</span><span style="color:#E1E4E8">,</span></span>
-<span class="line"><span style="color:#E1E4E8">    gradient: </span><span style="color:#9ECBFF">"linear-gradient(160deg, oklch(0.35 0.08 25) 0%, oklch(0.18 0.04 15) 100%)"</span><span style="color:#E1E4E8">,</span></span>
-<span class="line"><span style="color:#E1E4E8">  },</span></span>
-<span class="line"><span style="color:#E1E4E8">  {</span></span>
-<span class="line"><span style="color:#E1E4E8">    title: </span><span style="color:#9ECBFF">"North Archive"</span><span style="color:#E1E4E8">,</span></span>
-<span class="line"><span style="color:#E1E4E8">    genre: </span><span style="color:#9ECBFF">"Documentary"</span><span style="color:#E1E4E8">,</span></span>
-<span class="line"><span style="color:#E1E4E8">    gradient: </span><span style="color:#9ECBFF">"linear-gradient(160deg, oklch(0.55 0.06 210) 0%, oklch(0.28 0.04 230) 100%)"</span><span style="color:#E1E4E8">,</span></span>
-<span class="line"><span style="color:#E1E4E8">  },</span></span>
-<span class="line"><span style="color:#E1E4E8">  {</span></span>
-<span class="line"><span style="color:#E1E4E8">    title: </span><span style="color:#9ECBFF">"Soft Circuit"</span><span style="color:#E1E4E8">,</span></span>
-<span class="line"><span style="color:#E1E4E8">    genre: </span><span style="color:#9ECBFF">"Romance"</span><span style="color:#E1E4E8">,</span></span>
-<span class="line"><span style="color:#E1E4E8">    gradient: </span><span style="color:#9ECBFF">"linear-gradient(160deg, oklch(0.62 0.14 340) 0%, oklch(0.32 0.08 320) 100%)"</span><span style="color:#E1E4E8">,</span></span>
-<span class="line"><span style="color:#E1E4E8">  },</span></span>
-<span class="line"><span style="color:#E1E4E8">  {</span></span>
-<span class="line"><span style="color:#E1E4E8">    title: </span><span style="color:#9ECBFF">"Harbor Line"</span><span style="color:#E1E4E8">,</span></span>
-<span class="line"><span style="color:#E1E4E8">    genre: </span><span style="color:#9ECBFF">"Crime"</span><span style="color:#E1E4E8">,</span></span>
-<span class="line"><span style="color:#E1E4E8">    gradient: </span><span style="color:#9ECBFF">"linear-gradient(160deg, oklch(0.38 0.05 160) 0%, oklch(0.16 0.03 190) 100%)"</span><span style="color:#E1E4E8">,</span></span>
-<span class="line"><span style="color:#E1E4E8">  },</span></span>
-<span class="line"><span style="color:#E1E4E8">  {</span></span>
-<span class="line"><span style="color:#E1E4E8">    title: </span><span style="color:#9ECBFF">"Second Sun"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">    title: </span><span style="color:#9ECBFF">"Everything Everywhere All at Once"</span><span style="color:#E1E4E8">,</span></span>
 <span class="line"><span style="color:#E1E4E8">    genre: </span><span style="color:#9ECBFF">"Sci‑Fi"</span><span style="color:#E1E4E8">,</span></span>
-<span class="line"><span style="color:#E1E4E8">    gradient: </span><span style="color:#9ECBFF">"linear-gradient(160deg, oklch(0.48 0.16 55) 0%, oklch(0.24 0.08 40) 100%)"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">    poster: </span><span style="color:#B392F0">TMDB_POSTER</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"/u68AjlvlutfEIcpmbYpKcdi09ut.jpg"</span><span style="color:#E1E4E8">),</span></span>
+<span class="line"><span style="color:#E1E4E8">  },</span></span>
+<span class="line"><span style="color:#E1E4E8">  { title: </span><span style="color:#9ECBFF">"Parasite"</span><span style="color:#E1E4E8">, genre: </span><span style="color:#9ECBFF">"Thriller"</span><span style="color:#E1E4E8">, poster: </span><span style="color:#B392F0">TMDB_POSTER</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"/7IiTTgloJzvGI1TAYymCfbfl3vT.jpg"</span><span style="color:#E1E4E8">) },</span></span>
+<span class="line"><span style="color:#E1E4E8">  {</span></span>
+<span class="line"><span style="color:#E1E4E8">    title: </span><span style="color:#9ECBFF">"Spider-Man: Across the Spider-Verse"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">    genre: </span><span style="color:#9ECBFF">"Animation"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">    poster: </span><span style="color:#B392F0">TMDB_POSTER</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"/8Vt6mWEReuy4Of61Lnj5Xj704m8.jpg"</span><span style="color:#E1E4E8">),</span></span>
 <span class="line"><span style="color:#E1E4E8">  },</span></span>
 <span class="line"><span style="color:#E1E4E8">  {</span></span>
-<span class="line"><span style="color:#E1E4E8">    title: </span><span style="color:#9ECBFF">"Quiet Union"</span><span style="color:#E1E4E8">,</span></span>
-<span class="line"><span style="color:#E1E4E8">    genre: </span><span style="color:#9ECBFF">"Indie"</span><span style="color:#E1E4E8">,</span></span>
-<span class="line"><span style="color:#E1E4E8">    gradient: </span><span style="color:#9ECBFF">"linear-gradient(160deg, oklch(0.52 0.04 280) 0%, oklch(0.24 0.03 260) 100%)"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">    title: </span><span style="color:#9ECBFF">"Blade Runner 2049"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">    genre: </span><span style="color:#9ECBFF">"Sci‑Fi"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">    poster: </span><span style="color:#B392F0">TMDB_POSTER</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"/gajva2L0rPYkEWjzgFlBXCAVBE5.jpg"</span><span style="color:#E1E4E8">),</span></span>
+<span class="line"><span style="color:#E1E4E8">  },</span></span>
+<span class="line"><span style="color:#E1E4E8">  { title: </span><span style="color:#9ECBFF">"Interstellar"</span><span style="color:#E1E4E8">, genre: </span><span style="color:#9ECBFF">"Sci‑Fi"</span><span style="color:#E1E4E8">, poster: </span><span style="color:#B392F0">TMDB_POSTER</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"/yQvGrMoipbRoddT0ZR8tPoR7NfX.jpg"</span><span style="color:#E1E4E8">) },</span></span>
+<span class="line"><span style="color:#E1E4E8">  { title: </span><span style="color:#9ECBFF">"Poor Things"</span><span style="color:#E1E4E8">, genre: </span><span style="color:#9ECBFF">"Comedy"</span><span style="color:#E1E4E8">, poster: </span><span style="color:#B392F0">TMDB_POSTER</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"/kCGlIMHnOm8JPXq3rXM6c5wMxcT.jpg"</span><span style="color:#E1E4E8">) },</span></span>
+<span class="line"><span style="color:#E1E4E8">  {</span></span>
+<span class="line"><span style="color:#E1E4E8">    title: </span><span style="color:#9ECBFF">"Mad Max: Fury Road"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">    genre: </span><span style="color:#9ECBFF">"Action"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">    poster: </span><span style="color:#B392F0">TMDB_POSTER</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"/hA2ple9q4qnwxp3hKVNhroipsir.jpg"</span><span style="color:#E1E4E8">),</span></span>
 <span class="line"><span style="color:#E1E4E8">  },</span></span>
 <span class="line"><span style="color:#E1E4E8">] </span><span style="color:#F97583">as</span><span style="color:#F97583"> const</span><span style="color:#E1E4E8">;</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#F97583">const</span><span style="color:#79B8FF"> QUOTES</span><span style="color:#F97583"> =</span><span style="color:#E1E4E8"> [</span></span>
-<span class="line"><span style="color:#E1E4E8">  { text: </span><span style="color:#9ECBFF">"A widescreen poem."</span><span style="color:#E1E4E8">, source: </span><span style="color:#9ECBFF">"The Frame"</span><span style="color:#E1E4E8"> },</span></span>
-<span class="line"><span style="color:#E1E4E8">  { text: </span><span style="color:#9ECBFF">"Refuses to blink."</span><span style="color:#E1E4E8">, source: </span><span style="color:#9ECBFF">"Celluloid"</span><span style="color:#E1E4E8"> },</span></span>
-<span class="line"><span style="color:#E1E4E8">  { text: </span><span style="color:#9ECBFF">"Sound you feel in your chest."</span><span style="color:#E1E4E8">, source: </span><span style="color:#9ECBFF">"Playback"</span><span style="color:#E1E4E8"> },</span></span>
-<span class="line"><span style="color:#E1E4E8">  { text: </span><span style="color:#9ECBFF">"The rare blockbuster with a pulse."</span><span style="color:#E1E4E8">, source: </span><span style="color:#9ECBFF">"Premiere"</span><span style="color:#E1E4E8"> },</span></span>
-<span class="line"><span style="color:#E1E4E8">  { text: </span><span style="color:#9ECBFF">"Every frame is a poster."</span><span style="color:#E1E4E8">, source: </span><span style="color:#9ECBFF">"Lens Culture"</span><span style="color:#E1E4E8"> },</span></span>
-<span class="line"><span style="color:#E1E4E8">  { text: </span><span style="color:#9ECBFF">"Turn the volume up."</span><span style="color:#E1E4E8">, source: </span><span style="color:#9ECBFF">"Signal"</span><span style="color:#E1E4E8"> },</span></span>
-<span class="line"><span style="color:#E1E4E8">  { text: </span><span style="color:#9ECBFF">"IMAX without leaving the couch."</span><span style="color:#E1E4E8">, source: </span><span style="color:#9ECBFF">"Home Screen"</span><span style="color:#E1E4E8"> },</span></span>
-<span class="line"><span style="color:#E1E4E8">  { text: </span><span style="color:#9ECBFF">"Cast chemistry for the ages."</span><span style="color:#E1E4E8">, source: </span><span style="color:#9ECBFF">"Rolling Reel"</span><span style="color:#E1E4E8"> },</span></span>
-<span class="line"><span style="color:#E1E4E8">] </span><span style="color:#F97583">as</span><span style="color:#F97583"> const</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#F97583">function</span><span style="color:#B392F0"> CinemaContent</span><span style="color:#E1E4E8">({</span></span>
+<span class="line"><span style="color:#FFAB70">  className</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#FFAB70">  children</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span><span style="color:#F97583">:</span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#FFAB70">  className</span><span style="color:#F97583">?:</span><span style="color:#79B8FF"> string</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#FFAB70">  children</span><span style="color:#F97583">:</span><span style="color:#B392F0"> React</span><span style="color:#E1E4E8">.</span><span style="color:#B392F0">ReactNode</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#E1E4E8">}) {</span></span>
+<span class="line"><span style="color:#F97583">  return</span><span style="color:#E1E4E8"> &#x3C;</span><span style="color:#85E89D">div</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#B392F0">cn</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"mx-auto w-full max-w-6xl px-5 sm:px-8"</span><span style="color:#E1E4E8">, className)}>{children}&#x3C;/</span><span style="color:#85E89D">div</span><span style="color:#E1E4E8">>;</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#F97583">function</span><span style="color:#B392F0"> QuoteChip</span><span style="color:#E1E4E8">({ </span><span style="color:#FFAB70">text</span><span style="color:#E1E4E8">, </span><span style="color:#FFAB70">source</span><span style="color:#E1E4E8"> }</span><span style="color:#F97583">:</span><span style="color:#E1E4E8"> { </span><span style="color:#FFAB70">text</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> string</span><span style="color:#E1E4E8">; </span><span style="color:#FFAB70">source</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> string</span><span style="color:#E1E4E8"> }) {</span></span>
+<span class="line"><span style="color:#F97583">function</span><span style="color:#B392F0"> BackdropSlide</span><span style="color:#E1E4E8">({ </span><span style="color:#FFAB70">title</span><span style="color:#E1E4E8">, </span><span style="color:#FFAB70">image</span><span style="color:#E1E4E8"> }</span><span style="color:#F97583">:</span><span style="color:#E1E4E8"> { </span><span style="color:#FFAB70">title</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> string</span><span style="color:#E1E4E8">; </span><span style="color:#FFAB70">image</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> string</span><span style="color:#E1E4E8"> }) {</span></span>
 <span class="line"><span style="color:#F97583">  return</span><span style="color:#E1E4E8"> (</span></span>
-<span class="line"><span style="color:#E1E4E8">    &#x3C;</span><span style="color:#85E89D">figure</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"w-40 shrink-0 rounded-2xl border border-white/10 bg-white/[0.035] px-4 py-3 sm:w-44"</span><span style="color:#E1E4E8">></span></span>
-<span class="line"><span style="color:#E1E4E8">      &#x3C;</span><span style="color:#85E89D">blockquote</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"text-[13px] leading-snug text-white/82"</span><span style="color:#E1E4E8">></span><span style="color:#79B8FF">&#x26;ldquo;</span><span style="color:#E1E4E8">{text}</span><span style="color:#79B8FF">&#x26;rdquo;</span><span style="color:#E1E4E8">&#x3C;/</span><span style="color:#85E89D">blockquote</span><span style="color:#E1E4E8">></span></span>
-<span class="line"><span style="color:#E1E4E8">      &#x3C;</span><span style="color:#85E89D">figcaption</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"mt-2 text-[11px] font-medium tracking-wide text-white/38 uppercase"</span><span style="color:#E1E4E8">></span></span>
-<span class="line"><span style="color:#E1E4E8">        {source}</span></span>
+<span class="line"><span style="color:#E1E4E8">    &#x3C;</span><span style="color:#85E89D">div</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"relative h-[min(88svh,920px)] w-[clamp(14rem,42vw,36rem)] shrink-0 overflow-hidden"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">      &#x3C;</span><span style="color:#85E89D">img</span><span style="color:#B392F0"> src</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{image} </span><span style="color:#B392F0">alt</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">""</span><span style="color:#B392F0"> aria-hidden</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"true"</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"h-full w-full object-cover"</span><span style="color:#E1E4E8"> /></span></span>
+<span class="line"><span style="color:#E1E4E8">      &#x3C;</span><span style="color:#85E89D">span</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"sr-only"</span><span style="color:#E1E4E8">>{title}&#x3C;/</span><span style="color:#85E89D">span</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">    &#x3C;/</span><span style="color:#85E89D">div</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">  );</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">function</span><span style="color:#B392F0"> LandscapeStill</span><span style="color:#E1E4E8">({</span></span>
+<span class="line"><span style="color:#FFAB70">  title</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#FFAB70">  image</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#FFAB70">  variant</span><span style="color:#F97583"> =</span><span style="color:#9ECBFF"> "wide"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span><span style="color:#F97583">:</span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#FFAB70">  title</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> string</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#FFAB70">  image</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> string</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#FFAB70">  variant</span><span style="color:#F97583">?:</span><span style="color:#9ECBFF"> "wide"</span><span style="color:#F97583"> |</span><span style="color:#9ECBFF"> "tall"</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#E1E4E8">}) {</span></span>
+<span class="line"><span style="color:#F97583">  return</span><span style="color:#E1E4E8"> (</span></span>
+<span class="line"><span style="color:#E1E4E8">    &#x3C;</span><span style="color:#85E89D">figure</span></span>
+<span class="line"><span style="color:#B392F0">      className</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#B392F0">cn</span><span style="color:#E1E4E8">(</span></span>
+<span class="line"><span style="color:#9ECBFF">        "group relative w-full shrink-0 overflow-hidden rounded-2xl ring-1 ring-white/12"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">        variant </span><span style="color:#F97583">===</span><span style="color:#9ECBFF"> "tall"</span><span style="color:#F97583"> ?</span><span style="color:#9ECBFF"> "aspect-[5/3]"</span><span style="color:#F97583"> :</span><span style="color:#9ECBFF"> "aspect-video"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">      )}</span></span>
+<span class="line"><span style="color:#E1E4E8">    ></span></span>
+<span class="line"><span style="color:#E1E4E8">      &#x3C;</span><span style="color:#85E89D">img</span></span>
+<span class="line"><span style="color:#B392F0">        src</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{image}</span></span>
+<span class="line"><span style="color:#B392F0">        alt</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#9ECBFF">\`\${</span><span style="color:#E1E4E8">title</span><span style="color:#9ECBFF">} still\`</span><span style="color:#E1E4E8">}</span></span>
+<span class="line"><span style="color:#B392F0">        loading</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"lazy"</span></span>
+<span class="line"><span style="color:#B392F0">        decoding</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"async"</span></span>
+<span class="line"><span style="color:#B392F0">        className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"</span></span>
+<span class="line"><span style="color:#E1E4E8">      /></span></span>
+<span class="line"><span style="color:#E1E4E8">      &#x3C;</span><span style="color:#85E89D">div</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"pointer-events-none absolute inset-0 bg-linear-to-t from-black/75 via-black/10 to-transparent"</span><span style="color:#E1E4E8"> /></span></span>
+<span class="line"><span style="color:#E1E4E8">      &#x3C;</span><span style="color:#85E89D">figcaption</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"absolute inset-x-0 bottom-0 truncate px-3 pb-2.5 text-[11px] font-semibold tracking-[0.06em] text-white/88 uppercase"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">        {title}</span></span>
 <span class="line"><span style="color:#E1E4E8">      &#x3C;/</span><span style="color:#85E89D">figcaption</span><span style="color:#E1E4E8">></span></span>
 <span class="line"><span style="color:#E1E4E8">    &#x3C;/</span><span style="color:#85E89D">figure</span><span style="color:#E1E4E8">></span></span>
 <span class="line"><span style="color:#E1E4E8">  );</span></span>
@@ -1528,21 +1941,168 @@ export default function CinemaRow() {
 <span class="line"><span style="color:#F97583">function</span><span style="color:#B392F0"> PosterCard</span><span style="color:#E1E4E8">({</span></span>
 <span class="line"><span style="color:#FFAB70">  title</span><span style="color:#E1E4E8">,</span></span>
 <span class="line"><span style="color:#FFAB70">  genre</span><span style="color:#E1E4E8">,</span></span>
-<span class="line"><span style="color:#FFAB70">  gradient</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#FFAB70">  poster</span><span style="color:#E1E4E8">,</span></span>
 <span class="line"><span style="color:#E1E4E8">}</span><span style="color:#F97583">:</span><span style="color:#E1E4E8"> {</span></span>
 <span class="line"><span style="color:#FFAB70">  title</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> string</span><span style="color:#E1E4E8">;</span></span>
 <span class="line"><span style="color:#FFAB70">  genre</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> string</span><span style="color:#E1E4E8">;</span></span>
-<span class="line"><span style="color:#FFAB70">  gradient</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> string</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#FFAB70">  poster</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> string</span><span style="color:#E1E4E8">;</span></span>
 <span class="line"><span style="color:#E1E4E8">}) {</span></span>
 <span class="line"><span style="color:#F97583">  return</span><span style="color:#E1E4E8"> (</span></span>
 <span class="line"><span style="color:#E1E4E8">    &#x3C;</span><span style="color:#85E89D">article</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"w-[9.75rem] shrink-0 snap-start sm:w-[11.25rem]"</span><span style="color:#E1E4E8">></span></span>
-<span class="line"><span style="color:#E1E4E8">      &#x3C;</span><span style="color:#85E89D">div</span></span>
-<span class="line"><span style="color:#B392F0">        className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"aspect-[2/3] overflow-hidden rounded-xl ring-1 ring-white/10"</span></span>
-<span class="line"><span style="color:#B392F0">        style</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{{ backgroundImage: gradient }}</span></span>
-<span class="line"><span style="color:#E1E4E8">      /></span></span>
+<span class="line"><span style="color:#E1E4E8">      &#x3C;</span><span style="color:#85E89D">div</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"aspect-[2/3] overflow-hidden rounded-xl ring-1 ring-white/10"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">        &#x3C;</span><span style="color:#85E89D">img</span></span>
+<span class="line"><span style="color:#B392F0">          src</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{poster}</span></span>
+<span class="line"><span style="color:#B392F0">          alt</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#9ECBFF">\`\${</span><span style="color:#E1E4E8">title</span><span style="color:#9ECBFF">} poster\`</span><span style="color:#E1E4E8">}</span></span>
+<span class="line"><span style="color:#B392F0">          loading</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"lazy"</span></span>
+<span class="line"><span style="color:#B392F0">          decoding</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"async"</span></span>
+<span class="line"><span style="color:#B392F0">          className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"h-full w-full object-cover"</span></span>
+<span class="line"><span style="color:#E1E4E8">        /></span></span>
+<span class="line"><span style="color:#E1E4E8">      &#x3C;/</span><span style="color:#85E89D">div</span><span style="color:#E1E4E8">></span></span>
 <span class="line"><span style="color:#E1E4E8">      &#x3C;</span><span style="color:#85E89D">h3</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"mt-2.5 truncate text-[15px] font-medium text-white/92"</span><span style="color:#E1E4E8">>{title}&#x3C;/</span><span style="color:#85E89D">h3</span><span style="color:#E1E4E8">></span></span>
 <span class="line"><span style="color:#E1E4E8">      &#x3C;</span><span style="color:#85E89D">p</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"text-[13px] text-white/42"</span><span style="color:#E1E4E8">>{genre}&#x3C;/</span><span style="color:#85E89D">p</span><span style="color:#E1E4E8">></span></span>
 <span class="line"><span style="color:#E1E4E8">    &#x3C;/</span><span style="color:#85E89D">article</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">  );</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">function</span><span style="color:#B392F0"> MarqueeWell</span><span style="color:#E1E4E8">({</span></span>
+<span class="line"><span style="color:#FFAB70">  children</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#FFAB70">  className</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#FFAB70">  tone</span><span style="color:#F97583"> =</span><span style="color:#9ECBFF"> "violet"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span><span style="color:#F97583">:</span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#FFAB70">  children</span><span style="color:#F97583">:</span><span style="color:#B392F0"> React</span><span style="color:#E1E4E8">.</span><span style="color:#B392F0">ReactNode</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#FFAB70">  className</span><span style="color:#F97583">?:</span><span style="color:#79B8FF"> string</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#FFAB70">  tone</span><span style="color:#F97583">?:</span><span style="color:#9ECBFF"> "violet"</span><span style="color:#F97583"> |</span><span style="color:#9ECBFF"> "amber"</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#E1E4E8">}) {</span></span>
+<span class="line"><span style="color:#F97583">  const</span><span style="color:#79B8FF"> wellColor</span><span style="color:#F97583"> =</span></span>
+<span class="line"><span style="color:#E1E4E8">    tone </span><span style="color:#F97583">===</span><span style="color:#9ECBFF"> "violet"</span><span style="color:#F97583"> ?</span><span style="color:#9ECBFF"> "oklch(0.14 0.03 285)"</span><span style="color:#F97583"> :</span><span style="color:#9ECBFF"> "oklch(0.15 0.028 55)"</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">  return</span><span style="color:#E1E4E8"> (</span></span>
+<span class="line"><span style="color:#E1E4E8">    &#x3C;</span><span style="color:#85E89D">div</span></span>
+<span class="line"><span style="color:#B392F0">      className</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#B392F0">cn</span><span style="color:#E1E4E8">(</span></span>
+<span class="line"><span style="color:#9ECBFF">        "relative min-h-[18rem] overflow-hidden rounded-[1.35rem] shadow-[inset_0_1px_0_oklch(1_0_0/0.07)] ring-1 ring-white/10"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">        className,</span></span>
+<span class="line"><span style="color:#E1E4E8">      )}</span></span>
+<span class="line"><span style="color:#B392F0">      style</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{{ backgroundColor: wellColor }}</span></span>
+<span class="line"><span style="color:#E1E4E8">    ></span></span>
+<span class="line"><span style="color:#E1E4E8">      {children}</span></span>
+<span class="line"><span style="color:#E1E4E8">      &#x3C;</span><span style="color:#85E89D">div</span></span>
+<span class="line"><span style="color:#B392F0">        aria-hidden</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"true"</span></span>
+<span class="line"><span style="color:#B392F0">        className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"pointer-events-none absolute inset-x-0 top-0 z-10 h-14 bg-linear-to-b to-transparent"</span></span>
+<span class="line"><span style="color:#B392F0">        style</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{{</span></span>
+<span class="line"><span style="color:#E1E4E8">          backgroundImage: </span><span style="color:#9ECBFF">\`linear-gradient(to bottom, \${</span><span style="color:#E1E4E8">wellColor</span><span style="color:#9ECBFF">} 0%, color-mix(in oklch, \${</span><span style="color:#E1E4E8">wellColor</span><span style="color:#9ECBFF">} 85%, transparent) 55%, transparent 100%)\`</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">        }}</span></span>
+<span class="line"><span style="color:#E1E4E8">      /></span></span>
+<span class="line"><span style="color:#E1E4E8">      &#x3C;</span><span style="color:#85E89D">div</span></span>
+<span class="line"><span style="color:#B392F0">        aria-hidden</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"true"</span></span>
+<span class="line"><span style="color:#B392F0">        className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"pointer-events-none absolute inset-x-0 bottom-0 z-10 h-20 bg-linear-to-t to-transparent"</span></span>
+<span class="line"><span style="color:#B392F0">        style</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{{</span></span>
+<span class="line"><span style="color:#E1E4E8">          backgroundImage: </span><span style="color:#9ECBFF">\`linear-gradient(to top, \${</span><span style="color:#E1E4E8">wellColor</span><span style="color:#9ECBFF">} 0%, color-mix(in oklch, \${</span><span style="color:#E1E4E8">wellColor</span><span style="color:#9ECBFF">} 90%, transparent) 60%, transparent 100%)\`</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">        }}</span></span>
+<span class="line"><span style="color:#E1E4E8">      /></span></span>
+<span class="line"><span style="color:#E1E4E8">    &#x3C;/</span><span style="color:#85E89D">div</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">  );</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">function</span><span style="color:#B392F0"> StillMarqueeColumn</span><span style="color:#E1E4E8">({</span></span>
+<span class="line"><span style="color:#FFAB70">  stills</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#FFAB70">  reverse</span><span style="color:#F97583"> =</span><span style="color:#79B8FF"> false</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#FFAB70">  duration</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#FFAB70">  variant</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span><span style="color:#F97583">:</span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#FFAB70">  stills</span><span style="color:#F97583">:</span><span style="color:#F97583"> readonly</span><span style="color:#E1E4E8"> { </span><span style="color:#FFAB70">title</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> string</span><span style="color:#E1E4E8">; </span><span style="color:#FFAB70">image</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> string</span><span style="color:#E1E4E8"> }[];</span></span>
+<span class="line"><span style="color:#FFAB70">  reverse</span><span style="color:#F97583">?:</span><span style="color:#79B8FF"> boolean</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#FFAB70">  duration</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> string</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#FFAB70">  variant</span><span style="color:#F97583">:</span><span style="color:#9ECBFF"> "wide"</span><span style="color:#F97583"> |</span><span style="color:#9ECBFF"> "tall"</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#E1E4E8">}) {</span></span>
+<span class="line"><span style="color:#F97583">  return</span><span style="color:#E1E4E8"> (</span></span>
+<span class="line"><span style="color:#E1E4E8">    &#x3C;</span><span style="color:#79B8FF">Marquee</span></span>
+<span class="line"><span style="color:#B392F0">      vertical</span></span>
+<span class="line"><span style="color:#B392F0">      reverse</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{reverse}</span></span>
+<span class="line"><span style="color:#B392F0">      pauseOnHover</span></span>
+<span class="line"><span style="color:#B392F0">      applyMask</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#79B8FF">false</span><span style="color:#E1E4E8">}</span></span>
+<span class="line"><span style="color:#B392F0">      className</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#B392F0">cn</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"h-full p-2.5 sm:p-3"</span><span style="color:#E1E4E8">, duration)}</span></span>
+<span class="line"><span style="color:#E1E4E8">    ></span></span>
+<span class="line"><span style="color:#E1E4E8">      {stills.</span><span style="color:#B392F0">map</span><span style="color:#E1E4E8">((</span><span style="color:#FFAB70">still</span><span style="color:#E1E4E8">) </span><span style="color:#F97583">=></span><span style="color:#E1E4E8"> (</span></span>
+<span class="line"><span style="color:#E1E4E8">        &#x3C;</span><span style="color:#79B8FF">LandscapeStill</span><span style="color:#B392F0"> key</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#9ECBFF">\`\${</span><span style="color:#E1E4E8">reverse</span><span style="color:#F97583"> ?</span><span style="color:#9ECBFF"> "rev"</span><span style="color:#F97583"> :</span><span style="color:#9ECBFF"> "fwd"}-\${</span><span style="color:#E1E4E8">still</span><span style="color:#9ECBFF">.</span><span style="color:#E1E4E8">title</span><span style="color:#9ECBFF">}\`</span><span style="color:#E1E4E8">} {</span><span style="color:#F97583">...</span><span style="color:#E1E4E8">still} </span><span style="color:#B392F0">variant</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{variant} /></span></span>
+<span class="line"><span style="color:#E1E4E8">      ))}</span></span>
+<span class="line"><span style="color:#E1E4E8">    &#x3C;/</span><span style="color:#79B8FF">Marquee</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">  );</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">function</span><span style="color:#B392F0"> VerticalStillGallery</span><span style="color:#E1E4E8">({</span></span>
+<span class="line"><span style="color:#FFAB70">  reducedMotion</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#FFAB70">  className</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span><span style="color:#F97583">:</span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#FFAB70">  reducedMotion</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> boolean</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#FFAB70">  className</span><span style="color:#F97583">?:</span><span style="color:#79B8FF"> string</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#E1E4E8">}) {</span></span>
+<span class="line"><span style="color:#F97583">  if</span><span style="color:#E1E4E8"> (reducedMotion) {</span></span>
+<span class="line"><span style="color:#F97583">    return</span><span style="color:#E1E4E8"> (</span></span>
+<span class="line"><span style="color:#E1E4E8">      &#x3C;</span><span style="color:#85E89D">div</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#B392F0">cn</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"grid h-full min-h-[18rem] grid-cols-2 gap-2 sm:gap-2.5"</span><span style="color:#E1E4E8">, className)}></span></span>
+<span class="line"><span style="color:#E1E4E8">        &#x3C;</span><span style="color:#79B8FF">MarqueeWell</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"h-full min-h-0 overflow-y-auto"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">          &#x3C;</span><span style="color:#85E89D">div</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"flex flex-col gap-2.5 p-2.5 sm:p-3"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">            {</span><span style="color:#79B8FF">STILLS_LEFT</span><span style="color:#E1E4E8">.</span><span style="color:#B392F0">slice</span><span style="color:#E1E4E8">(</span><span style="color:#79B8FF">0</span><span style="color:#E1E4E8">, </span><span style="color:#79B8FF">3</span><span style="color:#E1E4E8">).</span><span style="color:#B392F0">map</span><span style="color:#E1E4E8">((</span><span style="color:#FFAB70">still</span><span style="color:#E1E4E8">) </span><span style="color:#F97583">=></span><span style="color:#E1E4E8"> (</span></span>
+<span class="line"><span style="color:#E1E4E8">              &#x3C;</span><span style="color:#79B8FF">LandscapeStill</span><span style="color:#B392F0"> key</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{still.title} {</span><span style="color:#F97583">...</span><span style="color:#E1E4E8">still} </span><span style="color:#B392F0">variant</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"wide"</span><span style="color:#E1E4E8"> /></span></span>
+<span class="line"><span style="color:#E1E4E8">            ))}</span></span>
+<span class="line"><span style="color:#E1E4E8">          &#x3C;/</span><span style="color:#85E89D">div</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">        &#x3C;/</span><span style="color:#79B8FF">MarqueeWell</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">        &#x3C;</span><span style="color:#79B8FF">MarqueeWell</span><span style="color:#B392F0"> tone</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"amber"</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"h-full min-h-0 overflow-y-auto"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">          &#x3C;</span><span style="color:#85E89D">div</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"flex flex-col gap-2.5 p-2.5 sm:p-3"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">            {</span><span style="color:#79B8FF">STILLS_RIGHT</span><span style="color:#E1E4E8">.</span><span style="color:#B392F0">slice</span><span style="color:#E1E4E8">(</span><span style="color:#79B8FF">0</span><span style="color:#E1E4E8">, </span><span style="color:#79B8FF">3</span><span style="color:#E1E4E8">).</span><span style="color:#B392F0">map</span><span style="color:#E1E4E8">((</span><span style="color:#FFAB70">still</span><span style="color:#E1E4E8">) </span><span style="color:#F97583">=></span><span style="color:#E1E4E8"> (</span></span>
+<span class="line"><span style="color:#E1E4E8">              &#x3C;</span><span style="color:#79B8FF">LandscapeStill</span><span style="color:#B392F0"> key</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{still.title} {</span><span style="color:#F97583">...</span><span style="color:#E1E4E8">still} </span><span style="color:#B392F0">variant</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"tall"</span><span style="color:#E1E4E8"> /></span></span>
+<span class="line"><span style="color:#E1E4E8">            ))}</span></span>
+<span class="line"><span style="color:#E1E4E8">          &#x3C;/</span><span style="color:#85E89D">div</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">        &#x3C;/</span><span style="color:#79B8FF">MarqueeWell</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">      &#x3C;/</span><span style="color:#85E89D">div</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">    );</span></span>
+<span class="line"><span style="color:#E1E4E8">  }</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">  return</span><span style="color:#E1E4E8"> (</span></span>
+<span class="line"><span style="color:#E1E4E8">    &#x3C;</span><span style="color:#85E89D">div</span></span>
+<span class="line"><span style="color:#B392F0">      className</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#B392F0">cn</span><span style="color:#E1E4E8">(</span></span>
+<span class="line"><span style="color:#9ECBFF">        "grid h-full min-h-[18rem] grid-cols-2 items-stretch gap-2 sm:min-h-[22rem] sm:gap-2.5 md:min-h-[min(26rem,46vh)]"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">        className,</span></span>
+<span class="line"><span style="color:#E1E4E8">      )}</span></span>
+<span class="line"><span style="color:#E1E4E8">    ></span></span>
+<span class="line"><span style="color:#E1E4E8">      &#x3C;</span><span style="color:#79B8FF">MarqueeWell</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"h-full min-h-0"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">        &#x3C;</span><span style="color:#79B8FF">StillMarqueeColumn</span><span style="color:#B392F0"> stills</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#79B8FF">STILLS_LEFT</span><span style="color:#E1E4E8">} </span><span style="color:#B392F0">duration</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"[--duration:32s] [--gap:12px]"</span><span style="color:#B392F0"> variant</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"wide"</span><span style="color:#E1E4E8"> /></span></span>
+<span class="line"><span style="color:#E1E4E8">      &#x3C;/</span><span style="color:#79B8FF">MarqueeWell</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">      &#x3C;</span><span style="color:#79B8FF">MarqueeWell</span><span style="color:#B392F0"> tone</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"amber"</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"h-full min-h-0 md:translate-y-3"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">        &#x3C;</span><span style="color:#79B8FF">StillMarqueeColumn</span></span>
+<span class="line"><span style="color:#B392F0">          stills</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#79B8FF">STILLS_RIGHT</span><span style="color:#E1E4E8">}</span></span>
+<span class="line"><span style="color:#B392F0">          reverse</span></span>
+<span class="line"><span style="color:#B392F0">          duration</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"[--duration:38s] [--gap:12px]"</span></span>
+<span class="line"><span style="color:#B392F0">          variant</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"tall"</span></span>
+<span class="line"><span style="color:#E1E4E8">        /></span></span>
+<span class="line"><span style="color:#E1E4E8">      &#x3C;/</span><span style="color:#79B8FF">MarqueeWell</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">    &#x3C;/</span><span style="color:#85E89D">div</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">  );</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">function</span><span style="color:#B392F0"> CraftFeaturePanel</span><span style="color:#E1E4E8">({ </span><span style="color:#FFAB70">reducedMotion</span><span style="color:#E1E4E8"> }</span><span style="color:#F97583">:</span><span style="color:#E1E4E8"> { </span><span style="color:#FFAB70">reducedMotion</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> boolean</span><span style="color:#E1E4E8"> }) {</span></span>
+<span class="line"><span style="color:#F97583">  return</span><span style="color:#E1E4E8"> (</span></span>
+<span class="line"><span style="color:#E1E4E8">    &#x3C;</span><span style="color:#85E89D">div</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"@container overflow-hidden rounded-[1.35rem] border border-white/10 bg-[oklch(0.12_0.025_285)] shadow-[inset_0_1px_0_oklch(1_0_0/0.05)]"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">      &#x3C;</span><span style="color:#85E89D">div</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"grid md:grid-cols-[minmax(0,11.5rem)_minmax(0,1fr)] lg:grid-cols-[minmax(0,15rem)_minmax(0,1fr)]"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">        &#x3C;</span><span style="color:#85E89D">div</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"flex flex-col justify-end gap-3 border-b border-white/8 p-5 sm:p-6 md:border-r md:border-b-0 md:p-6 lg:p-8"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">          &#x3C;</span><span style="color:#85E89D">p</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"text-[13px] font-medium tracking-[0.08em] text-white/42 uppercase"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">            The craft</span></span>
+<span class="line"><span style="color:#E1E4E8">          &#x3C;/</span><span style="color:#85E89D">p</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">          &#x3C;</span><span style="color:#85E89D">h2</span></span>
+<span class="line"><span style="color:#B392F0">            id</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"editorial-heading"</span></span>
+<span class="line"><span style="color:#B392F0">            className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"text-balance text-[clamp(1.5rem,4.5cqi,2.25rem)] leading-[1.08] font-semibold tracking-[-0.03em]"</span></span>
+<span class="line"><span style="color:#E1E4E8">          ></span></span>
+<span class="line"><span style="color:#E1E4E8">            Big-screen rhythm. Living-room scale.</span></span>
+<span class="line"><span style="color:#E1E4E8">          &#x3C;/</span><span style="color:#85E89D">h2</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">          &#x3C;</span><span style="color:#85E89D">p</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"text-[14px] leading-relaxed text-white/52 sm:text-[15px]"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">            Three motion layers — hero, rail, twin columns — one browse page.</span></span>
+<span class="line"><span style="color:#E1E4E8">          &#x3C;/</span><span style="color:#85E89D">p</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">        &#x3C;/</span><span style="color:#85E89D">div</span><span style="color:#E1E4E8">></span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">        &#x3C;</span><span style="color:#85E89D">div</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"min-h-[18rem] p-2.5 sm:min-h-[22rem] sm:p-3 md:min-h-[min(26rem,46vh)]"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">          &#x3C;</span><span style="color:#79B8FF">VerticalStillGallery</span><span style="color:#B392F0"> reducedMotion</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{reducedMotion} </span><span style="color:#B392F0">className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"h-full"</span><span style="color:#E1E4E8"> /></span></span>
+<span class="line"><span style="color:#E1E4E8">        &#x3C;/</span><span style="color:#85E89D">div</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">      &#x3C;/</span><span style="color:#85E89D">div</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">    &#x3C;/</span><span style="color:#85E89D">div</span><span style="color:#E1E4E8">></span></span>
 <span class="line"><span style="color:#E1E4E8">  );</span></span>
 <span class="line"><span style="color:#E1E4E8">}</span></span>
 <span class="line"></span>
@@ -1566,8 +2126,27 @@ export default function CinemaRow() {
 <span class="line"><span style="color:#9ECBFF">          "min-h-svh bg-black text-white selection:bg-white/20"</span><span style="color:#E1E4E8">,</span></span>
 <span class="line"><span style="color:#E1E4E8">        )}</span></span>
 <span class="line"><span style="color:#E1E4E8">      ></span></span>
-<span class="line"><span style="color:#E1E4E8">        {</span><span style="color:#6A737D">/* Hero — overscale premiere typography */</span><span style="color:#E1E4E8">}</span></span>
+<span class="line"><span style="color:#E1E4E8">        {</span><span style="color:#6A737D">/* Hero — backdrop marquee + premiere type */</span><span style="color:#E1E4E8">}</span></span>
 <span class="line"><span style="color:#E1E4E8">        &#x3C;</span><span style="color:#85E89D">section</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"relative isolate overflow-hidden"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">          &#x3C;</span><span style="color:#85E89D">div</span><span style="color:#B392F0"> aria-hidden</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"true"</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"absolute inset-0 overflow-hidden"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">            {reducedMotion </span><span style="color:#F97583">?</span><span style="color:#E1E4E8"> (</span></span>
+<span class="line"><span style="color:#E1E4E8">              &#x3C;</span><span style="color:#85E89D">img</span></span>
+<span class="line"><span style="color:#B392F0">                src</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#79B8FF">FEATURED</span><span style="color:#E1E4E8">.backdrop}</span></span>
+<span class="line"><span style="color:#B392F0">                alt</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">""</span></span>
+<span class="line"><span style="color:#B392F0">                className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"h-full w-full object-cover object-[50%_20%] opacity-40"</span></span>
+<span class="line"><span style="color:#E1E4E8">              /></span></span>
+<span class="line"><span style="color:#E1E4E8">            ) </span><span style="color:#F97583">:</span><span style="color:#E1E4E8"> (</span></span>
+<span class="line"><span style="color:#E1E4E8">              &#x3C;</span><span style="color:#79B8FF">Marquee</span></span>
+<span class="line"><span style="color:#B392F0">                pauseOnHover</span></span>
+<span class="line"><span style="color:#B392F0">                applyMask</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#79B8FF">false</span><span style="color:#E1E4E8">}</span></span>
+<span class="line"><span style="color:#B392F0">                className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"h-full [--duration:48s] [--gap:0px]"</span></span>
+<span class="line"><span style="color:#E1E4E8">              ></span></span>
+<span class="line"><span style="color:#E1E4E8">                {</span><span style="color:#79B8FF">HERO_BACKDROPS</span><span style="color:#E1E4E8">.</span><span style="color:#B392F0">map</span><span style="color:#E1E4E8">((</span><span style="color:#FFAB70">slide</span><span style="color:#E1E4E8">) </span><span style="color:#F97583">=></span><span style="color:#E1E4E8"> (</span></span>
+<span class="line"><span style="color:#E1E4E8">                  &#x3C;</span><span style="color:#79B8FF">BackdropSlide</span><span style="color:#B392F0"> key</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{slide.title} {</span><span style="color:#F97583">...</span><span style="color:#E1E4E8">slide} /></span></span>
+<span class="line"><span style="color:#E1E4E8">                ))}</span></span>
+<span class="line"><span style="color:#E1E4E8">              &#x3C;/</span><span style="color:#79B8FF">Marquee</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">            )}</span></span>
+<span class="line"><span style="color:#E1E4E8">          &#x3C;/</span><span style="color:#85E89D">div</span><span style="color:#E1E4E8">></span></span>
 <span class="line"><span style="color:#E1E4E8">          &#x3C;</span><span style="color:#85E89D">div</span></span>
 <span class="line"><span style="color:#B392F0">            aria-hidden</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"true"</span></span>
 <span class="line"><span style="color:#B392F0">            className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_120%_80%_at_50%_-10%,oklch(0.28_0.08_280_/_0.55)_0%,transparent_58%),linear-gradient(to_bottom,oklch(0.12_0.02_280)_0%,black_72%)]"</span></span>
@@ -1577,14 +2156,28 @@ export default function CinemaRow() {
 <span class="line"><span style="color:#B392F0">            className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-linear-to-t from-black to-transparent"</span></span>
 <span class="line"><span style="color:#E1E4E8">          /></span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">          &#x3C;</span><span style="color:#85E89D">div</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"relative z-10 flex min-h-[min(88svh,920px)] flex-col justify-end px-5 pb-[calc(var(--demo-chrome-reserve,5rem)+2.5rem)] pt-[max(1.25rem,env(safe-area-inset-top))] sm:px-8"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">          &#x3C;</span><span style="color:#79B8FF">CinemaContent</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"relative z-10 flex min-h-[min(88svh,920px)] flex-col justify-end pb-[calc(var(--demo-chrome-reserve,5rem)+2.5rem)] pt-[max(1.25rem,env(safe-area-inset-top))]"</span><span style="color:#E1E4E8">></span></span>
 <span class="line"><span style="color:#E1E4E8">            &#x3C;</span><span style="color:#85E89D">p</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"text-[13px] font-medium tracking-[0.08em] text-white/45 uppercase"</span><span style="color:#E1E4E8">></span></span>
 <span class="line"><span style="color:#E1E4E8">              {</span><span style="color:#79B8FF">FEATURED</span><span style="color:#E1E4E8">.eyebrow}</span></span>
 <span class="line"><span style="color:#E1E4E8">            &#x3C;/</span><span style="color:#85E89D">p</span><span style="color:#E1E4E8">></span></span>
-<span class="line"><span style="color:#E1E4E8">            &#x3C;</span><span style="color:#85E89D">h1</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"mt-3 max-w-[11ch] text-balance text-[clamp(3.25rem,14vw,7.5rem)] leading-[0.9] font-semibold tracking-[-0.045em]"</span><span style="color:#E1E4E8">></span></span>
-<span class="line"><span style="color:#E1E4E8">              {</span><span style="color:#79B8FF">FEATURED</span><span style="color:#E1E4E8">.title}</span></span>
-<span class="line"><span style="color:#E1E4E8">            &#x3C;/</span><span style="color:#85E89D">h1</span><span style="color:#E1E4E8">></span></span>
-<span class="line"><span style="color:#E1E4E8">            &#x3C;</span><span style="color:#85E89D">p</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"mt-5 max-w-[34ch] text-[17px] leading-snug text-white/58 sm:text-[19px]"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">            {reducedMotion </span><span style="color:#F97583">?</span><span style="color:#E1E4E8"> (</span></span>
+<span class="line"><span style="color:#E1E4E8">              &#x3C;</span><span style="color:#85E89D">h1</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"mt-3 max-w-[11ch] -translate-x-[0.13ex] text-balance text-[clamp(3.25rem,14vw,7.5rem)] leading-[0.9] font-semibold tracking-[-0.045em]"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">                {</span><span style="color:#79B8FF">FEATURED</span><span style="color:#E1E4E8">.title}</span></span>
+<span class="line"><span style="color:#E1E4E8">              &#x3C;/</span><span style="color:#85E89D">h1</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">            ) </span><span style="color:#F97583">:</span><span style="color:#E1E4E8"> (</span></span>
+<span class="line"><span style="color:#E1E4E8">              &#x3C;</span><span style="color:#85E89D">div</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"mt-3 max-w-[11ch] -translate-x-[0.13ex]"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">                &#x3C;</span><span style="color:#79B8FF">FocusBlurResolve</span></span>
+<span class="line"><span style="color:#B392F0">                  text</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#79B8FF">FEATURED</span><span style="color:#E1E4E8">.title}</span></span>
+<span class="line"><span style="color:#B392F0">                  holdMs</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#79B8FF">12000</span><span style="color:#E1E4E8">}</span></span>
+<span class="line"><span style="color:#B392F0">                  gapMs</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#79B8FF">2400</span><span style="color:#E1E4E8">}</span></span>
+<span class="line"><span style="color:#B392F0">                  className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"aspect-auto h-auto w-full items-start justify-start overflow-visible text-white"</span></span>
+<span class="line"><span style="color:#B392F0">                  stageClassName</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"relative inset-auto h-auto min-h-0 w-full place-items-start p-0"</span></span>
+<span class="line"><span style="color:#B392F0">                  titleClassName</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"!text-left !font-semibold !tracking-[-0.045em] !text-[clamp(3.25rem,14vw,7.5rem)] !leading-[0.9]"</span></span>
+<span class="line"><span style="color:#E1E4E8">                /></span></span>
+<span class="line"><span style="color:#E1E4E8">                &#x3C;</span><span style="color:#85E89D">h1</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"sr-only"</span><span style="color:#E1E4E8">>{</span><span style="color:#79B8FF">FEATURED</span><span style="color:#E1E4E8">.title}&#x3C;/</span><span style="color:#85E89D">h1</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">              &#x3C;/</span><span style="color:#85E89D">div</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">            )}</span></span>
+<span class="line"><span style="color:#E1E4E8">            &#x3C;</span><span style="color:#85E89D">p</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"mt-5 max-w-[28ch] text-[17px] leading-snug text-white/58 sm:text-[19px]"</span><span style="color:#E1E4E8">></span></span>
 <span class="line"><span style="color:#E1E4E8">              {</span><span style="color:#79B8FF">FEATURED</span><span style="color:#E1E4E8">.tagline}</span></span>
 <span class="line"><span style="color:#E1E4E8">            &#x3C;/</span><span style="color:#85E89D">p</span><span style="color:#E1E4E8">></span></span>
 <span class="line"><span style="color:#E1E4E8">            &#x3C;</span><span style="color:#85E89D">p</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"mt-3 text-[13px] text-white/38"</span><span style="color:#E1E4E8">>{</span><span style="color:#79B8FF">FEATURED</span><span style="color:#E1E4E8">.runtime}&#x3C;/</span><span style="color:#85E89D">p</span><span style="color:#E1E4E8">></span></span>
@@ -1604,97 +2197,35 @@ export default function CinemaRow() {
 <span class="line"><span style="color:#E1E4E8">                Add to Up Next</span></span>
 <span class="line"><span style="color:#E1E4E8">              &#x3C;/</span><span style="color:#85E89D">button</span><span style="color:#E1E4E8">></span></span>
 <span class="line"><span style="color:#E1E4E8">            &#x3C;/</span><span style="color:#85E89D">div</span><span style="color:#E1E4E8">></span></span>
-<span class="line"><span style="color:#E1E4E8">          &#x3C;/</span><span style="color:#85E89D">div</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">          &#x3C;/</span><span style="color:#79B8FF">CinemaContent</span><span style="color:#E1E4E8">></span></span>
 <span class="line"><span style="color:#E1E4E8">        &#x3C;/</span><span style="color:#85E89D">section</span><span style="color:#E1E4E8">></span></span>
 <span class="line"></span>
 <span class="line"><span style="color:#E1E4E8">        {</span><span style="color:#6A737D">/* Horizontal poster row */</span><span style="color:#E1E4E8">}</span></span>
 <span class="line"><span style="color:#E1E4E8">        &#x3C;</span><span style="color:#85E89D">section</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"pb-6 pt-2"</span><span style="color:#B392F0"> aria-labelledby</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"premieres-heading"</span><span style="color:#E1E4E8">></span></span>
-<span class="line"><span style="color:#E1E4E8">          &#x3C;</span><span style="color:#85E89D">div</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"mb-4 flex items-end justify-between gap-4 px-5 sm:px-8"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">          &#x3C;</span><span style="color:#79B8FF">CinemaContent</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"mb-4 flex items-end justify-between gap-4"</span><span style="color:#E1E4E8">></span></span>
 <span class="line"><span style="color:#E1E4E8">            &#x3C;</span><span style="color:#85E89D">h2</span><span style="color:#B392F0"> id</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"premieres-heading"</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"text-[22px] font-semibold tracking-[-0.02em]"</span><span style="color:#E1E4E8">></span></span>
 <span class="line"><span style="color:#E1E4E8">              Premieres</span></span>
 <span class="line"><span style="color:#E1E4E8">            &#x3C;/</span><span style="color:#85E89D">h2</span><span style="color:#E1E4E8">></span></span>
-<span class="line"><span style="color:#E1E4E8">            &#x3C;</span><span style="color:#85E89D">span</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"text-[13px] text-white/38"</span><span style="color:#E1E4E8">>Swipe to browse&#x3C;/</span><span style="color:#85E89D">span</span><span style="color:#E1E4E8">></span></span>
-<span class="line"><span style="color:#E1E4E8">          &#x3C;/</span><span style="color:#85E89D">div</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">            &#x3C;</span><span style="color:#85E89D">span</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"text-[13px] text-white/38"</span><span style="color:#E1E4E8">>Swipe&#x3C;/</span><span style="color:#85E89D">span</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">          &#x3C;/</span><span style="color:#79B8FF">CinemaContent</span><span style="color:#E1E4E8">></span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">          &#x3C;</span><span style="color:#85E89D">div</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"overflow-x-auto overscroll-x-contain pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&#x26;::-webkit-scrollbar]:hidden"</span><span style="color:#E1E4E8">></span></span>
-<span class="line"><span style="color:#E1E4E8">            &#x3C;</span><span style="color:#85E89D">div</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"flex w-max snap-x snap-mandatory gap-4 px-5 sm:gap-5 sm:px-8"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">          &#x3C;</span><span style="color:#79B8FF">CinemaContent</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"overflow-x-auto overscroll-x-contain pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&#x26;::-webkit-scrollbar]:hidden"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">            &#x3C;</span><span style="color:#85E89D">div</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"flex w-max snap-x snap-mandatory gap-4 sm:gap-5"</span><span style="color:#E1E4E8">></span></span>
 <span class="line"><span style="color:#E1E4E8">              {</span><span style="color:#79B8FF">PREMIERES</span><span style="color:#E1E4E8">.</span><span style="color:#B392F0">map</span><span style="color:#E1E4E8">((</span><span style="color:#FFAB70">film</span><span style="color:#E1E4E8">) </span><span style="color:#F97583">=></span><span style="color:#E1E4E8"> (</span></span>
 <span class="line"><span style="color:#E1E4E8">                &#x3C;</span><span style="color:#79B8FF">PosterCard</span><span style="color:#B392F0"> key</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{film.title} {</span><span style="color:#F97583">...</span><span style="color:#E1E4E8">film} /></span></span>
 <span class="line"><span style="color:#E1E4E8">              ))}</span></span>
 <span class="line"><span style="color:#E1E4E8">            &#x3C;/</span><span style="color:#85E89D">div</span><span style="color:#E1E4E8">></span></span>
-<span class="line"><span style="color:#E1E4E8">          &#x3C;/</span><span style="color:#85E89D">div</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">          &#x3C;/</span><span style="color:#79B8FF">CinemaContent</span><span style="color:#E1E4E8">></span></span>
 <span class="line"><span style="color:#E1E4E8">        &#x3C;/</span><span style="color:#85E89D">section</span><span style="color:#E1E4E8">></span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">        {</span><span style="color:#6A737D">/* Editorial copy + opposing vertical marquees */</span><span style="color:#E1E4E8">}</span></span>
+<span class="line"><span style="color:#E1E4E8">        {</span><span style="color:#6A737D">/* Editorial + opposing vertical still marquees */</span><span style="color:#E1E4E8">}</span></span>
 <span class="line"><span style="color:#E1E4E8">        &#x3C;</span><span style="color:#85E89D">section</span></span>
-<span class="line"><span style="color:#B392F0">          className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"border-t border-white/[0.06] px-5 py-20 sm:px-8 sm:py-28"</span></span>
+<span class="line"><span style="color:#B392F0">          className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"border-t border-white/[0.06] py-16 sm:py-24"</span></span>
 <span class="line"><span style="color:#B392F0">          aria-labelledby</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"editorial-heading"</span></span>
 <span class="line"><span style="color:#E1E4E8">        ></span></span>
-<span class="line"><span style="color:#E1E4E8">          &#x3C;</span><span style="color:#85E89D">div</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"mx-auto grid max-w-6xl gap-12 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)] lg:items-center lg:gap-16"</span><span style="color:#E1E4E8">></span></span>
-<span class="line"><span style="color:#E1E4E8">            &#x3C;</span><span style="color:#85E89D">div</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"max-w-md"</span><span style="color:#E1E4E8">></span></span>
-<span class="line"><span style="color:#E1E4E8">              &#x3C;</span><span style="color:#85E89D">p</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"text-[13px] font-medium tracking-[0.08em] text-white/42 uppercase"</span><span style="color:#E1E4E8">></span></span>
-<span class="line"><span style="color:#E1E4E8">                The craft</span></span>
-<span class="line"><span style="color:#E1E4E8">              &#x3C;/</span><span style="color:#85E89D">p</span><span style="color:#E1E4E8">></span></span>
-<span class="line"><span style="color:#E1E4E8">              &#x3C;</span><span style="color:#85E89D">h2</span></span>
-<span class="line"><span style="color:#B392F0">                id</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"editorial-heading"</span></span>
-<span class="line"><span style="color:#B392F0">                className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"mt-3 text-balance text-[clamp(2rem,5vw,3rem)] leading-[1.05] font-semibold tracking-[-0.03em]"</span></span>
-<span class="line"><span style="color:#E1E4E8">              ></span></span>
-<span class="line"><span style="color:#E1E4E8">                Built for the big screen. Tuned for your living room.</span></span>
-<span class="line"><span style="color:#E1E4E8">              &#x3C;/</span><span style="color:#85E89D">h2</span><span style="color:#E1E4E8">></span></span>
-<span class="line"><span style="color:#E1E4E8">              &#x3C;</span><span style="color:#85E89D">p</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"mt-5 text-[16px] leading-relaxed text-white/52"</span><span style="color:#E1E4E8">></span></span>
-<span class="line"><span style="color:#E1E4E8">                This browse layout pairs overscale premiere type with a snap-scrolling poster rail,</span></span>
-<span class="line"><span style="color:#E1E4E8">                then lets critic lines drift in opposite directions beside long-form copy — the</span></span>
-<span class="line"><span style="color:#E1E4E8">                rhythm streaming homepages use to feel cinematic without hiding the catalog.</span></span>
-<span class="line"><span style="color:#E1E4E8">              &#x3C;/</span><span style="color:#85E89D">p</span><span style="color:#E1E4E8">></span></span>
-<span class="line"><span style="color:#E1E4E8">              &#x3C;</span><span style="color:#85E89D">p</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"mt-4 text-[16px] leading-relaxed text-white/52"</span><span style="color:#E1E4E8">></span></span>
-<span class="line"><span style="color:#E1E4E8">                The dual marquees are the same{</span><span style="color:#9ECBFF">" "</span><span style="color:#E1E4E8">}</span></span>
-<span class="line"><span style="color:#E1E4E8">                &#x3C;</span><span style="color:#85E89D">span</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"text-white/72"</span><span style="color:#E1E4E8">>Marquee&#x3C;/</span><span style="color:#85E89D">span</span><span style="color:#E1E4E8">> primitive twice: one column runs</span></span>
-<span class="line"><span style="color:#E1E4E8">                upward, the other reverses downward so motion never feels like a single conveyor</span></span>
-<span class="line"><span style="color:#E1E4E8">                belt.</span></span>
-<span class="line"><span style="color:#E1E4E8">              &#x3C;/</span><span style="color:#85E89D">p</span><span style="color:#E1E4E8">></span></span>
-<span class="line"><span style="color:#E1E4E8">            &#x3C;/</span><span style="color:#85E89D">div</span><span style="color:#E1E4E8">></span></span>
-<span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">            &#x3C;</span><span style="color:#85E89D">div</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"grid h-[min(32rem,68vh)] min-h-[22rem] grid-cols-2 gap-3 sm:gap-4"</span><span style="color:#E1E4E8">></span></span>
-<span class="line"><span style="color:#E1E4E8">              {reducedMotion </span><span style="color:#F97583">?</span><span style="color:#E1E4E8"> (</span></span>
-<span class="line"><span style="color:#E1E4E8">                &#x3C;></span></span>
-<span class="line"><span style="color:#E1E4E8">                  &#x3C;</span><span style="color:#85E89D">div</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"flex flex-col gap-3 overflow-hidden rounded-2xl border border-white/[0.06] bg-white/[0.02] p-3"</span><span style="color:#E1E4E8">></span></span>
-<span class="line"><span style="color:#E1E4E8">                    {</span><span style="color:#79B8FF">QUOTES</span><span style="color:#E1E4E8">.</span><span style="color:#B392F0">slice</span><span style="color:#E1E4E8">(</span><span style="color:#79B8FF">0</span><span style="color:#E1E4E8">, </span><span style="color:#79B8FF">4</span><span style="color:#E1E4E8">).</span><span style="color:#B392F0">map</span><span style="color:#E1E4E8">((</span><span style="color:#FFAB70">quote</span><span style="color:#E1E4E8">) </span><span style="color:#F97583">=></span><span style="color:#E1E4E8"> (</span></span>
-<span class="line"><span style="color:#E1E4E8">                      &#x3C;</span><span style="color:#79B8FF">QuoteChip</span><span style="color:#B392F0"> key</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{quote.source} {</span><span style="color:#F97583">...</span><span style="color:#E1E4E8">quote} /></span></span>
-<span class="line"><span style="color:#E1E4E8">                    ))}</span></span>
-<span class="line"><span style="color:#E1E4E8">                  &#x3C;/</span><span style="color:#85E89D">div</span><span style="color:#E1E4E8">></span></span>
-<span class="line"><span style="color:#E1E4E8">                  &#x3C;</span><span style="color:#85E89D">div</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"flex flex-col gap-3 overflow-hidden rounded-2xl border border-white/[0.06] bg-white/[0.02] p-3"</span><span style="color:#E1E4E8">></span></span>
-<span class="line"><span style="color:#E1E4E8">                    {</span><span style="color:#79B8FF">QUOTES</span><span style="color:#E1E4E8">.</span><span style="color:#B392F0">slice</span><span style="color:#E1E4E8">(</span><span style="color:#79B8FF">4</span><span style="color:#E1E4E8">).</span><span style="color:#B392F0">map</span><span style="color:#E1E4E8">((</span><span style="color:#FFAB70">quote</span><span style="color:#E1E4E8">) </span><span style="color:#F97583">=></span><span style="color:#E1E4E8"> (</span></span>
-<span class="line"><span style="color:#E1E4E8">                      &#x3C;</span><span style="color:#79B8FF">QuoteChip</span><span style="color:#B392F0"> key</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{quote.source} {</span><span style="color:#F97583">...</span><span style="color:#E1E4E8">quote} /></span></span>
-<span class="line"><span style="color:#E1E4E8">                    ))}</span></span>
-<span class="line"><span style="color:#E1E4E8">                  &#x3C;/</span><span style="color:#85E89D">div</span><span style="color:#E1E4E8">></span></span>
-<span class="line"><span style="color:#E1E4E8">                &#x3C;/></span></span>
-<span class="line"><span style="color:#E1E4E8">              ) </span><span style="color:#F97583">:</span><span style="color:#E1E4E8"> (</span></span>
-<span class="line"><span style="color:#E1E4E8">                &#x3C;></span></span>
-<span class="line"><span style="color:#E1E4E8">                  &#x3C;</span><span style="color:#79B8FF">Marquee</span></span>
-<span class="line"><span style="color:#B392F0">                    vertical</span></span>
-<span class="line"><span style="color:#B392F0">                    pauseOnHover</span></span>
-<span class="line"><span style="color:#B392F0">                    applyMask</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#79B8FF">false</span><span style="color:#E1E4E8">}</span></span>
-<span class="line"><span style="color:#B392F0">                    className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"h-full rounded-2xl border border-white/[0.06] bg-white/[0.02] p-2 [--duration:26s] [--gap:14px]"</span></span>
-<span class="line"><span style="color:#E1E4E8">                  ></span></span>
-<span class="line"><span style="color:#E1E4E8">                    {</span><span style="color:#79B8FF">QUOTES</span><span style="color:#E1E4E8">.</span><span style="color:#B392F0">map</span><span style="color:#E1E4E8">((</span><span style="color:#FFAB70">quote</span><span style="color:#E1E4E8">) </span><span style="color:#F97583">=></span><span style="color:#E1E4E8"> (</span></span>
-<span class="line"><span style="color:#E1E4E8">                      &#x3C;</span><span style="color:#79B8FF">QuoteChip</span><span style="color:#B392F0"> key</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#9ECBFF">\`up-\${</span><span style="color:#E1E4E8">quote</span><span style="color:#9ECBFF">.</span><span style="color:#E1E4E8">source</span><span style="color:#9ECBFF">}\`</span><span style="color:#E1E4E8">} {</span><span style="color:#F97583">...</span><span style="color:#E1E4E8">quote} /></span></span>
-<span class="line"><span style="color:#E1E4E8">                    ))}</span></span>
-<span class="line"><span style="color:#E1E4E8">                  &#x3C;/</span><span style="color:#79B8FF">Marquee</span><span style="color:#E1E4E8">></span></span>
-<span class="line"><span style="color:#E1E4E8">                  &#x3C;</span><span style="color:#79B8FF">Marquee</span></span>
-<span class="line"><span style="color:#B392F0">                    vertical</span></span>
-<span class="line"><span style="color:#B392F0">                    reverse</span></span>
-<span class="line"><span style="color:#B392F0">                    pauseOnHover</span></span>
-<span class="line"><span style="color:#B392F0">                    applyMask</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#79B8FF">false</span><span style="color:#E1E4E8">}</span></span>
-<span class="line"><span style="color:#B392F0">                    className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"h-full rounded-2xl border border-white/[0.06] bg-white/[0.02] p-2 [--duration:31s] [--gap:14px]"</span></span>
-<span class="line"><span style="color:#E1E4E8">                  ></span></span>
-<span class="line"><span style="color:#E1E4E8">                    {</span><span style="color:#79B8FF">QUOTES</span><span style="color:#E1E4E8">.</span><span style="color:#B392F0">map</span><span style="color:#E1E4E8">((</span><span style="color:#FFAB70">quote</span><span style="color:#E1E4E8">) </span><span style="color:#F97583">=></span><span style="color:#E1E4E8"> (</span></span>
-<span class="line"><span style="color:#E1E4E8">                      &#x3C;</span><span style="color:#79B8FF">QuoteChip</span><span style="color:#B392F0"> key</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#9ECBFF">\`down-\${</span><span style="color:#E1E4E8">quote</span><span style="color:#9ECBFF">.</span><span style="color:#E1E4E8">source</span><span style="color:#9ECBFF">}\`</span><span style="color:#E1E4E8">} {</span><span style="color:#F97583">...</span><span style="color:#E1E4E8">quote} /></span></span>
-<span class="line"><span style="color:#E1E4E8">                    ))}</span></span>
-<span class="line"><span style="color:#E1E4E8">                  &#x3C;/</span><span style="color:#79B8FF">Marquee</span><span style="color:#E1E4E8">></span></span>
-<span class="line"><span style="color:#E1E4E8">                &#x3C;/></span></span>
-<span class="line"><span style="color:#E1E4E8">              )}</span></span>
-<span class="line"><span style="color:#E1E4E8">            &#x3C;/</span><span style="color:#85E89D">div</span><span style="color:#E1E4E8">></span></span>
-<span class="line"><span style="color:#E1E4E8">          &#x3C;/</span><span style="color:#85E89D">div</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">          &#x3C;</span><span style="color:#79B8FF">CinemaContent</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">            &#x3C;</span><span style="color:#79B8FF">CraftFeaturePanel</span><span style="color:#B392F0"> reducedMotion</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{reducedMotion} /></span></span>
+<span class="line"><span style="color:#E1E4E8">          &#x3C;/</span><span style="color:#79B8FF">CinemaContent</span><span style="color:#E1E4E8">></span></span>
 <span class="line"><span style="color:#E1E4E8">        &#x3C;/</span><span style="color:#85E89D">section</span><span style="color:#E1E4E8">></span></span>
 <span class="line"><span style="color:#E1E4E8">      &#x3C;/</span><span style="color:#85E89D">div</span><span style="color:#E1E4E8">></span></span>
 <span class="line"></span>

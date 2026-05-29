@@ -1,8 +1,10 @@
+import { siteStats } from "@/config/site-stats";
+
 const steps = [
   {
     number: "1",
     title: "Browse",
-    description: "Pick any component from 158+ options",
+    description: `Pick any component from ${siteStats.componentsFormatted} options`,
   },
   {
     number: "2",

@@ -5,6 +5,7 @@ import Link from "next/link";
 import AnimatedBeam from "@/animata/background/animated-beam";
 import { Icons } from "@/components/icons";
 import { siteConfig } from "@/config/site";
+import { siteStats } from "@/config/site-stats";
 
 export default function BeamCta() {
   return (
@@ -16,7 +17,7 @@ export default function BeamCta() {
               Free &amp; Open Source
             </h2>
             <p className="mt-4 text-[17px] leading-[1.47] text-white/70">
-              158+ components, MIT licensed. Copy, paste, ship.
+              {siteStats.componentsFormatted} components, MIT licensed. Copy, paste, ship.
             </p>
             <div className="mt-10 flex flex-col items-center gap-4 sm:flex-row">
               <Link
