@@ -1,0 +1,49 @@
+---
+title: Gooey Tabs
+description: Icon tabs that merge with an SVG goo filter when one label expands to show its title.
+labels: ["requires interaction", "click"]
+author: animata
+---
+
+<ComponentPreview name="tabs-gooey-tabs--primary" />
+
+## Installation
+
+### CLI
+
+<RegistryInstall category="tabs" name="gooey-tabs" />
+
+### Manual
+
+<Steps>
+<Step>Install dependencies</Step>
+
+```bash
+npm install motion @phosphor-icons/react
+```
+
+<Step>Run the following command</Step>
+
+It will create a new file called `gooey-tabs.tsx` inside the `components/animata/tabs` directory.
+
+```bash
+mkdir -p components/animata/tabs && touch components/animata/tabs/gooey-tabs.tsx
+```
+
+<Step>Paste the code</Step>
+
+Open the newly created file and paste the following code:
+
+```jsx file=<rootDir>/animata/tabs/gooey-tabs.tsx
+
+```
+
+</Steps>
+
+## Usage
+
+Pass your own `items` array (`title`, `icon`, `color` classes). Use `defaultActiveIndex={-1}` for an all-icon row, or `0` to open the first tab on load.
+
+## Credits
+
+Built by [Animata](https://animata.design)

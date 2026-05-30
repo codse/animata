@@ -24,4 +24,4 @@ Reworked **[Speed Dial](/docs/fabs/speed-dial)** for click-to-open (the old hove
 
 **[Animated Border Trail](/docs/container/animated-border-trail)** install steps no longer tell you to paste global CSS that the component does not use; the `@property` and keyframes ship inline. Unpublished all **feature-cards** docs and **Commit Graph**. Docs fenced blocks now get line numbers from a rehype pass after pretty-code. Replaced bare `transition` with explicit `transition-*` utilities across animata.
 
-Added **[Social](/docs/tabs/social)** under Tabs: a gooey icon strip where every tab starts collapsed and one label expands on click. Labels use `select-none` so width animation does not fight text selection; each tab keeps its own color instead of inheriting the active item's class.
+Added **[Gooey Tabs](/docs/tabs/gooey-tabs)** under Tabs: icon-only tabs that expand one label at a time and merge via an SVG goo filter. Width is measured from the label row on layout (so the first tab renders correctly on load); each tab keeps its own `color` class; labels use `select-none`.
