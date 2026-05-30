@@ -12,14 +12,13 @@ import {
   use,
   useId,
 } from "react";
-
+import { cn } from "@/lib/utils";
 import {
   handleTabListFocusCapture,
   handleTabListKeyDown,
   tabFocusClass,
   useTabSelection,
-} from "@/animata/tabs/shared";
-import { cn } from "@/lib/utils";
+} from "./shared";
 
 type GooeyTabsContextValue = {
   activeIndex: number;

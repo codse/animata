@@ -77,7 +77,7 @@ export function handleTabListKeyDown(
   const tablist = event.currentTarget;
   const tabs = tablist.querySelectorAll<HTMLElement>('[role="tab"]');
   const target = event.target as HTMLElement;
-  const currentTab = target.closest('[role="tab"]');
+  const currentTab = target.closest<HTMLElement>('[role="tab"]');
 
   if (!currentTab || !tablist.contains(currentTab)) {
     return;

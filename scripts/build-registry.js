@@ -181,12 +181,32 @@ function resolveAnimataSourceRef(sub) {
   return null;
 }
 
+function hasPublishedRegistryDoc(sub) {
+  const parts = sub.split("/");
+  if (parts.length < 2) return false;
+  const [cat, name] = parts;
+  const mdxPath = path.join(DOCS_DIR, cat, `${name}.mdx`);
+  if (!fs.existsSync(mdxPath)) return false;
+  const fm = parseFrontmatter(fs.readFileSync(mdxPath, "utf8"));
+  return fm.published !== "false";
+}
+
+/** Co-located helpers (e.g. tabs/shared) resolve with ./shared after shadcn install. */
+function rewriteCoLocatedAnimataImports(content, fileRef) {
+  const dir = path.posix.dirname(fileRef);
+  return content.replace(/from (["'])@\/animata\/([^"']+)\1/g, (match, quote, sub) => {
+    const importDir = path.posix.dirname(`animata/${sub}`);
+    if (importDir !== dir) return match;
+    return `from ${quote}./${path.posix.basename(sub)}${quote}`;
+  });
+}
+
 function registryFileEntry(ref, content) {
   return {
     path: `components/${ref}`,
     type: "registry:component",
     target: `~/components/${ref}`,
-    content,
+    content: rewriteCoLocatedAnimataImports(content, ref),
   };
 }
 
@@ -288,7 +308,7 @@ function buildItem(mdxPath) {
 
     for (const sub of animataRefs) {
       const ref = resolveAnimataSourceRef(sub);
-      if (ref) {
+      if (ref && !hasPublishedRegistryDoc(sub)) {
         if (ref !== primaryRef) {
           addAnimataSourceFile(ref, files, bundledRefs, queue);
         }
