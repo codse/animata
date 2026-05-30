@@ -202,15 +202,17 @@ function rewriteCoLocatedAnimataImports(content, fileRef) {
 }
 
 function registryFileEntry(ref, content) {
+  const installPath = ref.startsWith("components/") ? ref : `components/${ref}`;
+  const rewriteRef = ref.startsWith("components/") ? ref.slice("components/".length) : ref;
   return {
-    path: `components/${ref}`,
+    path: installPath,
     type: "registry:component",
-    target: `~/components/${ref}`,
-    content: rewriteCoLocatedAnimataImports(content, ref),
+    target: `~/${installPath}`,
+    content: rewriteCoLocatedAnimataImports(content, rewriteRef),
   };
 }
 
-function addAnimataSourceFile(ref, files, bundledRefs, queue) {
+function addBundledSourceFile(ref, files, bundledRefs, queue) {
   if (bundledRefs.has(ref)) return false;
   const abs = path.join(ROOT, ref);
   const content = readIfExists(abs);
@@ -235,19 +237,22 @@ function classifyImports(source) {
   const uiRefs = new Set();
   const hookRefs = new Set();
   const libRefs = new Set();
+  const shapeRefs = new Set();
   for (const spec of parseImports(source)) {
     if (spec.startsWith("@/animata/")) {
       const sub = spec.slice("@/animata/".length);
       animataRefs.add(sub);
     } else if (spec.startsWith("@/components/ui/")) {
       uiRefs.add(spec.slice("@/components/ui/".length));
+    } else if (spec.startsWith("@/components/shapes/")) {
+      shapeRefs.add(spec.slice("@/components/shapes/".length));
     } else if (spec.startsWith("@/hooks/")) {
       hookRefs.add(spec.slice("@/hooks/".length));
     } else if (spec.startsWith("@/lib/") && !spec.endsWith("/utils")) {
       libRefs.add(spec.slice("@/lib/".length));
     }
   }
-  return { animataRefs, uiRefs, hookRefs, libRefs };
+  return { animataRefs, uiRefs, hookRefs, libRefs, shapeRefs };
 }
 
 function toRegistryItemName(category, name) {
@@ -295,8 +300,8 @@ function buildItem(mdxPath) {
   const queue = [primarySource];
 
   for (const ref of fileRefs) {
-    if (!ref.startsWith("animata/") || ref === primaryRef) continue;
-    addAnimataSourceFile(ref, files, bundledRefs, queue);
+    if (ref === primaryRef) continue;
+    addBundledSourceFile(ref, files, bundledRefs, queue);
   }
 
   const dependencies = new Set(extractNpmDependencies(src));
@@ -304,13 +309,17 @@ function buildItem(mdxPath) {
   const processedHooks = new Set();
   while (queue.length) {
     const source = queue.shift();
-    const { animataRefs, uiRefs, hookRefs } = classifyImports(source);
+    const { animataRefs, uiRefs, hookRefs, shapeRefs } = classifyImports(source);
+
+    for (const shape of shapeRefs) {
+      addBundledSourceFile(`components/shapes/${shape}.tsx`, files, bundledRefs, queue);
+    }
 
     for (const sub of animataRefs) {
       const ref = resolveAnimataSourceRef(sub);
       if (ref && !hasPublishedRegistryDoc(sub)) {
         if (ref !== primaryRef) {
-          addAnimataSourceFile(ref, files, bundledRefs, queue);
+          addBundledSourceFile(ref, files, bundledRefs, queue);
         }
         if (ref === primaryRef || bundledRefs.has(ref)) {
           continue;

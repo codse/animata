@@ -1,13 +1,19 @@
 ---
 title: Card Stack
-description: A composable, infinitely cycling card stack with SVG photo masks and synchronized shuffle motion.
+description: Click-through card stack with SVG photo masks. The deck loops; cards shuffle in one motion.
 labels: ["requires interaction", "click"]
-author: animata
+author: hari
 ---
 
 <ComponentPreview name="card-card-stack--primary" />
 
 ## Installation
+
+### CLI
+
+<RegistryInstall category="card" name="card-stack" />
+
+The registry item installs `card-stack.tsx` and `components/shapes/card-stack-mask-defs.tsx`.
 
 ### Manual
 
@@ -20,7 +26,7 @@ npm install motion lucide-react
 
 <Step>Create the mask definitions</Step>
 
-Card photos use CSS `mask-image` with SVG `<mask>` ids. Mount a hidden 0×0 SVG once per stack (via `CardStack.Masks`) so those ids resolve in the document.
+Photos use CSS `mask-image` pointing at SVG `<mask>` ids. Render a hidden 0×0 SVG once per stack (`CardStack.Masks`) so those ids exist in the document.
 
 ```bash
 mkdir -p components/shapes && touch components/shapes/card-stack-mask-defs.tsx
@@ -44,7 +50,7 @@ mkdir -p components/animata/card && touch components/animata/card/card-stack.tsx
 
 ## Usage
 
-Compose the stack with primitives. Pass an `items` array with stable `id`s, set `depth` (1–3 visible cards), and render each card inside `CardStack.List`.
+Build the stack from `CardStack.*` parts. Pass `items` with stable `id`s, set `depth` (1–3 visible cards), and render each card in `CardStack.List`.
 
 ```tsx
 import { Heart, MessageCircle } from "lucide-react";
@@ -96,26 +102,26 @@ const items: CardStackItem[] = [
 </CardStack>
 ```
 
-`CardStack.Trigger` is a `<button>` — clicking anywhere on the stack advances to the next card. Use `onItemsChange` on the root to observe the rotated array. Export `useCardStack()` inside custom children if you need `activeItem`, `advance`, or layer presets.
+`CardStack.Trigger` is a `<button>`. Click anywhere on the stack to advance. Hook `onItemsChange` on the root if you want the rotated array. Inside custom children, `useCardStack()` exposes `activeItem`, `advance`, and layer presets.
 
-Pick a mask per card with `CARD_STACK_MASK_IDS` (`ellipse-1`, `flower-14`, `flower-1`, `misc-5`). `CardStack.Media` accepts `aspect` (`square`, `4/5`, `3/4`, `16/10`, or `fill`).
+Each card gets a mask from `CARD_STACK_MASK_IDS`: `ellipse-1`, `flower-14`, `flower-1`, or `misc-5`. `CardStack.Media` takes `aspect`: `square`, `4/5`, `3/4`, `16/10`, or `fill`.
 
 ## How it works
 
-**Infinite rotation.** The root keeps the full `items` array and shows only the first `depth` entries. On advance, the front item moves to the back of the array — the same cards cycle forever without unmounting the whole stack.
+The root holds the full `items` array but only renders the first `depth` entries. On advance, the front item moves to the back. Same cards, infinite loop, no full remount.
 
-**Synchronized shuffle.** `CardStack.List` wraps cards in `AnimatePresence` with `mode="sync"`. When you click, the front card exits (`y: 420`, `scale: 0.96`) while cards behind interpolate to the next layer’s transform at the same time. That reads as one continuous shuffle, not exit-then-enter.
+`CardStack.List` uses `AnimatePresence` with `mode="sync"`. Click and the front card exits (`y: 420`, `scale: 0.96`) while the cards behind move up into the next layer at the same time. One shuffle, not exit-then-enter.
 
-**Layer depth via `zIndex`.** Motion drives stacking, not Tailwind `z-*` classes: front rests at `zIndex: 20`, middle at `5`, back at `0`. On exit the front card bumps to `zIndex: 30` so it slides out over the rising stack.
+Stacking order comes from Motion `zIndex`, not Tailwind `z-*`: front at 20, middle at 5, back at 0. On exit the front card jumps to 30 so it slides out over the stack rising underneath.
 
-**Click handling.** Only one shuffle runs at a time. Clicks during an animation are ignored — no queue of pending dismisses that keeps playing after you stop clicking.
+Only one shuffle runs at a time. Extra clicks during the animation are dropped. Nothing queues up and keeps playing after you stop clicking.
 
-**Peek-in.** The rearmost slot animates from a smaller, offset pose when a card first enters the visible stack. Cards promoted from middle slots use `initial={false}` so they tween from their current pose instead of re-entering.
+The back slot peeks in from a smaller offset when a card first becomes visible. Cards moving up from the middle use `initial={false}` so they tween from where they already are instead of popping in again.
 
-**Masks.** `CardStack.Masks` renders `CardStackMaskDefs` — a hidden SVG whose `<mask>` elements are referenced by `mask-image: url(#cs_mask_1_…)` on the photo. Keep one defs instance in the tree; duplicate ids break masking.
+`CardStack.Masks` renders `CardStackMaskDefs`, a hidden SVG. Photos reference its `<mask>` ids via `mask-image: url(#cs_mask_1_…)`. One defs instance per page; duplicate ids break masking.
 
-**Accessibility.** `CardStack.LiveRegion` announces the active card. Each card is a `motion.article` with `aria-roledescription`. Metrics expose visible counts with `sr-only` labels. Respects `prefers-reduced-motion`: rotation is instant and motion durations drop to zero.
+`CardStack.LiveRegion` announces the active card. Cards are `motion.article` with `aria-roledescription`. Metrics keep visible counts but label them in `sr-only` text. With `prefers-reduced-motion`, rotation is instant and durations go to zero.
 
 ## Credits
 
-Built by [Animata](https://animata.design)
+Built by [hari](https://github.com/hari)
