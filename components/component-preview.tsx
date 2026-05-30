@@ -7,6 +7,8 @@ import { cn } from "@/lib/utils";
 
 interface ComponentPreviewProps extends React.HTMLAttributes<HTMLDivElement> {
   name: string;
+  /** When false, hides additional Storybook exports (e.g. blog grids). Default true. */
+  showOtherStories?: boolean;
 }
 
 // Categories with hyphens must come first so they match before single-word prefixes
@@ -260,7 +262,13 @@ function loadStoryModule(mod: Record<string, unknown>, exportName: string): Stor
   };
 }
 
-function StoryRenderer({ name }: { name: string }) {
+function StoryRenderer({
+  name,
+  showOtherStories = true,
+}: {
+  name: string;
+  showOtherStories?: boolean;
+}) {
   const [storyData, setStoryData] = React.useState<StoryData | null>(null);
   const [args, setArgs] = React.useState<Record<string, unknown>>({});
   const [error, setError] = React.useState<string | null>(null);
@@ -338,7 +346,7 @@ function StoryRenderer({ name }: { name: string }) {
         onChange={handleChange}
         onReset={handleReset}
       />
-      {storyData.otherStories.length > 0 && (
+      {showOtherStories && storyData.otherStories.length > 0 && (
         <div className="mt-6 space-y-4">
           <div className="text-sm font-medium text-muted-foreground">Other examples</div>
           {storyData.otherStories.map((story) => (
@@ -355,7 +363,12 @@ function StoryRenderer({ name }: { name: string }) {
   );
 }
 
-export function ComponentPreview({ name, className, ...props }: ComponentPreviewProps) {
+export function ComponentPreview({
+  name,
+  showOtherStories = true,
+  className,
+  ...props
+}: ComponentPreviewProps) {
   return (
     <div className={cn("group relative my-4", className)} {...props}>
       <React.Suspense
@@ -368,7 +381,7 @@ export function ComponentPreview({ name, className, ...props }: ComponentPreview
           </div>
         }
       >
-        <StoryRenderer name={name} />
+        <StoryRenderer name={name} showOtherStories={showOtherStories} />
       </React.Suspense>
     </div>
   );

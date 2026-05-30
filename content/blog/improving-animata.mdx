@@ -72,13 +72,17 @@ New work (and serious reworks) should read like UI you'd write in your own codeb
 
 Tabs are the obvious case. Gooey, Fluid, and Shift share the same compound shape: `List`, `Tab`, optional `Icon` / `Label`, instead of one component with a dozen boolean props. Keyboard and focus logic live in `animata/tabs/shared.ts` and ship with each tab install from the shadcn registry, so you're not pasting the same a11y block three times.
 
-<PreviewContainer>
-  <ComponentPreview name="tabs-fluid-tabs--primary" />
-</PreviewContainer>
-
-<PreviewContainer>
-  <ComponentPreview name="tabs-gooey-tabs--primary" />
-</PreviewContainer>
+<PreviewGrid>
+  <PreviewGridItem title="Fluid Tabs">
+    <ComponentPreview name="tabs-fluid-tabs--primary" showOtherStories={false} className="my-0" />
+  </PreviewGridItem>
+  <PreviewGridItem title="Fluid · with icons">
+    <ComponentPreview name="tabs-fluid-tabs--with-icons" showOtherStories={false} className="my-0" />
+  </PreviewGridItem>
+  <PreviewGridItem title="Gooey Tabs">
+    <ComponentPreview name="tabs-gooey-tabs--primary" showOtherStories={false} className="my-0" />
+  </PreviewGridItem>
+</PreviewGrid>
 
 April's text batch did something similar one layer down: nineteen presets on one `TextAnimator` runtime, so you can swap effects without relearning timing or reduced-motion behavior.
 

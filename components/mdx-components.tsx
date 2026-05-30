@@ -163,6 +163,17 @@ const components = {
   AlertDescription,
   InView,
   PreviewContainer,
+  PreviewGrid: ({ children }: { children: React.ReactNode }) => (
+    <div className="not-prose my-8 grid w-full gap-4 sm:grid-cols-2 lg:grid-cols-3">{children}</div>
+  ),
+  PreviewGridItem: ({ title, children }: { title?: string; children: React.ReactNode }) => (
+    <div className="flex min-w-0 flex-col gap-2">
+      {title ? <p className="text-sm font-medium text-muted-foreground">{title}</p> : null}
+      <div className="preview-light dark:preview-dark w-full overflow-hidden rounded-lg border bg-muted/30">
+        {children}
+      </div>
+    </div>
+  ),
   ...baseComponents,
   ChangeLogComponents: ({ children }: { children: React.ReactNode }) => {
     return <div className="grid md:grid-cols-2 gap-2 py-2">{children}</div>;
