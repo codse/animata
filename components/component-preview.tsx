@@ -8,7 +8,11 @@ import { cn } from "@/lib/utils";
 interface ComponentPreviewProps extends React.HTMLAttributes<HTMLDivElement> {
   name: string;
   /** When false, hides additional Storybook exports (e.g. blog grids). Default true. */
-  showOtherStories?: boolean;
+  showOtherStories?: boolean | string;
+}
+
+function shouldShowOtherStories(value?: boolean | string): boolean {
+  return value !== false && value !== "false" && value !== "0";
 }
 
 // Categories with hyphens must come first so they match before single-word prefixes
@@ -225,7 +229,11 @@ type StoryMeta = {
   argTypes?: Record<string, ArgType>;
 };
 
-function loadStoryModule(mod: Record<string, unknown>, exportName: string): StoryData | string {
+function loadStoryModule(
+  mod: Record<string, unknown>,
+  exportName: string,
+  collectOtherStories = true,
+): StoryData | string {
   const meta = mod.default as StoryMeta | undefined;
   const storyExport = (mod[exportName] ?? mod.Primary) as StoryExport | undefined;
 
@@ -236,28 +244,29 @@ function loadStoryModule(mod: Record<string, unknown>, exportName: string): Stor
   const mergedArgs = { ...meta?.args, ...storyExport.args };
   const argTypes = { ...meta?.argTypes, ...storyExport.argTypes };
 
-  // Collect other story exports
   const primaryKey = mod[exportName] ? exportName : "Primary";
   const otherStories: OtherStory[] = [];
 
-  for (const [key, value] of Object.entries(mod)) {
-    if (INTERNAL_EXPORTS.has(key) || key === primaryKey) continue;
-    const story = value as StoryExport;
-    if (!story || typeof story !== "object") continue;
+  if (collectOtherStories) {
+    for (const [key, value] of Object.entries(mod)) {
+      if (INTERNAL_EXPORTS.has(key) || key === primaryKey) continue;
+      const story = value as StoryExport;
+      if (!story || typeof story !== "object") continue;
 
-    const storyArgs = { ...meta?.args, ...story.args };
-    const renderFn =
-      story.render ??
-      (meta?.component
-        ? (args: Record<string, unknown>) => React.createElement(meta.component!, args)
-        : null);
+      const storyArgs = { ...meta?.args, ...story.args };
+      const renderFn =
+        story.render ??
+        (meta?.component
+          ? (args: Record<string, unknown>) => React.createElement(meta.component!, args)
+          : null);
 
-    if (renderFn) {
-      otherStories.push({
-        name: formatStoryName(key),
-        render: renderFn,
-        args: storyArgs,
-      });
+      if (renderFn) {
+        otherStories.push({
+          name: formatStoryName(key),
+          render: renderFn,
+          args: storyArgs,
+        });
+      }
     }
   }
 
@@ -275,8 +284,9 @@ function StoryRenderer({
   showOtherStories = true,
 }: {
   name: string;
-  showOtherStories?: boolean;
+  showOtherStories?: boolean | string;
 }) {
+  const includeOtherStories = shouldShowOtherStories(showOtherStories);
   const [storyData, setStoryData] = React.useState<StoryData | null>(null);
   const [args, setArgs] = React.useState<Record<string, unknown>>({});
   const [error, setError] = React.useState<string | null>(null);
@@ -288,7 +298,7 @@ function StoryRenderer({
 
     import(`@/animata/${path}.stories`)
       .then((mod) => {
-        const result = loadStoryModule(mod, exportName);
+        const result = loadStoryModule(mod, exportName, includeOtherStories);
         if (typeof result === "string") {
           setError(result);
           return;
@@ -300,7 +310,7 @@ function StoryRenderer({
         console.error(`Failed to load story ${path}:`, err);
         setError(`Failed to load: ${path}`);
       });
-  }, [name]);
+  }, [name, includeOtherStories]);
 
   const handleChange = React.useCallback((key: string, value: unknown) => {
     setArgs((prev) => ({ ...prev, [key]: value }));
@@ -354,7 +364,7 @@ function StoryRenderer({
         onChange={handleChange}
         onReset={handleReset}
       />
-      {showOtherStories && storyData.otherStories.length > 0 && (
+      {includeOtherStories && storyData.otherStories.length > 0 && (
         <div className="mt-6 space-y-4">
           <div className="text-sm font-medium text-muted-foreground">Other examples</div>
           {storyData.otherStories.map((story) => (
