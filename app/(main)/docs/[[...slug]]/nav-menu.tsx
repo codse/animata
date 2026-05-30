@@ -29,12 +29,19 @@ type NavMenuProps =
       baseRoute: "docs" | "blog";
     };
 
-export default function NavMenu(props: NavMenuProps) {
-  if ("title" in props) {
-    return <span className="truncate font-medium text-foreground">{props.title}</span>;
-  }
+function NavMenuTitle({ title }: { title: string }) {
+  return <span className="truncate font-medium text-foreground">{title}</span>;
+}
 
-  const { value, sideBarNavItems, baseRoute } = props;
+function NavMenuSelect({
+  value,
+  sideBarNavItems,
+  baseRoute,
+}: {
+  value: string;
+  sideBarNavItems: SidebarNavItem[];
+  baseRoute: "docs" | "blog";
+}) {
   const router = useRouter();
   const [navigating, setNavigating] = useState(false);
 
@@ -98,4 +105,22 @@ export default function NavMenu(props: NavMenuProps) {
       )}
     </>
   );
+}
+
+function isSelectNavMenu(props: NavMenuProps): props is Extract<NavMenuProps, { value: string }> {
+  return "value" in props && typeof props.value === "string";
+}
+
+export default function NavMenu(props: NavMenuProps) {
+  if (isSelectNavMenu(props)) {
+    return (
+      <NavMenuSelect
+        value={props.value}
+        sideBarNavItems={props.sideBarNavItems}
+        baseRoute={props.baseRoute}
+      />
+    );
+  }
+
+  return <NavMenuTitle title={props.title} />;
 }

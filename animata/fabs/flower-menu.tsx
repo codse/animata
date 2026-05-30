@@ -26,6 +26,8 @@ interface FlowerMenuProps extends React.HTMLAttributes<HTMLElement> {
   petalGap?: number;
   /** Accessible name for the closed toggle. */
   triggerLabel?: string;
+  /** Accessible name for the menu landmark. @default "Menu" */
+  menuLabel?: string;
 }
 
 function MenuToggler({
@@ -109,6 +111,7 @@ export default function FlowerMenu({
   togglerSize = 44,
   petalGap = 28,
   triggerLabel = "Open links menu",
+  menuLabel = "Menu",
   className,
   ...props
 }: FlowerMenuProps) {
@@ -192,7 +195,7 @@ export default function FlowerMenu({
   return (
     <nav
       ref={rootRef}
-      aria-label="Social links"
+      aria-label={menuLabel}
       className={cn("relative mx-auto", className)}
       style={{ width: containerSize, height: containerSize, minHeight: containerSize }}
       {...props}
@@ -226,6 +229,7 @@ export default function FlowerMenu({
         id={menuId}
         role="menu"
         aria-orientation="vertical"
+        inert={!isOpen ? true : undefined}
         onKeyDown={onMenuKeyDown}
         className="absolute inset-0 m-0 list-none p-0"
       >

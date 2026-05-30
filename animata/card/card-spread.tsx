@@ -61,8 +61,7 @@ export default function CardSpread() {
       className={cn(
         "group/spread relative flex min-h-80 min-w-52 items-center transition-all duration-500 ease-in-out",
         {
-          "origin-bottom transition-transform duration-500 ease-in-out hover:-rotate-[15deg]":
-            !isExpanded,
+          "origin-bottom hover:-rotate-[15deg]": !isExpanded,
           "gap-3": isExpanded,
         },
       )}

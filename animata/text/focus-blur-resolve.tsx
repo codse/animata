@@ -75,7 +75,7 @@ export interface FocusBlurResolveProps {
   className?: string;
   /** Passed to the inner `.text-animation-stage` grid. */
   stageClassName?: string;
-  /** Merged onto the animated title node — use `!text-*` to override preset sizing. */
+  /** Merged onto the animated title node — use `text-xl!` to override preset sizing. */
   titleClassName?: string;
 }
 

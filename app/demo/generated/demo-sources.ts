@@ -920,8 +920,8 @@ import { PlayIcon } from "lucide-react";
 import { IBM_Plex_Sans } from "next/font/google";
 import { useEffect, useState } from "react";
 
-import FocusBlurResolve from "@/animata/text/focus-blur-resolve";
 import Marquee from "@/animata/container/marquee";
+import WaveReveal from "@/animata/text/wave-reveal";
 import { cn } from "@/lib/utils";
 
 import { CinemaRowNotes } from "./cinema-row-notes";
@@ -939,10 +939,58 @@ const TMDB_BACKDROP = (path: string) => \`https://media.themoviedb.org/t/p/w780\
 const FEATURED = {
   eyebrow: "Now streaming",
   title: "Dune: Part Two",
-  tagline: "The desert remembers. So does Paul.",
+  tagline: "Paul goes back to Arrakis. The desert hasn't forgotten him.",
   runtime: "2h 47m · Sci‑Fi",
   backdrop: TMDB_BACKDROP("/eZ239CUp1d6OryZEBPnO2n87gMG.jpg"),
 };
+
+const HERO_TITLE_WORDS = FEATURED.title.trim().split(/\\s+/).length;
+const HERO_TITLE_DELAY_MS = 100;
+const HERO_WORD_STAGGER_MS = 50;
+const HERO_WORD_DURATION_MS = 700;
+const HERO_ITEM_DURATION_MS = 580;
+
+function heroSequenceDelays() {
+  const titleEnd =
+    HERO_TITLE_DELAY_MS + (HERO_TITLE_WORDS - 1) * HERO_WORD_STAGGER_MS + HERO_WORD_DURATION_MS;
+
+  const ctaPrimary = titleEnd + 120;
+  const ctaSecondary = titleEnd + 220;
+
+  return {
+    eyebrow: 0,
+    title: HERO_TITLE_DELAY_MS,
+    tagline: titleEnd - 220,
+    runtime: titleEnd - 40,
+    ctaPrimary,
+    ctaSecondary,
+    premieresLabel: ctaSecondary + 140,
+    premieresMeta: ctaSecondary + 220,
+    premieresRail: ctaSecondary + 260,
+  };
+}
+
+function CinemaEntranceStyles() {
+  return (
+    <style>{\`
+      @keyframes cinema-hero-rise {
+        from {
+          opacity: 0;
+          transform: translateY(14px);
+          filter: blur(8px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+          filter: blur(0);
+        }
+      }
+      .cinema-hero-rise {
+        animation: cinema-hero-rise \${HERO_ITEM_DURATION_MS}ms cubic-bezier(0.22, 1, 0.36, 1) both;
+      }
+    \`}</style>
+  );
+}
 
 const HERO_BACKDROPS = [
   { title: "Dune: Part Two", image: TMDB_BACKDROP("/eZ239CUp1d6OryZEBPnO2n87gMG.jpg") },
@@ -982,7 +1030,11 @@ const PREMIERES = [
     genre: "Horror",
     poster: TMDB_POSTER("/lqoMzCcZYEFK729d6qzt349fB4o.jpg"),
   },
-  { title: "Oppenheimer", genre: "Biography", poster: TMDB_POSTER("/8Gxv8gSFCU0XGDykEGv7zR1n2ua.jpg") },
+  {
+    title: "Oppenheimer",
+    genre: "Biography",
+    poster: TMDB_POSTER("/8Gxv8gSFCU0XGDykEGv7zR1n2ua.jpg"),
+  },
   {
     title: "Everything Everywhere All at Once",
     genre: "Sci‑Fi",
@@ -999,8 +1051,16 @@ const PREMIERES = [
     genre: "Sci‑Fi",
     poster: TMDB_POSTER("/gajva2L0rPYkEWjzgFlBXCAVBE5.jpg"),
   },
-  { title: "Interstellar", genre: "Sci‑Fi", poster: TMDB_POSTER("/yQvGrMoipbRoddT0ZR8tPoR7NfX.jpg") },
-  { title: "Poor Things", genre: "Comedy", poster: TMDB_POSTER("/kCGlIMHnOm8JPXq3rXM6c5wMxcT.jpg") },
+  {
+    title: "Interstellar",
+    genre: "Sci‑Fi",
+    poster: TMDB_POSTER("/yQvGrMoipbRoddT0ZR8tPoR7NfX.jpg"),
+  },
+  {
+    title: "Poor Things",
+    genre: "Comedy",
+    poster: TMDB_POSTER("/kCGlIMHnOm8JPXq3rXM6c5wMxcT.jpg"),
+  },
   {
     title: "Mad Max: Fury Road",
     genre: "Action",
@@ -1008,13 +1068,7 @@ const PREMIERES = [
   },
 ] as const;
 
-function CinemaContent({
-  className,
-  children,
-}: {
-  className?: string;
-  children: React.ReactNode;
-}) {
+function CinemaContent({ className, children }: { className?: string; children: React.ReactNode }) {
   return <div className={cn("mx-auto w-full max-w-6xl px-5 sm:px-8", className)}>{children}</div>;
 }
 
@@ -1039,7 +1093,7 @@ function LandscapeStill({
   return (
     <figure
       className={cn(
-        "group relative w-full shrink-0 overflow-hidden rounded-2xl ring-1 ring-white/12",
+        "group relative w-full max-w-48 shrink-0 overflow-hidden",
         variant === "tall" ? "aspect-[5/3]" : "aspect-video",
       )}
     >
@@ -1058,17 +1112,9 @@ function LandscapeStill({
   );
 }
 
-function PosterCard({
-  title,
-  genre,
-  poster,
-}: {
-  title: string;
-  genre: string;
-  poster: string;
-}) {
+function PosterCard({ title, genre, poster }: { title: string; genre: string; poster: string }) {
   return (
-    <article className="w-[9.75rem] shrink-0 snap-start sm:w-[11.25rem]">
+    <article className="w-[9.75rem] shrink-0 sm:w-[11.25rem]">
       <div className="aspect-[2/3] overflow-hidden rounded-xl ring-1 ring-white/10">
         <img
           src={poster}
@@ -1093,32 +1139,14 @@ function MarqueeWell({
   className?: string;
   tone?: "violet" | "amber";
 }) {
-  const wellColor =
-    tone === "violet" ? "oklch(0.14 0.03 285)" : "oklch(0.15 0.028 55)";
+  const wellColor = tone === "violet" ? "oklch(0.14 0.03 285)" : "oklch(0.15 0.028 55)";
 
   return (
     <div
-      className={cn(
-        "relative min-h-[18rem] overflow-hidden rounded-[1.35rem] shadow-[inset_0_1px_0_oklch(1_0_0/0.07)] ring-1 ring-white/10",
-        className,
-      )}
+      className={cn("relative min-h-[18rem] overflow-hidden", className)}
       style={{ backgroundColor: wellColor }}
     >
       {children}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-x-0 top-0 z-10 h-14 bg-linear-to-b to-transparent"
-        style={{
-          backgroundImage: \`linear-gradient(to bottom, \${wellColor} 0%, color-mix(in oklch, \${wellColor} 85%, transparent) 55%, transparent 100%)\`,
-        }}
-      />
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-20 bg-linear-to-t to-transparent"
-        style={{
-          backgroundImage: \`linear-gradient(to top, \${wellColor} 0%, color-mix(in oklch, \${wellColor} 90%, transparent) 60%, transparent 100%)\`,
-        }}
-      />
     </div>
   );
 }
@@ -1140,10 +1168,14 @@ function StillMarqueeColumn({
       reverse={reverse}
       pauseOnHover
       applyMask={false}
-      className={cn("h-full p-2.5 sm:p-3", duration)}
+      className={cn("h-full p-0", duration)}
     >
       {stills.map((still) => (
-        <LandscapeStill key={\`\${reverse ? "rev" : "fwd"}-\${still.title}\`} {...still} variant={variant} />
+        <LandscapeStill
+          key={\`\${reverse ? "rev" : "fwd"}-\${still.title}\`}
+          {...still}
+          variant={variant}
+        />
       ))}
     </Marquee>
   );
@@ -1158,16 +1190,16 @@ function VerticalStillGallery({
 }) {
   if (reducedMotion) {
     return (
-      <div className={cn("grid h-full min-h-[18rem] grid-cols-2 gap-2 sm:gap-2.5", className)}>
+      <div className={cn("grid h-full min-h-[18rem] grid-cols-2 gap-2 sm:gap-4", className)}>
         <MarqueeWell className="h-full min-h-0 overflow-y-auto">
-          <div className="flex flex-col gap-2.5 p-2.5 sm:p-3">
+          <div className="flex flex-col gap-2.5">
             {STILLS_LEFT.slice(0, 3).map((still) => (
               <LandscapeStill key={still.title} {...still} variant="wide" />
             ))}
           </div>
         </MarqueeWell>
         <MarqueeWell tone="amber" className="h-full min-h-0 overflow-y-auto">
-          <div className="flex flex-col gap-2.5 p-2.5 sm:p-3">
+          <div className="flex flex-col gap-2.5">
             {STILLS_RIGHT.slice(0, 3).map((still) => (
               <LandscapeStill key={still.title} {...still} variant="tall" />
             ))}
@@ -1180,14 +1212,18 @@ function VerticalStillGallery({
   return (
     <div
       className={cn(
-        "grid h-full min-h-[18rem] grid-cols-2 items-stretch gap-2 sm:min-h-[22rem] sm:gap-2.5 md:min-h-[min(26rem,46vh)]",
+        "flex justify-evenly md:grid h-full min-h-[18rem] md:grid-cols-2 gap-2 sm:gap-4",
         className,
       )}
     >
-      <MarqueeWell className="h-full min-h-0">
-        <StillMarqueeColumn stills={STILLS_LEFT} duration="[--duration:32s] [--gap:12px]" variant="wide" />
+      <MarqueeWell className="h-full min-h-0 max-w-fit">
+        <StillMarqueeColumn
+          stills={STILLS_LEFT}
+          duration="[--duration:32s] [--gap:12px]"
+          variant="wide"
+        />
       </MarqueeWell>
-      <MarqueeWell tone="amber" className="h-full min-h-0 md:translate-y-3">
+      <MarqueeWell tone="amber" className="h-full min-h-0 max-w-fit">
         <StillMarqueeColumn
           stills={STILLS_RIGHT}
           reverse
@@ -1199,10 +1235,154 @@ function VerticalStillGallery({
   );
 }
 
+function PremieresSection({ reducedMotion }: { reducedMotion: boolean }) {
+  const delays = heroSequenceDelays();
+
+  return (
+    <section className="pb-6 pt-8" aria-labelledby="premieres-heading">
+      <CinemaContent className="mb-4 flex items-end justify-between gap-4">
+        <h2
+          id="premieres-heading"
+          className={cn(
+            "text-[22px] font-semibold tracking-[-0.02em]",
+            !reducedMotion && "cinema-hero-rise",
+          )}
+          style={reducedMotion ? undefined : { animationDelay: \`\${delays.premieresLabel}ms\` }}
+        >
+          Premieres
+        </h2>
+        <span
+          className={cn("text-[13px] text-white/38", !reducedMotion && "cinema-hero-rise")}
+          style={reducedMotion ? undefined : { animationDelay: \`\${delays.premieresMeta}ms\` }}
+        >
+          Now playing
+        </span>
+      </CinemaContent>
+
+      <div
+        className={cn(!reducedMotion && "cinema-hero-rise")}
+        style={reducedMotion ? undefined : { animationDelay: \`\${delays.premieresRail}ms\` }}
+      >
+        {reducedMotion ? (
+          <CinemaContent className="overflow-x-auto overscroll-x-contain pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            <div className="flex w-max gap-4 sm:gap-5">
+              {PREMIERES.map((film) => (
+                <PosterCard key={film.title} {...film} />
+              ))}
+            </div>
+          </CinemaContent>
+        ) : (
+          <div className="overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_5%,black_95%,transparent)] [-webkit-mask-image:linear-gradient(to_right,transparent,black_5%,black_95%,transparent)]">
+            <Marquee
+              pauseOnHover
+              applyMask={false}
+              className="py-1 pl-5 [--duration:38s] [--gap:1rem] sm:pl-8 sm:[--gap:1.25rem]"
+            >
+              {PREMIERES.map((film) => (
+                <PosterCard key={film.title} {...film} />
+              ))}
+            </Marquee>
+          </div>
+        )}
+      </div>
+    </section>
+  );
+}
+function HeroPremiereCopy({ reducedMotion }: { reducedMotion: boolean }) {
+  const delays = heroSequenceDelays();
+
+  if (reducedMotion) {
+    return (
+      <>
+        <p className="text-[13px] font-medium tracking-[0.08em] text-white/45 uppercase">
+          {FEATURED.eyebrow}
+        </p>
+        <h1 className="mt-3 max-w-[11ch] -translate-x-[0.13ex] text-balance text-[clamp(3.25rem,14vw,7.5rem)] leading-[0.9] font-semibold tracking-[-0.045em]">
+          {FEATURED.title}
+        </h1>
+        <p className="mt-5 max-w-[28ch] text-[17px] leading-snug text-white/58 sm:text-[19px]">
+          {FEATURED.tagline}
+        </p>
+        <p className="mt-3 text-[13px] text-white/38">{FEATURED.runtime}</p>
+        <div className="mt-8 flex flex-wrap items-center gap-3">
+          <button
+            type="button"
+            className="inline-flex h-11 touch-manipulation items-center gap-2 rounded-full bg-white px-6 text-[14px] font-semibold text-black transition-transform active:scale-[0.98]"
+          >
+            <PlayIcon aria-hidden="true" className="size-4 fill-current" />
+            Play
+          </button>
+          <button
+            type="button"
+            className="inline-flex h-11 touch-manipulation items-center justify-center rounded-full border border-white/18 bg-white/[0.04] px-6 text-[14px] font-medium text-white/78 transition-colors hover:bg-white/[0.08] active:scale-[0.98]"
+          >
+            Add to Up Next
+          </button>
+        </div>
+      </>
+    );
+  }
+
+  return (
+    <>
+      <p
+        className="cinema-hero-rise text-[13px] font-medium tracking-[0.08em] text-white/45 uppercase"
+        style={{ animationDelay: \`\${delays.eyebrow}ms\` }}
+      >
+        {FEATURED.eyebrow}
+      </p>
+
+      <h1 className="mt-3 text-balance leading-[0.9]">
+        <WaveReveal
+          text={FEATURED.title}
+          mode="word"
+          direction="up"
+          blur
+          duration={\`\${HERO_WORD_DURATION_MS}ms\`}
+          delay={delays.title}
+          className=" -translate-x-[0.13ex] justify-start px-0 text-left font-semibold tracking-[-0.02em] text-[clamp(3.25rem,14vw,7.5rem)] md:px-0 md:text-[clamp(3.25rem,14vw,7.5rem)]"
+        />
+      </h1>
+
+      <p
+        className="cinema-hero-rise mt-5 max-w-[28ch] text-[17px] leading-snug text-white/58 sm:text-[19px]"
+        style={{ animationDelay: \`\${delays.tagline}ms\` }}
+      >
+        {FEATURED.tagline}
+      </p>
+
+      <p
+        className="cinema-hero-rise mt-3 text-[13px] text-white/38"
+        style={{ animationDelay: \`\${delays.runtime}ms\` }}
+      >
+        {FEATURED.runtime}
+      </p>
+
+      <div className="mt-8 flex flex-wrap items-center gap-3">
+        <button
+          type="button"
+          className="cinema-hero-rise inline-flex h-11 touch-manipulation items-center gap-2 rounded-full bg-white px-6 text-[14px] font-semibold text-black transition-transform active:scale-[0.98]"
+          style={{ animationDelay: \`\${delays.ctaPrimary}ms\` }}
+        >
+          <PlayIcon aria-hidden="true" className="size-4 fill-current" />
+          Play
+        </button>
+        <button
+          type="button"
+          className="cinema-hero-rise inline-flex h-11 touch-manipulation items-center justify-center rounded-full border border-white/18 bg-white/[0.04] px-6 text-[14px] font-medium text-white/78 transition-colors hover:bg-white/[0.08] active:scale-[0.98]"
+          style={{ animationDelay: \`\${delays.ctaSecondary}ms\` }}
+        >
+          Add to Up Next
+        </button>
+      </div>
+    </>
+  );
+}
+
 function CraftFeaturePanel({ reducedMotion }: { reducedMotion: boolean }) {
   return (
     <div className="@container overflow-hidden rounded-[1.35rem] border border-white/10 bg-[oklch(0.12_0.025_285)] shadow-[inset_0_1px_0_oklch(1_0_0/0.05)]">
-      <div className="grid md:grid-cols-[minmax(0,11.5rem)_minmax(0,1fr)] lg:grid-cols-[minmax(0,15rem)_minmax(0,1fr)]">
+      <div className="grid md:grid-cols-[1fr_auto]">
         <div className="flex flex-col justify-end gap-3 border-b border-white/8 p-5 sm:p-6 md:border-r md:border-b-0 md:p-6 lg:p-8">
           <p className="text-[13px] font-medium tracking-[0.08em] text-white/42 uppercase">
             The craft
@@ -1211,14 +1391,14 @@ function CraftFeaturePanel({ reducedMotion }: { reducedMotion: boolean }) {
             id="editorial-heading"
             className="text-balance text-[clamp(1.5rem,4.5cqi,2.25rem)] leading-[1.08] font-semibold tracking-[-0.03em]"
           >
-            Big-screen rhythm. Living-room scale.
+            Built for the big screen. Fine on your couch.
           </h2>
           <p className="text-[14px] leading-relaxed text-white/52 sm:text-[15px]">
-            Three motion layers — hero, rail, twin columns — one browse page.
+            Hero, poster row, two still columns — same page, different speeds.
           </p>
         </div>
 
-        <div className="min-h-[18rem] p-2.5 sm:min-h-[22rem] sm:p-3 md:min-h-[min(26rem,46vh)]">
+        <div className="max-h-[18rem] px-4x">
           <VerticalStillGallery reducedMotion={reducedMotion} className="h-full" />
         </div>
       </div>
@@ -1239,6 +1419,7 @@ export default function CinemaRow() {
 
   return (
     <>
+      <CinemaEntranceStyles />
       <div
         className={cn(
           sans.variable,
@@ -1248,25 +1429,6 @@ export default function CinemaRow() {
       >
         {/* Hero — backdrop marquee + premiere type */}
         <section className="relative isolate overflow-hidden">
-          <div aria-hidden="true" className="absolute inset-0 overflow-hidden">
-            {reducedMotion ? (
-              <img
-                src={FEATURED.backdrop}
-                alt=""
-                className="h-full w-full object-cover object-[50%_20%] opacity-40"
-              />
-            ) : (
-              <Marquee
-                pauseOnHover
-                applyMask={false}
-                className="h-full [--duration:48s] [--gap:0px]"
-              >
-                {HERO_BACKDROPS.map((slide) => (
-                  <BackdropSlide key={slide.title} {...slide} />
-                ))}
-              </Marquee>
-            )}
-          </div>
           <div
             aria-hidden="true"
             className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_120%_80%_at_50%_-10%,oklch(0.28_0.08_280_/_0.55)_0%,transparent_58%),linear-gradient(to_bottom,oklch(0.12_0.02_280)_0%,black_72%)]"
@@ -1277,66 +1439,11 @@ export default function CinemaRow() {
           />
 
           <CinemaContent className="relative z-10 flex min-h-[min(88svh,920px)] flex-col justify-end pb-[calc(var(--demo-chrome-reserve,5rem)+2.5rem)] pt-[max(1.25rem,env(safe-area-inset-top))]">
-            <p className="text-[13px] font-medium tracking-[0.08em] text-white/45 uppercase">
-              {FEATURED.eyebrow}
-            </p>
-            {reducedMotion ? (
-              <h1 className="mt-3 max-w-[11ch] -translate-x-[0.13ex] text-balance text-[clamp(3.25rem,14vw,7.5rem)] leading-[0.9] font-semibold tracking-[-0.045em]">
-                {FEATURED.title}
-              </h1>
-            ) : (
-              <div className="mt-3 max-w-[11ch] -translate-x-[0.13ex]">
-                <FocusBlurResolve
-                  text={FEATURED.title}
-                  holdMs={12000}
-                  gapMs={2400}
-                  className="aspect-auto h-auto w-full items-start justify-start overflow-visible text-white"
-                  stageClassName="relative inset-auto h-auto min-h-0 w-full place-items-start p-0"
-                  titleClassName="!text-left !font-semibold !tracking-[-0.045em] !text-[clamp(3.25rem,14vw,7.5rem)] !leading-[0.9]"
-                />
-                <h1 className="sr-only">{FEATURED.title}</h1>
-              </div>
-            )}
-            <p className="mt-5 max-w-[28ch] text-[17px] leading-snug text-white/58 sm:text-[19px]">
-              {FEATURED.tagline}
-            </p>
-            <p className="mt-3 text-[13px] text-white/38">{FEATURED.runtime}</p>
-
-            <div className="mt-8 flex flex-wrap items-center gap-3">
-              <button
-                type="button"
-                className="inline-flex h-11 touch-manipulation items-center gap-2 rounded-full bg-white px-6 text-[14px] font-semibold text-black transition-transform active:scale-[0.98]"
-              >
-                <PlayIcon aria-hidden="true" className="size-4 fill-current" />
-                Play
-              </button>
-              <button
-                type="button"
-                className="inline-flex h-11 touch-manipulation items-center justify-center rounded-full border border-white/18 bg-white/[0.04] px-6 text-[14px] font-medium text-white/78 transition-colors hover:bg-white/[0.08] active:scale-[0.98]"
-              >
-                Add to Up Next
-              </button>
-            </div>
+            <HeroPremiereCopy reducedMotion={reducedMotion} />
           </CinemaContent>
         </section>
 
-        {/* Horizontal poster row */}
-        <section className="pb-6 pt-2" aria-labelledby="premieres-heading">
-          <CinemaContent className="mb-4 flex items-end justify-between gap-4">
-            <h2 id="premieres-heading" className="text-[22px] font-semibold tracking-[-0.02em]">
-              Premieres
-            </h2>
-            <span className="text-[13px] text-white/38">Swipe</span>
-          </CinemaContent>
-
-          <CinemaContent className="overflow-x-auto overscroll-x-contain pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-            <div className="flex w-max snap-x snap-mandatory gap-4 sm:gap-5">
-              {PREMIERES.map((film) => (
-                <PosterCard key={film.title} {...film} />
-              ))}
-            </div>
-          </CinemaContent>
-        </section>
+        <PremieresSection reducedMotion={reducedMotion} />
 
         {/* Editorial + opposing vertical still marquees */}
         <section
@@ -1360,8 +1467,8 @@ export default function CinemaRow() {
 <span class="line"><span style="color:#D73A49">import</span><span style="color:#24292E"> { IBM_Plex_Sans } </span><span style="color:#D73A49">from</span><span style="color:#032F62"> "next/font/google"</span><span style="color:#24292E">;</span></span>
 <span class="line"><span style="color:#D73A49">import</span><span style="color:#24292E"> { useEffect, useState } </span><span style="color:#D73A49">from</span><span style="color:#032F62"> "react"</span><span style="color:#24292E">;</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#D73A49">import</span><span style="color:#24292E"> FocusBlurResolve </span><span style="color:#D73A49">from</span><span style="color:#032F62"> "@/animata/text/focus-blur-resolve"</span><span style="color:#24292E">;</span></span>
 <span class="line"><span style="color:#D73A49">import</span><span style="color:#24292E"> Marquee </span><span style="color:#D73A49">from</span><span style="color:#032F62"> "@/animata/container/marquee"</span><span style="color:#24292E">;</span></span>
+<span class="line"><span style="color:#D73A49">import</span><span style="color:#24292E"> WaveReveal </span><span style="color:#D73A49">from</span><span style="color:#032F62"> "@/animata/text/wave-reveal"</span><span style="color:#24292E">;</span></span>
 <span class="line"><span style="color:#D73A49">import</span><span style="color:#24292E"> { cn } </span><span style="color:#D73A49">from</span><span style="color:#032F62"> "@/lib/utils"</span><span style="color:#24292E">;</span></span>
 <span class="line"></span>
 <span class="line"><span style="color:#D73A49">import</span><span style="color:#24292E"> { CinemaRowNotes } </span><span style="color:#D73A49">from</span><span style="color:#032F62"> "./cinema-row-notes"</span><span style="color:#24292E">;</span></span>
@@ -1379,10 +1486,58 @@ export default function CinemaRow() {
 <span class="line"><span style="color:#D73A49">const</span><span style="color:#005CC5"> FEATURED</span><span style="color:#D73A49"> =</span><span style="color:#24292E"> {</span></span>
 <span class="line"><span style="color:#24292E">  eyebrow: </span><span style="color:#032F62">"Now streaming"</span><span style="color:#24292E">,</span></span>
 <span class="line"><span style="color:#24292E">  title: </span><span style="color:#032F62">"Dune: Part Two"</span><span style="color:#24292E">,</span></span>
-<span class="line"><span style="color:#24292E">  tagline: </span><span style="color:#032F62">"The desert remembers. So does Paul."</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">  tagline: </span><span style="color:#032F62">"Paul goes back to Arrakis. The desert hasn't forgotten him."</span><span style="color:#24292E">,</span></span>
 <span class="line"><span style="color:#24292E">  runtime: </span><span style="color:#032F62">"2h 47m · Sci‑Fi"</span><span style="color:#24292E">,</span></span>
 <span class="line"><span style="color:#24292E">  backdrop: </span><span style="color:#6F42C1">TMDB_BACKDROP</span><span style="color:#24292E">(</span><span style="color:#032F62">"/eZ239CUp1d6OryZEBPnO2n87gMG.jpg"</span><span style="color:#24292E">),</span></span>
 <span class="line"><span style="color:#24292E">};</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49">const</span><span style="color:#005CC5"> HERO_TITLE_WORDS</span><span style="color:#D73A49"> =</span><span style="color:#005CC5"> FEATURED</span><span style="color:#24292E">.title.</span><span style="color:#6F42C1">trim</span><span style="color:#24292E">().</span><span style="color:#6F42C1">split</span><span style="color:#24292E">(</span><span style="color:#032F62">/</span><span style="color:#005CC5">\\s</span><span style="color:#D73A49">+</span><span style="color:#032F62">/</span><span style="color:#24292E">).</span><span style="color:#005CC5">length</span><span style="color:#24292E">;</span></span>
+<span class="line"><span style="color:#D73A49">const</span><span style="color:#005CC5"> HERO_TITLE_DELAY_MS</span><span style="color:#D73A49"> =</span><span style="color:#005CC5"> 100</span><span style="color:#24292E">;</span></span>
+<span class="line"><span style="color:#D73A49">const</span><span style="color:#005CC5"> HERO_WORD_STAGGER_MS</span><span style="color:#D73A49"> =</span><span style="color:#005CC5"> 50</span><span style="color:#24292E">;</span></span>
+<span class="line"><span style="color:#D73A49">const</span><span style="color:#005CC5"> HERO_WORD_DURATION_MS</span><span style="color:#D73A49"> =</span><span style="color:#005CC5"> 700</span><span style="color:#24292E">;</span></span>
+<span class="line"><span style="color:#D73A49">const</span><span style="color:#005CC5"> HERO_ITEM_DURATION_MS</span><span style="color:#D73A49"> =</span><span style="color:#005CC5"> 580</span><span style="color:#24292E">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49">function</span><span style="color:#6F42C1"> heroSequenceDelays</span><span style="color:#24292E">() {</span></span>
+<span class="line"><span style="color:#D73A49">  const</span><span style="color:#005CC5"> titleEnd</span><span style="color:#D73A49"> =</span></span>
+<span class="line"><span style="color:#005CC5">    HERO_TITLE_DELAY_MS</span><span style="color:#D73A49"> +</span><span style="color:#24292E"> (</span><span style="color:#005CC5">HERO_TITLE_WORDS</span><span style="color:#D73A49"> -</span><span style="color:#005CC5"> 1</span><span style="color:#24292E">) </span><span style="color:#D73A49">*</span><span style="color:#005CC5"> HERO_WORD_STAGGER_MS</span><span style="color:#D73A49"> +</span><span style="color:#005CC5"> HERO_WORD_DURATION_MS</span><span style="color:#24292E">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49">  const</span><span style="color:#005CC5"> ctaPrimary</span><span style="color:#D73A49"> =</span><span style="color:#24292E"> titleEnd </span><span style="color:#D73A49">+</span><span style="color:#005CC5"> 120</span><span style="color:#24292E">;</span></span>
+<span class="line"><span style="color:#D73A49">  const</span><span style="color:#005CC5"> ctaSecondary</span><span style="color:#D73A49"> =</span><span style="color:#24292E"> titleEnd </span><span style="color:#D73A49">+</span><span style="color:#005CC5"> 220</span><span style="color:#24292E">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49">  return</span><span style="color:#24292E"> {</span></span>
+<span class="line"><span style="color:#24292E">    eyebrow: </span><span style="color:#005CC5">0</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">    title: </span><span style="color:#005CC5">HERO_TITLE_DELAY_MS</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">    tagline: titleEnd </span><span style="color:#D73A49">-</span><span style="color:#005CC5"> 220</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">    runtime: titleEnd </span><span style="color:#D73A49">-</span><span style="color:#005CC5"> 40</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">    ctaPrimary,</span></span>
+<span class="line"><span style="color:#24292E">    ctaSecondary,</span></span>
+<span class="line"><span style="color:#24292E">    premieresLabel: ctaSecondary </span><span style="color:#D73A49">+</span><span style="color:#005CC5"> 140</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">    premieresMeta: ctaSecondary </span><span style="color:#D73A49">+</span><span style="color:#005CC5"> 220</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">    premieresRail: ctaSecondary </span><span style="color:#D73A49">+</span><span style="color:#005CC5"> 260</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">  };</span></span>
+<span class="line"><span style="color:#24292E">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49">function</span><span style="color:#6F42C1"> CinemaEntranceStyles</span><span style="color:#24292E">() {</span></span>
+<span class="line"><span style="color:#D73A49">  return</span><span style="color:#24292E"> (</span></span>
+<span class="line"><span style="color:#24292E">    &#x3C;</span><span style="color:#22863A">style</span><span style="color:#24292E">>{</span><span style="color:#032F62">\`</span></span>
+<span class="line"><span style="color:#032F62">      @keyframes cinema-hero-rise {</span></span>
+<span class="line"><span style="color:#032F62">        from {</span></span>
+<span class="line"><span style="color:#032F62">          opacity: 0;</span></span>
+<span class="line"><span style="color:#032F62">          transform: translateY(14px);</span></span>
+<span class="line"><span style="color:#032F62">          filter: blur(8px);</span></span>
+<span class="line"><span style="color:#032F62">        }</span></span>
+<span class="line"><span style="color:#032F62">        to {</span></span>
+<span class="line"><span style="color:#032F62">          opacity: 1;</span></span>
+<span class="line"><span style="color:#032F62">          transform: translateY(0);</span></span>
+<span class="line"><span style="color:#032F62">          filter: blur(0);</span></span>
+<span class="line"><span style="color:#032F62">        }</span></span>
+<span class="line"><span style="color:#032F62">      }</span></span>
+<span class="line"><span style="color:#032F62">      .cinema-hero-rise {</span></span>
+<span class="line"><span style="color:#032F62">        animation: cinema-hero-rise \${</span><span style="color:#005CC5">HERO_ITEM_DURATION_MS</span><span style="color:#032F62">}ms cubic-bezier(0.22, 1, 0.36, 1) both;</span></span>
+<span class="line"><span style="color:#032F62">      }</span></span>
+<span class="line"><span style="color:#032F62">    \`</span><span style="color:#24292E">}&#x3C;/</span><span style="color:#22863A">style</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">  );</span></span>
+<span class="line"><span style="color:#24292E">}</span></span>
 <span class="line"></span>
 <span class="line"><span style="color:#D73A49">const</span><span style="color:#005CC5"> HERO_BACKDROPS</span><span style="color:#D73A49"> =</span><span style="color:#24292E"> [</span></span>
 <span class="line"><span style="color:#24292E">  { title: </span><span style="color:#032F62">"Dune: Part Two"</span><span style="color:#24292E">, image: </span><span style="color:#6F42C1">TMDB_BACKDROP</span><span style="color:#24292E">(</span><span style="color:#032F62">"/eZ239CUp1d6OryZEBPnO2n87gMG.jpg"</span><span style="color:#24292E">) },</span></span>
@@ -1422,7 +1577,11 @@ export default function CinemaRow() {
 <span class="line"><span style="color:#24292E">    genre: </span><span style="color:#032F62">"Horror"</span><span style="color:#24292E">,</span></span>
 <span class="line"><span style="color:#24292E">    poster: </span><span style="color:#6F42C1">TMDB_POSTER</span><span style="color:#24292E">(</span><span style="color:#032F62">"/lqoMzCcZYEFK729d6qzt349fB4o.jpg"</span><span style="color:#24292E">),</span></span>
 <span class="line"><span style="color:#24292E">  },</span></span>
-<span class="line"><span style="color:#24292E">  { title: </span><span style="color:#032F62">"Oppenheimer"</span><span style="color:#24292E">, genre: </span><span style="color:#032F62">"Biography"</span><span style="color:#24292E">, poster: </span><span style="color:#6F42C1">TMDB_POSTER</span><span style="color:#24292E">(</span><span style="color:#032F62">"/8Gxv8gSFCU0XGDykEGv7zR1n2ua.jpg"</span><span style="color:#24292E">) },</span></span>
+<span class="line"><span style="color:#24292E">  {</span></span>
+<span class="line"><span style="color:#24292E">    title: </span><span style="color:#032F62">"Oppenheimer"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">    genre: </span><span style="color:#032F62">"Biography"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">    poster: </span><span style="color:#6F42C1">TMDB_POSTER</span><span style="color:#24292E">(</span><span style="color:#032F62">"/8Gxv8gSFCU0XGDykEGv7zR1n2ua.jpg"</span><span style="color:#24292E">),</span></span>
+<span class="line"><span style="color:#24292E">  },</span></span>
 <span class="line"><span style="color:#24292E">  {</span></span>
 <span class="line"><span style="color:#24292E">    title: </span><span style="color:#032F62">"Everything Everywhere All at Once"</span><span style="color:#24292E">,</span></span>
 <span class="line"><span style="color:#24292E">    genre: </span><span style="color:#032F62">"Sci‑Fi"</span><span style="color:#24292E">,</span></span>
@@ -1439,8 +1598,16 @@ export default function CinemaRow() {
 <span class="line"><span style="color:#24292E">    genre: </span><span style="color:#032F62">"Sci‑Fi"</span><span style="color:#24292E">,</span></span>
 <span class="line"><span style="color:#24292E">    poster: </span><span style="color:#6F42C1">TMDB_POSTER</span><span style="color:#24292E">(</span><span style="color:#032F62">"/gajva2L0rPYkEWjzgFlBXCAVBE5.jpg"</span><span style="color:#24292E">),</span></span>
 <span class="line"><span style="color:#24292E">  },</span></span>
-<span class="line"><span style="color:#24292E">  { title: </span><span style="color:#032F62">"Interstellar"</span><span style="color:#24292E">, genre: </span><span style="color:#032F62">"Sci‑Fi"</span><span style="color:#24292E">, poster: </span><span style="color:#6F42C1">TMDB_POSTER</span><span style="color:#24292E">(</span><span style="color:#032F62">"/yQvGrMoipbRoddT0ZR8tPoR7NfX.jpg"</span><span style="color:#24292E">) },</span></span>
-<span class="line"><span style="color:#24292E">  { title: </span><span style="color:#032F62">"Poor Things"</span><span style="color:#24292E">, genre: </span><span style="color:#032F62">"Comedy"</span><span style="color:#24292E">, poster: </span><span style="color:#6F42C1">TMDB_POSTER</span><span style="color:#24292E">(</span><span style="color:#032F62">"/kCGlIMHnOm8JPXq3rXM6c5wMxcT.jpg"</span><span style="color:#24292E">) },</span></span>
+<span class="line"><span style="color:#24292E">  {</span></span>
+<span class="line"><span style="color:#24292E">    title: </span><span style="color:#032F62">"Interstellar"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">    genre: </span><span style="color:#032F62">"Sci‑Fi"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">    poster: </span><span style="color:#6F42C1">TMDB_POSTER</span><span style="color:#24292E">(</span><span style="color:#032F62">"/yQvGrMoipbRoddT0ZR8tPoR7NfX.jpg"</span><span style="color:#24292E">),</span></span>
+<span class="line"><span style="color:#24292E">  },</span></span>
+<span class="line"><span style="color:#24292E">  {</span></span>
+<span class="line"><span style="color:#24292E">    title: </span><span style="color:#032F62">"Poor Things"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">    genre: </span><span style="color:#032F62">"Comedy"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">    poster: </span><span style="color:#6F42C1">TMDB_POSTER</span><span style="color:#24292E">(</span><span style="color:#032F62">"/kCGlIMHnOm8JPXq3rXM6c5wMxcT.jpg"</span><span style="color:#24292E">),</span></span>
+<span class="line"><span style="color:#24292E">  },</span></span>
 <span class="line"><span style="color:#24292E">  {</span></span>
 <span class="line"><span style="color:#24292E">    title: </span><span style="color:#032F62">"Mad Max: Fury Road"</span><span style="color:#24292E">,</span></span>
 <span class="line"><span style="color:#24292E">    genre: </span><span style="color:#032F62">"Action"</span><span style="color:#24292E">,</span></span>
@@ -1448,13 +1615,7 @@ export default function CinemaRow() {
 <span class="line"><span style="color:#24292E">  },</span></span>
 <span class="line"><span style="color:#24292E">] </span><span style="color:#D73A49">as</span><span style="color:#D73A49"> const</span><span style="color:#24292E">;</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#D73A49">function</span><span style="color:#6F42C1"> CinemaContent</span><span style="color:#24292E">({</span></span>
-<span class="line"><span style="color:#E36209">  className</span><span style="color:#24292E">,</span></span>
-<span class="line"><span style="color:#E36209">  children</span><span style="color:#24292E">,</span></span>
-<span class="line"><span style="color:#24292E">}</span><span style="color:#D73A49">:</span><span style="color:#24292E"> {</span></span>
-<span class="line"><span style="color:#E36209">  className</span><span style="color:#D73A49">?:</span><span style="color:#005CC5"> string</span><span style="color:#24292E">;</span></span>
-<span class="line"><span style="color:#E36209">  children</span><span style="color:#D73A49">:</span><span style="color:#6F42C1"> React</span><span style="color:#24292E">.</span><span style="color:#6F42C1">ReactNode</span><span style="color:#24292E">;</span></span>
-<span class="line"><span style="color:#24292E">}) {</span></span>
+<span class="line"><span style="color:#D73A49">function</span><span style="color:#6F42C1"> CinemaContent</span><span style="color:#24292E">({ </span><span style="color:#E36209">className</span><span style="color:#24292E">, </span><span style="color:#E36209">children</span><span style="color:#24292E"> }</span><span style="color:#D73A49">:</span><span style="color:#24292E"> { </span><span style="color:#E36209">className</span><span style="color:#D73A49">?:</span><span style="color:#005CC5"> string</span><span style="color:#24292E">; </span><span style="color:#E36209">children</span><span style="color:#D73A49">:</span><span style="color:#6F42C1"> React</span><span style="color:#24292E">.</span><span style="color:#6F42C1">ReactNode</span><span style="color:#24292E"> }) {</span></span>
 <span class="line"><span style="color:#D73A49">  return</span><span style="color:#24292E"> &#x3C;</span><span style="color:#22863A">div</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#6F42C1">cn</span><span style="color:#24292E">(</span><span style="color:#032F62">"mx-auto w-full max-w-6xl px-5 sm:px-8"</span><span style="color:#24292E">, className)}>{children}&#x3C;/</span><span style="color:#22863A">div</span><span style="color:#24292E">>;</span></span>
 <span class="line"><span style="color:#24292E">}</span></span>
 <span class="line"></span>
@@ -1479,7 +1640,7 @@ export default function CinemaRow() {
 <span class="line"><span style="color:#D73A49">  return</span><span style="color:#24292E"> (</span></span>
 <span class="line"><span style="color:#24292E">    &#x3C;</span><span style="color:#22863A">figure</span></span>
 <span class="line"><span style="color:#6F42C1">      className</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#6F42C1">cn</span><span style="color:#24292E">(</span></span>
-<span class="line"><span style="color:#032F62">        "group relative w-full shrink-0 overflow-hidden rounded-2xl ring-1 ring-white/12"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#032F62">        "group relative w-full max-w-48 shrink-0 overflow-hidden"</span><span style="color:#24292E">,</span></span>
 <span class="line"><span style="color:#24292E">        variant </span><span style="color:#D73A49">===</span><span style="color:#032F62"> "tall"</span><span style="color:#D73A49"> ?</span><span style="color:#032F62"> "aspect-[5/3]"</span><span style="color:#D73A49"> :</span><span style="color:#032F62"> "aspect-video"</span><span style="color:#24292E">,</span></span>
 <span class="line"><span style="color:#24292E">      )}</span></span>
 <span class="line"><span style="color:#24292E">    ></span></span>
@@ -1498,17 +1659,9 @@ export default function CinemaRow() {
 <span class="line"><span style="color:#24292E">  );</span></span>
 <span class="line"><span style="color:#24292E">}</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#D73A49">function</span><span style="color:#6F42C1"> PosterCard</span><span style="color:#24292E">({</span></span>
-<span class="line"><span style="color:#E36209">  title</span><span style="color:#24292E">,</span></span>
-<span class="line"><span style="color:#E36209">  genre</span><span style="color:#24292E">,</span></span>
-<span class="line"><span style="color:#E36209">  poster</span><span style="color:#24292E">,</span></span>
-<span class="line"><span style="color:#24292E">}</span><span style="color:#D73A49">:</span><span style="color:#24292E"> {</span></span>
-<span class="line"><span style="color:#E36209">  title</span><span style="color:#D73A49">:</span><span style="color:#005CC5"> string</span><span style="color:#24292E">;</span></span>
-<span class="line"><span style="color:#E36209">  genre</span><span style="color:#D73A49">:</span><span style="color:#005CC5"> string</span><span style="color:#24292E">;</span></span>
-<span class="line"><span style="color:#E36209">  poster</span><span style="color:#D73A49">:</span><span style="color:#005CC5"> string</span><span style="color:#24292E">;</span></span>
-<span class="line"><span style="color:#24292E">}) {</span></span>
+<span class="line"><span style="color:#D73A49">function</span><span style="color:#6F42C1"> PosterCard</span><span style="color:#24292E">({ </span><span style="color:#E36209">title</span><span style="color:#24292E">, </span><span style="color:#E36209">genre</span><span style="color:#24292E">, </span><span style="color:#E36209">poster</span><span style="color:#24292E"> }</span><span style="color:#D73A49">:</span><span style="color:#24292E"> { </span><span style="color:#E36209">title</span><span style="color:#D73A49">:</span><span style="color:#005CC5"> string</span><span style="color:#24292E">; </span><span style="color:#E36209">genre</span><span style="color:#D73A49">:</span><span style="color:#005CC5"> string</span><span style="color:#24292E">; </span><span style="color:#E36209">poster</span><span style="color:#D73A49">:</span><span style="color:#005CC5"> string</span><span style="color:#24292E"> }) {</span></span>
 <span class="line"><span style="color:#D73A49">  return</span><span style="color:#24292E"> (</span></span>
-<span class="line"><span style="color:#24292E">    &#x3C;</span><span style="color:#22863A">article</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"w-[9.75rem] shrink-0 snap-start sm:w-[11.25rem]"</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">    &#x3C;</span><span style="color:#22863A">article</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"w-[9.75rem] shrink-0 sm:w-[11.25rem]"</span><span style="color:#24292E">></span></span>
 <span class="line"><span style="color:#24292E">      &#x3C;</span><span style="color:#22863A">div</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"aspect-[2/3] overflow-hidden rounded-xl ring-1 ring-white/10"</span><span style="color:#24292E">></span></span>
 <span class="line"><span style="color:#24292E">        &#x3C;</span><span style="color:#22863A">img</span></span>
 <span class="line"><span style="color:#6F42C1">          src</span><span style="color:#D73A49">=</span><span style="color:#24292E">{poster}</span></span>
@@ -1533,32 +1686,14 @@ export default function CinemaRow() {
 <span class="line"><span style="color:#E36209">  className</span><span style="color:#D73A49">?:</span><span style="color:#005CC5"> string</span><span style="color:#24292E">;</span></span>
 <span class="line"><span style="color:#E36209">  tone</span><span style="color:#D73A49">?:</span><span style="color:#032F62"> "violet"</span><span style="color:#D73A49"> |</span><span style="color:#032F62"> "amber"</span><span style="color:#24292E">;</span></span>
 <span class="line"><span style="color:#24292E">}) {</span></span>
-<span class="line"><span style="color:#D73A49">  const</span><span style="color:#005CC5"> wellColor</span><span style="color:#D73A49"> =</span></span>
-<span class="line"><span style="color:#24292E">    tone </span><span style="color:#D73A49">===</span><span style="color:#032F62"> "violet"</span><span style="color:#D73A49"> ?</span><span style="color:#032F62"> "oklch(0.14 0.03 285)"</span><span style="color:#D73A49"> :</span><span style="color:#032F62"> "oklch(0.15 0.028 55)"</span><span style="color:#24292E">;</span></span>
+<span class="line"><span style="color:#D73A49">  const</span><span style="color:#005CC5"> wellColor</span><span style="color:#D73A49"> =</span><span style="color:#24292E"> tone </span><span style="color:#D73A49">===</span><span style="color:#032F62"> "violet"</span><span style="color:#D73A49"> ?</span><span style="color:#032F62"> "oklch(0.14 0.03 285)"</span><span style="color:#D73A49"> :</span><span style="color:#032F62"> "oklch(0.15 0.028 55)"</span><span style="color:#24292E">;</span></span>
 <span class="line"></span>
 <span class="line"><span style="color:#D73A49">  return</span><span style="color:#24292E"> (</span></span>
 <span class="line"><span style="color:#24292E">    &#x3C;</span><span style="color:#22863A">div</span></span>
-<span class="line"><span style="color:#6F42C1">      className</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#6F42C1">cn</span><span style="color:#24292E">(</span></span>
-<span class="line"><span style="color:#032F62">        "relative min-h-[18rem] overflow-hidden rounded-[1.35rem] shadow-[inset_0_1px_0_oklch(1_0_0/0.07)] ring-1 ring-white/10"</span><span style="color:#24292E">,</span></span>
-<span class="line"><span style="color:#24292E">        className,</span></span>
-<span class="line"><span style="color:#24292E">      )}</span></span>
+<span class="line"><span style="color:#6F42C1">      className</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#6F42C1">cn</span><span style="color:#24292E">(</span><span style="color:#032F62">"relative min-h-[18rem] overflow-hidden"</span><span style="color:#24292E">, className)}</span></span>
 <span class="line"><span style="color:#6F42C1">      style</span><span style="color:#D73A49">=</span><span style="color:#24292E">{{ backgroundColor: wellColor }}</span></span>
 <span class="line"><span style="color:#24292E">    ></span></span>
 <span class="line"><span style="color:#24292E">      {children}</span></span>
-<span class="line"><span style="color:#24292E">      &#x3C;</span><span style="color:#22863A">div</span></span>
-<span class="line"><span style="color:#6F42C1">        aria-hidden</span><span style="color:#D73A49">=</span><span style="color:#032F62">"true"</span></span>
-<span class="line"><span style="color:#6F42C1">        className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"pointer-events-none absolute inset-x-0 top-0 z-10 h-14 bg-linear-to-b to-transparent"</span></span>
-<span class="line"><span style="color:#6F42C1">        style</span><span style="color:#D73A49">=</span><span style="color:#24292E">{{</span></span>
-<span class="line"><span style="color:#24292E">          backgroundImage: </span><span style="color:#032F62">\`linear-gradient(to bottom, \${</span><span style="color:#24292E">wellColor</span><span style="color:#032F62">} 0%, color-mix(in oklch, \${</span><span style="color:#24292E">wellColor</span><span style="color:#032F62">} 85%, transparent) 55%, transparent 100%)\`</span><span style="color:#24292E">,</span></span>
-<span class="line"><span style="color:#24292E">        }}</span></span>
-<span class="line"><span style="color:#24292E">      /></span></span>
-<span class="line"><span style="color:#24292E">      &#x3C;</span><span style="color:#22863A">div</span></span>
-<span class="line"><span style="color:#6F42C1">        aria-hidden</span><span style="color:#D73A49">=</span><span style="color:#032F62">"true"</span></span>
-<span class="line"><span style="color:#6F42C1">        className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"pointer-events-none absolute inset-x-0 bottom-0 z-10 h-20 bg-linear-to-t to-transparent"</span></span>
-<span class="line"><span style="color:#6F42C1">        style</span><span style="color:#D73A49">=</span><span style="color:#24292E">{{</span></span>
-<span class="line"><span style="color:#24292E">          backgroundImage: </span><span style="color:#032F62">\`linear-gradient(to top, \${</span><span style="color:#24292E">wellColor</span><span style="color:#032F62">} 0%, color-mix(in oklch, \${</span><span style="color:#24292E">wellColor</span><span style="color:#032F62">} 90%, transparent) 60%, transparent 100%)\`</span><span style="color:#24292E">,</span></span>
-<span class="line"><span style="color:#24292E">        }}</span></span>
-<span class="line"><span style="color:#24292E">      /></span></span>
 <span class="line"><span style="color:#24292E">    &#x3C;/</span><span style="color:#22863A">div</span><span style="color:#24292E">></span></span>
 <span class="line"><span style="color:#24292E">  );</span></span>
 <span class="line"><span style="color:#24292E">}</span></span>
@@ -1580,10 +1715,14 @@ export default function CinemaRow() {
 <span class="line"><span style="color:#6F42C1">      reverse</span><span style="color:#D73A49">=</span><span style="color:#24292E">{reverse}</span></span>
 <span class="line"><span style="color:#6F42C1">      pauseOnHover</span></span>
 <span class="line"><span style="color:#6F42C1">      applyMask</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#005CC5">false</span><span style="color:#24292E">}</span></span>
-<span class="line"><span style="color:#6F42C1">      className</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#6F42C1">cn</span><span style="color:#24292E">(</span><span style="color:#032F62">"h-full p-2.5 sm:p-3"</span><span style="color:#24292E">, duration)}</span></span>
+<span class="line"><span style="color:#6F42C1">      className</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#6F42C1">cn</span><span style="color:#24292E">(</span><span style="color:#032F62">"h-full p-0"</span><span style="color:#24292E">, duration)}</span></span>
 <span class="line"><span style="color:#24292E">    ></span></span>
 <span class="line"><span style="color:#24292E">      {stills.</span><span style="color:#6F42C1">map</span><span style="color:#24292E">((</span><span style="color:#E36209">still</span><span style="color:#24292E">) </span><span style="color:#D73A49">=></span><span style="color:#24292E"> (</span></span>
-<span class="line"><span style="color:#24292E">        &#x3C;</span><span style="color:#005CC5">LandscapeStill</span><span style="color:#6F42C1"> key</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#032F62">\`\${</span><span style="color:#24292E">reverse</span><span style="color:#D73A49"> ?</span><span style="color:#032F62"> "rev"</span><span style="color:#D73A49"> :</span><span style="color:#032F62"> "fwd"}-\${</span><span style="color:#24292E">still</span><span style="color:#032F62">.</span><span style="color:#24292E">title</span><span style="color:#032F62">}\`</span><span style="color:#24292E">} {</span><span style="color:#D73A49">...</span><span style="color:#24292E">still} </span><span style="color:#6F42C1">variant</span><span style="color:#D73A49">=</span><span style="color:#24292E">{variant} /></span></span>
+<span class="line"><span style="color:#24292E">        &#x3C;</span><span style="color:#005CC5">LandscapeStill</span></span>
+<span class="line"><span style="color:#6F42C1">          key</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#032F62">\`\${</span><span style="color:#24292E">reverse</span><span style="color:#D73A49"> ?</span><span style="color:#032F62"> "rev"</span><span style="color:#D73A49"> :</span><span style="color:#032F62"> "fwd"}-\${</span><span style="color:#24292E">still</span><span style="color:#032F62">.</span><span style="color:#24292E">title</span><span style="color:#032F62">}\`</span><span style="color:#24292E">}</span></span>
+<span class="line"><span style="color:#24292E">          {</span><span style="color:#D73A49">...</span><span style="color:#24292E">still}</span></span>
+<span class="line"><span style="color:#6F42C1">          variant</span><span style="color:#D73A49">=</span><span style="color:#24292E">{variant}</span></span>
+<span class="line"><span style="color:#24292E">        /></span></span>
 <span class="line"><span style="color:#24292E">      ))}</span></span>
 <span class="line"><span style="color:#24292E">    &#x3C;/</span><span style="color:#005CC5">Marquee</span><span style="color:#24292E">></span></span>
 <span class="line"><span style="color:#24292E">  );</span></span>
@@ -1598,16 +1737,16 @@ export default function CinemaRow() {
 <span class="line"><span style="color:#24292E">}) {</span></span>
 <span class="line"><span style="color:#D73A49">  if</span><span style="color:#24292E"> (reducedMotion) {</span></span>
 <span class="line"><span style="color:#D73A49">    return</span><span style="color:#24292E"> (</span></span>
-<span class="line"><span style="color:#24292E">      &#x3C;</span><span style="color:#22863A">div</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#6F42C1">cn</span><span style="color:#24292E">(</span><span style="color:#032F62">"grid h-full min-h-[18rem] grid-cols-2 gap-2 sm:gap-2.5"</span><span style="color:#24292E">, className)}></span></span>
+<span class="line"><span style="color:#24292E">      &#x3C;</span><span style="color:#22863A">div</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#6F42C1">cn</span><span style="color:#24292E">(</span><span style="color:#032F62">"grid h-full min-h-[18rem] grid-cols-2 gap-2 sm:gap-4"</span><span style="color:#24292E">, className)}></span></span>
 <span class="line"><span style="color:#24292E">        &#x3C;</span><span style="color:#005CC5">MarqueeWell</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"h-full min-h-0 overflow-y-auto"</span><span style="color:#24292E">></span></span>
-<span class="line"><span style="color:#24292E">          &#x3C;</span><span style="color:#22863A">div</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"flex flex-col gap-2.5 p-2.5 sm:p-3"</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">          &#x3C;</span><span style="color:#22863A">div</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"flex flex-col gap-2.5"</span><span style="color:#24292E">></span></span>
 <span class="line"><span style="color:#24292E">            {</span><span style="color:#005CC5">STILLS_LEFT</span><span style="color:#24292E">.</span><span style="color:#6F42C1">slice</span><span style="color:#24292E">(</span><span style="color:#005CC5">0</span><span style="color:#24292E">, </span><span style="color:#005CC5">3</span><span style="color:#24292E">).</span><span style="color:#6F42C1">map</span><span style="color:#24292E">((</span><span style="color:#E36209">still</span><span style="color:#24292E">) </span><span style="color:#D73A49">=></span><span style="color:#24292E"> (</span></span>
 <span class="line"><span style="color:#24292E">              &#x3C;</span><span style="color:#005CC5">LandscapeStill</span><span style="color:#6F42C1"> key</span><span style="color:#D73A49">=</span><span style="color:#24292E">{still.title} {</span><span style="color:#D73A49">...</span><span style="color:#24292E">still} </span><span style="color:#6F42C1">variant</span><span style="color:#D73A49">=</span><span style="color:#032F62">"wide"</span><span style="color:#24292E"> /></span></span>
 <span class="line"><span style="color:#24292E">            ))}</span></span>
 <span class="line"><span style="color:#24292E">          &#x3C;/</span><span style="color:#22863A">div</span><span style="color:#24292E">></span></span>
 <span class="line"><span style="color:#24292E">        &#x3C;/</span><span style="color:#005CC5">MarqueeWell</span><span style="color:#24292E">></span></span>
 <span class="line"><span style="color:#24292E">        &#x3C;</span><span style="color:#005CC5">MarqueeWell</span><span style="color:#6F42C1"> tone</span><span style="color:#D73A49">=</span><span style="color:#032F62">"amber"</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"h-full min-h-0 overflow-y-auto"</span><span style="color:#24292E">></span></span>
-<span class="line"><span style="color:#24292E">          &#x3C;</span><span style="color:#22863A">div</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"flex flex-col gap-2.5 p-2.5 sm:p-3"</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">          &#x3C;</span><span style="color:#22863A">div</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"flex flex-col gap-2.5"</span><span style="color:#24292E">></span></span>
 <span class="line"><span style="color:#24292E">            {</span><span style="color:#005CC5">STILLS_RIGHT</span><span style="color:#24292E">.</span><span style="color:#6F42C1">slice</span><span style="color:#24292E">(</span><span style="color:#005CC5">0</span><span style="color:#24292E">, </span><span style="color:#005CC5">3</span><span style="color:#24292E">).</span><span style="color:#6F42C1">map</span><span style="color:#24292E">((</span><span style="color:#E36209">still</span><span style="color:#24292E">) </span><span style="color:#D73A49">=></span><span style="color:#24292E"> (</span></span>
 <span class="line"><span style="color:#24292E">              &#x3C;</span><span style="color:#005CC5">LandscapeStill</span><span style="color:#6F42C1"> key</span><span style="color:#D73A49">=</span><span style="color:#24292E">{still.title} {</span><span style="color:#D73A49">...</span><span style="color:#24292E">still} </span><span style="color:#6F42C1">variant</span><span style="color:#D73A49">=</span><span style="color:#032F62">"tall"</span><span style="color:#24292E"> /></span></span>
 <span class="line"><span style="color:#24292E">            ))}</span></span>
@@ -1620,14 +1759,18 @@ export default function CinemaRow() {
 <span class="line"><span style="color:#D73A49">  return</span><span style="color:#24292E"> (</span></span>
 <span class="line"><span style="color:#24292E">    &#x3C;</span><span style="color:#22863A">div</span></span>
 <span class="line"><span style="color:#6F42C1">      className</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#6F42C1">cn</span><span style="color:#24292E">(</span></span>
-<span class="line"><span style="color:#032F62">        "grid h-full min-h-[18rem] grid-cols-2 items-stretch gap-2 sm:min-h-[22rem] sm:gap-2.5 md:min-h-[min(26rem,46vh)]"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#032F62">        "flex justify-evenly md:grid h-full min-h-[18rem] md:grid-cols-2 gap-2 sm:gap-4"</span><span style="color:#24292E">,</span></span>
 <span class="line"><span style="color:#24292E">        className,</span></span>
 <span class="line"><span style="color:#24292E">      )}</span></span>
 <span class="line"><span style="color:#24292E">    ></span></span>
-<span class="line"><span style="color:#24292E">      &#x3C;</span><span style="color:#005CC5">MarqueeWell</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"h-full min-h-0"</span><span style="color:#24292E">></span></span>
-<span class="line"><span style="color:#24292E">        &#x3C;</span><span style="color:#005CC5">StillMarqueeColumn</span><span style="color:#6F42C1"> stills</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#005CC5">STILLS_LEFT</span><span style="color:#24292E">} </span><span style="color:#6F42C1">duration</span><span style="color:#D73A49">=</span><span style="color:#032F62">"[--duration:32s] [--gap:12px]"</span><span style="color:#6F42C1"> variant</span><span style="color:#D73A49">=</span><span style="color:#032F62">"wide"</span><span style="color:#24292E"> /></span></span>
+<span class="line"><span style="color:#24292E">      &#x3C;</span><span style="color:#005CC5">MarqueeWell</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"h-full min-h-0 max-w-fit"</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">        &#x3C;</span><span style="color:#005CC5">StillMarqueeColumn</span></span>
+<span class="line"><span style="color:#6F42C1">          stills</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#005CC5">STILLS_LEFT</span><span style="color:#24292E">}</span></span>
+<span class="line"><span style="color:#6F42C1">          duration</span><span style="color:#D73A49">=</span><span style="color:#032F62">"[--duration:32s] [--gap:12px]"</span></span>
+<span class="line"><span style="color:#6F42C1">          variant</span><span style="color:#D73A49">=</span><span style="color:#032F62">"wide"</span></span>
+<span class="line"><span style="color:#24292E">        /></span></span>
 <span class="line"><span style="color:#24292E">      &#x3C;/</span><span style="color:#005CC5">MarqueeWell</span><span style="color:#24292E">></span></span>
-<span class="line"><span style="color:#24292E">      &#x3C;</span><span style="color:#005CC5">MarqueeWell</span><span style="color:#6F42C1"> tone</span><span style="color:#D73A49">=</span><span style="color:#032F62">"amber"</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"h-full min-h-0 md:translate-y-3"</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">      &#x3C;</span><span style="color:#005CC5">MarqueeWell</span><span style="color:#6F42C1"> tone</span><span style="color:#D73A49">=</span><span style="color:#032F62">"amber"</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"h-full min-h-0 max-w-fit"</span><span style="color:#24292E">></span></span>
 <span class="line"><span style="color:#24292E">        &#x3C;</span><span style="color:#005CC5">StillMarqueeColumn</span></span>
 <span class="line"><span style="color:#6F42C1">          stills</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#005CC5">STILLS_RIGHT</span><span style="color:#24292E">}</span></span>
 <span class="line"><span style="color:#6F42C1">          reverse</span></span>
@@ -1639,10 +1782,154 @@ export default function CinemaRow() {
 <span class="line"><span style="color:#24292E">  );</span></span>
 <span class="line"><span style="color:#24292E">}</span></span>
 <span class="line"></span>
+<span class="line"><span style="color:#D73A49">function</span><span style="color:#6F42C1"> PremieresSection</span><span style="color:#24292E">({ </span><span style="color:#E36209">reducedMotion</span><span style="color:#24292E"> }</span><span style="color:#D73A49">:</span><span style="color:#24292E"> { </span><span style="color:#E36209">reducedMotion</span><span style="color:#D73A49">:</span><span style="color:#005CC5"> boolean</span><span style="color:#24292E"> }) {</span></span>
+<span class="line"><span style="color:#D73A49">  const</span><span style="color:#005CC5"> delays</span><span style="color:#D73A49"> =</span><span style="color:#6F42C1"> heroSequenceDelays</span><span style="color:#24292E">();</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49">  return</span><span style="color:#24292E"> (</span></span>
+<span class="line"><span style="color:#24292E">    &#x3C;</span><span style="color:#22863A">section</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"pb-6 pt-8"</span><span style="color:#6F42C1"> aria-labelledby</span><span style="color:#D73A49">=</span><span style="color:#032F62">"premieres-heading"</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">      &#x3C;</span><span style="color:#005CC5">CinemaContent</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"mb-4 flex items-end justify-between gap-4"</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">        &#x3C;</span><span style="color:#22863A">h2</span></span>
+<span class="line"><span style="color:#6F42C1">          id</span><span style="color:#D73A49">=</span><span style="color:#032F62">"premieres-heading"</span></span>
+<span class="line"><span style="color:#6F42C1">          className</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#6F42C1">cn</span><span style="color:#24292E">(</span></span>
+<span class="line"><span style="color:#032F62">            "text-[22px] font-semibold tracking-[-0.02em]"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#D73A49">            !</span><span style="color:#24292E">reducedMotion </span><span style="color:#D73A49">&#x26;&#x26;</span><span style="color:#032F62"> "cinema-hero-rise"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">          )}</span></span>
+<span class="line"><span style="color:#6F42C1">          style</span><span style="color:#D73A49">=</span><span style="color:#24292E">{reducedMotion </span><span style="color:#D73A49">?</span><span style="color:#005CC5"> undefined</span><span style="color:#D73A49"> :</span><span style="color:#24292E"> { animationDelay: </span><span style="color:#032F62">\`\${</span><span style="color:#24292E">delays</span><span style="color:#032F62">.</span><span style="color:#24292E">premieresLabel</span><span style="color:#032F62">}ms\`</span><span style="color:#24292E"> }}</span></span>
+<span class="line"><span style="color:#24292E">        ></span></span>
+<span class="line"><span style="color:#24292E">          Premieres</span></span>
+<span class="line"><span style="color:#24292E">        &#x3C;/</span><span style="color:#22863A">h2</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">        &#x3C;</span><span style="color:#22863A">span</span></span>
+<span class="line"><span style="color:#6F42C1">          className</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#6F42C1">cn</span><span style="color:#24292E">(</span><span style="color:#032F62">"text-[13px] text-white/38"</span><span style="color:#24292E">, </span><span style="color:#D73A49">!</span><span style="color:#24292E">reducedMotion </span><span style="color:#D73A49">&#x26;&#x26;</span><span style="color:#032F62"> "cinema-hero-rise"</span><span style="color:#24292E">)}</span></span>
+<span class="line"><span style="color:#6F42C1">          style</span><span style="color:#D73A49">=</span><span style="color:#24292E">{reducedMotion </span><span style="color:#D73A49">?</span><span style="color:#005CC5"> undefined</span><span style="color:#D73A49"> :</span><span style="color:#24292E"> { animationDelay: </span><span style="color:#032F62">\`\${</span><span style="color:#24292E">delays</span><span style="color:#032F62">.</span><span style="color:#24292E">premieresMeta</span><span style="color:#032F62">}ms\`</span><span style="color:#24292E"> }}</span></span>
+<span class="line"><span style="color:#24292E">        ></span></span>
+<span class="line"><span style="color:#24292E">          Now playing</span></span>
+<span class="line"><span style="color:#24292E">        &#x3C;/</span><span style="color:#22863A">span</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">      &#x3C;/</span><span style="color:#005CC5">CinemaContent</span><span style="color:#24292E">></span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#24292E">      &#x3C;</span><span style="color:#22863A">div</span></span>
+<span class="line"><span style="color:#6F42C1">        className</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#6F42C1">cn</span><span style="color:#24292E">(</span><span style="color:#D73A49">!</span><span style="color:#24292E">reducedMotion </span><span style="color:#D73A49">&#x26;&#x26;</span><span style="color:#032F62"> "cinema-hero-rise"</span><span style="color:#24292E">)}</span></span>
+<span class="line"><span style="color:#6F42C1">        style</span><span style="color:#D73A49">=</span><span style="color:#24292E">{reducedMotion </span><span style="color:#D73A49">?</span><span style="color:#005CC5"> undefined</span><span style="color:#D73A49"> :</span><span style="color:#24292E"> { animationDelay: </span><span style="color:#032F62">\`\${</span><span style="color:#24292E">delays</span><span style="color:#032F62">.</span><span style="color:#24292E">premieresRail</span><span style="color:#032F62">}ms\`</span><span style="color:#24292E"> }}</span></span>
+<span class="line"><span style="color:#24292E">      ></span></span>
+<span class="line"><span style="color:#24292E">        {reducedMotion </span><span style="color:#D73A49">?</span><span style="color:#24292E"> (</span></span>
+<span class="line"><span style="color:#24292E">          &#x3C;</span><span style="color:#005CC5">CinemaContent</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"overflow-x-auto overscroll-x-contain pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&#x26;::-webkit-scrollbar]:hidden"</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">            &#x3C;</span><span style="color:#22863A">div</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"flex w-max gap-4 sm:gap-5"</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">              {</span><span style="color:#005CC5">PREMIERES</span><span style="color:#24292E">.</span><span style="color:#6F42C1">map</span><span style="color:#24292E">((</span><span style="color:#E36209">film</span><span style="color:#24292E">) </span><span style="color:#D73A49">=></span><span style="color:#24292E"> (</span></span>
+<span class="line"><span style="color:#24292E">                &#x3C;</span><span style="color:#005CC5">PosterCard</span><span style="color:#6F42C1"> key</span><span style="color:#D73A49">=</span><span style="color:#24292E">{film.title} {</span><span style="color:#D73A49">...</span><span style="color:#24292E">film} /></span></span>
+<span class="line"><span style="color:#24292E">              ))}</span></span>
+<span class="line"><span style="color:#24292E">            &#x3C;/</span><span style="color:#22863A">div</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">          &#x3C;/</span><span style="color:#005CC5">CinemaContent</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">        ) </span><span style="color:#D73A49">:</span><span style="color:#24292E"> (</span></span>
+<span class="line"><span style="color:#24292E">          &#x3C;</span><span style="color:#22863A">div</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_5%,black_95%,transparent)] [-webkit-mask-image:linear-gradient(to_right,transparent,black_5%,black_95%,transparent)]"</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">            &#x3C;</span><span style="color:#005CC5">Marquee</span></span>
+<span class="line"><span style="color:#6F42C1">              pauseOnHover</span></span>
+<span class="line"><span style="color:#6F42C1">              applyMask</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#005CC5">false</span><span style="color:#24292E">}</span></span>
+<span class="line"><span style="color:#6F42C1">              className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"py-1 pl-5 [--duration:38s] [--gap:1rem] sm:pl-8 sm:[--gap:1.25rem]"</span></span>
+<span class="line"><span style="color:#24292E">            ></span></span>
+<span class="line"><span style="color:#24292E">              {</span><span style="color:#005CC5">PREMIERES</span><span style="color:#24292E">.</span><span style="color:#6F42C1">map</span><span style="color:#24292E">((</span><span style="color:#E36209">film</span><span style="color:#24292E">) </span><span style="color:#D73A49">=></span><span style="color:#24292E"> (</span></span>
+<span class="line"><span style="color:#24292E">                &#x3C;</span><span style="color:#005CC5">PosterCard</span><span style="color:#6F42C1"> key</span><span style="color:#D73A49">=</span><span style="color:#24292E">{film.title} {</span><span style="color:#D73A49">...</span><span style="color:#24292E">film} /></span></span>
+<span class="line"><span style="color:#24292E">              ))}</span></span>
+<span class="line"><span style="color:#24292E">            &#x3C;/</span><span style="color:#005CC5">Marquee</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">          &#x3C;/</span><span style="color:#22863A">div</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">        )}</span></span>
+<span class="line"><span style="color:#24292E">      &#x3C;/</span><span style="color:#22863A">div</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">    &#x3C;/</span><span style="color:#22863A">section</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">  );</span></span>
+<span class="line"><span style="color:#24292E">}</span></span>
+<span class="line"><span style="color:#D73A49">function</span><span style="color:#6F42C1"> HeroPremiereCopy</span><span style="color:#24292E">({ </span><span style="color:#E36209">reducedMotion</span><span style="color:#24292E"> }</span><span style="color:#D73A49">:</span><span style="color:#24292E"> { </span><span style="color:#E36209">reducedMotion</span><span style="color:#D73A49">:</span><span style="color:#005CC5"> boolean</span><span style="color:#24292E"> }) {</span></span>
+<span class="line"><span style="color:#D73A49">  const</span><span style="color:#005CC5"> delays</span><span style="color:#D73A49"> =</span><span style="color:#6F42C1"> heroSequenceDelays</span><span style="color:#24292E">();</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49">  if</span><span style="color:#24292E"> (reducedMotion) {</span></span>
+<span class="line"><span style="color:#D73A49">    return</span><span style="color:#24292E"> (</span></span>
+<span class="line"><span style="color:#24292E">      &#x3C;></span></span>
+<span class="line"><span style="color:#24292E">        &#x3C;</span><span style="color:#22863A">p</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"text-[13px] font-medium tracking-[0.08em] text-white/45 uppercase"</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">          {</span><span style="color:#005CC5">FEATURED</span><span style="color:#24292E">.eyebrow}</span></span>
+<span class="line"><span style="color:#24292E">        &#x3C;/</span><span style="color:#22863A">p</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">        &#x3C;</span><span style="color:#22863A">h1</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"mt-3 max-w-[11ch] -translate-x-[0.13ex] text-balance text-[clamp(3.25rem,14vw,7.5rem)] leading-[0.9] font-semibold tracking-[-0.045em]"</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">          {</span><span style="color:#005CC5">FEATURED</span><span style="color:#24292E">.title}</span></span>
+<span class="line"><span style="color:#24292E">        &#x3C;/</span><span style="color:#22863A">h1</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">        &#x3C;</span><span style="color:#22863A">p</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"mt-5 max-w-[28ch] text-[17px] leading-snug text-white/58 sm:text-[19px]"</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">          {</span><span style="color:#005CC5">FEATURED</span><span style="color:#24292E">.tagline}</span></span>
+<span class="line"><span style="color:#24292E">        &#x3C;/</span><span style="color:#22863A">p</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">        &#x3C;</span><span style="color:#22863A">p</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"mt-3 text-[13px] text-white/38"</span><span style="color:#24292E">>{</span><span style="color:#005CC5">FEATURED</span><span style="color:#24292E">.runtime}&#x3C;/</span><span style="color:#22863A">p</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">        &#x3C;</span><span style="color:#22863A">div</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"mt-8 flex flex-wrap items-center gap-3"</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">          &#x3C;</span><span style="color:#22863A">button</span></span>
+<span class="line"><span style="color:#6F42C1">            type</span><span style="color:#D73A49">=</span><span style="color:#032F62">"button"</span></span>
+<span class="line"><span style="color:#6F42C1">            className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"inline-flex h-11 touch-manipulation items-center gap-2 rounded-full bg-white px-6 text-[14px] font-semibold text-black transition-transform active:scale-[0.98]"</span></span>
+<span class="line"><span style="color:#24292E">          ></span></span>
+<span class="line"><span style="color:#24292E">            &#x3C;</span><span style="color:#005CC5">PlayIcon</span><span style="color:#6F42C1"> aria-hidden</span><span style="color:#D73A49">=</span><span style="color:#032F62">"true"</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"size-4 fill-current"</span><span style="color:#24292E"> /></span></span>
+<span class="line"><span style="color:#24292E">            Play</span></span>
+<span class="line"><span style="color:#24292E">          &#x3C;/</span><span style="color:#22863A">button</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">          &#x3C;</span><span style="color:#22863A">button</span></span>
+<span class="line"><span style="color:#6F42C1">            type</span><span style="color:#D73A49">=</span><span style="color:#032F62">"button"</span></span>
+<span class="line"><span style="color:#6F42C1">            className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"inline-flex h-11 touch-manipulation items-center justify-center rounded-full border border-white/18 bg-white/[0.04] px-6 text-[14px] font-medium text-white/78 transition-colors hover:bg-white/[0.08] active:scale-[0.98]"</span></span>
+<span class="line"><span style="color:#24292E">          ></span></span>
+<span class="line"><span style="color:#24292E">            Add to Up Next</span></span>
+<span class="line"><span style="color:#24292E">          &#x3C;/</span><span style="color:#22863A">button</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">        &#x3C;/</span><span style="color:#22863A">div</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">      &#x3C;/></span></span>
+<span class="line"><span style="color:#24292E">    );</span></span>
+<span class="line"><span style="color:#24292E">  }</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49">  return</span><span style="color:#24292E"> (</span></span>
+<span class="line"><span style="color:#24292E">    &#x3C;></span></span>
+<span class="line"><span style="color:#24292E">      &#x3C;</span><span style="color:#22863A">p</span></span>
+<span class="line"><span style="color:#6F42C1">        className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"cinema-hero-rise text-[13px] font-medium tracking-[0.08em] text-white/45 uppercase"</span></span>
+<span class="line"><span style="color:#6F42C1">        style</span><span style="color:#D73A49">=</span><span style="color:#24292E">{{ animationDelay: </span><span style="color:#032F62">\`\${</span><span style="color:#24292E">delays</span><span style="color:#032F62">.</span><span style="color:#24292E">eyebrow</span><span style="color:#032F62">}ms\`</span><span style="color:#24292E"> }}</span></span>
+<span class="line"><span style="color:#24292E">      ></span></span>
+<span class="line"><span style="color:#24292E">        {</span><span style="color:#005CC5">FEATURED</span><span style="color:#24292E">.eyebrow}</span></span>
+<span class="line"><span style="color:#24292E">      &#x3C;/</span><span style="color:#22863A">p</span><span style="color:#24292E">></span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#24292E">      &#x3C;</span><span style="color:#22863A">h1</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"mt-3 text-balance leading-[0.9]"</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">        &#x3C;</span><span style="color:#005CC5">WaveReveal</span></span>
+<span class="line"><span style="color:#6F42C1">          text</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#005CC5">FEATURED</span><span style="color:#24292E">.title}</span></span>
+<span class="line"><span style="color:#6F42C1">          mode</span><span style="color:#D73A49">=</span><span style="color:#032F62">"word"</span></span>
+<span class="line"><span style="color:#6F42C1">          direction</span><span style="color:#D73A49">=</span><span style="color:#032F62">"up"</span></span>
+<span class="line"><span style="color:#6F42C1">          blur</span></span>
+<span class="line"><span style="color:#6F42C1">          duration</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#032F62">\`\${</span><span style="color:#005CC5">HERO_WORD_DURATION_MS</span><span style="color:#032F62">}ms\`</span><span style="color:#24292E">}</span></span>
+<span class="line"><span style="color:#6F42C1">          delay</span><span style="color:#D73A49">=</span><span style="color:#24292E">{delays.title}</span></span>
+<span class="line"><span style="color:#6F42C1">          className</span><span style="color:#D73A49">=</span><span style="color:#032F62">" -translate-x-[0.13ex] justify-start px-0 text-left font-semibold tracking-[-0.02em] text-[clamp(3.25rem,14vw,7.5rem)] md:px-0 md:text-[clamp(3.25rem,14vw,7.5rem)]"</span></span>
+<span class="line"><span style="color:#24292E">        /></span></span>
+<span class="line"><span style="color:#24292E">      &#x3C;/</span><span style="color:#22863A">h1</span><span style="color:#24292E">></span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#24292E">      &#x3C;</span><span style="color:#22863A">p</span></span>
+<span class="line"><span style="color:#6F42C1">        className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"cinema-hero-rise mt-5 max-w-[28ch] text-[17px] leading-snug text-white/58 sm:text-[19px]"</span></span>
+<span class="line"><span style="color:#6F42C1">        style</span><span style="color:#D73A49">=</span><span style="color:#24292E">{{ animationDelay: </span><span style="color:#032F62">\`\${</span><span style="color:#24292E">delays</span><span style="color:#032F62">.</span><span style="color:#24292E">tagline</span><span style="color:#032F62">}ms\`</span><span style="color:#24292E"> }}</span></span>
+<span class="line"><span style="color:#24292E">      ></span></span>
+<span class="line"><span style="color:#24292E">        {</span><span style="color:#005CC5">FEATURED</span><span style="color:#24292E">.tagline}</span></span>
+<span class="line"><span style="color:#24292E">      &#x3C;/</span><span style="color:#22863A">p</span><span style="color:#24292E">></span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#24292E">      &#x3C;</span><span style="color:#22863A">p</span></span>
+<span class="line"><span style="color:#6F42C1">        className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"cinema-hero-rise mt-3 text-[13px] text-white/38"</span></span>
+<span class="line"><span style="color:#6F42C1">        style</span><span style="color:#D73A49">=</span><span style="color:#24292E">{{ animationDelay: </span><span style="color:#032F62">\`\${</span><span style="color:#24292E">delays</span><span style="color:#032F62">.</span><span style="color:#24292E">runtime</span><span style="color:#032F62">}ms\`</span><span style="color:#24292E"> }}</span></span>
+<span class="line"><span style="color:#24292E">      ></span></span>
+<span class="line"><span style="color:#24292E">        {</span><span style="color:#005CC5">FEATURED</span><span style="color:#24292E">.runtime}</span></span>
+<span class="line"><span style="color:#24292E">      &#x3C;/</span><span style="color:#22863A">p</span><span style="color:#24292E">></span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#24292E">      &#x3C;</span><span style="color:#22863A">div</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"mt-8 flex flex-wrap items-center gap-3"</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">        &#x3C;</span><span style="color:#22863A">button</span></span>
+<span class="line"><span style="color:#6F42C1">          type</span><span style="color:#D73A49">=</span><span style="color:#032F62">"button"</span></span>
+<span class="line"><span style="color:#6F42C1">          className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"cinema-hero-rise inline-flex h-11 touch-manipulation items-center gap-2 rounded-full bg-white px-6 text-[14px] font-semibold text-black transition-transform active:scale-[0.98]"</span></span>
+<span class="line"><span style="color:#6F42C1">          style</span><span style="color:#D73A49">=</span><span style="color:#24292E">{{ animationDelay: </span><span style="color:#032F62">\`\${</span><span style="color:#24292E">delays</span><span style="color:#032F62">.</span><span style="color:#24292E">ctaPrimary</span><span style="color:#032F62">}ms\`</span><span style="color:#24292E"> }}</span></span>
+<span class="line"><span style="color:#24292E">        ></span></span>
+<span class="line"><span style="color:#24292E">          &#x3C;</span><span style="color:#005CC5">PlayIcon</span><span style="color:#6F42C1"> aria-hidden</span><span style="color:#D73A49">=</span><span style="color:#032F62">"true"</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"size-4 fill-current"</span><span style="color:#24292E"> /></span></span>
+<span class="line"><span style="color:#24292E">          Play</span></span>
+<span class="line"><span style="color:#24292E">        &#x3C;/</span><span style="color:#22863A">button</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">        &#x3C;</span><span style="color:#22863A">button</span></span>
+<span class="line"><span style="color:#6F42C1">          type</span><span style="color:#D73A49">=</span><span style="color:#032F62">"button"</span></span>
+<span class="line"><span style="color:#6F42C1">          className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"cinema-hero-rise inline-flex h-11 touch-manipulation items-center justify-center rounded-full border border-white/18 bg-white/[0.04] px-6 text-[14px] font-medium text-white/78 transition-colors hover:bg-white/[0.08] active:scale-[0.98]"</span></span>
+<span class="line"><span style="color:#6F42C1">          style</span><span style="color:#D73A49">=</span><span style="color:#24292E">{{ animationDelay: </span><span style="color:#032F62">\`\${</span><span style="color:#24292E">delays</span><span style="color:#032F62">.</span><span style="color:#24292E">ctaSecondary</span><span style="color:#032F62">}ms\`</span><span style="color:#24292E"> }}</span></span>
+<span class="line"><span style="color:#24292E">        ></span></span>
+<span class="line"><span style="color:#24292E">          Add to Up Next</span></span>
+<span class="line"><span style="color:#24292E">        &#x3C;/</span><span style="color:#22863A">button</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">      &#x3C;/</span><span style="color:#22863A">div</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">    &#x3C;/></span></span>
+<span class="line"><span style="color:#24292E">  );</span></span>
+<span class="line"><span style="color:#24292E">}</span></span>
+<span class="line"></span>
 <span class="line"><span style="color:#D73A49">function</span><span style="color:#6F42C1"> CraftFeaturePanel</span><span style="color:#24292E">({ </span><span style="color:#E36209">reducedMotion</span><span style="color:#24292E"> }</span><span style="color:#D73A49">:</span><span style="color:#24292E"> { </span><span style="color:#E36209">reducedMotion</span><span style="color:#D73A49">:</span><span style="color:#005CC5"> boolean</span><span style="color:#24292E"> }) {</span></span>
 <span class="line"><span style="color:#D73A49">  return</span><span style="color:#24292E"> (</span></span>
 <span class="line"><span style="color:#24292E">    &#x3C;</span><span style="color:#22863A">div</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"@container overflow-hidden rounded-[1.35rem] border border-white/10 bg-[oklch(0.12_0.025_285)] shadow-[inset_0_1px_0_oklch(1_0_0/0.05)]"</span><span style="color:#24292E">></span></span>
-<span class="line"><span style="color:#24292E">      &#x3C;</span><span style="color:#22863A">div</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"grid md:grid-cols-[minmax(0,11.5rem)_minmax(0,1fr)] lg:grid-cols-[minmax(0,15rem)_minmax(0,1fr)]"</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">      &#x3C;</span><span style="color:#22863A">div</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"grid md:grid-cols-[1fr_auto]"</span><span style="color:#24292E">></span></span>
 <span class="line"><span style="color:#24292E">        &#x3C;</span><span style="color:#22863A">div</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"flex flex-col justify-end gap-3 border-b border-white/8 p-5 sm:p-6 md:border-r md:border-b-0 md:p-6 lg:p-8"</span><span style="color:#24292E">></span></span>
 <span class="line"><span style="color:#24292E">          &#x3C;</span><span style="color:#22863A">p</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"text-[13px] font-medium tracking-[0.08em] text-white/42 uppercase"</span><span style="color:#24292E">></span></span>
 <span class="line"><span style="color:#24292E">            The craft</span></span>
@@ -1651,14 +1938,14 @@ export default function CinemaRow() {
 <span class="line"><span style="color:#6F42C1">            id</span><span style="color:#D73A49">=</span><span style="color:#032F62">"editorial-heading"</span></span>
 <span class="line"><span style="color:#6F42C1">            className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"text-balance text-[clamp(1.5rem,4.5cqi,2.25rem)] leading-[1.08] font-semibold tracking-[-0.03em]"</span></span>
 <span class="line"><span style="color:#24292E">          ></span></span>
-<span class="line"><span style="color:#24292E">            Big-screen rhythm. Living-room scale.</span></span>
+<span class="line"><span style="color:#24292E">            Built for the big screen. Fine on your couch.</span></span>
 <span class="line"><span style="color:#24292E">          &#x3C;/</span><span style="color:#22863A">h2</span><span style="color:#24292E">></span></span>
 <span class="line"><span style="color:#24292E">          &#x3C;</span><span style="color:#22863A">p</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"text-[14px] leading-relaxed text-white/52 sm:text-[15px]"</span><span style="color:#24292E">></span></span>
-<span class="line"><span style="color:#24292E">            Three motion layers — hero, rail, twin columns — one browse page.</span></span>
+<span class="line"><span style="color:#24292E">            Hero, poster row, two still columns — same page, different speeds.</span></span>
 <span class="line"><span style="color:#24292E">          &#x3C;/</span><span style="color:#22863A">p</span><span style="color:#24292E">></span></span>
 <span class="line"><span style="color:#24292E">        &#x3C;/</span><span style="color:#22863A">div</span><span style="color:#24292E">></span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#24292E">        &#x3C;</span><span style="color:#22863A">div</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"min-h-[18rem] p-2.5 sm:min-h-[22rem] sm:p-3 md:min-h-[min(26rem,46vh)]"</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">        &#x3C;</span><span style="color:#22863A">div</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"max-h-[18rem] px-4x"</span><span style="color:#24292E">></span></span>
 <span class="line"><span style="color:#24292E">          &#x3C;</span><span style="color:#005CC5">VerticalStillGallery</span><span style="color:#6F42C1"> reducedMotion</span><span style="color:#D73A49">=</span><span style="color:#24292E">{reducedMotion} </span><span style="color:#6F42C1">className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"h-full"</span><span style="color:#24292E"> /></span></span>
 <span class="line"><span style="color:#24292E">        &#x3C;/</span><span style="color:#22863A">div</span><span style="color:#24292E">></span></span>
 <span class="line"><span style="color:#24292E">      &#x3C;/</span><span style="color:#22863A">div</span><span style="color:#24292E">></span></span>
@@ -1679,6 +1966,7 @@ export default function CinemaRow() {
 <span class="line"></span>
 <span class="line"><span style="color:#D73A49">  return</span><span style="color:#24292E"> (</span></span>
 <span class="line"><span style="color:#24292E">    &#x3C;></span></span>
+<span class="line"><span style="color:#24292E">      &#x3C;</span><span style="color:#005CC5">CinemaEntranceStyles</span><span style="color:#24292E"> /></span></span>
 <span class="line"><span style="color:#24292E">      &#x3C;</span><span style="color:#22863A">div</span></span>
 <span class="line"><span style="color:#6F42C1">        className</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#6F42C1">cn</span><span style="color:#24292E">(</span></span>
 <span class="line"><span style="color:#24292E">          sans.variable,</span></span>
@@ -1688,25 +1976,6 @@ export default function CinemaRow() {
 <span class="line"><span style="color:#24292E">      ></span></span>
 <span class="line"><span style="color:#24292E">        {</span><span style="color:#6A737D">/* Hero — backdrop marquee + premiere type */</span><span style="color:#24292E">}</span></span>
 <span class="line"><span style="color:#24292E">        &#x3C;</span><span style="color:#22863A">section</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"relative isolate overflow-hidden"</span><span style="color:#24292E">></span></span>
-<span class="line"><span style="color:#24292E">          &#x3C;</span><span style="color:#22863A">div</span><span style="color:#6F42C1"> aria-hidden</span><span style="color:#D73A49">=</span><span style="color:#032F62">"true"</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"absolute inset-0 overflow-hidden"</span><span style="color:#24292E">></span></span>
-<span class="line"><span style="color:#24292E">            {reducedMotion </span><span style="color:#D73A49">?</span><span style="color:#24292E"> (</span></span>
-<span class="line"><span style="color:#24292E">              &#x3C;</span><span style="color:#22863A">img</span></span>
-<span class="line"><span style="color:#6F42C1">                src</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#005CC5">FEATURED</span><span style="color:#24292E">.backdrop}</span></span>
-<span class="line"><span style="color:#6F42C1">                alt</span><span style="color:#D73A49">=</span><span style="color:#032F62">""</span></span>
-<span class="line"><span style="color:#6F42C1">                className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"h-full w-full object-cover object-[50%_20%] opacity-40"</span></span>
-<span class="line"><span style="color:#24292E">              /></span></span>
-<span class="line"><span style="color:#24292E">            ) </span><span style="color:#D73A49">:</span><span style="color:#24292E"> (</span></span>
-<span class="line"><span style="color:#24292E">              &#x3C;</span><span style="color:#005CC5">Marquee</span></span>
-<span class="line"><span style="color:#6F42C1">                pauseOnHover</span></span>
-<span class="line"><span style="color:#6F42C1">                applyMask</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#005CC5">false</span><span style="color:#24292E">}</span></span>
-<span class="line"><span style="color:#6F42C1">                className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"h-full [--duration:48s] [--gap:0px]"</span></span>
-<span class="line"><span style="color:#24292E">              ></span></span>
-<span class="line"><span style="color:#24292E">                {</span><span style="color:#005CC5">HERO_BACKDROPS</span><span style="color:#24292E">.</span><span style="color:#6F42C1">map</span><span style="color:#24292E">((</span><span style="color:#E36209">slide</span><span style="color:#24292E">) </span><span style="color:#D73A49">=></span><span style="color:#24292E"> (</span></span>
-<span class="line"><span style="color:#24292E">                  &#x3C;</span><span style="color:#005CC5">BackdropSlide</span><span style="color:#6F42C1"> key</span><span style="color:#D73A49">=</span><span style="color:#24292E">{slide.title} {</span><span style="color:#D73A49">...</span><span style="color:#24292E">slide} /></span></span>
-<span class="line"><span style="color:#24292E">                ))}</span></span>
-<span class="line"><span style="color:#24292E">              &#x3C;/</span><span style="color:#005CC5">Marquee</span><span style="color:#24292E">></span></span>
-<span class="line"><span style="color:#24292E">            )}</span></span>
-<span class="line"><span style="color:#24292E">          &#x3C;/</span><span style="color:#22863A">div</span><span style="color:#24292E">></span></span>
 <span class="line"><span style="color:#24292E">          &#x3C;</span><span style="color:#22863A">div</span></span>
 <span class="line"><span style="color:#6F42C1">            aria-hidden</span><span style="color:#D73A49">=</span><span style="color:#032F62">"true"</span></span>
 <span class="line"><span style="color:#6F42C1">            className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_120%_80%_at_50%_-10%,oklch(0.28_0.08_280_/_0.55)_0%,transparent_58%),linear-gradient(to_bottom,oklch(0.12_0.02_280)_0%,black_72%)]"</span></span>
@@ -1717,66 +1986,11 @@ export default function CinemaRow() {
 <span class="line"><span style="color:#24292E">          /></span></span>
 <span class="line"></span>
 <span class="line"><span style="color:#24292E">          &#x3C;</span><span style="color:#005CC5">CinemaContent</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"relative z-10 flex min-h-[min(88svh,920px)] flex-col justify-end pb-[calc(var(--demo-chrome-reserve,5rem)+2.5rem)] pt-[max(1.25rem,env(safe-area-inset-top))]"</span><span style="color:#24292E">></span></span>
-<span class="line"><span style="color:#24292E">            &#x3C;</span><span style="color:#22863A">p</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"text-[13px] font-medium tracking-[0.08em] text-white/45 uppercase"</span><span style="color:#24292E">></span></span>
-<span class="line"><span style="color:#24292E">              {</span><span style="color:#005CC5">FEATURED</span><span style="color:#24292E">.eyebrow}</span></span>
-<span class="line"><span style="color:#24292E">            &#x3C;/</span><span style="color:#22863A">p</span><span style="color:#24292E">></span></span>
-<span class="line"><span style="color:#24292E">            {reducedMotion </span><span style="color:#D73A49">?</span><span style="color:#24292E"> (</span></span>
-<span class="line"><span style="color:#24292E">              &#x3C;</span><span style="color:#22863A">h1</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"mt-3 max-w-[11ch] -translate-x-[0.13ex] text-balance text-[clamp(3.25rem,14vw,7.5rem)] leading-[0.9] font-semibold tracking-[-0.045em]"</span><span style="color:#24292E">></span></span>
-<span class="line"><span style="color:#24292E">                {</span><span style="color:#005CC5">FEATURED</span><span style="color:#24292E">.title}</span></span>
-<span class="line"><span style="color:#24292E">              &#x3C;/</span><span style="color:#22863A">h1</span><span style="color:#24292E">></span></span>
-<span class="line"><span style="color:#24292E">            ) </span><span style="color:#D73A49">:</span><span style="color:#24292E"> (</span></span>
-<span class="line"><span style="color:#24292E">              &#x3C;</span><span style="color:#22863A">div</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"mt-3 max-w-[11ch] -translate-x-[0.13ex]"</span><span style="color:#24292E">></span></span>
-<span class="line"><span style="color:#24292E">                &#x3C;</span><span style="color:#005CC5">FocusBlurResolve</span></span>
-<span class="line"><span style="color:#6F42C1">                  text</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#005CC5">FEATURED</span><span style="color:#24292E">.title}</span></span>
-<span class="line"><span style="color:#6F42C1">                  holdMs</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#005CC5">12000</span><span style="color:#24292E">}</span></span>
-<span class="line"><span style="color:#6F42C1">                  gapMs</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#005CC5">2400</span><span style="color:#24292E">}</span></span>
-<span class="line"><span style="color:#6F42C1">                  className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"aspect-auto h-auto w-full items-start justify-start overflow-visible text-white"</span></span>
-<span class="line"><span style="color:#6F42C1">                  stageClassName</span><span style="color:#D73A49">=</span><span style="color:#032F62">"relative inset-auto h-auto min-h-0 w-full place-items-start p-0"</span></span>
-<span class="line"><span style="color:#6F42C1">                  titleClassName</span><span style="color:#D73A49">=</span><span style="color:#032F62">"!text-left !font-semibold !tracking-[-0.045em] !text-[clamp(3.25rem,14vw,7.5rem)] !leading-[0.9]"</span></span>
-<span class="line"><span style="color:#24292E">                /></span></span>
-<span class="line"><span style="color:#24292E">                &#x3C;</span><span style="color:#22863A">h1</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"sr-only"</span><span style="color:#24292E">>{</span><span style="color:#005CC5">FEATURED</span><span style="color:#24292E">.title}&#x3C;/</span><span style="color:#22863A">h1</span><span style="color:#24292E">></span></span>
-<span class="line"><span style="color:#24292E">              &#x3C;/</span><span style="color:#22863A">div</span><span style="color:#24292E">></span></span>
-<span class="line"><span style="color:#24292E">            )}</span></span>
-<span class="line"><span style="color:#24292E">            &#x3C;</span><span style="color:#22863A">p</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"mt-5 max-w-[28ch] text-[17px] leading-snug text-white/58 sm:text-[19px]"</span><span style="color:#24292E">></span></span>
-<span class="line"><span style="color:#24292E">              {</span><span style="color:#005CC5">FEATURED</span><span style="color:#24292E">.tagline}</span></span>
-<span class="line"><span style="color:#24292E">            &#x3C;/</span><span style="color:#22863A">p</span><span style="color:#24292E">></span></span>
-<span class="line"><span style="color:#24292E">            &#x3C;</span><span style="color:#22863A">p</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"mt-3 text-[13px] text-white/38"</span><span style="color:#24292E">>{</span><span style="color:#005CC5">FEATURED</span><span style="color:#24292E">.runtime}&#x3C;/</span><span style="color:#22863A">p</span><span style="color:#24292E">></span></span>
-<span class="line"></span>
-<span class="line"><span style="color:#24292E">            &#x3C;</span><span style="color:#22863A">div</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"mt-8 flex flex-wrap items-center gap-3"</span><span style="color:#24292E">></span></span>
-<span class="line"><span style="color:#24292E">              &#x3C;</span><span style="color:#22863A">button</span></span>
-<span class="line"><span style="color:#6F42C1">                type</span><span style="color:#D73A49">=</span><span style="color:#032F62">"button"</span></span>
-<span class="line"><span style="color:#6F42C1">                className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"inline-flex h-11 touch-manipulation items-center gap-2 rounded-full bg-white px-6 text-[14px] font-semibold text-black transition-transform active:scale-[0.98]"</span></span>
-<span class="line"><span style="color:#24292E">              ></span></span>
-<span class="line"><span style="color:#24292E">                &#x3C;</span><span style="color:#005CC5">PlayIcon</span><span style="color:#6F42C1"> aria-hidden</span><span style="color:#D73A49">=</span><span style="color:#032F62">"true"</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"size-4 fill-current"</span><span style="color:#24292E"> /></span></span>
-<span class="line"><span style="color:#24292E">                Play</span></span>
-<span class="line"><span style="color:#24292E">              &#x3C;/</span><span style="color:#22863A">button</span><span style="color:#24292E">></span></span>
-<span class="line"><span style="color:#24292E">              &#x3C;</span><span style="color:#22863A">button</span></span>
-<span class="line"><span style="color:#6F42C1">                type</span><span style="color:#D73A49">=</span><span style="color:#032F62">"button"</span></span>
-<span class="line"><span style="color:#6F42C1">                className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"inline-flex h-11 touch-manipulation items-center justify-center rounded-full border border-white/18 bg-white/[0.04] px-6 text-[14px] font-medium text-white/78 transition-colors hover:bg-white/[0.08] active:scale-[0.98]"</span></span>
-<span class="line"><span style="color:#24292E">              ></span></span>
-<span class="line"><span style="color:#24292E">                Add to Up Next</span></span>
-<span class="line"><span style="color:#24292E">              &#x3C;/</span><span style="color:#22863A">button</span><span style="color:#24292E">></span></span>
-<span class="line"><span style="color:#24292E">            &#x3C;/</span><span style="color:#22863A">div</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">            &#x3C;</span><span style="color:#005CC5">HeroPremiereCopy</span><span style="color:#6F42C1"> reducedMotion</span><span style="color:#D73A49">=</span><span style="color:#24292E">{reducedMotion} /></span></span>
 <span class="line"><span style="color:#24292E">          &#x3C;/</span><span style="color:#005CC5">CinemaContent</span><span style="color:#24292E">></span></span>
 <span class="line"><span style="color:#24292E">        &#x3C;/</span><span style="color:#22863A">section</span><span style="color:#24292E">></span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#24292E">        {</span><span style="color:#6A737D">/* Horizontal poster row */</span><span style="color:#24292E">}</span></span>
-<span class="line"><span style="color:#24292E">        &#x3C;</span><span style="color:#22863A">section</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"pb-6 pt-2"</span><span style="color:#6F42C1"> aria-labelledby</span><span style="color:#D73A49">=</span><span style="color:#032F62">"premieres-heading"</span><span style="color:#24292E">></span></span>
-<span class="line"><span style="color:#24292E">          &#x3C;</span><span style="color:#005CC5">CinemaContent</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"mb-4 flex items-end justify-between gap-4"</span><span style="color:#24292E">></span></span>
-<span class="line"><span style="color:#24292E">            &#x3C;</span><span style="color:#22863A">h2</span><span style="color:#6F42C1"> id</span><span style="color:#D73A49">=</span><span style="color:#032F62">"premieres-heading"</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"text-[22px] font-semibold tracking-[-0.02em]"</span><span style="color:#24292E">></span></span>
-<span class="line"><span style="color:#24292E">              Premieres</span></span>
-<span class="line"><span style="color:#24292E">            &#x3C;/</span><span style="color:#22863A">h2</span><span style="color:#24292E">></span></span>
-<span class="line"><span style="color:#24292E">            &#x3C;</span><span style="color:#22863A">span</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"text-[13px] text-white/38"</span><span style="color:#24292E">>Swipe&#x3C;/</span><span style="color:#22863A">span</span><span style="color:#24292E">></span></span>
-<span class="line"><span style="color:#24292E">          &#x3C;/</span><span style="color:#005CC5">CinemaContent</span><span style="color:#24292E">></span></span>
-<span class="line"></span>
-<span class="line"><span style="color:#24292E">          &#x3C;</span><span style="color:#005CC5">CinemaContent</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"overflow-x-auto overscroll-x-contain pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&#x26;::-webkit-scrollbar]:hidden"</span><span style="color:#24292E">></span></span>
-<span class="line"><span style="color:#24292E">            &#x3C;</span><span style="color:#22863A">div</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"flex w-max snap-x snap-mandatory gap-4 sm:gap-5"</span><span style="color:#24292E">></span></span>
-<span class="line"><span style="color:#24292E">              {</span><span style="color:#005CC5">PREMIERES</span><span style="color:#24292E">.</span><span style="color:#6F42C1">map</span><span style="color:#24292E">((</span><span style="color:#E36209">film</span><span style="color:#24292E">) </span><span style="color:#D73A49">=></span><span style="color:#24292E"> (</span></span>
-<span class="line"><span style="color:#24292E">                &#x3C;</span><span style="color:#005CC5">PosterCard</span><span style="color:#6F42C1"> key</span><span style="color:#D73A49">=</span><span style="color:#24292E">{film.title} {</span><span style="color:#D73A49">...</span><span style="color:#24292E">film} /></span></span>
-<span class="line"><span style="color:#24292E">              ))}</span></span>
-<span class="line"><span style="color:#24292E">            &#x3C;/</span><span style="color:#22863A">div</span><span style="color:#24292E">></span></span>
-<span class="line"><span style="color:#24292E">          &#x3C;/</span><span style="color:#005CC5">CinemaContent</span><span style="color:#24292E">></span></span>
-<span class="line"><span style="color:#24292E">        &#x3C;/</span><span style="color:#22863A">section</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">        &#x3C;</span><span style="color:#005CC5">PremieresSection</span><span style="color:#6F42C1"> reducedMotion</span><span style="color:#D73A49">=</span><span style="color:#24292E">{reducedMotion} /></span></span>
 <span class="line"></span>
 <span class="line"><span style="color:#24292E">        {</span><span style="color:#6A737D">/* Editorial + opposing vertical still marquees */</span><span style="color:#24292E">}</span></span>
 <span class="line"><span style="color:#24292E">        &#x3C;</span><span style="color:#22863A">section</span></span>
@@ -1800,8 +2014,8 @@ export default function CinemaRow() {
 <span class="line"><span style="color:#F97583">import</span><span style="color:#E1E4E8"> { IBM_Plex_Sans } </span><span style="color:#F97583">from</span><span style="color:#9ECBFF"> "next/font/google"</span><span style="color:#E1E4E8">;</span></span>
 <span class="line"><span style="color:#F97583">import</span><span style="color:#E1E4E8"> { useEffect, useState } </span><span style="color:#F97583">from</span><span style="color:#9ECBFF"> "react"</span><span style="color:#E1E4E8">;</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#F97583">import</span><span style="color:#E1E4E8"> FocusBlurResolve </span><span style="color:#F97583">from</span><span style="color:#9ECBFF"> "@/animata/text/focus-blur-resolve"</span><span style="color:#E1E4E8">;</span></span>
 <span class="line"><span style="color:#F97583">import</span><span style="color:#E1E4E8"> Marquee </span><span style="color:#F97583">from</span><span style="color:#9ECBFF"> "@/animata/container/marquee"</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#F97583">import</span><span style="color:#E1E4E8"> WaveReveal </span><span style="color:#F97583">from</span><span style="color:#9ECBFF"> "@/animata/text/wave-reveal"</span><span style="color:#E1E4E8">;</span></span>
 <span class="line"><span style="color:#F97583">import</span><span style="color:#E1E4E8"> { cn } </span><span style="color:#F97583">from</span><span style="color:#9ECBFF"> "@/lib/utils"</span><span style="color:#E1E4E8">;</span></span>
 <span class="line"></span>
 <span class="line"><span style="color:#F97583">import</span><span style="color:#E1E4E8"> { CinemaRowNotes } </span><span style="color:#F97583">from</span><span style="color:#9ECBFF"> "./cinema-row-notes"</span><span style="color:#E1E4E8">;</span></span>
@@ -1819,10 +2033,58 @@ export default function CinemaRow() {
 <span class="line"><span style="color:#F97583">const</span><span style="color:#79B8FF"> FEATURED</span><span style="color:#F97583"> =</span><span style="color:#E1E4E8"> {</span></span>
 <span class="line"><span style="color:#E1E4E8">  eyebrow: </span><span style="color:#9ECBFF">"Now streaming"</span><span style="color:#E1E4E8">,</span></span>
 <span class="line"><span style="color:#E1E4E8">  title: </span><span style="color:#9ECBFF">"Dune: Part Two"</span><span style="color:#E1E4E8">,</span></span>
-<span class="line"><span style="color:#E1E4E8">  tagline: </span><span style="color:#9ECBFF">"The desert remembers. So does Paul."</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">  tagline: </span><span style="color:#9ECBFF">"Paul goes back to Arrakis. The desert hasn't forgotten him."</span><span style="color:#E1E4E8">,</span></span>
 <span class="line"><span style="color:#E1E4E8">  runtime: </span><span style="color:#9ECBFF">"2h 47m · Sci‑Fi"</span><span style="color:#E1E4E8">,</span></span>
 <span class="line"><span style="color:#E1E4E8">  backdrop: </span><span style="color:#B392F0">TMDB_BACKDROP</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"/eZ239CUp1d6OryZEBPnO2n87gMG.jpg"</span><span style="color:#E1E4E8">),</span></span>
 <span class="line"><span style="color:#E1E4E8">};</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">const</span><span style="color:#79B8FF"> HERO_TITLE_WORDS</span><span style="color:#F97583"> =</span><span style="color:#79B8FF"> FEATURED</span><span style="color:#E1E4E8">.title.</span><span style="color:#B392F0">trim</span><span style="color:#E1E4E8">().</span><span style="color:#B392F0">split</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">/</span><span style="color:#79B8FF">\\s</span><span style="color:#F97583">+</span><span style="color:#9ECBFF">/</span><span style="color:#E1E4E8">).</span><span style="color:#79B8FF">length</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#F97583">const</span><span style="color:#79B8FF"> HERO_TITLE_DELAY_MS</span><span style="color:#F97583"> =</span><span style="color:#79B8FF"> 100</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#F97583">const</span><span style="color:#79B8FF"> HERO_WORD_STAGGER_MS</span><span style="color:#F97583"> =</span><span style="color:#79B8FF"> 50</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#F97583">const</span><span style="color:#79B8FF"> HERO_WORD_DURATION_MS</span><span style="color:#F97583"> =</span><span style="color:#79B8FF"> 700</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#F97583">const</span><span style="color:#79B8FF"> HERO_ITEM_DURATION_MS</span><span style="color:#F97583"> =</span><span style="color:#79B8FF"> 580</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">function</span><span style="color:#B392F0"> heroSequenceDelays</span><span style="color:#E1E4E8">() {</span></span>
+<span class="line"><span style="color:#F97583">  const</span><span style="color:#79B8FF"> titleEnd</span><span style="color:#F97583"> =</span></span>
+<span class="line"><span style="color:#79B8FF">    HERO_TITLE_DELAY_MS</span><span style="color:#F97583"> +</span><span style="color:#E1E4E8"> (</span><span style="color:#79B8FF">HERO_TITLE_WORDS</span><span style="color:#F97583"> -</span><span style="color:#79B8FF"> 1</span><span style="color:#E1E4E8">) </span><span style="color:#F97583">*</span><span style="color:#79B8FF"> HERO_WORD_STAGGER_MS</span><span style="color:#F97583"> +</span><span style="color:#79B8FF"> HERO_WORD_DURATION_MS</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">  const</span><span style="color:#79B8FF"> ctaPrimary</span><span style="color:#F97583"> =</span><span style="color:#E1E4E8"> titleEnd </span><span style="color:#F97583">+</span><span style="color:#79B8FF"> 120</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#F97583">  const</span><span style="color:#79B8FF"> ctaSecondary</span><span style="color:#F97583"> =</span><span style="color:#E1E4E8"> titleEnd </span><span style="color:#F97583">+</span><span style="color:#79B8FF"> 220</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">  return</span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#E1E4E8">    eyebrow: </span><span style="color:#79B8FF">0</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">    title: </span><span style="color:#79B8FF">HERO_TITLE_DELAY_MS</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">    tagline: titleEnd </span><span style="color:#F97583">-</span><span style="color:#79B8FF"> 220</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">    runtime: titleEnd </span><span style="color:#F97583">-</span><span style="color:#79B8FF"> 40</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">    ctaPrimary,</span></span>
+<span class="line"><span style="color:#E1E4E8">    ctaSecondary,</span></span>
+<span class="line"><span style="color:#E1E4E8">    premieresLabel: ctaSecondary </span><span style="color:#F97583">+</span><span style="color:#79B8FF"> 140</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">    premieresMeta: ctaSecondary </span><span style="color:#F97583">+</span><span style="color:#79B8FF"> 220</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">    premieresRail: ctaSecondary </span><span style="color:#F97583">+</span><span style="color:#79B8FF"> 260</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">  };</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">function</span><span style="color:#B392F0"> CinemaEntranceStyles</span><span style="color:#E1E4E8">() {</span></span>
+<span class="line"><span style="color:#F97583">  return</span><span style="color:#E1E4E8"> (</span></span>
+<span class="line"><span style="color:#E1E4E8">    &#x3C;</span><span style="color:#85E89D">style</span><span style="color:#E1E4E8">>{</span><span style="color:#9ECBFF">\`</span></span>
+<span class="line"><span style="color:#9ECBFF">      @keyframes cinema-hero-rise {</span></span>
+<span class="line"><span style="color:#9ECBFF">        from {</span></span>
+<span class="line"><span style="color:#9ECBFF">          opacity: 0;</span></span>
+<span class="line"><span style="color:#9ECBFF">          transform: translateY(14px);</span></span>
+<span class="line"><span style="color:#9ECBFF">          filter: blur(8px);</span></span>
+<span class="line"><span style="color:#9ECBFF">        }</span></span>
+<span class="line"><span style="color:#9ECBFF">        to {</span></span>
+<span class="line"><span style="color:#9ECBFF">          opacity: 1;</span></span>
+<span class="line"><span style="color:#9ECBFF">          transform: translateY(0);</span></span>
+<span class="line"><span style="color:#9ECBFF">          filter: blur(0);</span></span>
+<span class="line"><span style="color:#9ECBFF">        }</span></span>
+<span class="line"><span style="color:#9ECBFF">      }</span></span>
+<span class="line"><span style="color:#9ECBFF">      .cinema-hero-rise {</span></span>
+<span class="line"><span style="color:#9ECBFF">        animation: cinema-hero-rise \${</span><span style="color:#79B8FF">HERO_ITEM_DURATION_MS</span><span style="color:#9ECBFF">}ms cubic-bezier(0.22, 1, 0.36, 1) both;</span></span>
+<span class="line"><span style="color:#9ECBFF">      }</span></span>
+<span class="line"><span style="color:#9ECBFF">    \`</span><span style="color:#E1E4E8">}&#x3C;/</span><span style="color:#85E89D">style</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">  );</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span>
 <span class="line"></span>
 <span class="line"><span style="color:#F97583">const</span><span style="color:#79B8FF"> HERO_BACKDROPS</span><span style="color:#F97583"> =</span><span style="color:#E1E4E8"> [</span></span>
 <span class="line"><span style="color:#E1E4E8">  { title: </span><span style="color:#9ECBFF">"Dune: Part Two"</span><span style="color:#E1E4E8">, image: </span><span style="color:#B392F0">TMDB_BACKDROP</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"/eZ239CUp1d6OryZEBPnO2n87gMG.jpg"</span><span style="color:#E1E4E8">) },</span></span>
@@ -1862,7 +2124,11 @@ export default function CinemaRow() {
 <span class="line"><span style="color:#E1E4E8">    genre: </span><span style="color:#9ECBFF">"Horror"</span><span style="color:#E1E4E8">,</span></span>
 <span class="line"><span style="color:#E1E4E8">    poster: </span><span style="color:#B392F0">TMDB_POSTER</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"/lqoMzCcZYEFK729d6qzt349fB4o.jpg"</span><span style="color:#E1E4E8">),</span></span>
 <span class="line"><span style="color:#E1E4E8">  },</span></span>
-<span class="line"><span style="color:#E1E4E8">  { title: </span><span style="color:#9ECBFF">"Oppenheimer"</span><span style="color:#E1E4E8">, genre: </span><span style="color:#9ECBFF">"Biography"</span><span style="color:#E1E4E8">, poster: </span><span style="color:#B392F0">TMDB_POSTER</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"/8Gxv8gSFCU0XGDykEGv7zR1n2ua.jpg"</span><span style="color:#E1E4E8">) },</span></span>
+<span class="line"><span style="color:#E1E4E8">  {</span></span>
+<span class="line"><span style="color:#E1E4E8">    title: </span><span style="color:#9ECBFF">"Oppenheimer"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">    genre: </span><span style="color:#9ECBFF">"Biography"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">    poster: </span><span style="color:#B392F0">TMDB_POSTER</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"/8Gxv8gSFCU0XGDykEGv7zR1n2ua.jpg"</span><span style="color:#E1E4E8">),</span></span>
+<span class="line"><span style="color:#E1E4E8">  },</span></span>
 <span class="line"><span style="color:#E1E4E8">  {</span></span>
 <span class="line"><span style="color:#E1E4E8">    title: </span><span style="color:#9ECBFF">"Everything Everywhere All at Once"</span><span style="color:#E1E4E8">,</span></span>
 <span class="line"><span style="color:#E1E4E8">    genre: </span><span style="color:#9ECBFF">"Sci‑Fi"</span><span style="color:#E1E4E8">,</span></span>
@@ -1879,8 +2145,16 @@ export default function CinemaRow() {
 <span class="line"><span style="color:#E1E4E8">    genre: </span><span style="color:#9ECBFF">"Sci‑Fi"</span><span style="color:#E1E4E8">,</span></span>
 <span class="line"><span style="color:#E1E4E8">    poster: </span><span style="color:#B392F0">TMDB_POSTER</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"/gajva2L0rPYkEWjzgFlBXCAVBE5.jpg"</span><span style="color:#E1E4E8">),</span></span>
 <span class="line"><span style="color:#E1E4E8">  },</span></span>
-<span class="line"><span style="color:#E1E4E8">  { title: </span><span style="color:#9ECBFF">"Interstellar"</span><span style="color:#E1E4E8">, genre: </span><span style="color:#9ECBFF">"Sci‑Fi"</span><span style="color:#E1E4E8">, poster: </span><span style="color:#B392F0">TMDB_POSTER</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"/yQvGrMoipbRoddT0ZR8tPoR7NfX.jpg"</span><span style="color:#E1E4E8">) },</span></span>
-<span class="line"><span style="color:#E1E4E8">  { title: </span><span style="color:#9ECBFF">"Poor Things"</span><span style="color:#E1E4E8">, genre: </span><span style="color:#9ECBFF">"Comedy"</span><span style="color:#E1E4E8">, poster: </span><span style="color:#B392F0">TMDB_POSTER</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"/kCGlIMHnOm8JPXq3rXM6c5wMxcT.jpg"</span><span style="color:#E1E4E8">) },</span></span>
+<span class="line"><span style="color:#E1E4E8">  {</span></span>
+<span class="line"><span style="color:#E1E4E8">    title: </span><span style="color:#9ECBFF">"Interstellar"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">    genre: </span><span style="color:#9ECBFF">"Sci‑Fi"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">    poster: </span><span style="color:#B392F0">TMDB_POSTER</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"/yQvGrMoipbRoddT0ZR8tPoR7NfX.jpg"</span><span style="color:#E1E4E8">),</span></span>
+<span class="line"><span style="color:#E1E4E8">  },</span></span>
+<span class="line"><span style="color:#E1E4E8">  {</span></span>
+<span class="line"><span style="color:#E1E4E8">    title: </span><span style="color:#9ECBFF">"Poor Things"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">    genre: </span><span style="color:#9ECBFF">"Comedy"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">    poster: </span><span style="color:#B392F0">TMDB_POSTER</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"/kCGlIMHnOm8JPXq3rXM6c5wMxcT.jpg"</span><span style="color:#E1E4E8">),</span></span>
+<span class="line"><span style="color:#E1E4E8">  },</span></span>
 <span class="line"><span style="color:#E1E4E8">  {</span></span>
 <span class="line"><span style="color:#E1E4E8">    title: </span><span style="color:#9ECBFF">"Mad Max: Fury Road"</span><span style="color:#E1E4E8">,</span></span>
 <span class="line"><span style="color:#E1E4E8">    genre: </span><span style="color:#9ECBFF">"Action"</span><span style="color:#E1E4E8">,</span></span>
@@ -1888,13 +2162,7 @@ export default function CinemaRow() {
 <span class="line"><span style="color:#E1E4E8">  },</span></span>
 <span class="line"><span style="color:#E1E4E8">] </span><span style="color:#F97583">as</span><span style="color:#F97583"> const</span><span style="color:#E1E4E8">;</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#F97583">function</span><span style="color:#B392F0"> CinemaContent</span><span style="color:#E1E4E8">({</span></span>
-<span class="line"><span style="color:#FFAB70">  className</span><span style="color:#E1E4E8">,</span></span>
-<span class="line"><span style="color:#FFAB70">  children</span><span style="color:#E1E4E8">,</span></span>
-<span class="line"><span style="color:#E1E4E8">}</span><span style="color:#F97583">:</span><span style="color:#E1E4E8"> {</span></span>
-<span class="line"><span style="color:#FFAB70">  className</span><span style="color:#F97583">?:</span><span style="color:#79B8FF"> string</span><span style="color:#E1E4E8">;</span></span>
-<span class="line"><span style="color:#FFAB70">  children</span><span style="color:#F97583">:</span><span style="color:#B392F0"> React</span><span style="color:#E1E4E8">.</span><span style="color:#B392F0">ReactNode</span><span style="color:#E1E4E8">;</span></span>
-<span class="line"><span style="color:#E1E4E8">}) {</span></span>
+<span class="line"><span style="color:#F97583">function</span><span style="color:#B392F0"> CinemaContent</span><span style="color:#E1E4E8">({ </span><span style="color:#FFAB70">className</span><span style="color:#E1E4E8">, </span><span style="color:#FFAB70">children</span><span style="color:#E1E4E8"> }</span><span style="color:#F97583">:</span><span style="color:#E1E4E8"> { </span><span style="color:#FFAB70">className</span><span style="color:#F97583">?:</span><span style="color:#79B8FF"> string</span><span style="color:#E1E4E8">; </span><span style="color:#FFAB70">children</span><span style="color:#F97583">:</span><span style="color:#B392F0"> React</span><span style="color:#E1E4E8">.</span><span style="color:#B392F0">ReactNode</span><span style="color:#E1E4E8"> }) {</span></span>
 <span class="line"><span style="color:#F97583">  return</span><span style="color:#E1E4E8"> &#x3C;</span><span style="color:#85E89D">div</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#B392F0">cn</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"mx-auto w-full max-w-6xl px-5 sm:px-8"</span><span style="color:#E1E4E8">, className)}>{children}&#x3C;/</span><span style="color:#85E89D">div</span><span style="color:#E1E4E8">>;</span></span>
 <span class="line"><span style="color:#E1E4E8">}</span></span>
 <span class="line"></span>
@@ -1919,7 +2187,7 @@ export default function CinemaRow() {
 <span class="line"><span style="color:#F97583">  return</span><span style="color:#E1E4E8"> (</span></span>
 <span class="line"><span style="color:#E1E4E8">    &#x3C;</span><span style="color:#85E89D">figure</span></span>
 <span class="line"><span style="color:#B392F0">      className</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#B392F0">cn</span><span style="color:#E1E4E8">(</span></span>
-<span class="line"><span style="color:#9ECBFF">        "group relative w-full shrink-0 overflow-hidden rounded-2xl ring-1 ring-white/12"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#9ECBFF">        "group relative w-full max-w-48 shrink-0 overflow-hidden"</span><span style="color:#E1E4E8">,</span></span>
 <span class="line"><span style="color:#E1E4E8">        variant </span><span style="color:#F97583">===</span><span style="color:#9ECBFF"> "tall"</span><span style="color:#F97583"> ?</span><span style="color:#9ECBFF"> "aspect-[5/3]"</span><span style="color:#F97583"> :</span><span style="color:#9ECBFF"> "aspect-video"</span><span style="color:#E1E4E8">,</span></span>
 <span class="line"><span style="color:#E1E4E8">      )}</span></span>
 <span class="line"><span style="color:#E1E4E8">    ></span></span>
@@ -1938,17 +2206,9 @@ export default function CinemaRow() {
 <span class="line"><span style="color:#E1E4E8">  );</span></span>
 <span class="line"><span style="color:#E1E4E8">}</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#F97583">function</span><span style="color:#B392F0"> PosterCard</span><span style="color:#E1E4E8">({</span></span>
-<span class="line"><span style="color:#FFAB70">  title</span><span style="color:#E1E4E8">,</span></span>
-<span class="line"><span style="color:#FFAB70">  genre</span><span style="color:#E1E4E8">,</span></span>
-<span class="line"><span style="color:#FFAB70">  poster</span><span style="color:#E1E4E8">,</span></span>
-<span class="line"><span style="color:#E1E4E8">}</span><span style="color:#F97583">:</span><span style="color:#E1E4E8"> {</span></span>
-<span class="line"><span style="color:#FFAB70">  title</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> string</span><span style="color:#E1E4E8">;</span></span>
-<span class="line"><span style="color:#FFAB70">  genre</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> string</span><span style="color:#E1E4E8">;</span></span>
-<span class="line"><span style="color:#FFAB70">  poster</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> string</span><span style="color:#E1E4E8">;</span></span>
-<span class="line"><span style="color:#E1E4E8">}) {</span></span>
+<span class="line"><span style="color:#F97583">function</span><span style="color:#B392F0"> PosterCard</span><span style="color:#E1E4E8">({ </span><span style="color:#FFAB70">title</span><span style="color:#E1E4E8">, </span><span style="color:#FFAB70">genre</span><span style="color:#E1E4E8">, </span><span style="color:#FFAB70">poster</span><span style="color:#E1E4E8"> }</span><span style="color:#F97583">:</span><span style="color:#E1E4E8"> { </span><span style="color:#FFAB70">title</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> string</span><span style="color:#E1E4E8">; </span><span style="color:#FFAB70">genre</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> string</span><span style="color:#E1E4E8">; </span><span style="color:#FFAB70">poster</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> string</span><span style="color:#E1E4E8"> }) {</span></span>
 <span class="line"><span style="color:#F97583">  return</span><span style="color:#E1E4E8"> (</span></span>
-<span class="line"><span style="color:#E1E4E8">    &#x3C;</span><span style="color:#85E89D">article</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"w-[9.75rem] shrink-0 snap-start sm:w-[11.25rem]"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">    &#x3C;</span><span style="color:#85E89D">article</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"w-[9.75rem] shrink-0 sm:w-[11.25rem]"</span><span style="color:#E1E4E8">></span></span>
 <span class="line"><span style="color:#E1E4E8">      &#x3C;</span><span style="color:#85E89D">div</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"aspect-[2/3] overflow-hidden rounded-xl ring-1 ring-white/10"</span><span style="color:#E1E4E8">></span></span>
 <span class="line"><span style="color:#E1E4E8">        &#x3C;</span><span style="color:#85E89D">img</span></span>
 <span class="line"><span style="color:#B392F0">          src</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{poster}</span></span>
@@ -1973,32 +2233,14 @@ export default function CinemaRow() {
 <span class="line"><span style="color:#FFAB70">  className</span><span style="color:#F97583">?:</span><span style="color:#79B8FF"> string</span><span style="color:#E1E4E8">;</span></span>
 <span class="line"><span style="color:#FFAB70">  tone</span><span style="color:#F97583">?:</span><span style="color:#9ECBFF"> "violet"</span><span style="color:#F97583"> |</span><span style="color:#9ECBFF"> "amber"</span><span style="color:#E1E4E8">;</span></span>
 <span class="line"><span style="color:#E1E4E8">}) {</span></span>
-<span class="line"><span style="color:#F97583">  const</span><span style="color:#79B8FF"> wellColor</span><span style="color:#F97583"> =</span></span>
-<span class="line"><span style="color:#E1E4E8">    tone </span><span style="color:#F97583">===</span><span style="color:#9ECBFF"> "violet"</span><span style="color:#F97583"> ?</span><span style="color:#9ECBFF"> "oklch(0.14 0.03 285)"</span><span style="color:#F97583"> :</span><span style="color:#9ECBFF"> "oklch(0.15 0.028 55)"</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#F97583">  const</span><span style="color:#79B8FF"> wellColor</span><span style="color:#F97583"> =</span><span style="color:#E1E4E8"> tone </span><span style="color:#F97583">===</span><span style="color:#9ECBFF"> "violet"</span><span style="color:#F97583"> ?</span><span style="color:#9ECBFF"> "oklch(0.14 0.03 285)"</span><span style="color:#F97583"> :</span><span style="color:#9ECBFF"> "oklch(0.15 0.028 55)"</span><span style="color:#E1E4E8">;</span></span>
 <span class="line"></span>
 <span class="line"><span style="color:#F97583">  return</span><span style="color:#E1E4E8"> (</span></span>
 <span class="line"><span style="color:#E1E4E8">    &#x3C;</span><span style="color:#85E89D">div</span></span>
-<span class="line"><span style="color:#B392F0">      className</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#B392F0">cn</span><span style="color:#E1E4E8">(</span></span>
-<span class="line"><span style="color:#9ECBFF">        "relative min-h-[18rem] overflow-hidden rounded-[1.35rem] shadow-[inset_0_1px_0_oklch(1_0_0/0.07)] ring-1 ring-white/10"</span><span style="color:#E1E4E8">,</span></span>
-<span class="line"><span style="color:#E1E4E8">        className,</span></span>
-<span class="line"><span style="color:#E1E4E8">      )}</span></span>
+<span class="line"><span style="color:#B392F0">      className</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#B392F0">cn</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"relative min-h-[18rem] overflow-hidden"</span><span style="color:#E1E4E8">, className)}</span></span>
 <span class="line"><span style="color:#B392F0">      style</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{{ backgroundColor: wellColor }}</span></span>
 <span class="line"><span style="color:#E1E4E8">    ></span></span>
 <span class="line"><span style="color:#E1E4E8">      {children}</span></span>
-<span class="line"><span style="color:#E1E4E8">      &#x3C;</span><span style="color:#85E89D">div</span></span>
-<span class="line"><span style="color:#B392F0">        aria-hidden</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"true"</span></span>
-<span class="line"><span style="color:#B392F0">        className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"pointer-events-none absolute inset-x-0 top-0 z-10 h-14 bg-linear-to-b to-transparent"</span></span>
-<span class="line"><span style="color:#B392F0">        style</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{{</span></span>
-<span class="line"><span style="color:#E1E4E8">          backgroundImage: </span><span style="color:#9ECBFF">\`linear-gradient(to bottom, \${</span><span style="color:#E1E4E8">wellColor</span><span style="color:#9ECBFF">} 0%, color-mix(in oklch, \${</span><span style="color:#E1E4E8">wellColor</span><span style="color:#9ECBFF">} 85%, transparent) 55%, transparent 100%)\`</span><span style="color:#E1E4E8">,</span></span>
-<span class="line"><span style="color:#E1E4E8">        }}</span></span>
-<span class="line"><span style="color:#E1E4E8">      /></span></span>
-<span class="line"><span style="color:#E1E4E8">      &#x3C;</span><span style="color:#85E89D">div</span></span>
-<span class="line"><span style="color:#B392F0">        aria-hidden</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"true"</span></span>
-<span class="line"><span style="color:#B392F0">        className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"pointer-events-none absolute inset-x-0 bottom-0 z-10 h-20 bg-linear-to-t to-transparent"</span></span>
-<span class="line"><span style="color:#B392F0">        style</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{{</span></span>
-<span class="line"><span style="color:#E1E4E8">          backgroundImage: </span><span style="color:#9ECBFF">\`linear-gradient(to top, \${</span><span style="color:#E1E4E8">wellColor</span><span style="color:#9ECBFF">} 0%, color-mix(in oklch, \${</span><span style="color:#E1E4E8">wellColor</span><span style="color:#9ECBFF">} 90%, transparent) 60%, transparent 100%)\`</span><span style="color:#E1E4E8">,</span></span>
-<span class="line"><span style="color:#E1E4E8">        }}</span></span>
-<span class="line"><span style="color:#E1E4E8">      /></span></span>
 <span class="line"><span style="color:#E1E4E8">    &#x3C;/</span><span style="color:#85E89D">div</span><span style="color:#E1E4E8">></span></span>
 <span class="line"><span style="color:#E1E4E8">  );</span></span>
 <span class="line"><span style="color:#E1E4E8">}</span></span>
@@ -2020,10 +2262,14 @@ export default function CinemaRow() {
 <span class="line"><span style="color:#B392F0">      reverse</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{reverse}</span></span>
 <span class="line"><span style="color:#B392F0">      pauseOnHover</span></span>
 <span class="line"><span style="color:#B392F0">      applyMask</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#79B8FF">false</span><span style="color:#E1E4E8">}</span></span>
-<span class="line"><span style="color:#B392F0">      className</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#B392F0">cn</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"h-full p-2.5 sm:p-3"</span><span style="color:#E1E4E8">, duration)}</span></span>
+<span class="line"><span style="color:#B392F0">      className</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#B392F0">cn</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"h-full p-0"</span><span style="color:#E1E4E8">, duration)}</span></span>
 <span class="line"><span style="color:#E1E4E8">    ></span></span>
 <span class="line"><span style="color:#E1E4E8">      {stills.</span><span style="color:#B392F0">map</span><span style="color:#E1E4E8">((</span><span style="color:#FFAB70">still</span><span style="color:#E1E4E8">) </span><span style="color:#F97583">=></span><span style="color:#E1E4E8"> (</span></span>
-<span class="line"><span style="color:#E1E4E8">        &#x3C;</span><span style="color:#79B8FF">LandscapeStill</span><span style="color:#B392F0"> key</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#9ECBFF">\`\${</span><span style="color:#E1E4E8">reverse</span><span style="color:#F97583"> ?</span><span style="color:#9ECBFF"> "rev"</span><span style="color:#F97583"> :</span><span style="color:#9ECBFF"> "fwd"}-\${</span><span style="color:#E1E4E8">still</span><span style="color:#9ECBFF">.</span><span style="color:#E1E4E8">title</span><span style="color:#9ECBFF">}\`</span><span style="color:#E1E4E8">} {</span><span style="color:#F97583">...</span><span style="color:#E1E4E8">still} </span><span style="color:#B392F0">variant</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{variant} /></span></span>
+<span class="line"><span style="color:#E1E4E8">        &#x3C;</span><span style="color:#79B8FF">LandscapeStill</span></span>
+<span class="line"><span style="color:#B392F0">          key</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#9ECBFF">\`\${</span><span style="color:#E1E4E8">reverse</span><span style="color:#F97583"> ?</span><span style="color:#9ECBFF"> "rev"</span><span style="color:#F97583"> :</span><span style="color:#9ECBFF"> "fwd"}-\${</span><span style="color:#E1E4E8">still</span><span style="color:#9ECBFF">.</span><span style="color:#E1E4E8">title</span><span style="color:#9ECBFF">}\`</span><span style="color:#E1E4E8">}</span></span>
+<span class="line"><span style="color:#E1E4E8">          {</span><span style="color:#F97583">...</span><span style="color:#E1E4E8">still}</span></span>
+<span class="line"><span style="color:#B392F0">          variant</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{variant}</span></span>
+<span class="line"><span style="color:#E1E4E8">        /></span></span>
 <span class="line"><span style="color:#E1E4E8">      ))}</span></span>
 <span class="line"><span style="color:#E1E4E8">    &#x3C;/</span><span style="color:#79B8FF">Marquee</span><span style="color:#E1E4E8">></span></span>
 <span class="line"><span style="color:#E1E4E8">  );</span></span>
@@ -2038,16 +2284,16 @@ export default function CinemaRow() {
 <span class="line"><span style="color:#E1E4E8">}) {</span></span>
 <span class="line"><span style="color:#F97583">  if</span><span style="color:#E1E4E8"> (reducedMotion) {</span></span>
 <span class="line"><span style="color:#F97583">    return</span><span style="color:#E1E4E8"> (</span></span>
-<span class="line"><span style="color:#E1E4E8">      &#x3C;</span><span style="color:#85E89D">div</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#B392F0">cn</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"grid h-full min-h-[18rem] grid-cols-2 gap-2 sm:gap-2.5"</span><span style="color:#E1E4E8">, className)}></span></span>
+<span class="line"><span style="color:#E1E4E8">      &#x3C;</span><span style="color:#85E89D">div</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#B392F0">cn</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"grid h-full min-h-[18rem] grid-cols-2 gap-2 sm:gap-4"</span><span style="color:#E1E4E8">, className)}></span></span>
 <span class="line"><span style="color:#E1E4E8">        &#x3C;</span><span style="color:#79B8FF">MarqueeWell</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"h-full min-h-0 overflow-y-auto"</span><span style="color:#E1E4E8">></span></span>
-<span class="line"><span style="color:#E1E4E8">          &#x3C;</span><span style="color:#85E89D">div</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"flex flex-col gap-2.5 p-2.5 sm:p-3"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">          &#x3C;</span><span style="color:#85E89D">div</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"flex flex-col gap-2.5"</span><span style="color:#E1E4E8">></span></span>
 <span class="line"><span style="color:#E1E4E8">            {</span><span style="color:#79B8FF">STILLS_LEFT</span><span style="color:#E1E4E8">.</span><span style="color:#B392F0">slice</span><span style="color:#E1E4E8">(</span><span style="color:#79B8FF">0</span><span style="color:#E1E4E8">, </span><span style="color:#79B8FF">3</span><span style="color:#E1E4E8">).</span><span style="color:#B392F0">map</span><span style="color:#E1E4E8">((</span><span style="color:#FFAB70">still</span><span style="color:#E1E4E8">) </span><span style="color:#F97583">=></span><span style="color:#E1E4E8"> (</span></span>
 <span class="line"><span style="color:#E1E4E8">              &#x3C;</span><span style="color:#79B8FF">LandscapeStill</span><span style="color:#B392F0"> key</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{still.title} {</span><span style="color:#F97583">...</span><span style="color:#E1E4E8">still} </span><span style="color:#B392F0">variant</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"wide"</span><span style="color:#E1E4E8"> /></span></span>
 <span class="line"><span style="color:#E1E4E8">            ))}</span></span>
 <span class="line"><span style="color:#E1E4E8">          &#x3C;/</span><span style="color:#85E89D">div</span><span style="color:#E1E4E8">></span></span>
 <span class="line"><span style="color:#E1E4E8">        &#x3C;/</span><span style="color:#79B8FF">MarqueeWell</span><span style="color:#E1E4E8">></span></span>
 <span class="line"><span style="color:#E1E4E8">        &#x3C;</span><span style="color:#79B8FF">MarqueeWell</span><span style="color:#B392F0"> tone</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"amber"</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"h-full min-h-0 overflow-y-auto"</span><span style="color:#E1E4E8">></span></span>
-<span class="line"><span style="color:#E1E4E8">          &#x3C;</span><span style="color:#85E89D">div</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"flex flex-col gap-2.5 p-2.5 sm:p-3"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">          &#x3C;</span><span style="color:#85E89D">div</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"flex flex-col gap-2.5"</span><span style="color:#E1E4E8">></span></span>
 <span class="line"><span style="color:#E1E4E8">            {</span><span style="color:#79B8FF">STILLS_RIGHT</span><span style="color:#E1E4E8">.</span><span style="color:#B392F0">slice</span><span style="color:#E1E4E8">(</span><span style="color:#79B8FF">0</span><span style="color:#E1E4E8">, </span><span style="color:#79B8FF">3</span><span style="color:#E1E4E8">).</span><span style="color:#B392F0">map</span><span style="color:#E1E4E8">((</span><span style="color:#FFAB70">still</span><span style="color:#E1E4E8">) </span><span style="color:#F97583">=></span><span style="color:#E1E4E8"> (</span></span>
 <span class="line"><span style="color:#E1E4E8">              &#x3C;</span><span style="color:#79B8FF">LandscapeStill</span><span style="color:#B392F0"> key</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{still.title} {</span><span style="color:#F97583">...</span><span style="color:#E1E4E8">still} </span><span style="color:#B392F0">variant</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"tall"</span><span style="color:#E1E4E8"> /></span></span>
 <span class="line"><span style="color:#E1E4E8">            ))}</span></span>
@@ -2060,14 +2306,18 @@ export default function CinemaRow() {
 <span class="line"><span style="color:#F97583">  return</span><span style="color:#E1E4E8"> (</span></span>
 <span class="line"><span style="color:#E1E4E8">    &#x3C;</span><span style="color:#85E89D">div</span></span>
 <span class="line"><span style="color:#B392F0">      className</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#B392F0">cn</span><span style="color:#E1E4E8">(</span></span>
-<span class="line"><span style="color:#9ECBFF">        "grid h-full min-h-[18rem] grid-cols-2 items-stretch gap-2 sm:min-h-[22rem] sm:gap-2.5 md:min-h-[min(26rem,46vh)]"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#9ECBFF">        "flex justify-evenly md:grid h-full min-h-[18rem] md:grid-cols-2 gap-2 sm:gap-4"</span><span style="color:#E1E4E8">,</span></span>
 <span class="line"><span style="color:#E1E4E8">        className,</span></span>
 <span class="line"><span style="color:#E1E4E8">      )}</span></span>
 <span class="line"><span style="color:#E1E4E8">    ></span></span>
-<span class="line"><span style="color:#E1E4E8">      &#x3C;</span><span style="color:#79B8FF">MarqueeWell</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"h-full min-h-0"</span><span style="color:#E1E4E8">></span></span>
-<span class="line"><span style="color:#E1E4E8">        &#x3C;</span><span style="color:#79B8FF">StillMarqueeColumn</span><span style="color:#B392F0"> stills</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#79B8FF">STILLS_LEFT</span><span style="color:#E1E4E8">} </span><span style="color:#B392F0">duration</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"[--duration:32s] [--gap:12px]"</span><span style="color:#B392F0"> variant</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"wide"</span><span style="color:#E1E4E8"> /></span></span>
+<span class="line"><span style="color:#E1E4E8">      &#x3C;</span><span style="color:#79B8FF">MarqueeWell</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"h-full min-h-0 max-w-fit"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">        &#x3C;</span><span style="color:#79B8FF">StillMarqueeColumn</span></span>
+<span class="line"><span style="color:#B392F0">          stills</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#79B8FF">STILLS_LEFT</span><span style="color:#E1E4E8">}</span></span>
+<span class="line"><span style="color:#B392F0">          duration</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"[--duration:32s] [--gap:12px]"</span></span>
+<span class="line"><span style="color:#B392F0">          variant</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"wide"</span></span>
+<span class="line"><span style="color:#E1E4E8">        /></span></span>
 <span class="line"><span style="color:#E1E4E8">      &#x3C;/</span><span style="color:#79B8FF">MarqueeWell</span><span style="color:#E1E4E8">></span></span>
-<span class="line"><span style="color:#E1E4E8">      &#x3C;</span><span style="color:#79B8FF">MarqueeWell</span><span style="color:#B392F0"> tone</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"amber"</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"h-full min-h-0 md:translate-y-3"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">      &#x3C;</span><span style="color:#79B8FF">MarqueeWell</span><span style="color:#B392F0"> tone</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"amber"</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"h-full min-h-0 max-w-fit"</span><span style="color:#E1E4E8">></span></span>
 <span class="line"><span style="color:#E1E4E8">        &#x3C;</span><span style="color:#79B8FF">StillMarqueeColumn</span></span>
 <span class="line"><span style="color:#B392F0">          stills</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#79B8FF">STILLS_RIGHT</span><span style="color:#E1E4E8">}</span></span>
 <span class="line"><span style="color:#B392F0">          reverse</span></span>
@@ -2079,10 +2329,154 @@ export default function CinemaRow() {
 <span class="line"><span style="color:#E1E4E8">  );</span></span>
 <span class="line"><span style="color:#E1E4E8">}</span></span>
 <span class="line"></span>
+<span class="line"><span style="color:#F97583">function</span><span style="color:#B392F0"> PremieresSection</span><span style="color:#E1E4E8">({ </span><span style="color:#FFAB70">reducedMotion</span><span style="color:#E1E4E8"> }</span><span style="color:#F97583">:</span><span style="color:#E1E4E8"> { </span><span style="color:#FFAB70">reducedMotion</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> boolean</span><span style="color:#E1E4E8"> }) {</span></span>
+<span class="line"><span style="color:#F97583">  const</span><span style="color:#79B8FF"> delays</span><span style="color:#F97583"> =</span><span style="color:#B392F0"> heroSequenceDelays</span><span style="color:#E1E4E8">();</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">  return</span><span style="color:#E1E4E8"> (</span></span>
+<span class="line"><span style="color:#E1E4E8">    &#x3C;</span><span style="color:#85E89D">section</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"pb-6 pt-8"</span><span style="color:#B392F0"> aria-labelledby</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"premieres-heading"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">      &#x3C;</span><span style="color:#79B8FF">CinemaContent</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"mb-4 flex items-end justify-between gap-4"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">        &#x3C;</span><span style="color:#85E89D">h2</span></span>
+<span class="line"><span style="color:#B392F0">          id</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"premieres-heading"</span></span>
+<span class="line"><span style="color:#B392F0">          className</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#B392F0">cn</span><span style="color:#E1E4E8">(</span></span>
+<span class="line"><span style="color:#9ECBFF">            "text-[22px] font-semibold tracking-[-0.02em]"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#F97583">            !</span><span style="color:#E1E4E8">reducedMotion </span><span style="color:#F97583">&#x26;&#x26;</span><span style="color:#9ECBFF"> "cinema-hero-rise"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">          )}</span></span>
+<span class="line"><span style="color:#B392F0">          style</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{reducedMotion </span><span style="color:#F97583">?</span><span style="color:#79B8FF"> undefined</span><span style="color:#F97583"> :</span><span style="color:#E1E4E8"> { animationDelay: </span><span style="color:#9ECBFF">\`\${</span><span style="color:#E1E4E8">delays</span><span style="color:#9ECBFF">.</span><span style="color:#E1E4E8">premieresLabel</span><span style="color:#9ECBFF">}ms\`</span><span style="color:#E1E4E8"> }}</span></span>
+<span class="line"><span style="color:#E1E4E8">        ></span></span>
+<span class="line"><span style="color:#E1E4E8">          Premieres</span></span>
+<span class="line"><span style="color:#E1E4E8">        &#x3C;/</span><span style="color:#85E89D">h2</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">        &#x3C;</span><span style="color:#85E89D">span</span></span>
+<span class="line"><span style="color:#B392F0">          className</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#B392F0">cn</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"text-[13px] text-white/38"</span><span style="color:#E1E4E8">, </span><span style="color:#F97583">!</span><span style="color:#E1E4E8">reducedMotion </span><span style="color:#F97583">&#x26;&#x26;</span><span style="color:#9ECBFF"> "cinema-hero-rise"</span><span style="color:#E1E4E8">)}</span></span>
+<span class="line"><span style="color:#B392F0">          style</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{reducedMotion </span><span style="color:#F97583">?</span><span style="color:#79B8FF"> undefined</span><span style="color:#F97583"> :</span><span style="color:#E1E4E8"> { animationDelay: </span><span style="color:#9ECBFF">\`\${</span><span style="color:#E1E4E8">delays</span><span style="color:#9ECBFF">.</span><span style="color:#E1E4E8">premieresMeta</span><span style="color:#9ECBFF">}ms\`</span><span style="color:#E1E4E8"> }}</span></span>
+<span class="line"><span style="color:#E1E4E8">        ></span></span>
+<span class="line"><span style="color:#E1E4E8">          Now playing</span></span>
+<span class="line"><span style="color:#E1E4E8">        &#x3C;/</span><span style="color:#85E89D">span</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">      &#x3C;/</span><span style="color:#79B8FF">CinemaContent</span><span style="color:#E1E4E8">></span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">      &#x3C;</span><span style="color:#85E89D">div</span></span>
+<span class="line"><span style="color:#B392F0">        className</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#B392F0">cn</span><span style="color:#E1E4E8">(</span><span style="color:#F97583">!</span><span style="color:#E1E4E8">reducedMotion </span><span style="color:#F97583">&#x26;&#x26;</span><span style="color:#9ECBFF"> "cinema-hero-rise"</span><span style="color:#E1E4E8">)}</span></span>
+<span class="line"><span style="color:#B392F0">        style</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{reducedMotion </span><span style="color:#F97583">?</span><span style="color:#79B8FF"> undefined</span><span style="color:#F97583"> :</span><span style="color:#E1E4E8"> { animationDelay: </span><span style="color:#9ECBFF">\`\${</span><span style="color:#E1E4E8">delays</span><span style="color:#9ECBFF">.</span><span style="color:#E1E4E8">premieresRail</span><span style="color:#9ECBFF">}ms\`</span><span style="color:#E1E4E8"> }}</span></span>
+<span class="line"><span style="color:#E1E4E8">      ></span></span>
+<span class="line"><span style="color:#E1E4E8">        {reducedMotion </span><span style="color:#F97583">?</span><span style="color:#E1E4E8"> (</span></span>
+<span class="line"><span style="color:#E1E4E8">          &#x3C;</span><span style="color:#79B8FF">CinemaContent</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"overflow-x-auto overscroll-x-contain pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&#x26;::-webkit-scrollbar]:hidden"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">            &#x3C;</span><span style="color:#85E89D">div</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"flex w-max gap-4 sm:gap-5"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">              {</span><span style="color:#79B8FF">PREMIERES</span><span style="color:#E1E4E8">.</span><span style="color:#B392F0">map</span><span style="color:#E1E4E8">((</span><span style="color:#FFAB70">film</span><span style="color:#E1E4E8">) </span><span style="color:#F97583">=></span><span style="color:#E1E4E8"> (</span></span>
+<span class="line"><span style="color:#E1E4E8">                &#x3C;</span><span style="color:#79B8FF">PosterCard</span><span style="color:#B392F0"> key</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{film.title} {</span><span style="color:#F97583">...</span><span style="color:#E1E4E8">film} /></span></span>
+<span class="line"><span style="color:#E1E4E8">              ))}</span></span>
+<span class="line"><span style="color:#E1E4E8">            &#x3C;/</span><span style="color:#85E89D">div</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">          &#x3C;/</span><span style="color:#79B8FF">CinemaContent</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">        ) </span><span style="color:#F97583">:</span><span style="color:#E1E4E8"> (</span></span>
+<span class="line"><span style="color:#E1E4E8">          &#x3C;</span><span style="color:#85E89D">div</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_5%,black_95%,transparent)] [-webkit-mask-image:linear-gradient(to_right,transparent,black_5%,black_95%,transparent)]"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">            &#x3C;</span><span style="color:#79B8FF">Marquee</span></span>
+<span class="line"><span style="color:#B392F0">              pauseOnHover</span></span>
+<span class="line"><span style="color:#B392F0">              applyMask</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#79B8FF">false</span><span style="color:#E1E4E8">}</span></span>
+<span class="line"><span style="color:#B392F0">              className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"py-1 pl-5 [--duration:38s] [--gap:1rem] sm:pl-8 sm:[--gap:1.25rem]"</span></span>
+<span class="line"><span style="color:#E1E4E8">            ></span></span>
+<span class="line"><span style="color:#E1E4E8">              {</span><span style="color:#79B8FF">PREMIERES</span><span style="color:#E1E4E8">.</span><span style="color:#B392F0">map</span><span style="color:#E1E4E8">((</span><span style="color:#FFAB70">film</span><span style="color:#E1E4E8">) </span><span style="color:#F97583">=></span><span style="color:#E1E4E8"> (</span></span>
+<span class="line"><span style="color:#E1E4E8">                &#x3C;</span><span style="color:#79B8FF">PosterCard</span><span style="color:#B392F0"> key</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{film.title} {</span><span style="color:#F97583">...</span><span style="color:#E1E4E8">film} /></span></span>
+<span class="line"><span style="color:#E1E4E8">              ))}</span></span>
+<span class="line"><span style="color:#E1E4E8">            &#x3C;/</span><span style="color:#79B8FF">Marquee</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">          &#x3C;/</span><span style="color:#85E89D">div</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">        )}</span></span>
+<span class="line"><span style="color:#E1E4E8">      &#x3C;/</span><span style="color:#85E89D">div</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">    &#x3C;/</span><span style="color:#85E89D">section</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">  );</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span>
+<span class="line"><span style="color:#F97583">function</span><span style="color:#B392F0"> HeroPremiereCopy</span><span style="color:#E1E4E8">({ </span><span style="color:#FFAB70">reducedMotion</span><span style="color:#E1E4E8"> }</span><span style="color:#F97583">:</span><span style="color:#E1E4E8"> { </span><span style="color:#FFAB70">reducedMotion</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> boolean</span><span style="color:#E1E4E8"> }) {</span></span>
+<span class="line"><span style="color:#F97583">  const</span><span style="color:#79B8FF"> delays</span><span style="color:#F97583"> =</span><span style="color:#B392F0"> heroSequenceDelays</span><span style="color:#E1E4E8">();</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">  if</span><span style="color:#E1E4E8"> (reducedMotion) {</span></span>
+<span class="line"><span style="color:#F97583">    return</span><span style="color:#E1E4E8"> (</span></span>
+<span class="line"><span style="color:#E1E4E8">      &#x3C;></span></span>
+<span class="line"><span style="color:#E1E4E8">        &#x3C;</span><span style="color:#85E89D">p</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"text-[13px] font-medium tracking-[0.08em] text-white/45 uppercase"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">          {</span><span style="color:#79B8FF">FEATURED</span><span style="color:#E1E4E8">.eyebrow}</span></span>
+<span class="line"><span style="color:#E1E4E8">        &#x3C;/</span><span style="color:#85E89D">p</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">        &#x3C;</span><span style="color:#85E89D">h1</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"mt-3 max-w-[11ch] -translate-x-[0.13ex] text-balance text-[clamp(3.25rem,14vw,7.5rem)] leading-[0.9] font-semibold tracking-[-0.045em]"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">          {</span><span style="color:#79B8FF">FEATURED</span><span style="color:#E1E4E8">.title}</span></span>
+<span class="line"><span style="color:#E1E4E8">        &#x3C;/</span><span style="color:#85E89D">h1</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">        &#x3C;</span><span style="color:#85E89D">p</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"mt-5 max-w-[28ch] text-[17px] leading-snug text-white/58 sm:text-[19px]"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">          {</span><span style="color:#79B8FF">FEATURED</span><span style="color:#E1E4E8">.tagline}</span></span>
+<span class="line"><span style="color:#E1E4E8">        &#x3C;/</span><span style="color:#85E89D">p</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">        &#x3C;</span><span style="color:#85E89D">p</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"mt-3 text-[13px] text-white/38"</span><span style="color:#E1E4E8">>{</span><span style="color:#79B8FF">FEATURED</span><span style="color:#E1E4E8">.runtime}&#x3C;/</span><span style="color:#85E89D">p</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">        &#x3C;</span><span style="color:#85E89D">div</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"mt-8 flex flex-wrap items-center gap-3"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">          &#x3C;</span><span style="color:#85E89D">button</span></span>
+<span class="line"><span style="color:#B392F0">            type</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"button"</span></span>
+<span class="line"><span style="color:#B392F0">            className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"inline-flex h-11 touch-manipulation items-center gap-2 rounded-full bg-white px-6 text-[14px] font-semibold text-black transition-transform active:scale-[0.98]"</span></span>
+<span class="line"><span style="color:#E1E4E8">          ></span></span>
+<span class="line"><span style="color:#E1E4E8">            &#x3C;</span><span style="color:#79B8FF">PlayIcon</span><span style="color:#B392F0"> aria-hidden</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"true"</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"size-4 fill-current"</span><span style="color:#E1E4E8"> /></span></span>
+<span class="line"><span style="color:#E1E4E8">            Play</span></span>
+<span class="line"><span style="color:#E1E4E8">          &#x3C;/</span><span style="color:#85E89D">button</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">          &#x3C;</span><span style="color:#85E89D">button</span></span>
+<span class="line"><span style="color:#B392F0">            type</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"button"</span></span>
+<span class="line"><span style="color:#B392F0">            className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"inline-flex h-11 touch-manipulation items-center justify-center rounded-full border border-white/18 bg-white/[0.04] px-6 text-[14px] font-medium text-white/78 transition-colors hover:bg-white/[0.08] active:scale-[0.98]"</span></span>
+<span class="line"><span style="color:#E1E4E8">          ></span></span>
+<span class="line"><span style="color:#E1E4E8">            Add to Up Next</span></span>
+<span class="line"><span style="color:#E1E4E8">          &#x3C;/</span><span style="color:#85E89D">button</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">        &#x3C;/</span><span style="color:#85E89D">div</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">      &#x3C;/></span></span>
+<span class="line"><span style="color:#E1E4E8">    );</span></span>
+<span class="line"><span style="color:#E1E4E8">  }</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">  return</span><span style="color:#E1E4E8"> (</span></span>
+<span class="line"><span style="color:#E1E4E8">    &#x3C;></span></span>
+<span class="line"><span style="color:#E1E4E8">      &#x3C;</span><span style="color:#85E89D">p</span></span>
+<span class="line"><span style="color:#B392F0">        className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"cinema-hero-rise text-[13px] font-medium tracking-[0.08em] text-white/45 uppercase"</span></span>
+<span class="line"><span style="color:#B392F0">        style</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{{ animationDelay: </span><span style="color:#9ECBFF">\`\${</span><span style="color:#E1E4E8">delays</span><span style="color:#9ECBFF">.</span><span style="color:#E1E4E8">eyebrow</span><span style="color:#9ECBFF">}ms\`</span><span style="color:#E1E4E8"> }}</span></span>
+<span class="line"><span style="color:#E1E4E8">      ></span></span>
+<span class="line"><span style="color:#E1E4E8">        {</span><span style="color:#79B8FF">FEATURED</span><span style="color:#E1E4E8">.eyebrow}</span></span>
+<span class="line"><span style="color:#E1E4E8">      &#x3C;/</span><span style="color:#85E89D">p</span><span style="color:#E1E4E8">></span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">      &#x3C;</span><span style="color:#85E89D">h1</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"mt-3 text-balance leading-[0.9]"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">        &#x3C;</span><span style="color:#79B8FF">WaveReveal</span></span>
+<span class="line"><span style="color:#B392F0">          text</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#79B8FF">FEATURED</span><span style="color:#E1E4E8">.title}</span></span>
+<span class="line"><span style="color:#B392F0">          mode</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"word"</span></span>
+<span class="line"><span style="color:#B392F0">          direction</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"up"</span></span>
+<span class="line"><span style="color:#B392F0">          blur</span></span>
+<span class="line"><span style="color:#B392F0">          duration</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#9ECBFF">\`\${</span><span style="color:#79B8FF">HERO_WORD_DURATION_MS</span><span style="color:#9ECBFF">}ms\`</span><span style="color:#E1E4E8">}</span></span>
+<span class="line"><span style="color:#B392F0">          delay</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{delays.title}</span></span>
+<span class="line"><span style="color:#B392F0">          className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">" -translate-x-[0.13ex] justify-start px-0 text-left font-semibold tracking-[-0.02em] text-[clamp(3.25rem,14vw,7.5rem)] md:px-0 md:text-[clamp(3.25rem,14vw,7.5rem)]"</span></span>
+<span class="line"><span style="color:#E1E4E8">        /></span></span>
+<span class="line"><span style="color:#E1E4E8">      &#x3C;/</span><span style="color:#85E89D">h1</span><span style="color:#E1E4E8">></span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">      &#x3C;</span><span style="color:#85E89D">p</span></span>
+<span class="line"><span style="color:#B392F0">        className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"cinema-hero-rise mt-5 max-w-[28ch] text-[17px] leading-snug text-white/58 sm:text-[19px]"</span></span>
+<span class="line"><span style="color:#B392F0">        style</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{{ animationDelay: </span><span style="color:#9ECBFF">\`\${</span><span style="color:#E1E4E8">delays</span><span style="color:#9ECBFF">.</span><span style="color:#E1E4E8">tagline</span><span style="color:#9ECBFF">}ms\`</span><span style="color:#E1E4E8"> }}</span></span>
+<span class="line"><span style="color:#E1E4E8">      ></span></span>
+<span class="line"><span style="color:#E1E4E8">        {</span><span style="color:#79B8FF">FEATURED</span><span style="color:#E1E4E8">.tagline}</span></span>
+<span class="line"><span style="color:#E1E4E8">      &#x3C;/</span><span style="color:#85E89D">p</span><span style="color:#E1E4E8">></span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">      &#x3C;</span><span style="color:#85E89D">p</span></span>
+<span class="line"><span style="color:#B392F0">        className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"cinema-hero-rise mt-3 text-[13px] text-white/38"</span></span>
+<span class="line"><span style="color:#B392F0">        style</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{{ animationDelay: </span><span style="color:#9ECBFF">\`\${</span><span style="color:#E1E4E8">delays</span><span style="color:#9ECBFF">.</span><span style="color:#E1E4E8">runtime</span><span style="color:#9ECBFF">}ms\`</span><span style="color:#E1E4E8"> }}</span></span>
+<span class="line"><span style="color:#E1E4E8">      ></span></span>
+<span class="line"><span style="color:#E1E4E8">        {</span><span style="color:#79B8FF">FEATURED</span><span style="color:#E1E4E8">.runtime}</span></span>
+<span class="line"><span style="color:#E1E4E8">      &#x3C;/</span><span style="color:#85E89D">p</span><span style="color:#E1E4E8">></span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">      &#x3C;</span><span style="color:#85E89D">div</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"mt-8 flex flex-wrap items-center gap-3"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">        &#x3C;</span><span style="color:#85E89D">button</span></span>
+<span class="line"><span style="color:#B392F0">          type</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"button"</span></span>
+<span class="line"><span style="color:#B392F0">          className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"cinema-hero-rise inline-flex h-11 touch-manipulation items-center gap-2 rounded-full bg-white px-6 text-[14px] font-semibold text-black transition-transform active:scale-[0.98]"</span></span>
+<span class="line"><span style="color:#B392F0">          style</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{{ animationDelay: </span><span style="color:#9ECBFF">\`\${</span><span style="color:#E1E4E8">delays</span><span style="color:#9ECBFF">.</span><span style="color:#E1E4E8">ctaPrimary</span><span style="color:#9ECBFF">}ms\`</span><span style="color:#E1E4E8"> }}</span></span>
+<span class="line"><span style="color:#E1E4E8">        ></span></span>
+<span class="line"><span style="color:#E1E4E8">          &#x3C;</span><span style="color:#79B8FF">PlayIcon</span><span style="color:#B392F0"> aria-hidden</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"true"</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"size-4 fill-current"</span><span style="color:#E1E4E8"> /></span></span>
+<span class="line"><span style="color:#E1E4E8">          Play</span></span>
+<span class="line"><span style="color:#E1E4E8">        &#x3C;/</span><span style="color:#85E89D">button</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">        &#x3C;</span><span style="color:#85E89D">button</span></span>
+<span class="line"><span style="color:#B392F0">          type</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"button"</span></span>
+<span class="line"><span style="color:#B392F0">          className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"cinema-hero-rise inline-flex h-11 touch-manipulation items-center justify-center rounded-full border border-white/18 bg-white/[0.04] px-6 text-[14px] font-medium text-white/78 transition-colors hover:bg-white/[0.08] active:scale-[0.98]"</span></span>
+<span class="line"><span style="color:#B392F0">          style</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{{ animationDelay: </span><span style="color:#9ECBFF">\`\${</span><span style="color:#E1E4E8">delays</span><span style="color:#9ECBFF">.</span><span style="color:#E1E4E8">ctaSecondary</span><span style="color:#9ECBFF">}ms\`</span><span style="color:#E1E4E8"> }}</span></span>
+<span class="line"><span style="color:#E1E4E8">        ></span></span>
+<span class="line"><span style="color:#E1E4E8">          Add to Up Next</span></span>
+<span class="line"><span style="color:#E1E4E8">        &#x3C;/</span><span style="color:#85E89D">button</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">      &#x3C;/</span><span style="color:#85E89D">div</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">    &#x3C;/></span></span>
+<span class="line"><span style="color:#E1E4E8">  );</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span>
+<span class="line"></span>
 <span class="line"><span style="color:#F97583">function</span><span style="color:#B392F0"> CraftFeaturePanel</span><span style="color:#E1E4E8">({ </span><span style="color:#FFAB70">reducedMotion</span><span style="color:#E1E4E8"> }</span><span style="color:#F97583">:</span><span style="color:#E1E4E8"> { </span><span style="color:#FFAB70">reducedMotion</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> boolean</span><span style="color:#E1E4E8"> }) {</span></span>
 <span class="line"><span style="color:#F97583">  return</span><span style="color:#E1E4E8"> (</span></span>
 <span class="line"><span style="color:#E1E4E8">    &#x3C;</span><span style="color:#85E89D">div</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"@container overflow-hidden rounded-[1.35rem] border border-white/10 bg-[oklch(0.12_0.025_285)] shadow-[inset_0_1px_0_oklch(1_0_0/0.05)]"</span><span style="color:#E1E4E8">></span></span>
-<span class="line"><span style="color:#E1E4E8">      &#x3C;</span><span style="color:#85E89D">div</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"grid md:grid-cols-[minmax(0,11.5rem)_minmax(0,1fr)] lg:grid-cols-[minmax(0,15rem)_minmax(0,1fr)]"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">      &#x3C;</span><span style="color:#85E89D">div</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"grid md:grid-cols-[1fr_auto]"</span><span style="color:#E1E4E8">></span></span>
 <span class="line"><span style="color:#E1E4E8">        &#x3C;</span><span style="color:#85E89D">div</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"flex flex-col justify-end gap-3 border-b border-white/8 p-5 sm:p-6 md:border-r md:border-b-0 md:p-6 lg:p-8"</span><span style="color:#E1E4E8">></span></span>
 <span class="line"><span style="color:#E1E4E8">          &#x3C;</span><span style="color:#85E89D">p</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"text-[13px] font-medium tracking-[0.08em] text-white/42 uppercase"</span><span style="color:#E1E4E8">></span></span>
 <span class="line"><span style="color:#E1E4E8">            The craft</span></span>
@@ -2091,14 +2485,14 @@ export default function CinemaRow() {
 <span class="line"><span style="color:#B392F0">            id</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"editorial-heading"</span></span>
 <span class="line"><span style="color:#B392F0">            className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"text-balance text-[clamp(1.5rem,4.5cqi,2.25rem)] leading-[1.08] font-semibold tracking-[-0.03em]"</span></span>
 <span class="line"><span style="color:#E1E4E8">          ></span></span>
-<span class="line"><span style="color:#E1E4E8">            Big-screen rhythm. Living-room scale.</span></span>
+<span class="line"><span style="color:#E1E4E8">            Built for the big screen. Fine on your couch.</span></span>
 <span class="line"><span style="color:#E1E4E8">          &#x3C;/</span><span style="color:#85E89D">h2</span><span style="color:#E1E4E8">></span></span>
 <span class="line"><span style="color:#E1E4E8">          &#x3C;</span><span style="color:#85E89D">p</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"text-[14px] leading-relaxed text-white/52 sm:text-[15px]"</span><span style="color:#E1E4E8">></span></span>
-<span class="line"><span style="color:#E1E4E8">            Three motion layers — hero, rail, twin columns — one browse page.</span></span>
+<span class="line"><span style="color:#E1E4E8">            Hero, poster row, two still columns — same page, different speeds.</span></span>
 <span class="line"><span style="color:#E1E4E8">          &#x3C;/</span><span style="color:#85E89D">p</span><span style="color:#E1E4E8">></span></span>
 <span class="line"><span style="color:#E1E4E8">        &#x3C;/</span><span style="color:#85E89D">div</span><span style="color:#E1E4E8">></span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">        &#x3C;</span><span style="color:#85E89D">div</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"min-h-[18rem] p-2.5 sm:min-h-[22rem] sm:p-3 md:min-h-[min(26rem,46vh)]"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">        &#x3C;</span><span style="color:#85E89D">div</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"max-h-[18rem] px-4x"</span><span style="color:#E1E4E8">></span></span>
 <span class="line"><span style="color:#E1E4E8">          &#x3C;</span><span style="color:#79B8FF">VerticalStillGallery</span><span style="color:#B392F0"> reducedMotion</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{reducedMotion} </span><span style="color:#B392F0">className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"h-full"</span><span style="color:#E1E4E8"> /></span></span>
 <span class="line"><span style="color:#E1E4E8">        &#x3C;/</span><span style="color:#85E89D">div</span><span style="color:#E1E4E8">></span></span>
 <span class="line"><span style="color:#E1E4E8">      &#x3C;/</span><span style="color:#85E89D">div</span><span style="color:#E1E4E8">></span></span>
@@ -2119,6 +2513,7 @@ export default function CinemaRow() {
 <span class="line"></span>
 <span class="line"><span style="color:#F97583">  return</span><span style="color:#E1E4E8"> (</span></span>
 <span class="line"><span style="color:#E1E4E8">    &#x3C;></span></span>
+<span class="line"><span style="color:#E1E4E8">      &#x3C;</span><span style="color:#79B8FF">CinemaEntranceStyles</span><span style="color:#E1E4E8"> /></span></span>
 <span class="line"><span style="color:#E1E4E8">      &#x3C;</span><span style="color:#85E89D">div</span></span>
 <span class="line"><span style="color:#B392F0">        className</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#B392F0">cn</span><span style="color:#E1E4E8">(</span></span>
 <span class="line"><span style="color:#E1E4E8">          sans.variable,</span></span>
@@ -2128,25 +2523,6 @@ export default function CinemaRow() {
 <span class="line"><span style="color:#E1E4E8">      ></span></span>
 <span class="line"><span style="color:#E1E4E8">        {</span><span style="color:#6A737D">/* Hero — backdrop marquee + premiere type */</span><span style="color:#E1E4E8">}</span></span>
 <span class="line"><span style="color:#E1E4E8">        &#x3C;</span><span style="color:#85E89D">section</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"relative isolate overflow-hidden"</span><span style="color:#E1E4E8">></span></span>
-<span class="line"><span style="color:#E1E4E8">          &#x3C;</span><span style="color:#85E89D">div</span><span style="color:#B392F0"> aria-hidden</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"true"</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"absolute inset-0 overflow-hidden"</span><span style="color:#E1E4E8">></span></span>
-<span class="line"><span style="color:#E1E4E8">            {reducedMotion </span><span style="color:#F97583">?</span><span style="color:#E1E4E8"> (</span></span>
-<span class="line"><span style="color:#E1E4E8">              &#x3C;</span><span style="color:#85E89D">img</span></span>
-<span class="line"><span style="color:#B392F0">                src</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#79B8FF">FEATURED</span><span style="color:#E1E4E8">.backdrop}</span></span>
-<span class="line"><span style="color:#B392F0">                alt</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">""</span></span>
-<span class="line"><span style="color:#B392F0">                className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"h-full w-full object-cover object-[50%_20%] opacity-40"</span></span>
-<span class="line"><span style="color:#E1E4E8">              /></span></span>
-<span class="line"><span style="color:#E1E4E8">            ) </span><span style="color:#F97583">:</span><span style="color:#E1E4E8"> (</span></span>
-<span class="line"><span style="color:#E1E4E8">              &#x3C;</span><span style="color:#79B8FF">Marquee</span></span>
-<span class="line"><span style="color:#B392F0">                pauseOnHover</span></span>
-<span class="line"><span style="color:#B392F0">                applyMask</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#79B8FF">false</span><span style="color:#E1E4E8">}</span></span>
-<span class="line"><span style="color:#B392F0">                className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"h-full [--duration:48s] [--gap:0px]"</span></span>
-<span class="line"><span style="color:#E1E4E8">              ></span></span>
-<span class="line"><span style="color:#E1E4E8">                {</span><span style="color:#79B8FF">HERO_BACKDROPS</span><span style="color:#E1E4E8">.</span><span style="color:#B392F0">map</span><span style="color:#E1E4E8">((</span><span style="color:#FFAB70">slide</span><span style="color:#E1E4E8">) </span><span style="color:#F97583">=></span><span style="color:#E1E4E8"> (</span></span>
-<span class="line"><span style="color:#E1E4E8">                  &#x3C;</span><span style="color:#79B8FF">BackdropSlide</span><span style="color:#B392F0"> key</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{slide.title} {</span><span style="color:#F97583">...</span><span style="color:#E1E4E8">slide} /></span></span>
-<span class="line"><span style="color:#E1E4E8">                ))}</span></span>
-<span class="line"><span style="color:#E1E4E8">              &#x3C;/</span><span style="color:#79B8FF">Marquee</span><span style="color:#E1E4E8">></span></span>
-<span class="line"><span style="color:#E1E4E8">            )}</span></span>
-<span class="line"><span style="color:#E1E4E8">          &#x3C;/</span><span style="color:#85E89D">div</span><span style="color:#E1E4E8">></span></span>
 <span class="line"><span style="color:#E1E4E8">          &#x3C;</span><span style="color:#85E89D">div</span></span>
 <span class="line"><span style="color:#B392F0">            aria-hidden</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"true"</span></span>
 <span class="line"><span style="color:#B392F0">            className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_120%_80%_at_50%_-10%,oklch(0.28_0.08_280_/_0.55)_0%,transparent_58%),linear-gradient(to_bottom,oklch(0.12_0.02_280)_0%,black_72%)]"</span></span>
@@ -2157,66 +2533,11 @@ export default function CinemaRow() {
 <span class="line"><span style="color:#E1E4E8">          /></span></span>
 <span class="line"></span>
 <span class="line"><span style="color:#E1E4E8">          &#x3C;</span><span style="color:#79B8FF">CinemaContent</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"relative z-10 flex min-h-[min(88svh,920px)] flex-col justify-end pb-[calc(var(--demo-chrome-reserve,5rem)+2.5rem)] pt-[max(1.25rem,env(safe-area-inset-top))]"</span><span style="color:#E1E4E8">></span></span>
-<span class="line"><span style="color:#E1E4E8">            &#x3C;</span><span style="color:#85E89D">p</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"text-[13px] font-medium tracking-[0.08em] text-white/45 uppercase"</span><span style="color:#E1E4E8">></span></span>
-<span class="line"><span style="color:#E1E4E8">              {</span><span style="color:#79B8FF">FEATURED</span><span style="color:#E1E4E8">.eyebrow}</span></span>
-<span class="line"><span style="color:#E1E4E8">            &#x3C;/</span><span style="color:#85E89D">p</span><span style="color:#E1E4E8">></span></span>
-<span class="line"><span style="color:#E1E4E8">            {reducedMotion </span><span style="color:#F97583">?</span><span style="color:#E1E4E8"> (</span></span>
-<span class="line"><span style="color:#E1E4E8">              &#x3C;</span><span style="color:#85E89D">h1</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"mt-3 max-w-[11ch] -translate-x-[0.13ex] text-balance text-[clamp(3.25rem,14vw,7.5rem)] leading-[0.9] font-semibold tracking-[-0.045em]"</span><span style="color:#E1E4E8">></span></span>
-<span class="line"><span style="color:#E1E4E8">                {</span><span style="color:#79B8FF">FEATURED</span><span style="color:#E1E4E8">.title}</span></span>
-<span class="line"><span style="color:#E1E4E8">              &#x3C;/</span><span style="color:#85E89D">h1</span><span style="color:#E1E4E8">></span></span>
-<span class="line"><span style="color:#E1E4E8">            ) </span><span style="color:#F97583">:</span><span style="color:#E1E4E8"> (</span></span>
-<span class="line"><span style="color:#E1E4E8">              &#x3C;</span><span style="color:#85E89D">div</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"mt-3 max-w-[11ch] -translate-x-[0.13ex]"</span><span style="color:#E1E4E8">></span></span>
-<span class="line"><span style="color:#E1E4E8">                &#x3C;</span><span style="color:#79B8FF">FocusBlurResolve</span></span>
-<span class="line"><span style="color:#B392F0">                  text</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#79B8FF">FEATURED</span><span style="color:#E1E4E8">.title}</span></span>
-<span class="line"><span style="color:#B392F0">                  holdMs</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#79B8FF">12000</span><span style="color:#E1E4E8">}</span></span>
-<span class="line"><span style="color:#B392F0">                  gapMs</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#79B8FF">2400</span><span style="color:#E1E4E8">}</span></span>
-<span class="line"><span style="color:#B392F0">                  className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"aspect-auto h-auto w-full items-start justify-start overflow-visible text-white"</span></span>
-<span class="line"><span style="color:#B392F0">                  stageClassName</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"relative inset-auto h-auto min-h-0 w-full place-items-start p-0"</span></span>
-<span class="line"><span style="color:#B392F0">                  titleClassName</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"!text-left !font-semibold !tracking-[-0.045em] !text-[clamp(3.25rem,14vw,7.5rem)] !leading-[0.9]"</span></span>
-<span class="line"><span style="color:#E1E4E8">                /></span></span>
-<span class="line"><span style="color:#E1E4E8">                &#x3C;</span><span style="color:#85E89D">h1</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"sr-only"</span><span style="color:#E1E4E8">>{</span><span style="color:#79B8FF">FEATURED</span><span style="color:#E1E4E8">.title}&#x3C;/</span><span style="color:#85E89D">h1</span><span style="color:#E1E4E8">></span></span>
-<span class="line"><span style="color:#E1E4E8">              &#x3C;/</span><span style="color:#85E89D">div</span><span style="color:#E1E4E8">></span></span>
-<span class="line"><span style="color:#E1E4E8">            )}</span></span>
-<span class="line"><span style="color:#E1E4E8">            &#x3C;</span><span style="color:#85E89D">p</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"mt-5 max-w-[28ch] text-[17px] leading-snug text-white/58 sm:text-[19px]"</span><span style="color:#E1E4E8">></span></span>
-<span class="line"><span style="color:#E1E4E8">              {</span><span style="color:#79B8FF">FEATURED</span><span style="color:#E1E4E8">.tagline}</span></span>
-<span class="line"><span style="color:#E1E4E8">            &#x3C;/</span><span style="color:#85E89D">p</span><span style="color:#E1E4E8">></span></span>
-<span class="line"><span style="color:#E1E4E8">            &#x3C;</span><span style="color:#85E89D">p</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"mt-3 text-[13px] text-white/38"</span><span style="color:#E1E4E8">>{</span><span style="color:#79B8FF">FEATURED</span><span style="color:#E1E4E8">.runtime}&#x3C;/</span><span style="color:#85E89D">p</span><span style="color:#E1E4E8">></span></span>
-<span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">            &#x3C;</span><span style="color:#85E89D">div</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"mt-8 flex flex-wrap items-center gap-3"</span><span style="color:#E1E4E8">></span></span>
-<span class="line"><span style="color:#E1E4E8">              &#x3C;</span><span style="color:#85E89D">button</span></span>
-<span class="line"><span style="color:#B392F0">                type</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"button"</span></span>
-<span class="line"><span style="color:#B392F0">                className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"inline-flex h-11 touch-manipulation items-center gap-2 rounded-full bg-white px-6 text-[14px] font-semibold text-black transition-transform active:scale-[0.98]"</span></span>
-<span class="line"><span style="color:#E1E4E8">              ></span></span>
-<span class="line"><span style="color:#E1E4E8">                &#x3C;</span><span style="color:#79B8FF">PlayIcon</span><span style="color:#B392F0"> aria-hidden</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"true"</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"size-4 fill-current"</span><span style="color:#E1E4E8"> /></span></span>
-<span class="line"><span style="color:#E1E4E8">                Play</span></span>
-<span class="line"><span style="color:#E1E4E8">              &#x3C;/</span><span style="color:#85E89D">button</span><span style="color:#E1E4E8">></span></span>
-<span class="line"><span style="color:#E1E4E8">              &#x3C;</span><span style="color:#85E89D">button</span></span>
-<span class="line"><span style="color:#B392F0">                type</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"button"</span></span>
-<span class="line"><span style="color:#B392F0">                className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"inline-flex h-11 touch-manipulation items-center justify-center rounded-full border border-white/18 bg-white/[0.04] px-6 text-[14px] font-medium text-white/78 transition-colors hover:bg-white/[0.08] active:scale-[0.98]"</span></span>
-<span class="line"><span style="color:#E1E4E8">              ></span></span>
-<span class="line"><span style="color:#E1E4E8">                Add to Up Next</span></span>
-<span class="line"><span style="color:#E1E4E8">              &#x3C;/</span><span style="color:#85E89D">button</span><span style="color:#E1E4E8">></span></span>
-<span class="line"><span style="color:#E1E4E8">            &#x3C;/</span><span style="color:#85E89D">div</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">            &#x3C;</span><span style="color:#79B8FF">HeroPremiereCopy</span><span style="color:#B392F0"> reducedMotion</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{reducedMotion} /></span></span>
 <span class="line"><span style="color:#E1E4E8">          &#x3C;/</span><span style="color:#79B8FF">CinemaContent</span><span style="color:#E1E4E8">></span></span>
 <span class="line"><span style="color:#E1E4E8">        &#x3C;/</span><span style="color:#85E89D">section</span><span style="color:#E1E4E8">></span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">        {</span><span style="color:#6A737D">/* Horizontal poster row */</span><span style="color:#E1E4E8">}</span></span>
-<span class="line"><span style="color:#E1E4E8">        &#x3C;</span><span style="color:#85E89D">section</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"pb-6 pt-2"</span><span style="color:#B392F0"> aria-labelledby</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"premieres-heading"</span><span style="color:#E1E4E8">></span></span>
-<span class="line"><span style="color:#E1E4E8">          &#x3C;</span><span style="color:#79B8FF">CinemaContent</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"mb-4 flex items-end justify-between gap-4"</span><span style="color:#E1E4E8">></span></span>
-<span class="line"><span style="color:#E1E4E8">            &#x3C;</span><span style="color:#85E89D">h2</span><span style="color:#B392F0"> id</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"premieres-heading"</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"text-[22px] font-semibold tracking-[-0.02em]"</span><span style="color:#E1E4E8">></span></span>
-<span class="line"><span style="color:#E1E4E8">              Premieres</span></span>
-<span class="line"><span style="color:#E1E4E8">            &#x3C;/</span><span style="color:#85E89D">h2</span><span style="color:#E1E4E8">></span></span>
-<span class="line"><span style="color:#E1E4E8">            &#x3C;</span><span style="color:#85E89D">span</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"text-[13px] text-white/38"</span><span style="color:#E1E4E8">>Swipe&#x3C;/</span><span style="color:#85E89D">span</span><span style="color:#E1E4E8">></span></span>
-<span class="line"><span style="color:#E1E4E8">          &#x3C;/</span><span style="color:#79B8FF">CinemaContent</span><span style="color:#E1E4E8">></span></span>
-<span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">          &#x3C;</span><span style="color:#79B8FF">CinemaContent</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"overflow-x-auto overscroll-x-contain pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&#x26;::-webkit-scrollbar]:hidden"</span><span style="color:#E1E4E8">></span></span>
-<span class="line"><span style="color:#E1E4E8">            &#x3C;</span><span style="color:#85E89D">div</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"flex w-max snap-x snap-mandatory gap-4 sm:gap-5"</span><span style="color:#E1E4E8">></span></span>
-<span class="line"><span style="color:#E1E4E8">              {</span><span style="color:#79B8FF">PREMIERES</span><span style="color:#E1E4E8">.</span><span style="color:#B392F0">map</span><span style="color:#E1E4E8">((</span><span style="color:#FFAB70">film</span><span style="color:#E1E4E8">) </span><span style="color:#F97583">=></span><span style="color:#E1E4E8"> (</span></span>
-<span class="line"><span style="color:#E1E4E8">                &#x3C;</span><span style="color:#79B8FF">PosterCard</span><span style="color:#B392F0"> key</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{film.title} {</span><span style="color:#F97583">...</span><span style="color:#E1E4E8">film} /></span></span>
-<span class="line"><span style="color:#E1E4E8">              ))}</span></span>
-<span class="line"><span style="color:#E1E4E8">            &#x3C;/</span><span style="color:#85E89D">div</span><span style="color:#E1E4E8">></span></span>
-<span class="line"><span style="color:#E1E4E8">          &#x3C;/</span><span style="color:#79B8FF">CinemaContent</span><span style="color:#E1E4E8">></span></span>
-<span class="line"><span style="color:#E1E4E8">        &#x3C;/</span><span style="color:#85E89D">section</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">        &#x3C;</span><span style="color:#79B8FF">PremieresSection</span><span style="color:#B392F0"> reducedMotion</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{reducedMotion} /></span></span>
 <span class="line"></span>
 <span class="line"><span style="color:#E1E4E8">        {</span><span style="color:#6A737D">/* Editorial + opposing vertical still marquees */</span><span style="color:#E1E4E8">}</span></span>
 <span class="line"><span style="color:#E1E4E8">        &#x3C;</span><span style="color:#85E89D">section</span></span>
