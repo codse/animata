@@ -411,5 +411,12 @@ export function SingleComponentPreview({
   className,
   ...props
 }: Omit<ComponentPreviewProps, "showOtherStories">) {
-  return <ComponentPreview name={name} showOtherStories={false} className={className} {...props} />;
+  return (
+    <ComponentPreview
+      name={name}
+      showOtherStories={false}
+      className={cn("my-0 [&_.preview]:mb-0", className)}
+      {...props}
+    />
+  );
 }
