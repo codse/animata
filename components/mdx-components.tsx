@@ -19,7 +19,7 @@ import { Callout } from "@/components/callout";
 import { CodeBlockWrapper } from "@/components/code-block-wrapper";
 import { ComponentExample } from "@/components/component-example";
 import ComponentListItem from "@/components/component-list-item";
-import { ComponentPreview } from "@/components/component-preview";
+import { ComponentPreview, SingleComponentPreview } from "@/components/component-preview";
 import { ComponentSource } from "@/components/component-source";
 import { CopyButton, CopyNpmCommandButton, CopyTouchCommandButton } from "@/components/copy-button";
 import { CopyProxy } from "@/components/copy-proxy";
@@ -275,6 +275,7 @@ const components = {
   Modal,
   Callout,
   ComponentPreview,
+  SingleComponentPreview,
   ComponentExample,
   ComponentSource,
   RegistryInstall,

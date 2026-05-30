@@ -404,3 +404,12 @@ export function ComponentPreview({
     </div>
   );
 }
+
+/** Primary story only — use in MDX/blog; avoids RSC dropping `showOtherStories={false}`. */
+export function SingleComponentPreview({
+  name,
+  className,
+  ...props
+}: Omit<ComponentPreviewProps, "showOtherStories">) {
+  return <ComponentPreview name={name} showOtherStories={false} className={className} {...props} />;
+}
