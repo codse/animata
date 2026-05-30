@@ -22,7 +22,7 @@ const inlineCodeWhitespaceClasses = "whitespace-nowrap ms-[0.06em] me-[0.32em]";
 
 /** Rich inline chip — gradient fill, hairline border, inset highlight. */
 export const inlineCodeClassName = cn(
-  "relative rounded-[0.35rem] border py-0.5 pl-1.5 pr-2 font-mono text-[0.88em]",
+  "relative rounded-[0.35rem] border py-0.5 px-1.5 font-mono text-[0.88em]",
   inlineCodeWhitespaceClasses,
   "border-[hsl(60_5%_82%)] bg-[linear-gradient(180deg,hsl(60_8%_97.5%),hsl(60_4%_92.5%))]",
   "text-[hsl(240_5%_28%)]",

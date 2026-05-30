@@ -415,7 +415,7 @@ export function SingleComponentPreview({
     <ComponentPreview
       name={name}
       showOtherStories={false}
-      className={cn("my-0 [&_.preview]:mb-0", className)}
+      className={cn("my-0 [&_.preview]:!mb-0", className)}
       {...props}
     />
   );
