@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "motion/react";
+import { type HTMLMotionProps, motion } from "motion/react";
 import {
   Children,
   type ComponentProps,
@@ -228,9 +228,10 @@ function GooeyTabsLabel({ className, ...props }: ComponentProps<"span">) {
   );
 }
 
-type GooeyTabsTabProps = ComponentProps<"button"> & {
+type GooeyTabsTabProps = Omit<HTMLMotionProps<"button">, "children"> & {
   color: string;
   label?: string;
+  children?: ReactNode;
 };
 
 function getGooeyTabParts(
