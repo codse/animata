@@ -1,29 +1,79 @@
 ---
 title: May 2026
-description: Tailwind CSS 4.3, Boids Ecosystem, Sibling Focus Nav, and live demos at /demo.
+description: Boids Ecosystem, Sibling Focus Nav, Gooey Tabs, live demos at /demo, and Tailwind CSS 4.3.
 date: 2026-05-21
 ---
 
-Migrated the repo from Yarn 4 to **pnpm** (`packageManager: pnpm@11.5.0`). Install settings and `allowBuilds` live in `pnpm-workspace.yaml`. CI uses `pnpm/action-setup` with `pnpm install --frozen-lockfile`; local setup is `corepack enable` then `pnpm install`.
+Three new components, live demos at `/demo`, significant updates to Fluid and Shift tabs and Speed Dial, and a toolchain pass (pnpm, Tailwind 4.3, shadcn/ui resync).
 
-Upgraded the docs and site toolchain dependencies. Tailwind CSS moved to 4.3 (with matching `@tailwindcss/postcss`), and `tailwind-merge` to 3.6. All seventeen installed shadcn/ui primitives were re-synced from the official registry using URLs like `https://animata.design/r/{category}/{name}.json`, keeping `@radix-ui/react-*` imports per the new-york style (not the experimental unified `radix-ui` migration). Command palette and dialog were refreshed together so `cmdk` and `@radix-ui/react-dialog` types stayed aligned. The `shadcn:add` script now calls `shadcn@latest` instead of the deprecated `shadcn-ui` CLI. Fixed the command palette dialog scaling from the top-left corner by dropping legacy `slide-in-from-*` transforms on `DialogContent` that conflicted with centered `translate` under Tailwind v4 and `tw-animate-css`. Restored `CardTitle` and `CardDescription` as `<h3>` and `<p>` after the registry sync had replaced them with generic `<div>`s.
+## New components
 
-Added **[Boids Ecosystem](/docs/background/boids-ecosystem)**, a canvas flock built on Craig Reynolds' separation, alignment, and cohesion rules. Agents steer as a school, part around the cursor, and drift toward optional attractor wells you can place or tweak at runtime. Attractor coords are normalized `0..1`, so callers never need the canvas pixel size. An `agentsRef` callback exposes the live agent array for reads from the parent without a React re-render every frame. Shape toggles between triangle (reads as flock) and dot (reads as ambient activity). Palette, background, count, and cursor radius are props; `prefers-reduced-motion` falls back to a static field.
+<ChangeLogComponents>
+  <ChangeLogEntry href="/docs/background/boids-ecosystem">
+    <h3>Boids Ecosystem</h3>
+    <p>Canvas flock with cursor repulsion, optional attractors, and a reduced-motion fallback.</p>
+  </ChangeLogEntry>
+  <ChangeLogEntry href="/docs/container/sibling-focus-nav">
+    <h3>Sibling Focus Nav</h3>
+    <p>Dims sibling links until the active one is hovered or focused — opacity or blur, pure CSS.</p>
+  </ChangeLogEntry>
+  <ChangeLogEntry href="/docs/tabs/gooey-tabs">
+    <h3>Gooey Tabs</h3>
+    <p>Icon tabs with one expanding label merged through an SVG goo filter.</p>
+  </ChangeLogEntry>
+</ChangeLogComponents>
 
-Added **[Sibling Focus Nav](/docs/container/sibling-focus-nav)**, a `<nav>` wrapper that dims or blurs sibling links on group hover or `:focus-within`, then brings the active link back on hover or `:focus-visible`. Two modes: `opacity` (default) and `blur`. Pure CSS on the nav, no state. Use `SiblingFocusNav.Link`, or `getLinkClassName()` with Next.js `Link`.
+## Live demos
 
-Shipped **live demo mode** at `/demo`. Full-page compositions that sit next to the install-and-copy docs lane, not inside it. `/demo/{group}/{item}` drops site chrome so the layout owns the viewport. Bottom chrome fades in on pointer activity with prev/next, a searchable picker, refresh, fullscreen, and home. Shortcuts: `H`, `.`, `R`, `F`, arrow keys. First visit shows a one-time onboarding modal in `localStorage` with the shortcuts and a link to [contributing live demos](/docs/contributing/demos).
+Full-page compositions at `/demo/{group}/{item}` with chrome that fades in on pointer activity, prev/next, a searchable picker, and keyboard shortcuts. Recipe notes and source panels sit below each demo; production build validates the demo registry.
 
-Scroll past a demo and you get **recipe notes**: prose, component links, and an optional Shiki **source panel** from `demo-sources.config.js`, with GitHub blob links on each file tab. `demo-registry.config.js` is the map for demo ↔ component links. Recipe notes pull docs through `<DemoNotes.ComponentLinks>`; component pages pick up **Used in demos** badges. Production `pnpm build` validates the registry.
+<ChangeLogComponents>
+  <ChangeLogEntry href="/demo/hero/launch-shift">
+    <h3>Superhuman · platform hero</h3>
+    <p>Platform hero with Mail, Docs, and AI tabs over a Boids Ecosystem field.</p>
+  </ChangeLogEntry>
+  <ChangeLogEntry href="/demo/footer/footer-wordmark">
+    <h3>Wordmark · Lucien-style type</h3>
+    <p>Footer wordmark with boids background and gradient type treatment.</p>
+  </ChangeLogEntry>
+  <ChangeLogEntry href="/demo/browse/cinema-row">
+    <h3>Stream · premiere browse</h3>
+    <p>Premiere headline, scroll-snap poster row, and dual opposing Marquee columns.</p>
+  </ChangeLogEntry>
+</ChangeLogComponents>
 
-Added **[Stream · premiere browse](/demo/browse/cinema-row)** as a third demo: big premiere type, a horizontal poster row with scroll snap, and two [Marquee](/docs/container/marquee) columns scrolling opposite ways. **[Superhuman · platform hero](/demo/hero/launch-shift)** and **[Footer wordmark](/demo/footer/footer-wordmark)** still run Boids Ecosystem, just with different palettes. Removed **Scrolling Testimonials** as a component; that layout pattern moved into the browse demo instead.
+Removed Scrolling Testimonials as a standalone component — that pattern now lives in the browse demo.
 
-Docs prose now uses **Instrument Sans** in the docs shell and **premium silver inline code chips** for backtick tokens — gradient fill, matched HSL type, and spacing that does not leak into fenced Shiki blocks.
+## Improved components
 
-Reworked **[Speed Dial](/docs/fabs/speed-dial)** for click-to-open (the old hover-only version was useless on touch), keyboard menu support, and CSS stagger without Motion. Fixed **[Glowing Card](/docs/card/glowing-card)** layout and documented the `@theme` blur/glow tokens the v3 config used to ask for manually.
+<ChangeLogComponents>
+  <ChangeLogEntry href="/docs/tabs/fluid-tabs">
+    <h3>Fluid Tabs</h3>
+    <p>Composable List / Tab / Icon / Label API, manual keyboard activation, and a Motion layoutId pill.</p>
+  </ChangeLogEntry>
+  <ChangeLogEntry href="/docs/tabs/shift-tabs">
+    <h3>Shift Tabs</h3>
+    <p>Same composable shape as Fluid with tilted hover frames on inactive tabs.</p>
+  </ChangeLogEntry>
+  <ChangeLogEntry href="/docs/fabs/speed-dial">
+    <h3>Speed Dial</h3>
+    <p>Click-to-open with keyboard menu support and CSS stagger — no hover-only or Motion.</p>
+  </ChangeLogEntry>
+</ChangeLogComponents>
 
-**[Animated Border Trail](/docs/container/animated-border-trail)** install steps no longer tell you to paste global CSS that the component does not use; the `@property` and keyframes ship inline. Unpublished all **feature-cards** docs and **Commit Graph**. Docs fenced blocks now get line numbers from a rehype pass after pretty-code. Replaced bare `transition` with explicit `transition-*` utilities across animata.
+Registry installs for all three tab variants now bundle `animata/tabs/shared.ts` for focus rings and arrow-key behavior.
 
-Added **[Gooey Tabs](/docs/tabs/gooey-tabs)** under Tabs: composable icon tabs that expand one label at a time and merge via an SVG goo filter. Label width uses CSS grid (`0fr` / `1fr`); each tab takes a `color` class; controls are `motion.button` elements with `role="tab"` inside a `tablist`.
+## Improvements
 
-Reworked **[Fluid Tabs](/docs/tabs/fluid-tabs)** and **[Shift Tabs](/docs/tabs/shift-tabs)** into the same composable primitive shape (`List`, `Tab`, `Icon` / `Label` on Fluid). Shared keyboard and focus helpers live in `animata/tabs/shared.ts`. All three use `<nav>`, an inner `role="tablist"`, and `<button role="tab">` with manual activation: **Tab** reaches every tab, arrow keys move focus, and **Enter** or **Space** selects. Focus rings use `ring-2` with `ring-offset-2` and radius matched to each variant. Fluid keeps a Motion `layoutId` pill; Shift keeps the tilted hover frame on inactive tabs.
+Migrated from Yarn 4 to pnpm. Upgraded Tailwind CSS to 4.3 and re-synced seventeen shadcn/ui primitives from `https://animata.design/r/{category}/{name}.json`. The `shadcn:add` script calls `shadcn@latest`. Docs use Instrument Sans and silver inline code chips; fenced blocks get line numbers after pretty-code. Animated Border Trail install steps no longer reference unused global CSS. Unpublished feature-cards docs and Commit Graph. Replaced bare `transition` utilities with explicit `transition-*` across animata.
+
+## Bug fixes
+
+<ChangeLogComponents>
+  <ChangeLogEntry href="/docs/card/glowing-card">
+    <h3>Glowing Card</h3>
+    <p>Fixed layout overflow and documented the @theme blur/glow tokens from the v3 config.</p>
+  </ChangeLogEntry>
+</ChangeLogComponents>
+
+The command palette dialog scaled from the top-left after the shadcn sync — dropped legacy `slide-in-from-*` transforms on `DialogContent` that fought centered `translate` under Tailwind v4. Restored `CardTitle` and `CardDescription` as `h3` and `p` after the registry sync had swapped them for generic `div`s.
