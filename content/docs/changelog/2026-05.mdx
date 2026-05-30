@@ -23,3 +23,5 @@ Docs prose now uses **Instrument Sans** in the docs shell and **premium silver i
 Reworked **[Speed Dial](/docs/fabs/speed-dial)** for click-to-open (the old hover-only version was useless on touch), keyboard menu support, and CSS stagger without Motion. Fixed **[Glowing Card](/docs/card/glowing-card)** layout and documented the `@theme` blur/glow tokens the v3 config used to ask for manually.
 
 **[Animated Border Trail](/docs/container/animated-border-trail)** install steps no longer tell you to paste global CSS that the component does not use; the `@property` and keyframes ship inline. Unpublished all **feature-cards** docs and **Commit Graph**. Docs fenced blocks now get line numbers from a rehype pass after pretty-code. Replaced bare `transition` with explicit `transition-*` utilities across animata.
+
+Added **[Social](/docs/tabs/social)** under Tabs: a gooey icon strip where every tab starts collapsed and one label expands on click. Labels use `select-none` so width animation does not fight text selection; each tab keeps its own color instead of inheriting the active item's class.
