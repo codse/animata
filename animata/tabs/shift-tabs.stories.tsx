@@ -9,12 +9,19 @@ const meta = {
     layout: "centered",
   },
   tags: ["autodocs"],
+  args: {
+    children: null,
+  },
+  argTypes: {
+    children: { control: false },
+  },
 } satisfies Meta<typeof ShiftTabs>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Primary: Story = {
+  args: { children: null },
   render: () => (
     <ShiftTabs defaultActiveIndex={0}>
       <ShiftTabs.List aria-label="Shift tabs">

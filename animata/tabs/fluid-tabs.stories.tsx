@@ -10,12 +10,19 @@ const meta = {
     layout: "centered",
   },
   tags: ["autodocs"],
+  args: {
+    children: null,
+  },
+  argTypes: {
+    children: { control: false },
+  },
 } satisfies Meta<typeof FluidTabs>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Primary: Story = {
+  args: { children: null },
   render: () => (
     <FluidTabs defaultActiveIndex={2}>
       <FluidTabs.List aria-label="Fluid tabs">
@@ -40,6 +47,7 @@ export const Primary: Story = {
 };
 
 export const WithIcons: Story = {
+  args: { children: null },
   render: () => (
     <FluidTabs defaultActiveIndex={0}>
       <FluidTabs.List aria-label="Fluid tabs with icons">

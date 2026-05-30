@@ -10,12 +10,19 @@ const meta = {
     layout: "centered",
   },
   tags: ["autodocs"],
+  args: {
+    children: null,
+  },
+  argTypes: {
+    children: { control: false },
+  },
 } satisfies Meta<typeof GooeyTabs>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Primary: Story = {
+  args: { children: null },
   render: () => (
     <GooeyTabs defaultActiveIndex={2}>
       <GooeyTabs.List>
