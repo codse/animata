@@ -1,7 +1,7 @@
 "use client";
 
+import { Inbox, Landmark, PieChart } from "lucide-react";
 import Link from "next/link";
-
 import Duolingo from "@/animata/button/duolingo";
 import ShiningButton from "@/animata/button/shining-button";
 import FluidTabs from "@/animata/tabs/fluid-tabs";
@@ -172,7 +172,28 @@ export function HeroVariantB() {
           className="group flex flex-col overflow-hidden rounded-2xl bg-[hsl(var(--surface-card))] shadow-[var(--shadow-md)]"
         >
           <div className="flex flex-1 items-center justify-center px-4 py-8">
-            <FluidTabs />
+            <FluidTabs defaultActiveIndex={2}>
+              <FluidTabs.List aria-label="Fluid tabs">
+                <FluidTabs.Tab label="Accounts">
+                  <FluidTabs.Icon>
+                    <Landmark aria-hidden />
+                  </FluidTabs.Icon>
+                  <FluidTabs.Label>Accounts</FluidTabs.Label>
+                </FluidTabs.Tab>
+                <FluidTabs.Tab label="Deposits">
+                  <FluidTabs.Icon>
+                    <Inbox aria-hidden />
+                  </FluidTabs.Icon>
+                  <FluidTabs.Label>Deposits</FluidTabs.Label>
+                </FluidTabs.Tab>
+                <FluidTabs.Tab label="Funds">
+                  <FluidTabs.Icon>
+                    <PieChart aria-hidden />
+                  </FluidTabs.Icon>
+                  <FluidTabs.Label>Funds</FluidTabs.Label>
+                </FluidTabs.Tab>
+              </FluidTabs.List>
+            </FluidTabs>
           </div>
           <div className="flex items-center justify-between px-4 py-2.5">
             <span className="text-[12px] font-semibold text-foreground/50">Fluid Tabs</span>

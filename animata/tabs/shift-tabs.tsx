@@ -1,86 +1,201 @@
 "use client";
 
-import { motion } from "motion/react";
-import { useState } from "react";
+import {
+  Children,
+  type ComponentProps,
+  createContext,
+  type FocusEvent,
+  isValidElement,
+  type KeyboardEvent,
+  type ReactNode,
+  use,
+} from "react";
 
+import {
+  handleTabListFocusCapture,
+  handleTabListKeyDown,
+  tabFocusClass,
+  useTabSelection,
+} from "@/animata/tabs/shared";
 import { cn } from "@/lib/utils";
 
-const SHELL_TRANSITION = {
-  duration: 0.32,
-  ease: [0.32, 0.72, 0, 1] as const,
+type ShiftTabsContextValue = {
+  activeIndex: number;
+  setActiveIndex: (index: number) => void;
+  focusedIndex: number;
+  setFocusedIndex: (index: number) => void;
 };
 
-const HOVER_SPRING = {
-  type: "spring" as const,
-  stiffness: 420,
-  damping: 28,
+const ShiftTabsContext = createContext<ShiftTabsContextValue | null>(null);
+
+type ShiftTabSlotContextValue = {
+  index: number;
 };
 
-const defaultItems = ["Issues", "Pull Requests", "Actions", "Projects"];
+const ShiftTabSlotContext = createContext<ShiftTabSlotContextValue | null>(null);
 
-type ShiftTabProps = {
-  label: string;
-  isActive: boolean;
-  onSelect: () => void;
-};
-
-function ShiftTab({ label, isActive, onSelect }: ShiftTabProps) {
-  return (
-    <motion.button
-      type="button"
-      role="tab"
-      aria-selected={isActive}
-      onClick={onSelect}
-      whileTap={{ scale: 0.97 }}
-      transition={{ duration: 0.14, ease: [0.25, 0.1, 0.25, 1] }}
-      className={cn(
-        "rounded-lg bg-foreground p-px outline-none",
-        "focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
-        isActive && "shadow-sm",
-      )}
-    >
-      <motion.span
-        className={cn(
-          "flex h-10 items-center justify-center rounded-[calc(var(--radius)-2px)] border-2 bg-background px-4",
-          "motion-reduce:transition-none",
-          isActive ? "border-accent text-accent" : "border-border text-foreground",
-        )}
-        whileHover={isActive ? undefined : { rotate: 4 }}
-        transition={isActive ? SHELL_TRANSITION : HOVER_SPRING}
-      >
-        <span className="select-none px-1 text-center font-mono text-sm font-medium">{label}</span>
-      </motion.span>
-    </motion.button>
-  );
+function useShiftTabs() {
+  const context = use(ShiftTabsContext);
+  if (!context) {
+    throw new Error("ShiftTabs primitives must be used within <ShiftTabs>.");
+  }
+  return context;
 }
 
-export type ShiftTabsProps = {
-  items?: string[];
-  defaultIndex?: number;
+function useShiftTabSlot() {
+  const context = use(ShiftTabSlotContext);
+  if (!context) {
+    throw new Error("ShiftTabs.Tab must be a direct child of <ShiftTabs.List>.");
+  }
+  return context;
+}
+
+type ShiftTabsRootProps = {
+  children: ReactNode;
+  defaultActiveIndex?: number;
+  activeIndex?: number;
+  onActiveIndexChange?: (index: number) => void;
   className?: string;
 };
 
-export default function ShiftTabs({
-  items = defaultItems,
-  defaultIndex = 0,
+function ShiftTabsRoot({
+  children,
+  defaultActiveIndex = 0,
+  activeIndex: activeIndexProp,
+  onActiveIndexChange,
   className,
-}: ShiftTabsProps) {
-  const [activeIndex, setActiveIndex] = useState(defaultIndex);
+}: ShiftTabsRootProps) {
+  const { activeIndex, setActiveIndex, focusedIndex, setFocusedIndex } = useTabSelection({
+    defaultActiveIndex,
+    activeIndex: activeIndexProp,
+    onActiveIndexChange,
+  });
 
   return (
-    <div
-      role="tablist"
-      aria-label="Shift tabs"
-      className={cn("flex flex-wrap items-center justify-center gap-3 sm:gap-4", className)}
+    <ShiftTabsContext.Provider
+      value={{ activeIndex, setActiveIndex, focusedIndex, setFocusedIndex }}
     >
-      {items.map((item, index) => (
-        <ShiftTab
-          key={item}
-          label={item}
-          isActive={activeIndex === index}
-          onSelect={() => setActiveIndex(index)}
-        />
-      ))}
-    </div>
+      <div className={className}>{children}</div>
+    </ShiftTabsContext.Provider>
   );
 }
+
+type ShiftTabsListProps = ComponentProps<"nav"> & {
+  "aria-label"?: string;
+};
+
+function ShiftTabsList({
+  className,
+  children,
+  "aria-label": ariaLabel = "Tabs",
+  onKeyDown,
+  onFocusCapture,
+  ...props
+}: ShiftTabsListProps) {
+  const { activeIndex, setActiveIndex, setFocusedIndex } = useShiftTabs();
+  const tabs = Children.toArray(children).filter(isValidElement);
+  const count = tabs.length;
+
+  return (
+    <nav aria-label={ariaLabel} className={cn("overflow-visible", className)} {...props}>
+      <div
+        role="tablist"
+        onFocusCapture={(event: FocusEvent<HTMLElement>) => {
+          onFocusCapture?.(event);
+          handleTabListFocusCapture(event, activeIndex, setFocusedIndex);
+        }}
+        onKeyDown={(event: KeyboardEvent<HTMLElement>) => {
+          onKeyDown?.(event);
+          if (!event.defaultPrevented) {
+            handleTabListKeyDown(event, count, setActiveIndex, setFocusedIndex);
+          }
+        }}
+        className="flex flex-wrap items-center justify-center gap-3 sm:gap-4"
+      >
+        {tabs.map((tab, index) => (
+          <ShiftTabSlotContext.Provider key={tab.key ?? index} value={{ index }}>
+            {tab}
+          </ShiftTabSlotContext.Provider>
+        ))}
+      </div>
+    </nav>
+  );
+}
+
+function ShiftTabsLabel({ className, ...props }: ComponentProps<"span">) {
+  return (
+    <span
+      className={cn("select-none px-1 text-center font-mono text-sm font-medium", className)}
+      {...props}
+    />
+  );
+}
+
+type ShiftTabsTabProps = ComponentProps<"button"> & {
+  label?: string;
+};
+
+function ShiftTabsTab({
+  className,
+  children,
+  label,
+  onClick,
+  onFocus,
+  ...props
+}: ShiftTabsTabProps) {
+  const { activeIndex, setActiveIndex, setFocusedIndex } = useShiftTabs();
+  const { index } = useShiftTabSlot();
+  const isSelected = activeIndex === index;
+
+  return (
+    <button
+      type="button"
+      role="tab"
+      aria-selected={isSelected}
+      {...(label ? { "aria-label": label } : {})}
+      onClick={(event) => {
+        onClick?.(event);
+        if (!event.defaultPrevented) {
+          setActiveIndex(index);
+        }
+      }}
+      onFocus={(event: FocusEvent<HTMLButtonElement>) => {
+        onFocus?.(event);
+        if (!event.defaultPrevented) {
+          setFocusedIndex(index);
+        }
+      }}
+      className={cn(
+        tabFocusClass("rounded-lg"),
+        "transition-colors duration-200",
+        "active:scale-[0.97] motion-reduce:active:scale-100",
+        isSelected
+          ? "bg-foreground border-b-2 border-b-accent"
+          : "bg-transparent hover:bg-foreground",
+        className,
+      )}
+      {...props}
+    >
+      <span
+        className={cn(
+          "flex h-10 items-center justify-center rounded-md border-2 bg-background px-4",
+          "transition-transform duration-200 ease-out motion-reduce:transition-none motion-reduce:hover:rotate-0",
+          isSelected
+            ? "rotate-0 border-accent text-accent"
+            : "origin-top-right border-border text-foreground hover:rotate-6",
+        )}
+      >
+        {children}
+      </span>
+    </button>
+  );
+}
+
+const ShiftTabs = Object.assign(ShiftTabsRoot, {
+  List: ShiftTabsList,
+  Tab: ShiftTabsTab,
+  Label: ShiftTabsLabel,
+});
+
+export default ShiftTabs;
+export { ShiftTabsLabel, ShiftTabsList, ShiftTabsRoot, ShiftTabsTab, useShiftTabs };

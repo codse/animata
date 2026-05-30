@@ -1,7 +1,8 @@
 ---
 title: Fluid Tabs
-description: The component is a sliding animation card
+description: Composable tabs with a sliding pill indicator and manual keyboard selection.
 author: RudraSankha
+labels: ["requires interaction", "click"]
 ---
 
 <ComponentPreview name="tabs-fluid-tabs--primary" />
@@ -26,18 +27,50 @@ npm install motion lucide-react
 It will create a new file `fluid-tabs.tsx` inside the `components/animata/tabs` directory.
 
 ```bash
-mkdir -p components/animata/tabs && touch components/animata/tabs/fluid-tabs.tsx
+mkdir -p components/animata/tabs && touch components/animata/tabs/shared.ts components/animata/tabs/fluid-tabs.tsx
 ```
 
-<Step>Paste the code</Step>{" "}
+<Step>Paste the shared tab helpers</Step>
 
-Open the newly created file and paste the following code:
+```jsx file=<rootDir>/animata/tabs/shared.ts
+
+```
+
+<Step>Paste the component</Step>
 
 ```jsx file=<rootDir>/animata/tabs/fluid-tabs.tsx
 
 ```
 
 </Steps>
+
+## Usage
+
+Compose tabs with primitives. `FluidTabs.Icon` is optional — use `FluidTabs.Label` alone, icon alone, or both. The tab content row uses `gap-2` between children (only visible when both icon and label are present).
+
+```tsx
+import FluidTabs from "@/animata/tabs/fluid-tabs";
+import { Landmark } from "lucide-react";
+
+<FluidTabs defaultActiveIndex={0}>
+  <FluidTabs.List aria-label="Accounts">
+    <FluidTabs.Tab>
+      <FluidTabs.Label>Overview</FluidTabs.Label>
+    </FluidTabs.Tab>
+    <FluidTabs.Tab label="Settings">
+      <FluidTabs.Icon>
+        <Landmark />
+      </FluidTabs.Icon>
+    </FluidTabs.Tab>
+  </FluidTabs.List>
+</FluidTabs>
+```
+
+Structure: `<nav>` wraps a `role="tablist"` container; each `FluidTabs.Tab` is a `<button role="tab">`. Icons are `aria-hidden` when a label is visible. For icon-only tabs, set the `label` prop on `FluidTabs.Tab`.
+
+**Keyboard (manual activation):** **Tab** visits every tab; **arrow** keys move focus; **Enter** or **Space** selects the focused tab (updates `aria-selected` and the sliding pill). Click selects immediately.
+
+Use `activeIndex` and `onActiveIndexChange` on the root for controlled mode. The pill uses a per-instance `layoutId` so multiple tab bars on one page do not clash. Focus uses a visible `ring-2` with `ring-offset-2` on the pill-shaped tab.
 
 ## Credits
 

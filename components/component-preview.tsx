@@ -327,7 +327,7 @@ function StoryRenderer({ name }: { name: string }) {
     <>
       <div
         key={argsKey}
-        className="preview relative flex min-h-[200px] w-full max-w-full items-center justify-center overflow-x-auto overflow-y-hidden rounded-lg border bg-dot-pattern p-4 has-[.full-content]:overflow-auto has-[.full-content]:p-0"
+        className="preview relative flex min-h-[200px] w-full max-w-full items-center justify-center overflow-x-auto overflow-y-hidden rounded-lg border bg-dot-pattern p-4 has-[.full-content]:overflow-auto has-[.full-content]:p-0 has-[role=tablist]:overflow-visible has-[role=tablist]:p-2"
       >
         {preview}
       </div>
@@ -344,7 +344,7 @@ function StoryRenderer({ name }: { name: string }) {
           {storyData.otherStories.map((story) => (
             <div key={story.name}>
               <div className="mb-2 font-mono text-xs text-muted-foreground">{story.name}</div>
-              <div className="preview relative flex min-h-[150px] w-full max-w-full items-center justify-center overflow-x-auto overflow-y-hidden rounded-lg border bg-dot-pattern p-4 has-[.full-content]:overflow-auto has-[.full-content]:p-0">
+              <div className="preview relative flex min-h-[150px] w-full max-w-full items-center justify-center overflow-x-auto overflow-y-hidden rounded-lg border bg-dot-pattern p-4 has-[.full-content]:overflow-auto has-[.full-content]:p-0 has-[role=tablist]:overflow-visible has-[role=tablist]:p-2">
                 <StoryRender render={story.render} args={story.args} />
               </div>
             </div>

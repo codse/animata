@@ -1,7 +1,7 @@
 ---
 title: Shift Tabs
-description: A shift highlighting tabs
-labels: ["requires interaction", "hover"]
+description: Composable shift-style tabs with hover tilt and manual keyboard selection.
+labels: ["requires interaction", "hover", "click"]
 author: morphhyy
 ---
 
@@ -21,18 +21,45 @@ author: morphhyy
 It will create a new file called `shift-tabs.tsx` inside the `components/animata/tabs` directory.
 
 ```bash
-mkdir -p components/animata/tabs && touch components/animata/tabs/shift-tabs.tsx
+mkdir -p components/animata/tabs && touch components/animata/tabs/shared.ts components/animata/tabs/shift-tabs.tsx
 ```
 
-<Step>Paste the code</Step>
+<Step>Paste the shared tab helpers</Step>
 
-Open the newly created file and paste the following code:
+```jsx file=<rootDir>/animata/tabs/shared.ts
+
+```
+
+<Step>Paste the component</Step>
 
 ```jsx file=<rootDir>/animata/tabs/shift-tabs.tsx
 
 ```
 
 </Steps>
+
+## Usage
+
+Compose tabs with primitives. Wrap each label in `ShiftTabs.Label`, or pass plain text as `Tab` children. Structure: `<nav>`, inner `role="tablist"`, and `<button role="tab">` per item.
+
+```tsx
+import ShiftTabs from "@/animata/tabs/shift-tabs";
+
+<ShiftTabs defaultActiveIndex={0}>
+  <ShiftTabs.List aria-label="Repository">
+    <ShiftTabs.Tab label="Issues">
+      <ShiftTabs.Label>Issues</ShiftTabs.Label>
+    </ShiftTabs.Tab>
+    <ShiftTabs.Tab label="Pull Requests">
+      <ShiftTabs.Label>Pull Requests</ShiftTabs.Label>
+    </ShiftTabs.Tab>
+  </ShiftTabs.List>
+</ShiftTabs>
+```
+
+**Keyboard (manual activation):** **Tab** visits every tab; **arrow** keys move focus; **Enter** or **Space** selects. Click selects immediately.
+
+Use `activeIndex` and `onActiveIndexChange` for controlled mode. Only the selected tab keeps the foreground frame; inactive tabs show it on hover. Focus ring uses `ring-offset-2` with `rounded-lg` on the tab control.
 
 ## Credits
 

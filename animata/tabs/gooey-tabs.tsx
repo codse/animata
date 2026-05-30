@@ -5,18 +5,27 @@ import {
   Children,
   type ComponentProps,
   createContext,
+  type FocusEvent,
   isValidElement,
+  type KeyboardEvent,
   type ReactNode,
   use,
   useId,
-  useState,
 } from "react";
 
+import {
+  handleTabListFocusCapture,
+  handleTabListKeyDown,
+  tabFocusClass,
+  useTabSelection,
+} from "@/animata/tabs/shared";
 import { cn } from "@/lib/utils";
 
 type GooeyTabsContextValue = {
   activeIndex: number;
   setActiveIndex: (index: number) => void;
+  focusedIndex: number;
+  setFocusedIndex: (index: number) => void;
   filterId: string;
   intensity: number;
   contrast: number;
@@ -48,6 +57,22 @@ function useGooeyTabSlot() {
   return context;
 }
 
+function textFromNode(node: ReactNode): string {
+  if (node == null || typeof node === "boolean") {
+    return "";
+  }
+  if (typeof node === "string" || typeof node === "number") {
+    return String(node);
+  }
+  if (Array.isArray(node)) {
+    return node.map(textFromNode).join("");
+  }
+  if (isValidElement(node)) {
+    return textFromNode((node.props as { children?: ReactNode }).children);
+  }
+  return "";
+}
+
 function GooeyFilter({
   filterId,
   intensity,
@@ -64,9 +89,9 @@ function GooeyFilter({
   children: ReactNode;
 }) {
   return (
-    <motion.div
+    <div
       style={{ filter: `url(#${filterId})`, isolation: "isolate" }}
-      className={cn("flex flex-wrap rounded-sm", className)}
+      className={cn("relative flex flex-wrap rounded-sm", className)}
     >
       <svg aria-hidden className="absolute size-0" xmlns="http://www.w3.org/2000/svg">
         <title>Gooey filter</title>
@@ -84,7 +109,7 @@ function GooeyFilter({
         </defs>
       </svg>
       {children}
-    </motion.div>
+    </div>
   );
 }
 
@@ -109,29 +134,45 @@ function GooeyTabsRoot({
   lightness = -7,
   className,
 }: GooeyTabsRootProps) {
-  const [uncontrolledIndex, setUncontrolledIndex] = useState(defaultActiveIndex);
-  const activeIndex = activeIndexProp ?? uncontrolledIndex;
-  const setActiveIndex = (index: number) => {
-    onActiveIndexChange?.(index);
-    if (activeIndexProp === undefined) {
-      setUncontrolledIndex(index);
-    }
-  };
+  const { activeIndex, setActiveIndex, focusedIndex, setFocusedIndex } = useTabSelection({
+    defaultActiveIndex,
+    activeIndex: activeIndexProp,
+    onActiveIndexChange,
+  });
   const filterId = `gooey-tabs-${useId().replace(/:/g, "")}`;
 
   return (
     <GooeyTabsContext.Provider
-      value={{ activeIndex, setActiveIndex, filterId, intensity, contrast, lightness }}
+      value={{
+        activeIndex,
+        setActiveIndex,
+        focusedIndex,
+        setFocusedIndex,
+        filterId,
+        intensity,
+        contrast,
+        lightness,
+      }}
     >
       <div className={className}>{children}</div>
     </GooeyTabsContext.Provider>
   );
 }
 
-type GooeyTabsListProps = ComponentProps<"div">;
+type GooeyTabsListProps = ComponentProps<"nav"> & {
+  "aria-label"?: string;
+};
 
-function GooeyTabsList({ className, children }: GooeyTabsListProps) {
-  const { activeIndex, filterId, intensity, contrast, lightness } = useGooeyTabs();
+function GooeyTabsList({
+  className,
+  children,
+  "aria-label": ariaLabel = "Tabs",
+  onKeyDown,
+  onFocusCapture,
+  ...props
+}: GooeyTabsListProps) {
+  const { activeIndex, setActiveIndex, setFocusedIndex, filterId, intensity, contrast, lightness } =
+    useGooeyTabs();
   const tabs = Children.toArray(children).filter(isValidElement);
   const count = tabs.length;
 
@@ -143,72 +184,40 @@ function GooeyTabsList({ className, children }: GooeyTabsListProps) {
       lightness={lightness}
       className={cn({ "px-0": activeIndex !== -1 }, className)}
     >
-      {tabs.map((tab, index) => (
-        <GooeyTabSlotContext.Provider key={tab.key ?? index} value={{ index, count }}>
-          {tab}
-        </GooeyTabSlotContext.Provider>
-      ))}
+      <nav aria-label={ariaLabel} className="overflow-visible" {...props}>
+        <div
+          role="tablist"
+          onFocusCapture={(event: FocusEvent<HTMLElement>) => {
+            onFocusCapture?.(event);
+            handleTabListFocusCapture(event, activeIndex, setFocusedIndex);
+          }}
+          onKeyDown={(event: KeyboardEvent<HTMLElement>) => {
+            onKeyDown?.(event);
+            if (!event.defaultPrevented) {
+              handleTabListKeyDown(event, count, setActiveIndex, setFocusedIndex);
+            }
+          }}
+          className="flex flex-wrap"
+        >
+          {tabs.map((tab, index) => (
+            <GooeyTabSlotContext.Provider key={tab.key ?? index} value={{ index, count }}>
+              {tab}
+            </GooeyTabSlotContext.Provider>
+          ))}
+        </div>
+      </nav>
     </GooeyFilter>
   );
 }
 
-type GooeyTabsTabProps = ComponentProps<"div"> & {
-  /** Tailwind classes for this tab’s fill (e.g. `bg-blue-400 hover:bg-blue-500`). */
-  color: string;
-  /** Accessible name when the label is not plain text. */
-  label?: string;
-};
-
-/**
- * Tab shell uses CSS grid `auto 0fr` → `auto 1fr` so the label column sizes
- * intrinsically — no getBoundingClientRect. Place `GooeyTabs.Icon` then `GooeyTabs.Label` as children.
- */
-function GooeyTabsTab({ color, label, className, children, ...props }: GooeyTabsTabProps) {
-  const { activeIndex, setActiveIndex } = useGooeyTabs();
-  const { index, count } = useGooeyTabSlot();
-  const isActive = activeIndex === index;
-
-  const ariaLabel =
-    label ??
-    (typeof children === "string"
-      ? children
-      : `Tab ${index + 1}${isActive ? ", expanded" : ", collapsed"}`);
-
-  return (
-    <motion.div
-      role="button"
-      tabIndex={0}
-      aria-expanded={isActive}
-      aria-label={ariaLabel}
-      onClick={() => setActiveIndex(isActive ? -1 : index)}
-      onKeyDown={(event) => {
-        if (event.key === "Enter" || event.key === " ") {
-          event.preventDefault();
-          setActiveIndex(isActive ? -1 : index);
-        }
-      }}
-      className={cn(
-        "relative grid h-10 cursor-pointer items-center overflow-hidden text-white",
-        "transition-[grid-template-columns,gap,padding,margin,border-radius] duration-200 ease-in-out motion-reduce:transition-none",
-        isActive ? "grid-cols-[auto_1fr] gap-2 px-4" : "grid-cols-[auto_0fr] gap-0 px-2",
-        color,
-        {
-          rounded: isActive,
-          "mx-4": isActive && activeIndex !== 0 && activeIndex !== count - 1,
-          "mr-4": isActive && activeIndex === 0,
-          "ml-4": isActive && activeIndex === count - 1,
-        },
-        className,
-      )}
-      {...props}
-    >
-      {children}
-    </motion.div>
-  );
-}
-
 function GooeyTabsIcon({ className, ...props }: ComponentProps<"span">) {
-  return <span className={cn("inline-flex shrink-0 [&_svg]:size-6", className)} {...props} />;
+  return (
+    <span
+      aria-hidden
+      className={cn("inline-flex shrink-0 empty:hidden [&_svg]:size-6", className)}
+      {...props}
+    />
+  );
 }
 
 function GooeyTabsLabel({ className, ...props }: ComponentProps<"span">) {
@@ -217,6 +226,102 @@ function GooeyTabsLabel({ className, ...props }: ComponentProps<"span">) {
       className={cn("min-w-0 overflow-hidden select-none whitespace-nowrap text-sm", className)}
       {...props}
     />
+  );
+}
+
+type GooeyTabsTabProps = ComponentProps<"button"> & {
+  color: string;
+  label?: string;
+};
+
+function getGooeyTabParts(
+  children: ReactNode,
+  Icon: typeof GooeyTabsIcon,
+  Label: typeof GooeyTabsLabel,
+) {
+  let hasIcon = false;
+  let visibleLabel = "";
+
+  Children.forEach(children, (child) => {
+    if (!isValidElement(child)) {
+      return;
+    }
+    if (child.type === Icon) {
+      hasIcon = true;
+    }
+    if (child.type === Label) {
+      visibleLabel += textFromNode((child.props as { children?: ReactNode }).children);
+    }
+  });
+
+  return { hasIcon, visibleLabel: visibleLabel.trim() };
+}
+
+function gooeyTabGridClass(isSelected: boolean, hasIcon: boolean, hasLabel: boolean) {
+  if (hasIcon && hasLabel) {
+    return isSelected ? "grid-cols-[auto_1fr] gap-2 px-4" : "grid-cols-[auto_0fr] gap-0 px-2";
+  }
+  if (hasIcon) {
+    return isSelected ? "grid-cols-[auto] px-4" : "grid-cols-[auto] px-2";
+  }
+  if (hasLabel) {
+    return isSelected ? "grid-cols-[1fr] gap-0 px-4" : "grid-cols-[0fr] gap-0 px-2";
+  }
+  return isSelected ? "px-4" : "px-2";
+}
+
+function GooeyTabsTab({
+  color,
+  label,
+  className,
+  children,
+  onClick,
+  onFocus,
+  ...props
+}: GooeyTabsTabProps) {
+  const { activeIndex, setActiveIndex, setFocusedIndex } = useGooeyTabs();
+  const { index, count } = useGooeyTabSlot();
+  const isSelected = activeIndex === index;
+
+  const { hasIcon, visibleLabel } = getGooeyTabParts(children, GooeyTabsIcon, GooeyTabsLabel);
+  const hasVisibleLabel = Boolean(visibleLabel);
+  const ariaLabel = label ?? (hasVisibleLabel ? undefined : `Tab ${index + 1}`);
+
+  return (
+    <motion.button
+      type="button"
+      role="tab"
+      aria-selected={isSelected}
+      {...(ariaLabel ? { "aria-label": ariaLabel } : {})}
+      onClick={(event) => {
+        onClick?.(event);
+        if (!event.defaultPrevented) {
+          setActiveIndex(index);
+        }
+      }}
+      onFocus={(event: FocusEvent<HTMLButtonElement>) => {
+        onFocus?.(event);
+        if (!event.defaultPrevented) {
+          setFocusedIndex(index);
+        }
+      }}
+      className={cn(
+        tabFocusClass(isSelected ? "rounded" : "rounded-sm"),
+        "relative grid h-10 cursor-pointer items-center overflow-visible text-white",
+        "transition-[grid-template-columns,gap,padding,margin,border-radius] duration-200 ease-in-out motion-reduce:transition-none",
+        gooeyTabGridClass(isSelected, hasIcon, hasVisibleLabel),
+        color,
+        {
+          "mx-4": isSelected && activeIndex !== 0 && activeIndex !== count - 1,
+          "mr-4": isSelected && activeIndex === 0,
+          "ml-4": isSelected && activeIndex === count - 1,
+        },
+        className,
+      )}
+      {...props}
+    >
+      {children}
+    </motion.button>
   );
 }
 
