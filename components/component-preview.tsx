@@ -205,6 +205,14 @@ function formatStoryName(exportName: string): string {
   return exportName.replace(/([A-Z])/g, " $1").trim();
 }
 
+/** Storybook slug `with-icons` → export `WithIcons`. */
+function storySlugToExportName(slug: string): string {
+  return slug
+    .split("-")
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+    .join("");
+}
+
 type StoryExport = {
   render?: (args: Record<string, unknown>) => React.ReactNode;
   args?: Record<string, unknown>;
@@ -276,7 +284,7 @@ function StoryRenderer({
   React.useEffect(() => {
     const path = storyIdToPath(name);
     const [, storyName = "primary"] = name.split("--");
-    const exportName = storyName.charAt(0).toUpperCase() + storyName.slice(1);
+    const exportName = storySlugToExportName(storyName);
 
     import(`@/animata/${path}.stories`)
       .then((mod) => {
