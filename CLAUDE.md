@@ -96,7 +96,7 @@ styles/globals.css     # Tailwind v4 theme tokens
 ## Running locally
 
 ```bash
-yarn dev        # Next.js dev server
-yarn storybook  # Component workbench
-yarn build      # Production build
+pnpm dev        # Next.js dev server
+pnpm storybook  # Component workbench
+pnpm build      # Production build
 ```

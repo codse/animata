@@ -4,7 +4,8 @@
 /node_modules
 /.pnp
 .pnp.js
-.yarn/install-state.gz
+.pnpm-store
+.yarn/
 
 # testing
 /coverage

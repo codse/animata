@@ -73,7 +73,7 @@
       "!**/out",
       "!**/public/preview",
       "!**/components/ui",
-      "!**/yarn.lock"
+      "!**/pnpm-lock.yaml"
     ]
   }
 }

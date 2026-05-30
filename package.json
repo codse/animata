@@ -15,7 +15,6 @@
     "storybook:build": "storybook build -o public/preview",
     "animata:new": "node ./scripts/create-new.js",
     "registry:build": "node ./scripts/build-registry.js && node ./scripts/build-docs-markdown.js && node ./scripts/build-llms-txt.js",
-    "postinstall": "yarn prepare",
     "shadcn:add": "npx shadcn@latest add",
     "prepare": "husky"
   },
@@ -105,7 +104,18 @@
     "typescript": "^5",
     "wrangler": "^3.114.17"
   },
-  "packageManager": "yarn@4.2.2",
+  "packageManager": "pnpm@10.12.1",
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "@tsparticles/engine",
+      "core-js",
+      "core-js-pure",
+      "esbuild",
+      "protobufjs",
+      "sharp",
+      "workerd"
+    ]
+  },
   "lint-staged": {
     "**/*.{js,jsx,ts,tsx,json,css,md,mdx}": [
       "biome check --fix --no-errors-on-unmatched"
