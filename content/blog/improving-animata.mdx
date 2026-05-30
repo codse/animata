@@ -1,0 +1,198 @@
+---
+title: Raising the bar at Animata
+date: 2026-05-30
+description: Composition, accessibility, live demos, and a quieter library — how we've been improving Animata in 2026.
+author: AnimataDesign
+labels:
+  - Product
+  - Accessibility
+  - Demos
+links:
+  doc: /docs/changelog/2026-05
+featured: true
+---
+
+<Callout title="TL;DR">
+  Fewer sidebar entries, stricter merge bar, composable tab APIs, live demos at `/demo`, and registry installs that
+  match the files you actually copy. Details below — or jump to the{" "}
+  <a href="/docs/changelog/2026-05">May changelog</a> for the ship list.
+</Callout>
+
+Animata grew for a while the way a lot of open component libraries do: take a PR, ship a preview, add another sidebar link. Fine when you want volume. Less fine when someone is trying to paste your code into a real app and make it hold up.
+
+Since early 2026 we've been tightening what counts as an Animata component and reshaping the site around that. This is what actually shipped, and why we bothered.
+
+## Two lanes: reference and context
+
+<Tabs defaultValue="docs">
+  <TabsList>
+    <TabsTrigger value="docs">Component docs</TabsTrigger>
+    <TabsTrigger value="demo">Live demos</TabsTrigger>
+  </TabsList>
+  <TabsContent value="docs" className="text-muted-foreground">
+    <p className="leading-relaxed">
+      Install path: copy source or run `npx shadcn add https://animata.design/r/…`,
+      read props, drop into your app. Built for reference.
+    </p>
+  </TabsContent>
+  <TabsContent value="demo" className="text-muted-foreground">
+    <p className="leading-relaxed">
+      Context path: full-page compositions at <a href="/demo">/demo</a> with recipe notes, source panels, and links back
+      to every primitive in the layout. Built for judgment calls — what to combine, and what it costs.
+    </p>
+  </TabsContent>
+</Tabs>
+
+What we didn't have until May was the second lane. Each demo route is a full-page composition with light chrome (prev/next, search, refresh, fullscreen) and recipe notes when you scroll past the fold. Notes point at component docs; component docs point back with "Used in demos" when something shows up in a composition.
+
+`pnpm build` validates the demo registry, so a demo can't keep pointing at a component we quietly removed. Dry, maybe, but it keeps the showcase and the docs from drifting.
+
+### Try the demos
+
+<ChangeLogComponents>
+  <ChangeLogEntry href="/demo/hero/launch-shift">
+    <h3>Superhuman · platform hero</h3>
+    <p>Mail, Docs, and AI tabs over a Boids field.</p>
+  </ChangeLogEntry>
+  <ChangeLogEntry href="/demo/footer/footer-wordmark">
+    <h3>Wordmark · Lucien-style type</h3>
+    <p>Footer wordmark with boids and gradient type.</p>
+  </ChangeLogEntry>
+  <ChangeLogEntry href="/demo/browse/cinema-row">
+    <h3>Stream · premiere browse</h3>
+    <p>Poster row and dual opposing marquees.</p>
+  </ChangeLogEntry>
+</ChangeLogComponents>
+
+Specific layouts, not three new "page types" in the catalog. The goal is taste, not more grid tiles.
+
+## Composition over monolith props
+
+New work (and serious reworks) should read like UI you'd write in your own codebase.
+
+Tabs are the obvious case. Gooey, Fluid, and Shift share the same compound shape: `List`, `Tab`, optional `Icon` / `Label`, instead of one component with a dozen boolean props. Keyboard and focus logic live in `animata/tabs/shared.ts` and ship with each tab install from the shadcn registry, so you're not pasting the same a11y block three times.
+
+<PreviewContainer>
+  <ComponentPreview name="tabs-fluid-tabs--primary" />
+</PreviewContainer>
+
+<PreviewContainer>
+  <ComponentPreview name="tabs-gooey-tabs--primary" />
+</PreviewContainer>
+
+April's text batch did something similar one layer down: nineteen presets on one `TextAnimator` runtime, so you can swap effects without relearning timing or reduced-motion behavior.
+
+Composition also keeps Storybook, MDX, and the demo source panel honest. We'd rather show the parts than bury the API under `variant="fancy"`.
+
+## Accessibility as a default, not a follow-up issue
+
+We got tired of pretty 400px previews that only worked with a mouse.
+
+<Accordion type="single" collapsible className="w-full">
+  <AccordionItem value="tabs-keyboard">
+    <AccordionTrigger>How tab keyboard interaction works</AccordionTrigger>
+    <AccordionContent className="text-muted-foreground">
+      <ul className="list-disc space-y-2 pl-5">
+        <li>
+          <strong className="text-foreground">Tab</strong> — moves focus into the tab list and through each tab control.
+        </li>
+        <li>
+          <strong className="text-foreground">Arrow keys</strong> — move focus between tabs (manual activation).
+        </li>
+        <li>
+          <strong className="text-foreground">Enter / Space</strong> — selects the focused tab without selecting on focus alone.
+        </li>
+      </ul>
+      <p className="mt-3">
+        Markup: `nav`, inner `role="tablist"`, `button role="tab"`. Focus rings use `ring-2` and
+        `ring-offset-2` per variant.
+      </p>
+    </AccordionContent>
+  </AccordionItem>
+  <AccordionItem value="other-fixes">
+    <AccordionTrigger>Other a11y passes this cycle</AccordionTrigger>
+    <AccordionContent className="text-muted-foreground">
+      <p>
+        <strong className="text-foreground">Speed Dial</strong> — click-to-open and a real keyboard menu; hover-only was
+        dead on touch.
+      </p>
+      <p className="mt-2">
+        <strong className="text-foreground">Boids Ecosystem</strong> — respects{" "}
+        `prefers-reduced-motion` with a static field fallback.
+      </p>
+      <p className="mt-2">
+        <strong className="text-foreground">Site</strong> — landing keyboard order, heading structure, less layout shift on
+        first paint.
+      </p>
+    </AccordionContent>
+  </AccordionItem>
+</Accordion>
+
+The bar that sticks is per component: if you can click it, you should be able to run it without a pointer.
+
+## Unpublishing and rework instead of catalog inflation
+
+Not everything in `animata/` should keep a docs page.
+
+We unpublished the feature-cards category and Commit Graph when they stopped clearing the bar. Scrolling Testimonials left as a standalone component; the layout lives in the browse demo now, as a recipe, not a vague "testimonials" block.
+
+Glowing Card got a layout fix plus `@theme` docs for blur/glow tokens people were still copying from old v3 notes. Animated Border Trail install steps no longer send you hunting for global CSS the file doesn't use; `@property` and keyframes stay inline, like the source.
+
+Fluid and Shift weren't renamed copies of old markup. They were rebuilt to match Gooey's API and the shared a11y module. More work than a one-line changelog, but you end up with one pattern and three skins instead of three cousins.
+
+<Alert>
+  <AlertTitle>Rough rule</AlertTitle>
+  <AlertDescription>
+    If we'd hesitate to put it in a demo or on the landing page, it probably shouldn't stay a first-class primitive.
+  </AlertDescription>
+</Alert>
+
+## Registry, toolchain, and docs honesty
+
+In April everything got a shadcn registry URL:
+
+```bash
+npx shadcn add https://animata.design/r/tabs/fluid-tabs.json
+```
+
+In May we fixed tabs: installs need `shared.ts`, and for a bit the registry pointed at a dependency that wasn't there. Tab JSON bundles the helper now, with a `./shared` import that resolves after install.
+
+Under the hood: pnpm, Tailwind 4.3, a shadcn/ui resync, Biome (March), Next.js 16, Storybook 10. None of that is interesting on its own. It matters because we can run the same checks everywhere and stop lying in class names (explicit `transition-*` instead of bare `transition`, dialog transforms that don't fight Tailwind v4 centering).
+
+Docs got the same treatment: Instrument Sans in the shell, inline code chips that don't bleed into fenced blocks, line numbers on Shiki output, install steps that match what you paste.
+
+## What shipped this cycle
+
+<ChangeLogComponents>
+  <ChangeLogEntry href="/docs/background/boids-ecosystem">
+    <h3>Boids Ecosystem</h3>
+    <p>Canvas flock with cursor repulsion and reduced-motion fallback.</p>
+  </ChangeLogEntry>
+  <ChangeLogEntry href="/docs/container/sibling-focus-nav">
+    <h3>Sibling Focus Nav</h3>
+    <p>Dim sibling links until the active one is focused — pure CSS.</p>
+  </ChangeLogEntry>
+  <ChangeLogEntry href="/docs/tabs/gooey-tabs">
+    <h3>Gooey Tabs</h3>
+    <p>Icon tabs with one expanding label and SVG goo merge.</p>
+  </ChangeLogEntry>
+</ChangeLogComponents>
+
+## What we're actually optimizing for
+
+- Publish less, but better. Demote or unpublish what doesn't hold up.
+- Compound APIs, shared modules, one runtime where it makes sense.
+- Context via demos and recipes, not lonely previews in gray boxes.
+- A11y you can explain in a review, not apologize for later.
+
+Still open source. Still taking contributions. "Merged" now means it fits the bar, not that we needed another card in the grid.
+
+<Callout>
+  Want to help? Start with{" "}
+  <a href="/docs/contributing/demos">live demos</a> (composition + registry discipline), reworks toward compound
+  patterns, or a11y fixes with clear keyboard steps.
+</Callout>
+
+---
+
+Questions or ideas? [Open an issue](https://github.com/codse/animata/issues) or say hi in [Discord](https://discord.gg/YfvqMf5MTE).
