@@ -2,7 +2,7 @@
 title: Gooey Tabs
 description: Icon tabs that merge with an SVG goo filter when one label expands to show its title.
 labels: ["requires interaction", "click"]
-author: animata
+author: harimanok_
 ---
 
 <ComponentPreview name="tabs-gooey-tabs--primary" />
@@ -42,8 +42,28 @@ Open the newly created file and paste the following code:
 
 ## Usage
 
-Pass your own `items` array (`title`, `icon`, `color` classes). Use `defaultActiveIndex={-1}` for an all-icon row, or `0` to open the first tab on load.
+Compose tabs with primitives. Each `GooeyTabs.Tab` needs a `color` class string; put icons and labels inside.
+
+```tsx
+import GooeyTabs from "@/animata/tabs/gooey-tabs";
+import { HouseIcon } from "@phosphor-icons/react";
+
+<GooeyTabs defaultActiveIndex={0}>
+  <GooeyTabs.List>
+    <GooeyTabs.Tab color="bg-violet-500 hover:bg-violet-600" label="Home">
+      <GooeyTabs.Icon>
+        <HouseIcon weight="duotone" aria-hidden />
+      </GooeyTabs.Icon>
+      <GooeyTabs.Label>Home</GooeyTabs.Label>
+    </GooeyTabs.Tab>
+  </GooeyTabs.List>
+</GooeyTabs>
+```
+
+Use `defaultActiveIndex={-1}` for an all-icon row. Optional `intensity`, `contrast`, and `lightness` on the root adjust the SVG goo filter. Width is driven by CSS grid (`0fr` / `1fr` on the label column) — no layout measurement in JavaScript.
 
 ## Credits
 
-Built by [Animata](https://animata.design)
+Built by [hari](https://github.com/hari) · [@harimanok_](https://x.com/harimanok_)
+
+Inspired by [@wickedmishra](https://x.com/wickedmishra) on Twitter

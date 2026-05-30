@@ -1,33 +1,67 @@
 "use client";
 
-import {
-  FacebookLogo,
-  InstagramLogo,
-  TiktokLogo,
-  TwitterLogo,
-  YoutubeLogo,
-} from "@phosphor-icons/react";
 import { motion } from "motion/react";
-import { type ReactNode, useId, useLayoutEffect, useRef, useState } from "react";
+import {
+  Children,
+  type ComponentProps,
+  createContext,
+  isValidElement,
+  type ReactNode,
+  use,
+  useId,
+  useState,
+} from "react";
 
 import { cn } from "@/lib/utils";
 
-const COLLAPSED_WIDTH = 40;
-
-function GooeyEffect({
-  children,
-  filterId,
-  intensity = 8,
-  contrast = 18,
-  lightness = -7,
-  className,
-}: {
-  children: ReactNode;
+type GooeyTabsContextValue = {
+  activeIndex: number;
+  setActiveIndex: (index: number) => void;
   filterId: string;
-  intensity?: number;
-  contrast?: number;
-  lightness?: number;
+  intensity: number;
+  contrast: number;
+  lightness: number;
+};
+
+const GooeyTabsContext = createContext<GooeyTabsContextValue | null>(null);
+
+type GooeyTabSlotContextValue = {
+  index: number;
+  count: number;
+};
+
+const GooeyTabSlotContext = createContext<GooeyTabSlotContextValue | null>(null);
+
+function useGooeyTabs() {
+  const context = use(GooeyTabsContext);
+  if (!context) {
+    throw new Error("GooeyTabs primitives must be used within <GooeyTabs>.");
+  }
+  return context;
+}
+
+function useGooeyTabSlot() {
+  const context = use(GooeyTabSlotContext);
+  if (!context) {
+    throw new Error("GooeyTabs.Tab must be a direct child of <GooeyTabs.List>.");
+  }
+  return context;
+}
+
+function GooeyFilter({
+  filterId,
+  intensity,
+  contrast,
+  lightness,
+  className,
+  children,
+}: {
+  filterId: string;
+  intensity: number;
+  contrast: number;
+  lightness: number;
   className?: string;
+  children: ReactNode;
 }) {
   return (
     <motion.div
@@ -54,128 +88,144 @@ function GooeyEffect({
   );
 }
 
-export interface GooeyTabItem {
-  title: string;
-  icon: ReactNode;
-  color: string;
-}
+type GooeyTabsRootProps = {
+  children: ReactNode;
+  defaultActiveIndex?: number;
+  activeIndex?: number;
+  onActiveIndexChange?: (index: number) => void;
+  intensity?: number;
+  contrast?: number;
+  lightness?: number;
+  className?: string;
+};
 
-const defaultItems: GooeyTabItem[] = [
-  {
-    title: "Twitter",
-    icon: <TwitterLogo className="size-6 shrink-0" weight="regular" aria-hidden />,
-    color: "bg-blue-400 hover:bg-blue-500 active:bg-blue-800",
-  },
-  {
-    title: "Instagram",
-    icon: <InstagramLogo className="size-6 shrink-0" weight="regular" aria-hidden />,
-    color: "bg-rose-400 hover:bg-rose-500 active:bg-rose-800",
-  },
-  {
-    title: "Facebook",
-    icon: <FacebookLogo className="size-6 shrink-0" weight="regular" aria-hidden />,
-    color: "bg-blue-600 hover:bg-blue-700 active:bg-blue-800",
-  },
-  {
-    title: "Youtube",
-    icon: <YoutubeLogo className="size-6 shrink-0" weight="regular" aria-hidden />,
-    color: "bg-red-400 hover:bg-red-500 active:bg-red-800",
-  },
-  {
-    title: "TikTok",
-    icon: <TiktokLogo className="size-6 shrink-0" weight="regular" aria-hidden />,
-    color: "bg-neutral-800 hover:bg-neutral-900 active:bg-neutral-800",
-  },
-];
-
-interface GooeyTabButtonProps {
-  item: GooeyTabItem;
-  index: number;
-  activeIndex: number;
-  itemsLen: number;
-  onSelect: (index: number) => void;
-}
-
-function GooeyTabButton({ item, index, activeIndex, itemsLen, onSelect }: GooeyTabButtonProps) {
-  const labelRef = useRef<HTMLDivElement>(null);
-  const isActive = activeIndex === index;
-  const [width, setWidth] = useState(COLLAPSED_WIDTH);
-
-  useLayoutEffect(() => {
-    if (!isActive || !labelRef.current) {
-      setWidth(COLLAPSED_WIDTH);
-      return;
+function GooeyTabsRoot({
+  children,
+  defaultActiveIndex = 0,
+  activeIndex: activeIndexProp,
+  onActiveIndexChange,
+  intensity = 6,
+  contrast = 18,
+  lightness = -7,
+  className,
+}: GooeyTabsRootProps) {
+  const [uncontrolledIndex, setUncontrolledIndex] = useState(defaultActiveIndex);
+  const activeIndex = activeIndexProp ?? uncontrolledIndex;
+  const setActiveIndex = (index: number) => {
+    onActiveIndexChange?.(index);
+    if (activeIndexProp === undefined) {
+      setUncontrolledIndex(index);
     }
-    setWidth(labelRef.current.getBoundingClientRect().width + 32);
-  }, [isActive]);
+  };
+  const filterId = `gooey-tabs-${useId().replace(/:/g, "")}`;
+
+  return (
+    <GooeyTabsContext.Provider
+      value={{ activeIndex, setActiveIndex, filterId, intensity, contrast, lightness }}
+    >
+      <div className={className}>{children}</div>
+    </GooeyTabsContext.Provider>
+  );
+}
+
+type GooeyTabsListProps = ComponentProps<"div">;
+
+function GooeyTabsList({ className, children }: GooeyTabsListProps) {
+  const { activeIndex, filterId, intensity, contrast, lightness } = useGooeyTabs();
+  const tabs = Children.toArray(children).filter(isValidElement);
+  const count = tabs.length;
+
+  return (
+    <GooeyFilter
+      filterId={filterId}
+      intensity={intensity}
+      contrast={contrast}
+      lightness={lightness}
+      className={cn({ "px-0": activeIndex !== -1 }, className)}
+    >
+      {tabs.map((tab, index) => (
+        <GooeyTabSlotContext.Provider key={tab.key ?? index} value={{ index, count }}>
+          {tab}
+        </GooeyTabSlotContext.Provider>
+      ))}
+    </GooeyFilter>
+  );
+}
+
+type GooeyTabsTabProps = ComponentProps<"div"> & {
+  /** Tailwind classes for this tab’s fill (e.g. `bg-blue-400 hover:bg-blue-500`). */
+  color: string;
+  /** Accessible name when the label is not plain text. */
+  label?: string;
+};
+
+/**
+ * Tab shell uses CSS grid `auto 0fr` → `auto 1fr` so the label column sizes
+ * intrinsically — no getBoundingClientRect. Place `GooeyTabs.Icon` then `GooeyTabs.Label` as children.
+ */
+function GooeyTabsTab({ color, label, className, children, ...props }: GooeyTabsTabProps) {
+  const { activeIndex, setActiveIndex } = useGooeyTabs();
+  const { index, count } = useGooeyTabSlot();
+  const isActive = activeIndex === index;
+
+  const ariaLabel =
+    label ??
+    (typeof children === "string"
+      ? children
+      : `Tab ${index + 1}${isActive ? ", expanded" : ", collapsed"}`);
 
   return (
     <motion.div
       role="button"
       tabIndex={0}
       aria-expanded={isActive}
-      aria-label={item.title}
-      onClick={() => onSelect(isActive ? -1 : index)}
+      aria-label={ariaLabel}
+      onClick={() => setActiveIndex(isActive ? -1 : index)}
       onKeyDown={(event) => {
         if (event.key === "Enter" || event.key === " ") {
           event.preventDefault();
-          onSelect(isActive ? -1 : index);
+          setActiveIndex(isActive ? -1 : index);
         }
       }}
       className={cn(
-        "relative flex w-12 cursor-pointer gap-2 overflow-hidden px-4 py-2 text-white transition-all duration-200 ease-in-out",
-        item.color,
+        "relative grid h-10 cursor-pointer items-center overflow-hidden text-white",
+        "transition-[grid-template-columns,gap,padding,margin,border-radius] duration-200 ease-in-out motion-reduce:transition-none",
+        isActive ? "grid-cols-[auto_1fr] gap-2 px-4" : "grid-cols-[auto_0fr] gap-0 px-2",
+        color,
         {
           rounded: isActive,
-          "mx-4": isActive && activeIndex !== 0 && activeIndex !== itemsLen - 1,
+          "mx-4": isActive && activeIndex !== 0 && activeIndex !== count - 1,
           "mr-4": isActive && activeIndex === 0,
-          "ml-4": isActive && activeIndex === itemsLen - 1,
-          "pl-2": !isActive,
+          "ml-4": isActive && activeIndex === count - 1,
         },
+        className,
       )}
-      style={{ width }}
+      {...props}
     >
-      <div
-        ref={labelRef}
-        className="flex h-6 min-w-fit shrink-0 items-center gap-2 overflow-hidden transition-all duration-200 ease-in-out"
-      >
-        {item.icon}
-        <span className="inline-block select-none whitespace-nowrap">{item.title}</span>
-      </div>
+      {children}
     </motion.div>
   );
 }
 
-export interface GooeyTabsProps {
-  items?: GooeyTabItem[];
-  defaultActiveIndex?: number;
-  className?: string;
+function GooeyTabsIcon({ className, ...props }: ComponentProps<"span">) {
+  return <span className={cn("inline-flex shrink-0 [&_svg]:size-6", className)} {...props} />;
 }
 
-export default function GooeyTabs({
-  items = defaultItems,
-  defaultActiveIndex = 0,
-  className,
-}: GooeyTabsProps) {
-  const [activeIndex, setActiveIndex] = useState(defaultActiveIndex);
-  const filterId = `gooey-tabs-${useId().replace(/:/g, "")}`;
-
+function GooeyTabsLabel({ className, ...props }: ComponentProps<"span">) {
   return (
-    <GooeyEffect
-      filterId={filterId}
-      intensity={6}
-      className={cn({ "px-0": activeIndex !== -1 }, className)}
-    >
-      {items.map((item, index) => (
-        <GooeyTabButton
-          key={item.title}
-          item={item}
-          index={index}
-          activeIndex={activeIndex}
-          itemsLen={items.length}
-          onSelect={setActiveIndex}
-        />
-      ))}
-    </GooeyEffect>
+    <span
+      className={cn("min-w-0 overflow-hidden select-none whitespace-nowrap text-sm", className)}
+      {...props}
+    />
   );
 }
+
+const GooeyTabs = Object.assign(GooeyTabsRoot, {
+  List: GooeyTabsList,
+  Tab: GooeyTabsTab,
+  Icon: GooeyTabsIcon,
+  Label: GooeyTabsLabel,
+});
+
+export default GooeyTabs;
+export { GooeyTabsIcon, GooeyTabsLabel, GooeyTabsList, GooeyTabsRoot, GooeyTabsTab, useGooeyTabs };
