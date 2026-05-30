@@ -1,50 +1,84 @@
+"use client";
+
+import { motion } from "motion/react";
 import { useState } from "react";
 
 import { cn } from "@/lib/utils";
 
-interface ButtonProps {
-  item: string;
-  index?: number;
-  activeIndex: number;
-  onTabClick: () => void;
-}
-
-const Button = ({ item, index, activeIndex, onTabClick }: ButtonProps) => {
-  return (
-    <button
-      className={cn("rounded-lg bg-black", {
-        "border-b-2 border-b-indigo-500": index === activeIndex,
-      })}
-      onClick={onTabClick}
-    >
-      <span
-        className={cn(
-          "flex h-10 cursor-pointer items-center justify-center rounded-md border-2 bg-white p-3 transition-all",
-          {
-            "border-2 border-indigo-500 text-indigo-600": index === activeIndex,
-            "origin-top-right ease-in hover:rotate-6 text-black": index !== activeIndex,
-          },
-        )}
-      >
-        <span className="p-2 text-center font-mono">{item}</span>
-      </span>
-    </button>
-  );
+const SHELL_TRANSITION = {
+  duration: 0.32,
+  ease: [0.32, 0.72, 0, 1] as const,
 };
 
-export default function ShiftTabs({ items }: { items: string[] }) {
-  const [activeTab, setActiveTab] = useState(0);
+const HOVER_SPRING = {
+  type: "spring" as const,
+  stiffness: 420,
+  damping: 28,
+};
+
+const defaultItems = ["Issues", "Pull Requests", "Actions", "Projects"];
+
+type ShiftTabProps = {
+  label: string;
+  isActive: boolean;
+  onSelect: () => void;
+};
+
+function ShiftTab({ label, isActive, onSelect }: ShiftTabProps) {
   return (
-    <div className="flex w-full flex-wrap items-center justify-center gap-4">
+    <motion.button
+      type="button"
+      role="tab"
+      aria-selected={isActive}
+      onClick={onSelect}
+      whileTap={{ scale: 0.97 }}
+      transition={{ duration: 0.14, ease: [0.25, 0.1, 0.25, 1] }}
+      className={cn(
+        "rounded-lg bg-foreground p-px outline-none",
+        "focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+        isActive && "shadow-sm",
+      )}
+    >
+      <motion.span
+        className={cn(
+          "flex h-10 items-center justify-center rounded-[calc(var(--radius)-2px)] border-2 bg-background px-4",
+          "motion-reduce:transition-none",
+          isActive ? "border-accent text-accent" : "border-border text-foreground",
+        )}
+        whileHover={isActive ? undefined : { rotate: 4 }}
+        transition={isActive ? SHELL_TRANSITION : HOVER_SPRING}
+      >
+        <span className="select-none px-1 text-center font-mono text-sm font-medium">{label}</span>
+      </motion.span>
+    </motion.button>
+  );
+}
+
+export type ShiftTabsProps = {
+  items?: string[];
+  defaultIndex?: number;
+  className?: string;
+};
+
+export default function ShiftTabs({
+  items = defaultItems,
+  defaultIndex = 0,
+  className,
+}: ShiftTabsProps) {
+  const [activeIndex, setActiveIndex] = useState(defaultIndex);
+
+  return (
+    <div
+      role="tablist"
+      aria-label="Shift tabs"
+      className={cn("flex flex-wrap items-center justify-center gap-3 sm:gap-4", className)}
+    >
       {items.map((item, index) => (
-        <Button
-          onTabClick={() => {
-            setActiveTab(index);
-          }}
-          item={item}
-          activeIndex={activeTab}
-          index={index}
-          key={`shift_tab_${item}`}
+        <ShiftTab
+          key={item}
+          label={item}
+          isActive={activeIndex === index}
+          onSelect={() => setActiveIndex(index)}
         />
       ))}
     </div>
