@@ -18,7 +18,7 @@ author: YourTwitterUsername
 <Step>Install dependencies</Step>
 
 ```bash
-npm install framer-motion lucide-react
+npm install motion lucide-react
 ```
 
 <Step>Update `tailwind.config.js`</Step>
