@@ -1,0 +1,10 @@
+autoInstallPeers: true
+
+allowBuilds:
+  "@tsparticles/engine": true
+  core-js: true
+  core-js-pure: true
+  esbuild: true
+  protobufjs: true
+  sharp: true
+  workerd: true

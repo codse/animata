@@ -4,7 +4,7 @@ description: Tailwind CSS 4.3, Boids Ecosystem, Sibling Focus Nav, and live demo
 date: 2026-05-21
 ---
 
-Migrated the repo from Yarn 4 to **pnpm** (`packageManager: pnpm@10.12.1`). CI uses `pnpm/action-setup` with `pnpm install --frozen-lockfile`; local setup is `corepack enable` then `pnpm install`.
+Migrated the repo from Yarn 4 to **pnpm** (`packageManager: pnpm@11.5.0`). Install settings and `allowBuilds` live in `pnpm-workspace.yaml`. CI uses `pnpm/action-setup` with `pnpm install --frozen-lockfile`; local setup is `corepack enable` then `pnpm install`.
 
 Upgraded the docs and site toolchain dependencies. Tailwind CSS moved to 4.3 (with matching `@tailwindcss/postcss`), and `tailwind-merge` to 3.6. All seventeen installed shadcn/ui primitives were re-synced from the official registry using URLs like `https://animata.design/r/{category}/{name}.json`, keeping `@radix-ui/react-*` imports per the new-york style (not the experimental unified `radix-ui` migration). Command palette and dialog were refreshed together so `cmdk` and `@radix-ui/react-dialog` types stayed aligned. The `shadcn:add` script now calls `shadcn@latest` instead of the deprecated `shadcn-ui` CLI. Fixed the command palette dialog scaling from the top-left corner by dropping legacy `slide-in-from-*` transforms on `DialogContent` that conflicted with centered `translate` under Tailwind v4 and `tw-animate-css`. Restored `CardTitle` and `CardDescription` as `<h3>` and `<p>` after the registry sync had replaced them with generic `<div>`s.
 

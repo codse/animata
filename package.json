@@ -84,6 +84,7 @@
     "@biomejs/biome": "^2.4.6",
     "@commitlint/cli": "^19.3.0",
     "@commitlint/config-conventional": "^19.2.2",
+    "@mdx-js/mdx": "^3.1.1",
     "@storybook/addon-docs": "^10.2.15",
     "@storybook/addon-themes": "^10.2.15",
     "@storybook/nextjs": "^10.2.15",
@@ -96,26 +97,18 @@
     "@types/prompts": "^2",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@types/unist": "^3.0.3",
     "husky": "^9.0.11",
     "lint-staged": "^15.2.7",
     "playwright": "^1.59.1",
     "storybook": "^10.2.15",
     "tailwindcss": "^4.3.0",
     "typescript": "^5",
+    "unist-util-visit": "^5.1.0",
+    "vfile": "^6.0.3",
     "wrangler": "^3.114.17"
   },
-  "packageManager": "pnpm@10.12.1",
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "@tsparticles/engine",
-      "core-js",
-      "core-js-pure",
-      "esbuild",
-      "protobufjs",
-      "sharp",
-      "workerd"
-    ]
-  },
+  "packageManager": "pnpm@11.5.0",
   "lint-staged": {
     "**/*.{js,jsx,ts,tsx,json,css,md,mdx}": [
       "biome check --fix --no-errors-on-unmatched"
