@@ -1,8 +1,8 @@
 "use client";
 
-import { motion, useReducedMotion } from "motion/react";
 import {
   type ComponentProps,
+  type CSSProperties,
   createContext,
   type ReactNode,
   use,
@@ -10,6 +10,7 @@ import {
   useMemo,
   useRef,
   useState,
+  useSyncExternalStore,
 } from "react";
 
 import { cn } from "@/lib/utils";
@@ -33,6 +34,8 @@ interface SplitRevealContextValue extends SplitRevealProgressState {
 }
 
 const SplitRevealContext = createContext<SplitRevealContextValue | null>(null);
+
+const REVEAL_EASE = "cubic-bezier(0.76, 0, 0.24, 1)";
 
 export function useSplitReveal() {
   const context = use(SplitRevealContext);
@@ -60,6 +63,20 @@ export interface SplitRevealProps {
   onComplete?: () => void;
 }
 
+function subscribeReducedMotion(callback: () => void) {
+  const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+  mq.addEventListener("change", callback);
+  return () => mq.removeEventListener("change", callback);
+}
+
+function getReducedMotionSnapshot() {
+  return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+}
+
+function usePrefersReducedMotion() {
+  return useSyncExternalStore(subscribeReducedMotion, getReducedMotionSnapshot, () => false);
+}
+
 function preloadImages(urls: string[], onProgress: (loaded: number, total: number) => void) {
   const total = urls.length;
 
@@ -68,25 +85,42 @@ function preloadImages(urls: string[], onProgress: (loaded: number, total: numbe
     return Promise.resolve();
   }
 
-  return new Promise<void>((resolve) => {
-    let loaded = 0;
+  let loaded = 0;
 
-    const markDone = () => {
-      loaded += 1;
-      onProgress(loaded, total);
-      if (loaded >= total) {
-        resolve();
-      }
-    };
-
-    for (const url of urls) {
+  const preloadOne = (url: string) =>
+    new Promise<void>((resolve) => {
       const img = new Image();
+      let settled = false;
+
+      const settle = () => {
+        if (settled) {
+          return;
+        }
+        settled = true;
+        loaded += 1;
+        onProgress(loaded, total);
+        resolve();
+      };
+
+      const ready = () => {
+        if (typeof img.decode === "function") {
+          img.decode().then(settle).catch(settle);
+          return;
+        }
+        settle();
+      };
+
+      img.onload = ready;
+      img.onerror = settle;
       img.decoding = "async";
-      img.onload = markDone;
-      img.onerror = markDone;
       img.src = url;
-    }
-  });
+
+      if (img.complete && img.naturalWidth > 0) {
+        ready();
+      }
+    });
+
+  return Promise.all(urls.map((url) => preloadOne(url))).then(() => undefined);
 }
 
 function useScrollLock(active: boolean) {
@@ -133,8 +167,61 @@ function useScrollLock(active: boolean) {
   }, [active]);
 }
 
+function SplitRevealStyles() {
+  return (
+    <style>{`
+      @keyframes split-reveal-shutter-top {
+        from {
+          transform: translate3d(0, 0, 0);
+        }
+        to {
+          transform: translate3d(0, -100%, 0);
+        }
+      }
+
+      @keyframes split-reveal-shutter-bottom {
+        from {
+          transform: translate3d(0, 0, 0);
+        }
+        to {
+          transform: translate3d(0, 100%, 0);
+        }
+      }
+
+      [data-split-reveal-overlay] [data-split-reveal-progress] {
+        opacity: 1;
+        transition: opacity var(--split-reveal-progress-fade) ease-out;
+      }
+
+      [data-split-reveal-overlay][data-phase="fade-ui"] [data-split-reveal-progress],
+      [data-split-reveal-overlay][data-phase="reveal"] [data-split-reveal-progress] {
+        opacity: 0;
+      }
+
+      [data-split-reveal-overlay][data-phase="reveal"] [data-split-reveal-shutter="top"] {
+        animation: split-reveal-shutter-top var(--split-reveal-duration) ${REVEAL_EASE} forwards;
+      }
+
+      [data-split-reveal-overlay][data-phase="reveal"] [data-split-reveal-shutter="bottom"] {
+        animation: split-reveal-shutter-bottom var(--split-reveal-duration) ${REVEAL_EASE} forwards;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        [data-split-reveal-overlay][data-phase="reveal"] [data-split-reveal-shutter] {
+          animation: none;
+          opacity: 0;
+        }
+
+        [data-split-reveal-overlay] [data-split-reveal-progress] {
+          transition: none;
+        }
+      }
+    `}</style>
+  );
+}
+
 function SplitRevealOverlayFrame({ className, children, ...props }: ComponentProps<"div">) {
-  const { phase, zIndex, isActive } = useSplitReveal();
+  const { phase, zIndex, revealDuration, progressFadeMs, isActive } = useSplitReveal();
 
   if (!isActive) {
     return null;
@@ -147,13 +234,21 @@ function SplitRevealOverlayFrame({ className, children, ...props }: ComponentPro
         phase === "loading" ? "pointer-events-auto" : "pointer-events-none",
         className,
       )}
-      style={{ zIndex }}
+      style={
+        {
+          zIndex,
+          "--split-reveal-duration": `${revealDuration}s`,
+          "--split-reveal-progress-fade": `${progressFadeMs}ms`,
+        } as CSSProperties
+      }
+      data-phase={phase}
       aria-busy={phase === "loading"}
       aria-live="polite"
       role="status"
       data-split-reveal-overlay=""
       {...props}
     >
+      <SplitRevealStyles />
       {children}
     </div>
   );
@@ -162,24 +257,19 @@ function SplitRevealOverlayFrame({ className, children, ...props }: ComponentPro
 function SplitRevealShutter({
   side,
   className,
+  style,
   ...props
-}: ComponentProps<typeof motion.div> & { side: "top" | "bottom" }) {
-  const { phase, backgroundColor, revealDuration } = useSplitReveal();
+}: ComponentProps<"div"> & { side: "top" | "bottom" }) {
+  const { backgroundColor } = useSplitReveal();
 
   return (
-    <motion.div
+    <div
       className={cn(
         "absolute inset-x-0 h-1/2 will-change-transform",
         side === "top" ? "top-0" : "bottom-0",
         className,
       )}
-      style={{ backgroundColor }}
-      initial={{ y: "0%" }}
-      animate={phase === "reveal" ? { y: side === "top" ? "-100%" : "100%" } : { y: "0%" }}
-      transition={{
-        duration: revealDuration,
-        ease: [0.76, 0, 0.24, 1] as const,
-      }}
+      style={{ backgroundColor, ...style }}
       data-split-reveal-shutter={side}
       {...props}
     />
@@ -234,28 +324,18 @@ function SplitRevealProgressCount({
   );
 }
 
-function SplitRevealProgressSlot({
-  className,
-  children,
-  ...props
-}: ComponentProps<typeof motion.div>) {
-  const { phase, progressFadeMs } = useSplitReveal();
-  const showProgress = phase === "loading";
-
+function SplitRevealProgressSlot({ className, children, ...props }: ComponentProps<"div">) {
   return (
-    <motion.div
+    <div
       className={cn(
         "pointer-events-none absolute inset-0 z-10 flex items-center justify-center",
         className,
       )}
-      initial={{ opacity: 1 }}
-      animate={{ opacity: showProgress ? 1 : 0 }}
-      transition={{ duration: progressFadeMs / 1000, ease: "easeOut" }}
       data-split-reveal-progress=""
       {...props}
     >
       <div className="w-[min(18rem,70vw)]">{children}</div>
-    </motion.div>
+    </div>
   );
 }
 
@@ -263,7 +343,7 @@ function SplitRevealProgress({
   className,
   children,
   ...props
-}: ComponentProps<typeof motion.div> & {
+}: ComponentProps<"div"> & {
   children?: ReactNode | ((state: SplitRevealProgressState) => ReactNode);
 }) {
   const { phase, progress, loaded, total, foregroundColor } = useSplitReveal();
@@ -330,11 +410,15 @@ function SplitRevealRoot({
   lockScroll = true,
   onComplete,
 }: SplitRevealProps) {
-  const reduceMotion = useReducedMotion();
+  const reduceMotion = usePrefersReducedMotion();
   const onCompleteRef = useRef(onComplete);
+  const phaseRef = useRef<PreloaderPhase>("loading");
+  const [bootId, setBootId] = useState(0);
   const [phase, setPhase] = useState<PreloaderPhase>("loading");
   const [loaded, setLoaded] = useState(0);
   const [total, setTotal] = useState(0);
+
+  phaseRef.current = phase;
 
   const uniqueImages = useMemo(() => [...new Set(images.filter(Boolean))], [images]);
 
@@ -345,60 +429,115 @@ function SplitRevealRoot({
     onCompleteRef.current = onComplete;
   }, [onComplete]);
 
+  // bootId intentionally restarts preload after bfcache / tab restore
+  // biome-ignore lint/correctness/useExhaustiveDependencies: bootId is the restart signal
   useEffect(() => {
-    let cancelled = false;
+    let runId = 0;
     let fadeTimer: number | undefined;
     let revealTimer: number | undefined;
     let doneTimer: number | undefined;
 
-    setPhase("loading");
-    setLoaded(0);
-    setTotal(uniqueImages.length);
+    const clearTimers = () => {
+      if (fadeTimer !== undefined) {
+        window.clearTimeout(fadeTimer);
+        fadeTimer = undefined;
+      }
+      if (revealTimer !== undefined) {
+        window.clearTimeout(revealTimer);
+        revealTimer = undefined;
+      }
+      if (doneTimer !== undefined) {
+        window.clearTimeout(doneTimer);
+        doneTimer = undefined;
+      }
+    };
 
-    const finish = () => {
+    const finish = (currentRun: number) => {
+      if (currentRun !== runId) {
+        return;
+      }
       onCompleteRef.current?.();
       setPhase("done");
     };
 
-    preloadImages(uniqueImages, (nextLoaded, nextTotal) => {
-      if (cancelled) {
-        return;
-      }
-      setLoaded(nextLoaded);
-      setTotal(nextTotal);
-    }).then(() => {
-      if (cancelled) {
-        return;
-      }
-
+    const startReveal = (currentRun: number) => {
       if (reduceMotion) {
-        finish();
+        finish(currentRun);
         return;
       }
 
-      fadeTimer = window.setTimeout(() => {
-        setPhase("fade-ui");
+      setPhase("fade-ui");
 
-        revealTimer = window.setTimeout(() => {
-          setPhase("reveal");
-          doneTimer = window.setTimeout(finish, revealDuration * 1000);
-        }, progressFadeMs);
-      }, holdMs);
-    });
+      revealTimer = window.setTimeout(() => {
+        if (currentRun !== runId) {
+          return;
+        }
+
+        setPhase("reveal");
+        doneTimer = window.setTimeout(() => finish(currentRun), revealDuration * 1000);
+      }, progressFadeMs);
+    };
+
+    const start = () => {
+      runId += 1;
+      const currentRun = runId;
+      clearTimers();
+
+      const imageCount = uniqueImages.length;
+
+      setPhase("loading");
+      setLoaded(0);
+      setTotal(imageCount);
+
+      if (imageCount === 0) {
+        fadeTimer = window.setTimeout(() => startReveal(currentRun), holdMs);
+        return;
+      }
+
+      preloadImages(uniqueImages, (nextLoaded, nextTotal) => {
+        if (currentRun !== runId) {
+          return;
+        }
+        setLoaded(nextLoaded);
+        setTotal(nextTotal);
+      }).then(() => {
+        if (currentRun !== runId) {
+          return;
+        }
+
+        fadeTimer = window.setTimeout(() => startReveal(currentRun), holdMs);
+      });
+    };
+
+    start();
 
     return () => {
-      cancelled = true;
-      if (fadeTimer !== undefined) {
-        window.clearTimeout(fadeTimer);
-      }
-      if (revealTimer !== undefined) {
-        window.clearTimeout(revealTimer);
-      }
-      if (doneTimer !== undefined) {
-        window.clearTimeout(doneTimer);
+      runId += 1;
+      clearTimers();
+    };
+  }, [bootId, holdMs, progressFadeMs, reduceMotion, revealDuration, uniqueImages]);
+
+  useEffect(() => {
+    const onPageShow = (event: PageTransitionEvent) => {
+      if (event.persisted && phaseRef.current !== "done") {
+        setBootId((id) => id + 1);
       }
     };
-  }, [holdMs, progressFadeMs, reduceMotion, revealDuration, uniqueImages]);
+
+    const onResume = () => {
+      if (phaseRef.current !== "done") {
+        setBootId((id) => id + 1);
+      }
+    };
+
+    window.addEventListener("pageshow", onPageShow);
+    document.addEventListener("resume", onResume);
+
+    return () => {
+      window.removeEventListener("pageshow", onPageShow);
+      document.removeEventListener("resume", onResume);
+    };
+  }, []);
 
   useScrollLock(lockScroll && isActive);
 

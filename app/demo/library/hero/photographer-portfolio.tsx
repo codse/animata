@@ -57,7 +57,7 @@ const PHOTOGRAPHER = {
   studio: "Maya Chen",
   name: "Maya",
   location: "Brooklyn",
-  email: "mailto:hello@mayachen.studio",
+  email: "mailto:hello@codse.com",
   avatar: lummi(LUMMI_ASSETS.avatar),
 };
 
@@ -288,21 +288,21 @@ function PrintProof({
   captionRef: RefObject<HTMLDivElement | null>;
 }) {
   return (
-    <figure ref={stackRef} className="flex w-full min-w-0 flex-col">
-      <div
-        ref={captionRef}
-        className="relative z-30 w-full shrink-0"
-        style={{ backgroundColor: CANVAS }}
-      >
-        <PrintCaption />
-      </div>
-
+    <figure ref={stackRef} className="flex w-full min-w-0 flex-col md:items-end">
       <div
         className={cn(
-          "flex w-full flex-col",
-          "md:ml-auto md:w-[min(100cqw,calc((100cqh-4.5rem)*8/11))]",
+          "flex w-full min-w-0 flex-col",
+          "md:w-[min(100cqw,calc((100cqh-4.5rem)*8/11))]",
         )}
       >
+        <div
+          ref={captionRef}
+          className="relative z-30 w-full shrink-0"
+          style={{ backgroundColor: CANVAS }}
+        >
+          <PrintCaption />
+        </div>
+
         <div aria-hidden="true" className={cn("w-full shrink-0", STACK_PEEK)} />
         <div className="relative aspect-[4/5] w-full shrink-0 overflow-visible">
           <PrintStack />
@@ -325,11 +325,10 @@ function PortfolioLayout({
     <div
       className={cn("flex flex-col gap-8", "md:h-full md:min-h-0 md:flex-1 md:flex-row md:gap-6")}
     >
-      <div
-        ref={heroRef}
-        className="relative z-20 min-w-0 md:flex md:flex-[2] md:basis-0 md:flex-col md:justify-end"
-      >
-        <HeroStory />
+      <div className="relative z-20 min-w-0 md:flex md:flex-[2] md:basis-0 md:flex-col md:justify-end">
+        <div ref={heroRef}>
+          <HeroStory />
+        </div>
       </div>
 
       <div className="w-full min-w-0 md:flex md:min-h-0 md:flex-[3] md:basis-0 md:flex-col md:justify-end md:@container/print md:[container-type:size]">

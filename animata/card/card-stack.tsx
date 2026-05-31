@@ -70,6 +70,15 @@ const PROMOTE_SPRING: Transition = {
   bounce: 0,
 };
 
+/** Top-card press — same transform channel as stack promote / throw */
+const PRESS_SPRING: Transition = {
+  type: "spring",
+  visualDuration: 0.1,
+  bounce: 0,
+};
+
+const PRESS_SCALE_FACTOR = 0.985;
+
 const THROW_SPRING: Transition = {
   type: "spring",
   visualDuration: 0.24,
@@ -169,6 +178,19 @@ export function getCardStackLayers(
   return layers.slice(0, depth);
 }
 
+function getLayerScale(layer: CardStackLayerMotion): number {
+  const target = layer.animate;
+  if (
+    target &&
+    typeof target === "object" &&
+    "scale" in target &&
+    typeof target.scale === "number"
+  ) {
+    return target.scale;
+  }
+  return 1;
+}
+
 function getCardStackInitial(
   stackIndex: number,
   depth: number,
@@ -220,6 +242,8 @@ interface CardStackContextValue {
   activeItem: CardStackItem | undefined;
   depth: number;
   isAnimating: boolean;
+  pressActive: boolean;
+  setPressActive: (active: boolean) => void;
   throwImpulse: CardStackThrowImpulse | null;
   advance: () => void;
   handleExitComplete: () => void;
@@ -258,6 +282,7 @@ function CardStackRoot({
   const layers = useMemo(() => getCardStackLayers(reducedMotion, depth), [reducedMotion, depth]);
   const [itemList, setItemList] = useState(items);
   const [isAnimating, setIsAnimating] = useState(false);
+  const [pressActive, setPressActive] = useState(false);
   const [throwImpulse, setThrowImpulse] = useState<CardStackThrowImpulse | null>(null);
   const isAnimatingRef = useRef(false);
   const stepTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -379,6 +404,8 @@ function CardStackRoot({
       activeItem,
       depth,
       isAnimating,
+      pressActive,
+      setPressActive,
       throwImpulse,
       advance,
       handleExitComplete,
@@ -391,6 +418,7 @@ function CardStackRoot({
       activeItem,
       depth,
       isAnimating,
+      pressActive,
       throwImpulse,
       advance,
       handleExitComplete,
@@ -438,14 +466,36 @@ function CardStackTrigger({
   className,
   children,
   onClick,
+  onPointerDown,
+  onPointerUp,
+  onPointerLeave,
+  onPointerCancel,
   ...props
 }: ComponentProps<"button">) {
-  const { advance } = useCardStack();
+  const { advance, isAnimating, setPressActive } = useCardStack();
 
   return (
     <button
       type="button"
       aria-label={ariaLabel}
+      onPointerDown={(event) => {
+        onPointerDown?.(event);
+        if (!event.defaultPrevented && !isAnimating) {
+          setPressActive(true);
+        }
+      }}
+      onPointerUp={(event) => {
+        onPointerUp?.(event);
+        window.setTimeout(() => setPressActive(false), 0);
+      }}
+      onPointerLeave={(event) => {
+        onPointerLeave?.(event);
+        setPressActive(false);
+      }}
+      onPointerCancel={(event) => {
+        onPointerCancel?.(event);
+        setPressActive(false);
+      }}
       onClick={(event) => {
         onClick?.(event);
         if (!event.defaultPrevented) {
@@ -455,7 +505,6 @@ function CardStackTrigger({
       className={cn(
         "relative block w-full cursor-pointer outline-none",
         "focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
-        "active:scale-[0.995] motion-reduce:active:scale-100",
         className,
       )}
       {...props}
@@ -520,11 +569,17 @@ function CardStackCard({
   style,
   ...props
 }: CardStackCardProps) {
-  const { depth, reducedMotion, throwImpulse } = useCardStack();
+  const { depth, isAnimating, pressActive, reducedMotion, throwImpulse } = useCardStack();
   const total = stackDepth ?? depth;
 
   const initial = getCardStackInitial(stackIndex, depth, layer);
   const exit = getCardStackExit(stackIndex, layer, reducedMotion, throwImpulse);
+  const baseScale = getLayerScale(layer);
+  const isPressed = stackIndex === 0 && pressActive && !reducedMotion && !isAnimating;
+  const animate = isPressed
+    ? { ...layer.animate, scale: baseScale * PRESS_SCALE_FACTOR }
+    : layer.animate;
+  const transition = isPressed ? PRESS_SPRING : layer.transition;
 
   return (
     <motion.article
@@ -543,9 +598,9 @@ function CardStackCard({
         ...style,
       }}
       initial={initial}
-      animate={layer.animate}
+      animate={animate}
       exit={exit}
-      transition={layer.transition}
+      transition={transition}
       {...props}
     />
   );

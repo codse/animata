@@ -14,12 +14,6 @@ description: Fixed overlay that preloads images, locks scroll, and splits from t
 ### Manual
 
 <Steps>
-<Step>Install dependencies</Step>
-
-```bash
-npm install motion
-```
-
 <Step>Run the following command</Step>
 
 It will create a new file `split-reveal.tsx` inside the `components/animata/preloader` directory.
@@ -59,7 +53,7 @@ Drop it next to your page — no wrapper required:
 
 Pass `children` instead of `renderProgress` when you want full control over shutters and progress.
 
-Progress fades out before the shutters move. Tune the gap with `progressFadeMs` (default `280`) and the post-load pause with `holdMs`.
+Progress fades out before the shutters move. Shutters use CSS keyframes with a custom cubic-bezier — tune timing with `revealDuration` (default `0.85`s), `progressFadeMs` (default `280`), and the post-load pause with `holdMs`.
 
 ## Credits
 

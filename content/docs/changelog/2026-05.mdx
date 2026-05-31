@@ -27,7 +27,7 @@ Four new components, live demos at `/demo`, significant updates to Fluid and Shi
   </ChangeLogEntry>
   <ChangeLogEntry href="/docs/preloader/split-reveal">
     <h3>Split Reveal</h3>
-    <p>Fixed overlay preloader that loads images, locks scroll, fades the progress UI, then splits from the center seam.</p>
+    <p>Fixed overlay preloader that loads images, locks scroll, fades the progress UI, then splits from the center seam with CSS keyframes — no Motion dependency.</p>
   </ChangeLogEntry>
 </ChangeLogComponents>
 
@@ -50,7 +50,7 @@ Full-page compositions at `/demo/{group}/{item}` with chrome that fades in on po
   </ChangeLogEntry>
   <ChangeLogEntry href="/demo/hero/photographer-portfolio">
     <h3>Photographer portfolio</h3>
-    <p>Wedding photographer hero with Card Stack, Trailing Image trail, and Split Reveal preload.</p>
+    <p>Wedding photographer hero with Card Stack, Trailing Image trail, and Split Reveal preload. Print sizing uses container queries and aspect-ratio — no ResizeObserver.</p>
   </ChangeLogEntry>
 </ChangeLogComponents>
 
@@ -71,6 +71,14 @@ Removed Scrolling Testimonials as a standalone component — that pattern now li
     <h3>Speed Dial</h3>
     <p>Click-to-open with keyboard menu support and CSS stagger — no hover-only or Motion.</p>
   </ChangeLogEntry>
+  <ChangeLogEntry href="/docs/card/card-stack">
+    <h3>Card Stack</h3>
+    <p>Top-card press feedback now runs through the same transform channel as the shuffle animation instead of a CSS active scale on the trigger.</p>
+  </ChangeLogEntry>
+  <ChangeLogEntry href="/docs/preloader/split-reveal">
+    <h3>Split Reveal</h3>
+    <p>Replaced Motion shutters with CSS keyframes and custom easing. Preload waits for decoded images before revealing — no sessionStorage skip or early timeouts.</p>
+  </ChangeLogEntry>
 </ChangeLogComponents>
 
 Registry installs for all three tab variants now bundle `animata/tabs/shared.ts` for focus rings and arrow-key behavior.
@@ -82,6 +90,10 @@ Migrated from Yarn 4 to pnpm. Upgraded Tailwind CSS to 4.3 and re-synced sevente
 ## Bug fixes
 
 <ChangeLogComponents>
+  <ChangeLogEntry href="/demo/hero/photographer-portfolio">
+    <h3>Photographer portfolio demo</h3>
+    <p>Caption and print column now share one width constraint on short viewports so metadata lines up with the 4:5 frame on MacBook-sized screens.</p>
+  </ChangeLogEntry>
   <ChangeLogEntry href="/docs/card/glowing-card">
     <h3>Glowing Card</h3>
     <p>Fixed layout overflow and documented the @theme blur/glow tokens from the v3 config.</p>
