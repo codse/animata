@@ -1,6 +1,14 @@
-import type { SVGProps } from "react";
+"use client";
+
+import { type SVGProps, useId } from "react";
 
 export function Misc5(props: SVGProps<SVGSVGElement>) {
+  const uid = useId().replace(/:/g, "");
+  const clipId = `${uid}-clip`;
+  const maskId = `${uid}-mask`;
+  const paint0Id = `${uid}-paint0`;
+  const paint1Id = `${uid}-paint1`;
+
   return (
     <svg
       className="coolshapes misc-5"
@@ -11,10 +19,10 @@ export function Misc5(props: SVGProps<SVGSVGElement>) {
       xmlns="http://www.w3.org/2000/svg"
       {...props}
     >
-      <g clipPath="url(#cs_clip_1_misc-5)">
+      <g clipPath={`url(#${clipId})`}>
         <mask
           height="185"
-          id="cs_mask_1_misc-5"
+          id={maskId}
           style={{ maskType: "alpha" }}
           width="200"
           x="0"
@@ -26,15 +34,15 @@ export function Misc5(props: SVGProps<SVGSVGElement>) {
             fill="#fff"
           />
         </mask>
-        <g mask="url(#cs_mask_1_misc-5)">
+        <g mask={`url(#${maskId})`}>
           <path d="M200 0H0v200h200V0z" fill="#fff" />
-          <path d="M200 0H0v200h200V0z" fill="url(#paint0_radial_748_5033)" />
-          <path d="M200 0H0v200h200V0z" fill="url(#paint1_radial_748_5033)" />
+          <path d="M200 0H0v200h200V0z" fill={`url(#${paint0Id})`} />
+          <path d="M200 0H0v200h200V0z" fill={`url(#${paint1Id})`} />
         </g>
       </g>
       <defs>
         <radialGradient
-          id="paint0_radial_748_5033"
+          id={paint0Id}
           cx="0"
           cy="0"
           gradientTransform="rotate(116.694 71.023 87.946) scale(199.234)"
@@ -45,7 +53,7 @@ export function Misc5(props: SVGProps<SVGSVGElement>) {
           <stop offset="1" stopColor="#FF00D6" stopOpacity="0" />
         </radialGradient>
         <radialGradient
-          id="paint1_radial_748_5033"
+          id={paint1Id}
           cx="0"
           cy="0"
           gradientTransform="rotate(48.452 -12.085 35.502) scale(223.143)"
@@ -56,7 +64,7 @@ export function Misc5(props: SVGProps<SVGSVGElement>) {
           <stop offset="0.461" stopColor="#FF7171" stopOpacity="0.84" />
           <stop offset="1" stopColor="#FFF500" stopOpacity="0" />
         </radialGradient>
-        <clipPath id="cs_clip_1_misc-5">
+        <clipPath id={clipId}>
           <path d="M0 0H200V200H0z" fill="#fff" />
         </clipPath>
       </defs>

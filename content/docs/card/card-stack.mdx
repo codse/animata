@@ -118,7 +118,7 @@ Only one shuffle runs at a time. Extra clicks during the animation are dropped. 
 
 The back slot peeks in from a smaller offset when a card first becomes visible. Cards moving up from the middle use `initial={false}` so they tween from where they already are instead of popping in again.
 
-`CardStack.Masks` renders `CardStackMaskDefs`, a hidden SVG. Photos reference its `<mask>` ids via `mask-image: url(#cs_mask_1_…)`. One defs instance per page; duplicate ids break masking.
+`CardStack.Masks` renders `CardStackMaskDefs`, a hidden SVG. Photos reference its `<mask>` ids via `mask-image: url(#cardstack_mask_…)`. One defs instance per page; duplicate ids break masking.
 
 `CardStack.LiveRegion` announces the active card. Cards are `motion.article` with `aria-roledescription`. Metrics keep visible counts but label them in `sr-only` text. With `prefers-reduced-motion`, rotation is instant and durations go to zero.
 

@@ -288,7 +288,7 @@ function SplitRevealProgressTrack({
   return (
     <div
       className={cn("h-px w-full", className)}
-      style={{ backgroundColor: `${foregroundColor}14` }}
+      style={{ backgroundColor: `color-mix(in srgb, ${foregroundColor} 8%, transparent)` }}
     >
       <div
         className="h-px transition-[width] duration-300 ease-out"

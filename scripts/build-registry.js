@@ -301,6 +301,7 @@ function buildItem(mdxPath) {
 
   for (const ref of fileRefs) {
     if (ref === primaryRef) continue;
+    if (ref.startsWith("hooks/")) continue;
     addBundledSourceFile(ref, files, bundledRefs, queue);
   }
 

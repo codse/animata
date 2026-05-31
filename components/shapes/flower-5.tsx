@@ -1,6 +1,13 @@
-import type { SVGProps } from "react";
+"use client";
+
+import { type SVGProps, useId } from "react";
 
 export function Flower5(props: SVGProps<SVGSVGElement>) {
+  const uid = useId().replace(/:/g, "");
+  const clipId = `${uid}-clip`;
+  const maskId = `${uid}-mask`;
+  const filterId = `${uid}-filter`;
+
   return (
     <svg
       className="coolshapes flower-5"
@@ -11,10 +18,10 @@ export function Flower5(props: SVGProps<SVGSVGElement>) {
       xmlns="http://www.w3.org/2000/svg"
       {...props}
     >
-      <g clipPath="url(#cs_clip_1_flower-5)">
+      <g clipPath={`url(#${clipId})`}>
         <mask
           height="200"
-          id="cs_mask_1_flower-5"
+          id={maskId}
           style={{ maskType: "alpha" }}
           width="200"
           x="0"
@@ -26,10 +33,10 @@ export function Flower5(props: SVGProps<SVGSVGElement>) {
             fill="#fff"
           />
         </mask>
-        <g mask="url(#cs_mask_1_flower-5)">
+        <g mask={`url(#${maskId})`}>
           <path d="M200 0H0v200h200V0z" fill="#fff" />
           <path d="M200 0H0v200h200V0z" fill="#FF6C02" fillOpacity="0.19" />
-          <g filter="url(#filter0_f_748_4670)">
+          <g filter={`url(#${filterId})`}>
             <path d="M194 128H41v118h153V128z" fill="#FFC700" />
             <path d="M106 13H21v87h85V13z" fill="#FFE500" />
             <path d="M95 56H-23v87H95V56z" fill="#00C5DF" />
@@ -39,7 +46,7 @@ export function Flower5(props: SVGProps<SVGSVGElement>) {
       <defs>
         <filter
           height="358"
-          id="filter0_f_748_4670"
+          id={filterId}
           width="342"
           x="-85.5"
           y="-49.5"
@@ -50,7 +57,7 @@ export function Flower5(props: SVGProps<SVGSVGElement>) {
           <feBlend result="shape" in="SourceGraphic" in2="BackgroundImageFix" />
           <feGaussianBlur result="effect1_foregroundBlur_748_4670" stdDeviation="31.25" />
         </filter>
-        <clipPath id="cs_clip_1_flower-5">
+        <clipPath id={clipId}>
           <path d="M0 0H200V200H0z" fill="#fff" />
         </clipPath>
       </defs>

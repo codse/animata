@@ -21,10 +21,10 @@ import { CardStackMaskDefs } from "@/components/shapes/card-stack-mask-defs";
 import { cn } from "@/lib/utils";
 
 export const CARD_STACK_MASK_IDS = [
-  "cs_mask_1_ellipse-1",
-  "cs_mask_1_flower-14",
-  "cs_mask_1_flower-1",
-  "cs_mask_1_misc-5",
+  "cardstack_mask_ellipse-1",
+  "cardstack_mask_flower-14",
+  "cardstack_mask_flower-1",
+  "cardstack_mask_misc-5",
 ] as const;
 
 export type CardStackMaskId = (typeof CARD_STACK_MASK_IDS)[number];
@@ -36,7 +36,7 @@ export interface CardStackItem {
   image: string;
   title: string;
   tagline: string;
-  counts: {
+  counts?: {
     like: number;
     comment: number;
   };
@@ -279,7 +279,11 @@ function CardStackRoot({
   children,
 }: CardStackRootProps) {
   const reducedMotion = usePrefersReducedMotion();
-  const layers = useMemo(() => getCardStackLayers(reducedMotion, depth), [reducedMotion, depth]);
+  const stackDepth = Math.min(Math.max(1, depth), STACK_LAYER_PRESETS.length);
+  const layers = useMemo(
+    () => getCardStackLayers(reducedMotion, stackDepth),
+    [reducedMotion, stackDepth],
+  );
   const [itemList, setItemList] = useState(items);
   const [isAnimating, setIsAnimating] = useState(false);
   const [pressActive, setPressActive] = useState(false);
@@ -289,7 +293,7 @@ function CardStackRoot({
   const autoplayTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const advanceRef = useRef<() => void>(() => {});
 
-  const visibleItems = itemList.slice(0, depth);
+  const visibleItems = itemList.slice(0, stackDepth);
   const activeItem = visibleItems[0];
 
   const clearStepTimer = useCallback(() => {
@@ -305,6 +309,14 @@ function CardStackRoot({
       autoplayTimerRef.current = null;
     }
   }, []);
+
+  useEffect(() => {
+    clearStepTimer();
+    clearAutoplayTimer();
+    isAnimatingRef.current = false;
+    setIsAnimating(false);
+    setItemList(items);
+  }, [items, clearStepTimer, clearAutoplayTimer]);
 
   const rotateOne = useCallback(() => {
     setItemList((current) => {
@@ -402,7 +414,7 @@ function CardStackRoot({
       items: itemList,
       visibleItems,
       activeItem,
-      depth,
+      depth: stackDepth,
       isAnimating,
       pressActive,
       setPressActive,
@@ -416,7 +428,7 @@ function CardStackRoot({
       itemList,
       visibleItems,
       activeItem,
-      depth,
+      stackDepth,
       isAnimating,
       pressActive,
       throwImpulse,

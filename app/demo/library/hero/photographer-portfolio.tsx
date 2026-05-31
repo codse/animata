@@ -63,7 +63,9 @@ const PHOTOGRAPHER = {
 
 const TRAIL_IMAGES = LUMMI_ASSETS.trail.map((id) => lummi(id));
 
-const SHOT_SETTINGS: Record<string, { aperture: string; shutter: string; stock: string }> = {
+type PortfolioId = keyof typeof LUMMI_ASSETS.portfolio;
+
+const SHOT_SETTINGS: Record<PortfolioId, { aperture: string; shutter: string; stock: string }> = {
   vows: { aperture: "2", shutter: "1/500", stock: "Portra 400" },
   ceremony: { aperture: "2.8", shutter: "1/250", stock: "Portra 160" },
   reception: { aperture: "2", shutter: "1/125", stock: "Portra 800" },
@@ -83,7 +85,6 @@ const PORTFOLIO: CardStackItem[] = [
     image: lummi(LUMMI_ASSETS.portfolio.vows),
     title: "Vows",
     tagline: "Cliffside ceremony",
-    counts: { like: 0, comment: 0 },
     maskId: CARD_STACK_MASK_IDS[0],
   },
   {
@@ -91,7 +92,6 @@ const PORTFOLIO: CardStackItem[] = [
     image: lummi(LUMMI_ASSETS.portfolio.ceremony),
     title: "Ceremony",
     tagline: "Church exit",
-    counts: { like: 0, comment: 0 },
     maskId: CARD_STACK_MASK_IDS[0],
   },
   {
@@ -99,7 +99,6 @@ const PORTFOLIO: CardStackItem[] = [
     image: lummi(LUMMI_ASSETS.portfolio.reception),
     title: "Reception",
     tagline: "Evening dance",
-    counts: { like: 0, comment: 0 },
     maskId: CARD_STACK_MASK_IDS[0],
   },
   {
@@ -107,7 +106,6 @@ const PORTFOLIO: CardStackItem[] = [
     image: lummi(LUMMI_ASSETS.portfolio.candid),
     title: "Candid",
     tagline: "Real laughter",
-    counts: { like: 0, comment: 0 },
     maskId: CARD_STACK_MASK_IDS[0],
   },
   {
@@ -115,7 +113,6 @@ const PORTFOLIO: CardStackItem[] = [
     image: lummi(LUMMI_ASSETS.portfolio.florals),
     title: "Florals",
     tagline: "Bouquet detail",
-    counts: { like: 0, comment: 0 },
     maskId: CARD_STACK_MASK_IDS[0],
   },
   {
@@ -123,7 +120,6 @@ const PORTFOLIO: CardStackItem[] = [
     image: lummi(LUMMI_ASSETS.portfolio.festival),
     title: "Event",
     tagline: "Summer festival",
-    counts: { like: 0, comment: 0 },
     maskId: CARD_STACK_MASK_IDS[0],
   },
 ];
@@ -206,8 +202,12 @@ function ViewfinderFrame() {
 
 function PrintCaption() {
   const { activeItem } = useCardStack();
-  const index = activeItem ? PORTFOLIO.findIndex((item) => item.id === activeItem.id) + 1 : 1;
-  const settings = activeItem ? SHOT_SETTINGS[activeItem.id] : SHOT_SETTINGS.vows;
+  const rawIndex = activeItem ? PORTFOLIO.findIndex((item) => item.id === activeItem.id) : -1;
+  const index = rawIndex === -1 ? 1 : rawIndex + 1;
+  const settings =
+    activeItem && activeItem.id in SHOT_SETTINGS
+      ? SHOT_SETTINGS[activeItem.id as PortfolioId]
+      : SHOT_SETTINGS.vows;
 
   if (!activeItem || !settings) {
     return null;

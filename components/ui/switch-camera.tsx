@@ -38,22 +38,20 @@ const SwitchCameraIcon = forwardRef<SwitchCameraIconHandle, SwitchCameraIconProp
 
     const handleMouseEnter = useCallback(
       (event: React.MouseEvent<HTMLDivElement>) => {
-        if (isControlledRef.current) {
-          onMouseEnter?.(event);
-          return;
+        onMouseEnter?.(event);
+        if (!isControlledRef.current) {
+          controls.start("animate");
         }
-        controls.start("animate");
       },
       [controls, onMouseEnter],
     );
 
     const handleMouseLeave = useCallback(
       (event: React.MouseEvent<HTMLDivElement>) => {
-        if (isControlledRef.current) {
-          onMouseLeave?.(event);
-          return;
+        onMouseLeave?.(event);
+        if (!isControlledRef.current) {
+          controls.start("normal");
         }
-        controls.start("normal");
       },
       [controls, onMouseLeave],
     );

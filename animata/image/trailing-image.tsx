@@ -201,8 +201,9 @@ export default function TrailingImage({
   excludeRefs = [],
   maxTrailZIndex,
 }: TrailingImageProps) {
+  const resolvedImages = images.length > 0 ? images : DEFAULT_IMAGES;
   const containerRef = useRef<HTMLDivElement>(null);
-  const trailCount = Math.max(20, images.length);
+  const trailCount = Math.max(20, resolvedImages.length);
   const trailsRef = useRef(
     Array.from(
       { length: trailCount },
@@ -297,7 +298,7 @@ export default function TrailingImage({
   const trailLayer = (
     <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden>
       {trailsRef.current.map((ref, index) => (
-        <AnimatedImage key={index} ref={ref} src={images[index % images.length]!} />
+        <AnimatedImage key={index} ref={ref} src={resolvedImages[index % resolvedImages.length]!} />
       ))}
     </div>
   );

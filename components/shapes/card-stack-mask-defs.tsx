@@ -5,7 +5,7 @@ export function CardStackMaskDefs(props: SVGProps<SVGSVGElement>) {
     <svg aria-hidden width={0} height={0} xmlns="http://www.w3.org/2000/svg" {...props}>
       <defs>
         <mask
-          id="cs_mask_1_ellipse-1"
+          id="cardstack_mask_ellipse-1"
           width="200"
           height="200"
           x="0"
@@ -21,7 +21,7 @@ export function CardStackMaskDefs(props: SVGProps<SVGSVGElement>) {
         </mask>
 
         <mask
-          id="cs_mask_1_flower-14"
+          id="cardstack_mask_flower-14"
           width="200"
           height="194"
           x="0"
@@ -36,7 +36,7 @@ export function CardStackMaskDefs(props: SVGProps<SVGSVGElement>) {
         </mask>
 
         <mask
-          id="cs_mask_1_flower-1"
+          id="cardstack_mask_flower-1"
           width="200"
           height="186"
           x="0"
@@ -51,7 +51,7 @@ export function CardStackMaskDefs(props: SVGProps<SVGSVGElement>) {
         </mask>
 
         <mask
-          id="cs_mask_1_misc-5"
+          id="cardstack_mask_misc-5"
           width="200"
           height="185"
           x="0"

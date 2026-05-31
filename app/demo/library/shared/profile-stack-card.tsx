@@ -30,6 +30,7 @@ export function ProfileStackCard({
       stackIndex={index}
       className={cn(
         "bg-linear-to-br from-[#f5efe6] via-[#faf8f5] to-white ring-white/20",
+        "dark:from-pink-950 dark:via-card dark:to-card dark:ring-border/60",
         cardClassName,
       )}
     >
@@ -42,11 +43,11 @@ export function ProfileStackCard({
 
       {showMetrics ? (
         <CardStack.Footer>
-          <CardStack.Metric icon={Heart} label="Likes" value={item.counts.like} />
+          <CardStack.Metric icon={Heart} label="Likes" value={item.counts?.like ?? 0} />
           <CardStack.Metric
             icon={MessageCircle}
             label="Comments"
-            value={item.counts.comment}
+            value={item.counts?.comment ?? 0}
             className="ms-1"
           />
           <ArrowRight aria-hidden className="ml-auto size-6 shrink-0 text-black/40" />

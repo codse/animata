@@ -2627,7 +2627,9 @@ const PHOTOGRAPHER = {
 
 const TRAIL_IMAGES = LUMMI_ASSETS.trail.map((id) => lummi(id));
 
-const SHOT_SETTINGS: Record<string, { aperture: string; shutter: string; stock: string }> = {
+type PortfolioId = keyof typeof LUMMI_ASSETS.portfolio;
+
+const SHOT_SETTINGS: Record<PortfolioId, { aperture: string; shutter: string; stock: string }> = {
   vows: { aperture: "2", shutter: "1/500", stock: "Portra 400" },
   ceremony: { aperture: "2.8", shutter: "1/250", stock: "Portra 160" },
   reception: { aperture: "2", shutter: "1/125", stock: "Portra 800" },
@@ -2647,7 +2649,6 @@ const PORTFOLIO: CardStackItem[] = [
     image: lummi(LUMMI_ASSETS.portfolio.vows),
     title: "Vows",
     tagline: "Cliffside ceremony",
-    counts: { like: 0, comment: 0 },
     maskId: CARD_STACK_MASK_IDS[0],
   },
   {
@@ -2655,7 +2656,6 @@ const PORTFOLIO: CardStackItem[] = [
     image: lummi(LUMMI_ASSETS.portfolio.ceremony),
     title: "Ceremony",
     tagline: "Church exit",
-    counts: { like: 0, comment: 0 },
     maskId: CARD_STACK_MASK_IDS[0],
   },
   {
@@ -2663,7 +2663,6 @@ const PORTFOLIO: CardStackItem[] = [
     image: lummi(LUMMI_ASSETS.portfolio.reception),
     title: "Reception",
     tagline: "Evening dance",
-    counts: { like: 0, comment: 0 },
     maskId: CARD_STACK_MASK_IDS[0],
   },
   {
@@ -2671,7 +2670,6 @@ const PORTFOLIO: CardStackItem[] = [
     image: lummi(LUMMI_ASSETS.portfolio.candid),
     title: "Candid",
     tagline: "Real laughter",
-    counts: { like: 0, comment: 0 },
     maskId: CARD_STACK_MASK_IDS[0],
   },
   {
@@ -2679,7 +2677,6 @@ const PORTFOLIO: CardStackItem[] = [
     image: lummi(LUMMI_ASSETS.portfolio.florals),
     title: "Florals",
     tagline: "Bouquet detail",
-    counts: { like: 0, comment: 0 },
     maskId: CARD_STACK_MASK_IDS[0],
   },
   {
@@ -2687,7 +2684,6 @@ const PORTFOLIO: CardStackItem[] = [
     image: lummi(LUMMI_ASSETS.portfolio.festival),
     title: "Event",
     tagline: "Summer festival",
-    counts: { like: 0, comment: 0 },
     maskId: CARD_STACK_MASK_IDS[0],
   },
 ];
@@ -2770,8 +2766,12 @@ function ViewfinderFrame() {
 
 function PrintCaption() {
   const { activeItem } = useCardStack();
-  const index = activeItem ? PORTFOLIO.findIndex((item) => item.id === activeItem.id) + 1 : 1;
-  const settings = activeItem ? SHOT_SETTINGS[activeItem.id] : SHOT_SETTINGS.vows;
+  const rawIndex = activeItem ? PORTFOLIO.findIndex((item) => item.id === activeItem.id) : -1;
+  const index = rawIndex === -1 ? 1 : rawIndex + 1;
+  const settings =
+    activeItem && activeItem.id in SHOT_SETTINGS
+      ? SHOT_SETTINGS[activeItem.id as PortfolioId]
+      : SHOT_SETTINGS.vows;
 
   if (!activeItem || !settings) {
     return null;
@@ -2889,12 +2889,8 @@ function PortfolioLayout({
     <div
       className={cn("flex flex-col gap-8", "md:h-full md:min-h-0 md:flex-1 md:flex-row md:gap-6")}
     >
-      <div
-        className="relative z-20 min-w-0 md:flex md:flex-[2] md:basis-0 md:flex-col md:justify-end"
-      >
-        <div
-          ref={heroRef}
-        >
+      <div className="relative z-20 min-w-0 md:flex md:flex-[2] md:basis-0 md:flex-col md:justify-end">
+        <div ref={heroRef}>
           <HeroStory />
         </div>
       </div>
@@ -3032,7 +3028,9 @@ export default function PhotographerPortfolio() {
 <span class="line"></span>
 <span class="line"><span style="color:#D73A49">const</span><span style="color:#005CC5"> TRAIL_IMAGES</span><span style="color:#D73A49"> =</span><span style="color:#005CC5"> LUMMI_ASSETS</span><span style="color:#24292E">.trail.</span><span style="color:#6F42C1">map</span><span style="color:#24292E">((</span><span style="color:#E36209">id</span><span style="color:#24292E">) </span><span style="color:#D73A49">=></span><span style="color:#6F42C1"> lummi</span><span style="color:#24292E">(id));</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#D73A49">const</span><span style="color:#005CC5"> SHOT_SETTINGS</span><span style="color:#D73A49">:</span><span style="color:#6F42C1"> Record</span><span style="color:#24292E">&#x3C;</span><span style="color:#005CC5">string</span><span style="color:#24292E">, { </span><span style="color:#E36209">aperture</span><span style="color:#D73A49">:</span><span style="color:#005CC5"> string</span><span style="color:#24292E">; </span><span style="color:#E36209">shutter</span><span style="color:#D73A49">:</span><span style="color:#005CC5"> string</span><span style="color:#24292E">; </span><span style="color:#E36209">stock</span><span style="color:#D73A49">:</span><span style="color:#005CC5"> string</span><span style="color:#24292E"> }> </span><span style="color:#D73A49">=</span><span style="color:#24292E"> {</span></span>
+<span class="line"><span style="color:#D73A49">type</span><span style="color:#6F42C1"> PortfolioId</span><span style="color:#D73A49"> =</span><span style="color:#D73A49"> keyof</span><span style="color:#D73A49"> typeof</span><span style="color:#005CC5"> LUMMI_ASSETS</span><span style="color:#24292E">.portfolio;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49">const</span><span style="color:#005CC5"> SHOT_SETTINGS</span><span style="color:#D73A49">:</span><span style="color:#6F42C1"> Record</span><span style="color:#24292E">&#x3C;</span><span style="color:#6F42C1">PortfolioId</span><span style="color:#24292E">, { </span><span style="color:#E36209">aperture</span><span style="color:#D73A49">:</span><span style="color:#005CC5"> string</span><span style="color:#24292E">; </span><span style="color:#E36209">shutter</span><span style="color:#D73A49">:</span><span style="color:#005CC5"> string</span><span style="color:#24292E">; </span><span style="color:#E36209">stock</span><span style="color:#D73A49">:</span><span style="color:#005CC5"> string</span><span style="color:#24292E"> }> </span><span style="color:#D73A49">=</span><span style="color:#24292E"> {</span></span>
 <span class="line"><span style="color:#24292E">  vows: { aperture: </span><span style="color:#032F62">"2"</span><span style="color:#24292E">, shutter: </span><span style="color:#032F62">"1/500"</span><span style="color:#24292E">, stock: </span><span style="color:#032F62">"Portra 400"</span><span style="color:#24292E"> },</span></span>
 <span class="line"><span style="color:#24292E">  ceremony: { aperture: </span><span style="color:#032F62">"2.8"</span><span style="color:#24292E">, shutter: </span><span style="color:#032F62">"1/250"</span><span style="color:#24292E">, stock: </span><span style="color:#032F62">"Portra 160"</span><span style="color:#24292E"> },</span></span>
 <span class="line"><span style="color:#24292E">  reception: { aperture: </span><span style="color:#032F62">"2"</span><span style="color:#24292E">, shutter: </span><span style="color:#032F62">"1/125"</span><span style="color:#24292E">, stock: </span><span style="color:#032F62">"Portra 800"</span><span style="color:#24292E"> },</span></span>
@@ -3052,7 +3050,6 @@ export default function PhotographerPortfolio() {
 <span class="line"><span style="color:#24292E">    image: </span><span style="color:#6F42C1">lummi</span><span style="color:#24292E">(</span><span style="color:#005CC5">LUMMI_ASSETS</span><span style="color:#24292E">.portfolio.vows),</span></span>
 <span class="line"><span style="color:#24292E">    title: </span><span style="color:#032F62">"Vows"</span><span style="color:#24292E">,</span></span>
 <span class="line"><span style="color:#24292E">    tagline: </span><span style="color:#032F62">"Cliffside ceremony"</span><span style="color:#24292E">,</span></span>
-<span class="line"><span style="color:#24292E">    counts: { like: </span><span style="color:#005CC5">0</span><span style="color:#24292E">, comment: </span><span style="color:#005CC5">0</span><span style="color:#24292E"> },</span></span>
 <span class="line"><span style="color:#24292E">    maskId: </span><span style="color:#005CC5">CARD_STACK_MASK_IDS</span><span style="color:#24292E">[</span><span style="color:#005CC5">0</span><span style="color:#24292E">],</span></span>
 <span class="line"><span style="color:#24292E">  },</span></span>
 <span class="line"><span style="color:#24292E">  {</span></span>
@@ -3060,7 +3057,6 @@ export default function PhotographerPortfolio() {
 <span class="line"><span style="color:#24292E">    image: </span><span style="color:#6F42C1">lummi</span><span style="color:#24292E">(</span><span style="color:#005CC5">LUMMI_ASSETS</span><span style="color:#24292E">.portfolio.ceremony),</span></span>
 <span class="line"><span style="color:#24292E">    title: </span><span style="color:#032F62">"Ceremony"</span><span style="color:#24292E">,</span></span>
 <span class="line"><span style="color:#24292E">    tagline: </span><span style="color:#032F62">"Church exit"</span><span style="color:#24292E">,</span></span>
-<span class="line"><span style="color:#24292E">    counts: { like: </span><span style="color:#005CC5">0</span><span style="color:#24292E">, comment: </span><span style="color:#005CC5">0</span><span style="color:#24292E"> },</span></span>
 <span class="line"><span style="color:#24292E">    maskId: </span><span style="color:#005CC5">CARD_STACK_MASK_IDS</span><span style="color:#24292E">[</span><span style="color:#005CC5">0</span><span style="color:#24292E">],</span></span>
 <span class="line"><span style="color:#24292E">  },</span></span>
 <span class="line"><span style="color:#24292E">  {</span></span>
@@ -3068,7 +3064,6 @@ export default function PhotographerPortfolio() {
 <span class="line"><span style="color:#24292E">    image: </span><span style="color:#6F42C1">lummi</span><span style="color:#24292E">(</span><span style="color:#005CC5">LUMMI_ASSETS</span><span style="color:#24292E">.portfolio.reception),</span></span>
 <span class="line"><span style="color:#24292E">    title: </span><span style="color:#032F62">"Reception"</span><span style="color:#24292E">,</span></span>
 <span class="line"><span style="color:#24292E">    tagline: </span><span style="color:#032F62">"Evening dance"</span><span style="color:#24292E">,</span></span>
-<span class="line"><span style="color:#24292E">    counts: { like: </span><span style="color:#005CC5">0</span><span style="color:#24292E">, comment: </span><span style="color:#005CC5">0</span><span style="color:#24292E"> },</span></span>
 <span class="line"><span style="color:#24292E">    maskId: </span><span style="color:#005CC5">CARD_STACK_MASK_IDS</span><span style="color:#24292E">[</span><span style="color:#005CC5">0</span><span style="color:#24292E">],</span></span>
 <span class="line"><span style="color:#24292E">  },</span></span>
 <span class="line"><span style="color:#24292E">  {</span></span>
@@ -3076,7 +3071,6 @@ export default function PhotographerPortfolio() {
 <span class="line"><span style="color:#24292E">    image: </span><span style="color:#6F42C1">lummi</span><span style="color:#24292E">(</span><span style="color:#005CC5">LUMMI_ASSETS</span><span style="color:#24292E">.portfolio.candid),</span></span>
 <span class="line"><span style="color:#24292E">    title: </span><span style="color:#032F62">"Candid"</span><span style="color:#24292E">,</span></span>
 <span class="line"><span style="color:#24292E">    tagline: </span><span style="color:#032F62">"Real laughter"</span><span style="color:#24292E">,</span></span>
-<span class="line"><span style="color:#24292E">    counts: { like: </span><span style="color:#005CC5">0</span><span style="color:#24292E">, comment: </span><span style="color:#005CC5">0</span><span style="color:#24292E"> },</span></span>
 <span class="line"><span style="color:#24292E">    maskId: </span><span style="color:#005CC5">CARD_STACK_MASK_IDS</span><span style="color:#24292E">[</span><span style="color:#005CC5">0</span><span style="color:#24292E">],</span></span>
 <span class="line"><span style="color:#24292E">  },</span></span>
 <span class="line"><span style="color:#24292E">  {</span></span>
@@ -3084,7 +3078,6 @@ export default function PhotographerPortfolio() {
 <span class="line"><span style="color:#24292E">    image: </span><span style="color:#6F42C1">lummi</span><span style="color:#24292E">(</span><span style="color:#005CC5">LUMMI_ASSETS</span><span style="color:#24292E">.portfolio.florals),</span></span>
 <span class="line"><span style="color:#24292E">    title: </span><span style="color:#032F62">"Florals"</span><span style="color:#24292E">,</span></span>
 <span class="line"><span style="color:#24292E">    tagline: </span><span style="color:#032F62">"Bouquet detail"</span><span style="color:#24292E">,</span></span>
-<span class="line"><span style="color:#24292E">    counts: { like: </span><span style="color:#005CC5">0</span><span style="color:#24292E">, comment: </span><span style="color:#005CC5">0</span><span style="color:#24292E"> },</span></span>
 <span class="line"><span style="color:#24292E">    maskId: </span><span style="color:#005CC5">CARD_STACK_MASK_IDS</span><span style="color:#24292E">[</span><span style="color:#005CC5">0</span><span style="color:#24292E">],</span></span>
 <span class="line"><span style="color:#24292E">  },</span></span>
 <span class="line"><span style="color:#24292E">  {</span></span>
@@ -3092,7 +3085,6 @@ export default function PhotographerPortfolio() {
 <span class="line"><span style="color:#24292E">    image: </span><span style="color:#6F42C1">lummi</span><span style="color:#24292E">(</span><span style="color:#005CC5">LUMMI_ASSETS</span><span style="color:#24292E">.portfolio.festival),</span></span>
 <span class="line"><span style="color:#24292E">    title: </span><span style="color:#032F62">"Event"</span><span style="color:#24292E">,</span></span>
 <span class="line"><span style="color:#24292E">    tagline: </span><span style="color:#032F62">"Summer festival"</span><span style="color:#24292E">,</span></span>
-<span class="line"><span style="color:#24292E">    counts: { like: </span><span style="color:#005CC5">0</span><span style="color:#24292E">, comment: </span><span style="color:#005CC5">0</span><span style="color:#24292E"> },</span></span>
 <span class="line"><span style="color:#24292E">    maskId: </span><span style="color:#005CC5">CARD_STACK_MASK_IDS</span><span style="color:#24292E">[</span><span style="color:#005CC5">0</span><span style="color:#24292E">],</span></span>
 <span class="line"><span style="color:#24292E">  },</span></span>
 <span class="line"><span style="color:#24292E">];</span></span>
@@ -3175,8 +3167,12 @@ export default function PhotographerPortfolio() {
 <span class="line"></span>
 <span class="line"><span style="color:#D73A49">function</span><span style="color:#6F42C1"> PrintCaption</span><span style="color:#24292E">() {</span></span>
 <span class="line"><span style="color:#D73A49">  const</span><span style="color:#24292E"> { </span><span style="color:#005CC5">activeItem</span><span style="color:#24292E"> } </span><span style="color:#D73A49">=</span><span style="color:#6F42C1"> useCardStack</span><span style="color:#24292E">();</span></span>
-<span class="line"><span style="color:#D73A49">  const</span><span style="color:#005CC5"> index</span><span style="color:#D73A49"> =</span><span style="color:#24292E"> activeItem </span><span style="color:#D73A49">?</span><span style="color:#005CC5"> PORTFOLIO</span><span style="color:#24292E">.</span><span style="color:#6F42C1">findIndex</span><span style="color:#24292E">((</span><span style="color:#E36209">item</span><span style="color:#24292E">) </span><span style="color:#D73A49">=></span><span style="color:#24292E"> item.id </span><span style="color:#D73A49">===</span><span style="color:#24292E"> activeItem.id) </span><span style="color:#D73A49">+</span><span style="color:#005CC5"> 1</span><span style="color:#D73A49"> :</span><span style="color:#005CC5"> 1</span><span style="color:#24292E">;</span></span>
-<span class="line"><span style="color:#D73A49">  const</span><span style="color:#005CC5"> settings</span><span style="color:#D73A49"> =</span><span style="color:#24292E"> activeItem </span><span style="color:#D73A49">?</span><span style="color:#005CC5"> SHOT_SETTINGS</span><span style="color:#24292E">[activeItem.id] </span><span style="color:#D73A49">:</span><span style="color:#005CC5"> SHOT_SETTINGS</span><span style="color:#24292E">.vows;</span></span>
+<span class="line"><span style="color:#D73A49">  const</span><span style="color:#005CC5"> rawIndex</span><span style="color:#D73A49"> =</span><span style="color:#24292E"> activeItem </span><span style="color:#D73A49">?</span><span style="color:#005CC5"> PORTFOLIO</span><span style="color:#24292E">.</span><span style="color:#6F42C1">findIndex</span><span style="color:#24292E">((</span><span style="color:#E36209">item</span><span style="color:#24292E">) </span><span style="color:#D73A49">=></span><span style="color:#24292E"> item.id </span><span style="color:#D73A49">===</span><span style="color:#24292E"> activeItem.id) </span><span style="color:#D73A49">:</span><span style="color:#D73A49"> -</span><span style="color:#005CC5">1</span><span style="color:#24292E">;</span></span>
+<span class="line"><span style="color:#D73A49">  const</span><span style="color:#005CC5"> index</span><span style="color:#D73A49"> =</span><span style="color:#24292E"> rawIndex </span><span style="color:#D73A49">===</span><span style="color:#D73A49"> -</span><span style="color:#005CC5">1</span><span style="color:#D73A49"> ?</span><span style="color:#005CC5"> 1</span><span style="color:#D73A49"> :</span><span style="color:#24292E"> rawIndex </span><span style="color:#D73A49">+</span><span style="color:#005CC5"> 1</span><span style="color:#24292E">;</span></span>
+<span class="line"><span style="color:#D73A49">  const</span><span style="color:#005CC5"> settings</span><span style="color:#D73A49"> =</span></span>
+<span class="line"><span style="color:#24292E">    activeItem </span><span style="color:#D73A49">&#x26;&#x26;</span><span style="color:#24292E"> activeItem.id </span><span style="color:#D73A49">in</span><span style="color:#005CC5"> SHOT_SETTINGS</span></span>
+<span class="line"><span style="color:#D73A49">      ?</span><span style="color:#005CC5"> SHOT_SETTINGS</span><span style="color:#24292E">[activeItem.id </span><span style="color:#D73A49">as</span><span style="color:#6F42C1"> PortfolioId</span><span style="color:#24292E">]</span></span>
+<span class="line"><span style="color:#D73A49">      :</span><span style="color:#005CC5"> SHOT_SETTINGS</span><span style="color:#24292E">.vows;</span></span>
 <span class="line"></span>
 <span class="line"><span style="color:#D73A49">  if</span><span style="color:#24292E"> (</span><span style="color:#D73A49">!</span><span style="color:#24292E">activeItem </span><span style="color:#D73A49">||</span><span style="color:#D73A49"> !</span><span style="color:#24292E">settings) {</span></span>
 <span class="line"><span style="color:#D73A49">    return</span><span style="color:#005CC5"> null</span><span style="color:#24292E">;</span></span>
@@ -3294,12 +3290,8 @@ export default function PhotographerPortfolio() {
 <span class="line"><span style="color:#24292E">    &#x3C;</span><span style="color:#22863A">div</span></span>
 <span class="line"><span style="color:#6F42C1">      className</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#6F42C1">cn</span><span style="color:#24292E">(</span><span style="color:#032F62">"flex flex-col gap-8"</span><span style="color:#24292E">, </span><span style="color:#032F62">"md:h-full md:min-h-0 md:flex-1 md:flex-row md:gap-6"</span><span style="color:#24292E">)}</span></span>
 <span class="line"><span style="color:#24292E">    ></span></span>
-<span class="line"><span style="color:#24292E">      &#x3C;</span><span style="color:#22863A">div</span></span>
-<span class="line"><span style="color:#6F42C1">        className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"relative z-20 min-w-0 md:flex md:flex-[2] md:basis-0 md:flex-col md:justify-end"</span></span>
-<span class="line"><span style="color:#24292E">      ></span></span>
-<span class="line"><span style="color:#24292E">        &#x3C;</span><span style="color:#22863A">div</span></span>
-<span class="line"><span style="color:#6F42C1">          ref</span><span style="color:#D73A49">=</span><span style="color:#24292E">{heroRef}</span></span>
-<span class="line"><span style="color:#24292E">        ></span></span>
+<span class="line"><span style="color:#24292E">      &#x3C;</span><span style="color:#22863A">div</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"relative z-20 min-w-0 md:flex md:flex-[2] md:basis-0 md:flex-col md:justify-end"</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">        &#x3C;</span><span style="color:#22863A">div</span><span style="color:#6F42C1"> ref</span><span style="color:#D73A49">=</span><span style="color:#24292E">{heroRef}></span></span>
 <span class="line"><span style="color:#24292E">          &#x3C;</span><span style="color:#005CC5">HeroStory</span><span style="color:#24292E"> /></span></span>
 <span class="line"><span style="color:#24292E">        &#x3C;/</span><span style="color:#22863A">div</span><span style="color:#24292E">></span></span>
 <span class="line"><span style="color:#24292E">      &#x3C;/</span><span style="color:#22863A">div</span><span style="color:#24292E">></span></span>
@@ -3437,7 +3429,9 @@ export default function PhotographerPortfolio() {
 <span class="line"></span>
 <span class="line"><span style="color:#F97583">const</span><span style="color:#79B8FF"> TRAIL_IMAGES</span><span style="color:#F97583"> =</span><span style="color:#79B8FF"> LUMMI_ASSETS</span><span style="color:#E1E4E8">.trail.</span><span style="color:#B392F0">map</span><span style="color:#E1E4E8">((</span><span style="color:#FFAB70">id</span><span style="color:#E1E4E8">) </span><span style="color:#F97583">=></span><span style="color:#B392F0"> lummi</span><span style="color:#E1E4E8">(id));</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#F97583">const</span><span style="color:#79B8FF"> SHOT_SETTINGS</span><span style="color:#F97583">:</span><span style="color:#B392F0"> Record</span><span style="color:#E1E4E8">&#x3C;</span><span style="color:#79B8FF">string</span><span style="color:#E1E4E8">, { </span><span style="color:#FFAB70">aperture</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> string</span><span style="color:#E1E4E8">; </span><span style="color:#FFAB70">shutter</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> string</span><span style="color:#E1E4E8">; </span><span style="color:#FFAB70">stock</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> string</span><span style="color:#E1E4E8"> }> </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#F97583">type</span><span style="color:#B392F0"> PortfolioId</span><span style="color:#F97583"> =</span><span style="color:#F97583"> keyof</span><span style="color:#F97583"> typeof</span><span style="color:#79B8FF"> LUMMI_ASSETS</span><span style="color:#E1E4E8">.portfolio;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">const</span><span style="color:#79B8FF"> SHOT_SETTINGS</span><span style="color:#F97583">:</span><span style="color:#B392F0"> Record</span><span style="color:#E1E4E8">&#x3C;</span><span style="color:#B392F0">PortfolioId</span><span style="color:#E1E4E8">, { </span><span style="color:#FFAB70">aperture</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> string</span><span style="color:#E1E4E8">; </span><span style="color:#FFAB70">shutter</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> string</span><span style="color:#E1E4E8">; </span><span style="color:#FFAB70">stock</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> string</span><span style="color:#E1E4E8"> }> </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> {</span></span>
 <span class="line"><span style="color:#E1E4E8">  vows: { aperture: </span><span style="color:#9ECBFF">"2"</span><span style="color:#E1E4E8">, shutter: </span><span style="color:#9ECBFF">"1/500"</span><span style="color:#E1E4E8">, stock: </span><span style="color:#9ECBFF">"Portra 400"</span><span style="color:#E1E4E8"> },</span></span>
 <span class="line"><span style="color:#E1E4E8">  ceremony: { aperture: </span><span style="color:#9ECBFF">"2.8"</span><span style="color:#E1E4E8">, shutter: </span><span style="color:#9ECBFF">"1/250"</span><span style="color:#E1E4E8">, stock: </span><span style="color:#9ECBFF">"Portra 160"</span><span style="color:#E1E4E8"> },</span></span>
 <span class="line"><span style="color:#E1E4E8">  reception: { aperture: </span><span style="color:#9ECBFF">"2"</span><span style="color:#E1E4E8">, shutter: </span><span style="color:#9ECBFF">"1/125"</span><span style="color:#E1E4E8">, stock: </span><span style="color:#9ECBFF">"Portra 800"</span><span style="color:#E1E4E8"> },</span></span>
@@ -3457,7 +3451,6 @@ export default function PhotographerPortfolio() {
 <span class="line"><span style="color:#E1E4E8">    image: </span><span style="color:#B392F0">lummi</span><span style="color:#E1E4E8">(</span><span style="color:#79B8FF">LUMMI_ASSETS</span><span style="color:#E1E4E8">.portfolio.vows),</span></span>
 <span class="line"><span style="color:#E1E4E8">    title: </span><span style="color:#9ECBFF">"Vows"</span><span style="color:#E1E4E8">,</span></span>
 <span class="line"><span style="color:#E1E4E8">    tagline: </span><span style="color:#9ECBFF">"Cliffside ceremony"</span><span style="color:#E1E4E8">,</span></span>
-<span class="line"><span style="color:#E1E4E8">    counts: { like: </span><span style="color:#79B8FF">0</span><span style="color:#E1E4E8">, comment: </span><span style="color:#79B8FF">0</span><span style="color:#E1E4E8"> },</span></span>
 <span class="line"><span style="color:#E1E4E8">    maskId: </span><span style="color:#79B8FF">CARD_STACK_MASK_IDS</span><span style="color:#E1E4E8">[</span><span style="color:#79B8FF">0</span><span style="color:#E1E4E8">],</span></span>
 <span class="line"><span style="color:#E1E4E8">  },</span></span>
 <span class="line"><span style="color:#E1E4E8">  {</span></span>
@@ -3465,7 +3458,6 @@ export default function PhotographerPortfolio() {
 <span class="line"><span style="color:#E1E4E8">    image: </span><span style="color:#B392F0">lummi</span><span style="color:#E1E4E8">(</span><span style="color:#79B8FF">LUMMI_ASSETS</span><span style="color:#E1E4E8">.portfolio.ceremony),</span></span>
 <span class="line"><span style="color:#E1E4E8">    title: </span><span style="color:#9ECBFF">"Ceremony"</span><span style="color:#E1E4E8">,</span></span>
 <span class="line"><span style="color:#E1E4E8">    tagline: </span><span style="color:#9ECBFF">"Church exit"</span><span style="color:#E1E4E8">,</span></span>
-<span class="line"><span style="color:#E1E4E8">    counts: { like: </span><span style="color:#79B8FF">0</span><span style="color:#E1E4E8">, comment: </span><span style="color:#79B8FF">0</span><span style="color:#E1E4E8"> },</span></span>
 <span class="line"><span style="color:#E1E4E8">    maskId: </span><span style="color:#79B8FF">CARD_STACK_MASK_IDS</span><span style="color:#E1E4E8">[</span><span style="color:#79B8FF">0</span><span style="color:#E1E4E8">],</span></span>
 <span class="line"><span style="color:#E1E4E8">  },</span></span>
 <span class="line"><span style="color:#E1E4E8">  {</span></span>
@@ -3473,7 +3465,6 @@ export default function PhotographerPortfolio() {
 <span class="line"><span style="color:#E1E4E8">    image: </span><span style="color:#B392F0">lummi</span><span style="color:#E1E4E8">(</span><span style="color:#79B8FF">LUMMI_ASSETS</span><span style="color:#E1E4E8">.portfolio.reception),</span></span>
 <span class="line"><span style="color:#E1E4E8">    title: </span><span style="color:#9ECBFF">"Reception"</span><span style="color:#E1E4E8">,</span></span>
 <span class="line"><span style="color:#E1E4E8">    tagline: </span><span style="color:#9ECBFF">"Evening dance"</span><span style="color:#E1E4E8">,</span></span>
-<span class="line"><span style="color:#E1E4E8">    counts: { like: </span><span style="color:#79B8FF">0</span><span style="color:#E1E4E8">, comment: </span><span style="color:#79B8FF">0</span><span style="color:#E1E4E8"> },</span></span>
 <span class="line"><span style="color:#E1E4E8">    maskId: </span><span style="color:#79B8FF">CARD_STACK_MASK_IDS</span><span style="color:#E1E4E8">[</span><span style="color:#79B8FF">0</span><span style="color:#E1E4E8">],</span></span>
 <span class="line"><span style="color:#E1E4E8">  },</span></span>
 <span class="line"><span style="color:#E1E4E8">  {</span></span>
@@ -3481,7 +3472,6 @@ export default function PhotographerPortfolio() {
 <span class="line"><span style="color:#E1E4E8">    image: </span><span style="color:#B392F0">lummi</span><span style="color:#E1E4E8">(</span><span style="color:#79B8FF">LUMMI_ASSETS</span><span style="color:#E1E4E8">.portfolio.candid),</span></span>
 <span class="line"><span style="color:#E1E4E8">    title: </span><span style="color:#9ECBFF">"Candid"</span><span style="color:#E1E4E8">,</span></span>
 <span class="line"><span style="color:#E1E4E8">    tagline: </span><span style="color:#9ECBFF">"Real laughter"</span><span style="color:#E1E4E8">,</span></span>
-<span class="line"><span style="color:#E1E4E8">    counts: { like: </span><span style="color:#79B8FF">0</span><span style="color:#E1E4E8">, comment: </span><span style="color:#79B8FF">0</span><span style="color:#E1E4E8"> },</span></span>
 <span class="line"><span style="color:#E1E4E8">    maskId: </span><span style="color:#79B8FF">CARD_STACK_MASK_IDS</span><span style="color:#E1E4E8">[</span><span style="color:#79B8FF">0</span><span style="color:#E1E4E8">],</span></span>
 <span class="line"><span style="color:#E1E4E8">  },</span></span>
 <span class="line"><span style="color:#E1E4E8">  {</span></span>
@@ -3489,7 +3479,6 @@ export default function PhotographerPortfolio() {
 <span class="line"><span style="color:#E1E4E8">    image: </span><span style="color:#B392F0">lummi</span><span style="color:#E1E4E8">(</span><span style="color:#79B8FF">LUMMI_ASSETS</span><span style="color:#E1E4E8">.portfolio.florals),</span></span>
 <span class="line"><span style="color:#E1E4E8">    title: </span><span style="color:#9ECBFF">"Florals"</span><span style="color:#E1E4E8">,</span></span>
 <span class="line"><span style="color:#E1E4E8">    tagline: </span><span style="color:#9ECBFF">"Bouquet detail"</span><span style="color:#E1E4E8">,</span></span>
-<span class="line"><span style="color:#E1E4E8">    counts: { like: </span><span style="color:#79B8FF">0</span><span style="color:#E1E4E8">, comment: </span><span style="color:#79B8FF">0</span><span style="color:#E1E4E8"> },</span></span>
 <span class="line"><span style="color:#E1E4E8">    maskId: </span><span style="color:#79B8FF">CARD_STACK_MASK_IDS</span><span style="color:#E1E4E8">[</span><span style="color:#79B8FF">0</span><span style="color:#E1E4E8">],</span></span>
 <span class="line"><span style="color:#E1E4E8">  },</span></span>
 <span class="line"><span style="color:#E1E4E8">  {</span></span>
@@ -3497,7 +3486,6 @@ export default function PhotographerPortfolio() {
 <span class="line"><span style="color:#E1E4E8">    image: </span><span style="color:#B392F0">lummi</span><span style="color:#E1E4E8">(</span><span style="color:#79B8FF">LUMMI_ASSETS</span><span style="color:#E1E4E8">.portfolio.festival),</span></span>
 <span class="line"><span style="color:#E1E4E8">    title: </span><span style="color:#9ECBFF">"Event"</span><span style="color:#E1E4E8">,</span></span>
 <span class="line"><span style="color:#E1E4E8">    tagline: </span><span style="color:#9ECBFF">"Summer festival"</span><span style="color:#E1E4E8">,</span></span>
-<span class="line"><span style="color:#E1E4E8">    counts: { like: </span><span style="color:#79B8FF">0</span><span style="color:#E1E4E8">, comment: </span><span style="color:#79B8FF">0</span><span style="color:#E1E4E8"> },</span></span>
 <span class="line"><span style="color:#E1E4E8">    maskId: </span><span style="color:#79B8FF">CARD_STACK_MASK_IDS</span><span style="color:#E1E4E8">[</span><span style="color:#79B8FF">0</span><span style="color:#E1E4E8">],</span></span>
 <span class="line"><span style="color:#E1E4E8">  },</span></span>
 <span class="line"><span style="color:#E1E4E8">];</span></span>
@@ -3580,8 +3568,12 @@ export default function PhotographerPortfolio() {
 <span class="line"></span>
 <span class="line"><span style="color:#F97583">function</span><span style="color:#B392F0"> PrintCaption</span><span style="color:#E1E4E8">() {</span></span>
 <span class="line"><span style="color:#F97583">  const</span><span style="color:#E1E4E8"> { </span><span style="color:#79B8FF">activeItem</span><span style="color:#E1E4E8"> } </span><span style="color:#F97583">=</span><span style="color:#B392F0"> useCardStack</span><span style="color:#E1E4E8">();</span></span>
-<span class="line"><span style="color:#F97583">  const</span><span style="color:#79B8FF"> index</span><span style="color:#F97583"> =</span><span style="color:#E1E4E8"> activeItem </span><span style="color:#F97583">?</span><span style="color:#79B8FF"> PORTFOLIO</span><span style="color:#E1E4E8">.</span><span style="color:#B392F0">findIndex</span><span style="color:#E1E4E8">((</span><span style="color:#FFAB70">item</span><span style="color:#E1E4E8">) </span><span style="color:#F97583">=></span><span style="color:#E1E4E8"> item.id </span><span style="color:#F97583">===</span><span style="color:#E1E4E8"> activeItem.id) </span><span style="color:#F97583">+</span><span style="color:#79B8FF"> 1</span><span style="color:#F97583"> :</span><span style="color:#79B8FF"> 1</span><span style="color:#E1E4E8">;</span></span>
-<span class="line"><span style="color:#F97583">  const</span><span style="color:#79B8FF"> settings</span><span style="color:#F97583"> =</span><span style="color:#E1E4E8"> activeItem </span><span style="color:#F97583">?</span><span style="color:#79B8FF"> SHOT_SETTINGS</span><span style="color:#E1E4E8">[activeItem.id] </span><span style="color:#F97583">:</span><span style="color:#79B8FF"> SHOT_SETTINGS</span><span style="color:#E1E4E8">.vows;</span></span>
+<span class="line"><span style="color:#F97583">  const</span><span style="color:#79B8FF"> rawIndex</span><span style="color:#F97583"> =</span><span style="color:#E1E4E8"> activeItem </span><span style="color:#F97583">?</span><span style="color:#79B8FF"> PORTFOLIO</span><span style="color:#E1E4E8">.</span><span style="color:#B392F0">findIndex</span><span style="color:#E1E4E8">((</span><span style="color:#FFAB70">item</span><span style="color:#E1E4E8">) </span><span style="color:#F97583">=></span><span style="color:#E1E4E8"> item.id </span><span style="color:#F97583">===</span><span style="color:#E1E4E8"> activeItem.id) </span><span style="color:#F97583">:</span><span style="color:#F97583"> -</span><span style="color:#79B8FF">1</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#F97583">  const</span><span style="color:#79B8FF"> index</span><span style="color:#F97583"> =</span><span style="color:#E1E4E8"> rawIndex </span><span style="color:#F97583">===</span><span style="color:#F97583"> -</span><span style="color:#79B8FF">1</span><span style="color:#F97583"> ?</span><span style="color:#79B8FF"> 1</span><span style="color:#F97583"> :</span><span style="color:#E1E4E8"> rawIndex </span><span style="color:#F97583">+</span><span style="color:#79B8FF"> 1</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#F97583">  const</span><span style="color:#79B8FF"> settings</span><span style="color:#F97583"> =</span></span>
+<span class="line"><span style="color:#E1E4E8">    activeItem </span><span style="color:#F97583">&#x26;&#x26;</span><span style="color:#E1E4E8"> activeItem.id </span><span style="color:#F97583">in</span><span style="color:#79B8FF"> SHOT_SETTINGS</span></span>
+<span class="line"><span style="color:#F97583">      ?</span><span style="color:#79B8FF"> SHOT_SETTINGS</span><span style="color:#E1E4E8">[activeItem.id </span><span style="color:#F97583">as</span><span style="color:#B392F0"> PortfolioId</span><span style="color:#E1E4E8">]</span></span>
+<span class="line"><span style="color:#F97583">      :</span><span style="color:#79B8FF"> SHOT_SETTINGS</span><span style="color:#E1E4E8">.vows;</span></span>
 <span class="line"></span>
 <span class="line"><span style="color:#F97583">  if</span><span style="color:#E1E4E8"> (</span><span style="color:#F97583">!</span><span style="color:#E1E4E8">activeItem </span><span style="color:#F97583">||</span><span style="color:#F97583"> !</span><span style="color:#E1E4E8">settings) {</span></span>
 <span class="line"><span style="color:#F97583">    return</span><span style="color:#79B8FF"> null</span><span style="color:#E1E4E8">;</span></span>
@@ -3699,12 +3691,8 @@ export default function PhotographerPortfolio() {
 <span class="line"><span style="color:#E1E4E8">    &#x3C;</span><span style="color:#85E89D">div</span></span>
 <span class="line"><span style="color:#B392F0">      className</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#B392F0">cn</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"flex flex-col gap-8"</span><span style="color:#E1E4E8">, </span><span style="color:#9ECBFF">"md:h-full md:min-h-0 md:flex-1 md:flex-row md:gap-6"</span><span style="color:#E1E4E8">)}</span></span>
 <span class="line"><span style="color:#E1E4E8">    ></span></span>
-<span class="line"><span style="color:#E1E4E8">      &#x3C;</span><span style="color:#85E89D">div</span></span>
-<span class="line"><span style="color:#B392F0">        className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"relative z-20 min-w-0 md:flex md:flex-[2] md:basis-0 md:flex-col md:justify-end"</span></span>
-<span class="line"><span style="color:#E1E4E8">      ></span></span>
-<span class="line"><span style="color:#E1E4E8">        &#x3C;</span><span style="color:#85E89D">div</span></span>
-<span class="line"><span style="color:#B392F0">          ref</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{heroRef}</span></span>
-<span class="line"><span style="color:#E1E4E8">        ></span></span>
+<span class="line"><span style="color:#E1E4E8">      &#x3C;</span><span style="color:#85E89D">div</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"relative z-20 min-w-0 md:flex md:flex-[2] md:basis-0 md:flex-col md:justify-end"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">        &#x3C;</span><span style="color:#85E89D">div</span><span style="color:#B392F0"> ref</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{heroRef}></span></span>
 <span class="line"><span style="color:#E1E4E8">          &#x3C;</span><span style="color:#79B8FF">HeroStory</span><span style="color:#E1E4E8"> /></span></span>
 <span class="line"><span style="color:#E1E4E8">        &#x3C;/</span><span style="color:#85E89D">div</span><span style="color:#E1E4E8">></span></span>
 <span class="line"><span style="color:#E1E4E8">      &#x3C;/</span><span style="color:#85E89D">div</span><span style="color:#E1E4E8">></span></span>
