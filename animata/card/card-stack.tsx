@@ -4,10 +4,13 @@ import type { LucideIcon } from "lucide-react";
 import { AnimatePresence, type HTMLMotionProps, motion, type Transition } from "motion/react";
 import {
   type ComponentProps,
+  cloneElement,
   createContext,
+  isValidElement,
   type ReactNode,
   use,
   useCallback,
+  useEffect,
   useMemo,
   useRef,
   useState,
@@ -50,8 +53,51 @@ export interface CardStackLayerMotion {
 }
 
 const DEFAULT_STACK_DEPTH = 3;
+const DEFAULT_AUTOPLAY_INTERVAL = 4500;
+/** How long before the next click is accepted — decoupled from exit spring settle */
+const STEP_COOLDOWN_MS = 260;
 
-const easeOut: Transition["ease"] = [0, 0, 0.2, 1];
+/** Peek offsets as % of each card’s height so stacks scale with card size */
+const STACK_LAYER_PRESETS = [
+  { y: "0%", scale: 1, rotate: 0, zIndex: 20 },
+  { y: "-5%", scale: 0.84, rotate: -1, zIndex: 5 },
+  { y: "-7.5%", scale: 0.72, rotate: 1, zIndex: 0 },
+] as const;
+
+const PROMOTE_SPRING: Transition = {
+  type: "spring",
+  visualDuration: 0.22,
+  bounce: 0,
+};
+
+const THROW_SPRING: Transition = {
+  type: "spring",
+  visualDuration: 0.24,
+  bounce: 0.06,
+  restSpeed: 2,
+  restDelta: 0.001,
+};
+
+export interface CardStackThrowImpulse {
+  x: string;
+  rotate: number;
+  yVelocity: number;
+  rotateVelocity: number;
+}
+
+export function createCardStackThrowImpulse(): CardStackThrowImpulse {
+  const drift = Math.random() - 0.5;
+
+  return {
+    x: `${(drift * 7).toFixed(2)}%`,
+    rotate: drift * 6 + (Math.random() - 0.5) * 1.5,
+    yVelocity: 3.5 + Math.random() * 2.8,
+    rotateVelocity: drift * 10,
+  };
+}
+
+const CARD_STACK_STACK_ORIGIN = "50% 0%";
+const CARD_STACK_EXIT_Y = "200%";
 
 const CARD_STACK_MASK_STYLE = {
   maskSize: "cover",
@@ -84,42 +130,88 @@ export function getCardStackLayers(
   reducedMotion: boolean,
   depth = DEFAULT_STACK_DEPTH,
 ): CardStackLayerMotion[] {
-  const stackTransition: Transition = reducedMotion
-    ? { duration: 0 }
-    : { duration: 0.28, ease: easeOut };
+  const stackTransition: Transition = reducedMotion ? { duration: 0 } : PROMOTE_SPRING;
 
-  const layers: CardStackLayerMotion[] = [
-    {
-      className: "",
-      initial: { y: 90, rotate: 0, scale: 1, opacity: 1, zIndex: 20 },
-      animate: { y: 90, rotate: 0, scale: 1, opacity: 1, zIndex: 20 },
-      exit: reducedMotion
-        ? { y: 90, scale: 1, opacity: 1, zIndex: 20 }
-        : {
-            y: 420,
-            rotate: 0,
-            scale: 0.96,
-            opacity: 1,
-            zIndex: 30,
-            transition: stackTransition,
-          },
-      transition: stackTransition,
+  const layers: CardStackLayerMotion[] = STACK_LAYER_PRESETS.map((preset) => ({
+    className: "",
+    initial: {
+      y: preset.y,
+      rotate: preset.rotate,
+      scale: preset.scale,
+      opacity: 1,
+      zIndex: preset.zIndex,
     },
-    {
-      className: "",
-      initial: { y: 0, rotate: 0, scale: 0.75, opacity: 1, zIndex: 5 },
-      animate: { y: 40, rotate: -1, scale: 0.85, opacity: 1, zIndex: 5 },
-      transition: stackTransition,
+    animate: {
+      y: preset.y,
+      rotate: preset.rotate,
+      scale: preset.scale,
+      opacity: 1,
+      zIndex: preset.zIndex,
     },
-    {
-      className: "",
-      initial: { y: -40, rotate: 0, scale: 0.5, opacity: 1, zIndex: 0 },
-      animate: { y: 0, rotate: 1, scale: 0.7, opacity: 1, zIndex: 0 },
-      transition: stackTransition,
-    },
-  ];
+    exit: reducedMotion
+      ? {
+          y: preset.y,
+          scale: preset.scale,
+          opacity: 1,
+          zIndex: preset.zIndex,
+        }
+      : {
+          y: CARD_STACK_EXIT_Y,
+          rotate: 0,
+          scale: 0.93,
+          opacity: 0,
+          zIndex: 30,
+        },
+    transition: stackTransition,
+    style: { transformOrigin: CARD_STACK_STACK_ORIGIN },
+  }));
 
   return layers.slice(0, depth);
+}
+
+function getCardStackInitial(
+  stackIndex: number,
+  depth: number,
+  layer: CardStackLayerMotion,
+): HTMLMotionProps<"article">["initial"] {
+  if (stackIndex !== 0 && stackIndex !== depth - 1) {
+    return false;
+  }
+
+  return layer.initial;
+}
+
+function getCardStackExit(
+  stackIndex: number,
+  layer: CardStackLayerMotion,
+  reducedMotion: boolean,
+  throwImpulse: CardStackThrowImpulse | null,
+): HTMLMotionProps<"article">["exit"] {
+  if (stackIndex !== 0) {
+    return undefined;
+  }
+
+  if (reducedMotion) {
+    return layer.exit;
+  }
+
+  const impulse = throwImpulse ?? createCardStackThrowImpulse();
+
+  return {
+    y: CARD_STACK_EXIT_Y,
+    x: impulse.x,
+    rotate: impulse.rotate,
+    scale: 0.9,
+    opacity: 0,
+    zIndex: 30,
+    transition: {
+      y: { ...THROW_SPRING, velocity: impulse.yVelocity * 0.4 },
+      x: THROW_SPRING,
+      rotate: { ...THROW_SPRING, velocity: impulse.rotateVelocity * 0.35 },
+      scale: THROW_SPRING,
+      opacity: { type: "tween", duration: 0.16, ease: [0.4, 0, 1, 1] },
+    },
+  };
 }
 
 interface CardStackContextValue {
@@ -127,6 +219,8 @@ interface CardStackContextValue {
   visibleItems: CardStackItem[];
   activeItem: CardStackItem | undefined;
   depth: number;
+  isAnimating: boolean;
+  throwImpulse: CardStackThrowImpulse | null;
   advance: () => void;
   handleExitComplete: () => void;
   reducedMotion: boolean;
@@ -146,6 +240,8 @@ export function useCardStack() {
 interface CardStackRootProps {
   items: CardStackItem[];
   depth?: number;
+  autoplay?: boolean;
+  autoplayInterval?: number;
   onItemsChange?: (items: CardStackItem[]) => void;
   children: ReactNode;
 }
@@ -153,16 +249,37 @@ interface CardStackRootProps {
 function CardStackRoot({
   items,
   depth = DEFAULT_STACK_DEPTH,
+  autoplay = false,
+  autoplayInterval = DEFAULT_AUTOPLAY_INTERVAL,
   onItemsChange,
   children,
 }: CardStackRootProps) {
   const reducedMotion = usePrefersReducedMotion();
   const layers = useMemo(() => getCardStackLayers(reducedMotion, depth), [reducedMotion, depth]);
   const [itemList, setItemList] = useState(items);
+  const [isAnimating, setIsAnimating] = useState(false);
+  const [throwImpulse, setThrowImpulse] = useState<CardStackThrowImpulse | null>(null);
   const isAnimatingRef = useRef(false);
+  const stepTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const autoplayTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const advanceRef = useRef<() => void>(() => {});
 
   const visibleItems = itemList.slice(0, depth);
   const activeItem = visibleItems[0];
+
+  const clearStepTimer = useCallback(() => {
+    if (stepTimerRef.current !== null) {
+      clearTimeout(stepTimerRef.current);
+      stepTimerRef.current = null;
+    }
+  }, []);
+
+  const clearAutoplayTimer = useCallback(() => {
+    if (autoplayTimerRef.current !== null) {
+      clearTimeout(autoplayTimerRef.current);
+      autoplayTimerRef.current = null;
+    }
+  }, []);
 
   const rotateOne = useCallback(() => {
     setItemList((current) => {
@@ -174,22 +291,86 @@ function CardStackRoot({
     });
   }, [onItemsChange]);
 
+  const finishStep = useCallback(() => {
+    clearStepTimer();
+    if (!isAnimatingRef.current) return false;
+    isAnimatingRef.current = false;
+    setIsAnimating(false);
+    return true;
+  }, [clearStepTimer]);
+
+  const scheduleAutoplay = useCallback(() => {
+    clearAutoplayTimer();
+    if (!autoplay || reducedMotion || itemList.length <= 1) return;
+    if (document.hidden) return;
+
+    autoplayTimerRef.current = setTimeout(() => {
+      autoplayTimerRef.current = null;
+      advanceRef.current();
+    }, autoplayInterval);
+  }, [autoplay, autoplayInterval, clearAutoplayTimer, itemList.length, reducedMotion]);
+
+  const finishStepAndScheduleAutoplay = useCallback(() => {
+    if (finishStep()) {
+      scheduleAutoplay();
+    }
+  }, [finishStep, scheduleAutoplay]);
+
   const advance = useCallback(() => {
-    if (itemList.length <= 1) return;
-    if (isAnimatingRef.current) return;
+    if (itemList.length <= 1 || isAnimatingRef.current) return;
+
+    clearAutoplayTimer();
 
     if (reducedMotion) {
       rotateOne();
+      scheduleAutoplay();
       return;
     }
 
     isAnimatingRef.current = true;
+    setIsAnimating(true);
+    setThrowImpulse(createCardStackThrowImpulse());
+    clearStepTimer();
     rotateOne();
-  }, [itemList.length, reducedMotion, rotateOne]);
+    stepTimerRef.current = setTimeout(finishStepAndScheduleAutoplay, STEP_COOLDOWN_MS);
+  }, [
+    clearAutoplayTimer,
+    clearStepTimer,
+    finishStepAndScheduleAutoplay,
+    itemList.length,
+    reducedMotion,
+    rotateOne,
+    scheduleAutoplay,
+  ]);
+
+  advanceRef.current = advance;
 
   const handleExitComplete = useCallback(() => {
-    isAnimatingRef.current = false;
-  }, []);
+    finishStepAndScheduleAutoplay();
+  }, [finishStepAndScheduleAutoplay]);
+
+  useEffect(() => {
+    scheduleAutoplay();
+    return () => {
+      clearStepTimer();
+      clearAutoplayTimer();
+    };
+  }, [clearAutoplayTimer, clearStepTimer, scheduleAutoplay]);
+
+  useEffect(() => {
+    const onVisibilityChange = () => {
+      if (document.hidden) {
+        clearAutoplayTimer();
+        return;
+      }
+      if (!isAnimatingRef.current) {
+        scheduleAutoplay();
+      }
+    };
+
+    document.addEventListener("visibilitychange", onVisibilityChange);
+    return () => document.removeEventListener("visibilitychange", onVisibilityChange);
+  }, [clearAutoplayTimer, scheduleAutoplay]);
 
   const value = useMemo(
     () => ({
@@ -197,12 +378,25 @@ function CardStackRoot({
       visibleItems,
       activeItem,
       depth,
+      isAnimating,
+      throwImpulse,
       advance,
       handleExitComplete,
       reducedMotion,
       layers,
     }),
-    [itemList, visibleItems, activeItem, depth, advance, handleExitComplete, reducedMotion, layers],
+    [
+      itemList,
+      visibleItems,
+      activeItem,
+      depth,
+      isAnimating,
+      throwImpulse,
+      advance,
+      handleExitComplete,
+      reducedMotion,
+      layers,
+    ],
   );
 
   return <CardStackContext value={value}>{children}</CardStackContext>;
@@ -274,7 +468,10 @@ function CardStackTrigger({
 function CardStackViewport({ className, children, ...props }: ComponentProps<"div">) {
   return (
     <div
-      className={cn("relative mx-auto w-full min-h-[26rem] sm:min-h-[28rem]", className)}
+      className={cn(
+        "relative mx-auto w-full overflow-visible pt-20 sm:pt-24 min-h-[26rem] sm:min-h-[28rem]",
+        className,
+      )}
       {...props}
     >
       {children}
@@ -291,7 +488,20 @@ function CardStackList({ children }: CardStackListProps) {
 
   return (
     <AnimatePresence initial={false} mode="sync" onExitComplete={handleExitComplete}>
-      {visibleItems.map((item, index) => children(item, index, layers[index]!))}
+      {visibleItems.map((item, index) => {
+        const layer = layers[index]!;
+        const node = children(item, index, layer);
+
+        if (isValidElement(node) && node.type === CardStackCard) {
+          return cloneElement(node, {
+            key: item.id,
+            stackIndex: index,
+            layer,
+          });
+        }
+
+        return node;
+      })}
     </AnimatePresence>
   );
 }
@@ -302,9 +512,19 @@ interface CardStackCardProps extends HTMLMotionProps<"article"> {
   stackDepth?: number;
 }
 
-function CardStackCard({ layer, stackIndex, stackDepth, className, ...props }: CardStackCardProps) {
-  const { depth } = useCardStack();
+function CardStackCard({
+  layer,
+  stackIndex,
+  stackDepth,
+  className,
+  style,
+  ...props
+}: CardStackCardProps) {
+  const { depth, reducedMotion, throwImpulse } = useCardStack();
   const total = stackDepth ?? depth;
+
+  const initial = getCardStackInitial(stackIndex, depth, layer);
+  const exit = getCardStackExit(stackIndex, layer, reducedMotion, throwImpulse);
 
   return (
     <motion.article
@@ -317,9 +537,14 @@ function CardStackCard({ layer, stackIndex, stackDepth, className, ...props }: C
         className,
       )}
       aria-roledescription={`Card ${stackIndex + 1} of ${total}`}
-      initial={stackIndex === 0 || stackIndex === depth - 1 ? layer.initial : false}
+      style={{
+        transformOrigin: CARD_STACK_STACK_ORIGIN,
+        ...layer.style,
+        ...style,
+      }}
+      initial={initial}
       animate={layer.animate}
-      exit={layer.exit}
+      exit={exit}
       transition={layer.transition}
       {...props}
     />

@@ -2557,4 +2557,1226 @@ export default function CinemaRow() {
 <span class="line"></span></code></pre>`,
     },
   ],
+  "hero/photographer-portfolio": [
+    {
+      name: "photographer-portfolio.tsx",
+      path: "app/demo/library/hero/photographer-portfolio.tsx",
+      language: "tsx",
+      code: `"use client";
+
+import "@fontsource-variable/instrument-sans";
+import { useRef, useState, type CSSProperties, type ReactNode, type RefObject } from "react";
+
+import CardStack, {
+  CARD_STACK_MASK_IDS,
+  type CardStackItem,
+  useCardStack,
+} from "@/animata/card/card-stack";
+import TrailingImage from "@/animata/image/trailing-image";
+import SplitReveal from "@/animata/preloader/split-reveal";
+import { MapPinIcon } from "@/components/ui/map-pin";
+import { SwitchCameraIcon } from "@/components/ui/switch-camera";
+import { cn } from "@/lib/utils";
+
+import { PhotographerPortfolioNotes } from "./photographer-portfolio-notes";
+
+const FONT =
+  '"Instrument Sans Variable", ui-sans-serif, system-ui, sans-serif';
+
+const CANVAS = "#fff";
+const INK = "#000";
+const PRINT_WIDTH = 900;
+const PRINT_HEIGHT = 1125;
+
+const lummi = (assetId: string) =>
+  \`https://assets.lummi.ai/assets/\${assetId}?auto=format&fit=crop&w=\${PRINT_WIDTH}&h=\${PRINT_HEIGHT}&q=85\`;
+
+/** Wedding + event frames from https://lummi.ai — see demo notes for credits */
+const LUMMI_ASSETS = {
+  avatar: "QmXp6StB1i36XHbbmppop5AwtQgnyom8bYTZqPkLVNGJnk",
+  portfolio: {
+    vows: "QmabCfDwG7NUco1UhMnAE7NiHSK63MNKmPxAA2mc8Xrh8j",
+    ceremony: "QmS6CSjJ3hc82mvhNtYGWmcAZ1coJUdEkrAVmJ6PPEH2Q3",
+    reception: "QmaCT6boTGzVxo9ii5JYcnAuakoVhso3esFDA9Y58Nm7Le",
+    candid: "QmY8f1t5PS7b6fVhd6R7s1AFQMVERRKmgE8gNataeweAS4",
+    florals: "QmYerGQMAkWiRYDyYMwVfZQSKy8FGy2Js4G83vf1vyBGdR",
+    festival: "QmZnV56e2xNN5kqUWRVMupeiUExehkWKqo5X5ewgMpA19C",
+  },
+  trail: [
+    "QmVufjyFaAWjZYr4kdM8JLxr68EDky5V9YnwkhRbeD3jVb",
+    "QmTfDd4u2rHboSjREqrmM2AX8uamVhgURW5iKAJmTpe3Rz",
+    "QmcVMDiPtnnxCKgLCppm4iHQNp8L2zX8NF1xzV1Ch7nBtk",
+    "QmSXefvUey7N617ro5dG1mjRXFm9iUN5uUmwBTS63DEApS",
+    "QmVgzYXYEaShMjw87vVZZv1J7PjhaNKy92XY2uTrB59o9R",
+    "QmcioeKGZKuCeauwteg4DEu2edo6qe3HeK99Y9FywsYk8i",
+    "QmUB7fgmDhst3VZKU5R5uUkfvbcXvZ3FDKFvkNk5TkRvqD",
+    "QmeL2wx9Sdw4dGPawgxUBenthP9jt8ff8Ux4uog45NL95j",
+    "QmTXHjCens6Bg4Q7J4LjzU9fyKVec3t1ziqT32ShpXa93r",
+    "QmV1pUNAsa1orHnyBWFWki6qZvatRQpgbQnDCVdV1EzRGd",
+    "QmZAgYih2jUqmKJz4wUoTARdijpv7bveUFYrjvacV66KXp",
+    "QmQMun9ag4MrBC8man7bQC9xNupf4oCufwvCj2VpU7rXDi",
+  ],
+} as const;
+
+const PHOTOGRAPHER = {
+  studio: "Maya Chen",
+  name: "Maya",
+  location: "Brooklyn",
+  email: "mailto:hello@mayachen.studio",
+  avatar: lummi(LUMMI_ASSETS.avatar),
+};
+
+const TRAIL_IMAGES = LUMMI_ASSETS.trail.map((id) => lummi(id));
+
+const SHOT_SETTINGS: Record<string, { aperture: string; shutter: string; stock: string }> = {
+  vows: { aperture: "2", shutter: "1/500", stock: "Portra 400" },
+  ceremony: { aperture: "2.8", shutter: "1/250", stock: "Portra 160" },
+  reception: { aperture: "2", shutter: "1/125", stock: "Portra 800" },
+  candid: { aperture: "1.8", shutter: "1/320", stock: "Tri-X 400" },
+  florals: { aperture: "4", shutter: "1/200", stock: "Ektar 100" },
+  festival: { aperture: "2.8", shutter: "1/160", stock: "Portra 800" },
+};
+
+const HERO_TONE = {
+  mute: "text-black/40",
+  ink: "text-black",
+  accent: "text-[#c2410c]",
+} as const;
+
+const PORTFOLIO: CardStackItem[] = [
+  {
+    id: "vows",
+    image: lummi(LUMMI_ASSETS.portfolio.vows),
+    title: "Vows",
+    tagline: "Cliffside ceremony",
+    counts: { like: 0, comment: 0 },
+    maskId: CARD_STACK_MASK_IDS[0],
+  },
+  {
+    id: "ceremony",
+    image: lummi(LUMMI_ASSETS.portfolio.ceremony),
+    title: "Ceremony",
+    tagline: "Church exit",
+    counts: { like: 0, comment: 0 },
+    maskId: CARD_STACK_MASK_IDS[0],
+  },
+  {
+    id: "reception",
+    image: lummi(LUMMI_ASSETS.portfolio.reception),
+    title: "Reception",
+    tagline: "Evening dance",
+    counts: { like: 0, comment: 0 },
+    maskId: CARD_STACK_MASK_IDS[0],
+  },
+  {
+    id: "candid",
+    image: lummi(LUMMI_ASSETS.portfolio.candid),
+    title: "Candid",
+    tagline: "Real laughter",
+    counts: { like: 0, comment: 0 },
+    maskId: CARD_STACK_MASK_IDS[0],
+  },
+  {
+    id: "florals",
+    image: lummi(LUMMI_ASSETS.portfolio.florals),
+    title: "Florals",
+    tagline: "Bouquet detail",
+    counts: { like: 0, comment: 0 },
+    maskId: CARD_STACK_MASK_IDS[0],
+  },
+  {
+    id: "festival",
+    image: lummi(LUMMI_ASSETS.portfolio.festival),
+    title: "Event",
+    tagline: "Summer festival",
+    counts: { like: 0, comment: 0 },
+    maskId: CARD_STACK_MASK_IDS[0],
+  },
+];
+
+const PRELOAD_IMAGES = [
+  ...new Set([
+    PHOTOGRAPHER.avatar,
+    ...PORTFOLIO.map((item) => item.image),
+    ...TRAIL_IMAGES,
+  ]),
+];
+
+const HERO_MARK =
+  "mx-1 inline-flex size-[clamp(1.75rem,1.286em,2.25rem)] shrink-0 items-center justify-center align-middle";
+
+function HeroMark({ children, className }: { children: ReactNode; className?: string }) {
+  return (
+    <span className={cn(HERO_MARK, className)} aria-hidden>
+      {children}
+    </span>
+  );
+}
+
+function ProfileGlyph({ src, alt }: { src: string; alt: string }) {
+  return (
+    <span className={cn(HERO_MARK, "overflow-hidden rounded-full ring-1 ring-black/10")}>
+      <img src={src} alt={alt} className="size-full object-cover" decoding="async" />
+    </span>
+  );
+}
+
+function HeroStory() {
+  const type =
+    "text-[clamp(1.25rem,2vw,1.75rem)] font-medium leading-[1.55] tracking-[-0.02em]";
+
+  return (
+    <div className="max-w-[min(100%,36rem)] space-y-6">
+      <p className={type}>
+        <span className={HERO_TONE.mute}>Hi, I'm </span>
+        <span className={HERO_TONE.ink}>{PHOTOGRAPHER.name}</span>
+        <ProfileGlyph src={PHOTOGRAPHER.avatar} alt={PHOTOGRAPHER.studio} />
+        <span className={HERO_TONE.mute}>. I shoot </span>
+        <HeroMark className="text-black">
+          <SwitchCameraIcon className="size-full [&_svg]:size-full" />
+        </HeroMark>
+        <span className={HERO_TONE.mute}> </span>
+        <span className={HERO_TONE.ink}>weddings and events</span>
+        <span className={HERO_TONE.mute}> in </span>
+        <HeroMark className="text-black/55">
+          <MapPinIcon className="size-full [&_svg]:size-full" />
+        </HeroMark>
+        <span className={HERO_TONE.mute}> </span>
+        <span className={HERO_TONE.ink}>{PHOTOGRAPHER.location}</span>
+        <span className={HERO_TONE.mute}>
+          {" "}
+          — good light, real moments, and photos that don't feel forced.
+        </span>
+      </p>
+
+      <p className={type}>
+        <span className={HERO_TONE.accent}>Booking Q3.</span>
+        <span className={HERO_TONE.mute}> </span>
+        <a
+          href={PHOTOGRAPHER.email}
+          className={cn(HERO_TONE.ink, "underline-offset-[4px] hover:underline")}
+        >
+          Send me your date.
+        </a>
+      </p>
+    </div>
+  );
+}
+
+function ViewfinderFrame() {
+  const corner = "absolute size-4 border-white/80";
+  return (
+    <div className="pointer-events-none absolute inset-3 sm:inset-4" aria-hidden>
+      <span className={cn(corner, "left-0 top-0 border-l-2 border-t-2")} />
+      <span className={cn(corner, "right-0 top-0 border-r-2 border-t-2")} />
+      <span className={cn(corner, "bottom-0 left-0 border-b-2 border-l-2")} />
+      <span className={cn(corner, "bottom-0 right-0 border-b-2 border-r-2")} />
+      <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 opacity-[0.16]">
+        <span className="absolute left-1/2 top-1/2 h-px w-5 -translate-x-1/2 -translate-y-1/2 bg-white" />
+        <span className="absolute left-1/2 top-1/2 h-5 w-px -translate-x-1/2 -translate-y-1/2 bg-white" />
+      </div>
+    </div>
+  );
+}
+
+function PrintCaption() {
+  const { activeItem } = useCardStack();
+  const index = activeItem ? PORTFOLIO.findIndex((item) => item.id === activeItem.id) + 1 : 1;
+  const settings = activeItem ? SHOT_SETTINGS[activeItem.id] : SHOT_SETTINGS.vows;
+
+  if (!activeItem || !settings) {
+    return null;
+  }
+
+  return (
+    <figcaption className="relative z-10 shrink-0 border-b border-black/80 bg-transparent pb-3">
+      <div className="flex items-baseline justify-between gap-4">
+        <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-black">{activeItem.title}</p>
+        <p className="shrink-0 text-[11px] font-medium tabular-nums tracking-[0.1em] text-black/45">
+          {String(index).padStart(2, "0")}
+          <span className="text-black/20">/</span>
+          {String(PORTFOLIO.length).padStart(2, "0")}
+        </p>
+      </div>
+      <p className="mt-2 text-[11px] font-medium uppercase tracking-[0.1em] text-black/45">
+        ƒ/{settings.aperture}
+        <span className="px-1.5 text-black/20">·</span>
+        {settings.shutter}
+        <span className="px-1.5 text-black/20">·</span>
+        {settings.stock}
+      </p>
+    </figcaption>
+  );
+}
+
+const BASELINE = 8;
+const LAYOUT = {
+  shell: "px-6 sm:px-10 lg:px-14",
+  blockY: "py-8 lg:py-10",
+  grid: "gap-x-8 gap-y-8 lg:gap-x-10 lg:gap-y-10",
+} as const;
+
+function ProofStack({
+  stackRef,
+  captionRef,
+}: {
+  stackRef: RefObject<HTMLElement | null>;
+  captionRef: RefObject<HTMLDivElement | null>;
+}) {
+  return (
+    <figure
+      ref={stackRef}
+      className="ml-auto grid h-full min-h-0 w-full min-w-0 max-w-full grid-rows-[auto_minmax(0,1fr)] gap-y-3 sm:gap-y-4"
+    >
+      <div ref={captionRef} className="relative z-30 w-full shrink-0 bg-transparent">
+        <PrintCaption />
+      </div>
+      <div className="@container/stack relative flex min-h-0 flex-1 items-end justify-end pt-[max(2.5rem,11%)]">
+        <CardStack.Frame className="relative aspect-[4/5] h-auto w-[min(100cqw,calc(100cqh*4/5))] max-h-full min-h-0 shrink-0 overflow-visible">
+          <CardStack.LiveRegion />
+          <CardStack.Trigger aria-label="Show next photo" className="block size-full text-left">
+            <CardStack.Viewport className="relative size-full overflow-visible !min-h-0 !pt-0">
+            <CardStack.List>
+              {(item, index, layer) => (
+                <CardStack.Card
+                  key={item.id}
+                  layer={layer}
+                  stackIndex={index}
+                  className="size-full gap-0 overflow-visible rounded-none bg-transparent p-0 shadow-none ring-0 [background-image:none]"
+                >
+                  <figure className="flex size-full flex-col border-0 bg-transparent p-0">
+                    <div className="relative min-h-0 w-full flex-1 overflow-hidden bg-black/5">
+                      <img
+                        src={item.image}
+                        alt={\`\${PHOTOGRAPHER.studio} — \${item.title}\`}
+                        width={PRINT_WIDTH}
+                        height={PRINT_HEIGHT}
+                        decoding="async"
+                        draggable={false}
+                        className="absolute inset-0 size-full object-cover object-center"
+                      />
+                      {index === 0 ? <ViewfinderFrame /> : null}
+                    </div>
+                  </figure>
+                </CardStack.Card>
+              )}
+            </CardStack.List>
+          </CardStack.Viewport>
+        </CardStack.Trigger>
+      </CardStack.Frame>
+      </div>
+    </figure>
+  );
+}
+
+function PortfolioLayout({
+  stackRef,
+  heroRef,
+  captionRef,
+}: {
+  stackRef: RefObject<HTMLElement | null>;
+  heroRef: RefObject<HTMLDivElement | null>;
+  captionRef: RefObject<HTMLDivElement | null>;
+}) {
+  return (
+    <div
+      className={cn(
+        "grid h-[calc(100svh-var(--demo-chrome-reserve,5rem))] min-h-0 grid-cols-1 grid-rows-[auto_minmax(18rem,1fr)]",
+        "md:grid-cols-[minmax(0,2fr)_minmax(0,3fr)] md:grid-rows-1",
+        LAYOUT.grid,
+        LAYOUT.blockY,
+      )}
+      style={{ "--layout-baseline": \`\${BASELINE}px\` } as CSSProperties}
+    >
+      <div className="flex min-h-0 flex-col justify-end md:col-start-1 md:row-start-1 md:pt-[clamp(3rem,11vh,8rem)]">
+        <div ref={heroRef} className="relative z-20 w-fit max-w-full bg-transparent">
+          <HeroStory />
+        </div>
+      </div>
+
+      <div className="relative z-20 flex min-h-0 min-w-0 flex-col overflow-visible md:col-start-2 md:row-start-1 md:h-full md:pl-6 md:pt-[clamp(3rem,11vh,8rem)] lg:pl-10">
+        <ProofStack stackRef={stackRef} captionRef={captionRef} />
+      </div>
+    </div>
+  );
+}
+
+export default function PhotographerPortfolio() {
+  const stackRef = useRef<HTMLElement>(null);
+  const heroRef = useRef<HTMLDivElement>(null);
+  const captionRef = useRef<HTMLDivElement>(null);
+  const [preloaderDone, setPreloaderDone] = useState(false);
+
+  return (
+    <>
+      <section
+        className="relative isolate min-h-[calc(100svh-var(--demo-chrome-reserve,5rem))] overflow-hidden"
+        style={{ backgroundColor: CANVAS, color: INK, fontFamily: FONT }}
+      >
+        <TrailingImage
+          edgeToEdge
+          layerOnly
+          contained
+          className="z-10 isolate"
+          images={TRAIL_IMAGES}
+          threshold={88}
+          maxTrailZIndex={12}
+          excludeRefs={[heroRef, captionRef]}
+        />
+
+        <CardStack
+          items={PORTFOLIO}
+          depth={3}
+          autoplay={preloaderDone}
+          autoplayInterval={4500}
+        >
+          <div
+            className={cn(
+              "relative z-20 isolate mx-auto min-h-[calc(100svh-var(--demo-chrome-reserve,5rem))] w-full max-w-[92rem] pb-[var(--demo-chrome-reserve,5rem)]",
+              LAYOUT.shell,
+            )}
+          >
+            <PortfolioLayout stackRef={stackRef} heroRef={heroRef} captionRef={captionRef} />
+          </div>
+        </CardStack>
+      </section>
+
+      <SplitReveal
+        images={PRELOAD_IMAGES}
+        backgroundColor={CANVAS}
+        foregroundColor={INK}
+        zIndex={120}
+        lockScroll
+        onComplete={() => setPreloaderDone(true)}
+        renderProgress={({ loaded, total, progress }) => (
+          <>
+            <SplitReveal.ProgressTrack progress={progress} foregroundColor={INK} />
+            <p className="mt-3 text-center text-[11px] font-medium uppercase tracking-[0.12em] text-black/45">
+              Loading frames
+              <span className="px-1.5 text-black/20">·</span>
+              {String(loaded).padStart(2, "0")}
+              <span className="text-black/20">/</span>
+              {String(total).padStart(2, "0")}
+            </p>
+          </>
+        )}
+      />
+
+      <PhotographerPortfolioNotes />
+    </>
+  );
+}
+`,
+      htmlLight: `<pre class="shiki github-light" tabindex="0"><code><span class="line"><span style="color:#032F62">"use client"</span><span style="color:#24292E">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49">import</span><span style="color:#032F62"> "@fontsource-variable/instrument-sans"</span><span style="color:#24292E">;</span></span>
+<span class="line"><span style="color:#D73A49">import</span><span style="color:#24292E"> { useRef, useState, </span><span style="color:#D73A49">type</span><span style="color:#24292E"> CSSProperties, </span><span style="color:#D73A49">type</span><span style="color:#24292E"> ReactNode, </span><span style="color:#D73A49">type</span><span style="color:#24292E"> RefObject } </span><span style="color:#D73A49">from</span><span style="color:#032F62"> "react"</span><span style="color:#24292E">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49">import</span><span style="color:#24292E"> CardStack, {</span></span>
+<span class="line"><span style="color:#24292E">  CARD_STACK_MASK_IDS,</span></span>
+<span class="line"><span style="color:#D73A49">  type</span><span style="color:#24292E"> CardStackItem,</span></span>
+<span class="line"><span style="color:#24292E">  useCardStack,</span></span>
+<span class="line"><span style="color:#24292E">} </span><span style="color:#D73A49">from</span><span style="color:#032F62"> "@/animata/card/card-stack"</span><span style="color:#24292E">;</span></span>
+<span class="line"><span style="color:#D73A49">import</span><span style="color:#24292E"> TrailingImage </span><span style="color:#D73A49">from</span><span style="color:#032F62"> "@/animata/image/trailing-image"</span><span style="color:#24292E">;</span></span>
+<span class="line"><span style="color:#D73A49">import</span><span style="color:#24292E"> SplitReveal </span><span style="color:#D73A49">from</span><span style="color:#032F62"> "@/animata/preloader/split-reveal"</span><span style="color:#24292E">;</span></span>
+<span class="line"><span style="color:#D73A49">import</span><span style="color:#24292E"> { MapPinIcon } </span><span style="color:#D73A49">from</span><span style="color:#032F62"> "@/components/ui/map-pin"</span><span style="color:#24292E">;</span></span>
+<span class="line"><span style="color:#D73A49">import</span><span style="color:#24292E"> { SwitchCameraIcon } </span><span style="color:#D73A49">from</span><span style="color:#032F62"> "@/components/ui/switch-camera"</span><span style="color:#24292E">;</span></span>
+<span class="line"><span style="color:#D73A49">import</span><span style="color:#24292E"> { cn } </span><span style="color:#D73A49">from</span><span style="color:#032F62"> "@/lib/utils"</span><span style="color:#24292E">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49">import</span><span style="color:#24292E"> { PhotographerPortfolioNotes } </span><span style="color:#D73A49">from</span><span style="color:#032F62"> "./photographer-portfolio-notes"</span><span style="color:#24292E">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49">const</span><span style="color:#005CC5"> FONT</span><span style="color:#D73A49"> =</span></span>
+<span class="line"><span style="color:#032F62">  '"Instrument Sans Variable", ui-sans-serif, system-ui, sans-serif'</span><span style="color:#24292E">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49">const</span><span style="color:#005CC5"> CANVAS</span><span style="color:#D73A49"> =</span><span style="color:#032F62"> "#fff"</span><span style="color:#24292E">;</span></span>
+<span class="line"><span style="color:#D73A49">const</span><span style="color:#005CC5"> INK</span><span style="color:#D73A49"> =</span><span style="color:#032F62"> "#000"</span><span style="color:#24292E">;</span></span>
+<span class="line"><span style="color:#D73A49">const</span><span style="color:#005CC5"> PRINT_WIDTH</span><span style="color:#D73A49"> =</span><span style="color:#005CC5"> 900</span><span style="color:#24292E">;</span></span>
+<span class="line"><span style="color:#D73A49">const</span><span style="color:#005CC5"> PRINT_HEIGHT</span><span style="color:#D73A49"> =</span><span style="color:#005CC5"> 1125</span><span style="color:#24292E">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49">const</span><span style="color:#6F42C1"> lummi</span><span style="color:#D73A49"> =</span><span style="color:#24292E"> (</span><span style="color:#E36209">assetId</span><span style="color:#D73A49">:</span><span style="color:#005CC5"> string</span><span style="color:#24292E">) </span><span style="color:#D73A49">=></span></span>
+<span class="line"><span style="color:#032F62">  \`https://assets.lummi.ai/assets/\${</span><span style="color:#24292E">assetId</span><span style="color:#032F62">}?auto=format&#x26;fit=crop&#x26;w=\${</span><span style="color:#005CC5">PRINT_WIDTH</span><span style="color:#032F62">}&#x26;h=\${</span><span style="color:#005CC5">PRINT_HEIGHT</span><span style="color:#032F62">}&#x26;q=85\`</span><span style="color:#24292E">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">/** Wedding + event frames from https://lummi.ai — see demo notes for credits */</span></span>
+<span class="line"><span style="color:#D73A49">const</span><span style="color:#005CC5"> LUMMI_ASSETS</span><span style="color:#D73A49"> =</span><span style="color:#24292E"> {</span></span>
+<span class="line"><span style="color:#24292E">  avatar: </span><span style="color:#032F62">"QmXp6StB1i36XHbbmppop5AwtQgnyom8bYTZqPkLVNGJnk"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">  portfolio: {</span></span>
+<span class="line"><span style="color:#24292E">    vows: </span><span style="color:#032F62">"QmabCfDwG7NUco1UhMnAE7NiHSK63MNKmPxAA2mc8Xrh8j"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">    ceremony: </span><span style="color:#032F62">"QmS6CSjJ3hc82mvhNtYGWmcAZ1coJUdEkrAVmJ6PPEH2Q3"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">    reception: </span><span style="color:#032F62">"QmaCT6boTGzVxo9ii5JYcnAuakoVhso3esFDA9Y58Nm7Le"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">    candid: </span><span style="color:#032F62">"QmY8f1t5PS7b6fVhd6R7s1AFQMVERRKmgE8gNataeweAS4"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">    florals: </span><span style="color:#032F62">"QmYerGQMAkWiRYDyYMwVfZQSKy8FGy2Js4G83vf1vyBGdR"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">    festival: </span><span style="color:#032F62">"QmZnV56e2xNN5kqUWRVMupeiUExehkWKqo5X5ewgMpA19C"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">  },</span></span>
+<span class="line"><span style="color:#24292E">  trail: [</span></span>
+<span class="line"><span style="color:#032F62">    "QmVufjyFaAWjZYr4kdM8JLxr68EDky5V9YnwkhRbeD3jVb"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#032F62">    "QmTfDd4u2rHboSjREqrmM2AX8uamVhgURW5iKAJmTpe3Rz"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#032F62">    "QmcVMDiPtnnxCKgLCppm4iHQNp8L2zX8NF1xzV1Ch7nBtk"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#032F62">    "QmSXefvUey7N617ro5dG1mjRXFm9iUN5uUmwBTS63DEApS"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#032F62">    "QmVgzYXYEaShMjw87vVZZv1J7PjhaNKy92XY2uTrB59o9R"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#032F62">    "QmcioeKGZKuCeauwteg4DEu2edo6qe3HeK99Y9FywsYk8i"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#032F62">    "QmUB7fgmDhst3VZKU5R5uUkfvbcXvZ3FDKFvkNk5TkRvqD"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#032F62">    "QmeL2wx9Sdw4dGPawgxUBenthP9jt8ff8Ux4uog45NL95j"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#032F62">    "QmTXHjCens6Bg4Q7J4LjzU9fyKVec3t1ziqT32ShpXa93r"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#032F62">    "QmV1pUNAsa1orHnyBWFWki6qZvatRQpgbQnDCVdV1EzRGd"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#032F62">    "QmZAgYih2jUqmKJz4wUoTARdijpv7bveUFYrjvacV66KXp"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#032F62">    "QmQMun9ag4MrBC8man7bQC9xNupf4oCufwvCj2VpU7rXDi"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">  ],</span></span>
+<span class="line"><span style="color:#24292E">} </span><span style="color:#D73A49">as</span><span style="color:#D73A49"> const</span><span style="color:#24292E">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49">const</span><span style="color:#005CC5"> PHOTOGRAPHER</span><span style="color:#D73A49"> =</span><span style="color:#24292E"> {</span></span>
+<span class="line"><span style="color:#24292E">  studio: </span><span style="color:#032F62">"Maya Chen"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">  name: </span><span style="color:#032F62">"Maya"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">  location: </span><span style="color:#032F62">"Brooklyn"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">  email: </span><span style="color:#032F62">"mailto:hello@mayachen.studio"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">  avatar: </span><span style="color:#6F42C1">lummi</span><span style="color:#24292E">(</span><span style="color:#005CC5">LUMMI_ASSETS</span><span style="color:#24292E">.avatar),</span></span>
+<span class="line"><span style="color:#24292E">};</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49">const</span><span style="color:#005CC5"> TRAIL_IMAGES</span><span style="color:#D73A49"> =</span><span style="color:#005CC5"> LUMMI_ASSETS</span><span style="color:#24292E">.trail.</span><span style="color:#6F42C1">map</span><span style="color:#24292E">((</span><span style="color:#E36209">id</span><span style="color:#24292E">) </span><span style="color:#D73A49">=></span><span style="color:#6F42C1"> lummi</span><span style="color:#24292E">(id));</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49">const</span><span style="color:#005CC5"> SHOT_SETTINGS</span><span style="color:#D73A49">:</span><span style="color:#6F42C1"> Record</span><span style="color:#24292E">&#x3C;</span><span style="color:#005CC5">string</span><span style="color:#24292E">, { </span><span style="color:#E36209">aperture</span><span style="color:#D73A49">:</span><span style="color:#005CC5"> string</span><span style="color:#24292E">; </span><span style="color:#E36209">shutter</span><span style="color:#D73A49">:</span><span style="color:#005CC5"> string</span><span style="color:#24292E">; </span><span style="color:#E36209">stock</span><span style="color:#D73A49">:</span><span style="color:#005CC5"> string</span><span style="color:#24292E"> }> </span><span style="color:#D73A49">=</span><span style="color:#24292E"> {</span></span>
+<span class="line"><span style="color:#24292E">  vows: { aperture: </span><span style="color:#032F62">"2"</span><span style="color:#24292E">, shutter: </span><span style="color:#032F62">"1/500"</span><span style="color:#24292E">, stock: </span><span style="color:#032F62">"Portra 400"</span><span style="color:#24292E"> },</span></span>
+<span class="line"><span style="color:#24292E">  ceremony: { aperture: </span><span style="color:#032F62">"2.8"</span><span style="color:#24292E">, shutter: </span><span style="color:#032F62">"1/250"</span><span style="color:#24292E">, stock: </span><span style="color:#032F62">"Portra 160"</span><span style="color:#24292E"> },</span></span>
+<span class="line"><span style="color:#24292E">  reception: { aperture: </span><span style="color:#032F62">"2"</span><span style="color:#24292E">, shutter: </span><span style="color:#032F62">"1/125"</span><span style="color:#24292E">, stock: </span><span style="color:#032F62">"Portra 800"</span><span style="color:#24292E"> },</span></span>
+<span class="line"><span style="color:#24292E">  candid: { aperture: </span><span style="color:#032F62">"1.8"</span><span style="color:#24292E">, shutter: </span><span style="color:#032F62">"1/320"</span><span style="color:#24292E">, stock: </span><span style="color:#032F62">"Tri-X 400"</span><span style="color:#24292E"> },</span></span>
+<span class="line"><span style="color:#24292E">  florals: { aperture: </span><span style="color:#032F62">"4"</span><span style="color:#24292E">, shutter: </span><span style="color:#032F62">"1/200"</span><span style="color:#24292E">, stock: </span><span style="color:#032F62">"Ektar 100"</span><span style="color:#24292E"> },</span></span>
+<span class="line"><span style="color:#24292E">  festival: { aperture: </span><span style="color:#032F62">"2.8"</span><span style="color:#24292E">, shutter: </span><span style="color:#032F62">"1/160"</span><span style="color:#24292E">, stock: </span><span style="color:#032F62">"Portra 800"</span><span style="color:#24292E"> },</span></span>
+<span class="line"><span style="color:#24292E">};</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49">const</span><span style="color:#005CC5"> HERO_TONE</span><span style="color:#D73A49"> =</span><span style="color:#24292E"> {</span></span>
+<span class="line"><span style="color:#24292E">  mute: </span><span style="color:#032F62">"text-black/40"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">  ink: </span><span style="color:#032F62">"text-black"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">  accent: </span><span style="color:#032F62">"text-[#c2410c]"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">} </span><span style="color:#D73A49">as</span><span style="color:#D73A49"> const</span><span style="color:#24292E">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49">const</span><span style="color:#005CC5"> PORTFOLIO</span><span style="color:#D73A49">:</span><span style="color:#6F42C1"> CardStackItem</span><span style="color:#24292E">[] </span><span style="color:#D73A49">=</span><span style="color:#24292E"> [</span></span>
+<span class="line"><span style="color:#24292E">  {</span></span>
+<span class="line"><span style="color:#24292E">    id: </span><span style="color:#032F62">"vows"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">    image: </span><span style="color:#6F42C1">lummi</span><span style="color:#24292E">(</span><span style="color:#005CC5">LUMMI_ASSETS</span><span style="color:#24292E">.portfolio.vows),</span></span>
+<span class="line"><span style="color:#24292E">    title: </span><span style="color:#032F62">"Vows"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">    tagline: </span><span style="color:#032F62">"Cliffside ceremony"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">    counts: { like: </span><span style="color:#005CC5">0</span><span style="color:#24292E">, comment: </span><span style="color:#005CC5">0</span><span style="color:#24292E"> },</span></span>
+<span class="line"><span style="color:#24292E">    maskId: </span><span style="color:#005CC5">CARD_STACK_MASK_IDS</span><span style="color:#24292E">[</span><span style="color:#005CC5">0</span><span style="color:#24292E">],</span></span>
+<span class="line"><span style="color:#24292E">  },</span></span>
+<span class="line"><span style="color:#24292E">  {</span></span>
+<span class="line"><span style="color:#24292E">    id: </span><span style="color:#032F62">"ceremony"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">    image: </span><span style="color:#6F42C1">lummi</span><span style="color:#24292E">(</span><span style="color:#005CC5">LUMMI_ASSETS</span><span style="color:#24292E">.portfolio.ceremony),</span></span>
+<span class="line"><span style="color:#24292E">    title: </span><span style="color:#032F62">"Ceremony"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">    tagline: </span><span style="color:#032F62">"Church exit"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">    counts: { like: </span><span style="color:#005CC5">0</span><span style="color:#24292E">, comment: </span><span style="color:#005CC5">0</span><span style="color:#24292E"> },</span></span>
+<span class="line"><span style="color:#24292E">    maskId: </span><span style="color:#005CC5">CARD_STACK_MASK_IDS</span><span style="color:#24292E">[</span><span style="color:#005CC5">0</span><span style="color:#24292E">],</span></span>
+<span class="line"><span style="color:#24292E">  },</span></span>
+<span class="line"><span style="color:#24292E">  {</span></span>
+<span class="line"><span style="color:#24292E">    id: </span><span style="color:#032F62">"reception"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">    image: </span><span style="color:#6F42C1">lummi</span><span style="color:#24292E">(</span><span style="color:#005CC5">LUMMI_ASSETS</span><span style="color:#24292E">.portfolio.reception),</span></span>
+<span class="line"><span style="color:#24292E">    title: </span><span style="color:#032F62">"Reception"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">    tagline: </span><span style="color:#032F62">"Evening dance"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">    counts: { like: </span><span style="color:#005CC5">0</span><span style="color:#24292E">, comment: </span><span style="color:#005CC5">0</span><span style="color:#24292E"> },</span></span>
+<span class="line"><span style="color:#24292E">    maskId: </span><span style="color:#005CC5">CARD_STACK_MASK_IDS</span><span style="color:#24292E">[</span><span style="color:#005CC5">0</span><span style="color:#24292E">],</span></span>
+<span class="line"><span style="color:#24292E">  },</span></span>
+<span class="line"><span style="color:#24292E">  {</span></span>
+<span class="line"><span style="color:#24292E">    id: </span><span style="color:#032F62">"candid"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">    image: </span><span style="color:#6F42C1">lummi</span><span style="color:#24292E">(</span><span style="color:#005CC5">LUMMI_ASSETS</span><span style="color:#24292E">.portfolio.candid),</span></span>
+<span class="line"><span style="color:#24292E">    title: </span><span style="color:#032F62">"Candid"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">    tagline: </span><span style="color:#032F62">"Real laughter"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">    counts: { like: </span><span style="color:#005CC5">0</span><span style="color:#24292E">, comment: </span><span style="color:#005CC5">0</span><span style="color:#24292E"> },</span></span>
+<span class="line"><span style="color:#24292E">    maskId: </span><span style="color:#005CC5">CARD_STACK_MASK_IDS</span><span style="color:#24292E">[</span><span style="color:#005CC5">0</span><span style="color:#24292E">],</span></span>
+<span class="line"><span style="color:#24292E">  },</span></span>
+<span class="line"><span style="color:#24292E">  {</span></span>
+<span class="line"><span style="color:#24292E">    id: </span><span style="color:#032F62">"florals"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">    image: </span><span style="color:#6F42C1">lummi</span><span style="color:#24292E">(</span><span style="color:#005CC5">LUMMI_ASSETS</span><span style="color:#24292E">.portfolio.florals),</span></span>
+<span class="line"><span style="color:#24292E">    title: </span><span style="color:#032F62">"Florals"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">    tagline: </span><span style="color:#032F62">"Bouquet detail"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">    counts: { like: </span><span style="color:#005CC5">0</span><span style="color:#24292E">, comment: </span><span style="color:#005CC5">0</span><span style="color:#24292E"> },</span></span>
+<span class="line"><span style="color:#24292E">    maskId: </span><span style="color:#005CC5">CARD_STACK_MASK_IDS</span><span style="color:#24292E">[</span><span style="color:#005CC5">0</span><span style="color:#24292E">],</span></span>
+<span class="line"><span style="color:#24292E">  },</span></span>
+<span class="line"><span style="color:#24292E">  {</span></span>
+<span class="line"><span style="color:#24292E">    id: </span><span style="color:#032F62">"festival"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">    image: </span><span style="color:#6F42C1">lummi</span><span style="color:#24292E">(</span><span style="color:#005CC5">LUMMI_ASSETS</span><span style="color:#24292E">.portfolio.festival),</span></span>
+<span class="line"><span style="color:#24292E">    title: </span><span style="color:#032F62">"Event"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">    tagline: </span><span style="color:#032F62">"Summer festival"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">    counts: { like: </span><span style="color:#005CC5">0</span><span style="color:#24292E">, comment: </span><span style="color:#005CC5">0</span><span style="color:#24292E"> },</span></span>
+<span class="line"><span style="color:#24292E">    maskId: </span><span style="color:#005CC5">CARD_STACK_MASK_IDS</span><span style="color:#24292E">[</span><span style="color:#005CC5">0</span><span style="color:#24292E">],</span></span>
+<span class="line"><span style="color:#24292E">  },</span></span>
+<span class="line"><span style="color:#24292E">];</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49">const</span><span style="color:#005CC5"> PRELOAD_IMAGES</span><span style="color:#D73A49"> =</span><span style="color:#24292E"> [</span></span>
+<span class="line"><span style="color:#D73A49">  ...new</span><span style="color:#6F42C1"> Set</span><span style="color:#24292E">([</span></span>
+<span class="line"><span style="color:#005CC5">    PHOTOGRAPHER</span><span style="color:#24292E">.avatar,</span></span>
+<span class="line"><span style="color:#D73A49">    ...</span><span style="color:#005CC5">PORTFOLIO</span><span style="color:#24292E">.</span><span style="color:#6F42C1">map</span><span style="color:#24292E">((</span><span style="color:#E36209">item</span><span style="color:#24292E">) </span><span style="color:#D73A49">=></span><span style="color:#24292E"> item.image),</span></span>
+<span class="line"><span style="color:#D73A49">    ...</span><span style="color:#005CC5">TRAIL_IMAGES</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">  ]),</span></span>
+<span class="line"><span style="color:#24292E">];</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49">const</span><span style="color:#005CC5"> HERO_MARK</span><span style="color:#D73A49"> =</span></span>
+<span class="line"><span style="color:#032F62">  "mx-1 inline-flex size-[clamp(1.75rem,1.286em,2.25rem)] shrink-0 items-center justify-center align-middle"</span><span style="color:#24292E">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49">function</span><span style="color:#6F42C1"> HeroMark</span><span style="color:#24292E">({ </span><span style="color:#E36209">children</span><span style="color:#24292E">, </span><span style="color:#E36209">className</span><span style="color:#24292E"> }</span><span style="color:#D73A49">:</span><span style="color:#24292E"> { </span><span style="color:#E36209">children</span><span style="color:#D73A49">:</span><span style="color:#6F42C1"> ReactNode</span><span style="color:#24292E">; </span><span style="color:#E36209">className</span><span style="color:#D73A49">?:</span><span style="color:#005CC5"> string</span><span style="color:#24292E"> }) {</span></span>
+<span class="line"><span style="color:#D73A49">  return</span><span style="color:#24292E"> (</span></span>
+<span class="line"><span style="color:#24292E">    &#x3C;</span><span style="color:#22863A">span</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#6F42C1">cn</span><span style="color:#24292E">(</span><span style="color:#005CC5">HERO_MARK</span><span style="color:#24292E">, className)} </span><span style="color:#6F42C1">aria-hidden</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">      {children}</span></span>
+<span class="line"><span style="color:#24292E">    &#x3C;/</span><span style="color:#22863A">span</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">  );</span></span>
+<span class="line"><span style="color:#24292E">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49">function</span><span style="color:#6F42C1"> ProfileGlyph</span><span style="color:#24292E">({ </span><span style="color:#E36209">src</span><span style="color:#24292E">, </span><span style="color:#E36209">alt</span><span style="color:#24292E"> }</span><span style="color:#D73A49">:</span><span style="color:#24292E"> { </span><span style="color:#E36209">src</span><span style="color:#D73A49">:</span><span style="color:#005CC5"> string</span><span style="color:#24292E">; </span><span style="color:#E36209">alt</span><span style="color:#D73A49">:</span><span style="color:#005CC5"> string</span><span style="color:#24292E"> }) {</span></span>
+<span class="line"><span style="color:#D73A49">  return</span><span style="color:#24292E"> (</span></span>
+<span class="line"><span style="color:#24292E">    &#x3C;</span><span style="color:#22863A">span</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#6F42C1">cn</span><span style="color:#24292E">(</span><span style="color:#005CC5">HERO_MARK</span><span style="color:#24292E">, </span><span style="color:#032F62">"overflow-hidden rounded-full ring-1 ring-black/10"</span><span style="color:#24292E">)}></span></span>
+<span class="line"><span style="color:#24292E">      &#x3C;</span><span style="color:#22863A">img</span><span style="color:#6F42C1"> src</span><span style="color:#D73A49">=</span><span style="color:#24292E">{src} </span><span style="color:#6F42C1">alt</span><span style="color:#D73A49">=</span><span style="color:#24292E">{alt} </span><span style="color:#6F42C1">className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"size-full object-cover"</span><span style="color:#6F42C1"> decoding</span><span style="color:#D73A49">=</span><span style="color:#032F62">"async"</span><span style="color:#24292E"> /></span></span>
+<span class="line"><span style="color:#24292E">    &#x3C;/</span><span style="color:#22863A">span</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">  );</span></span>
+<span class="line"><span style="color:#24292E">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49">function</span><span style="color:#6F42C1"> HeroStory</span><span style="color:#24292E">() {</span></span>
+<span class="line"><span style="color:#D73A49">  const</span><span style="color:#005CC5"> type</span><span style="color:#D73A49"> =</span></span>
+<span class="line"><span style="color:#032F62">    "text-[clamp(1.25rem,2vw,1.75rem)] font-medium leading-[1.55] tracking-[-0.02em]"</span><span style="color:#24292E">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49">  return</span><span style="color:#24292E"> (</span></span>
+<span class="line"><span style="color:#24292E">    &#x3C;</span><span style="color:#22863A">div</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"max-w-[min(100%,36rem)] space-y-6"</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">      &#x3C;</span><span style="color:#22863A">p</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#24292E">{type}></span></span>
+<span class="line"><span style="color:#24292E">        &#x3C;</span><span style="color:#22863A">span</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#005CC5">HERO_TONE</span><span style="color:#24292E">.mute}>Hi, I'm &#x3C;/</span><span style="color:#22863A">span</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">        &#x3C;</span><span style="color:#22863A">span</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#005CC5">HERO_TONE</span><span style="color:#24292E">.ink}>{</span><span style="color:#005CC5">PHOTOGRAPHER</span><span style="color:#24292E">.name}&#x3C;/</span><span style="color:#22863A">span</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">        &#x3C;</span><span style="color:#005CC5">ProfileGlyph</span><span style="color:#6F42C1"> src</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#005CC5">PHOTOGRAPHER</span><span style="color:#24292E">.avatar} </span><span style="color:#6F42C1">alt</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#005CC5">PHOTOGRAPHER</span><span style="color:#24292E">.studio} /></span></span>
+<span class="line"><span style="color:#24292E">        &#x3C;</span><span style="color:#22863A">span</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#005CC5">HERO_TONE</span><span style="color:#24292E">.mute}>. I shoot &#x3C;/</span><span style="color:#22863A">span</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">        &#x3C;</span><span style="color:#005CC5">HeroMark</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"text-black"</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">          &#x3C;</span><span style="color:#005CC5">SwitchCameraIcon</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"size-full [&#x26;_svg]:size-full"</span><span style="color:#24292E"> /></span></span>
+<span class="line"><span style="color:#24292E">        &#x3C;/</span><span style="color:#005CC5">HeroMark</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">        &#x3C;</span><span style="color:#22863A">span</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#005CC5">HERO_TONE</span><span style="color:#24292E">.mute}> &#x3C;/</span><span style="color:#22863A">span</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">        &#x3C;</span><span style="color:#22863A">span</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#005CC5">HERO_TONE</span><span style="color:#24292E">.ink}>weddings and events&#x3C;/</span><span style="color:#22863A">span</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">        &#x3C;</span><span style="color:#22863A">span</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#005CC5">HERO_TONE</span><span style="color:#24292E">.mute}> in &#x3C;/</span><span style="color:#22863A">span</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">        &#x3C;</span><span style="color:#005CC5">HeroMark</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"text-black/55"</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">          &#x3C;</span><span style="color:#005CC5">MapPinIcon</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"size-full [&#x26;_svg]:size-full"</span><span style="color:#24292E"> /></span></span>
+<span class="line"><span style="color:#24292E">        &#x3C;/</span><span style="color:#005CC5">HeroMark</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">        &#x3C;</span><span style="color:#22863A">span</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#005CC5">HERO_TONE</span><span style="color:#24292E">.mute}> &#x3C;/</span><span style="color:#22863A">span</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">        &#x3C;</span><span style="color:#22863A">span</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#005CC5">HERO_TONE</span><span style="color:#24292E">.ink}>{</span><span style="color:#005CC5">PHOTOGRAPHER</span><span style="color:#24292E">.location}&#x3C;/</span><span style="color:#22863A">span</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">        &#x3C;</span><span style="color:#22863A">span</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#005CC5">HERO_TONE</span><span style="color:#24292E">.mute}></span></span>
+<span class="line"><span style="color:#24292E">          {</span><span style="color:#032F62">" "</span><span style="color:#24292E">}</span></span>
+<span class="line"><span style="color:#24292E">          — good light, real moments, and photos that don't feel forced.</span></span>
+<span class="line"><span style="color:#24292E">        &#x3C;/</span><span style="color:#22863A">span</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">      &#x3C;/</span><span style="color:#22863A">p</span><span style="color:#24292E">></span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#24292E">      &#x3C;</span><span style="color:#22863A">p</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#24292E">{type}></span></span>
+<span class="line"><span style="color:#24292E">        &#x3C;</span><span style="color:#22863A">span</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#005CC5">HERO_TONE</span><span style="color:#24292E">.accent}>Booking Q3.&#x3C;/</span><span style="color:#22863A">span</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">        &#x3C;</span><span style="color:#22863A">span</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#005CC5">HERO_TONE</span><span style="color:#24292E">.mute}> &#x3C;/</span><span style="color:#22863A">span</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">        &#x3C;</span><span style="color:#22863A">a</span></span>
+<span class="line"><span style="color:#6F42C1">          href</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#005CC5">PHOTOGRAPHER</span><span style="color:#24292E">.email}</span></span>
+<span class="line"><span style="color:#6F42C1">          className</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#6F42C1">cn</span><span style="color:#24292E">(</span><span style="color:#005CC5">HERO_TONE</span><span style="color:#24292E">.ink, </span><span style="color:#032F62">"underline-offset-[4px] hover:underline"</span><span style="color:#24292E">)}</span></span>
+<span class="line"><span style="color:#24292E">        ></span></span>
+<span class="line"><span style="color:#24292E">          Send me your date.</span></span>
+<span class="line"><span style="color:#24292E">        &#x3C;/</span><span style="color:#22863A">a</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">      &#x3C;/</span><span style="color:#22863A">p</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">    &#x3C;/</span><span style="color:#22863A">div</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">  );</span></span>
+<span class="line"><span style="color:#24292E">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49">function</span><span style="color:#6F42C1"> ViewfinderFrame</span><span style="color:#24292E">() {</span></span>
+<span class="line"><span style="color:#D73A49">  const</span><span style="color:#005CC5"> corner</span><span style="color:#D73A49"> =</span><span style="color:#032F62"> "absolute size-4 border-white/80"</span><span style="color:#24292E">;</span></span>
+<span class="line"><span style="color:#D73A49">  return</span><span style="color:#24292E"> (</span></span>
+<span class="line"><span style="color:#24292E">    &#x3C;</span><span style="color:#22863A">div</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"pointer-events-none absolute inset-3 sm:inset-4"</span><span style="color:#6F42C1"> aria-hidden</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">      &#x3C;</span><span style="color:#22863A">span</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#6F42C1">cn</span><span style="color:#24292E">(corner, </span><span style="color:#032F62">"left-0 top-0 border-l-2 border-t-2"</span><span style="color:#24292E">)} /></span></span>
+<span class="line"><span style="color:#24292E">      &#x3C;</span><span style="color:#22863A">span</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#6F42C1">cn</span><span style="color:#24292E">(corner, </span><span style="color:#032F62">"right-0 top-0 border-r-2 border-t-2"</span><span style="color:#24292E">)} /></span></span>
+<span class="line"><span style="color:#24292E">      &#x3C;</span><span style="color:#22863A">span</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#6F42C1">cn</span><span style="color:#24292E">(corner, </span><span style="color:#032F62">"bottom-0 left-0 border-b-2 border-l-2"</span><span style="color:#24292E">)} /></span></span>
+<span class="line"><span style="color:#24292E">      &#x3C;</span><span style="color:#22863A">span</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#6F42C1">cn</span><span style="color:#24292E">(corner, </span><span style="color:#032F62">"bottom-0 right-0 border-b-2 border-r-2"</span><span style="color:#24292E">)} /></span></span>
+<span class="line"><span style="color:#24292E">      &#x3C;</span><span style="color:#22863A">div</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 opacity-[0.16]"</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">        &#x3C;</span><span style="color:#22863A">span</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"absolute left-1/2 top-1/2 h-px w-5 -translate-x-1/2 -translate-y-1/2 bg-white"</span><span style="color:#24292E"> /></span></span>
+<span class="line"><span style="color:#24292E">        &#x3C;</span><span style="color:#22863A">span</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"absolute left-1/2 top-1/2 h-5 w-px -translate-x-1/2 -translate-y-1/2 bg-white"</span><span style="color:#24292E"> /></span></span>
+<span class="line"><span style="color:#24292E">      &#x3C;/</span><span style="color:#22863A">div</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">    &#x3C;/</span><span style="color:#22863A">div</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">  );</span></span>
+<span class="line"><span style="color:#24292E">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49">function</span><span style="color:#6F42C1"> PrintCaption</span><span style="color:#24292E">() {</span></span>
+<span class="line"><span style="color:#D73A49">  const</span><span style="color:#24292E"> { </span><span style="color:#005CC5">activeItem</span><span style="color:#24292E"> } </span><span style="color:#D73A49">=</span><span style="color:#6F42C1"> useCardStack</span><span style="color:#24292E">();</span></span>
+<span class="line"><span style="color:#D73A49">  const</span><span style="color:#005CC5"> index</span><span style="color:#D73A49"> =</span><span style="color:#24292E"> activeItem </span><span style="color:#D73A49">?</span><span style="color:#005CC5"> PORTFOLIO</span><span style="color:#24292E">.</span><span style="color:#6F42C1">findIndex</span><span style="color:#24292E">((</span><span style="color:#E36209">item</span><span style="color:#24292E">) </span><span style="color:#D73A49">=></span><span style="color:#24292E"> item.id </span><span style="color:#D73A49">===</span><span style="color:#24292E"> activeItem.id) </span><span style="color:#D73A49">+</span><span style="color:#005CC5"> 1</span><span style="color:#D73A49"> :</span><span style="color:#005CC5"> 1</span><span style="color:#24292E">;</span></span>
+<span class="line"><span style="color:#D73A49">  const</span><span style="color:#005CC5"> settings</span><span style="color:#D73A49"> =</span><span style="color:#24292E"> activeItem </span><span style="color:#D73A49">?</span><span style="color:#005CC5"> SHOT_SETTINGS</span><span style="color:#24292E">[activeItem.id] </span><span style="color:#D73A49">:</span><span style="color:#005CC5"> SHOT_SETTINGS</span><span style="color:#24292E">.vows;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49">  if</span><span style="color:#24292E"> (</span><span style="color:#D73A49">!</span><span style="color:#24292E">activeItem </span><span style="color:#D73A49">||</span><span style="color:#D73A49"> !</span><span style="color:#24292E">settings) {</span></span>
+<span class="line"><span style="color:#D73A49">    return</span><span style="color:#005CC5"> null</span><span style="color:#24292E">;</span></span>
+<span class="line"><span style="color:#24292E">  }</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49">  return</span><span style="color:#24292E"> (</span></span>
+<span class="line"><span style="color:#24292E">    &#x3C;</span><span style="color:#22863A">figcaption</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"relative z-10 shrink-0 border-b border-black/80 bg-transparent pb-3"</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">      &#x3C;</span><span style="color:#22863A">div</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"flex items-baseline justify-between gap-4"</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">        &#x3C;</span><span style="color:#22863A">p</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"text-[11px] font-medium uppercase tracking-[0.1em] text-black"</span><span style="color:#24292E">>{activeItem.title}&#x3C;/</span><span style="color:#22863A">p</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">        &#x3C;</span><span style="color:#22863A">p</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"shrink-0 text-[11px] font-medium tabular-nums tracking-[0.1em] text-black/45"</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">          {</span><span style="color:#6F42C1">String</span><span style="color:#24292E">(index).</span><span style="color:#6F42C1">padStart</span><span style="color:#24292E">(</span><span style="color:#005CC5">2</span><span style="color:#24292E">, </span><span style="color:#032F62">"0"</span><span style="color:#24292E">)}</span></span>
+<span class="line"><span style="color:#24292E">          &#x3C;</span><span style="color:#22863A">span</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"text-black/20"</span><span style="color:#24292E">>/&#x3C;/</span><span style="color:#22863A">span</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">          {</span><span style="color:#6F42C1">String</span><span style="color:#24292E">(</span><span style="color:#005CC5">PORTFOLIO</span><span style="color:#24292E">.</span><span style="color:#005CC5">length</span><span style="color:#24292E">).</span><span style="color:#6F42C1">padStart</span><span style="color:#24292E">(</span><span style="color:#005CC5">2</span><span style="color:#24292E">, </span><span style="color:#032F62">"0"</span><span style="color:#24292E">)}</span></span>
+<span class="line"><span style="color:#24292E">        &#x3C;/</span><span style="color:#22863A">p</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">      &#x3C;/</span><span style="color:#22863A">div</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">      &#x3C;</span><span style="color:#22863A">p</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"mt-2 text-[11px] font-medium uppercase tracking-[0.1em] text-black/45"</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">        ƒ/{settings.aperture}</span></span>
+<span class="line"><span style="color:#24292E">        &#x3C;</span><span style="color:#22863A">span</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"px-1.5 text-black/20"</span><span style="color:#24292E">>·&#x3C;/</span><span style="color:#22863A">span</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">        {settings.shutter}</span></span>
+<span class="line"><span style="color:#24292E">        &#x3C;</span><span style="color:#22863A">span</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"px-1.5 text-black/20"</span><span style="color:#24292E">>·&#x3C;/</span><span style="color:#22863A">span</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">        {settings.stock}</span></span>
+<span class="line"><span style="color:#24292E">      &#x3C;/</span><span style="color:#22863A">p</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">    &#x3C;/</span><span style="color:#22863A">figcaption</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">  );</span></span>
+<span class="line"><span style="color:#24292E">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49">const</span><span style="color:#005CC5"> BASELINE</span><span style="color:#D73A49"> =</span><span style="color:#005CC5"> 8</span><span style="color:#24292E">;</span></span>
+<span class="line"><span style="color:#D73A49">const</span><span style="color:#005CC5"> LAYOUT</span><span style="color:#D73A49"> =</span><span style="color:#24292E"> {</span></span>
+<span class="line"><span style="color:#24292E">  shell: </span><span style="color:#032F62">"px-6 sm:px-10 lg:px-14"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">  blockY: </span><span style="color:#032F62">"py-8 lg:py-10"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">  grid: </span><span style="color:#032F62">"gap-x-8 gap-y-8 lg:gap-x-10 lg:gap-y-10"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">} </span><span style="color:#D73A49">as</span><span style="color:#D73A49"> const</span><span style="color:#24292E">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49">function</span><span style="color:#6F42C1"> ProofStack</span><span style="color:#24292E">({</span></span>
+<span class="line"><span style="color:#E36209">  stackRef</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#E36209">  captionRef</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">}</span><span style="color:#D73A49">:</span><span style="color:#24292E"> {</span></span>
+<span class="line"><span style="color:#E36209">  stackRef</span><span style="color:#D73A49">:</span><span style="color:#6F42C1"> RefObject</span><span style="color:#24292E">&#x3C;</span><span style="color:#6F42C1">HTMLElement</span><span style="color:#D73A49"> |</span><span style="color:#005CC5"> null</span><span style="color:#24292E">>;</span></span>
+<span class="line"><span style="color:#E36209">  captionRef</span><span style="color:#D73A49">:</span><span style="color:#6F42C1"> RefObject</span><span style="color:#24292E">&#x3C;</span><span style="color:#6F42C1">HTMLDivElement</span><span style="color:#D73A49"> |</span><span style="color:#005CC5"> null</span><span style="color:#24292E">>;</span></span>
+<span class="line"><span style="color:#24292E">}) {</span></span>
+<span class="line"><span style="color:#D73A49">  return</span><span style="color:#24292E"> (</span></span>
+<span class="line"><span style="color:#24292E">    &#x3C;</span><span style="color:#22863A">figure</span></span>
+<span class="line"><span style="color:#6F42C1">      ref</span><span style="color:#D73A49">=</span><span style="color:#24292E">{stackRef}</span></span>
+<span class="line"><span style="color:#6F42C1">      className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"ml-auto grid h-full min-h-0 w-full min-w-0 max-w-full grid-rows-[auto_minmax(0,1fr)] gap-y-3 sm:gap-y-4"</span></span>
+<span class="line"><span style="color:#24292E">    ></span></span>
+<span class="line"><span style="color:#24292E">      &#x3C;</span><span style="color:#22863A">div</span><span style="color:#6F42C1"> ref</span><span style="color:#D73A49">=</span><span style="color:#24292E">{captionRef} </span><span style="color:#6F42C1">className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"relative z-30 w-full shrink-0 bg-transparent"</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">        &#x3C;</span><span style="color:#005CC5">PrintCaption</span><span style="color:#24292E"> /></span></span>
+<span class="line"><span style="color:#24292E">      &#x3C;/</span><span style="color:#22863A">div</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">      &#x3C;</span><span style="color:#22863A">div</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"@container/stack relative flex min-h-0 flex-1 items-end justify-end pt-[max(2.5rem,11%)]"</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">        &#x3C;</span><span style="color:#005CC5">CardStack.Frame</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"relative aspect-[4/5] h-auto w-[min(100cqw,calc(100cqh*4/5))] max-h-full min-h-0 shrink-0 overflow-visible"</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">          &#x3C;</span><span style="color:#005CC5">CardStack.LiveRegion</span><span style="color:#24292E"> /></span></span>
+<span class="line"><span style="color:#24292E">          &#x3C;</span><span style="color:#005CC5">CardStack.Trigger</span><span style="color:#6F42C1"> aria-label</span><span style="color:#D73A49">=</span><span style="color:#032F62">"Show next photo"</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"block size-full text-left"</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">            &#x3C;</span><span style="color:#005CC5">CardStack.Viewport</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"relative size-full overflow-visible !min-h-0 !pt-0"</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">            &#x3C;</span><span style="color:#005CC5">CardStack.List</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">              {(</span><span style="color:#E36209">item</span><span style="color:#24292E">, </span><span style="color:#E36209">index</span><span style="color:#24292E">, </span><span style="color:#E36209">layer</span><span style="color:#24292E">) </span><span style="color:#D73A49">=></span><span style="color:#24292E"> (</span></span>
+<span class="line"><span style="color:#24292E">                &#x3C;</span><span style="color:#005CC5">CardStack.Card</span></span>
+<span class="line"><span style="color:#6F42C1">                  key</span><span style="color:#D73A49">=</span><span style="color:#24292E">{item.id}</span></span>
+<span class="line"><span style="color:#6F42C1">                  layer</span><span style="color:#D73A49">=</span><span style="color:#24292E">{layer}</span></span>
+<span class="line"><span style="color:#6F42C1">                  stackIndex</span><span style="color:#D73A49">=</span><span style="color:#24292E">{index}</span></span>
+<span class="line"><span style="color:#6F42C1">                  className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"size-full gap-0 overflow-visible rounded-none bg-transparent p-0 shadow-none ring-0 [background-image:none]"</span></span>
+<span class="line"><span style="color:#24292E">                ></span></span>
+<span class="line"><span style="color:#24292E">                  &#x3C;</span><span style="color:#22863A">figure</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"flex size-full flex-col border-0 bg-transparent p-0"</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">                    &#x3C;</span><span style="color:#22863A">div</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"relative min-h-0 w-full flex-1 overflow-hidden bg-black/5"</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">                      &#x3C;</span><span style="color:#22863A">img</span></span>
+<span class="line"><span style="color:#6F42C1">                        src</span><span style="color:#D73A49">=</span><span style="color:#24292E">{item.image}</span></span>
+<span class="line"><span style="color:#6F42C1">                        alt</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#032F62">\`\${</span><span style="color:#005CC5">PHOTOGRAPHER</span><span style="color:#032F62">.</span><span style="color:#24292E">studio</span><span style="color:#032F62">} — \${</span><span style="color:#24292E">item</span><span style="color:#032F62">.</span><span style="color:#24292E">title</span><span style="color:#032F62">}\`</span><span style="color:#24292E">}</span></span>
+<span class="line"><span style="color:#6F42C1">                        width</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#005CC5">PRINT_WIDTH</span><span style="color:#24292E">}</span></span>
+<span class="line"><span style="color:#6F42C1">                        height</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#005CC5">PRINT_HEIGHT</span><span style="color:#24292E">}</span></span>
+<span class="line"><span style="color:#6F42C1">                        decoding</span><span style="color:#D73A49">=</span><span style="color:#032F62">"async"</span></span>
+<span class="line"><span style="color:#6F42C1">                        draggable</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#005CC5">false</span><span style="color:#24292E">}</span></span>
+<span class="line"><span style="color:#6F42C1">                        className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"absolute inset-0 size-full object-cover object-center"</span></span>
+<span class="line"><span style="color:#24292E">                      /></span></span>
+<span class="line"><span style="color:#24292E">                      {index </span><span style="color:#D73A49">===</span><span style="color:#005CC5"> 0</span><span style="color:#D73A49"> ?</span><span style="color:#24292E"> &#x3C;</span><span style="color:#005CC5">ViewfinderFrame</span><span style="color:#24292E"> /> </span><span style="color:#D73A49">:</span><span style="color:#005CC5"> null</span><span style="color:#24292E">}</span></span>
+<span class="line"><span style="color:#24292E">                    &#x3C;/</span><span style="color:#22863A">div</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">                  &#x3C;/</span><span style="color:#22863A">figure</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">                &#x3C;/</span><span style="color:#005CC5">CardStack.Card</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">              )}</span></span>
+<span class="line"><span style="color:#24292E">            &#x3C;/</span><span style="color:#005CC5">CardStack.List</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">          &#x3C;/</span><span style="color:#005CC5">CardStack.Viewport</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">        &#x3C;/</span><span style="color:#005CC5">CardStack.Trigger</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">      &#x3C;/</span><span style="color:#005CC5">CardStack.Frame</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">      &#x3C;/</span><span style="color:#22863A">div</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">    &#x3C;/</span><span style="color:#22863A">figure</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">  );</span></span>
+<span class="line"><span style="color:#24292E">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49">function</span><span style="color:#6F42C1"> PortfolioLayout</span><span style="color:#24292E">({</span></span>
+<span class="line"><span style="color:#E36209">  stackRef</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#E36209">  heroRef</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#E36209">  captionRef</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">}</span><span style="color:#D73A49">:</span><span style="color:#24292E"> {</span></span>
+<span class="line"><span style="color:#E36209">  stackRef</span><span style="color:#D73A49">:</span><span style="color:#6F42C1"> RefObject</span><span style="color:#24292E">&#x3C;</span><span style="color:#6F42C1">HTMLElement</span><span style="color:#D73A49"> |</span><span style="color:#005CC5"> null</span><span style="color:#24292E">>;</span></span>
+<span class="line"><span style="color:#E36209">  heroRef</span><span style="color:#D73A49">:</span><span style="color:#6F42C1"> RefObject</span><span style="color:#24292E">&#x3C;</span><span style="color:#6F42C1">HTMLDivElement</span><span style="color:#D73A49"> |</span><span style="color:#005CC5"> null</span><span style="color:#24292E">>;</span></span>
+<span class="line"><span style="color:#E36209">  captionRef</span><span style="color:#D73A49">:</span><span style="color:#6F42C1"> RefObject</span><span style="color:#24292E">&#x3C;</span><span style="color:#6F42C1">HTMLDivElement</span><span style="color:#D73A49"> |</span><span style="color:#005CC5"> null</span><span style="color:#24292E">>;</span></span>
+<span class="line"><span style="color:#24292E">}) {</span></span>
+<span class="line"><span style="color:#D73A49">  return</span><span style="color:#24292E"> (</span></span>
+<span class="line"><span style="color:#24292E">    &#x3C;</span><span style="color:#22863A">div</span></span>
+<span class="line"><span style="color:#6F42C1">      className</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#6F42C1">cn</span><span style="color:#24292E">(</span></span>
+<span class="line"><span style="color:#032F62">        "grid h-[calc(100svh-var(--demo-chrome-reserve,5rem))] min-h-0 grid-cols-1 grid-rows-[auto_minmax(18rem,1fr)]"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#032F62">        "md:grid-cols-[minmax(0,2fr)_minmax(0,3fr)] md:grid-rows-1"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#005CC5">        LAYOUT</span><span style="color:#24292E">.grid,</span></span>
+<span class="line"><span style="color:#005CC5">        LAYOUT</span><span style="color:#24292E">.blockY,</span></span>
+<span class="line"><span style="color:#24292E">      )}</span></span>
+<span class="line"><span style="color:#6F42C1">      style</span><span style="color:#D73A49">=</span><span style="color:#24292E">{{ </span><span style="color:#032F62">"--layout-baseline"</span><span style="color:#24292E">: </span><span style="color:#032F62">\`\${</span><span style="color:#005CC5">BASELINE</span><span style="color:#032F62">}px\`</span><span style="color:#24292E"> } </span><span style="color:#D73A49">as</span><span style="color:#6F42C1"> CSSProperties</span><span style="color:#24292E">}</span></span>
+<span class="line"><span style="color:#24292E">    ></span></span>
+<span class="line"><span style="color:#24292E">      &#x3C;</span><span style="color:#22863A">div</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"flex min-h-0 flex-col justify-end md:col-start-1 md:row-start-1 md:pt-[clamp(3rem,11vh,8rem)]"</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">        &#x3C;</span><span style="color:#22863A">div</span><span style="color:#6F42C1"> ref</span><span style="color:#D73A49">=</span><span style="color:#24292E">{heroRef} </span><span style="color:#6F42C1">className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"relative z-20 w-fit max-w-full bg-transparent"</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">          &#x3C;</span><span style="color:#005CC5">HeroStory</span><span style="color:#24292E"> /></span></span>
+<span class="line"><span style="color:#24292E">        &#x3C;/</span><span style="color:#22863A">div</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">      &#x3C;/</span><span style="color:#22863A">div</span><span style="color:#24292E">></span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#24292E">      &#x3C;</span><span style="color:#22863A">div</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"relative z-20 flex min-h-0 min-w-0 flex-col overflow-visible md:col-start-2 md:row-start-1 md:h-full md:pl-6 md:pt-[clamp(3rem,11vh,8rem)] lg:pl-10"</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">        &#x3C;</span><span style="color:#005CC5">ProofStack</span><span style="color:#6F42C1"> stackRef</span><span style="color:#D73A49">=</span><span style="color:#24292E">{stackRef} </span><span style="color:#6F42C1">captionRef</span><span style="color:#D73A49">=</span><span style="color:#24292E">{captionRef} /></span></span>
+<span class="line"><span style="color:#24292E">      &#x3C;/</span><span style="color:#22863A">div</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">    &#x3C;/</span><span style="color:#22863A">div</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">  );</span></span>
+<span class="line"><span style="color:#24292E">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49">export</span><span style="color:#D73A49"> default</span><span style="color:#D73A49"> function</span><span style="color:#6F42C1"> PhotographerPortfolio</span><span style="color:#24292E">() {</span></span>
+<span class="line"><span style="color:#D73A49">  const</span><span style="color:#005CC5"> stackRef</span><span style="color:#D73A49"> =</span><span style="color:#6F42C1"> useRef</span><span style="color:#24292E">&#x3C;</span><span style="color:#6F42C1">HTMLElement</span><span style="color:#24292E">>(</span><span style="color:#005CC5">null</span><span style="color:#24292E">);</span></span>
+<span class="line"><span style="color:#D73A49">  const</span><span style="color:#005CC5"> heroRef</span><span style="color:#D73A49"> =</span><span style="color:#6F42C1"> useRef</span><span style="color:#24292E">&#x3C;</span><span style="color:#6F42C1">HTMLDivElement</span><span style="color:#24292E">>(</span><span style="color:#005CC5">null</span><span style="color:#24292E">);</span></span>
+<span class="line"><span style="color:#D73A49">  const</span><span style="color:#005CC5"> captionRef</span><span style="color:#D73A49"> =</span><span style="color:#6F42C1"> useRef</span><span style="color:#24292E">&#x3C;</span><span style="color:#6F42C1">HTMLDivElement</span><span style="color:#24292E">>(</span><span style="color:#005CC5">null</span><span style="color:#24292E">);</span></span>
+<span class="line"><span style="color:#D73A49">  const</span><span style="color:#24292E"> [</span><span style="color:#005CC5">preloaderDone</span><span style="color:#24292E">, </span><span style="color:#005CC5">setPreloaderDone</span><span style="color:#24292E">] </span><span style="color:#D73A49">=</span><span style="color:#6F42C1"> useState</span><span style="color:#24292E">(</span><span style="color:#005CC5">false</span><span style="color:#24292E">);</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49">  return</span><span style="color:#24292E"> (</span></span>
+<span class="line"><span style="color:#24292E">    &#x3C;></span></span>
+<span class="line"><span style="color:#24292E">      &#x3C;</span><span style="color:#22863A">section</span></span>
+<span class="line"><span style="color:#6F42C1">        className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"relative isolate min-h-[calc(100svh-var(--demo-chrome-reserve,5rem))] overflow-hidden"</span></span>
+<span class="line"><span style="color:#6F42C1">        style</span><span style="color:#D73A49">=</span><span style="color:#24292E">{{ backgroundColor: </span><span style="color:#005CC5">CANVAS</span><span style="color:#24292E">, color: </span><span style="color:#005CC5">INK</span><span style="color:#24292E">, fontFamily: </span><span style="color:#005CC5">FONT</span><span style="color:#24292E"> }}</span></span>
+<span class="line"><span style="color:#24292E">      ></span></span>
+<span class="line"><span style="color:#24292E">        &#x3C;</span><span style="color:#005CC5">TrailingImage</span></span>
+<span class="line"><span style="color:#6F42C1">          edgeToEdge</span></span>
+<span class="line"><span style="color:#6F42C1">          layerOnly</span></span>
+<span class="line"><span style="color:#6F42C1">          contained</span></span>
+<span class="line"><span style="color:#6F42C1">          className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"z-10 isolate"</span></span>
+<span class="line"><span style="color:#6F42C1">          images</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#005CC5">TRAIL_IMAGES</span><span style="color:#24292E">}</span></span>
+<span class="line"><span style="color:#6F42C1">          threshold</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#005CC5">88</span><span style="color:#24292E">}</span></span>
+<span class="line"><span style="color:#6F42C1">          maxTrailZIndex</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#005CC5">12</span><span style="color:#24292E">}</span></span>
+<span class="line"><span style="color:#6F42C1">          excludeRefs</span><span style="color:#D73A49">=</span><span style="color:#24292E">{[heroRef, captionRef]}</span></span>
+<span class="line"><span style="color:#24292E">        /></span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#24292E">        &#x3C;</span><span style="color:#005CC5">CardStack</span></span>
+<span class="line"><span style="color:#6F42C1">          items</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#005CC5">PORTFOLIO</span><span style="color:#24292E">}</span></span>
+<span class="line"><span style="color:#6F42C1">          depth</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#005CC5">3</span><span style="color:#24292E">}</span></span>
+<span class="line"><span style="color:#6F42C1">          autoplay</span><span style="color:#D73A49">=</span><span style="color:#24292E">{preloaderDone}</span></span>
+<span class="line"><span style="color:#6F42C1">          autoplayInterval</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#005CC5">4500</span><span style="color:#24292E">}</span></span>
+<span class="line"><span style="color:#24292E">        ></span></span>
+<span class="line"><span style="color:#24292E">          &#x3C;</span><span style="color:#22863A">div</span></span>
+<span class="line"><span style="color:#6F42C1">            className</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#6F42C1">cn</span><span style="color:#24292E">(</span></span>
+<span class="line"><span style="color:#032F62">              "relative z-20 isolate mx-auto min-h-[calc(100svh-var(--demo-chrome-reserve,5rem))] w-full max-w-[92rem] pb-[var(--demo-chrome-reserve,5rem)]"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#005CC5">              LAYOUT</span><span style="color:#24292E">.shell,</span></span>
+<span class="line"><span style="color:#24292E">            )}</span></span>
+<span class="line"><span style="color:#24292E">          ></span></span>
+<span class="line"><span style="color:#24292E">            &#x3C;</span><span style="color:#005CC5">PortfolioLayout</span><span style="color:#6F42C1"> stackRef</span><span style="color:#D73A49">=</span><span style="color:#24292E">{stackRef} </span><span style="color:#6F42C1">heroRef</span><span style="color:#D73A49">=</span><span style="color:#24292E">{heroRef} </span><span style="color:#6F42C1">captionRef</span><span style="color:#D73A49">=</span><span style="color:#24292E">{captionRef} /></span></span>
+<span class="line"><span style="color:#24292E">          &#x3C;/</span><span style="color:#22863A">div</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">        &#x3C;/</span><span style="color:#005CC5">CardStack</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">      &#x3C;/</span><span style="color:#22863A">section</span><span style="color:#24292E">></span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#24292E">      &#x3C;</span><span style="color:#005CC5">SplitReveal</span></span>
+<span class="line"><span style="color:#6F42C1">        images</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#005CC5">PRELOAD_IMAGES</span><span style="color:#24292E">}</span></span>
+<span class="line"><span style="color:#6F42C1">        backgroundColor</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#005CC5">CANVAS</span><span style="color:#24292E">}</span></span>
+<span class="line"><span style="color:#6F42C1">        foregroundColor</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#005CC5">INK</span><span style="color:#24292E">}</span></span>
+<span class="line"><span style="color:#6F42C1">        zIndex</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#005CC5">120</span><span style="color:#24292E">}</span></span>
+<span class="line"><span style="color:#6F42C1">        lockScroll</span></span>
+<span class="line"><span style="color:#6F42C1">        onComplete</span><span style="color:#D73A49">=</span><span style="color:#24292E">{() </span><span style="color:#D73A49">=></span><span style="color:#6F42C1"> setPreloaderDone</span><span style="color:#24292E">(</span><span style="color:#005CC5">true</span><span style="color:#24292E">)}</span></span>
+<span class="line"><span style="color:#6F42C1">        renderProgress</span><span style="color:#D73A49">=</span><span style="color:#24292E">{({ </span><span style="color:#E36209">loaded</span><span style="color:#24292E">, </span><span style="color:#E36209">total</span><span style="color:#24292E">, </span><span style="color:#E36209">progress</span><span style="color:#24292E"> }) </span><span style="color:#D73A49">=></span><span style="color:#24292E"> (</span></span>
+<span class="line"><span style="color:#24292E">          &#x3C;></span></span>
+<span class="line"><span style="color:#24292E">            &#x3C;</span><span style="color:#005CC5">SplitReveal.ProgressTrack</span><span style="color:#6F42C1"> progress</span><span style="color:#D73A49">=</span><span style="color:#24292E">{progress} </span><span style="color:#6F42C1">foregroundColor</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#005CC5">INK</span><span style="color:#24292E">} /></span></span>
+<span class="line"><span style="color:#24292E">            &#x3C;</span><span style="color:#22863A">p</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"mt-3 text-center text-[11px] font-medium uppercase tracking-[0.12em] text-black/45"</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">              Loading frames</span></span>
+<span class="line"><span style="color:#24292E">              &#x3C;</span><span style="color:#22863A">span</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"px-1.5 text-black/20"</span><span style="color:#24292E">>·&#x3C;/</span><span style="color:#22863A">span</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">              {</span><span style="color:#6F42C1">String</span><span style="color:#24292E">(loaded).</span><span style="color:#6F42C1">padStart</span><span style="color:#24292E">(</span><span style="color:#005CC5">2</span><span style="color:#24292E">, </span><span style="color:#032F62">"0"</span><span style="color:#24292E">)}</span></span>
+<span class="line"><span style="color:#24292E">              &#x3C;</span><span style="color:#22863A">span</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"text-black/20"</span><span style="color:#24292E">>/&#x3C;/</span><span style="color:#22863A">span</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">              {</span><span style="color:#6F42C1">String</span><span style="color:#24292E">(total).</span><span style="color:#6F42C1">padStart</span><span style="color:#24292E">(</span><span style="color:#005CC5">2</span><span style="color:#24292E">, </span><span style="color:#032F62">"0"</span><span style="color:#24292E">)}</span></span>
+<span class="line"><span style="color:#24292E">            &#x3C;/</span><span style="color:#22863A">p</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">          &#x3C;/></span></span>
+<span class="line"><span style="color:#24292E">        )}</span></span>
+<span class="line"><span style="color:#24292E">      /></span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#24292E">      &#x3C;</span><span style="color:#005CC5">PhotographerPortfolioNotes</span><span style="color:#24292E"> /></span></span>
+<span class="line"><span style="color:#24292E">    &#x3C;/></span></span>
+<span class="line"><span style="color:#24292E">  );</span></span>
+<span class="line"><span style="color:#24292E">}</span></span>
+<span class="line"></span></code></pre>`,
+      htmlDark: `<pre class="shiki github-dark" tabindex="0"><code><span class="line"><span style="color:#9ECBFF">"use client"</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">import</span><span style="color:#9ECBFF"> "@fontsource-variable/instrument-sans"</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#F97583">import</span><span style="color:#E1E4E8"> { useRef, useState, </span><span style="color:#F97583">type</span><span style="color:#E1E4E8"> CSSProperties, </span><span style="color:#F97583">type</span><span style="color:#E1E4E8"> ReactNode, </span><span style="color:#F97583">type</span><span style="color:#E1E4E8"> RefObject } </span><span style="color:#F97583">from</span><span style="color:#9ECBFF"> "react"</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">import</span><span style="color:#E1E4E8"> CardStack, {</span></span>
+<span class="line"><span style="color:#E1E4E8">  CARD_STACK_MASK_IDS,</span></span>
+<span class="line"><span style="color:#F97583">  type</span><span style="color:#E1E4E8"> CardStackItem,</span></span>
+<span class="line"><span style="color:#E1E4E8">  useCardStack,</span></span>
+<span class="line"><span style="color:#E1E4E8">} </span><span style="color:#F97583">from</span><span style="color:#9ECBFF"> "@/animata/card/card-stack"</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#F97583">import</span><span style="color:#E1E4E8"> TrailingImage </span><span style="color:#F97583">from</span><span style="color:#9ECBFF"> "@/animata/image/trailing-image"</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#F97583">import</span><span style="color:#E1E4E8"> SplitReveal </span><span style="color:#F97583">from</span><span style="color:#9ECBFF"> "@/animata/preloader/split-reveal"</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#F97583">import</span><span style="color:#E1E4E8"> { MapPinIcon } </span><span style="color:#F97583">from</span><span style="color:#9ECBFF"> "@/components/ui/map-pin"</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#F97583">import</span><span style="color:#E1E4E8"> { SwitchCameraIcon } </span><span style="color:#F97583">from</span><span style="color:#9ECBFF"> "@/components/ui/switch-camera"</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#F97583">import</span><span style="color:#E1E4E8"> { cn } </span><span style="color:#F97583">from</span><span style="color:#9ECBFF"> "@/lib/utils"</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">import</span><span style="color:#E1E4E8"> { PhotographerPortfolioNotes } </span><span style="color:#F97583">from</span><span style="color:#9ECBFF"> "./photographer-portfolio-notes"</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">const</span><span style="color:#79B8FF"> FONT</span><span style="color:#F97583"> =</span></span>
+<span class="line"><span style="color:#9ECBFF">  '"Instrument Sans Variable", ui-sans-serif, system-ui, sans-serif'</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">const</span><span style="color:#79B8FF"> CANVAS</span><span style="color:#F97583"> =</span><span style="color:#9ECBFF"> "#fff"</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#F97583">const</span><span style="color:#79B8FF"> INK</span><span style="color:#F97583"> =</span><span style="color:#9ECBFF"> "#000"</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#F97583">const</span><span style="color:#79B8FF"> PRINT_WIDTH</span><span style="color:#F97583"> =</span><span style="color:#79B8FF"> 900</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#F97583">const</span><span style="color:#79B8FF"> PRINT_HEIGHT</span><span style="color:#F97583"> =</span><span style="color:#79B8FF"> 1125</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">const</span><span style="color:#B392F0"> lummi</span><span style="color:#F97583"> =</span><span style="color:#E1E4E8"> (</span><span style="color:#FFAB70">assetId</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> string</span><span style="color:#E1E4E8">) </span><span style="color:#F97583">=></span></span>
+<span class="line"><span style="color:#9ECBFF">  \`https://assets.lummi.ai/assets/\${</span><span style="color:#E1E4E8">assetId</span><span style="color:#9ECBFF">}?auto=format&#x26;fit=crop&#x26;w=\${</span><span style="color:#79B8FF">PRINT_WIDTH</span><span style="color:#9ECBFF">}&#x26;h=\${</span><span style="color:#79B8FF">PRINT_HEIGHT</span><span style="color:#9ECBFF">}&#x26;q=85\`</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">/** Wedding + event frames from https://lummi.ai — see demo notes for credits */</span></span>
+<span class="line"><span style="color:#F97583">const</span><span style="color:#79B8FF"> LUMMI_ASSETS</span><span style="color:#F97583"> =</span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#E1E4E8">  avatar: </span><span style="color:#9ECBFF">"QmXp6StB1i36XHbbmppop5AwtQgnyom8bYTZqPkLVNGJnk"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">  portfolio: {</span></span>
+<span class="line"><span style="color:#E1E4E8">    vows: </span><span style="color:#9ECBFF">"QmabCfDwG7NUco1UhMnAE7NiHSK63MNKmPxAA2mc8Xrh8j"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">    ceremony: </span><span style="color:#9ECBFF">"QmS6CSjJ3hc82mvhNtYGWmcAZ1coJUdEkrAVmJ6PPEH2Q3"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">    reception: </span><span style="color:#9ECBFF">"QmaCT6boTGzVxo9ii5JYcnAuakoVhso3esFDA9Y58Nm7Le"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">    candid: </span><span style="color:#9ECBFF">"QmY8f1t5PS7b6fVhd6R7s1AFQMVERRKmgE8gNataeweAS4"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">    florals: </span><span style="color:#9ECBFF">"QmYerGQMAkWiRYDyYMwVfZQSKy8FGy2Js4G83vf1vyBGdR"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">    festival: </span><span style="color:#9ECBFF">"QmZnV56e2xNN5kqUWRVMupeiUExehkWKqo5X5ewgMpA19C"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">  },</span></span>
+<span class="line"><span style="color:#E1E4E8">  trail: [</span></span>
+<span class="line"><span style="color:#9ECBFF">    "QmVufjyFaAWjZYr4kdM8JLxr68EDky5V9YnwkhRbeD3jVb"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#9ECBFF">    "QmTfDd4u2rHboSjREqrmM2AX8uamVhgURW5iKAJmTpe3Rz"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#9ECBFF">    "QmcVMDiPtnnxCKgLCppm4iHQNp8L2zX8NF1xzV1Ch7nBtk"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#9ECBFF">    "QmSXefvUey7N617ro5dG1mjRXFm9iUN5uUmwBTS63DEApS"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#9ECBFF">    "QmVgzYXYEaShMjw87vVZZv1J7PjhaNKy92XY2uTrB59o9R"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#9ECBFF">    "QmcioeKGZKuCeauwteg4DEu2edo6qe3HeK99Y9FywsYk8i"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#9ECBFF">    "QmUB7fgmDhst3VZKU5R5uUkfvbcXvZ3FDKFvkNk5TkRvqD"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#9ECBFF">    "QmeL2wx9Sdw4dGPawgxUBenthP9jt8ff8Ux4uog45NL95j"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#9ECBFF">    "QmTXHjCens6Bg4Q7J4LjzU9fyKVec3t1ziqT32ShpXa93r"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#9ECBFF">    "QmV1pUNAsa1orHnyBWFWki6qZvatRQpgbQnDCVdV1EzRGd"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#9ECBFF">    "QmZAgYih2jUqmKJz4wUoTARdijpv7bveUFYrjvacV66KXp"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#9ECBFF">    "QmQMun9ag4MrBC8man7bQC9xNupf4oCufwvCj2VpU7rXDi"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">  ],</span></span>
+<span class="line"><span style="color:#E1E4E8">} </span><span style="color:#F97583">as</span><span style="color:#F97583"> const</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">const</span><span style="color:#79B8FF"> PHOTOGRAPHER</span><span style="color:#F97583"> =</span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#E1E4E8">  studio: </span><span style="color:#9ECBFF">"Maya Chen"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">  name: </span><span style="color:#9ECBFF">"Maya"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">  location: </span><span style="color:#9ECBFF">"Brooklyn"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">  email: </span><span style="color:#9ECBFF">"mailto:hello@mayachen.studio"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">  avatar: </span><span style="color:#B392F0">lummi</span><span style="color:#E1E4E8">(</span><span style="color:#79B8FF">LUMMI_ASSETS</span><span style="color:#E1E4E8">.avatar),</span></span>
+<span class="line"><span style="color:#E1E4E8">};</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">const</span><span style="color:#79B8FF"> TRAIL_IMAGES</span><span style="color:#F97583"> =</span><span style="color:#79B8FF"> LUMMI_ASSETS</span><span style="color:#E1E4E8">.trail.</span><span style="color:#B392F0">map</span><span style="color:#E1E4E8">((</span><span style="color:#FFAB70">id</span><span style="color:#E1E4E8">) </span><span style="color:#F97583">=></span><span style="color:#B392F0"> lummi</span><span style="color:#E1E4E8">(id));</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">const</span><span style="color:#79B8FF"> SHOT_SETTINGS</span><span style="color:#F97583">:</span><span style="color:#B392F0"> Record</span><span style="color:#E1E4E8">&#x3C;</span><span style="color:#79B8FF">string</span><span style="color:#E1E4E8">, { </span><span style="color:#FFAB70">aperture</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> string</span><span style="color:#E1E4E8">; </span><span style="color:#FFAB70">shutter</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> string</span><span style="color:#E1E4E8">; </span><span style="color:#FFAB70">stock</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> string</span><span style="color:#E1E4E8"> }> </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#E1E4E8">  vows: { aperture: </span><span style="color:#9ECBFF">"2"</span><span style="color:#E1E4E8">, shutter: </span><span style="color:#9ECBFF">"1/500"</span><span style="color:#E1E4E8">, stock: </span><span style="color:#9ECBFF">"Portra 400"</span><span style="color:#E1E4E8"> },</span></span>
+<span class="line"><span style="color:#E1E4E8">  ceremony: { aperture: </span><span style="color:#9ECBFF">"2.8"</span><span style="color:#E1E4E8">, shutter: </span><span style="color:#9ECBFF">"1/250"</span><span style="color:#E1E4E8">, stock: </span><span style="color:#9ECBFF">"Portra 160"</span><span style="color:#E1E4E8"> },</span></span>
+<span class="line"><span style="color:#E1E4E8">  reception: { aperture: </span><span style="color:#9ECBFF">"2"</span><span style="color:#E1E4E8">, shutter: </span><span style="color:#9ECBFF">"1/125"</span><span style="color:#E1E4E8">, stock: </span><span style="color:#9ECBFF">"Portra 800"</span><span style="color:#E1E4E8"> },</span></span>
+<span class="line"><span style="color:#E1E4E8">  candid: { aperture: </span><span style="color:#9ECBFF">"1.8"</span><span style="color:#E1E4E8">, shutter: </span><span style="color:#9ECBFF">"1/320"</span><span style="color:#E1E4E8">, stock: </span><span style="color:#9ECBFF">"Tri-X 400"</span><span style="color:#E1E4E8"> },</span></span>
+<span class="line"><span style="color:#E1E4E8">  florals: { aperture: </span><span style="color:#9ECBFF">"4"</span><span style="color:#E1E4E8">, shutter: </span><span style="color:#9ECBFF">"1/200"</span><span style="color:#E1E4E8">, stock: </span><span style="color:#9ECBFF">"Ektar 100"</span><span style="color:#E1E4E8"> },</span></span>
+<span class="line"><span style="color:#E1E4E8">  festival: { aperture: </span><span style="color:#9ECBFF">"2.8"</span><span style="color:#E1E4E8">, shutter: </span><span style="color:#9ECBFF">"1/160"</span><span style="color:#E1E4E8">, stock: </span><span style="color:#9ECBFF">"Portra 800"</span><span style="color:#E1E4E8"> },</span></span>
+<span class="line"><span style="color:#E1E4E8">};</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">const</span><span style="color:#79B8FF"> HERO_TONE</span><span style="color:#F97583"> =</span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#E1E4E8">  mute: </span><span style="color:#9ECBFF">"text-black/40"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">  ink: </span><span style="color:#9ECBFF">"text-black"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">  accent: </span><span style="color:#9ECBFF">"text-[#c2410c]"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">} </span><span style="color:#F97583">as</span><span style="color:#F97583"> const</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">const</span><span style="color:#79B8FF"> PORTFOLIO</span><span style="color:#F97583">:</span><span style="color:#B392F0"> CardStackItem</span><span style="color:#E1E4E8">[] </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> [</span></span>
+<span class="line"><span style="color:#E1E4E8">  {</span></span>
+<span class="line"><span style="color:#E1E4E8">    id: </span><span style="color:#9ECBFF">"vows"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">    image: </span><span style="color:#B392F0">lummi</span><span style="color:#E1E4E8">(</span><span style="color:#79B8FF">LUMMI_ASSETS</span><span style="color:#E1E4E8">.portfolio.vows),</span></span>
+<span class="line"><span style="color:#E1E4E8">    title: </span><span style="color:#9ECBFF">"Vows"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">    tagline: </span><span style="color:#9ECBFF">"Cliffside ceremony"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">    counts: { like: </span><span style="color:#79B8FF">0</span><span style="color:#E1E4E8">, comment: </span><span style="color:#79B8FF">0</span><span style="color:#E1E4E8"> },</span></span>
+<span class="line"><span style="color:#E1E4E8">    maskId: </span><span style="color:#79B8FF">CARD_STACK_MASK_IDS</span><span style="color:#E1E4E8">[</span><span style="color:#79B8FF">0</span><span style="color:#E1E4E8">],</span></span>
+<span class="line"><span style="color:#E1E4E8">  },</span></span>
+<span class="line"><span style="color:#E1E4E8">  {</span></span>
+<span class="line"><span style="color:#E1E4E8">    id: </span><span style="color:#9ECBFF">"ceremony"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">    image: </span><span style="color:#B392F0">lummi</span><span style="color:#E1E4E8">(</span><span style="color:#79B8FF">LUMMI_ASSETS</span><span style="color:#E1E4E8">.portfolio.ceremony),</span></span>
+<span class="line"><span style="color:#E1E4E8">    title: </span><span style="color:#9ECBFF">"Ceremony"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">    tagline: </span><span style="color:#9ECBFF">"Church exit"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">    counts: { like: </span><span style="color:#79B8FF">0</span><span style="color:#E1E4E8">, comment: </span><span style="color:#79B8FF">0</span><span style="color:#E1E4E8"> },</span></span>
+<span class="line"><span style="color:#E1E4E8">    maskId: </span><span style="color:#79B8FF">CARD_STACK_MASK_IDS</span><span style="color:#E1E4E8">[</span><span style="color:#79B8FF">0</span><span style="color:#E1E4E8">],</span></span>
+<span class="line"><span style="color:#E1E4E8">  },</span></span>
+<span class="line"><span style="color:#E1E4E8">  {</span></span>
+<span class="line"><span style="color:#E1E4E8">    id: </span><span style="color:#9ECBFF">"reception"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">    image: </span><span style="color:#B392F0">lummi</span><span style="color:#E1E4E8">(</span><span style="color:#79B8FF">LUMMI_ASSETS</span><span style="color:#E1E4E8">.portfolio.reception),</span></span>
+<span class="line"><span style="color:#E1E4E8">    title: </span><span style="color:#9ECBFF">"Reception"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">    tagline: </span><span style="color:#9ECBFF">"Evening dance"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">    counts: { like: </span><span style="color:#79B8FF">0</span><span style="color:#E1E4E8">, comment: </span><span style="color:#79B8FF">0</span><span style="color:#E1E4E8"> },</span></span>
+<span class="line"><span style="color:#E1E4E8">    maskId: </span><span style="color:#79B8FF">CARD_STACK_MASK_IDS</span><span style="color:#E1E4E8">[</span><span style="color:#79B8FF">0</span><span style="color:#E1E4E8">],</span></span>
+<span class="line"><span style="color:#E1E4E8">  },</span></span>
+<span class="line"><span style="color:#E1E4E8">  {</span></span>
+<span class="line"><span style="color:#E1E4E8">    id: </span><span style="color:#9ECBFF">"candid"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">    image: </span><span style="color:#B392F0">lummi</span><span style="color:#E1E4E8">(</span><span style="color:#79B8FF">LUMMI_ASSETS</span><span style="color:#E1E4E8">.portfolio.candid),</span></span>
+<span class="line"><span style="color:#E1E4E8">    title: </span><span style="color:#9ECBFF">"Candid"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">    tagline: </span><span style="color:#9ECBFF">"Real laughter"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">    counts: { like: </span><span style="color:#79B8FF">0</span><span style="color:#E1E4E8">, comment: </span><span style="color:#79B8FF">0</span><span style="color:#E1E4E8"> },</span></span>
+<span class="line"><span style="color:#E1E4E8">    maskId: </span><span style="color:#79B8FF">CARD_STACK_MASK_IDS</span><span style="color:#E1E4E8">[</span><span style="color:#79B8FF">0</span><span style="color:#E1E4E8">],</span></span>
+<span class="line"><span style="color:#E1E4E8">  },</span></span>
+<span class="line"><span style="color:#E1E4E8">  {</span></span>
+<span class="line"><span style="color:#E1E4E8">    id: </span><span style="color:#9ECBFF">"florals"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">    image: </span><span style="color:#B392F0">lummi</span><span style="color:#E1E4E8">(</span><span style="color:#79B8FF">LUMMI_ASSETS</span><span style="color:#E1E4E8">.portfolio.florals),</span></span>
+<span class="line"><span style="color:#E1E4E8">    title: </span><span style="color:#9ECBFF">"Florals"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">    tagline: </span><span style="color:#9ECBFF">"Bouquet detail"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">    counts: { like: </span><span style="color:#79B8FF">0</span><span style="color:#E1E4E8">, comment: </span><span style="color:#79B8FF">0</span><span style="color:#E1E4E8"> },</span></span>
+<span class="line"><span style="color:#E1E4E8">    maskId: </span><span style="color:#79B8FF">CARD_STACK_MASK_IDS</span><span style="color:#E1E4E8">[</span><span style="color:#79B8FF">0</span><span style="color:#E1E4E8">],</span></span>
+<span class="line"><span style="color:#E1E4E8">  },</span></span>
+<span class="line"><span style="color:#E1E4E8">  {</span></span>
+<span class="line"><span style="color:#E1E4E8">    id: </span><span style="color:#9ECBFF">"festival"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">    image: </span><span style="color:#B392F0">lummi</span><span style="color:#E1E4E8">(</span><span style="color:#79B8FF">LUMMI_ASSETS</span><span style="color:#E1E4E8">.portfolio.festival),</span></span>
+<span class="line"><span style="color:#E1E4E8">    title: </span><span style="color:#9ECBFF">"Event"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">    tagline: </span><span style="color:#9ECBFF">"Summer festival"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">    counts: { like: </span><span style="color:#79B8FF">0</span><span style="color:#E1E4E8">, comment: </span><span style="color:#79B8FF">0</span><span style="color:#E1E4E8"> },</span></span>
+<span class="line"><span style="color:#E1E4E8">    maskId: </span><span style="color:#79B8FF">CARD_STACK_MASK_IDS</span><span style="color:#E1E4E8">[</span><span style="color:#79B8FF">0</span><span style="color:#E1E4E8">],</span></span>
+<span class="line"><span style="color:#E1E4E8">  },</span></span>
+<span class="line"><span style="color:#E1E4E8">];</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">const</span><span style="color:#79B8FF"> PRELOAD_IMAGES</span><span style="color:#F97583"> =</span><span style="color:#E1E4E8"> [</span></span>
+<span class="line"><span style="color:#F97583">  ...new</span><span style="color:#B392F0"> Set</span><span style="color:#E1E4E8">([</span></span>
+<span class="line"><span style="color:#79B8FF">    PHOTOGRAPHER</span><span style="color:#E1E4E8">.avatar,</span></span>
+<span class="line"><span style="color:#F97583">    ...</span><span style="color:#79B8FF">PORTFOLIO</span><span style="color:#E1E4E8">.</span><span style="color:#B392F0">map</span><span style="color:#E1E4E8">((</span><span style="color:#FFAB70">item</span><span style="color:#E1E4E8">) </span><span style="color:#F97583">=></span><span style="color:#E1E4E8"> item.image),</span></span>
+<span class="line"><span style="color:#F97583">    ...</span><span style="color:#79B8FF">TRAIL_IMAGES</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">  ]),</span></span>
+<span class="line"><span style="color:#E1E4E8">];</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">const</span><span style="color:#79B8FF"> HERO_MARK</span><span style="color:#F97583"> =</span></span>
+<span class="line"><span style="color:#9ECBFF">  "mx-1 inline-flex size-[clamp(1.75rem,1.286em,2.25rem)] shrink-0 items-center justify-center align-middle"</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">function</span><span style="color:#B392F0"> HeroMark</span><span style="color:#E1E4E8">({ </span><span style="color:#FFAB70">children</span><span style="color:#E1E4E8">, </span><span style="color:#FFAB70">className</span><span style="color:#E1E4E8"> }</span><span style="color:#F97583">:</span><span style="color:#E1E4E8"> { </span><span style="color:#FFAB70">children</span><span style="color:#F97583">:</span><span style="color:#B392F0"> ReactNode</span><span style="color:#E1E4E8">; </span><span style="color:#FFAB70">className</span><span style="color:#F97583">?:</span><span style="color:#79B8FF"> string</span><span style="color:#E1E4E8"> }) {</span></span>
+<span class="line"><span style="color:#F97583">  return</span><span style="color:#E1E4E8"> (</span></span>
+<span class="line"><span style="color:#E1E4E8">    &#x3C;</span><span style="color:#85E89D">span</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#B392F0">cn</span><span style="color:#E1E4E8">(</span><span style="color:#79B8FF">HERO_MARK</span><span style="color:#E1E4E8">, className)} </span><span style="color:#B392F0">aria-hidden</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">      {children}</span></span>
+<span class="line"><span style="color:#E1E4E8">    &#x3C;/</span><span style="color:#85E89D">span</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">  );</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">function</span><span style="color:#B392F0"> ProfileGlyph</span><span style="color:#E1E4E8">({ </span><span style="color:#FFAB70">src</span><span style="color:#E1E4E8">, </span><span style="color:#FFAB70">alt</span><span style="color:#E1E4E8"> }</span><span style="color:#F97583">:</span><span style="color:#E1E4E8"> { </span><span style="color:#FFAB70">src</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> string</span><span style="color:#E1E4E8">; </span><span style="color:#FFAB70">alt</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> string</span><span style="color:#E1E4E8"> }) {</span></span>
+<span class="line"><span style="color:#F97583">  return</span><span style="color:#E1E4E8"> (</span></span>
+<span class="line"><span style="color:#E1E4E8">    &#x3C;</span><span style="color:#85E89D">span</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#B392F0">cn</span><span style="color:#E1E4E8">(</span><span style="color:#79B8FF">HERO_MARK</span><span style="color:#E1E4E8">, </span><span style="color:#9ECBFF">"overflow-hidden rounded-full ring-1 ring-black/10"</span><span style="color:#E1E4E8">)}></span></span>
+<span class="line"><span style="color:#E1E4E8">      &#x3C;</span><span style="color:#85E89D">img</span><span style="color:#B392F0"> src</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{src} </span><span style="color:#B392F0">alt</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{alt} </span><span style="color:#B392F0">className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"size-full object-cover"</span><span style="color:#B392F0"> decoding</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"async"</span><span style="color:#E1E4E8"> /></span></span>
+<span class="line"><span style="color:#E1E4E8">    &#x3C;/</span><span style="color:#85E89D">span</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">  );</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">function</span><span style="color:#B392F0"> HeroStory</span><span style="color:#E1E4E8">() {</span></span>
+<span class="line"><span style="color:#F97583">  const</span><span style="color:#79B8FF"> type</span><span style="color:#F97583"> =</span></span>
+<span class="line"><span style="color:#9ECBFF">    "text-[clamp(1.25rem,2vw,1.75rem)] font-medium leading-[1.55] tracking-[-0.02em]"</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">  return</span><span style="color:#E1E4E8"> (</span></span>
+<span class="line"><span style="color:#E1E4E8">    &#x3C;</span><span style="color:#85E89D">div</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"max-w-[min(100%,36rem)] space-y-6"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">      &#x3C;</span><span style="color:#85E89D">p</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{type}></span></span>
+<span class="line"><span style="color:#E1E4E8">        &#x3C;</span><span style="color:#85E89D">span</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#79B8FF">HERO_TONE</span><span style="color:#E1E4E8">.mute}>Hi, I'm &#x3C;/</span><span style="color:#85E89D">span</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">        &#x3C;</span><span style="color:#85E89D">span</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#79B8FF">HERO_TONE</span><span style="color:#E1E4E8">.ink}>{</span><span style="color:#79B8FF">PHOTOGRAPHER</span><span style="color:#E1E4E8">.name}&#x3C;/</span><span style="color:#85E89D">span</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">        &#x3C;</span><span style="color:#79B8FF">ProfileGlyph</span><span style="color:#B392F0"> src</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#79B8FF">PHOTOGRAPHER</span><span style="color:#E1E4E8">.avatar} </span><span style="color:#B392F0">alt</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#79B8FF">PHOTOGRAPHER</span><span style="color:#E1E4E8">.studio} /></span></span>
+<span class="line"><span style="color:#E1E4E8">        &#x3C;</span><span style="color:#85E89D">span</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#79B8FF">HERO_TONE</span><span style="color:#E1E4E8">.mute}>. I shoot &#x3C;/</span><span style="color:#85E89D">span</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">        &#x3C;</span><span style="color:#79B8FF">HeroMark</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"text-black"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">          &#x3C;</span><span style="color:#79B8FF">SwitchCameraIcon</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"size-full [&#x26;_svg]:size-full"</span><span style="color:#E1E4E8"> /></span></span>
+<span class="line"><span style="color:#E1E4E8">        &#x3C;/</span><span style="color:#79B8FF">HeroMark</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">        &#x3C;</span><span style="color:#85E89D">span</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#79B8FF">HERO_TONE</span><span style="color:#E1E4E8">.mute}> &#x3C;/</span><span style="color:#85E89D">span</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">        &#x3C;</span><span style="color:#85E89D">span</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#79B8FF">HERO_TONE</span><span style="color:#E1E4E8">.ink}>weddings and events&#x3C;/</span><span style="color:#85E89D">span</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">        &#x3C;</span><span style="color:#85E89D">span</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#79B8FF">HERO_TONE</span><span style="color:#E1E4E8">.mute}> in &#x3C;/</span><span style="color:#85E89D">span</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">        &#x3C;</span><span style="color:#79B8FF">HeroMark</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"text-black/55"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">          &#x3C;</span><span style="color:#79B8FF">MapPinIcon</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"size-full [&#x26;_svg]:size-full"</span><span style="color:#E1E4E8"> /></span></span>
+<span class="line"><span style="color:#E1E4E8">        &#x3C;/</span><span style="color:#79B8FF">HeroMark</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">        &#x3C;</span><span style="color:#85E89D">span</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#79B8FF">HERO_TONE</span><span style="color:#E1E4E8">.mute}> &#x3C;/</span><span style="color:#85E89D">span</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">        &#x3C;</span><span style="color:#85E89D">span</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#79B8FF">HERO_TONE</span><span style="color:#E1E4E8">.ink}>{</span><span style="color:#79B8FF">PHOTOGRAPHER</span><span style="color:#E1E4E8">.location}&#x3C;/</span><span style="color:#85E89D">span</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">        &#x3C;</span><span style="color:#85E89D">span</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#79B8FF">HERO_TONE</span><span style="color:#E1E4E8">.mute}></span></span>
+<span class="line"><span style="color:#E1E4E8">          {</span><span style="color:#9ECBFF">" "</span><span style="color:#E1E4E8">}</span></span>
+<span class="line"><span style="color:#E1E4E8">          — good light, real moments, and photos that don't feel forced.</span></span>
+<span class="line"><span style="color:#E1E4E8">        &#x3C;/</span><span style="color:#85E89D">span</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">      &#x3C;/</span><span style="color:#85E89D">p</span><span style="color:#E1E4E8">></span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">      &#x3C;</span><span style="color:#85E89D">p</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{type}></span></span>
+<span class="line"><span style="color:#E1E4E8">        &#x3C;</span><span style="color:#85E89D">span</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#79B8FF">HERO_TONE</span><span style="color:#E1E4E8">.accent}>Booking Q3.&#x3C;/</span><span style="color:#85E89D">span</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">        &#x3C;</span><span style="color:#85E89D">span</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#79B8FF">HERO_TONE</span><span style="color:#E1E4E8">.mute}> &#x3C;/</span><span style="color:#85E89D">span</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">        &#x3C;</span><span style="color:#85E89D">a</span></span>
+<span class="line"><span style="color:#B392F0">          href</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#79B8FF">PHOTOGRAPHER</span><span style="color:#E1E4E8">.email}</span></span>
+<span class="line"><span style="color:#B392F0">          className</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#B392F0">cn</span><span style="color:#E1E4E8">(</span><span style="color:#79B8FF">HERO_TONE</span><span style="color:#E1E4E8">.ink, </span><span style="color:#9ECBFF">"underline-offset-[4px] hover:underline"</span><span style="color:#E1E4E8">)}</span></span>
+<span class="line"><span style="color:#E1E4E8">        ></span></span>
+<span class="line"><span style="color:#E1E4E8">          Send me your date.</span></span>
+<span class="line"><span style="color:#E1E4E8">        &#x3C;/</span><span style="color:#85E89D">a</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">      &#x3C;/</span><span style="color:#85E89D">p</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">    &#x3C;/</span><span style="color:#85E89D">div</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">  );</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">function</span><span style="color:#B392F0"> ViewfinderFrame</span><span style="color:#E1E4E8">() {</span></span>
+<span class="line"><span style="color:#F97583">  const</span><span style="color:#79B8FF"> corner</span><span style="color:#F97583"> =</span><span style="color:#9ECBFF"> "absolute size-4 border-white/80"</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#F97583">  return</span><span style="color:#E1E4E8"> (</span></span>
+<span class="line"><span style="color:#E1E4E8">    &#x3C;</span><span style="color:#85E89D">div</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"pointer-events-none absolute inset-3 sm:inset-4"</span><span style="color:#B392F0"> aria-hidden</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">      &#x3C;</span><span style="color:#85E89D">span</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#B392F0">cn</span><span style="color:#E1E4E8">(corner, </span><span style="color:#9ECBFF">"left-0 top-0 border-l-2 border-t-2"</span><span style="color:#E1E4E8">)} /></span></span>
+<span class="line"><span style="color:#E1E4E8">      &#x3C;</span><span style="color:#85E89D">span</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#B392F0">cn</span><span style="color:#E1E4E8">(corner, </span><span style="color:#9ECBFF">"right-0 top-0 border-r-2 border-t-2"</span><span style="color:#E1E4E8">)} /></span></span>
+<span class="line"><span style="color:#E1E4E8">      &#x3C;</span><span style="color:#85E89D">span</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#B392F0">cn</span><span style="color:#E1E4E8">(corner, </span><span style="color:#9ECBFF">"bottom-0 left-0 border-b-2 border-l-2"</span><span style="color:#E1E4E8">)} /></span></span>
+<span class="line"><span style="color:#E1E4E8">      &#x3C;</span><span style="color:#85E89D">span</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#B392F0">cn</span><span style="color:#E1E4E8">(corner, </span><span style="color:#9ECBFF">"bottom-0 right-0 border-b-2 border-r-2"</span><span style="color:#E1E4E8">)} /></span></span>
+<span class="line"><span style="color:#E1E4E8">      &#x3C;</span><span style="color:#85E89D">div</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 opacity-[0.16]"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">        &#x3C;</span><span style="color:#85E89D">span</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"absolute left-1/2 top-1/2 h-px w-5 -translate-x-1/2 -translate-y-1/2 bg-white"</span><span style="color:#E1E4E8"> /></span></span>
+<span class="line"><span style="color:#E1E4E8">        &#x3C;</span><span style="color:#85E89D">span</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"absolute left-1/2 top-1/2 h-5 w-px -translate-x-1/2 -translate-y-1/2 bg-white"</span><span style="color:#E1E4E8"> /></span></span>
+<span class="line"><span style="color:#E1E4E8">      &#x3C;/</span><span style="color:#85E89D">div</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">    &#x3C;/</span><span style="color:#85E89D">div</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">  );</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">function</span><span style="color:#B392F0"> PrintCaption</span><span style="color:#E1E4E8">() {</span></span>
+<span class="line"><span style="color:#F97583">  const</span><span style="color:#E1E4E8"> { </span><span style="color:#79B8FF">activeItem</span><span style="color:#E1E4E8"> } </span><span style="color:#F97583">=</span><span style="color:#B392F0"> useCardStack</span><span style="color:#E1E4E8">();</span></span>
+<span class="line"><span style="color:#F97583">  const</span><span style="color:#79B8FF"> index</span><span style="color:#F97583"> =</span><span style="color:#E1E4E8"> activeItem </span><span style="color:#F97583">?</span><span style="color:#79B8FF"> PORTFOLIO</span><span style="color:#E1E4E8">.</span><span style="color:#B392F0">findIndex</span><span style="color:#E1E4E8">((</span><span style="color:#FFAB70">item</span><span style="color:#E1E4E8">) </span><span style="color:#F97583">=></span><span style="color:#E1E4E8"> item.id </span><span style="color:#F97583">===</span><span style="color:#E1E4E8"> activeItem.id) </span><span style="color:#F97583">+</span><span style="color:#79B8FF"> 1</span><span style="color:#F97583"> :</span><span style="color:#79B8FF"> 1</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#F97583">  const</span><span style="color:#79B8FF"> settings</span><span style="color:#F97583"> =</span><span style="color:#E1E4E8"> activeItem </span><span style="color:#F97583">?</span><span style="color:#79B8FF"> SHOT_SETTINGS</span><span style="color:#E1E4E8">[activeItem.id] </span><span style="color:#F97583">:</span><span style="color:#79B8FF"> SHOT_SETTINGS</span><span style="color:#E1E4E8">.vows;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">  if</span><span style="color:#E1E4E8"> (</span><span style="color:#F97583">!</span><span style="color:#E1E4E8">activeItem </span><span style="color:#F97583">||</span><span style="color:#F97583"> !</span><span style="color:#E1E4E8">settings) {</span></span>
+<span class="line"><span style="color:#F97583">    return</span><span style="color:#79B8FF"> null</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#E1E4E8">  }</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">  return</span><span style="color:#E1E4E8"> (</span></span>
+<span class="line"><span style="color:#E1E4E8">    &#x3C;</span><span style="color:#85E89D">figcaption</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"relative z-10 shrink-0 border-b border-black/80 bg-transparent pb-3"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">      &#x3C;</span><span style="color:#85E89D">div</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"flex items-baseline justify-between gap-4"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">        &#x3C;</span><span style="color:#85E89D">p</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"text-[11px] font-medium uppercase tracking-[0.1em] text-black"</span><span style="color:#E1E4E8">>{activeItem.title}&#x3C;/</span><span style="color:#85E89D">p</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">        &#x3C;</span><span style="color:#85E89D">p</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"shrink-0 text-[11px] font-medium tabular-nums tracking-[0.1em] text-black/45"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">          {</span><span style="color:#B392F0">String</span><span style="color:#E1E4E8">(index).</span><span style="color:#B392F0">padStart</span><span style="color:#E1E4E8">(</span><span style="color:#79B8FF">2</span><span style="color:#E1E4E8">, </span><span style="color:#9ECBFF">"0"</span><span style="color:#E1E4E8">)}</span></span>
+<span class="line"><span style="color:#E1E4E8">          &#x3C;</span><span style="color:#85E89D">span</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"text-black/20"</span><span style="color:#E1E4E8">>/&#x3C;/</span><span style="color:#85E89D">span</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">          {</span><span style="color:#B392F0">String</span><span style="color:#E1E4E8">(</span><span style="color:#79B8FF">PORTFOLIO</span><span style="color:#E1E4E8">.</span><span style="color:#79B8FF">length</span><span style="color:#E1E4E8">).</span><span style="color:#B392F0">padStart</span><span style="color:#E1E4E8">(</span><span style="color:#79B8FF">2</span><span style="color:#E1E4E8">, </span><span style="color:#9ECBFF">"0"</span><span style="color:#E1E4E8">)}</span></span>
+<span class="line"><span style="color:#E1E4E8">        &#x3C;/</span><span style="color:#85E89D">p</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">      &#x3C;/</span><span style="color:#85E89D">div</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">      &#x3C;</span><span style="color:#85E89D">p</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"mt-2 text-[11px] font-medium uppercase tracking-[0.1em] text-black/45"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">        ƒ/{settings.aperture}</span></span>
+<span class="line"><span style="color:#E1E4E8">        &#x3C;</span><span style="color:#85E89D">span</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"px-1.5 text-black/20"</span><span style="color:#E1E4E8">>·&#x3C;/</span><span style="color:#85E89D">span</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">        {settings.shutter}</span></span>
+<span class="line"><span style="color:#E1E4E8">        &#x3C;</span><span style="color:#85E89D">span</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"px-1.5 text-black/20"</span><span style="color:#E1E4E8">>·&#x3C;/</span><span style="color:#85E89D">span</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">        {settings.stock}</span></span>
+<span class="line"><span style="color:#E1E4E8">      &#x3C;/</span><span style="color:#85E89D">p</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">    &#x3C;/</span><span style="color:#85E89D">figcaption</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">  );</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">const</span><span style="color:#79B8FF"> BASELINE</span><span style="color:#F97583"> =</span><span style="color:#79B8FF"> 8</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#F97583">const</span><span style="color:#79B8FF"> LAYOUT</span><span style="color:#F97583"> =</span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#E1E4E8">  shell: </span><span style="color:#9ECBFF">"px-6 sm:px-10 lg:px-14"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">  blockY: </span><span style="color:#9ECBFF">"py-8 lg:py-10"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">  grid: </span><span style="color:#9ECBFF">"gap-x-8 gap-y-8 lg:gap-x-10 lg:gap-y-10"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">} </span><span style="color:#F97583">as</span><span style="color:#F97583"> const</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">function</span><span style="color:#B392F0"> ProofStack</span><span style="color:#E1E4E8">({</span></span>
+<span class="line"><span style="color:#FFAB70">  stackRef</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#FFAB70">  captionRef</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span><span style="color:#F97583">:</span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#FFAB70">  stackRef</span><span style="color:#F97583">:</span><span style="color:#B392F0"> RefObject</span><span style="color:#E1E4E8">&#x3C;</span><span style="color:#B392F0">HTMLElement</span><span style="color:#F97583"> |</span><span style="color:#79B8FF"> null</span><span style="color:#E1E4E8">>;</span></span>
+<span class="line"><span style="color:#FFAB70">  captionRef</span><span style="color:#F97583">:</span><span style="color:#B392F0"> RefObject</span><span style="color:#E1E4E8">&#x3C;</span><span style="color:#B392F0">HTMLDivElement</span><span style="color:#F97583"> |</span><span style="color:#79B8FF"> null</span><span style="color:#E1E4E8">>;</span></span>
+<span class="line"><span style="color:#E1E4E8">}) {</span></span>
+<span class="line"><span style="color:#F97583">  return</span><span style="color:#E1E4E8"> (</span></span>
+<span class="line"><span style="color:#E1E4E8">    &#x3C;</span><span style="color:#85E89D">figure</span></span>
+<span class="line"><span style="color:#B392F0">      ref</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{stackRef}</span></span>
+<span class="line"><span style="color:#B392F0">      className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"ml-auto grid h-full min-h-0 w-full min-w-0 max-w-full grid-rows-[auto_minmax(0,1fr)] gap-y-3 sm:gap-y-4"</span></span>
+<span class="line"><span style="color:#E1E4E8">    ></span></span>
+<span class="line"><span style="color:#E1E4E8">      &#x3C;</span><span style="color:#85E89D">div</span><span style="color:#B392F0"> ref</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{captionRef} </span><span style="color:#B392F0">className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"relative z-30 w-full shrink-0 bg-transparent"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">        &#x3C;</span><span style="color:#79B8FF">PrintCaption</span><span style="color:#E1E4E8"> /></span></span>
+<span class="line"><span style="color:#E1E4E8">      &#x3C;/</span><span style="color:#85E89D">div</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">      &#x3C;</span><span style="color:#85E89D">div</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"@container/stack relative flex min-h-0 flex-1 items-end justify-end pt-[max(2.5rem,11%)]"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">        &#x3C;</span><span style="color:#79B8FF">CardStack.Frame</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"relative aspect-[4/5] h-auto w-[min(100cqw,calc(100cqh*4/5))] max-h-full min-h-0 shrink-0 overflow-visible"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">          &#x3C;</span><span style="color:#79B8FF">CardStack.LiveRegion</span><span style="color:#E1E4E8"> /></span></span>
+<span class="line"><span style="color:#E1E4E8">          &#x3C;</span><span style="color:#79B8FF">CardStack.Trigger</span><span style="color:#B392F0"> aria-label</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"Show next photo"</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"block size-full text-left"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">            &#x3C;</span><span style="color:#79B8FF">CardStack.Viewport</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"relative size-full overflow-visible !min-h-0 !pt-0"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">            &#x3C;</span><span style="color:#79B8FF">CardStack.List</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">              {(</span><span style="color:#FFAB70">item</span><span style="color:#E1E4E8">, </span><span style="color:#FFAB70">index</span><span style="color:#E1E4E8">, </span><span style="color:#FFAB70">layer</span><span style="color:#E1E4E8">) </span><span style="color:#F97583">=></span><span style="color:#E1E4E8"> (</span></span>
+<span class="line"><span style="color:#E1E4E8">                &#x3C;</span><span style="color:#79B8FF">CardStack.Card</span></span>
+<span class="line"><span style="color:#B392F0">                  key</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{item.id}</span></span>
+<span class="line"><span style="color:#B392F0">                  layer</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{layer}</span></span>
+<span class="line"><span style="color:#B392F0">                  stackIndex</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{index}</span></span>
+<span class="line"><span style="color:#B392F0">                  className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"size-full gap-0 overflow-visible rounded-none bg-transparent p-0 shadow-none ring-0 [background-image:none]"</span></span>
+<span class="line"><span style="color:#E1E4E8">                ></span></span>
+<span class="line"><span style="color:#E1E4E8">                  &#x3C;</span><span style="color:#85E89D">figure</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"flex size-full flex-col border-0 bg-transparent p-0"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">                    &#x3C;</span><span style="color:#85E89D">div</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"relative min-h-0 w-full flex-1 overflow-hidden bg-black/5"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">                      &#x3C;</span><span style="color:#85E89D">img</span></span>
+<span class="line"><span style="color:#B392F0">                        src</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{item.image}</span></span>
+<span class="line"><span style="color:#B392F0">                        alt</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#9ECBFF">\`\${</span><span style="color:#79B8FF">PHOTOGRAPHER</span><span style="color:#9ECBFF">.</span><span style="color:#E1E4E8">studio</span><span style="color:#9ECBFF">} — \${</span><span style="color:#E1E4E8">item</span><span style="color:#9ECBFF">.</span><span style="color:#E1E4E8">title</span><span style="color:#9ECBFF">}\`</span><span style="color:#E1E4E8">}</span></span>
+<span class="line"><span style="color:#B392F0">                        width</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#79B8FF">PRINT_WIDTH</span><span style="color:#E1E4E8">}</span></span>
+<span class="line"><span style="color:#B392F0">                        height</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#79B8FF">PRINT_HEIGHT</span><span style="color:#E1E4E8">}</span></span>
+<span class="line"><span style="color:#B392F0">                        decoding</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"async"</span></span>
+<span class="line"><span style="color:#B392F0">                        draggable</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#79B8FF">false</span><span style="color:#E1E4E8">}</span></span>
+<span class="line"><span style="color:#B392F0">                        className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"absolute inset-0 size-full object-cover object-center"</span></span>
+<span class="line"><span style="color:#E1E4E8">                      /></span></span>
+<span class="line"><span style="color:#E1E4E8">                      {index </span><span style="color:#F97583">===</span><span style="color:#79B8FF"> 0</span><span style="color:#F97583"> ?</span><span style="color:#E1E4E8"> &#x3C;</span><span style="color:#79B8FF">ViewfinderFrame</span><span style="color:#E1E4E8"> /> </span><span style="color:#F97583">:</span><span style="color:#79B8FF"> null</span><span style="color:#E1E4E8">}</span></span>
+<span class="line"><span style="color:#E1E4E8">                    &#x3C;/</span><span style="color:#85E89D">div</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">                  &#x3C;/</span><span style="color:#85E89D">figure</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">                &#x3C;/</span><span style="color:#79B8FF">CardStack.Card</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">              )}</span></span>
+<span class="line"><span style="color:#E1E4E8">            &#x3C;/</span><span style="color:#79B8FF">CardStack.List</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">          &#x3C;/</span><span style="color:#79B8FF">CardStack.Viewport</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">        &#x3C;/</span><span style="color:#79B8FF">CardStack.Trigger</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">      &#x3C;/</span><span style="color:#79B8FF">CardStack.Frame</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">      &#x3C;/</span><span style="color:#85E89D">div</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">    &#x3C;/</span><span style="color:#85E89D">figure</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">  );</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">function</span><span style="color:#B392F0"> PortfolioLayout</span><span style="color:#E1E4E8">({</span></span>
+<span class="line"><span style="color:#FFAB70">  stackRef</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#FFAB70">  heroRef</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#FFAB70">  captionRef</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span><span style="color:#F97583">:</span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#FFAB70">  stackRef</span><span style="color:#F97583">:</span><span style="color:#B392F0"> RefObject</span><span style="color:#E1E4E8">&#x3C;</span><span style="color:#B392F0">HTMLElement</span><span style="color:#F97583"> |</span><span style="color:#79B8FF"> null</span><span style="color:#E1E4E8">>;</span></span>
+<span class="line"><span style="color:#FFAB70">  heroRef</span><span style="color:#F97583">:</span><span style="color:#B392F0"> RefObject</span><span style="color:#E1E4E8">&#x3C;</span><span style="color:#B392F0">HTMLDivElement</span><span style="color:#F97583"> |</span><span style="color:#79B8FF"> null</span><span style="color:#E1E4E8">>;</span></span>
+<span class="line"><span style="color:#FFAB70">  captionRef</span><span style="color:#F97583">:</span><span style="color:#B392F0"> RefObject</span><span style="color:#E1E4E8">&#x3C;</span><span style="color:#B392F0">HTMLDivElement</span><span style="color:#F97583"> |</span><span style="color:#79B8FF"> null</span><span style="color:#E1E4E8">>;</span></span>
+<span class="line"><span style="color:#E1E4E8">}) {</span></span>
+<span class="line"><span style="color:#F97583">  return</span><span style="color:#E1E4E8"> (</span></span>
+<span class="line"><span style="color:#E1E4E8">    &#x3C;</span><span style="color:#85E89D">div</span></span>
+<span class="line"><span style="color:#B392F0">      className</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#B392F0">cn</span><span style="color:#E1E4E8">(</span></span>
+<span class="line"><span style="color:#9ECBFF">        "grid h-[calc(100svh-var(--demo-chrome-reserve,5rem))] min-h-0 grid-cols-1 grid-rows-[auto_minmax(18rem,1fr)]"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#9ECBFF">        "md:grid-cols-[minmax(0,2fr)_minmax(0,3fr)] md:grid-rows-1"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">        LAYOUT</span><span style="color:#E1E4E8">.grid,</span></span>
+<span class="line"><span style="color:#79B8FF">        LAYOUT</span><span style="color:#E1E4E8">.blockY,</span></span>
+<span class="line"><span style="color:#E1E4E8">      )}</span></span>
+<span class="line"><span style="color:#B392F0">      style</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{{ </span><span style="color:#9ECBFF">"--layout-baseline"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">\`\${</span><span style="color:#79B8FF">BASELINE</span><span style="color:#9ECBFF">}px\`</span><span style="color:#E1E4E8"> } </span><span style="color:#F97583">as</span><span style="color:#B392F0"> CSSProperties</span><span style="color:#E1E4E8">}</span></span>
+<span class="line"><span style="color:#E1E4E8">    ></span></span>
+<span class="line"><span style="color:#E1E4E8">      &#x3C;</span><span style="color:#85E89D">div</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"flex min-h-0 flex-col justify-end md:col-start-1 md:row-start-1 md:pt-[clamp(3rem,11vh,8rem)]"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">        &#x3C;</span><span style="color:#85E89D">div</span><span style="color:#B392F0"> ref</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{heroRef} </span><span style="color:#B392F0">className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"relative z-20 w-fit max-w-full bg-transparent"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">          &#x3C;</span><span style="color:#79B8FF">HeroStory</span><span style="color:#E1E4E8"> /></span></span>
+<span class="line"><span style="color:#E1E4E8">        &#x3C;/</span><span style="color:#85E89D">div</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">      &#x3C;/</span><span style="color:#85E89D">div</span><span style="color:#E1E4E8">></span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">      &#x3C;</span><span style="color:#85E89D">div</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"relative z-20 flex min-h-0 min-w-0 flex-col overflow-visible md:col-start-2 md:row-start-1 md:h-full md:pl-6 md:pt-[clamp(3rem,11vh,8rem)] lg:pl-10"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">        &#x3C;</span><span style="color:#79B8FF">ProofStack</span><span style="color:#B392F0"> stackRef</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{stackRef} </span><span style="color:#B392F0">captionRef</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{captionRef} /></span></span>
+<span class="line"><span style="color:#E1E4E8">      &#x3C;/</span><span style="color:#85E89D">div</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">    &#x3C;/</span><span style="color:#85E89D">div</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">  );</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">export</span><span style="color:#F97583"> default</span><span style="color:#F97583"> function</span><span style="color:#B392F0"> PhotographerPortfolio</span><span style="color:#E1E4E8">() {</span></span>
+<span class="line"><span style="color:#F97583">  const</span><span style="color:#79B8FF"> stackRef</span><span style="color:#F97583"> =</span><span style="color:#B392F0"> useRef</span><span style="color:#E1E4E8">&#x3C;</span><span style="color:#B392F0">HTMLElement</span><span style="color:#E1E4E8">>(</span><span style="color:#79B8FF">null</span><span style="color:#E1E4E8">);</span></span>
+<span class="line"><span style="color:#F97583">  const</span><span style="color:#79B8FF"> heroRef</span><span style="color:#F97583"> =</span><span style="color:#B392F0"> useRef</span><span style="color:#E1E4E8">&#x3C;</span><span style="color:#B392F0">HTMLDivElement</span><span style="color:#E1E4E8">>(</span><span style="color:#79B8FF">null</span><span style="color:#E1E4E8">);</span></span>
+<span class="line"><span style="color:#F97583">  const</span><span style="color:#79B8FF"> captionRef</span><span style="color:#F97583"> =</span><span style="color:#B392F0"> useRef</span><span style="color:#E1E4E8">&#x3C;</span><span style="color:#B392F0">HTMLDivElement</span><span style="color:#E1E4E8">>(</span><span style="color:#79B8FF">null</span><span style="color:#E1E4E8">);</span></span>
+<span class="line"><span style="color:#F97583">  const</span><span style="color:#E1E4E8"> [</span><span style="color:#79B8FF">preloaderDone</span><span style="color:#E1E4E8">, </span><span style="color:#79B8FF">setPreloaderDone</span><span style="color:#E1E4E8">] </span><span style="color:#F97583">=</span><span style="color:#B392F0"> useState</span><span style="color:#E1E4E8">(</span><span style="color:#79B8FF">false</span><span style="color:#E1E4E8">);</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">  return</span><span style="color:#E1E4E8"> (</span></span>
+<span class="line"><span style="color:#E1E4E8">    &#x3C;></span></span>
+<span class="line"><span style="color:#E1E4E8">      &#x3C;</span><span style="color:#85E89D">section</span></span>
+<span class="line"><span style="color:#B392F0">        className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"relative isolate min-h-[calc(100svh-var(--demo-chrome-reserve,5rem))] overflow-hidden"</span></span>
+<span class="line"><span style="color:#B392F0">        style</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{{ backgroundColor: </span><span style="color:#79B8FF">CANVAS</span><span style="color:#E1E4E8">, color: </span><span style="color:#79B8FF">INK</span><span style="color:#E1E4E8">, fontFamily: </span><span style="color:#79B8FF">FONT</span><span style="color:#E1E4E8"> }}</span></span>
+<span class="line"><span style="color:#E1E4E8">      ></span></span>
+<span class="line"><span style="color:#E1E4E8">        &#x3C;</span><span style="color:#79B8FF">TrailingImage</span></span>
+<span class="line"><span style="color:#B392F0">          edgeToEdge</span></span>
+<span class="line"><span style="color:#B392F0">          layerOnly</span></span>
+<span class="line"><span style="color:#B392F0">          contained</span></span>
+<span class="line"><span style="color:#B392F0">          className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"z-10 isolate"</span></span>
+<span class="line"><span style="color:#B392F0">          images</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#79B8FF">TRAIL_IMAGES</span><span style="color:#E1E4E8">}</span></span>
+<span class="line"><span style="color:#B392F0">          threshold</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#79B8FF">88</span><span style="color:#E1E4E8">}</span></span>
+<span class="line"><span style="color:#B392F0">          maxTrailZIndex</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#79B8FF">12</span><span style="color:#E1E4E8">}</span></span>
+<span class="line"><span style="color:#B392F0">          excludeRefs</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{[heroRef, captionRef]}</span></span>
+<span class="line"><span style="color:#E1E4E8">        /></span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">        &#x3C;</span><span style="color:#79B8FF">CardStack</span></span>
+<span class="line"><span style="color:#B392F0">          items</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#79B8FF">PORTFOLIO</span><span style="color:#E1E4E8">}</span></span>
+<span class="line"><span style="color:#B392F0">          depth</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#79B8FF">3</span><span style="color:#E1E4E8">}</span></span>
+<span class="line"><span style="color:#B392F0">          autoplay</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{preloaderDone}</span></span>
+<span class="line"><span style="color:#B392F0">          autoplayInterval</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#79B8FF">4500</span><span style="color:#E1E4E8">}</span></span>
+<span class="line"><span style="color:#E1E4E8">        ></span></span>
+<span class="line"><span style="color:#E1E4E8">          &#x3C;</span><span style="color:#85E89D">div</span></span>
+<span class="line"><span style="color:#B392F0">            className</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#B392F0">cn</span><span style="color:#E1E4E8">(</span></span>
+<span class="line"><span style="color:#9ECBFF">              "relative z-20 isolate mx-auto min-h-[calc(100svh-var(--demo-chrome-reserve,5rem))] w-full max-w-[92rem] pb-[var(--demo-chrome-reserve,5rem)]"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">              LAYOUT</span><span style="color:#E1E4E8">.shell,</span></span>
+<span class="line"><span style="color:#E1E4E8">            )}</span></span>
+<span class="line"><span style="color:#E1E4E8">          ></span></span>
+<span class="line"><span style="color:#E1E4E8">            &#x3C;</span><span style="color:#79B8FF">PortfolioLayout</span><span style="color:#B392F0"> stackRef</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{stackRef} </span><span style="color:#B392F0">heroRef</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{heroRef} </span><span style="color:#B392F0">captionRef</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{captionRef} /></span></span>
+<span class="line"><span style="color:#E1E4E8">          &#x3C;/</span><span style="color:#85E89D">div</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">        &#x3C;/</span><span style="color:#79B8FF">CardStack</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">      &#x3C;/</span><span style="color:#85E89D">section</span><span style="color:#E1E4E8">></span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">      &#x3C;</span><span style="color:#79B8FF">SplitReveal</span></span>
+<span class="line"><span style="color:#B392F0">        images</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#79B8FF">PRELOAD_IMAGES</span><span style="color:#E1E4E8">}</span></span>
+<span class="line"><span style="color:#B392F0">        backgroundColor</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#79B8FF">CANVAS</span><span style="color:#E1E4E8">}</span></span>
+<span class="line"><span style="color:#B392F0">        foregroundColor</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#79B8FF">INK</span><span style="color:#E1E4E8">}</span></span>
+<span class="line"><span style="color:#B392F0">        zIndex</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#79B8FF">120</span><span style="color:#E1E4E8">}</span></span>
+<span class="line"><span style="color:#B392F0">        lockScroll</span></span>
+<span class="line"><span style="color:#B392F0">        onComplete</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{() </span><span style="color:#F97583">=></span><span style="color:#B392F0"> setPreloaderDone</span><span style="color:#E1E4E8">(</span><span style="color:#79B8FF">true</span><span style="color:#E1E4E8">)}</span></span>
+<span class="line"><span style="color:#B392F0">        renderProgress</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{({ </span><span style="color:#FFAB70">loaded</span><span style="color:#E1E4E8">, </span><span style="color:#FFAB70">total</span><span style="color:#E1E4E8">, </span><span style="color:#FFAB70">progress</span><span style="color:#E1E4E8"> }) </span><span style="color:#F97583">=></span><span style="color:#E1E4E8"> (</span></span>
+<span class="line"><span style="color:#E1E4E8">          &#x3C;></span></span>
+<span class="line"><span style="color:#E1E4E8">            &#x3C;</span><span style="color:#79B8FF">SplitReveal.ProgressTrack</span><span style="color:#B392F0"> progress</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{progress} </span><span style="color:#B392F0">foregroundColor</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#79B8FF">INK</span><span style="color:#E1E4E8">} /></span></span>
+<span class="line"><span style="color:#E1E4E8">            &#x3C;</span><span style="color:#85E89D">p</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"mt-3 text-center text-[11px] font-medium uppercase tracking-[0.12em] text-black/45"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">              Loading frames</span></span>
+<span class="line"><span style="color:#E1E4E8">              &#x3C;</span><span style="color:#85E89D">span</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"px-1.5 text-black/20"</span><span style="color:#E1E4E8">>·&#x3C;/</span><span style="color:#85E89D">span</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">              {</span><span style="color:#B392F0">String</span><span style="color:#E1E4E8">(loaded).</span><span style="color:#B392F0">padStart</span><span style="color:#E1E4E8">(</span><span style="color:#79B8FF">2</span><span style="color:#E1E4E8">, </span><span style="color:#9ECBFF">"0"</span><span style="color:#E1E4E8">)}</span></span>
+<span class="line"><span style="color:#E1E4E8">              &#x3C;</span><span style="color:#85E89D">span</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"text-black/20"</span><span style="color:#E1E4E8">>/&#x3C;/</span><span style="color:#85E89D">span</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">              {</span><span style="color:#B392F0">String</span><span style="color:#E1E4E8">(total).</span><span style="color:#B392F0">padStart</span><span style="color:#E1E4E8">(</span><span style="color:#79B8FF">2</span><span style="color:#E1E4E8">, </span><span style="color:#9ECBFF">"0"</span><span style="color:#E1E4E8">)}</span></span>
+<span class="line"><span style="color:#E1E4E8">            &#x3C;/</span><span style="color:#85E89D">p</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">          &#x3C;/></span></span>
+<span class="line"><span style="color:#E1E4E8">        )}</span></span>
+<span class="line"><span style="color:#E1E4E8">      /></span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">      &#x3C;</span><span style="color:#79B8FF">PhotographerPortfolioNotes</span><span style="color:#E1E4E8"> /></span></span>
+<span class="line"><span style="color:#E1E4E8">    &#x3C;/></span></span>
+<span class="line"><span style="color:#E1E4E8">  );</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span>
+<span class="line"></span></code></pre>`,
+    },
+  ],
 };

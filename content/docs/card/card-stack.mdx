@@ -110,7 +110,7 @@ Each card gets a mask from `CARD_STACK_MASK_IDS`: `ellipse-1`, `flower-14`, `flo
 
 The root holds the full `items` array but only renders the first `depth` entries. On advance, the front item moves to the back. Same cards, infinite loop, no full remount.
 
-`CardStack.List` uses `AnimatePresence` with `mode="sync"`. Click and the front card exits (`y: 420`, `scale: 0.96`) while the cards behind move up into the next layer at the same time. One shuffle, not exit-then-enter.
+`CardStack.List` uses `AnimatePresence` with `mode="sync"`. Click and the front card exits (`y: "125%"`, `scale: 0.96`) while the cards behind move up into the next layer at the same time. One shuffle, not exit-then-enter.
 
 Stacking order comes from Motion `zIndex`, not Tailwind `z-*`: front at 20, middle at 5, back at 0. On exit the front card jumps to 30 so it slides out over the stack rising underneath.
 

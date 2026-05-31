@@ -1,0 +1,64 @@
+---
+title: Split Reveal
+description: Fixed overlay that preloads images, locks scroll, and splits from the center seam when done
+---
+
+<ComponentPreview name="preloader-split-reveal--primary" />
+
+## Installation
+
+### CLI
+
+<RegistryInstall category="preloader" name="split-reveal" />
+
+### Manual
+
+<Steps>
+<Step>Install dependencies</Step>
+
+```bash
+npm install motion
+```
+
+<Step>Run the following command</Step>
+
+It will create a new file `split-reveal.tsx` inside the `components/animata/preloader` directory.
+
+```bash
+mkdir -p components/animata/preloader && touch components/animata/preloader/split-reveal.tsx
+```
+
+<Step>Paste the code</Step>{" "}
+
+Open the newly created file and paste the following code:
+
+```jsx file=<rootDir>/animata/preloader/split-reveal.tsx
+
+```
+
+</Steps>
+
+## Usage
+
+Drop it next to your page — no wrapper required:
+
+```tsx
+<section>{/* your layout */}</section>
+
+<SplitReveal
+  images={imageUrls}
+  lockScroll
+  onComplete={() => setReady(true)}
+  renderProgress={({ loaded, total }) => (
+    <p>
+      {loaded}/{total}
+    </p>
+  )}
+/>
+```
+
+Pass `children` instead of `renderProgress` when you want full control over shutters and progress.
+
+## Credits
+
+Images in demos may come from [Lummi](https://www.lummi.ai).

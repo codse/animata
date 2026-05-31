@@ -48,6 +48,15 @@ const CHROME_IDLE_MS = 2200;
 const EDGE_SWIPE_PX = 28;
 const EDGE_SWIPE_MIN = 72;
 
+const DEMO_PRESS_SPRING = {
+  type: "spring" as const,
+  stiffness: 250,
+  damping: 25,
+};
+
+const PILL_CONTROL_CLASS =
+  "grid size-9 shrink-0 touch-manipulation place-items-center rounded-full text-white/62 outline-none transition-[color,background-color] duration-150 hover:bg-white/10 hover:text-white focus-visible:bg-white/10 focus-visible:text-white";
+
 function isTypingTarget(target: EventTarget | null) {
   if (!(target instanceof HTMLElement)) return false;
   const tag = target.tagName;
@@ -751,60 +760,34 @@ function PillHomeButton({
   onShowTip: (label: string, anchor: HTMLElement) => void;
 }) {
   const reducedMotion = useReducedMotion();
-  const logoRef = useRef<HTMLSpanElement>(null);
-  const swingRef = useRef<ReturnType<typeof animate> | null>(null);
   const tipLabel = formatDemoTooltipLabel("Home", "H");
 
   const revealTip = (anchor: HTMLElement) => {
     onShowTip(tipLabel, anchor);
   };
 
-  const swingLogo = useCallback(() => {
-    if (reducedMotion || !logoRef.current) return;
-
-    swingRef.current?.stop();
-    swingRef.current = animate(
-      logoRef.current,
-      { rotate: [18, -12, 7, -3, 1, 0] },
-      {
-        duration: 1.15,
-        ease: [0.22, 1.12, 0.36, 1],
-        times: [0, 0.24, 0.46, 0.68, 0.86, 1],
-      },
-    );
-  }, [reducedMotion]);
-
-  useEffect(() => {
-    return () => {
-      swingRef.current?.stop();
-    };
-  }, []);
-
   return (
-    <button
+    <motion.button
       type="button"
       aria-label="Back to animata home"
       aria-keyshortcuts="H"
       onClick={onClick}
-      onMouseEnter={(event) => {
-        revealTip(event.currentTarget);
-        swingLogo();
-      }}
-      onFocus={(event) => {
-        revealTip(event.currentTarget);
-        swingLogo();
-      }}
-      className="grid size-9 shrink-0 touch-manipulation place-items-center rounded-full text-white/62 outline-none transition-[color,background-color] duration-150 hover:bg-white/10 hover:text-white focus-visible:bg-white/10 focus-visible:text-white"
+      onMouseEnter={(event) => revealTip(event.currentTarget)}
+      onFocus={(event) => revealTip(event.currentTarget)}
+      whileTap={reducedMotion ? undefined : { scale: 0.94 }}
+      transition={DEMO_PRESS_SPRING}
+      className={cn(PILL_CONTROL_CLASS, "group")}
     >
       <span
-        ref={logoRef}
         aria-hidden="true"
-        className="inline-block origin-top will-change-transform"
-        style={{ transformOrigin: "top center" }}
+        className={cn(
+          "demo-home-logo inline-flex size-3.5 items-center justify-center",
+          !reducedMotion && "demo-home-logo-swing",
+        )}
       >
         <Icons.logo className="size-3.5" />
       </span>
-    </button>
+    </motion.button>
   );
 }
 
@@ -838,14 +821,16 @@ function PillRefreshButton({
   }, [refreshKey, reducedMotion]);
 
   return (
-    <button
+    <motion.button
       type="button"
       aria-label="Refresh demo"
       aria-keyshortcuts="R"
       onClick={onClick}
       onMouseEnter={(event) => revealTip(event.currentTarget)}
       onFocus={(event) => revealTip(event.currentTarget)}
-      className="grid size-9 shrink-0 touch-manipulation place-items-center rounded-full text-white/62 outline-none transition-[color,background-color] duration-150 hover:bg-white/10 hover:text-white focus-visible:bg-white/10 focus-visible:text-white active:scale-95"
+      whileTap={reducedMotion ? undefined : { scale: 0.94 }}
+      transition={DEMO_PRESS_SPRING}
+      className={PILL_CONTROL_CLASS}
     >
       <span
         ref={iconRef}
@@ -854,7 +839,7 @@ function PillRefreshButton({
       >
         <RefreshCwIcon className="size-3.5" />
       </span>
-    </button>
+    </motion.button>
   );
 }
 
@@ -866,6 +851,7 @@ function PillIconButton({
   onClick,
   onShowTip,
 }: PillIconButtonProps) {
+  const reducedMotion = useReducedMotion();
   const tipLabel = formatDemoTooltipLabel(label, keyShortcut);
 
   const revealTip = (anchor: HTMLElement) => {
@@ -873,20 +859,19 @@ function PillIconButton({
   };
 
   return (
-    <button
+    <motion.button
       type="button"
       aria-label={label}
       aria-keyshortcuts={keyShortcut}
       onClick={onClick}
       onMouseEnter={(event) => revealTip(event.currentTarget)}
       onFocus={(event) => revealTip(event.currentTarget)}
-      className={cn(
-        "grid size-9 shrink-0 touch-manipulation place-items-center rounded-full text-white/62 outline-none transition-[color,background-color,transform] duration-150 hover:bg-white/10 hover:text-white focus-visible:bg-white/10 focus-visible:text-white active:scale-95",
-        className,
-      )}
+      whileTap={reducedMotion ? undefined : { scale: 0.94 }}
+      transition={DEMO_PRESS_SPRING}
+      className={cn(PILL_CONTROL_CLASS, className)}
     >
       <Icon aria-hidden="true" className="size-3.5" />
-    </button>
+    </motion.button>
   );
 }
 
@@ -911,6 +896,7 @@ function PillIconLink({
   className,
   onShowTip,
 }: PillIconLinkProps) {
+  const reducedMotion = useReducedMotion();
   const tipLabel = formatDemoTooltipLabel(label, keyShortcut);
 
   const revealTip = (anchor: HTMLElement) => {
@@ -918,7 +904,7 @@ function PillIconLink({
   };
 
   return (
-    <a
+    <motion.a
       aria-label={label}
       aria-keyshortcuts={keyShortcut}
       href={href}
@@ -926,13 +912,12 @@ function PillIconLink({
       rel={rel}
       onMouseEnter={(event) => revealTip(event.currentTarget)}
       onFocus={(event) => revealTip(event.currentTarget)}
-      className={cn(
-        "grid size-9 shrink-0 touch-manipulation place-items-center rounded-full text-white/62 outline-none transition-[color,background-color,transform] duration-150 hover:bg-white/10 hover:text-white focus-visible:bg-white/10 focus-visible:text-white active:scale-95",
-        className,
-      )}
+      whileTap={reducedMotion ? undefined : { scale: 0.94 }}
+      transition={DEMO_PRESS_SPRING}
+      className={cn(PILL_CONTROL_CLASS, className)}
     >
       <Icon aria-hidden="true" className="size-3.5" />
-    </a>
+    </motion.a>
   );
 }
 
@@ -971,6 +956,24 @@ function DemoShellStyles() {
       @keyframes demo-fade-in {
         from { opacity: 0; }
         to { opacity: 1; }
+      }
+
+      @keyframes demo-logo-swing {
+        from {
+          transform: rotate(-14deg);
+        }
+        to {
+          transform: rotate(14deg);
+        }
+      }
+
+      .demo-home-logo {
+        transform-origin: 60% 0;
+      }
+
+      .group:hover .demo-home-logo-swing,
+      .group:focus-visible .demo-home-logo-swing {
+        animation: demo-logo-swing 0.95s ease-in-out infinite alternate;
       }
 
       .demo-picker-shell {

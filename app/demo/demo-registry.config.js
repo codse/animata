@@ -66,4 +66,32 @@ export const DEMO_REGISTRY = [
       },
     ],
   },
+  {
+    key: "hero/photographer-portfolio",
+    groupSlug: "hero",
+    itemSlug: "photographer-portfolio",
+    label: "Photographer portfolio",
+    components: [
+      {
+        docSlug: "card/card-stack",
+        category: "Card",
+        name: "Card Stack",
+        description:
+          "Portfolio deck — full-bleed 4:5 prints, forward-only carousel, autoplay after preload.",
+      },
+      {
+        docSlug: "image/trailing-image",
+        category: "Image",
+        name: "Trailing Image",
+        description: "Mouse trail of portfolio frames across the white field.",
+      },
+      {
+        docSlug: "preloader/split-reveal",
+        category: "Preloader",
+        name: "Split Reveal",
+        description:
+          "Fixed overlay — preloads images, locks scroll, splits from the center seam when done.",
+      },
+    ],
+  },
 ];

@@ -50,6 +50,12 @@ export const DEMO_GROUPS: DemoGroup[] = [
         themeColor: "#0E0E10",
         ...lazyDemo(() => import("./library/hero/launch-shift")),
       },
+      {
+        slug: "photographer-portfolio",
+        label: "Photographer portfolio",
+        themeColor: "#ffffff",
+        ...lazyDemo(() => import("./library/hero/photographer-portfolio")),
+      },
     ],
   },
   {

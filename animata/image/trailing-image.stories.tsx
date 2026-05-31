@@ -15,5 +15,8 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Primary: Story = {
-  args: {},
+  args: {
+    className: "h-96 w-full max-w-md rounded-xl border border-border",
+    children: <div aria-hidden className="h-full w-full" />,
+  },
 };

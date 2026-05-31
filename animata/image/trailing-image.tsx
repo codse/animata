@@ -1,8 +1,19 @@
+"use client";
+
 import { motion, useAnimation } from "motion/react";
-import { createRef, forwardRef, useCallback, useImperativeHandle, useRef } from "react";
+import {
+  createRef,
+  forwardRef,
+  type ReactNode,
+  type RefObject,
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+} from "react";
 
 import { useMousePosition } from "@/hooks/use-mouse-position";
-import { getDistance, lerp } from "@/lib/utils";
+import { cn, getDistance, lerp } from "@/lib/utils";
 
 interface AnimatedImageRef {
   show: ({
@@ -92,15 +103,17 @@ const AnimatedImage = forwardRef<AnimatedImageRef, { src: string }>(({ src }, re
       initial={{ opacity: 0, scale: 1 }}
       animate={controls}
       src={src}
-      alt="trail element"
-      className="absolute h-56 w-44 object-cover"
+      alt=""
+      aria-hidden
+      draggable={false}
+      className="pointer-events-none absolute h-56 w-44 select-none object-cover"
     />
   );
 });
 
 AnimatedImage.displayName = "AnimatedImage";
 
-const images = [
+const DEFAULT_IMAGES = [
   "https://assets.lummi.ai/assets/Qma1aBRXFsApFohRJrpJczE5QXGY6HhHKz24ybuw1khbou?auto=format&w=500",
   "https://assets.lummi.ai/assets/QmZBpAeh18DHxVNEEcJErt1UXGjZYCedSidJ6cybrDZdeS?auto=format&w=500",
   "https://assets.lummi.ai/assets/QmbMZFEfk2qwQkkmXYncpvHapkNQF5HuTrcascJC7edpfW?auto=format&w=500",
@@ -108,66 +121,228 @@ const images = [
   "https://assets.lummi.ai/assets/QmRy3tpFDCbgA3CQgRpySTGN6tNdomQE96rMpV31HeBUUd?auto=format&w=500",
 ];
 
-const TrailingImage = () => {
+export interface TrailingImageProps {
+  images?: string[];
+  className?: string;
+  children?: ReactNode;
+  /** Distance in px between trail spawns. Default 50. */
+  threshold?: number;
+  /** Full-viewport trail layer; tracks pointer on `window` so UI stays clickable. */
+  edgeToEdge?: boolean;
+  /** Render only the trail layer (no children wrapper). */
+  layerOnly?: boolean;
+  /** Pin to `absolute inset-0` inside a positioned parent instead of `fixed`. */
+  contained?: boolean;
+  /** Wrapper classes for interactive content when `edgeToEdge` is set. */
+  contentClassName?: string;
+  /** Pointer regions where trail spawns are suppressed (viewport/client coordinates). */
+  excludeRefs?: RefObject<HTMLElement | null>[];
+  /** Cap inline z-index so trails stay under foreground UI (e.g. z-20 content). */
+  maxTrailZIndex?: number;
+}
+
+function isInsideExcludeZones(
+  clientX: number,
+  clientY: number,
+  excludeRefs: RefObject<HTMLElement | null>[],
+) {
+  return excludeRefs.some((ref) => {
+    const rect = ref.current?.getBoundingClientRect();
+    if (!rect) {
+      return false;
+    }
+
+    return (
+      clientX >= rect.left && clientX <= rect.right && clientY >= rect.top && clientY <= rect.bottom
+    );
+  });
+}
+
+function isPointerOverExcludeZones(
+  clientX: number,
+  clientY: number,
+  target: EventTarget | null,
+  excludeRefs: RefObject<HTMLElement | null>[],
+) {
+  if (target instanceof Node) {
+    for (const ref of excludeRefs) {
+      if (ref.current?.contains(target)) {
+        return true;
+      }
+    }
+  }
+
+  if (isInsideExcludeZones(clientX, clientY, excludeRefs)) {
+    return true;
+  }
+
+  if (typeof document.elementsFromPoint !== "function") {
+    return false;
+  }
+
+  return document
+    .elementsFromPoint(clientX, clientY)
+    .some((element) =>
+      excludeRefs.some(
+        (ref) => ref.current && (ref.current === element || ref.current.contains(element)),
+      ),
+    );
+}
+
+export default function TrailingImage({
+  images = DEFAULT_IMAGES,
+  className,
+  children,
+  threshold = 50,
+  edgeToEdge = false,
+  layerOnly = false,
+  contained = false,
+  contentClassName,
+  excludeRefs = [],
+  maxTrailZIndex,
+}: TrailingImageProps) {
   const containerRef = useRef<HTMLDivElement>(null);
-  // Create a maximum of 20 trails for a smoother experience
+  const trailCount = Math.max(20, images.length);
   const trailsRef = useRef(
-    Array.from({ length: Math.max(20, images.length) }, createRef<AnimatedImageRef>),
+    Array.from(
+      { length: trailCount },
+      () => createRef<AnimatedImageRef>() as RefObject<AnimatedImageRef>,
+    ),
   );
 
   const lastPosition = useRef({ x: 0, y: 0 });
   const cachedPosition = useRef({ x: 0, y: 0 });
   const imageIndex = useRef(0);
   const zIndex = useRef(1);
+  const excludeRefsRef = useRef(excludeRefs);
+  excludeRefsRef.current = excludeRefs;
+  const maxTrailZIndexRef = useRef(maxTrailZIndex);
+  maxTrailZIndexRef.current = maxTrailZIndex;
 
-  const update = useCallback((cursor: { x: number; y: number }) => {
-    const activeRefCount = trailsRef.current.filter((ref) => ref.current?.isActive()).length;
-    if (activeRefCount === 0) {
-      // Reset zIndex since there are no active references
-      // This prevents zIndex from incrementing indefinitely
-      zIndex.current = 1;
+  const update = useCallback(
+    (cursor: { x: number; y: number }, eventTarget: EventTarget | null = null) => {
+      if (isPointerOverExcludeZones(cursor.x, cursor.y, eventTarget, excludeRefsRef.current)) {
+        lastPosition.current = cursor;
+        cachedPosition.current = cursor;
+        return;
+      }
+
+      const activeRefCount = trailsRef.current.filter((ref) => ref.current?.isActive()).length;
+      if (activeRefCount === 0) {
+        zIndex.current = 1;
+      }
+
+      const distance = getDistance(
+        cursor.x,
+        cursor.y,
+        lastPosition.current.x,
+        lastPosition.current.y,
+      );
+
+      const newCachePosition = {
+        x: lerp(cachedPosition.current.x || cursor.x, cursor.x, 0.1),
+        y: lerp(cachedPosition.current.y || cursor.y, cursor.y, 0.1),
+      };
+      cachedPosition.current = newCachePosition;
+
+      if (distance > threshold) {
+        imageIndex.current = (imageIndex.current + 1) % trailsRef.current.length;
+        const nextZ = zIndex.current + 1;
+        zIndex.current =
+          maxTrailZIndexRef.current !== undefined
+            ? Math.min(nextZ, maxTrailZIndexRef.current)
+            : nextZ;
+        lastPosition.current = cursor;
+        trailsRef.current[imageIndex.current].current?.show?.({
+          x: newCachePosition.x,
+          y: newCachePosition.y,
+          zIndex: zIndex.current,
+          newX: cursor.x,
+          newY: cursor.y,
+        });
+      }
+    },
+    [threshold],
+  );
+
+  useMousePosition(containerRef, edgeToEdge ? undefined : update);
+
+  useEffect(() => {
+    if (!edgeToEdge) {
+      return;
     }
 
-    const distance = getDistance(
-      cursor.x,
-      cursor.y,
-      lastPosition.current.x,
-      lastPosition.current.y,
-    );
-    const threshold = 50;
-
-    const newCachePosition = {
-      x: lerp(cachedPosition.current.x || cursor.x, cursor.x, 0.1),
-      y: lerp(cachedPosition.current.y || cursor.y, cursor.y, 0.1),
+    const handleMouseMove = (event: MouseEvent) => {
+      update({ x: event.clientX, y: event.clientY }, event.target);
     };
-    cachedPosition.current = newCachePosition;
 
-    if (distance > threshold) {
-      imageIndex.current = (imageIndex.current + 1) % trailsRef.current.length;
-      zIndex.current = zIndex.current + 1;
-      lastPosition.current = cursor;
-      trailsRef.current[imageIndex.current].current?.show?.({
-        x: newCachePosition.x,
-        y: newCachePosition.y,
-        zIndex: zIndex.current,
-        newX: cursor.x,
-        newY: cursor.y,
-      });
-    }
-  }, []);
+    const handleTouchMove = (event: TouchEvent) => {
+      const touch = event.touches[0];
+      if (!touch) {
+        return;
+      }
 
-  useMousePosition(containerRef, update);
+      update({ x: touch.clientX, y: touch.clientY }, event.target);
+    };
 
-  return (
-    <div ref={containerRef} className="storybook-fix relative flex min-h-96 w-full">
+    window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("touchmove", handleTouchMove, { passive: true });
+
+    return () => {
+      window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("touchmove", handleTouchMove);
+    };
+  }, [edgeToEdge, update]);
+
+  const trailLayer = (
+    <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden>
       {trailsRef.current.map((ref, index) => (
-        <AnimatedImage key={index} ref={ref} src={images[index % images.length]} />
+        <AnimatedImage key={index} ref={ref} src={images[index % images.length]!} />
       ))}
-      <div className="flex w-full flex-1 items-center justify-center p-4 text-center text-sm text-foreground md:text-3xl">
-        <div className="max-w-sm">Move your mouse over this element to see the effect</div>
-      </div>
     </div>
   );
-};
 
-export default TrailingImage;
+  if (edgeToEdge && layerOnly) {
+    return (
+      <div
+        ref={containerRef}
+        className={cn(
+          "pointer-events-none overflow-hidden",
+          contained ? "absolute inset-0" : "fixed inset-0",
+          className,
+        )}
+        aria-hidden
+      >
+        {trailLayer}
+      </div>
+    );
+  }
+
+  if (edgeToEdge) {
+    return (
+      <>
+        <div
+          ref={containerRef}
+          className={cn(
+            "pointer-events-none overflow-hidden",
+            contained ? "absolute inset-0" : "fixed inset-0",
+            className,
+          )}
+          aria-hidden
+        >
+          {trailLayer}
+        </div>
+        {children ? <div className={cn("relative z-10", contentClassName)}>{children}</div> : null}
+      </>
+    );
+  }
+
+  return (
+    <div ref={containerRef} className={cn("relative w-full", className)}>
+      {trailLayer}
+      {children ? <div className="relative z-10 h-full w-full">{children}</div> : null}
+    </div>
+  );
+}
+
+export { DEFAULT_IMAGES as TRAILING_IMAGE_DEFAULTS };

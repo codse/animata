@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { type CSSProperties, useEffect, useState } from "react";
+import type { CSSProperties } from "react";
 
 import AnimatedBorderTrail from "@/animata/container/animated-border-trail";
 import Marquee from "@/animata/container/marquee";
@@ -15,6 +15,8 @@ import RemountOnMouseIn from "@/components/remount-on-mouse-in";
 import { docsConfig } from "@/config/docs";
 import { siteStats } from "@/config/site-stats";
 import { cn } from "@/lib/utils";
+
+import { CardStackBento } from "./card-stack-bento";
 
 // Get component categories from the sidebar nav (skip Getting Started + Contributing)
 const categories = docsConfig.sidebarNav
@@ -297,6 +299,12 @@ export default function StatsBento() {
             <div className="mt-3 inline-block self-start rounded-full bg-foreground px-3 py-1 text-[11px] font-bold text-background sm:px-4 sm:py-1.5 sm:text-[12px]">
               MIT Licensed — free forever
             </div>
+          </BentoCard>
+        </div>
+
+        <div className="mt-3 sm:mt-4">
+          <BentoCard className="min-h-[22rem] sm:min-h-[24rem]">
+            <CardStackBento />
           </BentoCard>
         </div>
 
