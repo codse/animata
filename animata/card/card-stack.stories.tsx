@@ -107,11 +107,15 @@ export const Primary: Story = {
                       />
 
                       <CardStack.Footer>
-                        <CardStack.Metric icon={Heart} label="Likes" value={item.counts.like} />
+                        <CardStack.Metric
+                          icon={Heart}
+                          label="Likes"
+                          value={item.counts?.like ?? 0}
+                        />
                         <CardStack.Metric
                           icon={MessageCircle}
                           label="Comments"
-                          value={item.counts.comment}
+                          value={item.counts?.comment ?? 0}
                           className="ms-1"
                         />
                         <ArrowRight

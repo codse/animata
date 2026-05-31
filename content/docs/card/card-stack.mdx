@@ -90,8 +90,8 @@ const items: CardStackItem[] = [
               />
 
               <CardStack.Footer>
-                <CardStack.Metric icon={Heart} label="Likes" value={item.counts.like} />
-                <CardStack.Metric icon={MessageCircle} label="Comments" value={item.counts.comment} />
+                <CardStack.Metric icon={Heart} label="Likes" value={item.counts?.like ?? 0} />
+                <CardStack.Metric icon={MessageCircle} label="Comments" value={item.counts?.comment ?? 0} />
               </CardStack.Footer>
             </CardStack.Card>
           )}

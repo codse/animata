@@ -553,8 +553,8 @@ function CardStackList({ children }: CardStackListProps) {
         const layer = layers[index]!;
         const node = children(item, index, layer);
 
-        if (isValidElement(node) && node.type === CardStackCard) {
-          return cloneElement(node, {
+        if (isValidElement<CardStackCardProps>(node) && node.type === CardStackCard) {
+          return cloneElement<CardStackCardProps>(node, {
             key: item.id,
             stackIndex: index,
             layer,
@@ -588,8 +588,12 @@ function CardStackCard({
   const exit = getCardStackExit(stackIndex, layer, reducedMotion, throwImpulse);
   const baseScale = getLayerScale(layer);
   const isPressed = stackIndex === 0 && pressActive && !reducedMotion && !isAnimating;
+  const animateTarget =
+    typeof layer.animate === "object" && layer.animate !== null && !Array.isArray(layer.animate)
+      ? layer.animate
+      : {};
   const animate = isPressed
-    ? { ...layer.animate, scale: baseScale * PRESS_SCALE_FACTOR }
+    ? { ...animateTarget, scale: baseScale * PRESS_SCALE_FACTOR }
     : layer.animate;
   const transition = isPressed ? PRESS_SPRING : layer.transition;
 
