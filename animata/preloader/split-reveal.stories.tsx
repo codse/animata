@@ -18,6 +18,7 @@ const meta = {
   tags: ["autodocs"],
   argTypes: {
     revealDuration: { control: { type: "number", min: 0.2, max: 2, step: 0.05 } },
+    progressFadeMs: { control: { type: "number", min: 0, max: 800, step: 20 } },
     holdMs: { control: { type: "number", min: 0, max: 1200, step: 20 } },
     backgroundColor: { control: "color" },
     foregroundColor: { control: "color" },

@@ -14,7 +14,7 @@ import {
 
 import { cn } from "@/lib/utils";
 
-type PreloaderPhase = "loading" | "reveal" | "done";
+type PreloaderPhase = "loading" | "fade-ui" | "reveal" | "done";
 
 export interface SplitRevealProgressState {
   phase: PreloaderPhase;
@@ -27,6 +27,7 @@ interface SplitRevealContextValue extends SplitRevealProgressState {
   backgroundColor: string;
   foregroundColor: string;
   revealDuration: number;
+  progressFadeMs: number;
   zIndex: number;
   isActive: boolean;
 }
@@ -51,6 +52,8 @@ export interface SplitRevealProps {
   backgroundColor?: string;
   foregroundColor?: string;
   revealDuration?: number;
+  /** Progress UI fade duration before shutters move */
+  progressFadeMs?: number;
   holdMs?: number;
   zIndex?: number;
   lockScroll?: boolean;
@@ -236,7 +239,8 @@ function SplitRevealProgressSlot({
   children,
   ...props
 }: ComponentProps<typeof motion.div>) {
-  const { phase } = useSplitReveal();
+  const { phase, progressFadeMs } = useSplitReveal();
+  const showProgress = phase === "loading";
 
   return (
     <motion.div
@@ -245,8 +249,8 @@ function SplitRevealProgressSlot({
         className,
       )}
       initial={{ opacity: 1 }}
-      animate={phase === "reveal" ? { opacity: 0 } : { opacity: 1 }}
-      transition={{ duration: 0.28, ease: "easeOut" }}
+      animate={{ opacity: showProgress ? 1 : 0 }}
+      transition={{ duration: progressFadeMs / 1000, ease: "easeOut" }}
       data-split-reveal-progress=""
       {...props}
     >
@@ -320,6 +324,7 @@ function SplitRevealRoot({
   backgroundColor = "#fff",
   foregroundColor = "#000",
   revealDuration = 0.85,
+  progressFadeMs = 280,
   holdMs = 240,
   zIndex = 100,
   lockScroll = true,
@@ -342,6 +347,7 @@ function SplitRevealRoot({
 
   useEffect(() => {
     let cancelled = false;
+    let fadeTimer: number | undefined;
     let revealTimer: number | undefined;
     let doneTimer: number | undefined;
 
@@ -370,14 +376,21 @@ function SplitRevealRoot({
         return;
       }
 
-      revealTimer = window.setTimeout(() => {
-        setPhase("reveal");
-        doneTimer = window.setTimeout(finish, revealDuration * 1000);
+      fadeTimer = window.setTimeout(() => {
+        setPhase("fade-ui");
+
+        revealTimer = window.setTimeout(() => {
+          setPhase("reveal");
+          doneTimer = window.setTimeout(finish, revealDuration * 1000);
+        }, progressFadeMs);
       }, holdMs);
     });
 
     return () => {
       cancelled = true;
+      if (fadeTimer !== undefined) {
+        window.clearTimeout(fadeTimer);
+      }
       if (revealTimer !== undefined) {
         window.clearTimeout(revealTimer);
       }
@@ -385,7 +398,7 @@ function SplitRevealRoot({
         window.clearTimeout(doneTimer);
       }
     };
-  }, [holdMs, reduceMotion, revealDuration, uniqueImages]);
+  }, [holdMs, progressFadeMs, reduceMotion, revealDuration, uniqueImages]);
 
   useScrollLock(lockScroll && isActive);
 
@@ -398,6 +411,7 @@ function SplitRevealRoot({
       backgroundColor,
       foregroundColor,
       revealDuration,
+      progressFadeMs,
       zIndex,
       isActive,
     }),
@@ -408,6 +422,7 @@ function SplitRevealRoot({
       loaded,
       phase,
       progress,
+      progressFadeMs,
       revealDuration,
       total,
       zIndex,
