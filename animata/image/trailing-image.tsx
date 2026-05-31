@@ -9,6 +9,7 @@ import {
   useCallback,
   useEffect,
   useImperativeHandle,
+  useLayoutEffect,
   useRef,
 } from "react";
 
@@ -32,84 +33,88 @@ interface AnimatedImageRef {
   isActive: () => boolean;
 }
 
-const AnimatedImage = forwardRef<AnimatedImageRef, { src: string }>(({ src }, ref) => {
-  const controls = useAnimation();
-  const isRunning = useRef(false);
-  const imgRef = useRef<HTMLImageElement>(null);
+interface AnimatedImageProps {
+  src: string;
+  onActivityChange?: (delta: number) => void;
+}
 
-  useImperativeHandle(ref, () => ({
-    isActive: () => isRunning.current,
-    show: async ({
-      x,
-      y,
-      newX,
-      newY,
-      zIndex,
-    }: {
-      x: number;
-      y: number;
-      zIndex: number;
-      newX: number;
-      newY: number;
-    }) => {
-      const rect = imgRef.current?.getBoundingClientRect();
-      if (!rect) {
-        return;
-      }
+const AnimatedImage = forwardRef<AnimatedImageRef, AnimatedImageProps>(
+  ({ src, onActivityChange }, ref) => {
+    const controls = useAnimation();
+    const isRunning = useRef(false);
+    const onActivityChangeRef = useRef(onActivityChange);
+    onActivityChangeRef.current = onActivityChange;
 
-      const center = (posX: number, posY: number) => {
-        const coords = {
-          x: posX - rect.width / 2,
-          y: posY - rect.height / 2,
-        };
-        return `translate(${coords.x}px, ${coords.y}px)`;
-      };
-
-      controls.stop();
-
-      controls.set({
-        opacity: isRunning.current ? 1 : 0.75,
+    useImperativeHandle(ref, () => ({
+      isActive: () => isRunning.current,
+      show: async ({
+        x,
+        y,
+        newX,
+        newY,
         zIndex,
-        transform: `${center(x, y)} scale(1)`,
-        transition: { ease: "circOut" },
-      });
+      }: {
+        x: number;
+        y: number;
+        zIndex: number;
+        newX: number;
+        newY: number;
+      }) => {
+        controls.stop();
 
-      isRunning.current = true;
+        controls.set({
+          opacity: isRunning.current ? 1 : 0.75,
+          zIndex,
+          x,
+          y,
+          scale: 1,
+          transition: { ease: "circOut" },
+        });
 
-      await controls.start({
-        opacity: 1,
-        transform: `${center(newX, newY)} scale(1)`,
-        transition: { duration: 0.9, ease: "circOut" },
-      });
+        isRunning.current = true;
+        onActivityChangeRef.current?.(1);
 
-      await Promise.all([
-        controls.start({
-          transition: { duration: 1, ease: "easeInOut" },
-          transform: `${center(newX, newY)} scale(0.1)`,
-        }),
-        controls.start({
-          opacity: 0,
-          transition: { duration: 1.1, ease: "easeOut" },
-        }),
-      ]);
+        try {
+          await controls.start({
+            opacity: 1,
+            x: newX,
+            y: newY,
+            scale: 1,
+            transition: { duration: 0.9, ease: "circOut" },
+          });
 
-      isRunning.current = false;
-    },
-  }));
+          await Promise.all([
+            controls.start({
+              x: newX,
+              y: newY,
+              scale: 0.1,
+              transition: { duration: 1, ease: "easeInOut" },
+            }),
+            controls.start({
+              opacity: 0,
+              transition: { duration: 1.1, ease: "easeOut" },
+            }),
+          ]);
+        } finally {
+          isRunning.current = false;
+          onActivityChangeRef.current?.(-1);
+        }
+      },
+    }));
 
-  return (
-    <motion.img
-      ref={imgRef}
-      initial={{ opacity: 0, scale: 1 }}
-      animate={controls}
-      src={src}
-      alt=""
-      aria-hidden
-      draggable={false}
-      className="pointer-events-none absolute h-56 w-44 select-none object-cover"
-    />
-  );
-});
+    return (
+      <motion.img
+        initial={{ opacity: 0, scale: 1 }}
+        animate={controls}
+        src={src}
+        alt=""
+        aria-hidden
+        draggable={false}
+        className="pointer-events-none absolute h-56 w-44 -translate-x-1/2 -translate-y-1/2 select-none object-cover"
+      />
+    );
+  },
+);
 
 AnimatedImage.displayName = "AnimatedImage";
 
@@ -141,28 +146,19 @@ export interface TrailingImageProps {
   maxTrailZIndex?: number;
 }
 
-function isInsideExcludeZones(
-  clientX: number,
-  clientY: number,
-  excludeRefs: RefObject<HTMLElement | null>[],
-) {
-  return excludeRefs.some((ref) => {
-    const rect = ref.current?.getBoundingClientRect();
-    if (!rect) {
-      return false;
-    }
-
-    return (
-      clientX >= rect.left && clientX <= rect.right && clientY >= rect.top && clientY <= rect.bottom
-    );
-  });
+function isPointInRect(clientX: number, clientY: number, rect: DOMRect) {
+  return (
+    clientX >= rect.left && clientX <= rect.right && clientY >= rect.top && clientY <= rect.bottom
+  );
 }
 
+/** Fast exclusion: DOM contains first, then cached viewport rects (no layout reads per move). */
 function isPointerOverExcludeZones(
   clientX: number,
   clientY: number,
   target: EventTarget | null,
   excludeRefs: RefObject<HTMLElement | null>[],
+  excludeRects: DOMRect[],
 ) {
   if (target instanceof Node) {
     for (const ref of excludeRefs) {
@@ -172,21 +168,56 @@ function isPointerOverExcludeZones(
     }
   }
 
-  if (isInsideExcludeZones(clientX, clientY, excludeRefs)) {
-    return true;
+  for (const rect of excludeRects) {
+    if (isPointInRect(clientX, clientY, rect)) {
+      return true;
+    }
   }
 
-  if (typeof document.elementsFromPoint !== "function") {
-    return false;
-  }
+  return false;
+}
 
-  return document
-    .elementsFromPoint(clientX, clientY)
-    .some((element) =>
-      excludeRefs.some(
-        (ref) => ref.current && (ref.current === element || ref.current.contains(element)),
-      ),
-    );
+function useExcludeZoneRects(excludeRefs: RefObject<HTMLElement | null>[], enabled: boolean) {
+  const excludeRectsRef = useRef<DOMRect[]>([]);
+  const excludeRefsRef = useRef(excludeRefs);
+  excludeRefsRef.current = excludeRefs;
+
+  const measureExcludeRects = useCallback(() => {
+    excludeRectsRef.current = excludeRefsRef.current.flatMap((ref) => {
+      const rect = ref.current?.getBoundingClientRect();
+      return rect ? [rect] : [];
+    });
+  }, []);
+
+  useLayoutEffect(() => {
+    if (!enabled || excludeRefsRef.current.length === 0) {
+      excludeRectsRef.current = [];
+      return;
+    }
+
+    measureExcludeRects();
+
+    const observers: ResizeObserver[] = [];
+    for (const ref of excludeRefsRef.current) {
+      if (!ref.current) continue;
+      const observer = new ResizeObserver(measureExcludeRects);
+      observer.observe(ref.current);
+      observers.push(observer);
+    }
+
+    window.addEventListener("scroll", measureExcludeRects, { passive: true, capture: true });
+    window.addEventListener("resize", measureExcludeRects, { passive: true });
+
+    return () => {
+      for (const observer of observers) {
+        observer.disconnect();
+      }
+      window.removeEventListener("scroll", measureExcludeRects, { capture: true });
+      window.removeEventListener("resize", measureExcludeRects);
+    };
+  }, [enabled, measureExcludeRects]);
+
+  return { excludeRectsRef, measureExcludeRects };
 }
 
 export default function TrailingImage({
@@ -215,21 +246,43 @@ export default function TrailingImage({
   const cachedPosition = useRef({ x: 0, y: 0 });
   const imageIndex = useRef(0);
   const zIndex = useRef(1);
+  const activeTrailCountRef = useRef(0);
   const excludeRefsRef = useRef(excludeRefs);
   excludeRefsRef.current = excludeRefs;
   const maxTrailZIndexRef = useRef(maxTrailZIndex);
   maxTrailZIndexRef.current = maxTrailZIndex;
+  const hasExcludeZones = excludeRefs.length > 0;
+  const { excludeRectsRef } = useExcludeZoneRects(excludeRefs, hasExcludeZones);
 
-  const update = useCallback(
+  const pendingPointerRef = useRef<{
+    x: number;
+    y: number;
+    target: EventTarget | null;
+  } | null>(null);
+  const frameRef = useRef<number | null>(null);
+
+  const handleTrailActivity = useCallback((delta: number) => {
+    activeTrailCountRef.current += delta;
+  }, []);
+
+  const runUpdate = useCallback(
     (cursor: { x: number; y: number }, eventTarget: EventTarget | null = null) => {
-      if (isPointerOverExcludeZones(cursor.x, cursor.y, eventTarget, excludeRefsRef.current)) {
+      if (
+        hasExcludeZones &&
+        isPointerOverExcludeZones(
+          cursor.x,
+          cursor.y,
+          eventTarget,
+          excludeRefsRef.current,
+          excludeRectsRef.current,
+        )
+      ) {
         lastPosition.current = cursor;
         cachedPosition.current = cursor;
         return;
       }
 
-      const activeRefCount = trailsRef.current.filter((ref) => ref.current?.isActive()).length;
-      if (activeRefCount === 0) {
+      if (activeTrailCountRef.current === 0) {
         zIndex.current = 1;
       }
 
@@ -263,10 +316,37 @@ export default function TrailingImage({
         });
       }
     },
-    [threshold],
+    [hasExcludeZones, excludeRectsRef, threshold],
   );
 
-  useMousePosition(containerRef, edgeToEdge ? undefined : update);
+  const scheduleUpdate = useCallback(
+    (cursor: { x: number; y: number }, eventTarget: EventTarget | null = null) => {
+      pendingPointerRef.current = { x: cursor.x, y: cursor.y, target: eventTarget };
+      if (frameRef.current !== null) {
+        return;
+      }
+
+      frameRef.current = requestAnimationFrame(() => {
+        frameRef.current = null;
+        const pending = pendingPointerRef.current;
+        if (!pending) {
+          return;
+        }
+        runUpdate({ x: pending.x, y: pending.y }, pending.target);
+      });
+    },
+    [runUpdate],
+  );
+
+  useEffect(() => {
+    return () => {
+      if (frameRef.current !== null) {
+        cancelAnimationFrame(frameRef.current);
+      }
+    };
+  }, []);
+
+  useMousePosition(containerRef, edgeToEdge ? undefined : runUpdate);
 
   useEffect(() => {
     if (!edgeToEdge) {
@@ -274,7 +354,7 @@ export default function TrailingImage({
     }
 
     const handleMouseMove = (event: MouseEvent) => {
-      update({ x: event.clientX, y: event.clientY }, event.target);
+      scheduleUpdate({ x: event.clientX, y: event.clientY }, event.target);
     };
 
     const handleTouchMove = (event: TouchEvent) => {
@@ -283,22 +363,27 @@ export default function TrailingImage({
         return;
       }
 
-      update({ x: touch.clientX, y: touch.clientY }, event.target);
+      scheduleUpdate({ x: touch.clientX, y: touch.clientY }, event.target);
     };
 
-    window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("mousemove", handleMouseMove, { passive: true });
     window.addEventListener("touchmove", handleTouchMove, { passive: true });
 
     return () => {
       window.removeEventListener("mousemove", handleMouseMove);
       window.removeEventListener("touchmove", handleTouchMove);
     };
-  }, [edgeToEdge, update]);
+  }, [edgeToEdge, scheduleUpdate]);
 
   const trailLayer = (
     <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden>
       {trailsRef.current.map((ref, index) => (
-        <AnimatedImage key={index} ref={ref} src={resolvedImages[index % resolvedImages.length]!} />
+        <AnimatedImage
+          key={index}
+          ref={ref}
+          src={resolvedImages[index % resolvedImages.length]!}
+          onActivityChange={handleTrailActivity}
+        />
       ))}
     </div>
   );

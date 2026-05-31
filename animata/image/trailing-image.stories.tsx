@@ -16,7 +16,13 @@ type Story = StoryObj<typeof meta>;
 
 export const Primary: Story = {
   args: {
-    className: "h-96 w-full max-w-md rounded-xl border border-border",
-    children: <div aria-hidden className="h-full w-full" />,
+    className: "h-96 w-full full-content",
+    children: (
+      <div className="h-full w-full flex items-center justify-center">
+        <span className="text-sm text-muted-foreground">
+          Move your mouse to see the trailing effect
+        </span>
+      </div>
+    ),
   },
 };

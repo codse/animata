@@ -1,37 +1,78 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
+
+type Point = {
+  x: number;
+  y: number;
+};
 
 export function useMousePosition(
   ref: React.RefObject<HTMLElement | null>,
-  callback?: ({ x, y }: { x: number; y: number }) => void,
+  callback?: (point: Point) => void,
 ) {
+  const callbackRef = useRef(callback);
+  const rectRef = useRef<DOMRect | null>(null);
+  const frameRef = useRef<number | null>(null);
+  const latestPointRef = useRef<Point | null>(null);
+
+  callbackRef.current = callback;
+
   useEffect(() => {
-    const handleMouseMove = (event: MouseEvent) => {
-      const { clientX, clientY } = event;
-      const { top, left } = ref.current?.getBoundingClientRect() || {
-        top: 0,
-        left: 0,
-      };
+    const node = ref.current;
+    if (!node) return;
 
-      callback?.({ x: clientX - left, y: clientY - top });
+    const updateRect = () => {
+      rectRef.current = node.getBoundingClientRect();
     };
 
-    const handleTouchMove = (event: TouchEvent) => {
-      const { clientX, clientY } = event.touches[0];
-      const { top, left } = ref.current?.getBoundingClientRect() || {
-        top: 0,
-        left: 0,
-      };
+    const flush = () => {
+      frameRef.current = null;
 
-      callback?.({ x: clientX - left, y: clientY - top });
+      if (latestPointRef.current) {
+        callbackRef.current?.(latestPointRef.current);
+      }
     };
 
-    ref.current?.addEventListener("mousemove", handleMouseMove);
-    ref.current?.addEventListener("touchmove", handleTouchMove);
+    const handlePointerMove = (event: PointerEvent) => {
+      if (!rectRef.current) {
+        updateRect();
+      }
 
-    const nodeRef = ref.current;
+      const currentRect = rectRef.current;
+      if (!currentRect) return;
+
+      latestPointRef.current = {
+        x: event.clientX - currentRect.left,
+        y: event.clientY - currentRect.top,
+      };
+
+      if (frameRef.current === null) {
+        frameRef.current = requestAnimationFrame(flush);
+      }
+    };
+
+    updateRect();
+
+    node.addEventListener("pointerenter", updateRect);
+    node.addEventListener("pointermove", handlePointerMove, {
+      passive: true,
+    });
+
+    window.addEventListener("resize", updateRect);
+    window.addEventListener("scroll", updateRect, {
+      passive: true,
+      capture: true,
+    });
+
     return () => {
-      nodeRef?.removeEventListener("mousemove", handleMouseMove);
-      nodeRef?.removeEventListener("touchmove", handleTouchMove);
+      node.removeEventListener("pointerenter", updateRect);
+      node.removeEventListener("pointermove", handlePointerMove);
+
+      window.removeEventListener("resize", updateRect);
+      window.removeEventListener("scroll", updateRect, true);
+
+      if (frameRef.current !== null) {
+        cancelAnimationFrame(frameRef.current);
+      }
     };
-  }, [ref, callback]);
+  }, [ref]);
 }
