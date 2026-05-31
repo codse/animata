@@ -43,7 +43,7 @@ export function FooterWordmarkNotes() {
             The type sits in the field. It doesn&apos;t float on top like a heading.
           </p>
           <p>
-            Not a clone — same hierarchy. One blue family in <code>oklch</code>, Syne 800 on the
+            Not a clone, but same hierarchy. One blue family in <code>oklch</code>, Syne 800 on the
             wordmark, IBM Plex on the links. Lucien uses a static texture; we put boids behind the
             gradient at low opacity instead.
           </p>
@@ -52,7 +52,7 @@ export function FooterWordmarkNotes() {
 
       <DemoNotes.Section id="components" index={2} title="Components used">
         <DemoNotes.Prose>
-          <p>Two Animata pieces — boids and SiblingFocusNav. The rest is layout and CSS.</p>
+          <p>Two Animata pieces: boids and SiblingFocusNav. The rest is layout and CSS.</p>
         </DemoNotes.Prose>
         <DemoNotes.ComponentLinks demoKey={DEMO_KEY} />
         <DemoNotes.Prose>
@@ -66,7 +66,7 @@ export function FooterWordmarkNotes() {
         <DemoNotes.Prose>
           <p>
             The wordmark is <strong>SVG</strong> <code>&lt;text&gt;</code>, not a styled heading.
-            That&apos;s the trick for edge-to-edge scaling — no clipping, no fighting{" "}
+            That&apos;s what makes edge-to-edge scaling work. No clipping, no fighting{" "}
             <code>clamp()</code> on a single HTML line.
           </p>
           <p>
@@ -90,7 +90,7 @@ export function FooterWordmarkNotes() {
       <DemoNotes.Section id="source" index={4} title="Full source">
         <DemoNotes.Prose>
           <p>
-            Pulled from the demo file at build time. Copy what you need below — component docs are
+            Pulled from the demo file at build time. Copy what you need below. Component docs are
             linked above.
           </p>
         </DemoNotes.Prose>

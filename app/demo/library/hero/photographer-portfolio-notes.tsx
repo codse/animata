@@ -14,7 +14,7 @@ const TRAIL_EXCLUDE_SNIPPET = `<TrailingImage
   excludeRefs={[heroRef, captionRef]}
 />`;
 
-const LAYOUT_SNIPPET = `{/* mobile: column stack · desktop: 2:3 row, both pinned to bottom */}
+const LAYOUT_SNIPPET = `{/* mobile: column stack; desktop: 2:3 row, both pinned to bottom */}
 <div className="flex flex-col gap-8 md:h-full md:flex-1 md:flex-row md:gap-6">
   <div className="md:flex md:flex-[2] md:flex-col md:justify-end">{/* hero */}</div>
 
@@ -59,15 +59,15 @@ export function PhotographerPortfolioNotes() {
       <DemoNotes.Section id="concept" index={1} title="Concept">
         <DemoNotes.Prose>
           <p>
-            Fake site for Maya, a wedding photographer. White page, black type, not much else — name
-            and contact in the bottom-left, a tall stack of prints on the right. On phone the stack
-            goes full width; on desktop it sits on the right edge. Wedding stills from Lummi follow
-            the cursor behind everything.
+            Fake site for Maya, a wedding photographer. White page, black type, not much else. Name
+            and contact sit in the bottom-left; a tall stack of prints fills the right. On phone the
+            stack goes full width; on desktop it hugs the right edge. Wedding stills from Lummi
+            follow the cursor behind everything.
           </p>
           <p>
             The first thing you see is not the page. <code>SplitReveal</code> covers the screen,
             loads every image, and ticks progress on the center seam. When the batch finishes, the
-            halves slide apart. The layout was already there — just hidden.
+            halves slide apart. The layout was already there, just hidden.
           </p>
           <p>
             Whichever print is on top gets corner brackets, like a viewfinder. The rest are plain
@@ -79,14 +79,14 @@ export function PhotographerPortfolioNotes() {
       <DemoNotes.Section id="components" index={2} title="Components used">
         <DemoNotes.Prose>
           <p>
-            <code>SplitReveal</code> sits next to the page as a fixed overlay — pass{" "}
+            <code>SplitReveal</code> sits next to the page as a fixed overlay. Pass{" "}
             <code>images</code>, wire <code>onComplete</code>, done. We skipped the{" "}
             <code>.Content</code> wrapper on purpose; the real layout mounts normally underneath.
           </p>
           <p>
             <code>CardStack</code> advances the portfolio. Autoplay only starts after the preloader
             clears. <code>PrintCaption</code> mirrors the top frame with fake shutter metadata.
-            Camera and map pin icons are Lucide Animated — they only move on hover so the hero stays
+            Camera and map pin icons are Lucide Animated. They only move on hover so the hero stays
             quiet.
           </p>
           <p>
@@ -100,8 +100,8 @@ export function PhotographerPortfolioNotes() {
       <DemoNotes.Section id="build" index={3} title="How it's built">
         <DemoNotes.Prose>
           <p>
-            All image URLs live in <code>LUMMI_ASSETS</code> — six stack frames, twelve for trails,
-            one avatar — cropped through a shared <code>lummi()</code> helper.{" "}
+            All image URLs live in <code>LUMMI_ASSETS</code>: six stack frames, twelve for trails,
+            one avatar. All cropped through a shared <code>lummi()</code> helper.{" "}
             <code>PRELOAD_IMAGES</code> dedupes before SplitReveal sees them.
           </p>
           <p>
@@ -112,26 +112,26 @@ export function PhotographerPortfolioNotes() {
           <p>
             Print width was the annoying part. We tried JS measurement first; on desktop the caption
             and stack kept drifting out of sync. Switched to a size container on the print column
-            and capped width with <code>min(100cqw, calc((100cqh - 4.5rem) * 8 / 11))</code> — 4:5
-            frame plus a 10% peek strip (<code>aspect-[8/1]</code>) that fits the viewport height.
-            No <code>ResizeObserver</code>.
+            and capped width with <code>min(100cqw, calc((100cqh - 4.5rem) * 8 / 11))</code> for a
+            4:5 frame plus a 10% peek strip (<code>aspect-[8/1]</code>) that fits the viewport
+            height. No <code>ResizeObserver</code>.
           </p>
           <p>
             Caption had a white fill at one point. It fought the page background and made the
-            metadata feel like a sticker — dropped it; caption and page share the same canvas now.
+            metadata feel like a sticker. Dropped it; caption and page share the same canvas now.
           </p>
           <p>
-            For trails we first excluded the whole stack. Looked too clean — nothing ever crossed
-            the prints. Narrowed it to the hero and caption wrappers only.
+            For trails we first excluded the whole stack. Looked too clean; nothing ever crossed the
+            prints. Narrowed it to the hero and caption wrappers only.
           </p>
         </DemoNotes.Prose>
-        <DemoNotes.Code caption="Responsive print column — container query sizing">
+        <DemoNotes.Code caption="Responsive print column, container query sizing">
           {LAYOUT_SNIPPET}
         </DemoNotes.Code>
         <DemoNotes.Code caption="SplitReveal as a sibling overlay">
           {PRELOADER_SNIPPET}
         </DemoNotes.Code>
-        <DemoNotes.Code caption="Trail layer — exclude text wrappers">
+        <DemoNotes.Code caption="Trail layer, exclude text wrappers">
           {TRAIL_EXCLUDE_SNIPPET}
         </DemoNotes.Code>
       </DemoNotes.Section>
@@ -139,7 +139,7 @@ export function PhotographerPortfolioNotes() {
       <DemoNotes.Section id="credits" index={4} title="Credits">
         <DemoNotes.Prose>
           <p>
-            Photos from <a href="https://www.lummi.ai">Lummi</a> — wedding and event searches. IDs
+            Photos from <a href="https://www.lummi.ai">Lummi</a>, wedding and event searches. IDs
             are in <code>LUMMI_ASSETS</code>. Fine for demos; use your own shots for anything real.
           </p>
           <p>

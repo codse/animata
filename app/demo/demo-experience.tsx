@@ -1,7 +1,9 @@
 "use client";
 
 import * as DialogPrimitive from "@radix-ui/react-dialog";
+import { Command as CommandPrimitive } from "cmdk";
 import {
+  CheckIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
   LayoutGridIcon,
@@ -21,7 +23,6 @@ import { Icons } from "@/components/icons";
 import {
   CommandEmpty,
   CommandGroup,
-  CommandInput,
   CommandItem,
   CommandList,
   Command as CommandRoot,
@@ -554,69 +555,76 @@ function DemoPicker({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogPortal>
-        <DialogOverlay className="bg-black/50 backdrop-blur-[3px] sm:bg-black/45" />
+        <DialogOverlay className="bg-black/50 backdrop-blur-[2px] sm:bg-black/40" />
         <DialogPrimitive.Content
           style={{ "--demo-accent": accentColor } as CSSProperties}
           aria-describedby={undefined}
           className={cn(
-            "demo-picker-shell fixed z-50 grid w-full gap-0 overflow-hidden border border-white/12 bg-[#141414]/96 text-white shadow-[0_28px_90px_-28px_rgb(0_0_0_/_0.88)] backdrop-blur-2xl outline-none",
-            "inset-x-0 bottom-0 top-auto max-h-[min(88svh,680px)] translate-x-0 translate-y-0 rounded-t-[28px] border-b-0",
+            "demo-picker-shell fixed z-50 flex w-full flex-col overflow-hidden border border-white/10 bg-[#141414] text-white shadow-[0_24px_80px_-32px_rgb(0_0_0_/_0.9)] outline-none",
+            "inset-x-0 bottom-0 top-auto max-h-[min(88svh,640px)] translate-x-0 translate-y-0 rounded-t-[20px] border-b-0",
             "data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:slide-out-to-bottom-4",
             "data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:slide-in-from-bottom-4",
-            "sm:inset-x-auto sm:bottom-auto sm:top-[50%] sm:left-[50%] sm:max-w-[min(92vw,28rem)] sm:translate-x-[-50%] sm:translate-y-[-50%] sm:rounded-[24px] sm:border-b",
+            "sm:inset-x-auto sm:bottom-auto sm:top-[50%] sm:left-[50%] sm:max-w-[min(92vw,24rem)] sm:translate-x-[-50%] sm:translate-y-[-50%] sm:rounded-[18px] sm:border-b",
             "sm:data-[state=closed]:slide-out-to-bottom-0 sm:data-[state=closed]:zoom-out-95 sm:data-[state=open]:slide-in-from-bottom-0 sm:data-[state=open]:zoom-in-95",
           )}
         >
           <div className="sm:hidden">
-            <div aria-hidden="true" className="mx-auto mt-2.5 h-1 w-10 rounded-full bg-white/18" />
+            <div aria-hidden="true" className="mx-auto mt-2 h-1 w-9 rounded-full bg-white/15" />
           </div>
 
-          <div className="flex items-start justify-between gap-3 border-b border-white/8 px-4 pb-3 pt-3 sm:pt-4">
-            <div className="min-w-0">
-              <DialogPrimitive.Title className="text-[15px] font-medium tracking-[-0.02em] text-white">
-                Browse demos
-              </DialogPrimitive.Title>
-              <DialogPrimitive.Description className="mt-0.5 text-[12px] text-white/45">
-                {DEMO_ITEMS.length} live {DEMO_ITEMS.length === 1 ? "experience" : "experiences"}
-              </DialogPrimitive.Description>
-            </div>
+          <div className="flex items-center justify-between gap-3 px-4 pb-3 pt-3.5 sm:pt-4">
+            <DialogPrimitive.Title className="text-[15px] font-medium tracking-[-0.01em] text-white">
+              Browse demos
+            </DialogPrimitive.Title>
+            <DialogPrimitive.Description className="sr-only">
+              Search and switch between live demo pages.
+            </DialogPrimitive.Description>
             <button
               type="button"
               aria-label="Close demo picker"
               onClick={() => onOpenChange(false)}
-              className="grid size-9 shrink-0 touch-manipulation place-items-center rounded-full text-white/55 transition-colors hover:bg-white/10 hover:text-white"
+              className="-mr-1 grid size-8 shrink-0 touch-manipulation place-items-center rounded-full text-white/45 transition-colors hover:bg-white/8 hover:text-white/75"
             >
               <XIcon aria-hidden="true" className="size-4" />
             </button>
           </div>
 
-          <CommandRoot className="bg-transparent">
-            <div className="px-3 pt-3">
-              <div className="demo-picker-search flex items-center gap-2 rounded-2xl border border-white/8 bg-white/[0.04] px-3">
-                <SearchIcon aria-hidden="true" className="size-4 shrink-0 text-white/35" />
-                <CommandInput
-                  placeholder="Search by name or category…"
-                  className="h-11 border-0 bg-transparent px-0 text-[15px] text-white placeholder:text-white/35 focus:ring-0"
-                />
-              </div>
+          <CommandRoot className="flex min-h-0 w-full flex-col bg-transparent">
+            <div
+              cmdk-input-wrapper=""
+              className="flex h-11 w-full shrink-0 items-center gap-2.5 border-y border-white/8 px-4"
+            >
+              <SearchIcon aria-hidden="true" className="size-4 shrink-0 text-white/30" />
+              <CommandPrimitive.Input
+                placeholder="Search demos…"
+                className="min-w-0 flex-1 bg-transparent text-[15px] text-white outline-none placeholder:text-white/35"
+              />
             </div>
 
-            <CommandList className="demo-picker-list max-h-[min(52svh,420px)] px-2 pb-2 pt-2">
-              <CommandEmpty className="rounded-2xl bg-white/[0.03] py-10 text-sm text-white/45">
-                No demos match that search.
+            <CommandList className="demo-picker-list max-h-[min(52svh,400px)] px-1.5 py-1 pb-3">
+              <CommandEmpty className="px-4 py-10 text-[14px] text-white/45">
+                Nothing matched that search.
               </CommandEmpty>
-              {DEMO_GROUPS.map((group) => (
+              {DEMO_GROUPS.map((group, groupIndex) => (
                 <CommandGroup
                   key={group.slug}
-                  heading={`${group.label} · ${group.items.length}`}
-                  className="pb-1 [&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:py-2 [&_[cmdk-group-heading]]:text-[10px] [&_[cmdk-group-heading]]:font-semibold [&_[cmdk-group-heading]]:tracking-[0.12em] [&_[cmdk-group-heading]]:text-white/40"
+                  heading={group.label}
+                  className="demo-picker-group p-0 [&:not(:last-child)]:pb-4 [&_[cmdk-group-heading]]:sr-only [&_[cmdk-item]:not(:last-child)]:mb-1"
                 >
+                  <div
+                    aria-hidden="true"
+                    className={cn(
+                      "px-3 pb-1.5 text-[12px] font-medium text-white/38",
+                      groupIndex === 0 ? "pt-2.5" : "pt-3",
+                    )}
+                  >
+                    {group.label}
+                  </div>
                   {group.items.map((rawItem) => {
                     const flatIndex = getItemIndex(group.slug, rawItem.slug);
                     const entry = DEMO_ITEMS[flatIndex];
                     const isActive =
                       entry.slug === activeItem.slug && entry.group.slug === activeGroup.slug;
-                    const itemAccent = demoThemeColor(entry, group);
 
                     return (
                       <CommandItem
@@ -626,33 +634,18 @@ function DemoPicker({
                         onFocus={() => onPrefetch(entry)}
                         onSelect={() => onSelect(entry)}
                         className={cn(
-                          "demo-picker-item mx-0.5 cursor-pointer rounded-2xl px-3 py-2.5 aria-selected:bg-white/[0.07] data-[selected=true]:bg-white/[0.07]",
-                          isActive && "demo-picker-item-live bg-white/[0.05]",
+                          "demo-picker-item mx-0.5 cursor-pointer rounded-lg px-3 py-2.5 aria-selected:bg-white/[0.07] data-[selected=true]:bg-white/[0.07]",
+                          isActive && "demo-picker-item-live bg-white/[0.04]",
                         )}
-                        style={
-                          isActive ? ({ "--item-accent": itemAccent } as CSSProperties) : undefined
-                        }
                       >
-                        <span
-                          aria-hidden="true"
-                          className={cn(
-                            "mt-1.5 size-1.5 shrink-0 rounded-full bg-white/20",
-                            isActive &&
-                              "bg-[var(--item-accent)] shadow-[0_0_10px_color-mix(in_srgb,var(--item-accent)_70%,transparent)]",
-                          )}
-                        />
-                        <span className="min-w-0 flex-1">
-                          <span className="block truncate text-[13px] font-medium tracking-[-0.015em] text-white/92">
-                            {entry.label}
-                          </span>
-                          <span className="mt-0.5 block truncate text-[12px] leading-snug text-white/42">
-                            {group.phrase}
-                          </span>
+                        <span className="min-w-0 flex-1 truncate text-[14px] text-white/88">
+                          {entry.label}
                         </span>
                         {isActive ? (
-                          <span className="shrink-0 self-center rounded-full border border-white/10 bg-white/[0.06] px-2 py-0.5 text-[10px] font-medium text-white/72">
-                            live
-                          </span>
+                          <CheckIcon
+                            aria-hidden="true"
+                            className="size-3.5 shrink-0 text-white/45"
+                          />
                         ) : null}
                       </CommandItem>
                     );
@@ -661,15 +654,6 @@ function DemoPicker({
               ))}
             </CommandList>
           </CommandRoot>
-
-          <div className="border-t border-white/8 px-4 py-2.5">
-            <p className="text-center font-mono text-[10px] leading-relaxed text-white/35 sm:hidden">
-              Swipe screen edges · tap grid to browse
-            </p>
-            <p className="hidden text-center font-mono text-[10px] leading-relaxed text-white/35 sm:block">
-              H home · ← → cycle · . picker · R refresh · F fullscreen
-            </p>
-          </div>
         </DialogPrimitive.Content>
       </DialogPortal>
     </Dialog>
@@ -980,24 +964,8 @@ function DemoShellStyles() {
         isolation: isolate;
       }
 
-      .demo-picker-shell::before {
-        content: "";
-        pointer-events: none;
-        position: absolute;
-        inset: 0;
-        border-radius: inherit;
-        background:
-          linear-gradient(180deg, rgb(255 255 255 / 0.08), transparent 22%),
-          radial-gradient(circle at 50% 0%, rgb(255 255 255 / 0.06), transparent 42%);
-      }
-
-      .demo-picker-search [cmdk-input-wrapper] {
-        border: 0;
-        padding: 0;
-      }
-
-      .demo-picker-search [cmdk-input-wrapper] svg {
-        display: none;
+      .demo-picker-group + .demo-picker-group {
+        border-top: 1px solid rgb(255 255 255 / 0.05);
       }
 
       .demo-picker-list {
@@ -1016,12 +984,8 @@ function DemoShellStyles() {
 
       .demo-picker-item {
         display: flex;
-        align-items: flex-start;
+        align-items: center;
         gap: 0.625rem;
-      }
-
-      .demo-picker-item-live {
-        box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.08);
       }
 
       .demo-chrome-pill {

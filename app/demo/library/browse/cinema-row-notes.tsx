@@ -72,16 +72,15 @@ export function CinemaRowNotes() {
         id="demo-notes-title"
         eyebrow="Recipe"
         title="Stream browse"
-        description="Apple TV-style layout: gradient hero with staggered premiere copy, a scrolling poster rail, then a craft panel with twin vertical still columns. TMDB art — demo only."
+        description="Apple TV-style page: gradient hero, scrolling poster rail, craft panel with two vertical still columns. TMDB posters, demo only."
       />
 
       <DemoNotes.Section id="concept" index={1} title="Concept">
         <DemoNotes.Prose>
           <p>
-            Three bands on one page. The hero is type on a violet radial scrim — eyebrow, title,
-            tagline, runtime, and CTAs stagger in after load. Below that, premieres scroll
-            horizontally. The craft panel pairs short copy with two still columns drifting in
-            opposite directions.
+            Three bands stacked on one page. Hero copy sits on a violet radial scrim. Eyebrow,
+            title, tagline, runtime, and CTAs stagger in after load. Premieres scroll sideways
+            underneath. The craft panel is short copy plus two still columns moving opposite ways.
           </p>
         </DemoNotes.Prose>
       </DemoNotes.Section>
@@ -91,9 +90,9 @@ export function CinemaRowNotes() {
           <p>
             <code>WaveReveal</code> (<code>mode="word"</code>) on the hero title.{" "}
             <code>Marquee</code> on the premieres rail and both still columns (
-            <code>pauseOnHover</code>, <code>applyMask={"{false}"}</code> — local masks instead).
-            Hero rise/fall and delay math live in the demo file as <code>cinema-hero-rise</code>{" "}
-            plus <code>heroSequenceDelays()</code>.
+            <code>pauseOnHover</code>, <code>applyMask={"{false}"}</code>; we use local masks
+            instead). Hero rise/fall and delay math live in the demo file as{" "}
+            <code>cinema-hero-rise</code> plus <code>heroSequenceDelays()</code>.
           </p>
         </DemoNotes.Prose>
         <DemoNotes.ComponentLinks demoKey={DEMO_KEY} />
@@ -102,9 +101,9 @@ export function CinemaRowNotes() {
       <DemoNotes.Section id="build" index={3} title="How it's built">
         <DemoNotes.Prose>
           <p>
-            <code>heroSequenceDelays()</code> derives every entrance offset from the title word
-            count and <code>WaveReveal</code> timing — eyebrow through the premieres rail share one
-            sequence. <code>cinema-hero-rise</code> is a local keyframe (blur +{" "}
+            <code>heroSequenceDelays()</code> works out every entrance offset from the title word
+            count and <code>WaveReveal</code> timing. Eyebrow through the premieres rail all share
+            one sequence. <code>cinema-hero-rise</code> is a local keyframe (blur +{" "}
             <code>translateY</code>) on everything except the title words.
           </p>
           <p>
@@ -128,7 +127,7 @@ export function CinemaRowNotes() {
         <DemoNotes.Code caption="Hero delay sequence + WaveReveal">
           {HERO_SEQUENCE_SNIPPET}
         </DemoNotes.Code>
-        <DemoNotes.Code caption="Premieres rail — custom edge mask">
+        <DemoNotes.Code caption="Premieres rail, custom edge mask">
           {PREMIERES_SNIPPET}
         </DemoNotes.Code>
         <DemoNotes.Code caption="Craft panel still columns">{STILLS_SNIPPET}</DemoNotes.Code>

@@ -10,6 +10,8 @@
     "lint": "biome check .",
     "lint:fix": "biome check --fix .",
     "validate:demos": "node ./scripts/validate-demo-registry.js",
+    "validate:registry": "node ./scripts/validate-registry-install.js",
+    "validate:registry:build": "node ./scripts/validate-registry-install.js --build",
     "format": "biome format --write .",
     "storybook": "storybook dev -p 6006",
     "storybook:build": "storybook build -o public/preview",

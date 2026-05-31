@@ -30,8 +30,8 @@ export function LaunchShiftNotes() {
       <DemoNotes.Header
         id="demo-notes-title"
         eyebrow="Recipe"
-        title="Superhuman · platform hero"
-        description="The Grammarly → Superhuman rebrand hero from superhuman.com. Not affiliated; same headline and subhead, local layout."
+        title="Superhuman platform hero"
+        description="The Grammarly to Superhuman rebrand hero from superhuman.com. Not affiliated; same headline and subhead, local layout."
       />
 
       <DemoNotes.Section id="concept" index={1} title="Concept">
@@ -47,8 +47,8 @@ export function LaunchShiftNotes() {
           </p>
           <p>
             Black field, warm off-white body text, violet on the badge. Headline fades white to
-            gray, two lines so the gradient doesn&apos;t muddy the second row. Boids behind a
-            vignette for edge motion.
+            gray, split across two lines so the gradient doesn&apos;t muddy the second row. Boids
+            behind a vignette for edge motion.
           </p>
         </DemoNotes.Prose>
       </DemoNotes.Section>
