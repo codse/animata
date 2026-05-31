@@ -214,10 +214,7 @@ function PrintCaption() {
   }
 
   return (
-    <figcaption
-      className="relative z-10 shrink-0 border-b border-black/80 pb-3"
-      style={{ backgroundColor: CANVAS }}
-    >
+    <figcaption className="relative z-10 shrink-0 border-b border-black/80 pb-3">
       <div className="flex items-baseline justify-between gap-4">
         <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-black">
           {activeItem.title}
@@ -295,11 +292,7 @@ function PrintProof({
           "md:w-[min(100cqw,calc((100cqh-4.5rem)*8/11))]",
         )}
       >
-        <div
-          ref={captionRef}
-          className="relative z-30 w-full shrink-0"
-          style={{ backgroundColor: CANVAS }}
-        >
+        <div ref={captionRef} className="relative z-30 w-full shrink-0">
           <PrintCaption />
         </div>
 

@@ -2778,10 +2778,7 @@ function PrintCaption() {
   }
 
   return (
-    <figcaption
-      className="relative z-10 shrink-0 border-b border-black/80 pb-3"
-      style={{ backgroundColor: CANVAS }}
-    >
+    <figcaption className="relative z-10 shrink-0 border-b border-black/80 pb-3">
       <div className="flex items-baseline justify-between gap-4">
         <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-black">
           {activeItem.title}
@@ -2859,11 +2856,7 @@ function PrintProof({
           "md:w-[min(100cqw,calc((100cqh-4.5rem)*8/11))]",
         )}
       >
-        <div
-          ref={captionRef}
-          className="relative z-30 w-full shrink-0"
-          style={{ backgroundColor: CANVAS }}
-        >
+        <div ref={captionRef} className="relative z-30 w-full shrink-0">
           <PrintCaption />
         </div>
 
@@ -3179,10 +3172,7 @@ export default function PhotographerPortfolio() {
 <span class="line"><span style="color:#24292E">  }</span></span>
 <span class="line"></span>
 <span class="line"><span style="color:#D73A49">  return</span><span style="color:#24292E"> (</span></span>
-<span class="line"><span style="color:#24292E">    &#x3C;</span><span style="color:#22863A">figcaption</span></span>
-<span class="line"><span style="color:#6F42C1">      className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"relative z-10 shrink-0 border-b border-black/80 pb-3"</span></span>
-<span class="line"><span style="color:#6F42C1">      style</span><span style="color:#D73A49">=</span><span style="color:#24292E">{{ backgroundColor: </span><span style="color:#005CC5">CANVAS</span><span style="color:#24292E"> }}</span></span>
-<span class="line"><span style="color:#24292E">    ></span></span>
+<span class="line"><span style="color:#24292E">    &#x3C;</span><span style="color:#22863A">figcaption</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"relative z-10 shrink-0 border-b border-black/80 pb-3"</span><span style="color:#24292E">></span></span>
 <span class="line"><span style="color:#24292E">      &#x3C;</span><span style="color:#22863A">div</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"flex items-baseline justify-between gap-4"</span><span style="color:#24292E">></span></span>
 <span class="line"><span style="color:#24292E">        &#x3C;</span><span style="color:#22863A">p</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"text-[11px] font-medium uppercase tracking-[0.1em] text-black"</span><span style="color:#24292E">></span></span>
 <span class="line"><span style="color:#24292E">          {activeItem.title}</span></span>
@@ -3260,11 +3250,7 @@ export default function PhotographerPortfolio() {
 <span class="line"><span style="color:#032F62">          "md:w-[min(100cqw,calc((100cqh-4.5rem)*8/11))]"</span><span style="color:#24292E">,</span></span>
 <span class="line"><span style="color:#24292E">        )}</span></span>
 <span class="line"><span style="color:#24292E">      ></span></span>
-<span class="line"><span style="color:#24292E">        &#x3C;</span><span style="color:#22863A">div</span></span>
-<span class="line"><span style="color:#6F42C1">          ref</span><span style="color:#D73A49">=</span><span style="color:#24292E">{captionRef}</span></span>
-<span class="line"><span style="color:#6F42C1">          className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"relative z-30 w-full shrink-0"</span></span>
-<span class="line"><span style="color:#6F42C1">          style</span><span style="color:#D73A49">=</span><span style="color:#24292E">{{ backgroundColor: </span><span style="color:#005CC5">CANVAS</span><span style="color:#24292E"> }}</span></span>
-<span class="line"><span style="color:#24292E">        ></span></span>
+<span class="line"><span style="color:#24292E">        &#x3C;</span><span style="color:#22863A">div</span><span style="color:#6F42C1"> ref</span><span style="color:#D73A49">=</span><span style="color:#24292E">{captionRef} </span><span style="color:#6F42C1">className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"relative z-30 w-full shrink-0"</span><span style="color:#24292E">></span></span>
 <span class="line"><span style="color:#24292E">          &#x3C;</span><span style="color:#005CC5">PrintCaption</span><span style="color:#24292E"> /></span></span>
 <span class="line"><span style="color:#24292E">        &#x3C;/</span><span style="color:#22863A">div</span><span style="color:#24292E">></span></span>
 <span class="line"></span>
@@ -3580,10 +3566,7 @@ export default function PhotographerPortfolio() {
 <span class="line"><span style="color:#E1E4E8">  }</span></span>
 <span class="line"></span>
 <span class="line"><span style="color:#F97583">  return</span><span style="color:#E1E4E8"> (</span></span>
-<span class="line"><span style="color:#E1E4E8">    &#x3C;</span><span style="color:#85E89D">figcaption</span></span>
-<span class="line"><span style="color:#B392F0">      className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"relative z-10 shrink-0 border-b border-black/80 pb-3"</span></span>
-<span class="line"><span style="color:#B392F0">      style</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{{ backgroundColor: </span><span style="color:#79B8FF">CANVAS</span><span style="color:#E1E4E8"> }}</span></span>
-<span class="line"><span style="color:#E1E4E8">    ></span></span>
+<span class="line"><span style="color:#E1E4E8">    &#x3C;</span><span style="color:#85E89D">figcaption</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"relative z-10 shrink-0 border-b border-black/80 pb-3"</span><span style="color:#E1E4E8">></span></span>
 <span class="line"><span style="color:#E1E4E8">      &#x3C;</span><span style="color:#85E89D">div</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"flex items-baseline justify-between gap-4"</span><span style="color:#E1E4E8">></span></span>
 <span class="line"><span style="color:#E1E4E8">        &#x3C;</span><span style="color:#85E89D">p</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"text-[11px] font-medium uppercase tracking-[0.1em] text-black"</span><span style="color:#E1E4E8">></span></span>
 <span class="line"><span style="color:#E1E4E8">          {activeItem.title}</span></span>
@@ -3661,11 +3644,7 @@ export default function PhotographerPortfolio() {
 <span class="line"><span style="color:#9ECBFF">          "md:w-[min(100cqw,calc((100cqh-4.5rem)*8/11))]"</span><span style="color:#E1E4E8">,</span></span>
 <span class="line"><span style="color:#E1E4E8">        )}</span></span>
 <span class="line"><span style="color:#E1E4E8">      ></span></span>
-<span class="line"><span style="color:#E1E4E8">        &#x3C;</span><span style="color:#85E89D">div</span></span>
-<span class="line"><span style="color:#B392F0">          ref</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{captionRef}</span></span>
-<span class="line"><span style="color:#B392F0">          className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"relative z-30 w-full shrink-0"</span></span>
-<span class="line"><span style="color:#B392F0">          style</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{{ backgroundColor: </span><span style="color:#79B8FF">CANVAS</span><span style="color:#E1E4E8"> }}</span></span>
-<span class="line"><span style="color:#E1E4E8">        ></span></span>
+<span class="line"><span style="color:#E1E4E8">        &#x3C;</span><span style="color:#85E89D">div</span><span style="color:#B392F0"> ref</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{captionRef} </span><span style="color:#B392F0">className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"relative z-30 w-full shrink-0"</span><span style="color:#E1E4E8">></span></span>
 <span class="line"><span style="color:#E1E4E8">          &#x3C;</span><span style="color:#79B8FF">PrintCaption</span><span style="color:#E1E4E8"> /></span></span>
 <span class="line"><span style="color:#E1E4E8">        &#x3C;/</span><span style="color:#85E89D">div</span><span style="color:#E1E4E8">></span></span>
 <span class="line"></span>
