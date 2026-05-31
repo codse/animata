@@ -1,6 +1,7 @@
 ---
 title: Split Reveal
-description: Fixed overlay that preloads images, locks scroll, and splits from the center seam when done
+description: Full-screen preloader that loads images, locks scroll, then opens from the center seam.
+author: hari
 ---
 
 <ComponentPreview name="preloader-split-reveal--primary" />
@@ -34,7 +35,7 @@ Open the newly created file and paste the following code:
 
 ## Usage
 
-Drop it next to your page — no wrapper required:
+Place it next to your page. No wrapper required.
 
 ```tsx
 <section>{/* your layout */}</section>
@@ -51,10 +52,20 @@ Drop it next to your page — no wrapper required:
 />
 ```
 
-Pass `children` instead of `renderProgress` when you want full control over shutters and progress.
+Use `renderProgress` to swap the center counter while keeping the default shutters. Pass `children` to replace the whole overlay.
 
-Progress fades out before the shutters move. Shutters use CSS keyframes with a custom cubic-bezier — tune timing with `revealDuration` (default `0.85`s), `progressFadeMs` (default `280`), and the post-load pause with `holdMs`.
+After the last image decodes, the loader waits (`holdMs`), fades the progress UI (`progressFadeMs`), then splits the shutters. Timing runs on CSS keyframes with a custom cubic-bezier. `revealDuration` defaults to `0.85`s.
+
+## How it works
+
+The component preloads every URL in `images` with `Image()` plus `decode()` when available. Scroll locks while the overlay is active and releases on `done`.
+
+Phases go `loading` → `fade-ui` → `reveal` → `done`. Shutters are plain divs animated with `@keyframes`; no Motion dependency. `useSplitReveal()` exposes phase, counts, and colors if you build a custom overlay in `children`.
+
+Restoring a tab from bfcache gets a fresh boot id so the preloader does not stick on a stale `0/0` count.
 
 ## Credits
 
-Images in demos may come from [Lummi](https://www.lummi.ai).
+Built by [hari](https://github.com/hari)
+
+Images from [Lummi](https://www.lummi.ai)

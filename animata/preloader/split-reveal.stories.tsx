@@ -32,67 +32,10 @@ type Story = StoryObj<typeof meta>;
 export const Primary: Story = {
   render: (args) => (
     <>
-      <div className="flex min-h-svh items-center justify-center bg-zinc-100 px-6">
-        <p className="max-w-md text-center text-2xl font-semibold tracking-tight text-zinc-900">
-          Page content mounts normally. SplitReveal covers it until images load.
-        </p>
-      </div>
+      <p className="flex full-content items-center justify-center bg-zinc-100 max-w-md text-center text-balance leading-loose text-xl tracking-tight text-zinc-900 px-6 py-12">
+        Page content mounts normally. SplitReveal covers it until images load.
+      </p>
       <SplitReveal {...args} />
-    </>
-  ),
-  args: {
-    images: SAMPLE_IMAGES,
-    backgroundColor: "#fff",
-    foregroundColor: "#000",
-    revealDuration: 0.85,
-    holdMs: 240,
-    lockScroll: true,
-  },
-};
-
-export const CustomProgress: Story = {
-  render: (args) => (
-    <>
-      <div className="flex min-h-svh items-center justify-center bg-neutral-950 px-6 text-white">
-        <p className="text-xl font-medium">Underneath the overlay</p>
-      </div>
-      <SplitReveal
-        {...args}
-        renderProgress={({ progress, loaded, total }) => (
-          <p className="text-center text-sm tabular-nums text-white/70">
-            {loaded}/{total} · {progress}%
-          </p>
-        )}
-      />
-    </>
-  ),
-  args: {
-    images: SAMPLE_IMAGES,
-    backgroundColor: "#0a0a0a",
-    foregroundColor: "#fff",
-    revealDuration: 0.85,
-    holdMs: 240,
-    lockScroll: true,
-  },
-};
-
-export const ComposedOverlay: Story = {
-  render: (args) => (
-    <>
-      <div className="flex min-h-svh items-center justify-center bg-zinc-200 px-6">
-        <p className="text-lg font-medium text-zinc-800">Full overlay override via children</p>
-      </div>
-      <SplitReveal {...args}>
-        <SplitReveal.Shutter side="top" />
-        <SplitReveal.Shutter side="bottom" />
-        <SplitReveal.Progress>
-          {({ loaded, total }) => (
-            <p className="text-center text-xs uppercase tracking-[0.14em] text-black/50">
-              {loaded} of {total}
-            </p>
-          )}
-        </SplitReveal.Progress>
-      </SplitReveal>
     </>
   ),
   args: {
