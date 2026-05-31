@@ -1,7 +1,14 @@
 "use client";
 
 import "@fontsource-variable/instrument-sans";
-import { type CSSProperties, type ReactNode, type RefObject, useRef, useState } from "react";
+import {
+  type CSSProperties,
+  type ReactNode,
+  type RefObject,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
 
 import CardStack, {
   CARD_STACK_MASK_IDS,
@@ -12,6 +19,7 @@ import TrailingImage from "@/animata/image/trailing-image";
 import SplitReveal from "@/animata/preloader/split-reveal";
 import { MapPinIcon } from "@/components/ui/map-pin";
 import { SwitchCameraIcon } from "@/components/ui/switch-camera";
+import { useMediaQuery } from "@/hooks/use-media-query";
 import { cn } from "@/lib/utils";
 
 import { PhotographerPortfolioNotes } from "./photographer-portfolio-notes";
@@ -75,7 +83,6 @@ const SHOT_SETTINGS: Record<string, { aperture: string; shutter: string; stock: 
 const HERO_TONE = {
   mute: "text-black/40",
   ink: "text-black",
-  accent: "text-[#c2410c]",
 } as const;
 
 const PORTFOLIO: CardStackItem[] = [
@@ -138,9 +145,9 @@ const HERO_MARK =
 
 function HeroMark({ children, className }: { children: ReactNode; className?: string }) {
   return (
-    <span className={cn(HERO_MARK, className)} aria-hidden>
+    <div className={cn(HERO_MARK, className)} aria-hidden>
       {children}
-    </span>
+    </div>
   );
 }
 
@@ -156,8 +163,8 @@ function HeroStory() {
   const type = "text-[clamp(1.25rem,2vw,1.75rem)] font-medium leading-[1.55] tracking-[-0.02em]";
 
   return (
-    <div className="max-w-[min(100%,36rem)] space-y-6">
-      <p className={type}>
+    <div className="flex flex-col gap-[1.15em]">
+      <div className={type}>
         <span className={HERO_TONE.mute}>Hi, I'm </span>
         <span className={HERO_TONE.ink}>{PHOTOGRAPHER.name}</span>
         <ProfileGlyph src={PHOTOGRAPHER.avatar} alt={PHOTOGRAPHER.studio} />
@@ -173,15 +180,11 @@ function HeroStory() {
         </HeroMark>
         <span className={HERO_TONE.mute}> </span>
         <span className={HERO_TONE.ink}>{PHOTOGRAPHER.location}</span>
-        <span className={HERO_TONE.mute}>
-          {" "}
-          — good light, real moments, and photos that don't feel forced.
-        </span>
-      </p>
+        <span className={HERO_TONE.mute}> and capture photos you hang on the wall.</span>
+      </div>
 
-      <p className={type}>
-        <span className={HERO_TONE.accent}>Booking Q3.</span>
-        <span className={HERO_TONE.mute}> </span>
+      <p className={type} style={{ textBoxTrim: "trim-both" } as CSSProperties}>
+        <span className={HERO_TONE.mute}>Booking Q3. </span>
         <a
           href={PHOTOGRAPHER.email}
           className={cn(HERO_TONE.ink, "underline-offset-[4px] hover:underline")}
@@ -219,7 +222,10 @@ function PrintCaption() {
   }
 
   return (
-    <figcaption className="relative z-10 shrink-0 border-b border-black/80 bg-transparent pb-3">
+    <figcaption
+      className="relative z-10 shrink-0 border-b border-black/80 pb-3"
+      style={{ backgroundColor: CANVAS }}
+    >
       <div className="flex items-baseline justify-between gap-4">
         <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-black">
           {activeItem.title}
@@ -241,54 +247,162 @@ function PrintCaption() {
   );
 }
 
-const BASELINE = 8;
-const LAYOUT = {
-  shell: "px-6 sm:px-10 lg:px-14",
-  blockY: "py-8 lg:py-10",
-  grid: "gap-x-8 gap-y-8 lg:gap-x-10 lg:gap-y-10",
-} as const;
+const SHELL =
+  "px-6 pt-6 pb-[calc(var(--demo-chrome-reserve,5rem)+1.5rem)] sm:px-10 sm:pt-10 sm:pb-[calc(var(--demo-chrome-reserve,5rem)+2.5rem)] lg:px-14 lg:pt-14 lg:pb-[calc(var(--demo-chrome-reserve,5rem)+3.5rem)]";
+const PRINT_ASPECT = 5 / 4;
+/** Deepest stack layer y is -7.5% of card height — reserve a little extra for motion */
+const STACK_PEEK_RATIO = 0.1;
 
-function ProofStack({
+type PrintSize = { width: number; height: number; peek: number };
+
+function computePrintSize(
+  columnWidth: number,
+  budgetHeight: number,
+  captionHeight: number,
+): PrintSize {
+  const usable = Math.max(0, budgetHeight - captionHeight);
+  const maxPrintHeight = usable / (1 + STACK_PEEK_RATIO);
+  const height = Math.min(columnWidth * PRINT_ASPECT, maxPrintHeight);
+  const width = height / PRINT_ASPECT;
+
+  return {
+    width,
+    height,
+    peek: height * STACK_PEEK_RATIO,
+  };
+}
+
+function getPrintBudget(layoutEl: HTMLElement, stacked: boolean, columnWidth: number): number {
+  if (stacked) {
+    return columnWidth * PRINT_ASPECT;
+  }
+
+  const layoutRect = layoutEl.getBoundingClientRect();
+  const shell = layoutEl.parentElement;
+  if (!shell) {
+    return layoutEl.clientHeight;
+  }
+
+  const shellRect = shell.getBoundingClientRect();
+  const padBottom = Number.parseFloat(getComputedStyle(shell).paddingBottom);
+  const visibleBottom = shellRect.bottom - padBottom;
+  const visibleHeight = Math.max(0, visibleBottom - layoutRect.top);
+
+  return Math.min(layoutEl.clientHeight, visibleHeight);
+}
+
+function usePrintSize(
+  layoutRef: RefObject<HTMLElement | null>,
+  columnRef: RefObject<HTMLElement | null>,
+  captionRef: RefObject<HTMLElement | null>,
+) {
+  const [printSize, setPrintSize] = useState<PrintSize>({ width: 0, height: 0, peek: 0 });
+
+  useLayoutEffect(() => {
+    const layout = layoutRef.current;
+    const column = columnRef.current;
+    if (!layout || !column) return;
+
+    const measure = () => {
+      const columnWidth = column.clientWidth;
+      if (columnWidth <= 0) return;
+
+      const captionHeight = captionRef.current?.offsetHeight ?? 0;
+      const stacked = window.matchMedia("(max-width: 767px)").matches;
+
+      if (stacked) {
+        const height = columnWidth * PRINT_ASPECT;
+        setPrintSize({
+          width: columnWidth,
+          height,
+          peek: height * STACK_PEEK_RATIO,
+        });
+        return;
+      }
+
+      const budgetHeight = getPrintBudget(layout, false, columnWidth);
+      setPrintSize(computePrintSize(columnWidth, budgetHeight, captionHeight));
+    };
+
+    measure();
+
+    const observer = new ResizeObserver(measure);
+    observer.observe(layout);
+    observer.observe(column);
+    if (captionRef.current) observer.observe(captionRef.current);
+
+    return () => observer.disconnect();
+  }, [captionRef, columnRef, layoutRef]);
+
+  return printSize;
+}
+
+function PrintProof({
   stackRef,
   captionRef,
+  printSize,
+  stacked,
 }: {
   stackRef: RefObject<HTMLElement | null>;
   captionRef: RefObject<HTMLDivElement | null>;
+  printSize: PrintSize;
+  stacked: boolean;
 }) {
+  const ready = printSize.width > 0 && printSize.height > 0;
+
   return (
     <figure
       ref={stackRef}
-      className="ml-auto grid h-full min-h-0 w-full min-w-0 max-w-full grid-rows-[auto_minmax(0,1fr)] gap-y-3 sm:gap-y-4"
+      className={cn("flex w-full min-w-0 shrink-0 flex-col", !stacked && "md:ml-auto")}
+      style={!stacked && ready ? { width: printSize.width } : undefined}
     >
-      <div ref={captionRef} className="relative z-30 w-full shrink-0 bg-transparent">
+      <div
+        ref={captionRef}
+        className="relative z-30 w-full shrink-0"
+        style={{ backgroundColor: CANVAS }}
+      >
         <PrintCaption />
       </div>
-      <div className="@container/stack relative flex min-h-0 flex-1 items-end justify-end pt-[max(2.5rem,11%)]">
-        <CardStack.Frame className="relative aspect-[4/5] h-auto w-[min(100cqw,calc(100cqh*4/5))] max-h-full min-h-0 shrink-0 overflow-visible">
+
+      <div
+        aria-hidden="true"
+        className="w-full shrink-0"
+        style={{ aspectRatio: `${4 / (STACK_PEEK_RATIO * 5)}` }}
+      />
+
+      <div
+        className={cn(
+          "relative w-full shrink-0 overflow-visible",
+          stacked ? "aspect-[4/5]" : "md:ml-auto",
+        )}
+        style={!stacked && ready ? { width: printSize.width, height: printSize.height } : undefined}
+      >
+        <CardStack.Frame className="absolute inset-0 overflow-visible">
           <CardStack.LiveRegion />
-          <CardStack.Trigger aria-label="Show next photo" className="block size-full text-left">
-            <CardStack.Viewport className="relative size-full overflow-visible !min-h-0 !pt-0">
+          <CardStack.Trigger
+            aria-label="Show next photo"
+            className="absolute inset-0 block text-left"
+          >
+            <CardStack.Viewport className="size-full overflow-visible !min-h-0 !pt-0">
               <CardStack.List>
                 {(item, index, layer) => (
                   <CardStack.Card
                     key={item.id}
                     layer={layer}
                     stackIndex={index}
-                    className="size-full gap-0 overflow-visible rounded-none bg-transparent p-0 shadow-none ring-0 [background-image:none]"
+                    className="!inset-x-0 !top-0 !h-fit !w-full gap-0 overflow-visible rounded-none !bg-transparent p-0 shadow-none ring-0"
                   >
-                    <figure className="flex size-full flex-col border-0 bg-transparent p-0">
-                      <div className="relative min-h-0 w-full flex-1 overflow-hidden bg-black/5">
-                        <img
-                          src={item.image}
-                          alt={`${PHOTOGRAPHER.studio} — ${item.title}`}
-                          width={PRINT_WIDTH}
-                          height={PRINT_HEIGHT}
-                          decoding="async"
-                          draggable={false}
-                          className="absolute inset-0 size-full object-cover object-center"
-                        />
-                        {index === 0 ? <ViewfinderFrame /> : null}
-                      </div>
+                    <figure className="relative aspect-[4/5] size-full overflow-hidden bg-black/5">
+                      <img
+                        src={item.image}
+                        alt={`${PHOTOGRAPHER.studio} — ${item.title}`}
+                        width={PRINT_WIDTH}
+                        height={PRINT_HEIGHT}
+                        decoding="async"
+                        draggable={false}
+                        className="size-full object-cover object-center"
+                      />
+                      {index === 0 ? <ViewfinderFrame /> : null}
                     </figure>
                   </CardStack.Card>
                 )}
@@ -302,38 +416,47 @@ function ProofStack({
 }
 
 function PortfolioLayout({
+  layoutRef,
   stackRef,
   heroRef,
   captionRef,
 }: {
+  layoutRef: RefObject<HTMLDivElement | null>;
   stackRef: RefObject<HTMLElement | null>;
   heroRef: RefObject<HTMLDivElement | null>;
   captionRef: RefObject<HTMLDivElement | null>;
 }) {
+  const columnRef = useRef<HTMLDivElement>(null);
+  const stacked = useMediaQuery("(max-width: 767px)");
+  const printSize = usePrintSize(layoutRef, columnRef, captionRef);
+
   return (
     <div
+      ref={layoutRef}
       className={cn(
-        "grid h-[calc(100svh-var(--demo-chrome-reserve,5rem))] min-h-0 grid-cols-1 grid-rows-[auto_minmax(18rem,1fr)]",
-        "md:grid-cols-[minmax(0,2fr)_minmax(0,3fr)] md:grid-rows-1",
-        LAYOUT.grid,
-        LAYOUT.blockY,
+        "flex flex-col gap-8",
+        "md:min-h-0 md:flex-1 md:flex-row md:items-end md:justify-start md:gap-6 md:h-full",
       )}
-      style={{ "--layout-baseline": `${BASELINE}px` } as CSSProperties}
     >
-      <div className="flex min-h-0 flex-col justify-end md:col-start-1 md:row-start-1 md:pt-[clamp(3rem,11vh,8rem)]">
-        <div ref={heroRef} className="relative z-20 w-fit max-w-full bg-transparent">
-          <HeroStory />
-        </div>
+      <div ref={heroRef} className="relative z-20 min-w-0 md:flex-[2] md:basis-0">
+        <HeroStory />
       </div>
 
-      <div className="relative z-20 flex min-h-0 min-w-0 flex-col overflow-visible md:col-start-2 md:row-start-1 md:h-full md:pl-6 md:pt-[clamp(3rem,11vh,8rem)] lg:pl-10">
-        <ProofStack stackRef={stackRef} captionRef={captionRef} />
+      <div ref={columnRef} className="w-full min-w-0 md:col-start-2 md:flex-[3] md:basis-0">
+        <PrintProof
+          stackRef={stackRef}
+          captionRef={captionRef}
+          printSize={printSize}
+          stacked={stacked}
+        />
       </div>
     </div>
   );
 }
 
 export default function PhotographerPortfolio() {
+  const shellRef = useRef<HTMLDivElement>(null);
+  const layoutRef = useRef<HTMLDivElement>(null);
   const stackRef = useRef<HTMLElement>(null);
   const heroRef = useRef<HTMLDivElement>(null);
   const captionRef = useRef<HTMLDivElement>(null);
@@ -342,7 +465,7 @@ export default function PhotographerPortfolio() {
   return (
     <>
       <section
-        className="relative isolate min-h-[calc(100svh-var(--demo-chrome-reserve,5rem))] overflow-hidden"
+        className="relative isolate min-h-svh overflow-x-hidden overflow-y-auto md:h-svh md:overflow-hidden"
         style={{ backgroundColor: CANVAS, color: INK, fontFamily: FONT }}
       >
         <TrailingImage
@@ -358,12 +481,18 @@ export default function PhotographerPortfolio() {
 
         <CardStack items={PORTFOLIO} depth={3} autoplay={preloaderDone} autoplayInterval={4500}>
           <div
+            ref={shellRef}
             className={cn(
-              "relative z-20 isolate mx-auto min-h-[calc(100svh-var(--demo-chrome-reserve,5rem))] w-full max-w-[92rem] pb-[var(--demo-chrome-reserve,5rem)]",
-              LAYOUT.shell,
+              "relative z-20 isolate mx-auto flex w-full max-w-[92rem] flex-col md:h-full md:min-h-0 md:flex-1",
+              SHELL,
             )}
           >
-            <PortfolioLayout stackRef={stackRef} heroRef={heroRef} captionRef={captionRef} />
+            <PortfolioLayout
+              layoutRef={layoutRef}
+              stackRef={stackRef}
+              heroRef={heroRef}
+              captionRef={captionRef}
+            />
           </div>
         </CardStack>
       </section>
