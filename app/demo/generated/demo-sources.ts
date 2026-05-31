@@ -2565,7 +2565,7 @@ export default function CinemaRow() {
       code: `"use client";
 
 import "@fontsource-variable/instrument-sans";
-import { useRef, useState, type CSSProperties, type ReactNode, type RefObject } from "react";
+import { type CSSProperties, type ReactNode, type RefObject, useRef, useState } from "react";
 
 import CardStack, {
   CARD_STACK_MASK_IDS,
@@ -2580,8 +2580,7 @@ import { cn } from "@/lib/utils";
 
 import { PhotographerPortfolioNotes } from "./photographer-portfolio-notes";
 
-const FONT =
-  '"Instrument Sans Variable", ui-sans-serif, system-ui, sans-serif';
+const FONT = '"Instrument Sans Variable", ui-sans-serif, system-ui, sans-serif';
 
 const CANVAS = "#fff";
 const INK = "#000";
@@ -2640,7 +2639,6 @@ const SHOT_SETTINGS: Record<string, { aperture: string; shutter: string; stock: 
 const HERO_TONE = {
   mute: "text-black/40",
   ink: "text-black",
-  accent: "text-[#c2410c]",
 } as const;
 
 const PORTFOLIO: CardStackItem[] = [
@@ -2695,11 +2693,7 @@ const PORTFOLIO: CardStackItem[] = [
 ];
 
 const PRELOAD_IMAGES = [
-  ...new Set([
-    PHOTOGRAPHER.avatar,
-    ...PORTFOLIO.map((item) => item.image),
-    ...TRAIL_IMAGES,
-  ]),
+  ...new Set([PHOTOGRAPHER.avatar, ...PORTFOLIO.map((item) => item.image), ...TRAIL_IMAGES]),
 ];
 
 const HERO_MARK =
@@ -2707,9 +2701,9 @@ const HERO_MARK =
 
 function HeroMark({ children, className }: { children: ReactNode; className?: string }) {
   return (
-    <span className={cn(HERO_MARK, className)} aria-hidden>
+    <div className={cn(HERO_MARK, className)} aria-hidden>
       {children}
-    </span>
+    </div>
   );
 }
 
@@ -2722,12 +2716,11 @@ function ProfileGlyph({ src, alt }: { src: string; alt: string }) {
 }
 
 function HeroStory() {
-  const type =
-    "text-[clamp(1.25rem,2vw,1.75rem)] font-medium leading-[1.55] tracking-[-0.02em]";
+  const type = "text-[clamp(1.25rem,2vw,1.75rem)] font-medium leading-[1.55] tracking-[-0.02em]";
 
   return (
-    <div className="max-w-[min(100%,36rem)] space-y-6">
-      <p className={type}>
+    <div className="flex flex-col gap-[1.15em]">
+      <div className={type}>
         <span className={HERO_TONE.mute}>Hi, I'm </span>
         <span className={HERO_TONE.ink}>{PHOTOGRAPHER.name}</span>
         <ProfileGlyph src={PHOTOGRAPHER.avatar} alt={PHOTOGRAPHER.studio} />
@@ -2743,15 +2736,11 @@ function HeroStory() {
         </HeroMark>
         <span className={HERO_TONE.mute}> </span>
         <span className={HERO_TONE.ink}>{PHOTOGRAPHER.location}</span>
-        <span className={HERO_TONE.mute}>
-          {" "}
-          — good light, real moments, and photos that don't feel forced.
-        </span>
-      </p>
+        <span className={HERO_TONE.mute}> and capture photos you hang on the wall.</span>
+      </div>
 
-      <p className={type}>
-        <span className={HERO_TONE.accent}>Booking Q3.</span>
-        <span className={HERO_TONE.mute}> </span>
+      <p className={type} style={{ textBoxTrim: "trim-both" } as CSSProperties}>
+        <span className={HERO_TONE.mute}>Booking Q3. </span>
         <a
           href={PHOTOGRAPHER.email}
           className={cn(HERO_TONE.ink, "underline-offset-[4px] hover:underline")}
@@ -2789,9 +2778,14 @@ function PrintCaption() {
   }
 
   return (
-    <figcaption className="relative z-10 shrink-0 border-b border-black/80 bg-transparent pb-3">
+    <figcaption
+      className="relative z-10 shrink-0 border-b border-black/80 pb-3"
+      style={{ backgroundColor: CANVAS }}
+    >
       <div className="flex items-baseline justify-between gap-4">
-        <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-black">{activeItem.title}</p>
+        <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-black">
+          {activeItem.title}
+        </p>
         <p className="shrink-0 text-[11px] font-medium tabular-nums tracking-[0.1em] text-black/45">
           {String(index).padStart(2, "0")}
           <span className="text-black/20">/</span>
@@ -2809,14 +2803,48 @@ function PrintCaption() {
   );
 }
 
-const BASELINE = 8;
-const LAYOUT = {
-  shell: "px-6 sm:px-10 lg:px-14",
-  blockY: "py-8 lg:py-10",
-  grid: "gap-x-8 gap-y-8 lg:gap-x-10 lg:gap-y-10",
-} as const;
+const SHELL =
+  "px-6 pt-6 pb-[calc(var(--demo-chrome-reserve,5rem)+1.5rem)] sm:px-10 sm:pt-10 sm:pb-[calc(var(--demo-chrome-reserve,5rem)+2.5rem)] lg:px-14 lg:pt-14 lg:pb-[calc(var(--demo-chrome-reserve,5rem)+3.5rem)]";
 
-function ProofStack({
+/** Stack peek is 10% of print height — at 4:5 that is an 8:1 strip */
+const STACK_PEEK = "aspect-[8/1]";
+
+function PrintStack() {
+  return (
+    <CardStack.Frame className="absolute inset-0 overflow-visible">
+      <CardStack.LiveRegion />
+      <CardStack.Trigger aria-label="Show next photo" className="absolute inset-0 block text-left">
+        <CardStack.Viewport className="size-full overflow-visible !min-h-0 !pt-0">
+          <CardStack.List>
+            {(item, index, layer) => (
+              <CardStack.Card
+                key={item.id}
+                layer={layer}
+                stackIndex={index}
+                className="!inset-x-0 !top-0 !h-fit !w-full gap-0 overflow-visible rounded-none !bg-transparent p-0 shadow-none ring-0"
+              >
+                <figure className="relative aspect-[4/5] size-full overflow-hidden bg-black/5">
+                  <img
+                    src={item.image}
+                    alt={\`\${PHOTOGRAPHER.studio} — \${item.title}\`}
+                    width={PRINT_WIDTH}
+                    height={PRINT_HEIGHT}
+                    decoding="async"
+                    draggable={false}
+                    className="size-full object-cover object-center"
+                  />
+                  {index === 0 ? <ViewfinderFrame /> : null}
+                </figure>
+              </CardStack.Card>
+            )}
+          </CardStack.List>
+        </CardStack.Viewport>
+      </CardStack.Trigger>
+    </CardStack.Frame>
+  );
+}
+
+function PrintProof({
   stackRef,
   captionRef,
 }: {
@@ -2824,46 +2852,25 @@ function ProofStack({
   captionRef: RefObject<HTMLDivElement | null>;
 }) {
   return (
-    <figure
-      ref={stackRef}
-      className="ml-auto grid h-full min-h-0 w-full min-w-0 max-w-full grid-rows-[auto_minmax(0,1fr)] gap-y-3 sm:gap-y-4"
-    >
-      <div ref={captionRef} className="relative z-30 w-full shrink-0 bg-transparent">
+    <figure ref={stackRef} className="flex w-full min-w-0 flex-col">
+      <div
+        ref={captionRef}
+        className="relative z-30 w-full shrink-0"
+        style={{ backgroundColor: CANVAS }}
+      >
         <PrintCaption />
       </div>
-      <div className="@container/stack relative flex min-h-0 flex-1 items-end justify-end pt-[max(2.5rem,11%)]">
-        <CardStack.Frame className="relative aspect-[4/5] h-auto w-[min(100cqw,calc(100cqh*4/5))] max-h-full min-h-0 shrink-0 overflow-visible">
-          <CardStack.LiveRegion />
-          <CardStack.Trigger aria-label="Show next photo" className="block size-full text-left">
-            <CardStack.Viewport className="relative size-full overflow-visible !min-h-0 !pt-0">
-            <CardStack.List>
-              {(item, index, layer) => (
-                <CardStack.Card
-                  key={item.id}
-                  layer={layer}
-                  stackIndex={index}
-                  className="size-full gap-0 overflow-visible rounded-none bg-transparent p-0 shadow-none ring-0 [background-image:none]"
-                >
-                  <figure className="flex size-full flex-col border-0 bg-transparent p-0">
-                    <div className="relative min-h-0 w-full flex-1 overflow-hidden bg-black/5">
-                      <img
-                        src={item.image}
-                        alt={\`\${PHOTOGRAPHER.studio} — \${item.title}\`}
-                        width={PRINT_WIDTH}
-                        height={PRINT_HEIGHT}
-                        decoding="async"
-                        draggable={false}
-                        className="absolute inset-0 size-full object-cover object-center"
-                      />
-                      {index === 0 ? <ViewfinderFrame /> : null}
-                    </div>
-                  </figure>
-                </CardStack.Card>
-              )}
-            </CardStack.List>
-          </CardStack.Viewport>
-        </CardStack.Trigger>
-      </CardStack.Frame>
+
+      <div
+        className={cn(
+          "flex w-full flex-col",
+          "md:ml-auto md:w-[min(100cqw,calc((100cqh-4.5rem)*8/11))]",
+        )}
+      >
+        <div aria-hidden="true" className={cn("w-full shrink-0", STACK_PEEK)} />
+        <div className="relative aspect-[4/5] w-full shrink-0 overflow-visible">
+          <PrintStack />
+        </div>
       </div>
     </figure>
   );
@@ -2880,22 +2887,17 @@ function PortfolioLayout({
 }) {
   return (
     <div
-      className={cn(
-        "grid h-[calc(100svh-var(--demo-chrome-reserve,5rem))] min-h-0 grid-cols-1 grid-rows-[auto_minmax(18rem,1fr)]",
-        "md:grid-cols-[minmax(0,2fr)_minmax(0,3fr)] md:grid-rows-1",
-        LAYOUT.grid,
-        LAYOUT.blockY,
-      )}
-      style={{ "--layout-baseline": \`\${BASELINE}px\` } as CSSProperties}
+      className={cn("flex flex-col gap-8", "md:h-full md:min-h-0 md:flex-1 md:flex-row md:gap-6")}
     >
-      <div className="flex min-h-0 flex-col justify-end md:col-start-1 md:row-start-1 md:pt-[clamp(3rem,11vh,8rem)]">
-        <div ref={heroRef} className="relative z-20 w-fit max-w-full bg-transparent">
-          <HeroStory />
-        </div>
+      <div
+        ref={heroRef}
+        className="relative z-20 min-w-0 md:flex md:flex-[2] md:basis-0 md:flex-col md:justify-end"
+      >
+        <HeroStory />
       </div>
 
-      <div className="relative z-20 flex min-h-0 min-w-0 flex-col overflow-visible md:col-start-2 md:row-start-1 md:h-full md:pl-6 md:pt-[clamp(3rem,11vh,8rem)] lg:pl-10">
-        <ProofStack stackRef={stackRef} captionRef={captionRef} />
+      <div className="w-full min-w-0 md:flex md:min-h-0 md:flex-[3] md:basis-0 md:flex-col md:justify-end md:@container/print md:[container-type:size]">
+        <PrintProof stackRef={stackRef} captionRef={captionRef} />
       </div>
     </div>
   );
@@ -2910,7 +2912,7 @@ export default function PhotographerPortfolio() {
   return (
     <>
       <section
-        className="relative isolate min-h-[calc(100svh-var(--demo-chrome-reserve,5rem))] overflow-hidden"
+        className="relative isolate min-h-svh overflow-x-hidden overflow-y-auto md:h-svh md:overflow-hidden"
         style={{ backgroundColor: CANVAS, color: INK, fontFamily: FONT }}
       >
         <TrailingImage
@@ -2924,16 +2926,11 @@ export default function PhotographerPortfolio() {
           excludeRefs={[heroRef, captionRef]}
         />
 
-        <CardStack
-          items={PORTFOLIO}
-          depth={3}
-          autoplay={preloaderDone}
-          autoplayInterval={4500}
-        >
+        <CardStack items={PORTFOLIO} depth={3} autoplay={preloaderDone} autoplayInterval={4500}>
           <div
             className={cn(
-              "relative z-20 isolate mx-auto min-h-[calc(100svh-var(--demo-chrome-reserve,5rem))] w-full max-w-[92rem] pb-[var(--demo-chrome-reserve,5rem)]",
-              LAYOUT.shell,
+              "relative z-20 isolate mx-auto flex w-full max-w-[92rem] flex-col md:h-full md:min-h-0 md:flex-1",
+              SHELL,
             )}
           >
             <PortfolioLayout stackRef={stackRef} heroRef={heroRef} captionRef={captionRef} />
@@ -2970,7 +2967,7 @@ export default function PhotographerPortfolio() {
       htmlLight: `<pre class="shiki github-light" tabindex="0"><code><span class="line"><span style="color:#032F62">"use client"</span><span style="color:#24292E">;</span></span>
 <span class="line"></span>
 <span class="line"><span style="color:#D73A49">import</span><span style="color:#032F62"> "@fontsource-variable/instrument-sans"</span><span style="color:#24292E">;</span></span>
-<span class="line"><span style="color:#D73A49">import</span><span style="color:#24292E"> { useRef, useState, </span><span style="color:#D73A49">type</span><span style="color:#24292E"> CSSProperties, </span><span style="color:#D73A49">type</span><span style="color:#24292E"> ReactNode, </span><span style="color:#D73A49">type</span><span style="color:#24292E"> RefObject } </span><span style="color:#D73A49">from</span><span style="color:#032F62"> "react"</span><span style="color:#24292E">;</span></span>
+<span class="line"><span style="color:#D73A49">import</span><span style="color:#24292E"> { </span><span style="color:#D73A49">type</span><span style="color:#24292E"> CSSProperties, </span><span style="color:#D73A49">type</span><span style="color:#24292E"> ReactNode, </span><span style="color:#D73A49">type</span><span style="color:#24292E"> RefObject, useRef, useState } </span><span style="color:#D73A49">from</span><span style="color:#032F62"> "react"</span><span style="color:#24292E">;</span></span>
 <span class="line"></span>
 <span class="line"><span style="color:#D73A49">import</span><span style="color:#24292E"> CardStack, {</span></span>
 <span class="line"><span style="color:#24292E">  CARD_STACK_MASK_IDS,</span></span>
@@ -2985,8 +2982,7 @@ export default function PhotographerPortfolio() {
 <span class="line"></span>
 <span class="line"><span style="color:#D73A49">import</span><span style="color:#24292E"> { PhotographerPortfolioNotes } </span><span style="color:#D73A49">from</span><span style="color:#032F62"> "./photographer-portfolio-notes"</span><span style="color:#24292E">;</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#D73A49">const</span><span style="color:#005CC5"> FONT</span><span style="color:#D73A49"> =</span></span>
-<span class="line"><span style="color:#032F62">  '"Instrument Sans Variable", ui-sans-serif, system-ui, sans-serif'</span><span style="color:#24292E">;</span></span>
+<span class="line"><span style="color:#D73A49">const</span><span style="color:#005CC5"> FONT</span><span style="color:#D73A49"> =</span><span style="color:#032F62"> '"Instrument Sans Variable", ui-sans-serif, system-ui, sans-serif'</span><span style="color:#24292E">;</span></span>
 <span class="line"></span>
 <span class="line"><span style="color:#D73A49">const</span><span style="color:#005CC5"> CANVAS</span><span style="color:#D73A49"> =</span><span style="color:#032F62"> "#fff"</span><span style="color:#24292E">;</span></span>
 <span class="line"><span style="color:#D73A49">const</span><span style="color:#005CC5"> INK</span><span style="color:#D73A49"> =</span><span style="color:#032F62"> "#000"</span><span style="color:#24292E">;</span></span>
@@ -3045,7 +3041,6 @@ export default function PhotographerPortfolio() {
 <span class="line"><span style="color:#D73A49">const</span><span style="color:#005CC5"> HERO_TONE</span><span style="color:#D73A49"> =</span><span style="color:#24292E"> {</span></span>
 <span class="line"><span style="color:#24292E">  mute: </span><span style="color:#032F62">"text-black/40"</span><span style="color:#24292E">,</span></span>
 <span class="line"><span style="color:#24292E">  ink: </span><span style="color:#032F62">"text-black"</span><span style="color:#24292E">,</span></span>
-<span class="line"><span style="color:#24292E">  accent: </span><span style="color:#032F62">"text-[#c2410c]"</span><span style="color:#24292E">,</span></span>
 <span class="line"><span style="color:#24292E">} </span><span style="color:#D73A49">as</span><span style="color:#D73A49"> const</span><span style="color:#24292E">;</span></span>
 <span class="line"></span>
 <span class="line"><span style="color:#D73A49">const</span><span style="color:#005CC5"> PORTFOLIO</span><span style="color:#D73A49">:</span><span style="color:#6F42C1"> CardStackItem</span><span style="color:#24292E">[] </span><span style="color:#D73A49">=</span><span style="color:#24292E"> [</span></span>
@@ -3100,11 +3095,7 @@ export default function PhotographerPortfolio() {
 <span class="line"><span style="color:#24292E">];</span></span>
 <span class="line"></span>
 <span class="line"><span style="color:#D73A49">const</span><span style="color:#005CC5"> PRELOAD_IMAGES</span><span style="color:#D73A49"> =</span><span style="color:#24292E"> [</span></span>
-<span class="line"><span style="color:#D73A49">  ...new</span><span style="color:#6F42C1"> Set</span><span style="color:#24292E">([</span></span>
-<span class="line"><span style="color:#005CC5">    PHOTOGRAPHER</span><span style="color:#24292E">.avatar,</span></span>
-<span class="line"><span style="color:#D73A49">    ...</span><span style="color:#005CC5">PORTFOLIO</span><span style="color:#24292E">.</span><span style="color:#6F42C1">map</span><span style="color:#24292E">((</span><span style="color:#E36209">item</span><span style="color:#24292E">) </span><span style="color:#D73A49">=></span><span style="color:#24292E"> item.image),</span></span>
-<span class="line"><span style="color:#D73A49">    ...</span><span style="color:#005CC5">TRAIL_IMAGES</span><span style="color:#24292E">,</span></span>
-<span class="line"><span style="color:#24292E">  ]),</span></span>
+<span class="line"><span style="color:#D73A49">  ...new</span><span style="color:#6F42C1"> Set</span><span style="color:#24292E">([</span><span style="color:#005CC5">PHOTOGRAPHER</span><span style="color:#24292E">.avatar, </span><span style="color:#D73A49">...</span><span style="color:#005CC5">PORTFOLIO</span><span style="color:#24292E">.</span><span style="color:#6F42C1">map</span><span style="color:#24292E">((</span><span style="color:#E36209">item</span><span style="color:#24292E">) </span><span style="color:#D73A49">=></span><span style="color:#24292E"> item.image), </span><span style="color:#D73A49">...</span><span style="color:#005CC5">TRAIL_IMAGES</span><span style="color:#24292E">]),</span></span>
 <span class="line"><span style="color:#24292E">];</span></span>
 <span class="line"></span>
 <span class="line"><span style="color:#D73A49">const</span><span style="color:#005CC5"> HERO_MARK</span><span style="color:#D73A49"> =</span></span>
@@ -3112,9 +3103,9 @@ export default function PhotographerPortfolio() {
 <span class="line"></span>
 <span class="line"><span style="color:#D73A49">function</span><span style="color:#6F42C1"> HeroMark</span><span style="color:#24292E">({ </span><span style="color:#E36209">children</span><span style="color:#24292E">, </span><span style="color:#E36209">className</span><span style="color:#24292E"> }</span><span style="color:#D73A49">:</span><span style="color:#24292E"> { </span><span style="color:#E36209">children</span><span style="color:#D73A49">:</span><span style="color:#6F42C1"> ReactNode</span><span style="color:#24292E">; </span><span style="color:#E36209">className</span><span style="color:#D73A49">?:</span><span style="color:#005CC5"> string</span><span style="color:#24292E"> }) {</span></span>
 <span class="line"><span style="color:#D73A49">  return</span><span style="color:#24292E"> (</span></span>
-<span class="line"><span style="color:#24292E">    &#x3C;</span><span style="color:#22863A">span</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#6F42C1">cn</span><span style="color:#24292E">(</span><span style="color:#005CC5">HERO_MARK</span><span style="color:#24292E">, className)} </span><span style="color:#6F42C1">aria-hidden</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">    &#x3C;</span><span style="color:#22863A">div</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#6F42C1">cn</span><span style="color:#24292E">(</span><span style="color:#005CC5">HERO_MARK</span><span style="color:#24292E">, className)} </span><span style="color:#6F42C1">aria-hidden</span><span style="color:#24292E">></span></span>
 <span class="line"><span style="color:#24292E">      {children}</span></span>
-<span class="line"><span style="color:#24292E">    &#x3C;/</span><span style="color:#22863A">span</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">    &#x3C;/</span><span style="color:#22863A">div</span><span style="color:#24292E">></span></span>
 <span class="line"><span style="color:#24292E">  );</span></span>
 <span class="line"><span style="color:#24292E">}</span></span>
 <span class="line"></span>
@@ -3127,12 +3118,11 @@ export default function PhotographerPortfolio() {
 <span class="line"><span style="color:#24292E">}</span></span>
 <span class="line"></span>
 <span class="line"><span style="color:#D73A49">function</span><span style="color:#6F42C1"> HeroStory</span><span style="color:#24292E">() {</span></span>
-<span class="line"><span style="color:#D73A49">  const</span><span style="color:#005CC5"> type</span><span style="color:#D73A49"> =</span></span>
-<span class="line"><span style="color:#032F62">    "text-[clamp(1.25rem,2vw,1.75rem)] font-medium leading-[1.55] tracking-[-0.02em]"</span><span style="color:#24292E">;</span></span>
+<span class="line"><span style="color:#D73A49">  const</span><span style="color:#005CC5"> type</span><span style="color:#D73A49"> =</span><span style="color:#032F62"> "text-[clamp(1.25rem,2vw,1.75rem)] font-medium leading-[1.55] tracking-[-0.02em]"</span><span style="color:#24292E">;</span></span>
 <span class="line"></span>
 <span class="line"><span style="color:#D73A49">  return</span><span style="color:#24292E"> (</span></span>
-<span class="line"><span style="color:#24292E">    &#x3C;</span><span style="color:#22863A">div</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"max-w-[min(100%,36rem)] space-y-6"</span><span style="color:#24292E">></span></span>
-<span class="line"><span style="color:#24292E">      &#x3C;</span><span style="color:#22863A">p</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#24292E">{type}></span></span>
+<span class="line"><span style="color:#24292E">    &#x3C;</span><span style="color:#22863A">div</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"flex flex-col gap-[1.15em]"</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">      &#x3C;</span><span style="color:#22863A">div</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#24292E">{type}></span></span>
 <span class="line"><span style="color:#24292E">        &#x3C;</span><span style="color:#22863A">span</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#005CC5">HERO_TONE</span><span style="color:#24292E">.mute}>Hi, I'm &#x3C;/</span><span style="color:#22863A">span</span><span style="color:#24292E">></span></span>
 <span class="line"><span style="color:#24292E">        &#x3C;</span><span style="color:#22863A">span</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#005CC5">HERO_TONE</span><span style="color:#24292E">.ink}>{</span><span style="color:#005CC5">PHOTOGRAPHER</span><span style="color:#24292E">.name}&#x3C;/</span><span style="color:#22863A">span</span><span style="color:#24292E">></span></span>
 <span class="line"><span style="color:#24292E">        &#x3C;</span><span style="color:#005CC5">ProfileGlyph</span><span style="color:#6F42C1"> src</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#005CC5">PHOTOGRAPHER</span><span style="color:#24292E">.avatar} </span><span style="color:#6F42C1">alt</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#005CC5">PHOTOGRAPHER</span><span style="color:#24292E">.studio} /></span></span>
@@ -3148,15 +3138,11 @@ export default function PhotographerPortfolio() {
 <span class="line"><span style="color:#24292E">        &#x3C;/</span><span style="color:#005CC5">HeroMark</span><span style="color:#24292E">></span></span>
 <span class="line"><span style="color:#24292E">        &#x3C;</span><span style="color:#22863A">span</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#005CC5">HERO_TONE</span><span style="color:#24292E">.mute}> &#x3C;/</span><span style="color:#22863A">span</span><span style="color:#24292E">></span></span>
 <span class="line"><span style="color:#24292E">        &#x3C;</span><span style="color:#22863A">span</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#005CC5">HERO_TONE</span><span style="color:#24292E">.ink}>{</span><span style="color:#005CC5">PHOTOGRAPHER</span><span style="color:#24292E">.location}&#x3C;/</span><span style="color:#22863A">span</span><span style="color:#24292E">></span></span>
-<span class="line"><span style="color:#24292E">        &#x3C;</span><span style="color:#22863A">span</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#005CC5">HERO_TONE</span><span style="color:#24292E">.mute}></span></span>
-<span class="line"><span style="color:#24292E">          {</span><span style="color:#032F62">" "</span><span style="color:#24292E">}</span></span>
-<span class="line"><span style="color:#24292E">          — good light, real moments, and photos that don't feel forced.</span></span>
-<span class="line"><span style="color:#24292E">        &#x3C;/</span><span style="color:#22863A">span</span><span style="color:#24292E">></span></span>
-<span class="line"><span style="color:#24292E">      &#x3C;/</span><span style="color:#22863A">p</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">        &#x3C;</span><span style="color:#22863A">span</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#005CC5">HERO_TONE</span><span style="color:#24292E">.mute}> and capture photos you hang on the wall.&#x3C;/</span><span style="color:#22863A">span</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">      &#x3C;/</span><span style="color:#22863A">div</span><span style="color:#24292E">></span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#24292E">      &#x3C;</span><span style="color:#22863A">p</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#24292E">{type}></span></span>
-<span class="line"><span style="color:#24292E">        &#x3C;</span><span style="color:#22863A">span</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#005CC5">HERO_TONE</span><span style="color:#24292E">.accent}>Booking Q3.&#x3C;/</span><span style="color:#22863A">span</span><span style="color:#24292E">></span></span>
-<span class="line"><span style="color:#24292E">        &#x3C;</span><span style="color:#22863A">span</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#005CC5">HERO_TONE</span><span style="color:#24292E">.mute}> &#x3C;/</span><span style="color:#22863A">span</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">      &#x3C;</span><span style="color:#22863A">p</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#24292E">{type} </span><span style="color:#6F42C1">style</span><span style="color:#D73A49">=</span><span style="color:#24292E">{{ textBoxTrim: </span><span style="color:#032F62">"trim-both"</span><span style="color:#24292E"> } </span><span style="color:#D73A49">as</span><span style="color:#6F42C1"> CSSProperties</span><span style="color:#24292E">}></span></span>
+<span class="line"><span style="color:#24292E">        &#x3C;</span><span style="color:#22863A">span</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#005CC5">HERO_TONE</span><span style="color:#24292E">.mute}>Booking Q3. &#x3C;/</span><span style="color:#22863A">span</span><span style="color:#24292E">></span></span>
 <span class="line"><span style="color:#24292E">        &#x3C;</span><span style="color:#22863A">a</span></span>
 <span class="line"><span style="color:#6F42C1">          href</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#005CC5">PHOTOGRAPHER</span><span style="color:#24292E">.email}</span></span>
 <span class="line"><span style="color:#6F42C1">          className</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#6F42C1">cn</span><span style="color:#24292E">(</span><span style="color:#005CC5">HERO_TONE</span><span style="color:#24292E">.ink, </span><span style="color:#032F62">"underline-offset-[4px] hover:underline"</span><span style="color:#24292E">)}</span></span>
@@ -3194,9 +3180,14 @@ export default function PhotographerPortfolio() {
 <span class="line"><span style="color:#24292E">  }</span></span>
 <span class="line"></span>
 <span class="line"><span style="color:#D73A49">  return</span><span style="color:#24292E"> (</span></span>
-<span class="line"><span style="color:#24292E">    &#x3C;</span><span style="color:#22863A">figcaption</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"relative z-10 shrink-0 border-b border-black/80 bg-transparent pb-3"</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">    &#x3C;</span><span style="color:#22863A">figcaption</span></span>
+<span class="line"><span style="color:#6F42C1">      className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"relative z-10 shrink-0 border-b border-black/80 pb-3"</span></span>
+<span class="line"><span style="color:#6F42C1">      style</span><span style="color:#D73A49">=</span><span style="color:#24292E">{{ backgroundColor: </span><span style="color:#005CC5">CANVAS</span><span style="color:#24292E"> }}</span></span>
+<span class="line"><span style="color:#24292E">    ></span></span>
 <span class="line"><span style="color:#24292E">      &#x3C;</span><span style="color:#22863A">div</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"flex items-baseline justify-between gap-4"</span><span style="color:#24292E">></span></span>
-<span class="line"><span style="color:#24292E">        &#x3C;</span><span style="color:#22863A">p</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"text-[11px] font-medium uppercase tracking-[0.1em] text-black"</span><span style="color:#24292E">>{activeItem.title}&#x3C;/</span><span style="color:#22863A">p</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">        &#x3C;</span><span style="color:#22863A">p</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"text-[11px] font-medium uppercase tracking-[0.1em] text-black"</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">          {activeItem.title}</span></span>
+<span class="line"><span style="color:#24292E">        &#x3C;/</span><span style="color:#22863A">p</span><span style="color:#24292E">></span></span>
 <span class="line"><span style="color:#24292E">        &#x3C;</span><span style="color:#22863A">p</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"shrink-0 text-[11px] font-medium tabular-nums tracking-[0.1em] text-black/45"</span><span style="color:#24292E">></span></span>
 <span class="line"><span style="color:#24292E">          {</span><span style="color:#6F42C1">String</span><span style="color:#24292E">(index).</span><span style="color:#6F42C1">padStart</span><span style="color:#24292E">(</span><span style="color:#005CC5">2</span><span style="color:#24292E">, </span><span style="color:#032F62">"0"</span><span style="color:#24292E">)}</span></span>
 <span class="line"><span style="color:#24292E">          &#x3C;</span><span style="color:#22863A">span</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"text-black/20"</span><span style="color:#24292E">>/&#x3C;/</span><span style="color:#22863A">span</span><span style="color:#24292E">></span></span>
@@ -3214,14 +3205,48 @@ export default function PhotographerPortfolio() {
 <span class="line"><span style="color:#24292E">  );</span></span>
 <span class="line"><span style="color:#24292E">}</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#D73A49">const</span><span style="color:#005CC5"> BASELINE</span><span style="color:#D73A49"> =</span><span style="color:#005CC5"> 8</span><span style="color:#24292E">;</span></span>
-<span class="line"><span style="color:#D73A49">const</span><span style="color:#005CC5"> LAYOUT</span><span style="color:#D73A49"> =</span><span style="color:#24292E"> {</span></span>
-<span class="line"><span style="color:#24292E">  shell: </span><span style="color:#032F62">"px-6 sm:px-10 lg:px-14"</span><span style="color:#24292E">,</span></span>
-<span class="line"><span style="color:#24292E">  blockY: </span><span style="color:#032F62">"py-8 lg:py-10"</span><span style="color:#24292E">,</span></span>
-<span class="line"><span style="color:#24292E">  grid: </span><span style="color:#032F62">"gap-x-8 gap-y-8 lg:gap-x-10 lg:gap-y-10"</span><span style="color:#24292E">,</span></span>
-<span class="line"><span style="color:#24292E">} </span><span style="color:#D73A49">as</span><span style="color:#D73A49"> const</span><span style="color:#24292E">;</span></span>
+<span class="line"><span style="color:#D73A49">const</span><span style="color:#005CC5"> SHELL</span><span style="color:#D73A49"> =</span></span>
+<span class="line"><span style="color:#032F62">  "px-6 pt-6 pb-[calc(var(--demo-chrome-reserve,5rem)+1.5rem)] sm:px-10 sm:pt-10 sm:pb-[calc(var(--demo-chrome-reserve,5rem)+2.5rem)] lg:px-14 lg:pt-14 lg:pb-[calc(var(--demo-chrome-reserve,5rem)+3.5rem)]"</span><span style="color:#24292E">;</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#D73A49">function</span><span style="color:#6F42C1"> ProofStack</span><span style="color:#24292E">({</span></span>
+<span class="line"><span style="color:#6A737D">/** Stack peek is 10% of print height — at 4:5 that is an 8:1 strip */</span></span>
+<span class="line"><span style="color:#D73A49">const</span><span style="color:#005CC5"> STACK_PEEK</span><span style="color:#D73A49"> =</span><span style="color:#032F62"> "aspect-[8/1]"</span><span style="color:#24292E">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49">function</span><span style="color:#6F42C1"> PrintStack</span><span style="color:#24292E">() {</span></span>
+<span class="line"><span style="color:#D73A49">  return</span><span style="color:#24292E"> (</span></span>
+<span class="line"><span style="color:#24292E">    &#x3C;</span><span style="color:#005CC5">CardStack.Frame</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"absolute inset-0 overflow-visible"</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">      &#x3C;</span><span style="color:#005CC5">CardStack.LiveRegion</span><span style="color:#24292E"> /></span></span>
+<span class="line"><span style="color:#24292E">      &#x3C;</span><span style="color:#005CC5">CardStack.Trigger</span><span style="color:#6F42C1"> aria-label</span><span style="color:#D73A49">=</span><span style="color:#032F62">"Show next photo"</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"absolute inset-0 block text-left"</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">        &#x3C;</span><span style="color:#005CC5">CardStack.Viewport</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"size-full overflow-visible !min-h-0 !pt-0"</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">          &#x3C;</span><span style="color:#005CC5">CardStack.List</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">            {(</span><span style="color:#E36209">item</span><span style="color:#24292E">, </span><span style="color:#E36209">index</span><span style="color:#24292E">, </span><span style="color:#E36209">layer</span><span style="color:#24292E">) </span><span style="color:#D73A49">=></span><span style="color:#24292E"> (</span></span>
+<span class="line"><span style="color:#24292E">              &#x3C;</span><span style="color:#005CC5">CardStack.Card</span></span>
+<span class="line"><span style="color:#6F42C1">                key</span><span style="color:#D73A49">=</span><span style="color:#24292E">{item.id}</span></span>
+<span class="line"><span style="color:#6F42C1">                layer</span><span style="color:#D73A49">=</span><span style="color:#24292E">{layer}</span></span>
+<span class="line"><span style="color:#6F42C1">                stackIndex</span><span style="color:#D73A49">=</span><span style="color:#24292E">{index}</span></span>
+<span class="line"><span style="color:#6F42C1">                className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"!inset-x-0 !top-0 !h-fit !w-full gap-0 overflow-visible rounded-none !bg-transparent p-0 shadow-none ring-0"</span></span>
+<span class="line"><span style="color:#24292E">              ></span></span>
+<span class="line"><span style="color:#24292E">                &#x3C;</span><span style="color:#22863A">figure</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"relative aspect-[4/5] size-full overflow-hidden bg-black/5"</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">                  &#x3C;</span><span style="color:#22863A">img</span></span>
+<span class="line"><span style="color:#6F42C1">                    src</span><span style="color:#D73A49">=</span><span style="color:#24292E">{item.image}</span></span>
+<span class="line"><span style="color:#6F42C1">                    alt</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#032F62">\`\${</span><span style="color:#005CC5">PHOTOGRAPHER</span><span style="color:#032F62">.</span><span style="color:#24292E">studio</span><span style="color:#032F62">} — \${</span><span style="color:#24292E">item</span><span style="color:#032F62">.</span><span style="color:#24292E">title</span><span style="color:#032F62">}\`</span><span style="color:#24292E">}</span></span>
+<span class="line"><span style="color:#6F42C1">                    width</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#005CC5">PRINT_WIDTH</span><span style="color:#24292E">}</span></span>
+<span class="line"><span style="color:#6F42C1">                    height</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#005CC5">PRINT_HEIGHT</span><span style="color:#24292E">}</span></span>
+<span class="line"><span style="color:#6F42C1">                    decoding</span><span style="color:#D73A49">=</span><span style="color:#032F62">"async"</span></span>
+<span class="line"><span style="color:#6F42C1">                    draggable</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#005CC5">false</span><span style="color:#24292E">}</span></span>
+<span class="line"><span style="color:#6F42C1">                    className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"size-full object-cover object-center"</span></span>
+<span class="line"><span style="color:#24292E">                  /></span></span>
+<span class="line"><span style="color:#24292E">                  {index </span><span style="color:#D73A49">===</span><span style="color:#005CC5"> 0</span><span style="color:#D73A49"> ?</span><span style="color:#24292E"> &#x3C;</span><span style="color:#005CC5">ViewfinderFrame</span><span style="color:#24292E"> /> </span><span style="color:#D73A49">:</span><span style="color:#005CC5"> null</span><span style="color:#24292E">}</span></span>
+<span class="line"><span style="color:#24292E">                &#x3C;/</span><span style="color:#22863A">figure</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">              &#x3C;/</span><span style="color:#005CC5">CardStack.Card</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">            )}</span></span>
+<span class="line"><span style="color:#24292E">          &#x3C;/</span><span style="color:#005CC5">CardStack.List</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">        &#x3C;/</span><span style="color:#005CC5">CardStack.Viewport</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">      &#x3C;/</span><span style="color:#005CC5">CardStack.Trigger</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">    &#x3C;/</span><span style="color:#005CC5">CardStack.Frame</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">  );</span></span>
+<span class="line"><span style="color:#24292E">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49">function</span><span style="color:#6F42C1"> PrintProof</span><span style="color:#24292E">({</span></span>
 <span class="line"><span style="color:#E36209">  stackRef</span><span style="color:#24292E">,</span></span>
 <span class="line"><span style="color:#E36209">  captionRef</span><span style="color:#24292E">,</span></span>
 <span class="line"><span style="color:#24292E">}</span><span style="color:#D73A49">:</span><span style="color:#24292E"> {</span></span>
@@ -3229,46 +3254,25 @@ export default function PhotographerPortfolio() {
 <span class="line"><span style="color:#E36209">  captionRef</span><span style="color:#D73A49">:</span><span style="color:#6F42C1"> RefObject</span><span style="color:#24292E">&#x3C;</span><span style="color:#6F42C1">HTMLDivElement</span><span style="color:#D73A49"> |</span><span style="color:#005CC5"> null</span><span style="color:#24292E">>;</span></span>
 <span class="line"><span style="color:#24292E">}) {</span></span>
 <span class="line"><span style="color:#D73A49">  return</span><span style="color:#24292E"> (</span></span>
-<span class="line"><span style="color:#24292E">    &#x3C;</span><span style="color:#22863A">figure</span></span>
-<span class="line"><span style="color:#6F42C1">      ref</span><span style="color:#D73A49">=</span><span style="color:#24292E">{stackRef}</span></span>
-<span class="line"><span style="color:#6F42C1">      className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"ml-auto grid h-full min-h-0 w-full min-w-0 max-w-full grid-rows-[auto_minmax(0,1fr)] gap-y-3 sm:gap-y-4"</span></span>
-<span class="line"><span style="color:#24292E">    ></span></span>
-<span class="line"><span style="color:#24292E">      &#x3C;</span><span style="color:#22863A">div</span><span style="color:#6F42C1"> ref</span><span style="color:#D73A49">=</span><span style="color:#24292E">{captionRef} </span><span style="color:#6F42C1">className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"relative z-30 w-full shrink-0 bg-transparent"</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">    &#x3C;</span><span style="color:#22863A">figure</span><span style="color:#6F42C1"> ref</span><span style="color:#D73A49">=</span><span style="color:#24292E">{stackRef} </span><span style="color:#6F42C1">className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"flex w-full min-w-0 flex-col"</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">      &#x3C;</span><span style="color:#22863A">div</span></span>
+<span class="line"><span style="color:#6F42C1">        ref</span><span style="color:#D73A49">=</span><span style="color:#24292E">{captionRef}</span></span>
+<span class="line"><span style="color:#6F42C1">        className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"relative z-30 w-full shrink-0"</span></span>
+<span class="line"><span style="color:#6F42C1">        style</span><span style="color:#D73A49">=</span><span style="color:#24292E">{{ backgroundColor: </span><span style="color:#005CC5">CANVAS</span><span style="color:#24292E"> }}</span></span>
+<span class="line"><span style="color:#24292E">      ></span></span>
 <span class="line"><span style="color:#24292E">        &#x3C;</span><span style="color:#005CC5">PrintCaption</span><span style="color:#24292E"> /></span></span>
 <span class="line"><span style="color:#24292E">      &#x3C;/</span><span style="color:#22863A">div</span><span style="color:#24292E">></span></span>
-<span class="line"><span style="color:#24292E">      &#x3C;</span><span style="color:#22863A">div</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"@container/stack relative flex min-h-0 flex-1 items-end justify-end pt-[max(2.5rem,11%)]"</span><span style="color:#24292E">></span></span>
-<span class="line"><span style="color:#24292E">        &#x3C;</span><span style="color:#005CC5">CardStack.Frame</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"relative aspect-[4/5] h-auto w-[min(100cqw,calc(100cqh*4/5))] max-h-full min-h-0 shrink-0 overflow-visible"</span><span style="color:#24292E">></span></span>
-<span class="line"><span style="color:#24292E">          &#x3C;</span><span style="color:#005CC5">CardStack.LiveRegion</span><span style="color:#24292E"> /></span></span>
-<span class="line"><span style="color:#24292E">          &#x3C;</span><span style="color:#005CC5">CardStack.Trigger</span><span style="color:#6F42C1"> aria-label</span><span style="color:#D73A49">=</span><span style="color:#032F62">"Show next photo"</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"block size-full text-left"</span><span style="color:#24292E">></span></span>
-<span class="line"><span style="color:#24292E">            &#x3C;</span><span style="color:#005CC5">CardStack.Viewport</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"relative size-full overflow-visible !min-h-0 !pt-0"</span><span style="color:#24292E">></span></span>
-<span class="line"><span style="color:#24292E">            &#x3C;</span><span style="color:#005CC5">CardStack.List</span><span style="color:#24292E">></span></span>
-<span class="line"><span style="color:#24292E">              {(</span><span style="color:#E36209">item</span><span style="color:#24292E">, </span><span style="color:#E36209">index</span><span style="color:#24292E">, </span><span style="color:#E36209">layer</span><span style="color:#24292E">) </span><span style="color:#D73A49">=></span><span style="color:#24292E"> (</span></span>
-<span class="line"><span style="color:#24292E">                &#x3C;</span><span style="color:#005CC5">CardStack.Card</span></span>
-<span class="line"><span style="color:#6F42C1">                  key</span><span style="color:#D73A49">=</span><span style="color:#24292E">{item.id}</span></span>
-<span class="line"><span style="color:#6F42C1">                  layer</span><span style="color:#D73A49">=</span><span style="color:#24292E">{layer}</span></span>
-<span class="line"><span style="color:#6F42C1">                  stackIndex</span><span style="color:#D73A49">=</span><span style="color:#24292E">{index}</span></span>
-<span class="line"><span style="color:#6F42C1">                  className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"size-full gap-0 overflow-visible rounded-none bg-transparent p-0 shadow-none ring-0 [background-image:none]"</span></span>
-<span class="line"><span style="color:#24292E">                ></span></span>
-<span class="line"><span style="color:#24292E">                  &#x3C;</span><span style="color:#22863A">figure</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"flex size-full flex-col border-0 bg-transparent p-0"</span><span style="color:#24292E">></span></span>
-<span class="line"><span style="color:#24292E">                    &#x3C;</span><span style="color:#22863A">div</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"relative min-h-0 w-full flex-1 overflow-hidden bg-black/5"</span><span style="color:#24292E">></span></span>
-<span class="line"><span style="color:#24292E">                      &#x3C;</span><span style="color:#22863A">img</span></span>
-<span class="line"><span style="color:#6F42C1">                        src</span><span style="color:#D73A49">=</span><span style="color:#24292E">{item.image}</span></span>
-<span class="line"><span style="color:#6F42C1">                        alt</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#032F62">\`\${</span><span style="color:#005CC5">PHOTOGRAPHER</span><span style="color:#032F62">.</span><span style="color:#24292E">studio</span><span style="color:#032F62">} — \${</span><span style="color:#24292E">item</span><span style="color:#032F62">.</span><span style="color:#24292E">title</span><span style="color:#032F62">}\`</span><span style="color:#24292E">}</span></span>
-<span class="line"><span style="color:#6F42C1">                        width</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#005CC5">PRINT_WIDTH</span><span style="color:#24292E">}</span></span>
-<span class="line"><span style="color:#6F42C1">                        height</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#005CC5">PRINT_HEIGHT</span><span style="color:#24292E">}</span></span>
-<span class="line"><span style="color:#6F42C1">                        decoding</span><span style="color:#D73A49">=</span><span style="color:#032F62">"async"</span></span>
-<span class="line"><span style="color:#6F42C1">                        draggable</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#005CC5">false</span><span style="color:#24292E">}</span></span>
-<span class="line"><span style="color:#6F42C1">                        className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"absolute inset-0 size-full object-cover object-center"</span></span>
-<span class="line"><span style="color:#24292E">                      /></span></span>
-<span class="line"><span style="color:#24292E">                      {index </span><span style="color:#D73A49">===</span><span style="color:#005CC5"> 0</span><span style="color:#D73A49"> ?</span><span style="color:#24292E"> &#x3C;</span><span style="color:#005CC5">ViewfinderFrame</span><span style="color:#24292E"> /> </span><span style="color:#D73A49">:</span><span style="color:#005CC5"> null</span><span style="color:#24292E">}</span></span>
-<span class="line"><span style="color:#24292E">                    &#x3C;/</span><span style="color:#22863A">div</span><span style="color:#24292E">></span></span>
-<span class="line"><span style="color:#24292E">                  &#x3C;/</span><span style="color:#22863A">figure</span><span style="color:#24292E">></span></span>
-<span class="line"><span style="color:#24292E">                &#x3C;/</span><span style="color:#005CC5">CardStack.Card</span><span style="color:#24292E">></span></span>
-<span class="line"><span style="color:#24292E">              )}</span></span>
-<span class="line"><span style="color:#24292E">            &#x3C;/</span><span style="color:#005CC5">CardStack.List</span><span style="color:#24292E">></span></span>
-<span class="line"><span style="color:#24292E">          &#x3C;/</span><span style="color:#005CC5">CardStack.Viewport</span><span style="color:#24292E">></span></span>
-<span class="line"><span style="color:#24292E">        &#x3C;/</span><span style="color:#005CC5">CardStack.Trigger</span><span style="color:#24292E">></span></span>
-<span class="line"><span style="color:#24292E">      &#x3C;/</span><span style="color:#005CC5">CardStack.Frame</span><span style="color:#24292E">></span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#24292E">      &#x3C;</span><span style="color:#22863A">div</span></span>
+<span class="line"><span style="color:#6F42C1">        className</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#6F42C1">cn</span><span style="color:#24292E">(</span></span>
+<span class="line"><span style="color:#032F62">          "flex w-full flex-col"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#032F62">          "md:ml-auto md:w-[min(100cqw,calc((100cqh-4.5rem)*8/11))]"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">        )}</span></span>
+<span class="line"><span style="color:#24292E">      ></span></span>
+<span class="line"><span style="color:#24292E">        &#x3C;</span><span style="color:#22863A">div</span><span style="color:#6F42C1"> aria-hidden</span><span style="color:#D73A49">=</span><span style="color:#032F62">"true"</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#6F42C1">cn</span><span style="color:#24292E">(</span><span style="color:#032F62">"w-full shrink-0"</span><span style="color:#24292E">, </span><span style="color:#005CC5">STACK_PEEK</span><span style="color:#24292E">)} /></span></span>
+<span class="line"><span style="color:#24292E">        &#x3C;</span><span style="color:#22863A">div</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"relative aspect-[4/5] w-full shrink-0 overflow-visible"</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">          &#x3C;</span><span style="color:#005CC5">PrintStack</span><span style="color:#24292E"> /></span></span>
+<span class="line"><span style="color:#24292E">        &#x3C;/</span><span style="color:#22863A">div</span><span style="color:#24292E">></span></span>
 <span class="line"><span style="color:#24292E">      &#x3C;/</span><span style="color:#22863A">div</span><span style="color:#24292E">></span></span>
 <span class="line"><span style="color:#24292E">    &#x3C;/</span><span style="color:#22863A">figure</span><span style="color:#24292E">></span></span>
 <span class="line"><span style="color:#24292E">  );</span></span>
@@ -3285,22 +3289,17 @@ export default function PhotographerPortfolio() {
 <span class="line"><span style="color:#24292E">}) {</span></span>
 <span class="line"><span style="color:#D73A49">  return</span><span style="color:#24292E"> (</span></span>
 <span class="line"><span style="color:#24292E">    &#x3C;</span><span style="color:#22863A">div</span></span>
-<span class="line"><span style="color:#6F42C1">      className</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#6F42C1">cn</span><span style="color:#24292E">(</span></span>
-<span class="line"><span style="color:#032F62">        "grid h-[calc(100svh-var(--demo-chrome-reserve,5rem))] min-h-0 grid-cols-1 grid-rows-[auto_minmax(18rem,1fr)]"</span><span style="color:#24292E">,</span></span>
-<span class="line"><span style="color:#032F62">        "md:grid-cols-[minmax(0,2fr)_minmax(0,3fr)] md:grid-rows-1"</span><span style="color:#24292E">,</span></span>
-<span class="line"><span style="color:#005CC5">        LAYOUT</span><span style="color:#24292E">.grid,</span></span>
-<span class="line"><span style="color:#005CC5">        LAYOUT</span><span style="color:#24292E">.blockY,</span></span>
-<span class="line"><span style="color:#24292E">      )}</span></span>
-<span class="line"><span style="color:#6F42C1">      style</span><span style="color:#D73A49">=</span><span style="color:#24292E">{{ </span><span style="color:#032F62">"--layout-baseline"</span><span style="color:#24292E">: </span><span style="color:#032F62">\`\${</span><span style="color:#005CC5">BASELINE</span><span style="color:#032F62">}px\`</span><span style="color:#24292E"> } </span><span style="color:#D73A49">as</span><span style="color:#6F42C1"> CSSProperties</span><span style="color:#24292E">}</span></span>
+<span class="line"><span style="color:#6F42C1">      className</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#6F42C1">cn</span><span style="color:#24292E">(</span><span style="color:#032F62">"flex flex-col gap-8"</span><span style="color:#24292E">, </span><span style="color:#032F62">"md:h-full md:min-h-0 md:flex-1 md:flex-row md:gap-6"</span><span style="color:#24292E">)}</span></span>
 <span class="line"><span style="color:#24292E">    ></span></span>
-<span class="line"><span style="color:#24292E">      &#x3C;</span><span style="color:#22863A">div</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"flex min-h-0 flex-col justify-end md:col-start-1 md:row-start-1 md:pt-[clamp(3rem,11vh,8rem)]"</span><span style="color:#24292E">></span></span>
-<span class="line"><span style="color:#24292E">        &#x3C;</span><span style="color:#22863A">div</span><span style="color:#6F42C1"> ref</span><span style="color:#D73A49">=</span><span style="color:#24292E">{heroRef} </span><span style="color:#6F42C1">className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"relative z-20 w-fit max-w-full bg-transparent"</span><span style="color:#24292E">></span></span>
-<span class="line"><span style="color:#24292E">          &#x3C;</span><span style="color:#005CC5">HeroStory</span><span style="color:#24292E"> /></span></span>
-<span class="line"><span style="color:#24292E">        &#x3C;/</span><span style="color:#22863A">div</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">      &#x3C;</span><span style="color:#22863A">div</span></span>
+<span class="line"><span style="color:#6F42C1">        ref</span><span style="color:#D73A49">=</span><span style="color:#24292E">{heroRef}</span></span>
+<span class="line"><span style="color:#6F42C1">        className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"relative z-20 min-w-0 md:flex md:flex-[2] md:basis-0 md:flex-col md:justify-end"</span></span>
+<span class="line"><span style="color:#24292E">      ></span></span>
+<span class="line"><span style="color:#24292E">        &#x3C;</span><span style="color:#005CC5">HeroStory</span><span style="color:#24292E"> /></span></span>
 <span class="line"><span style="color:#24292E">      &#x3C;/</span><span style="color:#22863A">div</span><span style="color:#24292E">></span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#24292E">      &#x3C;</span><span style="color:#22863A">div</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"relative z-20 flex min-h-0 min-w-0 flex-col overflow-visible md:col-start-2 md:row-start-1 md:h-full md:pl-6 md:pt-[clamp(3rem,11vh,8rem)] lg:pl-10"</span><span style="color:#24292E">></span></span>
-<span class="line"><span style="color:#24292E">        &#x3C;</span><span style="color:#005CC5">ProofStack</span><span style="color:#6F42C1"> stackRef</span><span style="color:#D73A49">=</span><span style="color:#24292E">{stackRef} </span><span style="color:#6F42C1">captionRef</span><span style="color:#D73A49">=</span><span style="color:#24292E">{captionRef} /></span></span>
+<span class="line"><span style="color:#24292E">      &#x3C;</span><span style="color:#22863A">div</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"w-full min-w-0 md:flex md:min-h-0 md:flex-[3] md:basis-0 md:flex-col md:justify-end md:@container/print md:[container-type:size]"</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">        &#x3C;</span><span style="color:#005CC5">PrintProof</span><span style="color:#6F42C1"> stackRef</span><span style="color:#D73A49">=</span><span style="color:#24292E">{stackRef} </span><span style="color:#6F42C1">captionRef</span><span style="color:#D73A49">=</span><span style="color:#24292E">{captionRef} /></span></span>
 <span class="line"><span style="color:#24292E">      &#x3C;/</span><span style="color:#22863A">div</span><span style="color:#24292E">></span></span>
 <span class="line"><span style="color:#24292E">    &#x3C;/</span><span style="color:#22863A">div</span><span style="color:#24292E">></span></span>
 <span class="line"><span style="color:#24292E">  );</span></span>
@@ -3315,7 +3314,7 @@ export default function PhotographerPortfolio() {
 <span class="line"><span style="color:#D73A49">  return</span><span style="color:#24292E"> (</span></span>
 <span class="line"><span style="color:#24292E">    &#x3C;></span></span>
 <span class="line"><span style="color:#24292E">      &#x3C;</span><span style="color:#22863A">section</span></span>
-<span class="line"><span style="color:#6F42C1">        className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"relative isolate min-h-[calc(100svh-var(--demo-chrome-reserve,5rem))] overflow-hidden"</span></span>
+<span class="line"><span style="color:#6F42C1">        className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"relative isolate min-h-svh overflow-x-hidden overflow-y-auto md:h-svh md:overflow-hidden"</span></span>
 <span class="line"><span style="color:#6F42C1">        style</span><span style="color:#D73A49">=</span><span style="color:#24292E">{{ backgroundColor: </span><span style="color:#005CC5">CANVAS</span><span style="color:#24292E">, color: </span><span style="color:#005CC5">INK</span><span style="color:#24292E">, fontFamily: </span><span style="color:#005CC5">FONT</span><span style="color:#24292E"> }}</span></span>
 <span class="line"><span style="color:#24292E">      ></span></span>
 <span class="line"><span style="color:#24292E">        &#x3C;</span><span style="color:#005CC5">TrailingImage</span></span>
@@ -3329,16 +3328,11 @@ export default function PhotographerPortfolio() {
 <span class="line"><span style="color:#6F42C1">          excludeRefs</span><span style="color:#D73A49">=</span><span style="color:#24292E">{[heroRef, captionRef]}</span></span>
 <span class="line"><span style="color:#24292E">        /></span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#24292E">        &#x3C;</span><span style="color:#005CC5">CardStack</span></span>
-<span class="line"><span style="color:#6F42C1">          items</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#005CC5">PORTFOLIO</span><span style="color:#24292E">}</span></span>
-<span class="line"><span style="color:#6F42C1">          depth</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#005CC5">3</span><span style="color:#24292E">}</span></span>
-<span class="line"><span style="color:#6F42C1">          autoplay</span><span style="color:#D73A49">=</span><span style="color:#24292E">{preloaderDone}</span></span>
-<span class="line"><span style="color:#6F42C1">          autoplayInterval</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#005CC5">4500</span><span style="color:#24292E">}</span></span>
-<span class="line"><span style="color:#24292E">        ></span></span>
+<span class="line"><span style="color:#24292E">        &#x3C;</span><span style="color:#005CC5">CardStack</span><span style="color:#6F42C1"> items</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#005CC5">PORTFOLIO</span><span style="color:#24292E">} </span><span style="color:#6F42C1">depth</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#005CC5">3</span><span style="color:#24292E">} </span><span style="color:#6F42C1">autoplay</span><span style="color:#D73A49">=</span><span style="color:#24292E">{preloaderDone} </span><span style="color:#6F42C1">autoplayInterval</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#005CC5">4500</span><span style="color:#24292E">}></span></span>
 <span class="line"><span style="color:#24292E">          &#x3C;</span><span style="color:#22863A">div</span></span>
 <span class="line"><span style="color:#6F42C1">            className</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#6F42C1">cn</span><span style="color:#24292E">(</span></span>
-<span class="line"><span style="color:#032F62">              "relative z-20 isolate mx-auto min-h-[calc(100svh-var(--demo-chrome-reserve,5rem))] w-full max-w-[92rem] pb-[var(--demo-chrome-reserve,5rem)]"</span><span style="color:#24292E">,</span></span>
-<span class="line"><span style="color:#005CC5">              LAYOUT</span><span style="color:#24292E">.shell,</span></span>
+<span class="line"><span style="color:#032F62">              "relative z-20 isolate mx-auto flex w-full max-w-[92rem] flex-col md:h-full md:min-h-0 md:flex-1"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#005CC5">              SHELL</span><span style="color:#24292E">,</span></span>
 <span class="line"><span style="color:#24292E">            )}</span></span>
 <span class="line"><span style="color:#24292E">          ></span></span>
 <span class="line"><span style="color:#24292E">            &#x3C;</span><span style="color:#005CC5">PortfolioLayout</span><span style="color:#6F42C1"> stackRef</span><span style="color:#D73A49">=</span><span style="color:#24292E">{stackRef} </span><span style="color:#6F42C1">heroRef</span><span style="color:#D73A49">=</span><span style="color:#24292E">{heroRef} </span><span style="color:#6F42C1">captionRef</span><span style="color:#D73A49">=</span><span style="color:#24292E">{captionRef} /></span></span>
@@ -3375,7 +3369,7 @@ export default function PhotographerPortfolio() {
       htmlDark: `<pre class="shiki github-dark" tabindex="0"><code><span class="line"><span style="color:#9ECBFF">"use client"</span><span style="color:#E1E4E8">;</span></span>
 <span class="line"></span>
 <span class="line"><span style="color:#F97583">import</span><span style="color:#9ECBFF"> "@fontsource-variable/instrument-sans"</span><span style="color:#E1E4E8">;</span></span>
-<span class="line"><span style="color:#F97583">import</span><span style="color:#E1E4E8"> { useRef, useState, </span><span style="color:#F97583">type</span><span style="color:#E1E4E8"> CSSProperties, </span><span style="color:#F97583">type</span><span style="color:#E1E4E8"> ReactNode, </span><span style="color:#F97583">type</span><span style="color:#E1E4E8"> RefObject } </span><span style="color:#F97583">from</span><span style="color:#9ECBFF"> "react"</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#F97583">import</span><span style="color:#E1E4E8"> { </span><span style="color:#F97583">type</span><span style="color:#E1E4E8"> CSSProperties, </span><span style="color:#F97583">type</span><span style="color:#E1E4E8"> ReactNode, </span><span style="color:#F97583">type</span><span style="color:#E1E4E8"> RefObject, useRef, useState } </span><span style="color:#F97583">from</span><span style="color:#9ECBFF"> "react"</span><span style="color:#E1E4E8">;</span></span>
 <span class="line"></span>
 <span class="line"><span style="color:#F97583">import</span><span style="color:#E1E4E8"> CardStack, {</span></span>
 <span class="line"><span style="color:#E1E4E8">  CARD_STACK_MASK_IDS,</span></span>
@@ -3390,8 +3384,7 @@ export default function PhotographerPortfolio() {
 <span class="line"></span>
 <span class="line"><span style="color:#F97583">import</span><span style="color:#E1E4E8"> { PhotographerPortfolioNotes } </span><span style="color:#F97583">from</span><span style="color:#9ECBFF"> "./photographer-portfolio-notes"</span><span style="color:#E1E4E8">;</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#F97583">const</span><span style="color:#79B8FF"> FONT</span><span style="color:#F97583"> =</span></span>
-<span class="line"><span style="color:#9ECBFF">  '"Instrument Sans Variable", ui-sans-serif, system-ui, sans-serif'</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#F97583">const</span><span style="color:#79B8FF"> FONT</span><span style="color:#F97583"> =</span><span style="color:#9ECBFF"> '"Instrument Sans Variable", ui-sans-serif, system-ui, sans-serif'</span><span style="color:#E1E4E8">;</span></span>
 <span class="line"></span>
 <span class="line"><span style="color:#F97583">const</span><span style="color:#79B8FF"> CANVAS</span><span style="color:#F97583"> =</span><span style="color:#9ECBFF"> "#fff"</span><span style="color:#E1E4E8">;</span></span>
 <span class="line"><span style="color:#F97583">const</span><span style="color:#79B8FF"> INK</span><span style="color:#F97583"> =</span><span style="color:#9ECBFF"> "#000"</span><span style="color:#E1E4E8">;</span></span>
@@ -3450,7 +3443,6 @@ export default function PhotographerPortfolio() {
 <span class="line"><span style="color:#F97583">const</span><span style="color:#79B8FF"> HERO_TONE</span><span style="color:#F97583"> =</span><span style="color:#E1E4E8"> {</span></span>
 <span class="line"><span style="color:#E1E4E8">  mute: </span><span style="color:#9ECBFF">"text-black/40"</span><span style="color:#E1E4E8">,</span></span>
 <span class="line"><span style="color:#E1E4E8">  ink: </span><span style="color:#9ECBFF">"text-black"</span><span style="color:#E1E4E8">,</span></span>
-<span class="line"><span style="color:#E1E4E8">  accent: </span><span style="color:#9ECBFF">"text-[#c2410c]"</span><span style="color:#E1E4E8">,</span></span>
 <span class="line"><span style="color:#E1E4E8">} </span><span style="color:#F97583">as</span><span style="color:#F97583"> const</span><span style="color:#E1E4E8">;</span></span>
 <span class="line"></span>
 <span class="line"><span style="color:#F97583">const</span><span style="color:#79B8FF"> PORTFOLIO</span><span style="color:#F97583">:</span><span style="color:#B392F0"> CardStackItem</span><span style="color:#E1E4E8">[] </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> [</span></span>
@@ -3505,11 +3497,7 @@ export default function PhotographerPortfolio() {
 <span class="line"><span style="color:#E1E4E8">];</span></span>
 <span class="line"></span>
 <span class="line"><span style="color:#F97583">const</span><span style="color:#79B8FF"> PRELOAD_IMAGES</span><span style="color:#F97583"> =</span><span style="color:#E1E4E8"> [</span></span>
-<span class="line"><span style="color:#F97583">  ...new</span><span style="color:#B392F0"> Set</span><span style="color:#E1E4E8">([</span></span>
-<span class="line"><span style="color:#79B8FF">    PHOTOGRAPHER</span><span style="color:#E1E4E8">.avatar,</span></span>
-<span class="line"><span style="color:#F97583">    ...</span><span style="color:#79B8FF">PORTFOLIO</span><span style="color:#E1E4E8">.</span><span style="color:#B392F0">map</span><span style="color:#E1E4E8">((</span><span style="color:#FFAB70">item</span><span style="color:#E1E4E8">) </span><span style="color:#F97583">=></span><span style="color:#E1E4E8"> item.image),</span></span>
-<span class="line"><span style="color:#F97583">    ...</span><span style="color:#79B8FF">TRAIL_IMAGES</span><span style="color:#E1E4E8">,</span></span>
-<span class="line"><span style="color:#E1E4E8">  ]),</span></span>
+<span class="line"><span style="color:#F97583">  ...new</span><span style="color:#B392F0"> Set</span><span style="color:#E1E4E8">([</span><span style="color:#79B8FF">PHOTOGRAPHER</span><span style="color:#E1E4E8">.avatar, </span><span style="color:#F97583">...</span><span style="color:#79B8FF">PORTFOLIO</span><span style="color:#E1E4E8">.</span><span style="color:#B392F0">map</span><span style="color:#E1E4E8">((</span><span style="color:#FFAB70">item</span><span style="color:#E1E4E8">) </span><span style="color:#F97583">=></span><span style="color:#E1E4E8"> item.image), </span><span style="color:#F97583">...</span><span style="color:#79B8FF">TRAIL_IMAGES</span><span style="color:#E1E4E8">]),</span></span>
 <span class="line"><span style="color:#E1E4E8">];</span></span>
 <span class="line"></span>
 <span class="line"><span style="color:#F97583">const</span><span style="color:#79B8FF"> HERO_MARK</span><span style="color:#F97583"> =</span></span>
@@ -3517,9 +3505,9 @@ export default function PhotographerPortfolio() {
 <span class="line"></span>
 <span class="line"><span style="color:#F97583">function</span><span style="color:#B392F0"> HeroMark</span><span style="color:#E1E4E8">({ </span><span style="color:#FFAB70">children</span><span style="color:#E1E4E8">, </span><span style="color:#FFAB70">className</span><span style="color:#E1E4E8"> }</span><span style="color:#F97583">:</span><span style="color:#E1E4E8"> { </span><span style="color:#FFAB70">children</span><span style="color:#F97583">:</span><span style="color:#B392F0"> ReactNode</span><span style="color:#E1E4E8">; </span><span style="color:#FFAB70">className</span><span style="color:#F97583">?:</span><span style="color:#79B8FF"> string</span><span style="color:#E1E4E8"> }) {</span></span>
 <span class="line"><span style="color:#F97583">  return</span><span style="color:#E1E4E8"> (</span></span>
-<span class="line"><span style="color:#E1E4E8">    &#x3C;</span><span style="color:#85E89D">span</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#B392F0">cn</span><span style="color:#E1E4E8">(</span><span style="color:#79B8FF">HERO_MARK</span><span style="color:#E1E4E8">, className)} </span><span style="color:#B392F0">aria-hidden</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">    &#x3C;</span><span style="color:#85E89D">div</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#B392F0">cn</span><span style="color:#E1E4E8">(</span><span style="color:#79B8FF">HERO_MARK</span><span style="color:#E1E4E8">, className)} </span><span style="color:#B392F0">aria-hidden</span><span style="color:#E1E4E8">></span></span>
 <span class="line"><span style="color:#E1E4E8">      {children}</span></span>
-<span class="line"><span style="color:#E1E4E8">    &#x3C;/</span><span style="color:#85E89D">span</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">    &#x3C;/</span><span style="color:#85E89D">div</span><span style="color:#E1E4E8">></span></span>
 <span class="line"><span style="color:#E1E4E8">  );</span></span>
 <span class="line"><span style="color:#E1E4E8">}</span></span>
 <span class="line"></span>
@@ -3532,12 +3520,11 @@ export default function PhotographerPortfolio() {
 <span class="line"><span style="color:#E1E4E8">}</span></span>
 <span class="line"></span>
 <span class="line"><span style="color:#F97583">function</span><span style="color:#B392F0"> HeroStory</span><span style="color:#E1E4E8">() {</span></span>
-<span class="line"><span style="color:#F97583">  const</span><span style="color:#79B8FF"> type</span><span style="color:#F97583"> =</span></span>
-<span class="line"><span style="color:#9ECBFF">    "text-[clamp(1.25rem,2vw,1.75rem)] font-medium leading-[1.55] tracking-[-0.02em]"</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#F97583">  const</span><span style="color:#79B8FF"> type</span><span style="color:#F97583"> =</span><span style="color:#9ECBFF"> "text-[clamp(1.25rem,2vw,1.75rem)] font-medium leading-[1.55] tracking-[-0.02em]"</span><span style="color:#E1E4E8">;</span></span>
 <span class="line"></span>
 <span class="line"><span style="color:#F97583">  return</span><span style="color:#E1E4E8"> (</span></span>
-<span class="line"><span style="color:#E1E4E8">    &#x3C;</span><span style="color:#85E89D">div</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"max-w-[min(100%,36rem)] space-y-6"</span><span style="color:#E1E4E8">></span></span>
-<span class="line"><span style="color:#E1E4E8">      &#x3C;</span><span style="color:#85E89D">p</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{type}></span></span>
+<span class="line"><span style="color:#E1E4E8">    &#x3C;</span><span style="color:#85E89D">div</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"flex flex-col gap-[1.15em]"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">      &#x3C;</span><span style="color:#85E89D">div</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{type}></span></span>
 <span class="line"><span style="color:#E1E4E8">        &#x3C;</span><span style="color:#85E89D">span</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#79B8FF">HERO_TONE</span><span style="color:#E1E4E8">.mute}>Hi, I'm &#x3C;/</span><span style="color:#85E89D">span</span><span style="color:#E1E4E8">></span></span>
 <span class="line"><span style="color:#E1E4E8">        &#x3C;</span><span style="color:#85E89D">span</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#79B8FF">HERO_TONE</span><span style="color:#E1E4E8">.ink}>{</span><span style="color:#79B8FF">PHOTOGRAPHER</span><span style="color:#E1E4E8">.name}&#x3C;/</span><span style="color:#85E89D">span</span><span style="color:#E1E4E8">></span></span>
 <span class="line"><span style="color:#E1E4E8">        &#x3C;</span><span style="color:#79B8FF">ProfileGlyph</span><span style="color:#B392F0"> src</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#79B8FF">PHOTOGRAPHER</span><span style="color:#E1E4E8">.avatar} </span><span style="color:#B392F0">alt</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#79B8FF">PHOTOGRAPHER</span><span style="color:#E1E4E8">.studio} /></span></span>
@@ -3553,15 +3540,11 @@ export default function PhotographerPortfolio() {
 <span class="line"><span style="color:#E1E4E8">        &#x3C;/</span><span style="color:#79B8FF">HeroMark</span><span style="color:#E1E4E8">></span></span>
 <span class="line"><span style="color:#E1E4E8">        &#x3C;</span><span style="color:#85E89D">span</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#79B8FF">HERO_TONE</span><span style="color:#E1E4E8">.mute}> &#x3C;/</span><span style="color:#85E89D">span</span><span style="color:#E1E4E8">></span></span>
 <span class="line"><span style="color:#E1E4E8">        &#x3C;</span><span style="color:#85E89D">span</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#79B8FF">HERO_TONE</span><span style="color:#E1E4E8">.ink}>{</span><span style="color:#79B8FF">PHOTOGRAPHER</span><span style="color:#E1E4E8">.location}&#x3C;/</span><span style="color:#85E89D">span</span><span style="color:#E1E4E8">></span></span>
-<span class="line"><span style="color:#E1E4E8">        &#x3C;</span><span style="color:#85E89D">span</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#79B8FF">HERO_TONE</span><span style="color:#E1E4E8">.mute}></span></span>
-<span class="line"><span style="color:#E1E4E8">          {</span><span style="color:#9ECBFF">" "</span><span style="color:#E1E4E8">}</span></span>
-<span class="line"><span style="color:#E1E4E8">          — good light, real moments, and photos that don't feel forced.</span></span>
-<span class="line"><span style="color:#E1E4E8">        &#x3C;/</span><span style="color:#85E89D">span</span><span style="color:#E1E4E8">></span></span>
-<span class="line"><span style="color:#E1E4E8">      &#x3C;/</span><span style="color:#85E89D">p</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">        &#x3C;</span><span style="color:#85E89D">span</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#79B8FF">HERO_TONE</span><span style="color:#E1E4E8">.mute}> and capture photos you hang on the wall.&#x3C;/</span><span style="color:#85E89D">span</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">      &#x3C;/</span><span style="color:#85E89D">div</span><span style="color:#E1E4E8">></span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">      &#x3C;</span><span style="color:#85E89D">p</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{type}></span></span>
-<span class="line"><span style="color:#E1E4E8">        &#x3C;</span><span style="color:#85E89D">span</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#79B8FF">HERO_TONE</span><span style="color:#E1E4E8">.accent}>Booking Q3.&#x3C;/</span><span style="color:#85E89D">span</span><span style="color:#E1E4E8">></span></span>
-<span class="line"><span style="color:#E1E4E8">        &#x3C;</span><span style="color:#85E89D">span</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#79B8FF">HERO_TONE</span><span style="color:#E1E4E8">.mute}> &#x3C;/</span><span style="color:#85E89D">span</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">      &#x3C;</span><span style="color:#85E89D">p</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{type} </span><span style="color:#B392F0">style</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{{ textBoxTrim: </span><span style="color:#9ECBFF">"trim-both"</span><span style="color:#E1E4E8"> } </span><span style="color:#F97583">as</span><span style="color:#B392F0"> CSSProperties</span><span style="color:#E1E4E8">}></span></span>
+<span class="line"><span style="color:#E1E4E8">        &#x3C;</span><span style="color:#85E89D">span</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#79B8FF">HERO_TONE</span><span style="color:#E1E4E8">.mute}>Booking Q3. &#x3C;/</span><span style="color:#85E89D">span</span><span style="color:#E1E4E8">></span></span>
 <span class="line"><span style="color:#E1E4E8">        &#x3C;</span><span style="color:#85E89D">a</span></span>
 <span class="line"><span style="color:#B392F0">          href</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#79B8FF">PHOTOGRAPHER</span><span style="color:#E1E4E8">.email}</span></span>
 <span class="line"><span style="color:#B392F0">          className</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#B392F0">cn</span><span style="color:#E1E4E8">(</span><span style="color:#79B8FF">HERO_TONE</span><span style="color:#E1E4E8">.ink, </span><span style="color:#9ECBFF">"underline-offset-[4px] hover:underline"</span><span style="color:#E1E4E8">)}</span></span>
@@ -3599,9 +3582,14 @@ export default function PhotographerPortfolio() {
 <span class="line"><span style="color:#E1E4E8">  }</span></span>
 <span class="line"></span>
 <span class="line"><span style="color:#F97583">  return</span><span style="color:#E1E4E8"> (</span></span>
-<span class="line"><span style="color:#E1E4E8">    &#x3C;</span><span style="color:#85E89D">figcaption</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"relative z-10 shrink-0 border-b border-black/80 bg-transparent pb-3"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">    &#x3C;</span><span style="color:#85E89D">figcaption</span></span>
+<span class="line"><span style="color:#B392F0">      className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"relative z-10 shrink-0 border-b border-black/80 pb-3"</span></span>
+<span class="line"><span style="color:#B392F0">      style</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{{ backgroundColor: </span><span style="color:#79B8FF">CANVAS</span><span style="color:#E1E4E8"> }}</span></span>
+<span class="line"><span style="color:#E1E4E8">    ></span></span>
 <span class="line"><span style="color:#E1E4E8">      &#x3C;</span><span style="color:#85E89D">div</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"flex items-baseline justify-between gap-4"</span><span style="color:#E1E4E8">></span></span>
-<span class="line"><span style="color:#E1E4E8">        &#x3C;</span><span style="color:#85E89D">p</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"text-[11px] font-medium uppercase tracking-[0.1em] text-black"</span><span style="color:#E1E4E8">>{activeItem.title}&#x3C;/</span><span style="color:#85E89D">p</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">        &#x3C;</span><span style="color:#85E89D">p</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"text-[11px] font-medium uppercase tracking-[0.1em] text-black"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">          {activeItem.title}</span></span>
+<span class="line"><span style="color:#E1E4E8">        &#x3C;/</span><span style="color:#85E89D">p</span><span style="color:#E1E4E8">></span></span>
 <span class="line"><span style="color:#E1E4E8">        &#x3C;</span><span style="color:#85E89D">p</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"shrink-0 text-[11px] font-medium tabular-nums tracking-[0.1em] text-black/45"</span><span style="color:#E1E4E8">></span></span>
 <span class="line"><span style="color:#E1E4E8">          {</span><span style="color:#B392F0">String</span><span style="color:#E1E4E8">(index).</span><span style="color:#B392F0">padStart</span><span style="color:#E1E4E8">(</span><span style="color:#79B8FF">2</span><span style="color:#E1E4E8">, </span><span style="color:#9ECBFF">"0"</span><span style="color:#E1E4E8">)}</span></span>
 <span class="line"><span style="color:#E1E4E8">          &#x3C;</span><span style="color:#85E89D">span</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"text-black/20"</span><span style="color:#E1E4E8">>/&#x3C;/</span><span style="color:#85E89D">span</span><span style="color:#E1E4E8">></span></span>
@@ -3619,14 +3607,48 @@ export default function PhotographerPortfolio() {
 <span class="line"><span style="color:#E1E4E8">  );</span></span>
 <span class="line"><span style="color:#E1E4E8">}</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#F97583">const</span><span style="color:#79B8FF"> BASELINE</span><span style="color:#F97583"> =</span><span style="color:#79B8FF"> 8</span><span style="color:#E1E4E8">;</span></span>
-<span class="line"><span style="color:#F97583">const</span><span style="color:#79B8FF"> LAYOUT</span><span style="color:#F97583"> =</span><span style="color:#E1E4E8"> {</span></span>
-<span class="line"><span style="color:#E1E4E8">  shell: </span><span style="color:#9ECBFF">"px-6 sm:px-10 lg:px-14"</span><span style="color:#E1E4E8">,</span></span>
-<span class="line"><span style="color:#E1E4E8">  blockY: </span><span style="color:#9ECBFF">"py-8 lg:py-10"</span><span style="color:#E1E4E8">,</span></span>
-<span class="line"><span style="color:#E1E4E8">  grid: </span><span style="color:#9ECBFF">"gap-x-8 gap-y-8 lg:gap-x-10 lg:gap-y-10"</span><span style="color:#E1E4E8">,</span></span>
-<span class="line"><span style="color:#E1E4E8">} </span><span style="color:#F97583">as</span><span style="color:#F97583"> const</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#F97583">const</span><span style="color:#79B8FF"> SHELL</span><span style="color:#F97583"> =</span></span>
+<span class="line"><span style="color:#9ECBFF">  "px-6 pt-6 pb-[calc(var(--demo-chrome-reserve,5rem)+1.5rem)] sm:px-10 sm:pt-10 sm:pb-[calc(var(--demo-chrome-reserve,5rem)+2.5rem)] lg:px-14 lg:pt-14 lg:pb-[calc(var(--demo-chrome-reserve,5rem)+3.5rem)]"</span><span style="color:#E1E4E8">;</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#F97583">function</span><span style="color:#B392F0"> ProofStack</span><span style="color:#E1E4E8">({</span></span>
+<span class="line"><span style="color:#6A737D">/** Stack peek is 10% of print height — at 4:5 that is an 8:1 strip */</span></span>
+<span class="line"><span style="color:#F97583">const</span><span style="color:#79B8FF"> STACK_PEEK</span><span style="color:#F97583"> =</span><span style="color:#9ECBFF"> "aspect-[8/1]"</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">function</span><span style="color:#B392F0"> PrintStack</span><span style="color:#E1E4E8">() {</span></span>
+<span class="line"><span style="color:#F97583">  return</span><span style="color:#E1E4E8"> (</span></span>
+<span class="line"><span style="color:#E1E4E8">    &#x3C;</span><span style="color:#79B8FF">CardStack.Frame</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"absolute inset-0 overflow-visible"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">      &#x3C;</span><span style="color:#79B8FF">CardStack.LiveRegion</span><span style="color:#E1E4E8"> /></span></span>
+<span class="line"><span style="color:#E1E4E8">      &#x3C;</span><span style="color:#79B8FF">CardStack.Trigger</span><span style="color:#B392F0"> aria-label</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"Show next photo"</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"absolute inset-0 block text-left"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">        &#x3C;</span><span style="color:#79B8FF">CardStack.Viewport</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"size-full overflow-visible !min-h-0 !pt-0"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">          &#x3C;</span><span style="color:#79B8FF">CardStack.List</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">            {(</span><span style="color:#FFAB70">item</span><span style="color:#E1E4E8">, </span><span style="color:#FFAB70">index</span><span style="color:#E1E4E8">, </span><span style="color:#FFAB70">layer</span><span style="color:#E1E4E8">) </span><span style="color:#F97583">=></span><span style="color:#E1E4E8"> (</span></span>
+<span class="line"><span style="color:#E1E4E8">              &#x3C;</span><span style="color:#79B8FF">CardStack.Card</span></span>
+<span class="line"><span style="color:#B392F0">                key</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{item.id}</span></span>
+<span class="line"><span style="color:#B392F0">                layer</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{layer}</span></span>
+<span class="line"><span style="color:#B392F0">                stackIndex</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{index}</span></span>
+<span class="line"><span style="color:#B392F0">                className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"!inset-x-0 !top-0 !h-fit !w-full gap-0 overflow-visible rounded-none !bg-transparent p-0 shadow-none ring-0"</span></span>
+<span class="line"><span style="color:#E1E4E8">              ></span></span>
+<span class="line"><span style="color:#E1E4E8">                &#x3C;</span><span style="color:#85E89D">figure</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"relative aspect-[4/5] size-full overflow-hidden bg-black/5"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">                  &#x3C;</span><span style="color:#85E89D">img</span></span>
+<span class="line"><span style="color:#B392F0">                    src</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{item.image}</span></span>
+<span class="line"><span style="color:#B392F0">                    alt</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#9ECBFF">\`\${</span><span style="color:#79B8FF">PHOTOGRAPHER</span><span style="color:#9ECBFF">.</span><span style="color:#E1E4E8">studio</span><span style="color:#9ECBFF">} — \${</span><span style="color:#E1E4E8">item</span><span style="color:#9ECBFF">.</span><span style="color:#E1E4E8">title</span><span style="color:#9ECBFF">}\`</span><span style="color:#E1E4E8">}</span></span>
+<span class="line"><span style="color:#B392F0">                    width</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#79B8FF">PRINT_WIDTH</span><span style="color:#E1E4E8">}</span></span>
+<span class="line"><span style="color:#B392F0">                    height</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#79B8FF">PRINT_HEIGHT</span><span style="color:#E1E4E8">}</span></span>
+<span class="line"><span style="color:#B392F0">                    decoding</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"async"</span></span>
+<span class="line"><span style="color:#B392F0">                    draggable</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#79B8FF">false</span><span style="color:#E1E4E8">}</span></span>
+<span class="line"><span style="color:#B392F0">                    className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"size-full object-cover object-center"</span></span>
+<span class="line"><span style="color:#E1E4E8">                  /></span></span>
+<span class="line"><span style="color:#E1E4E8">                  {index </span><span style="color:#F97583">===</span><span style="color:#79B8FF"> 0</span><span style="color:#F97583"> ?</span><span style="color:#E1E4E8"> &#x3C;</span><span style="color:#79B8FF">ViewfinderFrame</span><span style="color:#E1E4E8"> /> </span><span style="color:#F97583">:</span><span style="color:#79B8FF"> null</span><span style="color:#E1E4E8">}</span></span>
+<span class="line"><span style="color:#E1E4E8">                &#x3C;/</span><span style="color:#85E89D">figure</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">              &#x3C;/</span><span style="color:#79B8FF">CardStack.Card</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">            )}</span></span>
+<span class="line"><span style="color:#E1E4E8">          &#x3C;/</span><span style="color:#79B8FF">CardStack.List</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">        &#x3C;/</span><span style="color:#79B8FF">CardStack.Viewport</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">      &#x3C;/</span><span style="color:#79B8FF">CardStack.Trigger</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">    &#x3C;/</span><span style="color:#79B8FF">CardStack.Frame</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">  );</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">function</span><span style="color:#B392F0"> PrintProof</span><span style="color:#E1E4E8">({</span></span>
 <span class="line"><span style="color:#FFAB70">  stackRef</span><span style="color:#E1E4E8">,</span></span>
 <span class="line"><span style="color:#FFAB70">  captionRef</span><span style="color:#E1E4E8">,</span></span>
 <span class="line"><span style="color:#E1E4E8">}</span><span style="color:#F97583">:</span><span style="color:#E1E4E8"> {</span></span>
@@ -3634,46 +3656,25 @@ export default function PhotographerPortfolio() {
 <span class="line"><span style="color:#FFAB70">  captionRef</span><span style="color:#F97583">:</span><span style="color:#B392F0"> RefObject</span><span style="color:#E1E4E8">&#x3C;</span><span style="color:#B392F0">HTMLDivElement</span><span style="color:#F97583"> |</span><span style="color:#79B8FF"> null</span><span style="color:#E1E4E8">>;</span></span>
 <span class="line"><span style="color:#E1E4E8">}) {</span></span>
 <span class="line"><span style="color:#F97583">  return</span><span style="color:#E1E4E8"> (</span></span>
-<span class="line"><span style="color:#E1E4E8">    &#x3C;</span><span style="color:#85E89D">figure</span></span>
-<span class="line"><span style="color:#B392F0">      ref</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{stackRef}</span></span>
-<span class="line"><span style="color:#B392F0">      className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"ml-auto grid h-full min-h-0 w-full min-w-0 max-w-full grid-rows-[auto_minmax(0,1fr)] gap-y-3 sm:gap-y-4"</span></span>
-<span class="line"><span style="color:#E1E4E8">    ></span></span>
-<span class="line"><span style="color:#E1E4E8">      &#x3C;</span><span style="color:#85E89D">div</span><span style="color:#B392F0"> ref</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{captionRef} </span><span style="color:#B392F0">className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"relative z-30 w-full shrink-0 bg-transparent"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">    &#x3C;</span><span style="color:#85E89D">figure</span><span style="color:#B392F0"> ref</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{stackRef} </span><span style="color:#B392F0">className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"flex w-full min-w-0 flex-col"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">      &#x3C;</span><span style="color:#85E89D">div</span></span>
+<span class="line"><span style="color:#B392F0">        ref</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{captionRef}</span></span>
+<span class="line"><span style="color:#B392F0">        className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"relative z-30 w-full shrink-0"</span></span>
+<span class="line"><span style="color:#B392F0">        style</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{{ backgroundColor: </span><span style="color:#79B8FF">CANVAS</span><span style="color:#E1E4E8"> }}</span></span>
+<span class="line"><span style="color:#E1E4E8">      ></span></span>
 <span class="line"><span style="color:#E1E4E8">        &#x3C;</span><span style="color:#79B8FF">PrintCaption</span><span style="color:#E1E4E8"> /></span></span>
 <span class="line"><span style="color:#E1E4E8">      &#x3C;/</span><span style="color:#85E89D">div</span><span style="color:#E1E4E8">></span></span>
-<span class="line"><span style="color:#E1E4E8">      &#x3C;</span><span style="color:#85E89D">div</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"@container/stack relative flex min-h-0 flex-1 items-end justify-end pt-[max(2.5rem,11%)]"</span><span style="color:#E1E4E8">></span></span>
-<span class="line"><span style="color:#E1E4E8">        &#x3C;</span><span style="color:#79B8FF">CardStack.Frame</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"relative aspect-[4/5] h-auto w-[min(100cqw,calc(100cqh*4/5))] max-h-full min-h-0 shrink-0 overflow-visible"</span><span style="color:#E1E4E8">></span></span>
-<span class="line"><span style="color:#E1E4E8">          &#x3C;</span><span style="color:#79B8FF">CardStack.LiveRegion</span><span style="color:#E1E4E8"> /></span></span>
-<span class="line"><span style="color:#E1E4E8">          &#x3C;</span><span style="color:#79B8FF">CardStack.Trigger</span><span style="color:#B392F0"> aria-label</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"Show next photo"</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"block size-full text-left"</span><span style="color:#E1E4E8">></span></span>
-<span class="line"><span style="color:#E1E4E8">            &#x3C;</span><span style="color:#79B8FF">CardStack.Viewport</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"relative size-full overflow-visible !min-h-0 !pt-0"</span><span style="color:#E1E4E8">></span></span>
-<span class="line"><span style="color:#E1E4E8">            &#x3C;</span><span style="color:#79B8FF">CardStack.List</span><span style="color:#E1E4E8">></span></span>
-<span class="line"><span style="color:#E1E4E8">              {(</span><span style="color:#FFAB70">item</span><span style="color:#E1E4E8">, </span><span style="color:#FFAB70">index</span><span style="color:#E1E4E8">, </span><span style="color:#FFAB70">layer</span><span style="color:#E1E4E8">) </span><span style="color:#F97583">=></span><span style="color:#E1E4E8"> (</span></span>
-<span class="line"><span style="color:#E1E4E8">                &#x3C;</span><span style="color:#79B8FF">CardStack.Card</span></span>
-<span class="line"><span style="color:#B392F0">                  key</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{item.id}</span></span>
-<span class="line"><span style="color:#B392F0">                  layer</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{layer}</span></span>
-<span class="line"><span style="color:#B392F0">                  stackIndex</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{index}</span></span>
-<span class="line"><span style="color:#B392F0">                  className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"size-full gap-0 overflow-visible rounded-none bg-transparent p-0 shadow-none ring-0 [background-image:none]"</span></span>
-<span class="line"><span style="color:#E1E4E8">                ></span></span>
-<span class="line"><span style="color:#E1E4E8">                  &#x3C;</span><span style="color:#85E89D">figure</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"flex size-full flex-col border-0 bg-transparent p-0"</span><span style="color:#E1E4E8">></span></span>
-<span class="line"><span style="color:#E1E4E8">                    &#x3C;</span><span style="color:#85E89D">div</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"relative min-h-0 w-full flex-1 overflow-hidden bg-black/5"</span><span style="color:#E1E4E8">></span></span>
-<span class="line"><span style="color:#E1E4E8">                      &#x3C;</span><span style="color:#85E89D">img</span></span>
-<span class="line"><span style="color:#B392F0">                        src</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{item.image}</span></span>
-<span class="line"><span style="color:#B392F0">                        alt</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#9ECBFF">\`\${</span><span style="color:#79B8FF">PHOTOGRAPHER</span><span style="color:#9ECBFF">.</span><span style="color:#E1E4E8">studio</span><span style="color:#9ECBFF">} — \${</span><span style="color:#E1E4E8">item</span><span style="color:#9ECBFF">.</span><span style="color:#E1E4E8">title</span><span style="color:#9ECBFF">}\`</span><span style="color:#E1E4E8">}</span></span>
-<span class="line"><span style="color:#B392F0">                        width</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#79B8FF">PRINT_WIDTH</span><span style="color:#E1E4E8">}</span></span>
-<span class="line"><span style="color:#B392F0">                        height</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#79B8FF">PRINT_HEIGHT</span><span style="color:#E1E4E8">}</span></span>
-<span class="line"><span style="color:#B392F0">                        decoding</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"async"</span></span>
-<span class="line"><span style="color:#B392F0">                        draggable</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#79B8FF">false</span><span style="color:#E1E4E8">}</span></span>
-<span class="line"><span style="color:#B392F0">                        className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"absolute inset-0 size-full object-cover object-center"</span></span>
-<span class="line"><span style="color:#E1E4E8">                      /></span></span>
-<span class="line"><span style="color:#E1E4E8">                      {index </span><span style="color:#F97583">===</span><span style="color:#79B8FF"> 0</span><span style="color:#F97583"> ?</span><span style="color:#E1E4E8"> &#x3C;</span><span style="color:#79B8FF">ViewfinderFrame</span><span style="color:#E1E4E8"> /> </span><span style="color:#F97583">:</span><span style="color:#79B8FF"> null</span><span style="color:#E1E4E8">}</span></span>
-<span class="line"><span style="color:#E1E4E8">                    &#x3C;/</span><span style="color:#85E89D">div</span><span style="color:#E1E4E8">></span></span>
-<span class="line"><span style="color:#E1E4E8">                  &#x3C;/</span><span style="color:#85E89D">figure</span><span style="color:#E1E4E8">></span></span>
-<span class="line"><span style="color:#E1E4E8">                &#x3C;/</span><span style="color:#79B8FF">CardStack.Card</span><span style="color:#E1E4E8">></span></span>
-<span class="line"><span style="color:#E1E4E8">              )}</span></span>
-<span class="line"><span style="color:#E1E4E8">            &#x3C;/</span><span style="color:#79B8FF">CardStack.List</span><span style="color:#E1E4E8">></span></span>
-<span class="line"><span style="color:#E1E4E8">          &#x3C;/</span><span style="color:#79B8FF">CardStack.Viewport</span><span style="color:#E1E4E8">></span></span>
-<span class="line"><span style="color:#E1E4E8">        &#x3C;/</span><span style="color:#79B8FF">CardStack.Trigger</span><span style="color:#E1E4E8">></span></span>
-<span class="line"><span style="color:#E1E4E8">      &#x3C;/</span><span style="color:#79B8FF">CardStack.Frame</span><span style="color:#E1E4E8">></span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">      &#x3C;</span><span style="color:#85E89D">div</span></span>
+<span class="line"><span style="color:#B392F0">        className</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#B392F0">cn</span><span style="color:#E1E4E8">(</span></span>
+<span class="line"><span style="color:#9ECBFF">          "flex w-full flex-col"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#9ECBFF">          "md:ml-auto md:w-[min(100cqw,calc((100cqh-4.5rem)*8/11))]"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">        )}</span></span>
+<span class="line"><span style="color:#E1E4E8">      ></span></span>
+<span class="line"><span style="color:#E1E4E8">        &#x3C;</span><span style="color:#85E89D">div</span><span style="color:#B392F0"> aria-hidden</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"true"</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#B392F0">cn</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"w-full shrink-0"</span><span style="color:#E1E4E8">, </span><span style="color:#79B8FF">STACK_PEEK</span><span style="color:#E1E4E8">)} /></span></span>
+<span class="line"><span style="color:#E1E4E8">        &#x3C;</span><span style="color:#85E89D">div</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"relative aspect-[4/5] w-full shrink-0 overflow-visible"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">          &#x3C;</span><span style="color:#79B8FF">PrintStack</span><span style="color:#E1E4E8"> /></span></span>
+<span class="line"><span style="color:#E1E4E8">        &#x3C;/</span><span style="color:#85E89D">div</span><span style="color:#E1E4E8">></span></span>
 <span class="line"><span style="color:#E1E4E8">      &#x3C;/</span><span style="color:#85E89D">div</span><span style="color:#E1E4E8">></span></span>
 <span class="line"><span style="color:#E1E4E8">    &#x3C;/</span><span style="color:#85E89D">figure</span><span style="color:#E1E4E8">></span></span>
 <span class="line"><span style="color:#E1E4E8">  );</span></span>
@@ -3690,22 +3691,17 @@ export default function PhotographerPortfolio() {
 <span class="line"><span style="color:#E1E4E8">}) {</span></span>
 <span class="line"><span style="color:#F97583">  return</span><span style="color:#E1E4E8"> (</span></span>
 <span class="line"><span style="color:#E1E4E8">    &#x3C;</span><span style="color:#85E89D">div</span></span>
-<span class="line"><span style="color:#B392F0">      className</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#B392F0">cn</span><span style="color:#E1E4E8">(</span></span>
-<span class="line"><span style="color:#9ECBFF">        "grid h-[calc(100svh-var(--demo-chrome-reserve,5rem))] min-h-0 grid-cols-1 grid-rows-[auto_minmax(18rem,1fr)]"</span><span style="color:#E1E4E8">,</span></span>
-<span class="line"><span style="color:#9ECBFF">        "md:grid-cols-[minmax(0,2fr)_minmax(0,3fr)] md:grid-rows-1"</span><span style="color:#E1E4E8">,</span></span>
-<span class="line"><span style="color:#79B8FF">        LAYOUT</span><span style="color:#E1E4E8">.grid,</span></span>
-<span class="line"><span style="color:#79B8FF">        LAYOUT</span><span style="color:#E1E4E8">.blockY,</span></span>
-<span class="line"><span style="color:#E1E4E8">      )}</span></span>
-<span class="line"><span style="color:#B392F0">      style</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{{ </span><span style="color:#9ECBFF">"--layout-baseline"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">\`\${</span><span style="color:#79B8FF">BASELINE</span><span style="color:#9ECBFF">}px\`</span><span style="color:#E1E4E8"> } </span><span style="color:#F97583">as</span><span style="color:#B392F0"> CSSProperties</span><span style="color:#E1E4E8">}</span></span>
+<span class="line"><span style="color:#B392F0">      className</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#B392F0">cn</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"flex flex-col gap-8"</span><span style="color:#E1E4E8">, </span><span style="color:#9ECBFF">"md:h-full md:min-h-0 md:flex-1 md:flex-row md:gap-6"</span><span style="color:#E1E4E8">)}</span></span>
 <span class="line"><span style="color:#E1E4E8">    ></span></span>
-<span class="line"><span style="color:#E1E4E8">      &#x3C;</span><span style="color:#85E89D">div</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"flex min-h-0 flex-col justify-end md:col-start-1 md:row-start-1 md:pt-[clamp(3rem,11vh,8rem)]"</span><span style="color:#E1E4E8">></span></span>
-<span class="line"><span style="color:#E1E4E8">        &#x3C;</span><span style="color:#85E89D">div</span><span style="color:#B392F0"> ref</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{heroRef} </span><span style="color:#B392F0">className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"relative z-20 w-fit max-w-full bg-transparent"</span><span style="color:#E1E4E8">></span></span>
-<span class="line"><span style="color:#E1E4E8">          &#x3C;</span><span style="color:#79B8FF">HeroStory</span><span style="color:#E1E4E8"> /></span></span>
-<span class="line"><span style="color:#E1E4E8">        &#x3C;/</span><span style="color:#85E89D">div</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">      &#x3C;</span><span style="color:#85E89D">div</span></span>
+<span class="line"><span style="color:#B392F0">        ref</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{heroRef}</span></span>
+<span class="line"><span style="color:#B392F0">        className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"relative z-20 min-w-0 md:flex md:flex-[2] md:basis-0 md:flex-col md:justify-end"</span></span>
+<span class="line"><span style="color:#E1E4E8">      ></span></span>
+<span class="line"><span style="color:#E1E4E8">        &#x3C;</span><span style="color:#79B8FF">HeroStory</span><span style="color:#E1E4E8"> /></span></span>
 <span class="line"><span style="color:#E1E4E8">      &#x3C;/</span><span style="color:#85E89D">div</span><span style="color:#E1E4E8">></span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">      &#x3C;</span><span style="color:#85E89D">div</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"relative z-20 flex min-h-0 min-w-0 flex-col overflow-visible md:col-start-2 md:row-start-1 md:h-full md:pl-6 md:pt-[clamp(3rem,11vh,8rem)] lg:pl-10"</span><span style="color:#E1E4E8">></span></span>
-<span class="line"><span style="color:#E1E4E8">        &#x3C;</span><span style="color:#79B8FF">ProofStack</span><span style="color:#B392F0"> stackRef</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{stackRef} </span><span style="color:#B392F0">captionRef</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{captionRef} /></span></span>
+<span class="line"><span style="color:#E1E4E8">      &#x3C;</span><span style="color:#85E89D">div</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"w-full min-w-0 md:flex md:min-h-0 md:flex-[3] md:basis-0 md:flex-col md:justify-end md:@container/print md:[container-type:size]"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">        &#x3C;</span><span style="color:#79B8FF">PrintProof</span><span style="color:#B392F0"> stackRef</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{stackRef} </span><span style="color:#B392F0">captionRef</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{captionRef} /></span></span>
 <span class="line"><span style="color:#E1E4E8">      &#x3C;/</span><span style="color:#85E89D">div</span><span style="color:#E1E4E8">></span></span>
 <span class="line"><span style="color:#E1E4E8">    &#x3C;/</span><span style="color:#85E89D">div</span><span style="color:#E1E4E8">></span></span>
 <span class="line"><span style="color:#E1E4E8">  );</span></span>
@@ -3720,7 +3716,7 @@ export default function PhotographerPortfolio() {
 <span class="line"><span style="color:#F97583">  return</span><span style="color:#E1E4E8"> (</span></span>
 <span class="line"><span style="color:#E1E4E8">    &#x3C;></span></span>
 <span class="line"><span style="color:#E1E4E8">      &#x3C;</span><span style="color:#85E89D">section</span></span>
-<span class="line"><span style="color:#B392F0">        className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"relative isolate min-h-[calc(100svh-var(--demo-chrome-reserve,5rem))] overflow-hidden"</span></span>
+<span class="line"><span style="color:#B392F0">        className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"relative isolate min-h-svh overflow-x-hidden overflow-y-auto md:h-svh md:overflow-hidden"</span></span>
 <span class="line"><span style="color:#B392F0">        style</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{{ backgroundColor: </span><span style="color:#79B8FF">CANVAS</span><span style="color:#E1E4E8">, color: </span><span style="color:#79B8FF">INK</span><span style="color:#E1E4E8">, fontFamily: </span><span style="color:#79B8FF">FONT</span><span style="color:#E1E4E8"> }}</span></span>
 <span class="line"><span style="color:#E1E4E8">      ></span></span>
 <span class="line"><span style="color:#E1E4E8">        &#x3C;</span><span style="color:#79B8FF">TrailingImage</span></span>
@@ -3734,16 +3730,11 @@ export default function PhotographerPortfolio() {
 <span class="line"><span style="color:#B392F0">          excludeRefs</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{[heroRef, captionRef]}</span></span>
 <span class="line"><span style="color:#E1E4E8">        /></span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">        &#x3C;</span><span style="color:#79B8FF">CardStack</span></span>
-<span class="line"><span style="color:#B392F0">          items</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#79B8FF">PORTFOLIO</span><span style="color:#E1E4E8">}</span></span>
-<span class="line"><span style="color:#B392F0">          depth</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#79B8FF">3</span><span style="color:#E1E4E8">}</span></span>
-<span class="line"><span style="color:#B392F0">          autoplay</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{preloaderDone}</span></span>
-<span class="line"><span style="color:#B392F0">          autoplayInterval</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#79B8FF">4500</span><span style="color:#E1E4E8">}</span></span>
-<span class="line"><span style="color:#E1E4E8">        ></span></span>
+<span class="line"><span style="color:#E1E4E8">        &#x3C;</span><span style="color:#79B8FF">CardStack</span><span style="color:#B392F0"> items</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#79B8FF">PORTFOLIO</span><span style="color:#E1E4E8">} </span><span style="color:#B392F0">depth</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#79B8FF">3</span><span style="color:#E1E4E8">} </span><span style="color:#B392F0">autoplay</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{preloaderDone} </span><span style="color:#B392F0">autoplayInterval</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#79B8FF">4500</span><span style="color:#E1E4E8">}></span></span>
 <span class="line"><span style="color:#E1E4E8">          &#x3C;</span><span style="color:#85E89D">div</span></span>
 <span class="line"><span style="color:#B392F0">            className</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#B392F0">cn</span><span style="color:#E1E4E8">(</span></span>
-<span class="line"><span style="color:#9ECBFF">              "relative z-20 isolate mx-auto min-h-[calc(100svh-var(--demo-chrome-reserve,5rem))] w-full max-w-[92rem] pb-[var(--demo-chrome-reserve,5rem)]"</span><span style="color:#E1E4E8">,</span></span>
-<span class="line"><span style="color:#79B8FF">              LAYOUT</span><span style="color:#E1E4E8">.shell,</span></span>
+<span class="line"><span style="color:#9ECBFF">              "relative z-20 isolate mx-auto flex w-full max-w-[92rem] flex-col md:h-full md:min-h-0 md:flex-1"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#79B8FF">              SHELL</span><span style="color:#E1E4E8">,</span></span>
 <span class="line"><span style="color:#E1E4E8">            )}</span></span>
 <span class="line"><span style="color:#E1E4E8">          ></span></span>
 <span class="line"><span style="color:#E1E4E8">            &#x3C;</span><span style="color:#79B8FF">PortfolioLayout</span><span style="color:#B392F0"> stackRef</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{stackRef} </span><span style="color:#B392F0">heroRef</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{heroRef} </span><span style="color:#B392F0">captionRef</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{captionRef} /></span></span>

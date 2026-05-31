@@ -14,6 +14,22 @@ const TRAIL_EXCLUDE_SNIPPET = `<TrailingImage
   excludeRefs={[heroRef, captionRef]}
 />`;
 
+const LAYOUT_SNIPPET = `{/* mobile: column stack · desktop: 2:3 row, both pinned to bottom */}
+<div className="flex flex-col gap-8 md:h-full md:flex-1 md:flex-row md:gap-6">
+  <div className="md:flex md:flex-[2] md:flex-col md:justify-end">{/* hero */}</div>
+
+  <div className="md:flex md:flex-[3] md:flex-col md:justify-end md:@container/print md:[container-type:size]">
+    <figure className="flex w-full flex-col">
+      <figcaption>{/* active frame metadata */}</figcaption>
+
+      <div className="flex w-full flex-col md:ml-auto md:w-[min(100cqw,calc((100cqh-4.5rem)*8/11))]">
+        <div aria-hidden className="aspect-[8/1] w-full" />
+        <div className="relative aspect-[4/5] w-full">{/* CardStack */}</div>
+      </div>
+    </figure>
+  </div>
+</div>`;
+
 const PRELOADER_SNIPPET = `<section>{/* your page */}</section>
 
 <SplitReveal
@@ -44,8 +60,9 @@ export function PhotographerPortfolioNotes() {
         <DemoNotes.Prose>
           <p>
             Maya&apos;s portfolio page with almost nothing else on it. White background, black type,
-            a short intro in the bottom-left corner, and a tall 4:5 stack on the right. Move the
-            mouse and wedding frames from Lummi trail behind the layout.
+            a short intro in the bottom-left corner, and a tall 4:5 stack on the right — full width
+            on mobile, right-aligned on desktop. Move the mouse and wedding frames from Lummi trail
+            behind the layout.
           </p>
           <p>
             Before any of that shows, <code>SplitReveal</code> preloads every image and covers the
@@ -85,15 +102,25 @@ export function PhotographerPortfolioNotes() {
             <code>PRELOAD_IMAGES</code> dedupes the lot before handing it to SplitReveal.
           </p>
           <p>
-            <code>PortfolioLayout</code> is a 2:3 grid on desktop. Hero pins to the bottom of the
-            left column; the stack column keeps the caption above the cards with a little peek
-            padding so the promoted frame can breathe.
+            <code>PortfolioLayout</code> is a flex column on mobile and a 2:3 row on desktop. Hero
+            and print column both pin to the bottom with <code>justify-end</code> — extra space
+            stays above the copy, not between the caption and the stack.
+          </p>
+          <p>
+            Print sizing is CSS-only. Mobile uses <code>w-full</code> and <code>aspect-[4/5]</code>.
+            Desktop puts a size container on the print column and caps width with{" "}
+            <code>min(100cqw, calc((100cqh - 4.5rem) * 8 / 11))</code> so a 4:5 frame plus a 10%
+            peek strip (<code>aspect-[8/1]</code>) fits the viewport without{" "}
+            <code>ResizeObserver</code>.
           </p>
           <p>
             Trail blocking is DOM-based. Only the hero and caption wrappers are excluded — not the
             whole stack — so photos can still drift over the prints.
           </p>
         </DemoNotes.Prose>
+        <DemoNotes.Code caption="Responsive print column — container query sizing">
+          {LAYOUT_SNIPPET}
+        </DemoNotes.Code>
         <DemoNotes.Code caption="SplitReveal as a sibling overlay">
           {PRELOADER_SNIPPET}
         </DemoNotes.Code>
