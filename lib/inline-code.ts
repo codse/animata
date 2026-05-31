@@ -40,9 +40,8 @@ export const inlineCodeProseCss = `
   .demo-notes-prose :is(p, li, td, th, dd, figcaption) code {
     position: relative;
     white-space: nowrap;
-    margin-inline: 0.06em 0.32em;
     border-radius: 0.35rem;
-    padding: 0.125rem 0.5rem 0.125rem 0.375rem;
+    padding: 0.125rem 0.5rem;
     font-family: var(--font-mono, ui-monospace, monospace);
     font-size: 0.88em;
     border: 1px solid ${inlineCodeLight.border};

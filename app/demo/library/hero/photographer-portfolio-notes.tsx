@@ -53,42 +53,45 @@ export function PhotographerPortfolioNotes() {
         id="demo-notes-title"
         eyebrow="Recipe"
         title="Photographer portfolio"
-        description="White page, hero copy on the left, print stack on the right. SplitReveal sits on top as a sibling — no wrapping required."
+        description="Minimal wedding portfolio: intro bottom-left, 4:5 print stack on the right, mouse trails underneath. SplitReveal preloads first."
       />
 
       <DemoNotes.Section id="concept" index={1} title="Concept">
         <DemoNotes.Prose>
           <p>
-            Maya&apos;s portfolio page with almost nothing else on it. White background, black type,
-            a short intro in the bottom-left corner, and a tall 4:5 stack on the right — full width
-            on mobile, right-aligned on desktop. Move the mouse and wedding frames from Lummi trail
-            behind the layout.
+            Fake site for Maya, a wedding photographer. White page, black type, not much else — name
+            and contact in the bottom-left, a tall stack of prints on the right. On phone the stack
+            goes full width; on desktop it sits on the right edge. Wedding stills from Lummi follow
+            the cursor behind everything.
           </p>
           <p>
-            Before any of that shows, <code>SplitReveal</code> preloads every image and covers the
-            viewport. Progress ticks up on the center seam; when the batch is done, the top and
-            bottom halves slide apart. The page was already mounted underneath — you just
-            couldn&apos;t see it yet.
+            The first thing you see is not the page. <code>SplitReveal</code> covers the screen,
+            loads every image, and ticks progress on the center seam. When the batch finishes, the
+            halves slide apart. The layout was already there — just hidden.
           </p>
-          <p>The active stack frame gets viewfinder brackets. Everything else is just the photo.</p>
+          <p>
+            Whichever print is on top gets corner brackets, like a viewfinder. The rest are plain
+            photos.
+          </p>
         </DemoNotes.Prose>
       </DemoNotes.Section>
 
       <DemoNotes.Section id="components" index={2} title="Components used">
         <DemoNotes.Prose>
           <p>
-            <code>SplitReveal</code> is a fixed overlay you drop next to your layout — pass{" "}
-            <code>images</code>, optionally <code>renderProgress</code>, and it handles preload,
-            scroll lock, and the split exit. No <code>.Content</code> wrapper.
+            <code>SplitReveal</code> sits next to the page as a fixed overlay — pass{" "}
+            <code>images</code>, wire <code>onComplete</code>, done. We skipped the{" "}
+            <code>.Content</code> wrapper on purpose; the real layout mounts normally underneath.
           </p>
           <p>
-            <code>CardStack</code> cycles the portfolio forward; autoplay waits until the preloader
-            finishes. <code>PrintCaption</code> reads the active frame and fakes exposure metadata.
-            Hero camera and map pin icons come from Lucide Animated and only animate on hover.
+            <code>CardStack</code> advances the portfolio. Autoplay only starts after the preloader
+            clears. <code>PrintCaption</code> mirrors the top frame with fake shutter metadata.
+            Camera and map pin icons are Lucide Animated — they only move on hover so the hero stays
+            quiet.
           </p>
           <p>
-            <code>TrailingImage</code> runs at <code>z-10</code>. Hero and caption refs are on the
-            exclude list so trails never land on readable text.
+            <code>TrailingImage</code> at <code>z-10</code>. Hero and caption refs sit on the
+            exclude list so trails skip readable text but can still drift over the prints.
           </p>
         </DemoNotes.Prose>
         <DemoNotes.ComponentLinks demoKey={DEMO_KEY} />
@@ -97,25 +100,29 @@ export function PhotographerPortfolioNotes() {
       <DemoNotes.Section id="build" index={3} title="How it's built">
         <DemoNotes.Prose>
           <p>
-            URLs live in <code>LUMMI_ASSETS</code> — six stack frames, twelve trail frames, one
-            avatar — all cropped through a shared <code>lummi()</code> helper.{" "}
-            <code>PRELOAD_IMAGES</code> dedupes the lot before handing it to SplitReveal.
+            All image URLs live in <code>LUMMI_ASSETS</code> — six stack frames, twelve for trails,
+            one avatar — cropped through a shared <code>lummi()</code> helper.{" "}
+            <code>PRELOAD_IMAGES</code> dedupes before SplitReveal sees them.
           </p>
           <p>
-            <code>PortfolioLayout</code> is a flex column on mobile and a 2:3 row on desktop. Hero
-            and print column both pin to the bottom with <code>justify-end</code> — extra space
-            stays above the copy, not between the caption and the stack.
+            Layout is a column on mobile, 2:3 row on desktop. Hero and print column both use{" "}
+            <code>justify-end</code> so extra height goes above the copy, not between the caption
+            and the stack. That gap looked wrong in early passes.
           </p>
           <p>
-            Print sizing is CSS-only. Mobile uses <code>w-full</code> and <code>aspect-[4/5]</code>.
-            Desktop puts a size container on the print column and caps width with{" "}
-            <code>min(100cqw, calc((100cqh - 4.5rem) * 8 / 11))</code> so a 4:5 frame plus a 10%
-            peek strip (<code>aspect-[8/1]</code>) fits the viewport without{" "}
-            <code>ResizeObserver</code>.
+            Print width was the annoying part. We tried JS measurement first; on desktop the caption
+            and stack kept drifting out of sync. Switched to a size container on the print column
+            and capped width with <code>min(100cqw, calc((100cqh - 4.5rem) * 8 / 11))</code> — 4:5
+            frame plus a 10% peek strip (<code>aspect-[8/1]</code>) that fits the viewport height.
+            No <code>ResizeObserver</code>.
           </p>
           <p>
-            Trail blocking is DOM-based. Only the hero and caption wrappers are excluded — not the
-            whole stack — so photos can still drift over the prints.
+            Caption had a white fill at one point. It fought the page background and made the
+            metadata feel like a sticker — dropped it; caption and page share the same canvas now.
+          </p>
+          <p>
+            For trails we first excluded the whole stack. Looked too clean — nothing ever crossed
+            the prints. Narrowed it to the hero and caption wrappers only.
           </p>
         </DemoNotes.Prose>
         <DemoNotes.Code caption="Responsive print column — container query sizing">
@@ -132,26 +139,28 @@ export function PhotographerPortfolioNotes() {
       <DemoNotes.Section id="credits" index={4} title="Credits">
         <DemoNotes.Prose>
           <p>
-            <strong>Photos</strong> — from <a href="https://www.lummi.ai">Lummi</a> (wedding and
-            event searches). IDs are in <code>LUMMI_ASSETS</code>. Fine for demos; swap in your own
-            work for anything client-facing.
+            Photos from <a href="https://www.lummi.ai">Lummi</a> — wedding and event searches. IDs
+            are in <code>LUMMI_ASSETS</code>. Fine for demos; use your own shots for anything real.
           </p>
           <p>
-            <strong>Icons</strong> — <a href="https://lucide-animated.com/icons/map-pin">Map Pin</a>{" "}
-            and <a href="https://lucide-animated.com/icons/switch-camera">Switch Camera</a> from
-            Lucide Animated (MIT).
+            Icons: <a href="https://lucide-animated.com/icons/map-pin">Map Pin</a> and{" "}
+            <a href="https://lucide-animated.com/icons/switch-camera">Switch Camera</a> (Lucide
+            Animated, MIT).
           </p>
           <p>
-            <strong>Type</strong> —{" "}
-            <a href="https://fontsource.org/fonts/instrument-sans">Instrument Sans Variable</a> via
-            Fontsource.
+            Type:{" "}
+            <a href="https://fontsource.org/fonts/instrument-sans">Instrument Sans Variable</a>{" "}
+            (Fontsource).
           </p>
         </DemoNotes.Prose>
       </DemoNotes.Section>
 
       <DemoNotes.Section id="source" index={5} title="Full source">
         <DemoNotes.Prose>
-          <p>Pulled from the demo file at build time.</p>
+          <p>
+            Pulled from the demo file at build time. Copy what you need below; component links are
+            above.
+          </p>
         </DemoNotes.Prose>
         <DemoNotes.Bleed>
           <DemoSourcePanel files={sources} />
