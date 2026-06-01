@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import ScoreBoard, { testScoreBoardProps } from "@/animata/widget/score-board";
+import ScoreBoard from "@/animata/widget/score-board";
 
 const meta = {
   title: "Widget/Score Board",
@@ -15,5 +15,5 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Primary: Story = {
-  args: testScoreBoardProps,
+  args: {},
 };

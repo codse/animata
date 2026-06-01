@@ -1,95 +1,99 @@
 import { GraduationCap, XCircle } from "lucide-react";
-import type React from "react";
 
 import { cn } from "@/lib/utils";
 
-export interface StudyTimerProps {
-  segments: Segment[];
-}
-
-interface Segment {
+export type StudyTimerSegment = {
   value: number;
   color: string;
-}
-
-export const testStudyTimerProps: StudyTimerProps = {
-  segments: [
-    { value: 57, color: "orange" },
-    { value: 24, color: "pink" },
-    { value: 26, color: "yellow" },
-  ],
 };
+
+export type StudyTimerProps = {
+  className?: string;
+  segments?: StudyTimerSegment[];
+  /** Shown in the focus badge (e.g. pomodoro count). */
+  sessionCount?: number;
+};
+
+const DEFAULT_SEGMENTS: StudyTimerSegment[] = [
+  { value: 57, color: "rgb(251 146 60)" },
+  { value: 24, color: "rgb(244 114 182)" },
+  { value: 26, color: "rgb(250 204 21)" },
+];
 
 const formatTime = (totalMinutes: number) => {
   const hours = Math.floor(totalMinutes / 60);
   const minutes = totalMinutes % 60;
-  const seconds = (totalMinutes * 60) % 60;
-
-  const formattedHours = hours.toString().padStart(2, "0");
-  const formattedMinutes = minutes.toString().padStart(2, "0");
-  const formattedSeconds = seconds.toString().padStart(2, "0");
-
-  return `${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
+  const seconds = Math.floor((totalMinutes * 60) % 60);
+  return [hours, minutes, seconds].map((n) => String(n).padStart(2, "0")).join(":");
 };
 
-const StudyTimer: React.FC<StudyTimerProps> = ({ segments = testStudyTimerProps.segments }) => {
+function SegmentBar({ segment, totalSum }: { segment: StudyTimerSegment; totalSum: number }) {
+  const widthPercent = totalSum > 0 ? (segment.value / totalSum) * 100 : 0;
+  return (
+    <div
+      className="h-full rounded-sm"
+      style={{ width: `${widthPercent}%`, backgroundColor: segment.color }}
+    />
+  );
+}
+
+export default function StudyTimer({
+  className,
+  segments = DEFAULT_SEGMENTS,
+  sessionCount = 21,
+}: StudyTimerProps) {
   const totalMinutes = segments.reduce((acc, segment) => acc + segment.value, 0);
   const time = formatTime(totalMinutes);
 
   return (
-    <div className="relative flex size-52 flex-col gap-1 rounded-3xl bg-zinc-900 p-4 text-white shadow-lg">
-      <div className="flex items-center justify-between p-2">
+    <div
+      className={cn(
+        "flex size-52 flex-col rounded-3xl bg-zinc-900 p-4 font-sans text-white shadow-md",
+        className,
+      )}
+    >
+      <div className="flex shrink-0 items-start justify-between">
         <button
+          type="button"
           className={cn(
-            "relative flex items-center justify-center px-4 py-2",
-            "duration-1000 before:absolute before:inset-0 before:animate-pulse before:rounded-3xl before:border-2 before:border-sky-600",
+            "relative flex min-h-9 min-w-9 items-center justify-center rounded-full",
+            "before:absolute before:inset-0 before:animate-pulse before:rounded-full before:border-2 before:border-sky-500/80",
           )}
+          aria-label="Study session"
         >
-          <GraduationCap size={18} className="text-white" />
+          <GraduationCap className="relative z-10 size-[18px]" strokeWidth={2} aria-hidden />
         </button>
-        <div className="flex cursor-pointer items-center justify-center space-x-0.5 rounded-full bg-yellow-600 px-2 py-1 font-bold text-black">
-          <XCircle size={10} className="fill-black text-yellow-600" />
-          <span className="text-xs font-bold">21</span>
+        <div className="inline-flex items-center gap-1 rounded-full bg-amber-400 px-2 py-1">
+          <XCircle className="size-3 fill-zinc-900 text-amber-400" aria-hidden />
+          <span className="text-[13px] font-medium tabular-nums leading-none text-zinc-900">
+            {sessionCount}
+          </span>
         </div>
       </div>
-      <div className="mt-2 p-2">
-        <div className="text-xl font-bold tracking-wider">{time}</div>
-        <div className="flex justify-start space-x-2 overflow-x-auto text-sm">
+
+      <div className="mt-3 shrink-0">
+        <p className="text-[22px] font-normal leading-none tabular-nums tracking-tight">{time}</p>
+        <div className="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1 text-[13px] font-medium leading-none">
           {segments.map((segment, index) => (
             <span
               key={index}
-              className="flex items-center justify-center gap-2"
+              className="inline-flex items-center gap-2"
               style={{ color: segment.color }}
             >
-              {segment.value}m
-              {index !== segments.length - 1 && (
-                <div className="h-1 w-1 rounded-full border-2 border-gray-600 bg-gray-600" />
-              )}
+              <span className="tabular-nums">{segment.value}m</span>
+              {index !== segments.length - 1 ? (
+                <span className="size-1 rounded-full bg-zinc-600" aria-hidden />
+              ) : null}
             </span>
           ))}
         </div>
       </div>
-      <div className="flex flex-1 space-x-0.5">
+
+      <div className="mt-3 flex min-h-0 flex-1 gap-0.5">
         {segments.map((segment, index) => (
           <SegmentBar key={index} segment={segment} totalSum={totalMinutes} />
         ))}
       </div>
     </div>
   );
-};
-
-const SegmentBar: React.FC<{ segment: Segment; totalSum: number }> = ({ segment, totalSum }) => {
-  const widthPercent = (segment.value / totalSum) * 100;
-
-  return (
-    <div
-      className="h-full rounded-b-sm rounded-t-sm"
-      style={{
-        width: `${widthPercent}%`,
-        backgroundColor: segment.color,
-      }}
-    />
-  );
-};
-
-export default StudyTimer;
+}

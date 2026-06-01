@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import StudyTimer, { testStudyTimerProps } from "@/animata/widget/study-timer";
+import StudyTimer from "@/animata/widget/study-timer";
 
 const meta = {
   title: "Widget/Study Timer",
@@ -16,5 +16,5 @@ export default meta;
 type Story = StoryObj<typeof StudyTimer>;
 
 export const Primary: Story = {
-  args: testStudyTimerProps,
+  args: {},
 };
