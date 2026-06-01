@@ -256,7 +256,7 @@ function PrintStack() {
                 stackIndex={index}
                 className="!inset-x-0 !top-0 !h-fit !w-full gap-0 overflow-visible rounded-none !bg-transparent p-0 shadow-none ring-0"
               >
-                <figure className="relative aspect-[4/5] size-full overflow-hidden bg-black/5">
+                <figure className="relative aspect-[4/5] w-full overflow-hidden bg-black/5">
                   <img
                     src={item.image}
                     alt={`${PHOTOGRAPHER.studio} — ${item.title}`}
