@@ -4,16 +4,18 @@ import ReminderWidget from "@/animata/widget/reminder-widget";
 const meta = {
   title: "Widget/Reminder Widget",
   component: ReminderWidget,
-  parameters: {
-    layout: "centered",
-  },
+  parameters: { layout: "centered" },
   tags: ["autodocs"],
-  argTypes: {},
 } satisfies Meta<typeof ReminderWidget>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Primary: Story = {
-  args: {},
+export const TripPacking: Story = {
+  name: "Trip packing",
+  args: {
+    title: "Packing",
+  },
 };
+
+export const Primary = TripPacking;

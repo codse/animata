@@ -4,18 +4,18 @@ import ShoppingList from "@/animata/widget/shopping-list";
 const meta = {
   title: "Widget/Shopping List",
   component: ShoppingList,
-  parameters: {
-    layout: "centered",
-  },
+  parameters: { layout: "centered" },
   tags: ["autodocs"],
-  argTypes: {},
 } satisfies Meta<typeof ShoppingList>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Primary: Story = {
+export const GroceryRun: Story = {
+  name: "Grocery run",
   args: {
     title: "Shopping list",
   },
 };
+
+export const Primary = GroceryRun;

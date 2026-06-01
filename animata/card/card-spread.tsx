@@ -8,10 +8,10 @@ function Reminders() {
   return (
     <ShoppingList
       title="Reminders"
-      data={[
-        { title: "book museum tickets" },
-        { title: "buy groceries", checked: true },
-        { title: "call mom" },
+      items={[
+        { id: "museum", title: "Book museum tickets" },
+        { id: "groceries", title: "Buy groceries", checked: true },
+        { id: "mom", title: "Call mom" },
       ]}
     />
   );
