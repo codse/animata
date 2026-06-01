@@ -106,20 +106,9 @@ export default function FundWidget({
   const rotateYValue = Math.min(dragDistance / 10, 15);
 
   return (
-    <div
-      className={cn(
-        "storybook-fix group flex items-center justify-center py-32",
-        containerClassName,
-      )}
-    >
-      <div
-        className={cn(
-          "absolute inset-0 -z-10 h-full w-full items-center bg-linear-to-r from-violet-200 to-pink-200",
-          backgroundClassName,
-        )}
-      />
+    <div className={cn("relative flex size-52 items-center justify-center", containerClassName)}>
       <AnimatePresence initial={false}>
-        <div className="flex h-72 w-64 flex-col items-center">
+        <div className="flex h-72 w-64 origin-center scale-[0.72] flex-col items-center">
           <div className="z-20 flex h-64 w-72 overflow-clip rounded-[35px] bg-white px-6 pt-6 shadow-[0px_0px_10px_1px_#bec2bf]">
             <motion.div
               key={activeDiv}
