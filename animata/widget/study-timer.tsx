@@ -23,8 +23,7 @@ const DEFAULT_SEGMENTS: StudyTimerSegment[] = [
 const formatTime = (totalMinutes: number) => {
   const hours = Math.floor(totalMinutes / 60);
   const minutes = totalMinutes % 60;
-  const seconds = Math.floor((totalMinutes * 60) % 60);
-  return [hours, minutes, seconds].map((n) => String(n).padStart(2, "0")).join(":");
+  return [hours, minutes].map((n) => String(n).padStart(2, "0")).join(":");
 };
 
 function SegmentBar({ segment, totalSum }: { segment: StudyTimerSegment; totalSum: number }) {

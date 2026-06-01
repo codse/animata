@@ -31,7 +31,8 @@ export default function MusicWidget({
 }: MusicWidgetProps) {
   const [index, setIndex] = useState(0);
   const [playing, setPlaying] = useState(defaultPlaying);
-  const track = tracks[index % tracks.length];
+  const safeTracks = tracks.length > 0 ? tracks : DEFAULT_TRACKS;
+  const track = safeTracks[index % safeTracks.length];
 
   return (
     <div
@@ -81,7 +82,7 @@ export default function MusicWidget({
           type="button"
           aria-label="Previous track"
           className="touch-manipulation flex min-h-11 min-w-11 items-center justify-center rounded-full"
-          onClick={() => setIndex((i) => (i - 1 + tracks.length) % tracks.length)}
+          onClick={() => setIndex((i) => (i - 1 + safeTracks.length) % safeTracks.length)}
         >
           <SkipBack className="size-5 fill-current" />
         </button>
@@ -101,7 +102,7 @@ export default function MusicWidget({
           type="button"
           aria-label="Next track"
           className="touch-manipulation flex min-h-11 min-w-11 items-center justify-center rounded-full"
-          onClick={() => setIndex((i) => (i + 1) % tracks.length)}
+          onClick={() => setIndex((i) => (i + 1) % safeTracks.length)}
         >
           <SkipForward className="size-5 fill-current" />
         </button>

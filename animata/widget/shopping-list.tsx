@@ -74,6 +74,8 @@ export default function ShoppingList({
           <li key={item.id}>
             <button
               type="button"
+              role="checkbox"
+              aria-checked={item.checked ?? false}
               onClick={() => toggle(item.id)}
               className="touch-manipulation flex min-h-11 w-full items-center gap-2.5 rounded-md py-0.5 text-left"
             >
@@ -84,6 +86,7 @@ export default function ShoppingList({
                     ? "border-foreground bg-foreground text-background"
                     : "border-muted-foreground/35 bg-transparent text-transparent",
                 )}
+                aria-hidden
               >
                 <CheckIcon />
               </span>

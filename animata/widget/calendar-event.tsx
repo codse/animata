@@ -68,7 +68,7 @@ function EventRow({ event }: { event: CalendarEventItem }) {
   return (
     <li className={cn("flex shrink-0 gap-2 rounded-md px-2 py-1", variant.chip)}>
       <span className={cn("mt-1.5 size-2 shrink-0 rounded-full", variant.dot)} aria-hidden />
-      <div className="min-w-0 flex-1 flex-col gap-0.5">
+      <div className="flex min-w-0 flex-1 flex-col gap-0.5">
         <p className={cn("truncate text-[15px] font-semibold leading-snug", variant.title)}>
           {event.title}
         </p>

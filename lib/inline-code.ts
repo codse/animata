@@ -17,7 +17,7 @@ const inlineCodeDark = {
   boxShadow: "inset 0 1px 0 0 hsl(0 0% 100% / 0.05), 0 1px 2px hsl(0 0% 0% / 0.34)",
 } as const;
 
-/** Keep tokens on one line — asymmetric pad + trailing margin for prose gaps. */
+/** Keep inline code on one line. */
 const inlineCodeWhitespaceClasses = "whitespace-nowrap";
 
 /** Rich inline chip — gradient fill, hairline border, inset highlight. */

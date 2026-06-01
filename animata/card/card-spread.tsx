@@ -117,7 +117,7 @@ export default function CardSpread() {
           }
         }}
         className={cn(
-          "card-spread-stage group/stack relative h-64 outline-none",
+          "card-spread-stage group/stack relative h-64 outline-none focus-visible:ring-2 focus-visible:ring-[#ffcc00] focus-visible:ring-offset-2 focus-visible:ring-offset-background",
           isExpanded
             ? "card-spread-stage--expand cursor-default"
             : "card-spread-stage--collapse w-48 cursor-pointer",

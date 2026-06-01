@@ -63,6 +63,8 @@ export default function ReminderWidget({
           <li key={item.id} className="border-b border-border last:border-b-0">
             <button
               type="button"
+              role="checkbox"
+              aria-checked={item.done ?? false}
               onClick={() => toggle(item.id)}
               className="touch-manipulation flex min-h-11 w-full items-center gap-3 py-2 text-left"
             >

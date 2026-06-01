@@ -47,18 +47,19 @@ export default function DeliveryCard({
   return (
     <div
       className={cn(
-        "relative size-52 overflow-hidden rounded-3xl font-sans text-white shadow-md",
+        "relative size-52 overflow-hidden rounded-3xl border border-zinc-900/50 font-sans text-white shadow-md",
+        "bg-zinc-800 dark:border-zinc-950 dark:bg-zinc-900",
         className,
       )}
     >
       <div className="absolute right-2 z-10 h-28 w-5 bg-white/30">
-        <div className="absolute -bottom-2 z-0 h-4 w-full rotate-45 bg-zinc-700" />
+        <div className="absolute -bottom-2 z-0 h-4 w-full rotate-45 bg-zinc-700 dark:bg-zinc-800" />
       </div>
 
       <div className="flex h-full flex-col">
-        <div className="relative shrink-0 bg-zinc-500 px-4 pb-2.5 pt-4">
+        <div className="relative shrink-0 bg-zinc-600 px-4 pb-2.5 pt-4 dark:bg-zinc-700">
           <div className="absolute right-2 top-0 flex h-full w-5 justify-center">
-            <div className="z-20 w-0.5 bg-zinc-500" />
+            <div className="z-20 w-0.5 bg-zinc-600 dark:bg-zinc-700" />
           </div>
           <p className="text-[13px] font-medium leading-none text-white/85">{headline}</p>
           <p className="mt-1 text-[22px] font-normal leading-none tabular-nums tracking-tight">
@@ -66,23 +67,25 @@ export default function DeliveryCard({
           </p>
         </div>
 
-        <div className="flex min-h-0 flex-1 flex-col border-t-2 border-t-zinc-900 bg-zinc-700 px-4 pb-4 pt-2">
-          <p className="shrink-0 text-[13px] font-medium leading-none text-amber-300">{status}</p>
+        <div className="flex min-h-0 flex-1 flex-col border-t-2 border-t-zinc-900/80 bg-zinc-700 px-4 pb-4 pt-2 dark:border-t-zinc-950 dark:bg-zinc-800">
+          <p className="shrink-0 text-[13px] font-medium leading-none text-amber-400 dark:text-amber-300">
+            {status}
+          </p>
 
-          <div className="relative mx-0.5 mb-5 mt-4 shrink-0 bg-zinc-400">
-            <div className="absolute left-0 top-1/2 size-3 -translate-y-1/2 rounded-full bg-amber-300" />
-            <div className="absolute right-0 top-1/2 z-10 size-3 -translate-y-1/2 rounded-full bg-zinc-500" />
+          <div className="relative mx-0.5 mb-5 mt-4 shrink-0 bg-zinc-500 dark:bg-zinc-600">
+            <div className="absolute left-0 top-1/2 size-3 -translate-y-1/2 rounded-full bg-amber-400 dark:bg-amber-300" />
+            <div className="absolute right-0 top-1/2 z-10 size-3 -translate-y-1/2 rounded-full bg-zinc-600 dark:bg-zinc-700" />
             <div
-              className="relative h-0.5 bg-amber-300 transition-[width] duration-500 ease-in-out"
+              className="relative h-0.5 bg-amber-400 transition-[width] duration-500 ease-in-out dark:bg-amber-300"
               style={{ width: `${clamped}%` }}
             >
-              <TruckIcon className="absolute right-0 top-1/2 z-50 size-8 -translate-y-1/2 translate-x-1/2 rounded-full bg-amber-300 p-1.5 text-zinc-800" />
+              <TruckIcon className="absolute right-0 top-1/2 z-50 size-8 -translate-y-1/2 translate-x-1/2 rounded-full bg-amber-400 p-1.5 text-zinc-900 dark:bg-amber-300 dark:text-zinc-800" />
             </div>
           </div>
 
           <div className="mt-auto flex items-start gap-1.5">
             <LocateIcon
-              className="mt-0.5 size-4 shrink-0 text-zinc-400"
+              className="mt-0.5 size-4 shrink-0 text-zinc-400 dark:text-zinc-500"
               strokeWidth={2}
               aria-hidden
             />
@@ -90,7 +93,7 @@ export default function DeliveryCard({
               <p className="truncate text-[15px] font-semibold leading-tight text-white">
                 {location}
               </p>
-              <p className="mt-0.5 text-[13px] leading-none tabular-nums text-zinc-400">
+              <p className="mt-0.5 text-[13px] leading-none tabular-nums text-zinc-400 dark:text-zinc-500">
                 {timeAgo} ago
               </p>
             </div>

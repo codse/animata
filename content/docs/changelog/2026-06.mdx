@@ -1,0 +1,68 @@
+---
+title: June 2026
+description: Widget glance polish, Card Spread motion, and catalog cleanup.
+date: 2026-06-01
+---
+
+Wave 1 widgets got Apple-style type hierarchy and props-driven demos. Card Spread was rebuilt for deck, peek, and throw-on-click motion. Four oversized widgets left the public catalog, and the internal widget standards doc was removed from contributing.
+
+## Improved components
+
+<ChangeLogComponents>
+  <ChangeLogEntry href="/docs/widget/reminder">
+    <h3>Reminder</h3>
+    <p>Glance typography, toggleable rows, and theme tokens — use on home-screen–style boards where quick task completion matters.</p>
+  </ChangeLogEntry>
+  <ChangeLogEntry href="/docs/widget/weather-card">
+    <h3>Weather Card</h3>
+    <p>Props for city, conditions, and highs/lows with a compact square layout for dashboards and marketing bentos.</p>
+  </ChangeLogEntry>
+  <ChangeLogEntry href="/docs/widget/water-tracker">
+    <h3>Water Tracker</h3>
+    <p>Configurable goal and fill level with clearer hierarchy for health and habit apps.</p>
+  </ChangeLogEntry>
+  <ChangeLogEntry href="/docs/widget/vpn-widget">
+    <h3>VPN Widget</h3>
+    <p>Sliding connect control with labeled states — fits security or connectivity glance tiles.</p>
+  </ChangeLogEntry>
+  <ChangeLogEntry href="/docs/widget/delivery-card">
+    <h3>Delivery Card</h3>
+    <p>Transit progress, arrival time, and location in a dark tile suited to order-tracking UIs.</p>
+  </ChangeLogEntry>
+  <ChangeLogEntry href="/docs/widget/alarm-clock">
+    <h3>Alarm Clock</h3>
+    <p>Toggleable alarms with schedule labels — for clock or morning-routine widget grids.</p>
+  </ChangeLogEntry>
+  <ChangeLogEntry href="/docs/widget/calendar-event">
+    <h3>Calendar Event</h3>
+    <p>Dot-and-chip event rows with default data — drop into calendar or agenda previews.</p>
+  </ChangeLogEntry>
+  <ChangeLogEntry href="/docs/widget/music-widget">
+    <h3>Music Widget</h3>
+    <p>Track list, cover art, and transport controls for media player mockups.</p>
+  </ChangeLogEntry>
+  <ChangeLogEntry href="/docs/widget/shopping-list">
+    <h3>Shopping List</h3>
+    <p>Interactive checkboxes and configurable items — grocery or errand list tiles.</p>
+  </ChangeLogEntry>
+  <ChangeLogEntry href="/docs/widget/notes">
+    <h3>Notes</h3>
+    <p>Line-based note content with the yellow sticky treatment — quick memo widgets.</p>
+  </ChangeLogEntry>
+  <ChangeLogEntry href="/docs/widget/fund-widget">
+    <h3>Fund Widget</h3>
+    <p>Chart scaled into the square `size-52` shell for finance glance layouts.</p>
+  </ChangeLogEntry>
+  <ChangeLogEntry href="/docs/widget/calorie-counter">
+    <h3>Calorie Counter</h3>
+    <p>Tall donut summary with flex layout instead of absolute positioning — nutrition dashboards.</p>
+  </ChangeLogEntry>
+  <ChangeLogEntry href="/docs/card/card-spread">
+    <h3>Card Spread</h3>
+    <p>Stacked deck with a subtle hover peek and click-to-spread throw easing. Use when you want several related cards in one compact stack that expands on demand.</p>
+  </ChangeLogEntry>
+</ChangeLogComponents>
+
+## Documentation
+
+Unpublished Calendar Widget, Music Stack Interaction, Team Clock, and Video Chat from the docs and shadcn registry so the widget overview lists only glance-sized tiles. Removed the internal widget catalog standards page from contributing. Added `useIsMobile` for responsive docs and demo behavior. Widget overview now tracks published entries only and places Fund Widget in the square section.
