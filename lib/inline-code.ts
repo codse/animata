@@ -18,7 +18,7 @@ const inlineCodeDark = {
 } as const;
 
 /** Keep tokens on one line — asymmetric pad + trailing margin for prose gaps. */
-const inlineCodeWhitespaceClasses = "whitespace-nowrap ms-[0.06em] me-[0.32em]";
+const inlineCodeWhitespaceClasses = "whitespace-nowrap";
 
 /** Rich inline chip — gradient fill, hairline border, inset highlight. */
 export const inlineCodeClassName = cn(
