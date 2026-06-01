@@ -66,17 +66,11 @@ export default function LaunchShift() {
               Superhuman
             </span>
 
-            <h1 className="mt-4 max-w-[16ch] text-balance text-[clamp(2.35rem,6.8vw,3.75rem)] font-semibold tracking-[-0.045em]">
-              <span
-                style={{ textBoxTrim: "trim-both" }}
-                className="block bg-linear-to-b leading-none from-white via-[#F5F5F3] to-[#A8A8A6] bg-clip-text text-transparent"
-              >
+            <h1 className="mt-5 max-w-[16ch] text-balance text-[clamp(2.35rem,6.8vw,3.75rem)] font-semibold leading-[1.05] tracking-[-0.045em]">
+              <span className="block bg-linear-to-b from-white via-[#F5F5F3] to-[#A8A8A6] bg-clip-text text-transparent">
                 Superpowers,
               </span>
-              <span
-                style={{ textBoxTrim: "trim-both" }}
-                className="-mt-5 block bg-linear-to-b leading-none from-white via-[#F5F5F3] to-[#A8A8A6] bg-clip-text text-transparent"
-              >
+              <span className="mt-1 block bg-linear-to-b from-white via-[#F5F5F3] to-[#A8A8A6] bg-clip-text text-transparent sm:mt-0 sm:-mt-3 md:-mt-4">
                 everywhere you work.
               </span>
             </h1>

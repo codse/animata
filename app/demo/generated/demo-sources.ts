@@ -642,17 +642,11 @@ export default function LaunchShift() {
               Superhuman
             </span>
 
-            <h1 className="mt-4 max-w-[16ch] text-balance text-[clamp(2.35rem,6.8vw,3.75rem)] font-semibold tracking-[-0.045em]">
-              <span
-                style={{ textBoxTrim: "trim-both" }}
-                className="block bg-linear-to-b leading-none from-white via-[#F5F5F3] to-[#A8A8A6] bg-clip-text text-transparent"
-              >
+            <h1 className="mt-5 max-w-[16ch] text-balance text-[clamp(2.35rem,6.8vw,3.75rem)] font-semibold leading-[1.05] tracking-[-0.045em]">
+              <span className="block bg-linear-to-b from-white via-[#F5F5F3] to-[#A8A8A6] bg-clip-text text-transparent">
                 Superpowers,
               </span>
-              <span
-                style={{ textBoxTrim: "trim-both" }}
-                className="-mt-5 block bg-linear-to-b leading-none from-white via-[#F5F5F3] to-[#A8A8A6] bg-clip-text text-transparent"
-              >
+              <span className="mt-1 block bg-linear-to-b from-white via-[#F5F5F3] to-[#A8A8A6] bg-clip-text text-transparent sm:mt-0 sm:-mt-3 md:-mt-4">
                 everywhere you work.
               </span>
             </h1>
@@ -753,17 +747,11 @@ export default function LaunchShift() {
 <span class="line"><span style="color:#24292E">              Superhuman</span></span>
 <span class="line"><span style="color:#24292E">            &#x3C;/</span><span style="color:#22863A">span</span><span style="color:#24292E">></span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#24292E">            &#x3C;</span><span style="color:#22863A">h1</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"mt-4 max-w-[16ch] text-balance text-[clamp(2.35rem,6.8vw,3.75rem)] font-semibold tracking-[-0.045em]"</span><span style="color:#24292E">></span></span>
-<span class="line"><span style="color:#24292E">              &#x3C;</span><span style="color:#22863A">span</span></span>
-<span class="line"><span style="color:#6F42C1">                style</span><span style="color:#D73A49">=</span><span style="color:#24292E">{{ textBoxTrim: </span><span style="color:#032F62">"trim-both"</span><span style="color:#24292E"> }}</span></span>
-<span class="line"><span style="color:#6F42C1">                className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"block bg-linear-to-b leading-none from-white via-[#F5F5F3] to-[#A8A8A6] bg-clip-text text-transparent"</span></span>
-<span class="line"><span style="color:#24292E">              ></span></span>
+<span class="line"><span style="color:#24292E">            &#x3C;</span><span style="color:#22863A">h1</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"mt-5 max-w-[16ch] text-balance text-[clamp(2.35rem,6.8vw,3.75rem)] font-semibold leading-[1.05] tracking-[-0.045em]"</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">              &#x3C;</span><span style="color:#22863A">span</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"block bg-linear-to-b from-white via-[#F5F5F3] to-[#A8A8A6] bg-clip-text text-transparent"</span><span style="color:#24292E">></span></span>
 <span class="line"><span style="color:#24292E">                Superpowers,</span></span>
 <span class="line"><span style="color:#24292E">              &#x3C;/</span><span style="color:#22863A">span</span><span style="color:#24292E">></span></span>
-<span class="line"><span style="color:#24292E">              &#x3C;</span><span style="color:#22863A">span</span></span>
-<span class="line"><span style="color:#6F42C1">                style</span><span style="color:#D73A49">=</span><span style="color:#24292E">{{ textBoxTrim: </span><span style="color:#032F62">"trim-both"</span><span style="color:#24292E"> }}</span></span>
-<span class="line"><span style="color:#6F42C1">                className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"-mt-5 block bg-linear-to-b leading-none from-white via-[#F5F5F3] to-[#A8A8A6] bg-clip-text text-transparent"</span></span>
-<span class="line"><span style="color:#24292E">              ></span></span>
+<span class="line"><span style="color:#24292E">              &#x3C;</span><span style="color:#22863A">span</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"mt-1 block bg-linear-to-b from-white via-[#F5F5F3] to-[#A8A8A6] bg-clip-text text-transparent sm:mt-0 sm:-mt-3 md:-mt-4"</span><span style="color:#24292E">></span></span>
 <span class="line"><span style="color:#24292E">                everywhere you work.</span></span>
 <span class="line"><span style="color:#24292E">              &#x3C;/</span><span style="color:#22863A">span</span><span style="color:#24292E">></span></span>
 <span class="line"><span style="color:#24292E">            &#x3C;/</span><span style="color:#22863A">h1</span><span style="color:#24292E">></span></span>
@@ -864,17 +852,11 @@ export default function LaunchShift() {
 <span class="line"><span style="color:#E1E4E8">              Superhuman</span></span>
 <span class="line"><span style="color:#E1E4E8">            &#x3C;/</span><span style="color:#85E89D">span</span><span style="color:#E1E4E8">></span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">            &#x3C;</span><span style="color:#85E89D">h1</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"mt-4 max-w-[16ch] text-balance text-[clamp(2.35rem,6.8vw,3.75rem)] font-semibold tracking-[-0.045em]"</span><span style="color:#E1E4E8">></span></span>
-<span class="line"><span style="color:#E1E4E8">              &#x3C;</span><span style="color:#85E89D">span</span></span>
-<span class="line"><span style="color:#B392F0">                style</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{{ textBoxTrim: </span><span style="color:#9ECBFF">"trim-both"</span><span style="color:#E1E4E8"> }}</span></span>
-<span class="line"><span style="color:#B392F0">                className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"block bg-linear-to-b leading-none from-white via-[#F5F5F3] to-[#A8A8A6] bg-clip-text text-transparent"</span></span>
-<span class="line"><span style="color:#E1E4E8">              ></span></span>
+<span class="line"><span style="color:#E1E4E8">            &#x3C;</span><span style="color:#85E89D">h1</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"mt-5 max-w-[16ch] text-balance text-[clamp(2.35rem,6.8vw,3.75rem)] font-semibold leading-[1.05] tracking-[-0.045em]"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">              &#x3C;</span><span style="color:#85E89D">span</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"block bg-linear-to-b from-white via-[#F5F5F3] to-[#A8A8A6] bg-clip-text text-transparent"</span><span style="color:#E1E4E8">></span></span>
 <span class="line"><span style="color:#E1E4E8">                Superpowers,</span></span>
 <span class="line"><span style="color:#E1E4E8">              &#x3C;/</span><span style="color:#85E89D">span</span><span style="color:#E1E4E8">></span></span>
-<span class="line"><span style="color:#E1E4E8">              &#x3C;</span><span style="color:#85E89D">span</span></span>
-<span class="line"><span style="color:#B392F0">                style</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{{ textBoxTrim: </span><span style="color:#9ECBFF">"trim-both"</span><span style="color:#E1E4E8"> }}</span></span>
-<span class="line"><span style="color:#B392F0">                className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"-mt-5 block bg-linear-to-b leading-none from-white via-[#F5F5F3] to-[#A8A8A6] bg-clip-text text-transparent"</span></span>
-<span class="line"><span style="color:#E1E4E8">              ></span></span>
+<span class="line"><span style="color:#E1E4E8">              &#x3C;</span><span style="color:#85E89D">span</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"mt-1 block bg-linear-to-b from-white via-[#F5F5F3] to-[#A8A8A6] bg-clip-text text-transparent sm:mt-0 sm:-mt-3 md:-mt-4"</span><span style="color:#E1E4E8">></span></span>
 <span class="line"><span style="color:#E1E4E8">                everywhere you work.</span></span>
 <span class="line"><span style="color:#E1E4E8">              &#x3C;/</span><span style="color:#85E89D">span</span><span style="color:#E1E4E8">></span></span>
 <span class="line"><span style="color:#E1E4E8">            &#x3C;/</span><span style="color:#85E89D">h1</span><span style="color:#E1E4E8">></span></span>
@@ -2811,7 +2793,7 @@ function PrintStack() {
     <CardStack.Frame className="absolute inset-0 overflow-visible">
       <CardStack.LiveRegion />
       <CardStack.Trigger aria-label="Show next photo" className="absolute inset-0 block text-left">
-        <CardStack.Viewport className="size-full overflow-visible !min-h-0 !pt-0">
+        <CardStack.Viewport className="absolute inset-0 overflow-visible !min-h-0 pt-[14%] sm:pt-0">
           <CardStack.List>
             {(item, index, layer) => (
               <CardStack.Card
@@ -2861,8 +2843,12 @@ function PrintProof({
         </div>
 
         <div aria-hidden="true" className={cn("w-full shrink-0", STACK_PEEK)} />
-        <div className="relative aspect-[4/5] w-full shrink-0 overflow-visible">
-          <PrintStack />
+        <div className="relative w-full shrink-0">
+          <div className="relative w-full overflow-visible pb-[125%] sm:aspect-[4/5] sm:pb-0">
+            <div className="absolute inset-0 overflow-visible">
+              <PrintStack />
+            </div>
+          </div>
         </div>
       </div>
     </figure>
@@ -2888,7 +2874,7 @@ function PortfolioLayout({
         </div>
       </div>
 
-      <div className="w-full min-w-0 md:flex md:min-h-0 md:flex-[3] md:basis-0 md:flex-col md:justify-end md:@container/print md:[container-type:size]">
+      <div className="w-full min-w-0 shrink-0 md:flex md:min-h-0 md:flex-[3] md:basis-0 md:flex-col md:justify-end md:@container/print md:[container-type:size]">
         <PrintProof stackRef={stackRef} captionRef={captionRef} />
       </div>
     </div>
@@ -2904,7 +2890,7 @@ export default function PhotographerPortfolio() {
   return (
     <>
       <section
-        className="relative isolate min-h-svh overflow-x-hidden overflow-y-auto md:h-svh md:overflow-hidden"
+        className="relative isolate min-h-svh overflow-x-hidden md:h-svh md:overflow-hidden"
         style={{ backgroundColor: CANVAS, color: INK, fontFamily: FONT }}
       >
         <TrailingImage
@@ -3205,7 +3191,7 @@ export default function PhotographerPortfolio() {
 <span class="line"><span style="color:#24292E">    &#x3C;</span><span style="color:#005CC5">CardStack.Frame</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"absolute inset-0 overflow-visible"</span><span style="color:#24292E">></span></span>
 <span class="line"><span style="color:#24292E">      &#x3C;</span><span style="color:#005CC5">CardStack.LiveRegion</span><span style="color:#24292E"> /></span></span>
 <span class="line"><span style="color:#24292E">      &#x3C;</span><span style="color:#005CC5">CardStack.Trigger</span><span style="color:#6F42C1"> aria-label</span><span style="color:#D73A49">=</span><span style="color:#032F62">"Show next photo"</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"absolute inset-0 block text-left"</span><span style="color:#24292E">></span></span>
-<span class="line"><span style="color:#24292E">        &#x3C;</span><span style="color:#005CC5">CardStack.Viewport</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"size-full overflow-visible !min-h-0 !pt-0"</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">        &#x3C;</span><span style="color:#005CC5">CardStack.Viewport</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"absolute inset-0 overflow-visible !min-h-0 pt-[14%] sm:pt-0"</span><span style="color:#24292E">></span></span>
 <span class="line"><span style="color:#24292E">          &#x3C;</span><span style="color:#005CC5">CardStack.List</span><span style="color:#24292E">></span></span>
 <span class="line"><span style="color:#24292E">            {(</span><span style="color:#E36209">item</span><span style="color:#24292E">, </span><span style="color:#E36209">index</span><span style="color:#24292E">, </span><span style="color:#E36209">layer</span><span style="color:#24292E">) </span><span style="color:#D73A49">=></span><span style="color:#24292E"> (</span></span>
 <span class="line"><span style="color:#24292E">              &#x3C;</span><span style="color:#005CC5">CardStack.Card</span></span>
@@ -3255,8 +3241,12 @@ export default function PhotographerPortfolio() {
 <span class="line"><span style="color:#24292E">        &#x3C;/</span><span style="color:#22863A">div</span><span style="color:#24292E">></span></span>
 <span class="line"></span>
 <span class="line"><span style="color:#24292E">        &#x3C;</span><span style="color:#22863A">div</span><span style="color:#6F42C1"> aria-hidden</span><span style="color:#D73A49">=</span><span style="color:#032F62">"true"</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#6F42C1">cn</span><span style="color:#24292E">(</span><span style="color:#032F62">"w-full shrink-0"</span><span style="color:#24292E">, </span><span style="color:#005CC5">STACK_PEEK</span><span style="color:#24292E">)} /></span></span>
-<span class="line"><span style="color:#24292E">        &#x3C;</span><span style="color:#22863A">div</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"relative aspect-[4/5] w-full shrink-0 overflow-visible"</span><span style="color:#24292E">></span></span>
-<span class="line"><span style="color:#24292E">          &#x3C;</span><span style="color:#005CC5">PrintStack</span><span style="color:#24292E"> /></span></span>
+<span class="line"><span style="color:#24292E">        &#x3C;</span><span style="color:#22863A">div</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"relative w-full shrink-0"</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">          &#x3C;</span><span style="color:#22863A">div</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"relative w-full overflow-visible pb-[125%] sm:aspect-[4/5] sm:pb-0"</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">            &#x3C;</span><span style="color:#22863A">div</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"absolute inset-0 overflow-visible"</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">              &#x3C;</span><span style="color:#005CC5">PrintStack</span><span style="color:#24292E"> /></span></span>
+<span class="line"><span style="color:#24292E">            &#x3C;/</span><span style="color:#22863A">div</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">          &#x3C;/</span><span style="color:#22863A">div</span><span style="color:#24292E">></span></span>
 <span class="line"><span style="color:#24292E">        &#x3C;/</span><span style="color:#22863A">div</span><span style="color:#24292E">></span></span>
 <span class="line"><span style="color:#24292E">      &#x3C;/</span><span style="color:#22863A">div</span><span style="color:#24292E">></span></span>
 <span class="line"><span style="color:#24292E">    &#x3C;/</span><span style="color:#22863A">figure</span><span style="color:#24292E">></span></span>
@@ -3282,7 +3272,7 @@ export default function PhotographerPortfolio() {
 <span class="line"><span style="color:#24292E">        &#x3C;/</span><span style="color:#22863A">div</span><span style="color:#24292E">></span></span>
 <span class="line"><span style="color:#24292E">      &#x3C;/</span><span style="color:#22863A">div</span><span style="color:#24292E">></span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#24292E">      &#x3C;</span><span style="color:#22863A">div</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"w-full min-w-0 md:flex md:min-h-0 md:flex-[3] md:basis-0 md:flex-col md:justify-end md:@container/print md:[container-type:size]"</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">      &#x3C;</span><span style="color:#22863A">div</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"w-full min-w-0 shrink-0 md:flex md:min-h-0 md:flex-[3] md:basis-0 md:flex-col md:justify-end md:@container/print md:[container-type:size]"</span><span style="color:#24292E">></span></span>
 <span class="line"><span style="color:#24292E">        &#x3C;</span><span style="color:#005CC5">PrintProof</span><span style="color:#6F42C1"> stackRef</span><span style="color:#D73A49">=</span><span style="color:#24292E">{stackRef} </span><span style="color:#6F42C1">captionRef</span><span style="color:#D73A49">=</span><span style="color:#24292E">{captionRef} /></span></span>
 <span class="line"><span style="color:#24292E">      &#x3C;/</span><span style="color:#22863A">div</span><span style="color:#24292E">></span></span>
 <span class="line"><span style="color:#24292E">    &#x3C;/</span><span style="color:#22863A">div</span><span style="color:#24292E">></span></span>
@@ -3298,7 +3288,7 @@ export default function PhotographerPortfolio() {
 <span class="line"><span style="color:#D73A49">  return</span><span style="color:#24292E"> (</span></span>
 <span class="line"><span style="color:#24292E">    &#x3C;></span></span>
 <span class="line"><span style="color:#24292E">      &#x3C;</span><span style="color:#22863A">section</span></span>
-<span class="line"><span style="color:#6F42C1">        className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"relative isolate min-h-svh overflow-x-hidden overflow-y-auto md:h-svh md:overflow-hidden"</span></span>
+<span class="line"><span style="color:#6F42C1">        className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"relative isolate min-h-svh overflow-x-hidden md:h-svh md:overflow-hidden"</span></span>
 <span class="line"><span style="color:#6F42C1">        style</span><span style="color:#D73A49">=</span><span style="color:#24292E">{{ backgroundColor: </span><span style="color:#005CC5">CANVAS</span><span style="color:#24292E">, color: </span><span style="color:#005CC5">INK</span><span style="color:#24292E">, fontFamily: </span><span style="color:#005CC5">FONT</span><span style="color:#24292E"> }}</span></span>
 <span class="line"><span style="color:#24292E">      ></span></span>
 <span class="line"><span style="color:#24292E">        &#x3C;</span><span style="color:#005CC5">TrailingImage</span></span>
@@ -3599,7 +3589,7 @@ export default function PhotographerPortfolio() {
 <span class="line"><span style="color:#E1E4E8">    &#x3C;</span><span style="color:#79B8FF">CardStack.Frame</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"absolute inset-0 overflow-visible"</span><span style="color:#E1E4E8">></span></span>
 <span class="line"><span style="color:#E1E4E8">      &#x3C;</span><span style="color:#79B8FF">CardStack.LiveRegion</span><span style="color:#E1E4E8"> /></span></span>
 <span class="line"><span style="color:#E1E4E8">      &#x3C;</span><span style="color:#79B8FF">CardStack.Trigger</span><span style="color:#B392F0"> aria-label</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"Show next photo"</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"absolute inset-0 block text-left"</span><span style="color:#E1E4E8">></span></span>
-<span class="line"><span style="color:#E1E4E8">        &#x3C;</span><span style="color:#79B8FF">CardStack.Viewport</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"size-full overflow-visible !min-h-0 !pt-0"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">        &#x3C;</span><span style="color:#79B8FF">CardStack.Viewport</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"absolute inset-0 overflow-visible !min-h-0 pt-[14%] sm:pt-0"</span><span style="color:#E1E4E8">></span></span>
 <span class="line"><span style="color:#E1E4E8">          &#x3C;</span><span style="color:#79B8FF">CardStack.List</span><span style="color:#E1E4E8">></span></span>
 <span class="line"><span style="color:#E1E4E8">            {(</span><span style="color:#FFAB70">item</span><span style="color:#E1E4E8">, </span><span style="color:#FFAB70">index</span><span style="color:#E1E4E8">, </span><span style="color:#FFAB70">layer</span><span style="color:#E1E4E8">) </span><span style="color:#F97583">=></span><span style="color:#E1E4E8"> (</span></span>
 <span class="line"><span style="color:#E1E4E8">              &#x3C;</span><span style="color:#79B8FF">CardStack.Card</span></span>
@@ -3649,8 +3639,12 @@ export default function PhotographerPortfolio() {
 <span class="line"><span style="color:#E1E4E8">        &#x3C;/</span><span style="color:#85E89D">div</span><span style="color:#E1E4E8">></span></span>
 <span class="line"></span>
 <span class="line"><span style="color:#E1E4E8">        &#x3C;</span><span style="color:#85E89D">div</span><span style="color:#B392F0"> aria-hidden</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"true"</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#B392F0">cn</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"w-full shrink-0"</span><span style="color:#E1E4E8">, </span><span style="color:#79B8FF">STACK_PEEK</span><span style="color:#E1E4E8">)} /></span></span>
-<span class="line"><span style="color:#E1E4E8">        &#x3C;</span><span style="color:#85E89D">div</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"relative aspect-[4/5] w-full shrink-0 overflow-visible"</span><span style="color:#E1E4E8">></span></span>
-<span class="line"><span style="color:#E1E4E8">          &#x3C;</span><span style="color:#79B8FF">PrintStack</span><span style="color:#E1E4E8"> /></span></span>
+<span class="line"><span style="color:#E1E4E8">        &#x3C;</span><span style="color:#85E89D">div</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"relative w-full shrink-0"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">          &#x3C;</span><span style="color:#85E89D">div</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"relative w-full overflow-visible pb-[125%] sm:aspect-[4/5] sm:pb-0"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">            &#x3C;</span><span style="color:#85E89D">div</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"absolute inset-0 overflow-visible"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">              &#x3C;</span><span style="color:#79B8FF">PrintStack</span><span style="color:#E1E4E8"> /></span></span>
+<span class="line"><span style="color:#E1E4E8">            &#x3C;/</span><span style="color:#85E89D">div</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">          &#x3C;/</span><span style="color:#85E89D">div</span><span style="color:#E1E4E8">></span></span>
 <span class="line"><span style="color:#E1E4E8">        &#x3C;/</span><span style="color:#85E89D">div</span><span style="color:#E1E4E8">></span></span>
 <span class="line"><span style="color:#E1E4E8">      &#x3C;/</span><span style="color:#85E89D">div</span><span style="color:#E1E4E8">></span></span>
 <span class="line"><span style="color:#E1E4E8">    &#x3C;/</span><span style="color:#85E89D">figure</span><span style="color:#E1E4E8">></span></span>
@@ -3676,7 +3670,7 @@ export default function PhotographerPortfolio() {
 <span class="line"><span style="color:#E1E4E8">        &#x3C;/</span><span style="color:#85E89D">div</span><span style="color:#E1E4E8">></span></span>
 <span class="line"><span style="color:#E1E4E8">      &#x3C;/</span><span style="color:#85E89D">div</span><span style="color:#E1E4E8">></span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#E1E4E8">      &#x3C;</span><span style="color:#85E89D">div</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"w-full min-w-0 md:flex md:min-h-0 md:flex-[3] md:basis-0 md:flex-col md:justify-end md:@container/print md:[container-type:size]"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">      &#x3C;</span><span style="color:#85E89D">div</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"w-full min-w-0 shrink-0 md:flex md:min-h-0 md:flex-[3] md:basis-0 md:flex-col md:justify-end md:@container/print md:[container-type:size]"</span><span style="color:#E1E4E8">></span></span>
 <span class="line"><span style="color:#E1E4E8">        &#x3C;</span><span style="color:#79B8FF">PrintProof</span><span style="color:#B392F0"> stackRef</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{stackRef} </span><span style="color:#B392F0">captionRef</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{captionRef} /></span></span>
 <span class="line"><span style="color:#E1E4E8">      &#x3C;/</span><span style="color:#85E89D">div</span><span style="color:#E1E4E8">></span></span>
 <span class="line"><span style="color:#E1E4E8">    &#x3C;/</span><span style="color:#85E89D">div</span><span style="color:#E1E4E8">></span></span>
@@ -3692,7 +3686,7 @@ export default function PhotographerPortfolio() {
 <span class="line"><span style="color:#F97583">  return</span><span style="color:#E1E4E8"> (</span></span>
 <span class="line"><span style="color:#E1E4E8">    &#x3C;></span></span>
 <span class="line"><span style="color:#E1E4E8">      &#x3C;</span><span style="color:#85E89D">section</span></span>
-<span class="line"><span style="color:#B392F0">        className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"relative isolate min-h-svh overflow-x-hidden overflow-y-auto md:h-svh md:overflow-hidden"</span></span>
+<span class="line"><span style="color:#B392F0">        className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"relative isolate min-h-svh overflow-x-hidden md:h-svh md:overflow-hidden"</span></span>
 <span class="line"><span style="color:#B392F0">        style</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{{ backgroundColor: </span><span style="color:#79B8FF">CANVAS</span><span style="color:#E1E4E8">, color: </span><span style="color:#79B8FF">INK</span><span style="color:#E1E4E8">, fontFamily: </span><span style="color:#79B8FF">FONT</span><span style="color:#E1E4E8"> }}</span></span>
 <span class="line"><span style="color:#E1E4E8">      ></span></span>
 <span class="line"><span style="color:#E1E4E8">        &#x3C;</span><span style="color:#79B8FF">TrailingImage</span></span>

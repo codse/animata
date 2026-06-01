@@ -247,7 +247,7 @@ function PrintStack() {
     <CardStack.Frame className="absolute inset-0 overflow-visible">
       <CardStack.LiveRegion />
       <CardStack.Trigger aria-label="Show next photo" className="absolute inset-0 block text-left">
-        <CardStack.Viewport className="size-full overflow-visible !min-h-0 !pt-0">
+        <CardStack.Viewport className="absolute inset-0 overflow-visible !min-h-0 pt-[14%] sm:pt-0">
           <CardStack.List>
             {(item, index, layer) => (
               <CardStack.Card
@@ -297,8 +297,12 @@ function PrintProof({
         </div>
 
         <div aria-hidden="true" className={cn("w-full shrink-0", STACK_PEEK)} />
-        <div className="relative aspect-[4/5] w-full shrink-0 overflow-visible">
-          <PrintStack />
+        <div className="relative w-full shrink-0">
+          <div className="relative w-full overflow-visible pb-[125%] sm:aspect-[4/5] sm:pb-0">
+            <div className="absolute inset-0 overflow-visible">
+              <PrintStack />
+            </div>
+          </div>
         </div>
       </div>
     </figure>
@@ -324,7 +328,7 @@ function PortfolioLayout({
         </div>
       </div>
 
-      <div className="w-full min-w-0 md:flex md:min-h-0 md:flex-[3] md:basis-0 md:flex-col md:justify-end md:@container/print md:[container-type:size]">
+      <div className="w-full min-w-0 shrink-0 md:flex md:min-h-0 md:flex-[3] md:basis-0 md:flex-col md:justify-end md:@container/print md:[container-type:size]">
         <PrintProof stackRef={stackRef} captionRef={captionRef} />
       </div>
     </div>
@@ -340,7 +344,7 @@ export default function PhotographerPortfolio() {
   return (
     <>
       <section
-        className="relative isolate min-h-svh overflow-x-hidden overflow-y-auto md:h-svh md:overflow-hidden"
+        className="relative isolate min-h-svh overflow-x-hidden md:h-svh md:overflow-hidden"
         style={{ backgroundColor: CANVAS, color: INK, fontFamily: FONT }}
       >
         <TrailingImage
