@@ -12,103 +12,120 @@ export type CalendarEventProps = {
   className?: string;
   /** Defaults to today. */
   date?: Date;
-  events: CalendarEventItem[];
+  events?: CalendarEventItem[];
   maxVisible?: number;
 };
 
+export const DEFAULT_CALENDAR_EVENTS: CalendarEventItem[] = [
+  { title: "Design critique", time: "10:00 – 10:45", variant: "violet" },
+  { title: "Lunch with Alex", time: "12:30 – 1:15", variant: "cyan" },
+  { title: "Ship review", time: "3:00 – 4:00", variant: "emerald" },
+];
+
 const VARIANT_STYLES: Record<
   CalendarEventVariant,
-  { chip: string; bar: string; title: string; time: string }
+  { chip: string; dot: string; title: string; time: string }
 > = {
   violet: {
-    chip: "bg-violet-100 dark:bg-violet-500/20",
-    bar: "bg-violet-600",
-    title: "text-violet-950 dark:text-violet-100",
-    time: "text-violet-700 dark:text-violet-300",
+    chip: "bg-violet-500/15 dark:bg-violet-500/25",
+    dot: "bg-violet-600",
+    title: "text-foreground",
+    time: "text-muted-foreground",
   },
   cyan: {
-    chip: "bg-cyan-100 dark:bg-cyan-500/20",
-    bar: "bg-cyan-600",
-    title: "text-cyan-950 dark:text-cyan-100",
-    time: "text-cyan-700 dark:text-cyan-300",
+    chip: "bg-cyan-500/15 dark:bg-cyan-500/25",
+    dot: "bg-cyan-600",
+    title: "text-foreground",
+    time: "text-muted-foreground",
   },
   emerald: {
-    chip: "bg-emerald-100 dark:bg-emerald-500/20",
-    bar: "bg-emerald-600",
-    title: "text-emerald-950 dark:text-emerald-100",
-    time: "text-emerald-700 dark:text-emerald-300",
+    chip: "bg-emerald-500/15 dark:bg-emerald-500/25",
+    dot: "bg-emerald-600",
+    title: "text-foreground",
+    time: "text-muted-foreground",
   },
   amber: {
-    chip: "bg-amber-100 dark:bg-amber-500/20",
-    bar: "bg-amber-600",
-    title: "text-amber-950 dark:text-amber-100",
-    time: "text-amber-800 dark:text-amber-300",
+    chip: "bg-amber-500/15 dark:bg-amber-500/25",
+    dot: "bg-amber-600",
+    title: "text-foreground",
+    time: "text-muted-foreground",
   },
   rose: {
-    chip: "bg-rose-100 dark:bg-rose-500/20",
-    bar: "bg-rose-600",
-    title: "text-rose-950 dark:text-rose-100",
-    time: "text-rose-700 dark:text-rose-300",
+    chip: "bg-rose-500/15 dark:bg-rose-500/25",
+    dot: "bg-rose-600",
+    title: "text-foreground",
+    time: "text-muted-foreground",
   },
 };
+
+function eventTimeStart(time: string) {
+  const parts = time.split(/\s[–-]\s/);
+  return parts[0]?.trim() ?? time;
+}
 
 function EventRow({ event }: { event: CalendarEventItem }) {
   const variant = VARIANT_STYLES[event.variant ?? "violet"];
   return (
-    <div
-      className={cn(
-        "flex h-10 w-full items-center gap-2 overflow-hidden rounded-lg pl-1",
-        variant.chip,
-      )}
-    >
-      <span className={cn("h-8 w-1 shrink-0 rounded-sm", variant.bar)} aria-hidden />
-      <div className="min-w-0 py-0.5">
-        <p className={cn("truncate text-sm font-semibold leading-tight", variant.title)}>
+    <li className={cn("flex shrink-0 gap-2 rounded-md px-2 py-1", variant.chip)}>
+      <span className={cn("mt-1.5 size-2 shrink-0 rounded-full", variant.dot)} aria-hidden />
+      <div className="min-w-0 flex-1 flex-col gap-0.5">
+        <p className={cn("truncate text-[15px] font-semibold leading-snug", variant.title)}>
           {event.title}
         </p>
-        <p className={cn("truncate text-xs tabular-nums", variant.time)}>{event.time}</p>
+        <p className={cn("truncate text-[13px] leading-snug tabular-nums", variant.time)}>
+          {event.time}
+        </p>
       </div>
-    </div>
+    </li>
   );
 }
 
 export default function CalendarEvent({
   className,
   date = new Date(),
-  events,
+  events = DEFAULT_CALENDAR_EVENTS,
   maxVisible = 2,
 }: CalendarEventProps) {
-  const list = events ?? [];
+  const list = events;
   const visible = list.slice(0, maxVisible);
   const extra = list.length - maxVisible;
+  const nextEvent = list[maxVisible];
 
   return (
     <div
       className={cn(
-        "flex size-52 flex-col overflow-hidden rounded-3xl border border-border bg-background p-4 shadow-md",
+        "flex size-52 flex-col rounded-3xl border border-border bg-background p-3.5 font-sans shadow-md",
         className,
       )}
     >
-      <div className="flex items-baseline gap-1.5">
-        <p className="text-lg font-bold text-rose-500">
+      <div className="flex shrink-0 items-baseline gap-1.5">
+        <p className="text-[15px] font-semibold leading-snug text-rose-500">
           {date.toLocaleString("default", { weekday: "short" })}
         </p>
-        <p className="text-lg font-bold tabular-nums text-foreground">{date.getDate()}</p>
+        <p className="text-[22px] font-normal leading-snug tabular-nums tracking-tight text-foreground">
+          {date.getDate()}
+        </p>
       </div>
 
-      <div className="my-2 flex min-h-0 flex-1 flex-col justify-center gap-2">
-        {visible.length > 0 ? (
-          visible.map((event, index) => <EventRow key={`${event.title}-${index}`} event={event} />)
-        ) : (
-          <p className="text-center text-xs text-muted-foreground">No events today</p>
-        )}
-      </div>
+      {visible.length > 0 ? (
+        <ul className="mt-2 flex shrink-0 flex-col gap-1">
+          {visible.map((event, index) => (
+            <EventRow key={`${event.title}-${index}`} event={event} />
+          ))}
+        </ul>
+      ) : (
+        <p className="mt-2 shrink-0 text-[13px] leading-snug text-muted-foreground">
+          No events today
+        </p>
+      )}
 
       {extra > 0 ? (
-        <div className="flex h-8 items-center justify-between rounded-lg border border-border bg-muted/50 px-2">
-          <p className="text-xs font-semibold text-foreground">+{extra} more</p>
-          <p className="text-[10px] tabular-nums text-muted-foreground">
-            {list[maxVisible]?.time.split(" - ")[0] ?? ""}
+        <div className="mt-1.5 flex h-8 shrink-0 items-center justify-between gap-2 rounded-md bg-muted/60 px-2.5">
+          <p className="shrink-0 text-[13px] font-medium leading-snug text-foreground">
+            +{extra} more
+          </p>
+          <p className="min-w-0 truncate text-right text-[13px] leading-snug tabular-nums text-muted-foreground">
+            {nextEvent ? eventTimeStart(nextEvent.time) : ""}
           </p>
         </div>
       ) : null}
