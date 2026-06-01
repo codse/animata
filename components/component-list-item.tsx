@@ -104,7 +104,13 @@ export default function ComponentListItem({
   const [forceUpdate, setForceUpdate] = useState(0);
   const Component = lazy && Reflect.has(lazyList, copyId) ? lazyList[copyId] : null;
   return (
-    <div {...props} className={cn("group/component component-list-item relative", className)}>
+    <div
+      {...props}
+      className={cn(
+        "group/component grid grid-rows-[auto_1fr_auto] component-list-item relative",
+        className,
+      )}
+    >
       <Actions copyId={copyId} href={href} onRefresh={() => setForceUpdate((prev) => prev + 1)} />
       <div
         key={`component-list-item-${copyId}-${forceUpdate}`}

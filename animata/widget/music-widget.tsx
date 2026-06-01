@@ -43,7 +43,7 @@ export default function MusicWidget({
       <div className="relative flex min-h-0 flex-1 flex-col justify-between">
         <div className="flex gap-2">
           <img src={coverUrl} alt="" className="size-20 shrink-0 rounded-2xl object-cover" />
-          <div className="flex h-fit flex-wrap justify-end gap-1" aria-hidden>
+          <div className="flex ms-auto h-fit flex-wrap justify-end gap-0.5" aria-hidden>
             <Music2
               size={16}
               className={cn("transition-all", {

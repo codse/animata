@@ -50,6 +50,26 @@ Simply open the `config/docs.ts` file and paste the new entry in the `docsConfig
 
 The script above generates a placeholder documentation file for the new component. You can find the file in the `content/docs/{type}` directory. Update it with the relevant information about the component you are creating and remove the placeholder content.
 
+### Manual install steps (`<Steps>` / `<Step>`)
+
+`<Step>` renders an `<h3>`. In MDX, put a **blank line** after `<Steps>`, after each `</Step>`, and before fenced code blocks. Otherwise MDX wraps steps in `<p>` and you get invalid HTML (`<p>` cannot contain `<h3>`) and hydration errors.
+
+````mdx
+<Steps>
+
+<Step>Install dependencies</Step>
+
+```bash
+npm install lucide-react
+```
+
+<Step>Run the following command</Step>
+
+Your prose here…
+
+</Steps>
+````
+
 ## Proposing pull requests
 
 - **Making changes**: implement your bug fix or feature and write stories to cover different use cases. Then commit your changes, push your bug fix/feature branch to the origin (your forked repo) and open a pull request to the upstream (the repository you originally forked)‘s main branch.

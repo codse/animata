@@ -35,7 +35,7 @@ export default function FlightWidget() {
           <div className="text-lg font-semibold tracking-widest text-red-700">AIR CANADA</div>
           <img
             src="https://seeklogo.com/images/A/air-canada-logo-A0180CCDB8-seeklogo.com.png"
-            className="h-6 w-6"
+            className="h-6 w-6 mix-blend-multiply"
             alt="Air Canada logo"
           />
         </div>
