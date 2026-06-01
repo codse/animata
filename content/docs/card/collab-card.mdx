@@ -1,0 +1,134 @@
+---
+title: Collab Card
+description: Bento tile for realtime collaboration—not a generic card. Live presence, selection frame, teammate cursors.
+labels: ["bento", "collaboration", "animated"]
+---
+
+<ComponentPreview name="card-collab-card--primary" />
+
+A bento feature tile for realtime collaboration, not a general-purpose card. Put it in a wide cell on your marketing site or product landing when you're selling live editing, shared canvases, or co-authored docs. Skip it for heroes and for slots where collaboration isn't the point.
+
+Out of the box it looks like Figma multiplayer: live status and an avatar stack up top, a blue dashed frame with corner handles around the greeting, and two named pills with cursors that drift and flash a click ring. Change the strings and `collaborators` tuple for Linear, Notion, or whatever tool you're echoing.
+
+## Installation
+
+### CLI
+
+<RegistryInstall category="card" name="collab-card" />
+
+### Manual
+
+<Steps>
+
+<Step>Run the following command</Step>
+
+This creates `collab-card.tsx` in `components/animata/card`.
+
+```bash
+mkdir -p components/animata/card && touch components/animata/card/collab-card.tsx
+```
+
+<Step>Paste the code</Step>
+
+Open the file and paste:
+
+```jsx file=<rootDir>/animata/card/collab-card.tsx
+
+```
+
+</Steps>
+
+## When to use
+
+Feature grids and bento rows about multiplayer editing, shared canvases, co-authored docs, or live presence. One host cursor runs the frame edge; two teammate cursors sit on their pills. If your users know Figma, they'll read it instantly.
+
+## When not to use
+
+Solo flows—the card implies other people in the file. Tight grid cells—the greeting is sized in `cqi`, so give the tile at least half a row of height. Pages with no collaboration story—the motion promises co-editing; don't leave that hanging.
+
+## How it works
+
+The root is a container query (`@container`). Spacing, type, frame padding, and cursor offsets use `cqi`, so everything scales with the card width. No breakpoint ladder, no `ResizeObserver`.
+
+Animation is CSS only. The host cursor loops the dashed frame. Collaborator cursors wobble beside their pills; a masked `conic-gradient` draws the click burst on a delay. Put a `text-*` class on the cursor wrapper and both pointer and burst pick it up through `currentColor`.
+
+With `prefers-reduced-motion: reduce`, animations stop. Cursors and bursts stay visible at rest so the card still reads offline.
+
+Defaults borrow Figma's `#0D99FF` frame and the usual violet/coral collaborator colors. Background glows use `color-mix(in oklch, …)` on the dark canvas.
+
+## Reskinning
+
+```tsx
+// Figma — default
+<CollabCard />
+
+// Linear — issue assignment
+<CollabCard
+  greeting="ENG-204"
+  eyebrow="Now collaborating"
+  intro="assigned to"
+  liveLabel="Live · 2 editing"
+  collaborators={[
+    { name: "Karri", pill: "bg-[#5E6AD2]", cursor: "text-[#5E6AD2]" },
+    { name: "Tuomas", pill: "bg-[#EB5688]", cursor: "text-[#EB5688]" },
+  ]}
+/>
+
+// Notion — wiki co-editors
+<CollabCard
+  greeting="Team wiki"
+  eyebrow="Live editors"
+  intro="with"
+  conjunction="+"
+  collaborators={[
+    { name: "Ivan", pill: "bg-[#2F3437]", cursor: "text-[#2F3437]" },
+    { name: "Simon", pill: "bg-[#E0AE51]", pillText: "text-[#1f1f1f]", cursor: "text-[#E0AE51]" },
+  ]}
+/>
+```
+
+## Props
+
+<PropsTable>
+  <PropsTable.Row prop="greeting" type="string" default='"hello!"'>
+    Text inside the dashed frame.
+  </PropsTable.Row>
+  <PropsTable.Row prop="eyebrow" type="string" default='"Now in multiplayer"'>
+    Line above the frame.
+  </PropsTable.Row>
+  <PropsTable.Row prop="intro" type="string" default='"editing"'>
+    Copy before the first pill.
+  </PropsTable.Row>
+  <PropsTable.Row prop="conjunction" type="string" default='"&"'>
+    Between the two pills.
+  </PropsTable.Row>
+  <PropsTable.Row prop="trailing" type="string" default='""'>
+    After the second pill; omitted when empty.
+  </PropsTable.Row>
+  <PropsTable.Row prop="liveLabel" type="string" default='"Live · 4 editing"'>
+    Next to the green live dot.
+  </PropsTable.Row>
+  <PropsTable.Row prop="presenceColors" type="string[]" default="Figma swatches">
+    Hex fills for stack avatars, left to right.
+  </PropsTable.Row>
+  <PropsTable.Row prop="extraCount" type="number" default="2">
+    Shown as +N on the avatar stack.
+  </PropsTable.Row>
+  <PropsTable.Row prop="collaborators" type="[Collaborator, Collaborator]" default="Dylan + Evan">
+    name, pill, optional pillText, and cursor per person.
+  </PropsTable.Row>
+  <PropsTable.Row prop="backgroundUrl" type="string">
+    Cover image; without it, dark canvas and dot grid.
+  </PropsTable.Row>
+  <PropsTable.Row prop="className" type="string">
+    On the outer wrapper (size, radius).
+  </PropsTable.Row>
+</PropsTable>
+
+## Accessibility
+
+Cursors and bursts are `aria-hidden`. Screen readers still get the greeting, eyebrow, and names from visible text.
+
+Reduced motion turns animations off; layout stays the same.
+
+The frame is a dashed `border`, not a background image, so it holds up in forced-colors mode.

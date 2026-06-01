@@ -50,6 +50,22 @@ Simply open the `config/docs.ts` file and paste the new entry in the `docsConfig
 
 The script above generates a placeholder documentation file for the new component. You can find the file in the `content/docs/{type}` directory. Update it with the relevant information about the component you are creating and remove the placeholder content.
 
+### Props tables
+
+Document the component API with `<PropsTable>` and `<PropsTable.Row>` — not a markdown pipe table. See `content/docs/card/collab-card.mdx` for a full example.
+
+```mdx
+## Props
+
+<PropsTable>
+  <PropsTable.Row prop="className" type="string">
+    Classes on the root element.
+  </PropsTable.Row>
+</PropsTable>
+```
+
+For two exported components in one doc (e.g. `DebugGrid` and `DebugSurface`), use `title` on each table: `<PropsTable title="DebugGrid">`.
+
 ### Manual install steps (`<Steps>` / `<Step>`)
 
 `<Step>` renders an `<h3>`. In MDX, put a **blank line** after `<Steps>`, after each `</Step>`, and before fenced code blocks. Otherwise MDX wraps steps in `<p>` and you get invalid HTML (`<p>` cannot contain `<h3>`) and hydration errors.

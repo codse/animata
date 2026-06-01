@@ -27,6 +27,7 @@ import { AnimataRenderer } from "@/components/dynamic-animata";
 import { FrameworkDocs } from "@/components/framework-docs";
 import { InView } from "@/components/in-view";
 import PreviewContainer from "@/components/preview-container";
+import { PropsTable } from "@/components/props-table";
 import { RegistryInstall } from "@/components/registry-install";
 import {
   Accordion,
@@ -279,6 +280,7 @@ const components = {
   ComponentExample,
   ComponentSource,
   RegistryInstall,
+  PropsTable,
   AspectRatio,
   CodeBlockWrapper: ({ ...props }) => <CodeBlockWrapper className="rounded-md border" {...props} />,
   Step: ({ className, ...props }: ComponentProps<"h3">) => (
