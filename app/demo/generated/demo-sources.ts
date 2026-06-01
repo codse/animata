@@ -2802,7 +2802,7 @@ function PrintStack() {
                 stackIndex={index}
                 className="!inset-x-0 !top-0 !h-fit !w-full gap-0 overflow-visible rounded-none !bg-transparent p-0 shadow-none ring-0"
               >
-                <figure className="relative aspect-[4/5] size-full overflow-hidden bg-black/5">
+                <figure className="relative aspect-[4/5] w-full overflow-hidden bg-black/5">
                   <img
                     src={item.image}
                     alt={\`\${PHOTOGRAPHER.studio} — \${item.title}\`}
@@ -3200,7 +3200,7 @@ export default function PhotographerPortfolio() {
 <span class="line"><span style="color:#6F42C1">                stackIndex</span><span style="color:#D73A49">=</span><span style="color:#24292E">{index}</span></span>
 <span class="line"><span style="color:#6F42C1">                className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"!inset-x-0 !top-0 !h-fit !w-full gap-0 overflow-visible rounded-none !bg-transparent p-0 shadow-none ring-0"</span></span>
 <span class="line"><span style="color:#24292E">              ></span></span>
-<span class="line"><span style="color:#24292E">                &#x3C;</span><span style="color:#22863A">figure</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"relative aspect-[4/5] size-full overflow-hidden bg-black/5"</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">                &#x3C;</span><span style="color:#22863A">figure</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"relative aspect-[4/5] w-full overflow-hidden bg-black/5"</span><span style="color:#24292E">></span></span>
 <span class="line"><span style="color:#24292E">                  &#x3C;</span><span style="color:#22863A">img</span></span>
 <span class="line"><span style="color:#6F42C1">                    src</span><span style="color:#D73A49">=</span><span style="color:#24292E">{item.image}</span></span>
 <span class="line"><span style="color:#6F42C1">                    alt</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#032F62">\`\${</span><span style="color:#005CC5">PHOTOGRAPHER</span><span style="color:#032F62">.</span><span style="color:#24292E">studio</span><span style="color:#032F62">} — \${</span><span style="color:#24292E">item</span><span style="color:#032F62">.</span><span style="color:#24292E">title</span><span style="color:#032F62">}\`</span><span style="color:#24292E">}</span></span>
@@ -3598,7 +3598,7 @@ export default function PhotographerPortfolio() {
 <span class="line"><span style="color:#B392F0">                stackIndex</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{index}</span></span>
 <span class="line"><span style="color:#B392F0">                className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"!inset-x-0 !top-0 !h-fit !w-full gap-0 overflow-visible rounded-none !bg-transparent p-0 shadow-none ring-0"</span></span>
 <span class="line"><span style="color:#E1E4E8">              ></span></span>
-<span class="line"><span style="color:#E1E4E8">                &#x3C;</span><span style="color:#85E89D">figure</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"relative aspect-[4/5] size-full overflow-hidden bg-black/5"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">                &#x3C;</span><span style="color:#85E89D">figure</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"relative aspect-[4/5] w-full overflow-hidden bg-black/5"</span><span style="color:#E1E4E8">></span></span>
 <span class="line"><span style="color:#E1E4E8">                  &#x3C;</span><span style="color:#85E89D">img</span></span>
 <span class="line"><span style="color:#B392F0">                    src</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{item.image}</span></span>
 <span class="line"><span style="color:#B392F0">                    alt</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#9ECBFF">\`\${</span><span style="color:#79B8FF">PHOTOGRAPHER</span><span style="color:#9ECBFF">.</span><span style="color:#E1E4E8">studio</span><span style="color:#9ECBFF">} — \${</span><span style="color:#E1E4E8">item</span><span style="color:#9ECBFF">.</span><span style="color:#E1E4E8">title</span><span style="color:#9ECBFF">}\`</span><span style="color:#E1E4E8">}</span></span>
