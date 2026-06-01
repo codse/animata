@@ -1,0 +1,152 @@
+---
+title: Widget catalog standards
+date: 2026-05-30
+description: How we decide which widgets stay published, and how to improve them from a user-value perspective.
+---
+
+Animata **widgets** are small, glanceable React cards — the kind of thing you’d drop on a marketing bento, a dashboard tile, or an app home screen. They are **not** full app panels, video call UIs, or expandable multi-column layouts.
+
+This page is the **published-only value audit** for the `widget-improvements` effort. It does not apply to components we have deliberately removed from the public catalog.
+
+## Who we optimize for
+
+**Developer (primary):** lands on a doc page and asks *“Is this the thing I need, and can I ship it with my data in five minutes?”*
+
+**End user (secondary):** glances at the card in an app and gets **one fact** or **one obvious control** without reading copy.
+
+If we cannot answer both, the component should not stay in the public widget list — regardless of animation quality.
+
+## Value test (published catalog only)
+
+Before investing in a widget, complete this in one sentence each:
+
+| Question | If the answer is weak… |
+| --- | --- |
+| **Job** — What problem does this solve? | Unpublish or move to a `/demo` recipe only |
+| **Glance** — What is the single hero element? | Simplify layout; do not add more props |
+| **Ship** — Would a real product pin this on a home screen? | Not a widget; demote or delete |
+| **Story** — Does Storybook show a recognizable scenario? | Fix the story first, then the API |
+| **Own** — Can consumers pass their data without fighting the API? | Composition + props; if still awkward, unpublish |
+
+### Apple HIG (web adaptation)
+
+We borrow intent from [Apple’s widget HIG](https://developer.apple.com/design/human-interface-guidelines/widgets): one simple idea, balanced density, system-like type hierarchy, meaningful color — adapted to **web** (`size-52`, light/dark, `prefers-reduced-motion`, 44px touch targets). We are **not** building WidgetKit timelines.
+
+**Default small family:** `size-52` (~208px), `p-4`, `rounded-3xl`, three text levels (hero / body / caption).
+
+## Unpublished — do not republish
+
+These four stay **`published: false`**. No docs pages, no shadcn registry, no “relaunch” changelog. Source may remain for Storybook or internal demos only.
+
+| Component | Why it left the catalog |
+| --- | --- |
+| Calendar Widget | Calendar strip + events is a **medium panel**, not a glance tile; API was immature |
+| Team Clock | **Expandable team board**, not a home-screen widget |
+| Video Chat | **Full call UI**, not a widget |
+| Music Stack Interaction | **Album browser** with view modes; belongs in app UI or a demo |
+
+Further code changes on these are optional and **demo-driven only** — not catalog polish.
+
+---
+
+## Published audit (34 components)
+
+**Tier A — High value:** clear job; worth prioritizing on `widget-improvements`.
+
+**Tier B — Conditional:** useful after a sharp story + API pass, or merge with a sibling.
+
+**Tier C — Low value / wrong shape:** recommend unpublish (`published: false`) or demo-only.
+
+| Widget | Job (user perspective) | Glance hero | Tier | Recommendation |
+| --- | --- | --- | --- | --- |
+| [Reminder](/docs/widget/reminder) | See work vs home task counts + next commitment | Two counts + “Meeting in 30 mins” | **A** | **Improve** — add props for counts/copy; keep `size-52` |
+| [Weather Card](/docs/widget/weather-card) | Current weather where I am | Big temperature | **A** | **Improve** — props done; add `TokyoCommute` story |
+| [Water Tracker](/docs/widget/water-tracker) | Am I on track for today’s water goal? | Fill vs daily goal | **A** | **Improve** — props + goal label |
+| [VPN Connection](/docs/widget/vpn-widget) | Am I protected / connected? | Status + toggle affordance | **A** | **Improve** — `aria-pressed` on control |
+| [Delivery Card](/docs/widget/delivery-card) | Where is my order? | ETA + map/truck progress | **A** | **Improve** — enlarge scrubber hit area |
+| [Direction Card](/docs/widget/direction-card) | How do I get there? | Turn + distance | **A** | **Keep** — already strong API |
+| [Alarm Clock](/docs/widget/alarm-clock) | When is my next alarm? | Time + label | **A** | **Improve** — story: “Weekday alarm” |
+| [Study Timer](/docs/widget/study-timer) | How far through today’s focus blocks? | Segment bar | **A** | **Improve** — named segments in story |
+| [Expense Tracker](/docs/widget/expense-tracker) | How much did I spend this week? | Total + bars | **A** | **Keep** — data props OK |
+| [Live Score](/docs/widget/live-score) | What’s the score right now? | Scoreline | **A** | **Improve** — document demo randomness in MDX |
+| [Cycling](/docs/widget/cycling) | How was my ride? | Distance + heart rate | **A** | **Improve** — token colors in SVG |
+| [Calendar Event](/docs/widget/calendar-event) | What’s my next event? | Title + time | **A** | **Improve** — props + glance story |
+| [Music Widget](/docs/widget/music-widget) | What’s playing? | Track + play control | **A** | **Improve** — stories for play/pause |
+| [Clock With Photo](/docs/widget/clock-with-photo) | Time + personal backdrop | Clock over photo | **A** | **Improve** — props for image/time |
+| [Instagram Post](/docs/widget/instagram-post) | Social post preview / like affordance | Image + engagement | **A** | **Keep** — niche but obvious |
+| [Profile](/docs/widget/profile) | Who is this person + social links? | Avatar + name | **B** | **Improve** — props done; story “Creator card” |
+| [Shopping List](/docs/widget/shopping-list) | What’s left to buy? | Checked items list | **B** | **Improve** — row buttons if interactive |
+| [Fund Widget](/docs/widget/fund-widget) | How are my funds doing? | Balance / trend | **B** | **Improve** — drag handle a11y |
+| [Notes](/docs/widget/notes) | Quick sticky note on home screen | Yellow note body | **B** | **Improve** — token color; `NotesCard` pattern |
+| [Security Alert](/docs/widget/security-alert) | Should I run a security scan? | Alert + CTA | **B** | **Improve** — props + 44px CTA |
+| [Gooey Calendar](/docs/widget/gooey-calendar) | Marketing calendar / booking teaser | Expanding schedule | **B** | **Reframe** — “Landing block”, not home widget; fix day targets |
+| [Popover Menu](/docs/widget/popover-menu) | Compact nav with motion | Menu items | **B** | **Reframe** — widget vs `container/` nav; compound API |
+| [Battery Level](/docs/widget/battery-level) | Battery on my devices | Donut / device list | **B** | **Improve** — props; merge with Battery? |
+| [Sleep Tracker](/docs/widget/sleep-tracker) | How did I sleep? | Chart + duration | **B** | **Improve** — move test data to stories; belongs near graphs |
+| [Score Board](/docs/widget/score-board) | Progress / score over time | Chart + stat | **B** | **Improve** — same as sleep; remove exported test props |
+| [Weekly Progress](/docs/widget/weekly-progress) | Weekly habit rings | Ring chart | **B** | **Improve** — clarify job or unpublish |
+| [Reminder Widget](/docs/widget/reminder-widget) | Packing / checklist reminders | Checklist | **C** | **Unpublish or merge** — overlaps [Reminder](/docs/widget/reminder); `h-80` wrong size |
+| [Battery](/docs/widget/battery) | Phone battery % | Ring % | **C** | **Unpublish** — duplicate of Battery Level |
+| [Storage Widget](/docs/widget/storage-widget) | Disk usage | Heatmap | **C** | **Unpublish** — duplicate of Storage Status |
+| [Storage Status](/docs/widget/storage-status) | What’s using my disk? | Segments | **C** | **Keep one** — unpublish the other |
+| [Flight Widget](/docs/widget/flight-widget) | Trip / gate info | Route + times | **C** | **Unpublish** — zero props, decorative only |
+| [Mobile Detail](/docs/widget/mobile-detail) | System stats (battery, RAM…) | Progress bars | **C** | **Unpublish** — hover-only; settings panel not widget |
+| [Calorie Counter](/docs/widget/calorie-counter) | Calories vs daily goal | Donut | **C** | **Unpublish or resize** — `h-96` / wide; use graphs + small card |
+| [Folder](/docs/widget/folder) | Files in a folder | Folder icon | **C** | **Unpublish** — hover-only icon; not a data widget |
+
+---
+
+## Recommended backlog (`widget-improvements`)
+
+### Wave 1 — Tier A (ship value users feel) — done on `widget-improvements`
+
+Reminder, Weather Card, Water Tracker, VPN Connection, Delivery Card, Alarm Clock, Calendar Event, and Music Widget were updated with props, named stories, `size-52` / 44px controls, and “How it works” in docs.
+
+**Next:** Wave 2 merges and Tier B reframes; Wave 3 unpublishes Tier C duplicates.
+
+### Wave 2 — Tier B (one decision each)
+
+- **Merge:** Battery + Battery Level → one “Device battery” widget  
+- **Merge:** Storage Widget + Storage Status → one “Storage” widget  
+- **Merge or unpublish:** Reminder vs Reminder Widget  
+- **Reframe or unpublish:** Gooey Calendar, Popover Menu (document as marketing/nav, not home tiles)  
+- **Charts:** Sleep Tracker, Score Board — tighten stories; consider `graphs/` cross-link  
+
+### Wave 3 — Tier C (reduce catalog noise)
+
+Unpublish with `published: false` (no deletion required): Flight Widget, Mobile Detail, Folder, Calorie Counter (or shrink + republish once), duplicate batteries/storage, Reminder Widget if Reminder wins.
+
+### Explicitly out of scope
+
+- Republishing Calendar Widget, Team Clock, Video Chat, Music Stack Interaction  
+
+---
+
+## Story naming (examples)
+
+Replace generic `Primary` where it helps:
+
+| Widget | Story idea |
+| --- | --- |
+| Weather Card | `TokyoMorning`, `NycRain` |
+| VPN | `Connected`, `Disconnected` |
+| Delivery Card | `OutForDelivery` |
+| Reminder | `StandupIn30` |
+| Expense Tracker | `WeekToDate` |
+| Live Score | `SecondHalf` (+ note: simulated ticks in demo) |
+
+---
+
+## Checklist before keeping a widget published
+
+- [ ] Job + glance answered in the MDX description (benefit, not feature list)  
+- [ ] Story shows a recognizable product context  
+- [ ] Default footprint is `size-52` (or documented medium variant)  
+- [ ] Theme light/dark; no hover-only critical info  
+- [ ] Touch targets ≥ 44px on interactive controls  
+- [ ] `className` + `cn()`; consumer owns copy via props or children  
+- [ ] Changelog entry when user-visible behavior ships  
+
+---
+
+_Last updated: widget-improvements audit, May 2026._

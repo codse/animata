@@ -6,60 +6,77 @@ import { useState } from "react";
 import ToggleSwitch from "@/animata/button/toggle-switch";
 import { cn } from "@/lib/utils";
 
-interface AlarmProps {
-  alarms: { id?: number; time: string; repetition: string }[];
-}
+export type AlarmItem = {
+  id: string | number;
+  time: string;
+  schedule: string;
+};
+
+export type AlarmClockProps = {
+  className?: string;
+  alarms?: AlarmItem[];
+  defaultEnabledIds?: Array<string | number>;
+};
+
+const DEFAULT_ALARMS: AlarmItem[] = [
+  { id: "weekday", time: "7:30 AM", schedule: "Weekdays" },
+  { id: "weekend", time: "9:00 AM", schedule: "Sat & Sun" },
+];
 
 export default function AlarmClock({
-  // Placeholder data
-  alarms = [
-    { id: 0, time: "7:30 AM", repetition: "Once" },
-    { id: 1, time: "8:00 AM", repetition: "Daily" },
-    { id: 2, time: "9:00 AM", repetition: "Weekdays" },
-  ],
-}: AlarmProps) {
-  const [toggleStates, setToggleStates] = useState(new Set<number>());
+  className,
+  alarms = DEFAULT_ALARMS,
+  defaultEnabledIds = ["weekday"],
+}: AlarmClockProps) {
+  const visible = alarms.slice(0, 2);
+  const [enabledIds, setEnabledIds] = useState(() => new Set(defaultEnabledIds));
 
-  const handleToggleChange = (value: boolean, index: number) => {
-    setToggleStates((prevStates) => {
-      const newStates = new Set(prevStates);
-      if (value) {
-        newStates.add(index);
-      } else {
-        newStates.delete(index);
-      }
-      return newStates;
+  const handleToggle = (id: string | number, on: boolean) => {
+    setEnabledIds((prev) => {
+      const next = new Set(prev);
+      if (on) next.add(id);
+      else next.delete(id);
+      return next;
     });
   };
 
   return (
-    <div className={cn("group size-52 rounded-3xl border bg-background p-4 dark:border-zinc-700")}>
+    <div
+      className={cn(
+        "flex size-52 flex-col rounded-3xl border border-border bg-background p-4 shadow-md",
+        className,
+      )}
+    >
       <div className="flex items-center justify-between">
-        <p className="text-md font-bold text-foreground">Alarms</p>
-        <AlarmClockIcon size={20} className="mt-1 text-muted-foreground" />
+        <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">Alarms</p>
+        <AlarmClockIcon className="size-4 text-muted-foreground" aria-hidden />
       </div>
 
-      <div className="mt-3 flex flex-col gap-2">
-        {alarms.map((alarm, index) => (
-          <div className="flex items-center justify-between" key={index}>
-            <div className="flex-col justify-start tabular-nums">
-              <p
-                className={`text-md font-bold ${toggleStates.has(index) ? "text-foreground" : "text-muted-foreground"}`}
-              >
-                {alarm.time}
-              </p>
-              <p
-                className={`text-xs font-medium ${toggleStates.has(index) ? "text-foreground" : "text-muted-foreground"}`}
-              >
-                {alarm.repetition}
-              </p>
+      <div className="mt-3 flex min-h-0 flex-1 flex-col justify-center gap-3">
+        {visible.map((alarm) => {
+          const on = enabledIds.has(alarm.id);
+          return (
+            <div className="flex items-center justify-between gap-2" key={alarm.id}>
+              <div className="min-w-0">
+                <p
+                  className={cn(
+                    "text-lg font-semibold tabular-nums tracking-tight",
+                    on ? "text-foreground" : "text-muted-foreground",
+                  )}
+                >
+                  {alarm.time}
+                </p>
+                <p className={cn("text-xs", on ? "text-foreground" : "text-muted-foreground")}>
+                  {alarm.schedule}
+                </p>
+              </div>
+              <ToggleSwitch
+                defaultChecked={on}
+                onChange={(value) => handleToggle(alarm.id, value)}
+              />
             </div>
-            <ToggleSwitch
-              defaultChecked={toggleStates.has(index)}
-              onChange={(value) => handleToggleChange(value, index)} // Pass index to identify which alarm is toggled
-            />
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );

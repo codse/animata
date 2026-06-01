@@ -1,10 +1,14 @@
 ---
 title: Reminder
-description: A reminder widget shows notifications for important tasks
+description: Glance at open tasks by list and see what is coming up next.
 author: ll4xmii
 ---
 
-<ComponentPreview name="widget-reminder--primary" />
+<ComponentPreview name="widget-reminder--standup-in-30" />
+
+## How it works
+
+The card is a fixed `size-52` tile. Pass `buckets` for the two summary counts (work, home, or any labels you define) and `nextLabel` for the single line people read first — usually the next meeting or errand. Styling stays in your story or app; the primitive only handles layout.
 
 ## Installation
 
@@ -15,6 +19,7 @@ author: ll4xmii
 ### Manual
 
 <Steps>
+
 <Step>Run the following command</Step>
 
 It will create a new file called `reminder.tsx` inside the `components/animata/widget` directory.

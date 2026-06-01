@@ -1,10 +1,14 @@
 ---
 title: Delivery Card
-description: This card helps user to track their orders.
+description: Show delivery ETA, status, and route progress on a single home-screen tile.
 author: sanjaya22780
 ---
 
-<ComponentPreview name="widget-delivery-card--primary" />
+<ComponentPreview name="widget-delivery-card--out-for-delivery" />
+
+## How it works
+
+Pass `progress` (0–100), `arrivalTime`, `location`, and `timeAgo` from your order API. Progress drives the truck marker along a simple bar. Set `simulateProgress` only in demos — it cycles progress on an interval so Storybook feels alive without surprising production embeds.
 
 ## Installation
 
@@ -15,6 +19,7 @@ author: sanjaya22780
 ### Manual
 
 <Steps>
+
 <Step>Install dependencies</Step>
 
 ```bash

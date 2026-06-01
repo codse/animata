@@ -83,6 +83,11 @@ const sidebarNav: SidebarNavItem[] = [
         items: [],
       },
       {
+        title: "Widget catalog",
+        href: "/docs/contributing/widgets",
+        items: [],
+      },
+      {
         title: "Live demos",
         href: "/docs/contributing/demos",
         items: [],

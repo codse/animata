@@ -1,39 +1,32 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import VpnWidget from "@/animata/widget/vpn-widget";
+import VpnConnection from "@/animata/widget/vpn-widget";
 
-const meta: Meta<typeof VpnWidget> = {
-  title: "Widget/Vpn Widget",
-  component: VpnWidget,
-  parameters: {
-    layout: "centered",
-  },
+const meta = {
+  title: "Widget/VPN Connection",
+  component: VpnConnection,
+  parameters: { layout: "centered" },
   tags: ["autodocs"],
-  argTypes: {
-    userName: { control: "text" },
-    latency: { control: "text" },
-    netSpeed: { control: "text" },
-    className: { control: "text" },
-  },
-};
+} satisfies Meta<typeof VpnConnection>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Primary: Story = {
+export const Connected: Story = {
+  name: "Connected",
   args: {
-    userName: "Animata",
-    latency: "5ms",
-    netSpeed: "10",
-    defaultConnected: false,
+    serverName: "Tokyo",
+    latency: "48 ms",
+    downloadMbps: "112.3",
+    defaultConnected: true,
   },
 };
 
-export const VpnWidgetStory: Story = {
+export const Disconnected: Story = {
+  name: "Disconnected",
   args: {
-    userName: "Animata",
-    latency: "5ms",
-    netSpeed: "15.75",
-    className: "",
-    defaultConnected: true,
+    serverName: "Frankfurt",
+    latency: "—",
+    downloadMbps: "0",
+    defaultConnected: false,
   },
 };

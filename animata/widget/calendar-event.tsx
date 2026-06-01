@@ -1,125 +1,117 @@
 import { cn } from "@/lib/utils";
 
-interface CalendarEvent {
+export type CalendarEventVariant = "violet" | "cyan" | "emerald" | "amber" | "rose";
+
+export type CalendarEventItem = {
   title: string;
   time: string;
-  color: string;
-  bgcolor: string;
-  barColor: string;
-  dateColor: string;
-}
-
-interface CalendarEventProps {
-  dates: CalendarEvent[];
-}
-
-export const testCalendarEventProps: CalendarEventProps = {
-  dates: [
-    {
-      title: "Backlog Updates",
-      time: "10:30 - 10:45",
-      color: "text-purple-900",
-      bgcolor: "bg-purple-200",
-      barColor: "bg-purple-700",
-      dateColor: "text-purple-600",
-    },
-    {
-      title: "Review Jade A",
-      time: "12:00 - 12:45",
-      color: "text-cyan-900",
-      bgcolor: "bg-cyan-200",
-      barColor: "bg-cyan-700",
-      dateColor: "text-cyan-600",
-    },
-    {
-      title: "Design Meeting",
-      time: "14:00 - 15:00",
-      color: "text-green-900",
-      bgcolor: "bg-green-200",
-      barColor: "bg-green-700",
-      dateColor: "text-green-600",
-    },
-    {
-      title: "Development",
-      time: "16:00 - 17:00",
-      color: "text-yellow-900",
-      bgcolor: "bg-yellow-200",
-      barColor: "bg-yellow-700",
-      dateColor: "text-yellow-600",
-    },
-    {
-      title: "QA Testing",
-      time: "18:00 - 19:00",
-      color: "text-red-900",
-      bgcolor: "bg-red-200",
-      barColor: "bg-red-700",
-      dateColor: "text-red-600",
-    },
-  ],
+  variant?: CalendarEventVariant;
 };
 
-const maxEvents = 2;
+export type CalendarEventProps = {
+  className?: string;
+  /** Defaults to today. */
+  date?: Date;
+  events: CalendarEventItem[];
+  maxVisible?: number;
+};
 
-function EventCard({ date }: { date: CalendarEvent; hides: boolean }) {
+const VARIANT_STYLES: Record<
+  CalendarEventVariant,
+  { chip: string; bar: string; title: string; time: string }
+> = {
+  violet: {
+    chip: "bg-violet-100 dark:bg-violet-500/20",
+    bar: "bg-violet-600",
+    title: "text-violet-950 dark:text-violet-100",
+    time: "text-violet-700 dark:text-violet-300",
+  },
+  cyan: {
+    chip: "bg-cyan-100 dark:bg-cyan-500/20",
+    bar: "bg-cyan-600",
+    title: "text-cyan-950 dark:text-cyan-100",
+    time: "text-cyan-700 dark:text-cyan-300",
+  },
+  emerald: {
+    chip: "bg-emerald-100 dark:bg-emerald-500/20",
+    bar: "bg-emerald-600",
+    title: "text-emerald-950 dark:text-emerald-100",
+    time: "text-emerald-700 dark:text-emerald-300",
+  },
+  amber: {
+    chip: "bg-amber-100 dark:bg-amber-500/20",
+    bar: "bg-amber-600",
+    title: "text-amber-950 dark:text-amber-100",
+    time: "text-amber-800 dark:text-amber-300",
+  },
+  rose: {
+    chip: "bg-rose-100 dark:bg-rose-500/20",
+    bar: "bg-rose-600",
+    title: "text-rose-950 dark:text-rose-100",
+    time: "text-rose-700 dark:text-rose-300",
+  },
+};
+
+function EventRow({ event }: { event: CalendarEventItem }) {
+  const variant = VARIANT_STYLES[event.variant ?? "violet"];
   return (
     <div
       className={cn(
-        "relative flex h-10 w-full items-center gap-2 overflow-hidden rounded-md pl-1 transition-all",
-        date.bgcolor,
+        "flex h-10 w-full items-center gap-2 overflow-hidden rounded-lg pl-1",
+        variant.chip,
       )}
     >
-      <div className={cn("h-8 w-1 rounded-sm", date.barColor)}></div>
-      <div className="flex-col items-center justify-center">
-        <h4 className={cn("text-sm font-bold", date.color)}>{date.title}</h4>
-        <p className={cn("whitespace-pre text-xs", date.dateColor)}>{date.time}</p>
+      <span className={cn("h-8 w-1 shrink-0 rounded-sm", variant.bar)} aria-hidden />
+      <div className="min-w-0 py-0.5">
+        <p className={cn("truncate text-sm font-semibold leading-tight", variant.title)}>
+          {event.title}
+        </p>
+        <p className={cn("truncate text-xs tabular-nums", variant.time)}>{event.time}</p>
       </div>
     </div>
   );
 }
 
 export default function CalendarEvent({
-  dates = testCalendarEventProps.dates,
+  className,
+  date = new Date(),
+  events,
+  maxVisible = 2,
 }: CalendarEventProps) {
-  const extraCount = dates.length - maxEvents;
+  const list = events ?? [];
+  const visible = list.slice(0, maxVisible);
+  const extra = list.length - maxVisible;
+
   return (
     <div
       className={cn(
-        "group relative flex size-52 flex-col overflow-hidden rounded-3xl border-2 bg-white p-4",
+        "flex size-52 flex-col overflow-hidden rounded-3xl border border-border bg-background p-4 shadow-md",
+        className,
       )}
     >
-      <div className="flex gap-1">
-        <p className="text-xl font-bold text-red-400">
-          {new Date().toLocaleString("default", { weekday: "short" })}
+      <div className="flex items-baseline gap-1.5">
+        <p className="text-lg font-bold text-rose-500">
+          {date.toLocaleString("default", { weekday: "short" })}
         </p>
-        <p className="text-xl font-bold text-black">{new Date().getDate()}</p>
+        <p className="text-lg font-bold tabular-nums text-foreground">{date.getDate()}</p>
       </div>
-      <div className="my-2 flex flex-1 flex-col gap-2">
-        {dates.slice(0, maxEvents).map((date, index) => (
-          <EventCard hides key={index} date={date} />
-        ))}
+
+      <div className="my-2 flex min-h-0 flex-1 flex-col justify-center gap-2">
+        {visible.length > 0 ? (
+          visible.map((event, index) => <EventRow key={`${event.title}-${index}`} event={event} />)
+        ) : (
+          <p className="text-center text-xs text-muted-foreground">No events today</p>
+        )}
       </div>
-      {extraCount ? (
-        <>
-          <div className="flex h-8 w-full items-center justify-between rounded-md border-2 border-slate-200 bg-slate-50 p-1">
-            <p className="text-xs font-bold text-neutral-800">
-              +{dates.length - maxEvents} event{extraCount > 1 && "s"}
-            </p>
-            <p className="text-[10px] text-gray-500">16:15 - 20:00</p>
-          </div>
-          {dates.slice(maxEvents, maxEvents + 3).map((_date, index) => (
-            <div
-              key={index}
-              style={{
-                paddingInline: `${(index + 1) * 6}px`,
-              }}
-            >
-              <div className="mt-[1px] h-[2px] w-full rounded-full bg-gray-100" />
-            </div>
-          ))}
-        </>
-      ) : (
-        <div className="w-full text-center text-xs font-bold text-gray-500">No more events</div>
-      )}
+
+      {extra > 0 ? (
+        <div className="flex h-8 items-center justify-between rounded-lg border border-border bg-muted/50 px-2">
+          <p className="text-xs font-semibold text-foreground">+{extra} more</p>
+          <p className="text-[10px] tabular-nums text-muted-foreground">
+            {list[maxVisible]?.time.split(" - ")[0] ?? ""}
+          </p>
+        </div>
+      ) : null}
     </div>
   );
 }

@@ -5,112 +5,106 @@ import { useState } from "react";
 
 import { absoluteUrl, cn } from "@/lib/utils";
 
-const songs = [
-  {
-    title: "Never gonna give you up",
-    artist: "Rick Astley",
-  },
-  {
-    title: "It must have been love",
-    artist: "Roxette",
-  },
-  {
-    title: "Take on me",
-    artist: "A-ha",
-  },
+export type MusicTrack = {
+  title: string;
+  artist: string;
+};
+
+export type MusicWidgetProps = {
+  className?: string;
+  tracks?: MusicTrack[];
+  coverUrl?: string;
+  defaultPlaying?: boolean;
+};
+
+const DEFAULT_TRACKS: MusicTrack[] = [
+  { title: "Never Gonna Give You Up", artist: "Rick Astley" },
+  { title: "It Must Have Been Love", artist: "Roxette" },
+  { title: "Take On Me", artist: "A-ha" },
 ];
 
-export default function MusicWidget() {
-  const [currentSong, setCurrentSong] = useState(0);
-  const [play, setPlay] = useState(false);
-
-  const handleClick = () => {
-    setPlay((prevValue) => !prevValue);
-  };
-
-  const handleNext = () => {
-    setCurrentSong((prevValue) => (prevValue + 1) % songs.length);
-  };
-
-  const handlePrev = () => {
-    setCurrentSong((prevValue) => (prevValue - 1 + songs.length) % songs.length);
-  };
-
-  const song = songs[currentSong];
-  const { title, artist } = song;
+export default function MusicWidget({
+  className,
+  tracks = DEFAULT_TRACKS,
+  coverUrl = absoluteUrl("/widget/music.jpg"),
+  defaultPlaying = false,
+}: MusicWidgetProps) {
+  const [index, setIndex] = useState(0);
+  const [playing, setPlaying] = useState(defaultPlaying);
+  const track = tracks[index % tracks.length];
 
   return (
-    <div className="flex h-52 w-52 flex-col rounded-3xl bg-linear-to-bl from-indigo-200 to-indigo-600 p-4 text-white">
-      <div className="relative flex flex-1 flex-col justify-between">
-        <div className="flex">
-          <div className="flex-1">
-            <img
-              src={absoluteUrl("/widget/music.jpg")}
-              alt="Album Pic"
-              className="h-20 w-20 rounded-2xl"
-            />
-          </div>
-          <div className={cn("flex h-fit w-12 flex-wrap justify-center gap-1")}>
+    <div
+      className={cn(
+        "flex size-52 flex-col rounded-3xl bg-linear-to-bl from-indigo-200 to-indigo-700 p-4 text-white shadow-md dark:from-indigo-900 dark:to-indigo-950",
+        className,
+      )}
+    >
+      <div className="relative flex min-h-0 flex-1 flex-col justify-between">
+        <div className="flex gap-2">
+          <img src={coverUrl} alt="" className="size-20 shrink-0 rounded-2xl object-cover" />
+          <div className="flex h-fit flex-wrap justify-end gap-1" aria-hidden>
             <Music2
               size={16}
-              className={cn("text-white transition-all", {
-                hidden: !play,
-                "delay-500 duration-1000 animate-in zoom-in direction-alternate-reverse repeat-infinite":
-                  play,
+              className={cn("transition-all", {
+                hidden: !playing,
+                "animate-in zoom-in repeat-infinite direction-alternate-reverse duration-1000 delay-500":
+                  playing,
               })}
             />
             <Music3
               size={14}
-              className={cn("text-white transition-all", {
-                hidden: !play,
-                "duration-1000 animate-in zoom-in direction-alternate-reverse repeat-infinite":
-                  play,
+              className={cn("transition-all", {
+                hidden: !playing,
+                "animate-in zoom-in repeat-infinite direction-alternate-reverse duration-1000":
+                  playing,
               })}
             />
             <Music
               size={18}
-              className={cn("text-white transition-all", {
-                hidden: !play,
-                "delay-300 duration-1000 animate-in zoom-in direction-alternate-reverse repeat-infinite":
-                  play,
+              className={cn("transition-all", {
+                hidden: !playing,
+                "animate-in zoom-in repeat-infinite direction-alternate-reverse duration-1000 delay-300":
+                  playing,
               })}
             />
           </div>
         </div>
-        <p title={title} className="line-clamp-1 w-full text-lg font-bold leading-none">
-          {title}
-        </p>
-        <p
-          title={artist}
-          className="-mt-6 line-clamp-1 text-xs font-semibold leading-none text-indigo-300"
-        >
-          {artist}
-        </p>
-      </div>
-      <div className="mt-2 flex items-center justify-evenly">
-        <SkipBack
-          size={20}
-          className="cursor-pointer fill-white text-white hover:fill-gray-100 hover:text-gray-100 active:fill-gray-200 active:text-gray-200"
-          onClick={handlePrev}
-        />
-        <div onClick={handleClick}>
-          {!play ? (
-            <Play
-              size={25}
-              className="cursor-pointer fill-white text-white hover:fill-gray-100 hover:text-gray-100 active:fill-gray-200 active:text-gray-200"
-            />
-          ) : (
-            <Pause
-              size={25}
-              className="cursor-pointer fill-white text-white hover:fill-gray-100 hover:text-gray-100 active:fill-gray-200 active:text-gray-200"
-            />
-          )}
+        <div className="space-y-0.5">
+          <p className="line-clamp-1 text-sm font-semibold leading-tight">{track.title}</p>
+          <p className="line-clamp-1 text-xs font-medium text-indigo-200">{track.artist}</p>
         </div>
-        <SkipForward
-          size={25}
-          className="cursor-pointer fill-white text-white hover:fill-gray-100 hover:text-gray-100 active:fill-gray-200 active:text-gray-200"
-          onClick={handleNext}
-        />
+      </div>
+
+      <div className="mt-2 flex items-center justify-evenly">
+        <button
+          type="button"
+          aria-label="Previous track"
+          className="touch-manipulation flex min-h-11 min-w-11 items-center justify-center rounded-full"
+          onClick={() => setIndex((i) => (i - 1 + tracks.length) % tracks.length)}
+        >
+          <SkipBack className="size-5 fill-current" />
+        </button>
+        <button
+          type="button"
+          aria-label={playing ? "Pause" : "Play"}
+          className="touch-manipulation flex min-h-11 min-w-11 items-center justify-center rounded-full"
+          onClick={() => setPlaying((p) => !p)}
+        >
+          {playing ? (
+            <Pause className="size-6 fill-current" />
+          ) : (
+            <Play className="size-6 fill-current" />
+          )}
+        </button>
+        <button
+          type="button"
+          aria-label="Next track"
+          className="touch-manipulation flex min-h-11 min-w-11 items-center justify-center rounded-full"
+          onClick={() => setIndex((i) => (i + 1) % tracks.length)}
+        >
+          <SkipForward className="size-5 fill-current" />
+        </button>
       </div>
     </div>
   );

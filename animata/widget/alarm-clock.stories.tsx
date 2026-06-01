@@ -4,22 +4,28 @@ import AlarmClock from "@/animata/widget/alarm-clock";
 const meta = {
   title: "Widget/Alarm Clock",
   component: AlarmClock,
-  parameters: {
-    layout: "centered",
-  },
+  parameters: { layout: "centered" },
   tags: ["autodocs"],
-  argTypes: {},
 } satisfies Meta<typeof AlarmClock>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Primary: Story = {
+export const WeekdayRoutine: Story = {
+  name: "Weekday routine",
   args: {
     alarms: [
-      { id: 0, time: "7:30 AM", repetition: "Once" },
-      { id: 1, time: "8:00 AM", repetition: "Daily" },
-      { id: 2, time: "9:00 AM", repetition: "Weekdays" },
+      { id: "weekday", time: "6:45 AM", schedule: "Weekdays" },
+      { id: "gym", time: "7:15 AM", schedule: "Mon, Wed, Fri" },
     ],
+    defaultEnabledIds: ["weekday"],
+  },
+};
+
+export const WeekendSleepIn: Story = {
+  name: "Weekend sleep in",
+  args: {
+    alarms: [{ id: "weekend", time: "9:30 AM", schedule: "Sat & Sun" }],
+    defaultEnabledIds: [],
   },
 };

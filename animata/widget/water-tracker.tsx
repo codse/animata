@@ -1,72 +1,80 @@
 "use client";
+
 import { Droplet } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import { cn } from "@/lib/utils";
 
-interface WaterTrackerProps {
-  dailyGoal: number;
-}
+export type WaterTrackerProps = {
+  className?: string;
+  dailyGoal?: number;
+  sipMl?: number;
+  defaultIntake?: number;
+  intake?: number;
+  onIntakeChange?: (ml: number) => void;
+};
 
-export default function WaterTracker({ dailyGoal = 5000 }: WaterTrackerProps) {
-  const [waterIntake, setWaterIntake] = useState(0);
+export default function WaterTracker({
+  className,
+  dailyGoal = 2000,
+  sipMl = 250,
+  defaultIntake = 750,
+  intake: controlledIntake,
+  onIntakeChange,
+}: WaterTrackerProps) {
+  const [internalIntake, setInternalIntake] = useState(defaultIntake);
+  const intake = controlledIntake ?? internalIntake;
+  const atGoal = intake >= dailyGoal;
+  const progress = Math.min(100, (intake / dailyGoal) * 100);
 
-  useEffect(() => {
-    setWaterIntake(1500);
-  }, []);
-
-  const handleAddWater = () => {
-    setWaterIntake((prevIntake) => {
-      if (prevIntake + 250 <= dailyGoal) {
-        return prevIntake + 250;
-      }
-      return prevIntake;
-    });
+  const addWater = () => {
+    if (atGoal) return;
+    const next = Math.min(dailyGoal, intake + sipMl);
+    if (controlledIntake === undefined) {
+      setInternalIntake(next);
+    }
+    onIntakeChange?.(next);
   };
 
-  const progress = (waterIntake / dailyGoal) * 100;
-
   return (
-    <div className={cn("group relative flex size-52 rounded-3xl bg-gray-800")}>
-      <div className="flex flex-1 flex-col p-4">
-        <div className="flex items-center justify-center gap-1">
-          <Droplet className="fill-blue-500 text-blue-500" size={22} />
-          <p className="text-sm font-semibold text-white">Water</p>
+    <div
+      className={cn(
+        "relative flex size-52 overflow-hidden rounded-3xl border border-border bg-card shadow-md",
+        className,
+      )}
+    >
+      <div className="flex min-w-0 flex-1 flex-col p-4">
+        <div className="flex items-center justify-center gap-1.5">
+          <Droplet className="size-5 fill-sky-500 text-sky-500" aria-hidden />
+          <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">Water</p>
         </div>
-        <div className="flex flex-1 flex-col items-center justify-center">
-          <h1 className="text-xl font-bold text-white">{waterIntake}ml</h1>
-          <p className="font-sans text-xs text-gray-400">Today</p>
+        <div className="flex flex-1 flex-col items-center justify-center gap-0.5">
+          <p className="text-2xl font-semibold tabular-nums tracking-tight text-foreground">
+            {intake}
+            <span className="text-sm font-medium text-muted-foreground"> ml</span>
+          </p>
+          <p className="text-xs text-muted-foreground">of {dailyGoal.toLocaleString()} ml today</p>
         </div>
-        <div className="mb-2 flex justify-center">
-          <button
-            onClick={handleAddWater}
-            disabled={waterIntake >= dailyGoal}
-            className={cn(
-              "transform rounded-full bg-linear-to-r px-6 py-2 text-sm font-semibold text-white",
-              {
-                "cursor-not-allowed from-gray-600 to-gray-500 opacity-80": waterIntake >= dailyGoal,
-                "from-blue-500 to-blue-700 transition-transform hover:scale-105 hover:shadow-lg":
-                  waterIntake < dailyGoal,
-              },
-            )}
-          >
-            +250 ml
-          </button>
-        </div>
+        <button
+          type="button"
+          onClick={addWater}
+          disabled={atGoal}
+          className={cn(
+            "touch-manipulation mx-auto min-h-11 rounded-full px-5 text-sm font-semibold transition-transform",
+            atGoal
+              ? "cursor-not-allowed bg-muted text-muted-foreground"
+              : "bg-sky-600 text-white hover:scale-[1.02] active:scale-[0.98]",
+          )}
+        >
+          +{sipMl} ml
+        </button>
       </div>
 
-      <div className="relative flex w-10 flex-col items-end">
-        <div className="absolute bottom-0 right-0 h-full w-10 overflow-hidden rounded-r-3xl border-l-2 border-gray-700 bg-gray-800">
-          <div
-            className={
-              "absolute bottom-0 right-0 w-full bg-linear-to-t from-blue-500 to-blue-700 transition-all duration-100 ease-out"
-            }
-            style={{
-              height: `${progress}%`,
-              "--progress-height": `${progress}%`,
-            }}
-          ></div>
-        </div>
+      <div className="relative w-10 shrink-0 border-l border-border bg-muted/30" aria-hidden>
+        <div
+          className="absolute inset-x-0 bottom-0 bg-linear-to-t from-sky-600 to-sky-400 transition-[height] duration-300 ease-out"
+          style={{ height: `${progress}%` }}
+        />
       </div>
     </div>
   );

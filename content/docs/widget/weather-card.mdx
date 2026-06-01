@@ -1,10 +1,14 @@
 ---
 title: Weather Card
-description: A cool weather widget
+description: Current temperature, feels-like, and today’s high/low for any city.
 author: AdashBaral
 ---
 
-<ComponentPreview name="widget-weather-card--primary" />
+<ComponentPreview name="widget-weather-card--tokyo-morning" />
+
+## How it works
+
+All content is props — `city`, `temperature`, `feelsLike`, `high`, `low` — wired to your weather API in the parent. Typography uses three levels: city label, hero degree, and footer hi/lo. The card uses theme tokens so light and dark modes stay legible without custom hex per theme.
 
 ## Installation
 
@@ -17,7 +21,10 @@ author: AdashBaral
 <Steps>
 
 <Step>Install dependencies</Step>
-```bash npm install lucide-react ```
+
+```bash
+npm install lucide-react
+```
 
 <Step>Run the following command</Step>
 

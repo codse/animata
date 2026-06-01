@@ -1,11 +1,15 @@
 ---
 title: Alarm Clock
-description: It is a alarm clock
+description: Toggle one or two alarms on a compact card — built for a morning routine glance.
 labels: ["requires interaction", "toggle"]
 author: Sumingurung9
 ---
 
-<ComponentPreview name="widget-alarm-clock--primary" />
+<ComponentPreview name="widget-alarm-clock--weekday-routine" />
+
+## How it works
+
+Each entry in `alarms` needs `time`, `schedule`, and a stable `id` for toggle state. `defaultEnabledIds` sets which alarms start on. The list is capped at two rows so the tile stays readable; add more alarms in your app screen, not on the widget.
 
 ## Installation
 

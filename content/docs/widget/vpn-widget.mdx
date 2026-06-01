@@ -1,10 +1,14 @@
 ---
 title: VPN Connection
-description: Shows the Vpn Connectivity
+description: See server, speed, and connection status at a glance — with a slide-to-connect control.
 labels: ["requires interaction", "click"]
 ---
 
-<ComponentPreview name="widget-vpn-widget--primary" />
+<ComponentPreview name="widget-vpn-widget--connected" />
+
+## How it works
+
+`serverName`, `latency`, and `downloadMbps` are display-only. Connection state is uncontrolled (`defaultConnected`) or controlled (`connected` + `onConnectedChange`). The toggle is a real `role="switch"` button with a 44px hit area, not a hover-only chip.
 
 ## Installation
 
@@ -15,10 +19,13 @@ labels: ["requires interaction", "click"]
 ### Manual
 
 <Steps>
+
 <Step>Install dependencies</Step>
+
 ```bash
 npm install lucide-react
 ```
+
 <Step>Run the following command</Step>
 
 It will create a new file called `vpn-widget.tsx` inside the `components/animata/widget` directory.

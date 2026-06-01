@@ -1,106 +1,118 @@
 "use client";
+
 import { FlagIcon, ShieldBan, ShieldCheck } from "lucide-react";
 import { useState } from "react";
 
 import { cn } from "@/lib/utils";
 
-interface SlidingButtonProps {
-  initialConnected?: boolean;
+type SlidingButtonProps = {
+  connected: boolean;
+  onConnectedChange: (connected: boolean) => void;
   className?: string;
-}
+};
 
-interface VpnConnectionProps {
-  userName?: string;
-  latency?: string;
-  netSpeed?: string;
-  className?: string;
-  defaultConnected?: boolean;
-}
-
-function SlidingButton({ initialConnected = false, className }: SlidingButtonProps) {
-  const [connected, setConnected] = useState(initialConnected);
-
+function SlidingButton({ connected, onConnectedChange, className }: SlidingButtonProps) {
   return (
-    <div
+    <button
+      type="button"
+      role="switch"
+      aria-checked={connected}
       className={cn(
-        "relative flex w-full cursor-pointer items-center justify-between overflow-hidden rounded-2xl bg-gray-200/75 transition-colors",
+        "touch-manipulation relative flex min-h-11 w-full items-center justify-between overflow-hidden rounded-2xl bg-muted transition-colors",
         className,
       )}
-      onClick={() => setConnected(!connected)}
+      onClick={() => onConnectedChange(!connected)}
     >
-      <div className="flex h-12 w-8 items-center justify-center">
-        <div
-          className={cn("h-3 w-3 rounded-full bg-red-500 transition-opacity", {
-            "opacity-0 duration-300": connected,
+      <span className="flex h-11 w-8 items-center justify-center" aria-hidden>
+        <span
+          className={cn("size-2.5 rounded-full bg-red-500 transition-opacity", {
+            "opacity-0": connected,
             "opacity-100": !connected,
           })}
         />
-      </div>
-      <div
+      </span>
+      <span
         className={cn(
-          "absolute z-10 flex h-11 w-36 flex-1 flex-col items-center justify-center rounded-[14px] bg-white py-2 transition-colors duration-200 ease-in-out hover:bg-gray-50/95 active:bg-gray-50/70",
-          {
-            "left-0.5": connected,
-            "left-[34px]": !connected,
-          },
+          "absolute z-10 flex h-10 w-[8.75rem] flex-col items-center justify-center rounded-[14px] bg-background py-1 shadow-sm transition-[left] duration-200 ease-out",
+          connected ? "left-0.5" : "left-[34px]",
         )}
       >
-        <strong className="select-none text-sm text-black">
+        <span className="text-sm font-semibold text-foreground">
           {connected ? "Connected" : "Disconnected"}
-        </strong>
+        </span>
         <span
-          className={cn("-mt-1 inline-flex select-none items-center gap-1 text-xs font-semibold", {
-            "text-blue-700/50": connected,
-            "text-red-700/50": !connected,
+          className={cn("inline-flex items-center gap-1 text-xs font-medium", {
+            "text-sky-700 dark:text-sky-400": connected,
+            "text-red-700 dark:text-red-400": !connected,
           })}
         >
-          {connected ? <ShieldCheck size={12} /> : <ShieldBan size={12} />}
-          {connected ? "Secured" : "Not Secured"}
+          {connected ? <ShieldCheck size={12} aria-hidden /> : <ShieldBan size={12} aria-hidden />}
+          {connected ? "Secured" : "Not secured"}
         </span>
-      </div>
-      <div className="flex h-12 w-8 items-center justify-center">
-        <div
-          className={cn("h-3 w-3 rounded-full bg-green-500 transition-opacity", {
-            "opacity-0 duration-300": !connected,
-            "opacity-100 group-hover/vpn:animate-pulse": connected,
+      </span>
+      <span className="flex h-11 w-8 items-center justify-center" aria-hidden>
+        <span
+          className={cn("size-2.5 rounded-full bg-emerald-500 transition-opacity", {
+            "opacity-0": !connected,
+            "opacity-100": connected,
           })}
         />
-      </div>
-    </div>
+      </span>
+    </button>
   );
 }
 
+export type VpnConnectionProps = {
+  className?: string;
+  serverName?: string;
+  latency?: string;
+  downloadMbps?: string;
+  defaultConnected?: boolean;
+  connected?: boolean;
+  onConnectedChange?: (connected: boolean) => void;
+};
+
 export default function VpnConnection({
-  userName = "Animata",
-  latency = "53ms",
-  netSpeed = "57.4",
   className,
+  serverName = "Tokyo",
+  latency = "53 ms",
+  downloadMbps = "57.4",
   defaultConnected = false,
+  connected: controlledConnected,
+  onConnectedChange,
 }: VpnConnectionProps) {
+  const [internalConnected, setInternalConnected] = useState(defaultConnected);
+  const connected = controlledConnected ?? internalConnected;
+
+  const setConnected = (next: boolean) => {
+    if (controlledConnected === undefined) {
+      setInternalConnected(next);
+    }
+    onConnectedChange?.(next);
+  };
+
   return (
     <div className={className}>
-      <div className={cn("group/vpn flex size-52 flex-col rounded-3xl bg-blue-900 p-0.5")}>
-        <div className="flex items-center gap-2 px-4 pb-2 pt-4">
-          <FlagIcon size={24} className="fill-yellow-500 text-yellow-500" />
-          <h3 className={cn("text-xl font-semibold tracking-wide text-yellow-500")}>{userName}</h3>
+      <div className="flex size-52 flex-col rounded-3xl border border-sky-900/30 bg-sky-950 p-0.5 shadow-md">
+        <div className="flex items-center gap-2 px-3 pb-1.5 pt-3">
+          <FlagIcon className="size-5 fill-amber-400 text-amber-400" aria-hidden />
+          <p className="truncate text-sm font-semibold tracking-tight text-amber-400">
+            {serverName}
+          </p>
         </div>
-        <div
-          className={cn("group/vpn flex w-full flex-1 flex-col gap-1 rounded-[22px] bg-white p-3")}
-        >
-          <div
-            className={cn(
-              "inline-flex max-w-fit items-center justify-center gap-1 rounded-xl bg-green-100 px-2 text-sm font-semibold",
-            )}
-          >
-            <div className="animate-sl h-2 w-2 animate-pulse rounded-full bg-green-500" />
-            <h6 className="text-green-600">{latency}</h6>
+        <div className="flex min-h-0 flex-1 flex-col gap-2 rounded-[22px] bg-background p-3">
+          <div className="inline-flex max-w-fit items-center gap-1.5 rounded-lg bg-emerald-500/15 px-2 py-0.5">
+            <span className="size-2 animate-pulse rounded-full bg-emerald-500" aria-hidden />
+            <span className="text-xs font-medium tabular-nums text-emerald-700 dark:text-emerald-400">
+              {latency}
+            </span>
           </div>
-          <h2 className={cn("mt-2 text-4xl font-semibold text-zinc-900")}>
-            {netSpeed}
-            <sup className={cn("font-bold tracking-tighter text-gray-700/50")}>mb</sup>
-          </h2>
+          <p className="text-3xl font-semibold tabular-nums tracking-tight text-foreground">
+            {downloadMbps}
+            <span className="ml-0.5 text-sm font-medium text-muted-foreground">Mbps</span>
+          </p>
           <div className="mt-auto">
-            <SlidingButton initialConnected={defaultConnected} />
+            <SlidingButton connected={connected} onConnectedChange={setConnected} />
           </div>
         </div>
       </div>

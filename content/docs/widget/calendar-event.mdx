@@ -1,10 +1,23 @@
 ---
 title: Calendar event
-description: Calendar event widget
+description: Show today’s date plus the next events — built for a calendar home-screen widget.
 author: Sumin Gurung
 ---
 
-<ComponentPreview name="widget-calendar-event--primary" />
+<ComponentPreview name="widget-calendar-event--workday-glance" />
+
+## How it works
+
+Pass an `events` array with `title`, `time`, and optional `variant` (`violet`, `cyan`, `emerald`, `amber`, `rose`) for chip colors. `maxVisible` controls how many rows fit before a “+N more” footer. Override `date` when you are not showing “today”.
+
+```tsx
+<CalendarEvent
+  events={[
+    { title: "Design critique", time: "10:00 – 10:45", variant: "violet" },
+    { title: "Lunch", time: "12:30 – 1:15", variant: "cyan" },
+  ]}
+/>
+```
 
 ## Installation
 
@@ -15,6 +28,7 @@ author: Sumin Gurung
 ### Manual
 
 <Steps>
+
 <Step>Run the following command</Step>
 
 It will create a new file called `calendar-event.tsx` inside the `components/animata/widget` directory.

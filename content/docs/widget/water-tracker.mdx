@@ -1,11 +1,15 @@
 ---
 title: Water Tracker
-description: Water tracker
+description: Track daily water intake with a glanceable fill bar and one-tap top-ups.
 labels: ["requires interaction", "click"]
 author: Sumingurung9
 ---
 
-<ComponentPreview name="widget-water-tracker--primary" />
+<ComponentPreview name="widget-water-tracker--morning-start" />
+
+## How it works
+
+`dailyGoal` and `sipMl` set the target and increment size. Use `defaultIntake` for an uncontrolled demo, or `intake` with `onIntakeChange` when your app owns hydration state. The right edge is a CSS height transition — no chart library — so the tile stays lightweight for bento grids.
 
 ## Installation
 
@@ -16,6 +20,7 @@ author: Sumingurung9
 ### Manual
 
 <Steps>
+
 <Step>Install dependencies</Step>
 
 ```bash
