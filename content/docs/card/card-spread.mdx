@@ -1,7 +1,8 @@
 ---
 title: Card Spread
-description: A stack of cards that will reveal on hover and spread on click.
-author: YourTwitterUsername
+description: A stacked deck of widget cards with a subtle hover peek and a click-to-spread throw animation.
+author: sudhashrestha
+labels: ["requires interaction", "click", "hover"]
 ---
 
 <ComponentPreview name="card-card-spread--primary" />
@@ -32,6 +33,18 @@ Open the newly created file and paste the following code:
 ```
 
 </Steps>
+
+## Usage
+
+The stack has three states:
+
+1. **Deck** — all cards share one origin (transform-only, no absolute fan layout).
+2. **Hover** — a light vertical peek on the outer layer; spread motion is unchanged.
+3. **Click** — cards throw into their spread positions with a custom `--ease-throw` curve; collapse uses a separate ease-out gather.
+
+Toggle with click or <kbd>Enter</kbd> / <kbd>Space</kbd> when the stage is focused. The demo composes Notes, Shopping List, and related widget cards — swap in your own `w-48` tiles as needed.
+
+Motion is CSS-only: an inner wrapper handles spread/collapse; an outer wrapper handles hover peek so the two never fight for `transform`.
 
 ## Credits
 
