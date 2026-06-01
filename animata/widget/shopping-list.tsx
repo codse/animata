@@ -65,7 +65,9 @@ export default function ShoppingList({
         className,
       )}
     >
-      <p className="shrink-0 p-4 text-[15px] font-semibold leading-snug text-foreground">{title}</p>
+      <p className="shrink-0 p-4 pb-2 text-[15px] font-semibold leading-snug text-foreground">
+        {title}
+      </p>
 
       <ul className="px-4 pb-4 flex min-h-0 flex-1 flex-col gap-0.5 overflow-y-auto">
         {rows.map((item) => (
@@ -73,7 +75,7 @@ export default function ShoppingList({
             <button
               type="button"
               onClick={() => toggle(item.id)}
-              className="touch-manipulation flex min-h-11 w-full items-center gap-2.5 rounded-md py-1.5 text-left"
+              className="touch-manipulation flex min-h-11 w-full items-center gap-2.5 rounded-md py-0.5 text-left"
             >
               <span
                 className={cn(

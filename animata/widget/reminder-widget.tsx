@@ -48,7 +48,7 @@ export default function ReminderWidget({
         className,
       )}
     >
-      <div className="flex p-4 shrink-0 items-center justify-between gap-2">
+      <div className="flex p-4 pb-2 shrink-0 items-center justify-between gap-2">
         <div className="flex min-w-0 items-center gap-2">
           <Bell className="size-[15px] shrink-0 text-sky-500" strokeWidth={2} aria-hidden />
           <p className="truncate text-[15px] font-semibold leading-snug text-foreground">{title}</p>
