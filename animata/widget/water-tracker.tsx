@@ -39,28 +39,32 @@ export default function WaterTracker({
   return (
     <div
       className={cn(
-        "relative flex size-52 overflow-hidden rounded-3xl border border-border bg-card shadow-md",
+        "relative flex size-52 overflow-hidden rounded-3xl border border-border bg-card font-sans shadow-md",
         className,
       )}
     >
       <div className="flex min-w-0 flex-1 flex-col p-4">
-        <div className="flex items-center justify-center gap-1.5">
-          <Droplet className="size-5 fill-sky-500 text-sky-500" aria-hidden />
-          <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">Water</p>
+        <div className="flex shrink-0 items-center gap-1.5">
+          <Droplet className="size-[15px] fill-sky-500 text-sky-500" aria-hidden />
+          <p className="text-[15px] font-semibold leading-none text-foreground">Water</p>
         </div>
-        <div className="flex flex-1 flex-col items-center justify-center gap-0.5">
-          <p className="text-2xl font-semibold tabular-nums tracking-tight text-foreground">
-            {intake}
-            <span className="text-sm font-medium text-muted-foreground"> ml</span>
+
+        <div className="mt-3 flex flex-col gap-1">
+          <p className="text-[22px] font-normal leading-none tabular-nums tracking-tight text-foreground">
+            {intake.toLocaleString()}
+            <span className="text-[13px] font-medium text-muted-foreground"> ml</span>
           </p>
-          <p className="text-xs text-muted-foreground">of {dailyGoal.toLocaleString()} ml today</p>
+          <p className="text-[13px] leading-none text-muted-foreground">
+            of {dailyGoal.toLocaleString()} ml today
+          </p>
         </div>
+
         <button
           type="button"
           onClick={addWater}
           disabled={atGoal}
           className={cn(
-            "touch-manipulation mx-auto min-h-11 rounded-full px-5 text-sm font-semibold transition-transform",
+            "touch-manipulation mt-auto min-h-11 w-full rounded-full text-[15px] font-medium leading-none transition-transform",
             atGoal
               ? "cursor-not-allowed bg-muted text-muted-foreground"
               : "bg-sky-600 text-white hover:scale-[1.02] active:scale-[0.98]",

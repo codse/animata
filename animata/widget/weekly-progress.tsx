@@ -2,44 +2,71 @@ import { BookOpen } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
-export default function WeeklyProgress() {
-  const days = ["M", "T", "W", "TH", "F", "S", "SU"];
+export type WeeklyProgressProps = {
+  className?: string;
+  author?: string;
+  title?: string;
+  percent?: number;
+};
+
+const DAYS = ["M", "T", "W", "TH", "F", "S", "SU"] as const;
+
+export default function WeeklyProgress({
+  className,
+  author = "Chris Dixon",
+  title = "Read Write Own",
+  percent = 30,
+}: WeeklyProgressProps) {
   return (
-    <div className={cn("group size-52 rounded-3xl bg-amber-100 p-4")}>
-      <div>
-        <p className="text-sm font-semibold text-gray-500">Chris Dixon</p>
-        <p className="text-lg font-bold text-black">Read Write Own</p>
+    <div
+      className={cn(
+        "flex size-52 flex-col rounded-3xl border border-border bg-amber-50 p-4 font-sans shadow-md dark:bg-amber-950/40",
+        className,
+      )}
+    >
+      <div className="shrink-0">
+        <p className="text-[13px] leading-none text-muted-foreground">{author}</p>
+        <p className="mt-1 text-[15px] font-semibold leading-snug text-foreground">{title}</p>
       </div>
-      <div className="mt-1 inline-flex items-center justify-around gap-2 rounded-full border-2 border-gray-300 px-2 py-1">
-        <BookOpen size={20} fill="orange" color="orange" className="top-4" />
-        <p className="text-sm font-bold text-black">30%</p>
+
+      <div className="mt-2 inline-flex w-fit items-center gap-2 rounded-full border border-border bg-background/60 px-2.5 py-1.5">
+        <BookOpen
+          className="size-4 text-amber-600 dark:text-amber-400"
+          strokeWidth={2}
+          aria-hidden
+        />
+        <p className="text-[13px] font-medium tabular-nums leading-none text-foreground">
+          {percent}%
+        </p>
       </div>
-      <div className="mt-2 flex flex-wrap justify-center">
-        {days.map((day, index) => (
+
+      <div className="mt-2 flex flex-wrap justify-start gap-0.5">
+        {DAYS.map((day, index) => (
           <svg
-            key={index}
-            width="42"
-            height="42"
+            key={day}
+            width="40"
+            height="40"
             viewBox="-25 -25 250 250"
-            version="1.1"
             xmlns="http://www.w3.org/2000/svg"
+            className="shrink-0"
             style={{ transform: "rotate(-90deg)" }}
+            aria-hidden
           >
             <circle
               r="90"
               cx="100"
               cy="100"
               fill="transparent"
-              stroke="#e0e0e0"
+              className="stroke-border"
               strokeWidth="16px"
               strokeDasharray="565.48px"
               strokeDashoffset="0"
-            ></circle>
+            />
             <circle
               r="90"
               cx="100"
               cy="100"
-              stroke="#ff8040"
+              className="stroke-amber-500"
               strokeWidth="16px"
               strokeLinecap="round"
               fill="transparent"
@@ -55,10 +82,9 @@ export default function WeeklyProgress() {
               />
             </circle>
             <text
-              className="text-6xl font-bold"
+              className="fill-foreground text-[56px] font-medium"
               x="100px"
               y="105px"
-              fill="black"
               dominantBaseline="middle"
               textAnchor="middle"
               style={{ transform: "rotate(90deg) translate(0px, -196px)" }}
