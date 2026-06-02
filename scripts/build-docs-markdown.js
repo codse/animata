@@ -59,8 +59,54 @@ function resolveSourceBlocks(mdx) {
   });
 }
 
+function readJsxAttr(attrs, name) {
+  const quoted = attrs.match(new RegExp(`\\b${name}=(?:"([^"]*)"|'([^']*)')`));
+  if (quoted) return quoted[1] ?? quoted[2] ?? "";
+  if (new RegExp(`\\b${name}\\b`).test(attrs) && !attrs.includes(`${name}=`)) return true;
+  return undefined;
+}
+
+function escapeTableCell(value) {
+  return String(value).replace(/\|/g, "\\|").replace(/\n+/g, " ").trim();
+}
+
+function serializePropsTableBlock(_match, title, body) {
+  const rows = [];
+  const rowRe = /<PropsTable\.Row\s+([^>]+)>\s*([\s\S]*?)\s*<\/PropsTable\.Row>/g;
+  for (const rowMatch of body.matchAll(rowRe)) {
+    const attrs = rowMatch[1];
+    const description = rowMatch[2].trim();
+    const prop = readJsxAttr(attrs, "prop");
+    const type = readJsxAttr(attrs, "type");
+    const required = readJsxAttr(attrs, "required") === true;
+    const defaultValue = readJsxAttr(attrs, "default");
+
+    let defaultCell = "—";
+    if (required) defaultCell = "Required";
+    else if (defaultValue !== undefined && defaultValue !== "") defaultCell = `\`${defaultValue}\``;
+
+    rows.push(
+      `| \`${escapeTableCell(prop)}\` | \`${escapeTableCell(type)}\` | ${defaultCell} | ${escapeTableCell(description)} |`,
+    );
+  }
+
+  if (rows.length === 0) return "";
+
+  const header = title ? `### ${title}\n\n` : "";
+  return `${header}| Prop | Type | Default | Description |
+|---|---|---|---|
+${rows.join("\n")}`;
+}
+
+function serializePropsTables(mdx) {
+  return mdx.replace(
+    /<PropsTable(?:\s+title="([^"]*)")?\s*>([\s\S]*?)<\/PropsTable>/g,
+    serializePropsTableBlock,
+  );
+}
+
 function stripJsx(mdx, { siteUrl }) {
-  return mdx
+  const stripped = mdx
     .replace(/<ComponentPreview[^/>]*\/>/g, "")
     .replace(
       /<RegistryInstall\s+category="([^"]+)"\s+name="([^"]+)"\s*\/>/g,
@@ -69,7 +115,9 @@ function stripJsx(mdx, { siteUrl }) {
     .replace(/<Step>([\s\S]*?)<\/Step>/g, "**$1**")
     .replace(/<Steps>\s*/g, "")
     .replace(/\s*<\/Steps>/g, "")
-    .replace(/\{" "\}/g, " ")
+    .replace(/\{" "\}/g, " ");
+
+  return serializePropsTables(stripped)
     .replace(/\n{3,}/g, "\n\n")
     .trim();
 }
