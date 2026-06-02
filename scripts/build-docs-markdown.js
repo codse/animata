@@ -67,7 +67,7 @@ function readJsxAttr(attrs, name) {
 }
 
 function escapeTableCell(value) {
-  return String(value).replace(/\|/g, "\\|").replace(/\n+/g, " ").trim();
+  return String(value).replace(/\\/g, "\\\\").replace(/\|/g, "\\|").replace(/\n+/g, " ").trim();
 }
 
 function serializePropsTableBlock(_match, title, body) {
@@ -83,7 +83,8 @@ function serializePropsTableBlock(_match, title, body) {
 
     let defaultCell = "—";
     if (required) defaultCell = "Required";
-    else if (defaultValue !== undefined && defaultValue !== "") defaultCell = `\`${defaultValue}\``;
+    else if (defaultValue !== undefined && defaultValue !== "")
+      defaultCell = `\`${escapeTableCell(defaultValue)}\``;
 
     rows.push(
       `| \`${escapeTableCell(prop)}\` | \`${escapeTableCell(type)}\` | ${defaultCell} | ${escapeTableCell(description)} |`,
