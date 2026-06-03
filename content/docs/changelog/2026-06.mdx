@@ -1,23 +1,17 @@
 ---
 title: June 2026
-description: Stacked Sections scroll deck, widget glance polish, Card Spread and Collab Card, and catalog cleanup.
+description: Stacked Sections, widget glance polish, Card Spread and Collab Card, and catalog cleanup.
 date: 2026-06-01
 ---
 
-Added Stacked Sections, a scroll primitive for pinned chapter decks. Wave 1 widgets got Apple-style type hierarchy and props-driven demos. Card Spread was rebuilt for deck, peek, and throw-on-click motion. Four oversized widgets left the public catalog, and the internal widget standards doc was removed from contributing.
+Added Stacked Sections for pinned chapter scroll stories. Wave 1 widgets got Apple-style type hierarchy and props-driven demos. Card Spread was rebuilt for deck, peek, and throw-on-click motion. Four oversized widgets left the public catalog, and the internal widget standards doc was removed from contributing.
 
 ## New components
 
 <ChangeLogComponents>
   <ChangeLogEntry href="/docs/scroll/stacked-sections">
     <h3>Stacked Sections</h3>
-    <p>
-      Composable sticky deck — each direct child pins in a shared flex column, prior panes peek as color bands via{" "}
-      <code>stackOffset</code>, and an in-flow runway spacer keeps the last chapter pinned through the outro. Optional
-      rAF cover scale on scroll; respects <code>prefers-reduced-motion</code>. Use for product release pages, manifestos,
-      and any linear story split into a few full-bleed beats. Includes a Plane-style spring-release demo at{" "}
-      <code>/demo/scroll/stacked-sections-demo-001</code>.
-    </p>
+    <p>Sticky chapter deck — each pane pins and stacks with a peek strip. Built for release pages and scroll-driven product stories.</p>
   </ChangeLogEntry>
 </ChangeLogComponents>
 
