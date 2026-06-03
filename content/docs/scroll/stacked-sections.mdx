@@ -1,0 +1,103 @@
+---
+title: Stacked Sections
+description: A vertical deck primitive that pins each child as a sticky pane, leaving a thin strip of the one before visible above — a true stack of cards.
+labels: ["new", "scroll", "requires interaction"]
+---
+
+<ComponentPreview name="scroll-stacked-sections--primary" />
+
+## Installation
+
+### CLI
+
+<RegistryInstall category="scroll" name="stacked-sections" />
+
+### Manual
+
+<Steps>
+
+<Step>Run the following command</Step>
+
+It will create a new file called `stacked-sections.tsx` inside the `components/animata/scroll` directory.
+
+```bash
+mkdir -p components/animata/scroll && touch components/animata/scroll/stacked-sections.tsx
+```
+
+<Step>Paste the code</Step>
+
+Open the newly created file and paste the following code:
+
+```jsx file=<rootDir>/animata/scroll/stacked-sections.tsx
+
+```
+
+</Steps>
+
+## Usage
+
+`StackedSections` is a thin primitive. Each direct child becomes one card in the deck; palette, copy, and layout are yours.
+
+```jsx
+<StackedSections stackOffset={48}>
+  <MyFirstChapter />
+  <MySecondChapter />
+  <MyThirdChapter />
+</StackedSections>
+```
+
+## How it works
+
+This mirrors the [CSS stacking-cards demo](https://scroll-driven-animations.style/demos/stacking-cards/css/):
+
+```text
+[data-stacked-deck]          ← flex column; handoff padding + in-flow scrollRunway spacer
+  [data-stacked-card]        ← position: sticky; top: 0; padding-top: index × offset
+    [data-stacked-content]   ← scale while the next card rises; frozen once it has pinned
+      {your chapter}
+```
+
+1. **Deck (`#cards`).** A single flex column — all cards are siblings so each `position: sticky` shares the deck as its scroll range (earlier cards stay pinned while later ones stack on top). `padding-bottom: numcards × stackOffset` handles stack handoff; an in-flow `[data-stacked-runway]` spacer (height = `scrollRunway`) extends that range so the last pane does not scroll away early.
+2. **Card (`.card`).** `position: sticky`, `top: 0`, and `padding-top: calc(var(--index) × offset)` so each pane pins at the same edge but peeks below the previous (`--index` is 1-based, like the reference).
+3. **Content (`.card__content`).** Transform runs here so scroll height stays honest. While the next card rises into its pin, scale interpolates toward `scale(calc(1.1 - 0.1 × reverse-index))`. Once the next card has stuck, that pane's scale **locks** — it does not keep animating when you scroll through runway padding.
+4. **Why not deck-level scroll-driven CSS?** Tying every card to one `view-timeline` `exit-crossing` slice re-animated covered panes after they had already pinned. Per-pane freeze on cover matches the stacking-cards intent more reliably.
+
+## When to use
+
+Use this for narrative pages with a handful of distinct chapters — a curated reading list, a multi-act feature story, an editorial release page, an "about" or manifesto split into themes. The deck-stacking gesture turns ordinary scrolling into a reveal where every previous chapter's strip remains visible as the next one pins on top.
+
+## When not to use
+
+- For more than about five panes. A deeper deck makes the lower panes invisible for too long.
+- When the panes aren't visually distinct — if every chapter is the same colour, the stacking gesture has nothing to dramatise.
+- As a primary navigation pattern. Readers can't easily jump between panes; the deck is meant for linear scrolling.
+
+## Props
+
+<PropsTable>
+  <PropsTable.Row prop="children" type="React.ReactNode">
+    One card per direct child. Fragments are flattened.
+  </PropsTable.Row>
+  <PropsTable.Row prop="withDramaEffect" type="boolean" default="true">
+    Scale covered panes on the inner content layer while the next card pins. Disable for sticky-only.
+  </PropsTable.Row>
+  <PropsTable.Row prop="stackOffset" type="number" default="48">
+  Pixels per 1-based index for each card's `padding-top` stagger (peek band). Set to `0` for a flush stack.
+  </PropsTable.Row>
+  <PropsTable.Row prop="paneGap" type="false | string" default="gap-2">
+    Tailwind `gap-*` classes on the deck flex column. Pass `false` to disable.
+  </PropsTable.Row>
+  <PropsTable.Row prop="scrollRunway" type="string" default="0px">
+    Height of the in-flow runway spacer after the last card. Use in boxed scrollers so the final pane stays pinned — e.g. `min(75vh, 32rem)` in Storybook.
+  </PropsTable.Row>
+  <PropsTable.Row prop="className" type="string">
+    Forwarded to the deck wrapper.
+  </PropsTable.Row>
+</PropsTable>
+
+## Accessibility
+
+- Use real headings (`<h2>`) inside each pane — the primitive doesn't impose structure.
+- If a pane carries links, render them as `<a>` elements with palette-tinted focus rings.
+- No scroll hijacking — a passive scroll listener drives the optional cover scale only.
+- `prefers-reduced-motion` disables the scale animation; cards still pin.

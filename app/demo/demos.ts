@@ -89,6 +89,21 @@ export const DEMO_GROUPS: DemoGroup[] = [
       },
     ],
   },
+  {
+    slug: "scroll",
+    label: "Scroll",
+    title: "Scroll layouts",
+    phrase: "Product release scroll — chapters pin and stack like a quarterly ship note.",
+    themeColor: "#e8eaef",
+    items: [
+      {
+        slug: "stacked-sections-demo-001",
+        label: "Plane · spring release",
+        themeColor: "#e8eaef",
+        ...lazyDemo(() => import("./library/scroll/stacked-sections-demo-001")),
+      },
+    ],
+  },
 ];
 
 export type DemoItemWithGroup = DemoItem & { group: DemoGroup };

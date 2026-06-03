@@ -3740,4 +3740,851 @@ export default function PhotographerPortfolio() {
 <span class="line"></span></code></pre>`,
     },
   ],
+  "scroll/stacked-sections-demo-001": [
+    {
+      name: "stacked-sections-demo-001.tsx",
+      path: "app/demo/library/scroll/stacked-sections-demo-001.tsx",
+      language: "tsx",
+      code: `"use client";
+
+import type { ReactNode } from "react";
+import { Inter, Space_Grotesk } from "next/font/google";
+
+import StackedSections from "@/animata/scroll/stacked-sections";
+import { cn } from "@/lib/utils";
+
+import { StackedSectionsDemo001Notes } from "./stacked-sections-demo-001-notes";
+
+/** PickFont — Tech + Minimal (Space Grotesk + Inter): https://pickfont.com */
+const display = Space_Grotesk({
+  subsets: ["latin"],
+  weight: ["500", "600", "700"],
+  variable: "--font-display",
+  display: "swap",
+});
+
+const sans = Inter({
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+  variable: "--font-sans",
+  display: "swap",
+});
+
+/** Peek band when the next pane covers this one — no eyebrow strip, just color + type */
+const STACK_OFFSET = 40;
+
+const PAD_X = "px-6 sm:px-8";
+const PAD_Y = "py-8 sm:py-9";
+
+const typeDisplay = "font-(family-name:--font-display) font-semibold tracking-[-0.04em]";
+const typeCopy = "font-(family-name:--font-sans) font-medium tracking-[-0.01em]";
+const typeBody = "font-(family-name:--font-sans) font-normal tracking-normal";
+
+const light = {
+  bg: "bg-[#f4f5f8] text-[#0f1011]",
+  muted: "text-[#0f1011]/72",
+  panel: "border-[#0f1011]/10 bg-white/80",
+  accent: "bg-[#5e6ad2] text-white",
+  accentMuted: "bg-[#5e6ad2]/12 text-[#4a52a8]",
+  dot: "bg-[#5e6ad2]",
+};
+
+const dark = {
+  bg: "bg-[#0f1011] text-[#eeeef0]",
+  muted: "text-[#eeeef0]/72",
+  panel: "border-[#eeeef0]/12 bg-[#1a1b1e]",
+  accent: "bg-[#8b93ff] text-[#0f1011]",
+  accentMuted: "bg-[#8b93ff]/14 text-[#b4b9ff]",
+  dot: "bg-[#8b93ff]",
+};
+
+type Tone = typeof light;
+
+function ReleaseChapter({
+  title,
+  lead,
+  body,
+  tone,
+  children,
+}: {
+  title: string;
+  lead: string;
+  body: string;
+  tone: Tone;
+  children?: ReactNode;
+}) {
+  return (
+    <section
+      className={cn("flex w-full shrink-0 flex-col overflow-hidden rounded-2xl", tone.bg)}
+    >
+      <div className={cn("flex flex-col gap-6", PAD_X, PAD_Y)}>
+        <div className="flex flex-col gap-2.5">
+          <h2
+            className={cn(
+              typeDisplay,
+              "text-[clamp(1.75rem,7vw,2.75rem)] leading-[1.05] tracking-[-0.03em]",
+            )}
+          >
+            {title}
+          </h2>
+          <p className={cn("text-[15px] leading-snug", typeBody, tone.muted)}>{lead}</p>
+          <p className={cn("max-w-prose text-sm leading-[1.65]", typeBody, tone.muted)}>{body}</p>
+        </div>
+        {children}
+      </div>
+    </section>
+  );
+}
+
+function ScatteredTools({ tone }: { tone: Tone }) {
+  const rows = [
+    { label: "Standup notes", where: "Slack thread" },
+    { label: "Cycle scope", where: "Spreadsheet" },
+    { label: "Customer ask", where: "Email" },
+  ];
+  return (
+    <div className={cn("flex flex-col gap-2 rounded-xl border p-3", tone.panel)}>
+      {rows.map((row) => (
+        <div
+          key={row.label}
+          className="flex items-center justify-between gap-3 rounded-lg bg-black/[0.03] px-3 py-2.5 dark:bg-white/[0.04]"
+        >
+          <span className={cn("text-sm", typeCopy)}>{row.label}</span>
+          <span className={cn("text-xs", typeBody, tone.muted)}>{row.where}</span>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function CycleBoard({ tone }: { tone: Tone }) {
+  const lanes = [
+    { name: "Backlog", fill: 28 },
+    { name: "In progress", fill: 62 },
+    { name: "Review", fill: 44 },
+    { name: "Done", fill: 91 },
+  ];
+  return (
+    <div className={cn("rounded-xl border p-4", tone.panel)}>
+      <p className={cn("mb-3 text-xs", typeCopy, tone.muted)}>Cycle · Apr 7 → Apr 21</p>
+      <div className="flex flex-col gap-3">
+        {lanes.map((lane) => (
+          <div key={lane.name} className="flex items-center gap-3">
+            <span className={cn("w-24 shrink-0 text-xs", typeBody, tone.muted)}>{lane.name}</span>
+            <div className="h-2 flex-1 overflow-hidden rounded-full bg-black/8 dark:bg-white/10">
+              <div
+                className={cn("h-full rounded-full", tone.dot)}
+                style={{ width: \`\${lane.fill}%\` }}
+              />
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function RequestInbox({ tone }: { tone: Tone }) {
+  const items = [
+    { title: "Export audit log to S3", votes: 48 },
+    { title: "Guest role for contractors", votes: 31 },
+    { title: "Slack → issue from reaction", votes: 27 },
+  ];
+  return (
+    <ul className={cn("flex flex-col gap-2 rounded-xl border p-3", tone.panel)}>
+      {items.map((item) => (
+        <li
+          key={item.title}
+          className="flex items-start justify-between gap-3 rounded-lg px-3 py-2.5"
+        >
+          <span className={cn("text-sm leading-snug", typeCopy)}>{item.title}</span>
+          <span
+            className={cn(
+              "shrink-0 rounded-md px-2 py-0.5 text-[11px] tabular-nums",
+              typeCopy,
+              tone.accentMuted,
+            )}
+          >
+            {item.votes}
+          </span>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+function WorkspaceCta({ tone }: { tone: Tone }) {
+  return (
+    <div className={cn("flex flex-col gap-3 rounded-xl border p-4", tone.panel)}>
+      <div className="flex items-center gap-3">
+        <span className={cn("flex size-10 items-center justify-center rounded-lg text-sm font-bold", tone.accent)}>
+          P
+        </span>
+        <div>
+          <p className={cn("text-sm", typeCopy)}>acme.workspace</p>
+          <p className={cn("text-xs", typeBody, tone.muted)}>42 members · Pro plan</p>
+        </div>
+      </div>
+      <div
+        className={cn(
+          "flex h-11 items-center justify-center rounded-lg text-sm font-semibold",
+          typeCopy,
+          tone.accent,
+        )}
+      >
+        Turn on spring features
+      </div>
+    </div>
+  );
+}
+
+export default function StackedSectionsDemo001() {
+  return (
+    <>
+      <div
+        className={cn(
+          display.variable,
+          display.className,
+          sans.variable,
+          sans.className,
+          "bg-[#e8eaef] text-[#0f1011]",
+        )}
+      >
+        <div className={cn("mx-auto w-full max-w-3xl", PAD_X)}>
+          <header className="flex min-h-[min(30svh,260px)] flex-col justify-center gap-3 pb-[var(--demo-chrome-reserve,5rem)] pt-[max(1.25rem,env(safe-area-inset-top))]">
+            <h1
+              className={cn(
+                typeDisplay,
+                "max-w-[14ch] text-[clamp(2rem,8vw,3rem)] leading-[1.02] tracking-[-0.03em]",
+              )}
+            >
+              Spring release, one scroll
+            </h1>
+            <p className={cn("max-w-md text-sm leading-[1.65] text-[#0f1011]/68", typeBody)}>
+              A product update page for a project tool — four chapters pin and stack as you read
+              through what shipped this quarter.
+            </p>
+          </header>
+
+          <StackedSections
+            stackOffset={STACK_OFFSET}
+            withDramaEffect
+            scrollRunway="min(50vh, 24rem)"
+            className="w-full"
+          >
+            <ReleaseChapter
+              title="Stop chasing context"
+              lead="Issues, cycles, and customer asks lived in three places."
+              body="This release pulls triage into one surface so leads can answer “what are we building and why?” without opening five tabs."
+              tone={light}
+            >
+              <ScatteredTools tone={light} />
+            </ReleaseChapter>
+
+            <ReleaseChapter
+              title="Cycles that match reality"
+              lead="Two-week rhythm with capacity hints built in."
+              body="Teams see load per lane before the sprint starts — scope slips show up as bar drift, not a surprise retro topic."
+              tone={dark}
+            >
+              <CycleBoard tone={dark} />
+            </ReleaseChapter>
+
+            <ReleaseChapter
+              title="Customer requests, ranked"
+              lead="Votes roll up from support and sales without a spreadsheet."
+              body="Product can promote a request to an issue in one gesture; the inbox stays the source of truth for what users asked for."
+              tone={light}
+            >
+              <RequestInbox tone={light} />
+            </ReleaseChapter>
+
+            <ReleaseChapter
+              title="Ship it on your workspace"
+              lead="Flags roll out per team — no all-hands required."
+              body="Admins enable the spring bundle when ready. Everyone else sees what changed in the changelog the moment they log in."
+              tone={dark}
+            >
+              <WorkspaceCta tone={dark} />
+            </ReleaseChapter>
+          </StackedSections>
+
+          <footer
+            className={cn(
+              "flex min-h-[min(16svh,120px)] items-center justify-center pb-[var(--demo-chrome-reserve,5rem)] text-sm text-[#0f1011]/45",
+              typeBody,
+            )}
+          >
+            End of release notes
+          </footer>
+        </div>
+      </div>
+
+      <StackedSectionsDemo001Notes />
+    </>
+  );
+}
+`,
+      htmlLight: `<pre class="shiki github-light" tabindex="0"><code><span class="line"><span style="color:#032F62">"use client"</span><span style="color:#24292E">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49">import</span><span style="color:#D73A49"> type</span><span style="color:#24292E"> { ReactNode } </span><span style="color:#D73A49">from</span><span style="color:#032F62"> "react"</span><span style="color:#24292E">;</span></span>
+<span class="line"><span style="color:#D73A49">import</span><span style="color:#24292E"> { Inter, Space_Grotesk } </span><span style="color:#D73A49">from</span><span style="color:#032F62"> "next/font/google"</span><span style="color:#24292E">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49">import</span><span style="color:#24292E"> StackedSections </span><span style="color:#D73A49">from</span><span style="color:#032F62"> "@/animata/scroll/stacked-sections"</span><span style="color:#24292E">;</span></span>
+<span class="line"><span style="color:#D73A49">import</span><span style="color:#24292E"> { cn } </span><span style="color:#D73A49">from</span><span style="color:#032F62"> "@/lib/utils"</span><span style="color:#24292E">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49">import</span><span style="color:#24292E"> { StackedSectionsDemo001Notes } </span><span style="color:#D73A49">from</span><span style="color:#032F62"> "./stacked-sections-demo-001-notes"</span><span style="color:#24292E">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">/** PickFont — Tech + Minimal (Space Grotesk + Inter): https://pickfont.com */</span></span>
+<span class="line"><span style="color:#D73A49">const</span><span style="color:#005CC5"> display</span><span style="color:#D73A49"> =</span><span style="color:#6F42C1"> Space_Grotesk</span><span style="color:#24292E">({</span></span>
+<span class="line"><span style="color:#24292E">  subsets: [</span><span style="color:#032F62">"latin"</span><span style="color:#24292E">],</span></span>
+<span class="line"><span style="color:#24292E">  weight: [</span><span style="color:#032F62">"500"</span><span style="color:#24292E">, </span><span style="color:#032F62">"600"</span><span style="color:#24292E">, </span><span style="color:#032F62">"700"</span><span style="color:#24292E">],</span></span>
+<span class="line"><span style="color:#24292E">  variable: </span><span style="color:#032F62">"--font-display"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">  display: </span><span style="color:#032F62">"swap"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">});</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49">const</span><span style="color:#005CC5"> sans</span><span style="color:#D73A49"> =</span><span style="color:#6F42C1"> Inter</span><span style="color:#24292E">({</span></span>
+<span class="line"><span style="color:#24292E">  subsets: [</span><span style="color:#032F62">"latin"</span><span style="color:#24292E">],</span></span>
+<span class="line"><span style="color:#24292E">  weight: [</span><span style="color:#032F62">"400"</span><span style="color:#24292E">, </span><span style="color:#032F62">"500"</span><span style="color:#24292E">, </span><span style="color:#032F62">"600"</span><span style="color:#24292E">],</span></span>
+<span class="line"><span style="color:#24292E">  variable: </span><span style="color:#032F62">"--font-sans"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">  display: </span><span style="color:#032F62">"swap"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">});</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">/** Peek band when the next pane covers this one — no eyebrow strip, just color + type */</span></span>
+<span class="line"><span style="color:#D73A49">const</span><span style="color:#005CC5"> STACK_OFFSET</span><span style="color:#D73A49"> =</span><span style="color:#005CC5"> 40</span><span style="color:#24292E">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49">const</span><span style="color:#005CC5"> PAD_X</span><span style="color:#D73A49"> =</span><span style="color:#032F62"> "px-6 sm:px-8"</span><span style="color:#24292E">;</span></span>
+<span class="line"><span style="color:#D73A49">const</span><span style="color:#005CC5"> PAD_Y</span><span style="color:#D73A49"> =</span><span style="color:#032F62"> "py-8 sm:py-9"</span><span style="color:#24292E">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49">const</span><span style="color:#005CC5"> typeDisplay</span><span style="color:#D73A49"> =</span><span style="color:#032F62"> "font-(family-name:--font-display) font-semibold tracking-[-0.04em]"</span><span style="color:#24292E">;</span></span>
+<span class="line"><span style="color:#D73A49">const</span><span style="color:#005CC5"> typeCopy</span><span style="color:#D73A49"> =</span><span style="color:#032F62"> "font-(family-name:--font-sans) font-medium tracking-[-0.01em]"</span><span style="color:#24292E">;</span></span>
+<span class="line"><span style="color:#D73A49">const</span><span style="color:#005CC5"> typeBody</span><span style="color:#D73A49"> =</span><span style="color:#032F62"> "font-(family-name:--font-sans) font-normal tracking-normal"</span><span style="color:#24292E">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49">const</span><span style="color:#005CC5"> light</span><span style="color:#D73A49"> =</span><span style="color:#24292E"> {</span></span>
+<span class="line"><span style="color:#24292E">  bg: </span><span style="color:#032F62">"bg-[#f4f5f8] text-[#0f1011]"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">  muted: </span><span style="color:#032F62">"text-[#0f1011]/72"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">  panel: </span><span style="color:#032F62">"border-[#0f1011]/10 bg-white/80"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">  accent: </span><span style="color:#032F62">"bg-[#5e6ad2] text-white"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">  accentMuted: </span><span style="color:#032F62">"bg-[#5e6ad2]/12 text-[#4a52a8]"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">  dot: </span><span style="color:#032F62">"bg-[#5e6ad2]"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">};</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49">const</span><span style="color:#005CC5"> dark</span><span style="color:#D73A49"> =</span><span style="color:#24292E"> {</span></span>
+<span class="line"><span style="color:#24292E">  bg: </span><span style="color:#032F62">"bg-[#0f1011] text-[#eeeef0]"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">  muted: </span><span style="color:#032F62">"text-[#eeeef0]/72"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">  panel: </span><span style="color:#032F62">"border-[#eeeef0]/12 bg-[#1a1b1e]"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">  accent: </span><span style="color:#032F62">"bg-[#8b93ff] text-[#0f1011]"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">  accentMuted: </span><span style="color:#032F62">"bg-[#8b93ff]/14 text-[#b4b9ff]"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">  dot: </span><span style="color:#032F62">"bg-[#8b93ff]"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">};</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49">type</span><span style="color:#6F42C1"> Tone</span><span style="color:#D73A49"> =</span><span style="color:#D73A49"> typeof</span><span style="color:#24292E"> light;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49">function</span><span style="color:#6F42C1"> ReleaseChapter</span><span style="color:#24292E">({</span></span>
+<span class="line"><span style="color:#E36209">  title</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#E36209">  lead</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#E36209">  body</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#E36209">  tone</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#E36209">  children</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">}</span><span style="color:#D73A49">:</span><span style="color:#24292E"> {</span></span>
+<span class="line"><span style="color:#E36209">  title</span><span style="color:#D73A49">:</span><span style="color:#005CC5"> string</span><span style="color:#24292E">;</span></span>
+<span class="line"><span style="color:#E36209">  lead</span><span style="color:#D73A49">:</span><span style="color:#005CC5"> string</span><span style="color:#24292E">;</span></span>
+<span class="line"><span style="color:#E36209">  body</span><span style="color:#D73A49">:</span><span style="color:#005CC5"> string</span><span style="color:#24292E">;</span></span>
+<span class="line"><span style="color:#E36209">  tone</span><span style="color:#D73A49">:</span><span style="color:#6F42C1"> Tone</span><span style="color:#24292E">;</span></span>
+<span class="line"><span style="color:#E36209">  children</span><span style="color:#D73A49">?:</span><span style="color:#6F42C1"> ReactNode</span><span style="color:#24292E">;</span></span>
+<span class="line"><span style="color:#24292E">}) {</span></span>
+<span class="line"><span style="color:#D73A49">  return</span><span style="color:#24292E"> (</span></span>
+<span class="line"><span style="color:#24292E">    &#x3C;</span><span style="color:#22863A">section</span></span>
+<span class="line"><span style="color:#6F42C1">      className</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#6F42C1">cn</span><span style="color:#24292E">(</span><span style="color:#032F62">"flex w-full shrink-0 flex-col overflow-hidden rounded-2xl"</span><span style="color:#24292E">, tone.bg)}</span></span>
+<span class="line"><span style="color:#24292E">    ></span></span>
+<span class="line"><span style="color:#24292E">      &#x3C;</span><span style="color:#22863A">div</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#6F42C1">cn</span><span style="color:#24292E">(</span><span style="color:#032F62">"flex flex-col gap-6"</span><span style="color:#24292E">, </span><span style="color:#005CC5">PAD_X</span><span style="color:#24292E">, </span><span style="color:#005CC5">PAD_Y</span><span style="color:#24292E">)}></span></span>
+<span class="line"><span style="color:#24292E">        &#x3C;</span><span style="color:#22863A">div</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"flex flex-col gap-2.5"</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">          &#x3C;</span><span style="color:#22863A">h2</span></span>
+<span class="line"><span style="color:#6F42C1">            className</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#6F42C1">cn</span><span style="color:#24292E">(</span></span>
+<span class="line"><span style="color:#24292E">              typeDisplay,</span></span>
+<span class="line"><span style="color:#032F62">              "text-[clamp(1.75rem,7vw,2.75rem)] leading-[1.05] tracking-[-0.03em]"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">            )}</span></span>
+<span class="line"><span style="color:#24292E">          ></span></span>
+<span class="line"><span style="color:#24292E">            {title}</span></span>
+<span class="line"><span style="color:#24292E">          &#x3C;/</span><span style="color:#22863A">h2</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">          &#x3C;</span><span style="color:#22863A">p</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#6F42C1">cn</span><span style="color:#24292E">(</span><span style="color:#032F62">"text-[15px] leading-snug"</span><span style="color:#24292E">, typeBody, tone.muted)}>{lead}&#x3C;/</span><span style="color:#22863A">p</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">          &#x3C;</span><span style="color:#22863A">p</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#6F42C1">cn</span><span style="color:#24292E">(</span><span style="color:#032F62">"max-w-prose text-sm leading-[1.65]"</span><span style="color:#24292E">, typeBody, tone.muted)}>{body}&#x3C;/</span><span style="color:#22863A">p</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">        &#x3C;/</span><span style="color:#22863A">div</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">        {children}</span></span>
+<span class="line"><span style="color:#24292E">      &#x3C;/</span><span style="color:#22863A">div</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">    &#x3C;/</span><span style="color:#22863A">section</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">  );</span></span>
+<span class="line"><span style="color:#24292E">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49">function</span><span style="color:#6F42C1"> ScatteredTools</span><span style="color:#24292E">({ </span><span style="color:#E36209">tone</span><span style="color:#24292E"> }</span><span style="color:#D73A49">:</span><span style="color:#24292E"> { </span><span style="color:#E36209">tone</span><span style="color:#D73A49">:</span><span style="color:#6F42C1"> Tone</span><span style="color:#24292E"> }) {</span></span>
+<span class="line"><span style="color:#D73A49">  const</span><span style="color:#005CC5"> rows</span><span style="color:#D73A49"> =</span><span style="color:#24292E"> [</span></span>
+<span class="line"><span style="color:#24292E">    { label: </span><span style="color:#032F62">"Standup notes"</span><span style="color:#24292E">, where: </span><span style="color:#032F62">"Slack thread"</span><span style="color:#24292E"> },</span></span>
+<span class="line"><span style="color:#24292E">    { label: </span><span style="color:#032F62">"Cycle scope"</span><span style="color:#24292E">, where: </span><span style="color:#032F62">"Spreadsheet"</span><span style="color:#24292E"> },</span></span>
+<span class="line"><span style="color:#24292E">    { label: </span><span style="color:#032F62">"Customer ask"</span><span style="color:#24292E">, where: </span><span style="color:#032F62">"Email"</span><span style="color:#24292E"> },</span></span>
+<span class="line"><span style="color:#24292E">  ];</span></span>
+<span class="line"><span style="color:#D73A49">  return</span><span style="color:#24292E"> (</span></span>
+<span class="line"><span style="color:#24292E">    &#x3C;</span><span style="color:#22863A">div</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#6F42C1">cn</span><span style="color:#24292E">(</span><span style="color:#032F62">"flex flex-col gap-2 rounded-xl border p-3"</span><span style="color:#24292E">, tone.panel)}></span></span>
+<span class="line"><span style="color:#24292E">      {rows.</span><span style="color:#6F42C1">map</span><span style="color:#24292E">((</span><span style="color:#E36209">row</span><span style="color:#24292E">) </span><span style="color:#D73A49">=></span><span style="color:#24292E"> (</span></span>
+<span class="line"><span style="color:#24292E">        &#x3C;</span><span style="color:#22863A">div</span></span>
+<span class="line"><span style="color:#6F42C1">          key</span><span style="color:#D73A49">=</span><span style="color:#24292E">{row.label}</span></span>
+<span class="line"><span style="color:#6F42C1">          className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"flex items-center justify-between gap-3 rounded-lg bg-black/[0.03] px-3 py-2.5 dark:bg-white/[0.04]"</span></span>
+<span class="line"><span style="color:#24292E">        ></span></span>
+<span class="line"><span style="color:#24292E">          &#x3C;</span><span style="color:#22863A">span</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#6F42C1">cn</span><span style="color:#24292E">(</span><span style="color:#032F62">"text-sm"</span><span style="color:#24292E">, typeCopy)}>{row.label}&#x3C;/</span><span style="color:#22863A">span</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">          &#x3C;</span><span style="color:#22863A">span</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#6F42C1">cn</span><span style="color:#24292E">(</span><span style="color:#032F62">"text-xs"</span><span style="color:#24292E">, typeBody, tone.muted)}>{row.where}&#x3C;/</span><span style="color:#22863A">span</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">        &#x3C;/</span><span style="color:#22863A">div</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">      ))}</span></span>
+<span class="line"><span style="color:#24292E">    &#x3C;/</span><span style="color:#22863A">div</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">  );</span></span>
+<span class="line"><span style="color:#24292E">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49">function</span><span style="color:#6F42C1"> CycleBoard</span><span style="color:#24292E">({ </span><span style="color:#E36209">tone</span><span style="color:#24292E"> }</span><span style="color:#D73A49">:</span><span style="color:#24292E"> { </span><span style="color:#E36209">tone</span><span style="color:#D73A49">:</span><span style="color:#6F42C1"> Tone</span><span style="color:#24292E"> }) {</span></span>
+<span class="line"><span style="color:#D73A49">  const</span><span style="color:#005CC5"> lanes</span><span style="color:#D73A49"> =</span><span style="color:#24292E"> [</span></span>
+<span class="line"><span style="color:#24292E">    { name: </span><span style="color:#032F62">"Backlog"</span><span style="color:#24292E">, fill: </span><span style="color:#005CC5">28</span><span style="color:#24292E"> },</span></span>
+<span class="line"><span style="color:#24292E">    { name: </span><span style="color:#032F62">"In progress"</span><span style="color:#24292E">, fill: </span><span style="color:#005CC5">62</span><span style="color:#24292E"> },</span></span>
+<span class="line"><span style="color:#24292E">    { name: </span><span style="color:#032F62">"Review"</span><span style="color:#24292E">, fill: </span><span style="color:#005CC5">44</span><span style="color:#24292E"> },</span></span>
+<span class="line"><span style="color:#24292E">    { name: </span><span style="color:#032F62">"Done"</span><span style="color:#24292E">, fill: </span><span style="color:#005CC5">91</span><span style="color:#24292E"> },</span></span>
+<span class="line"><span style="color:#24292E">  ];</span></span>
+<span class="line"><span style="color:#D73A49">  return</span><span style="color:#24292E"> (</span></span>
+<span class="line"><span style="color:#24292E">    &#x3C;</span><span style="color:#22863A">div</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#6F42C1">cn</span><span style="color:#24292E">(</span><span style="color:#032F62">"rounded-xl border p-4"</span><span style="color:#24292E">, tone.panel)}></span></span>
+<span class="line"><span style="color:#24292E">      &#x3C;</span><span style="color:#22863A">p</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#6F42C1">cn</span><span style="color:#24292E">(</span><span style="color:#032F62">"mb-3 text-xs"</span><span style="color:#24292E">, typeCopy, tone.muted)}>Cycle · Apr 7 → Apr 21&#x3C;/</span><span style="color:#22863A">p</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">      &#x3C;</span><span style="color:#22863A">div</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"flex flex-col gap-3"</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">        {lanes.</span><span style="color:#6F42C1">map</span><span style="color:#24292E">((</span><span style="color:#E36209">lane</span><span style="color:#24292E">) </span><span style="color:#D73A49">=></span><span style="color:#24292E"> (</span></span>
+<span class="line"><span style="color:#24292E">          &#x3C;</span><span style="color:#22863A">div</span><span style="color:#6F42C1"> key</span><span style="color:#D73A49">=</span><span style="color:#24292E">{lane.name} </span><span style="color:#6F42C1">className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"flex items-center gap-3"</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">            &#x3C;</span><span style="color:#22863A">span</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#6F42C1">cn</span><span style="color:#24292E">(</span><span style="color:#032F62">"w-24 shrink-0 text-xs"</span><span style="color:#24292E">, typeBody, tone.muted)}>{lane.name}&#x3C;/</span><span style="color:#22863A">span</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">            &#x3C;</span><span style="color:#22863A">div</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"h-2 flex-1 overflow-hidden rounded-full bg-black/8 dark:bg-white/10"</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">              &#x3C;</span><span style="color:#22863A">div</span></span>
+<span class="line"><span style="color:#6F42C1">                className</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#6F42C1">cn</span><span style="color:#24292E">(</span><span style="color:#032F62">"h-full rounded-full"</span><span style="color:#24292E">, tone.dot)}</span></span>
+<span class="line"><span style="color:#6F42C1">                style</span><span style="color:#D73A49">=</span><span style="color:#24292E">{{ width: </span><span style="color:#032F62">\`\${</span><span style="color:#24292E">lane</span><span style="color:#032F62">.</span><span style="color:#24292E">fill</span><span style="color:#032F62">}%\`</span><span style="color:#24292E"> }}</span></span>
+<span class="line"><span style="color:#24292E">              /></span></span>
+<span class="line"><span style="color:#24292E">            &#x3C;/</span><span style="color:#22863A">div</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">          &#x3C;/</span><span style="color:#22863A">div</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">        ))}</span></span>
+<span class="line"><span style="color:#24292E">      &#x3C;/</span><span style="color:#22863A">div</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">    &#x3C;/</span><span style="color:#22863A">div</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">  );</span></span>
+<span class="line"><span style="color:#24292E">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49">function</span><span style="color:#6F42C1"> RequestInbox</span><span style="color:#24292E">({ </span><span style="color:#E36209">tone</span><span style="color:#24292E"> }</span><span style="color:#D73A49">:</span><span style="color:#24292E"> { </span><span style="color:#E36209">tone</span><span style="color:#D73A49">:</span><span style="color:#6F42C1"> Tone</span><span style="color:#24292E"> }) {</span></span>
+<span class="line"><span style="color:#D73A49">  const</span><span style="color:#005CC5"> items</span><span style="color:#D73A49"> =</span><span style="color:#24292E"> [</span></span>
+<span class="line"><span style="color:#24292E">    { title: </span><span style="color:#032F62">"Export audit log to S3"</span><span style="color:#24292E">, votes: </span><span style="color:#005CC5">48</span><span style="color:#24292E"> },</span></span>
+<span class="line"><span style="color:#24292E">    { title: </span><span style="color:#032F62">"Guest role for contractors"</span><span style="color:#24292E">, votes: </span><span style="color:#005CC5">31</span><span style="color:#24292E"> },</span></span>
+<span class="line"><span style="color:#24292E">    { title: </span><span style="color:#032F62">"Slack → issue from reaction"</span><span style="color:#24292E">, votes: </span><span style="color:#005CC5">27</span><span style="color:#24292E"> },</span></span>
+<span class="line"><span style="color:#24292E">  ];</span></span>
+<span class="line"><span style="color:#D73A49">  return</span><span style="color:#24292E"> (</span></span>
+<span class="line"><span style="color:#24292E">    &#x3C;</span><span style="color:#22863A">ul</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#6F42C1">cn</span><span style="color:#24292E">(</span><span style="color:#032F62">"flex flex-col gap-2 rounded-xl border p-3"</span><span style="color:#24292E">, tone.panel)}></span></span>
+<span class="line"><span style="color:#24292E">      {items.</span><span style="color:#6F42C1">map</span><span style="color:#24292E">((</span><span style="color:#E36209">item</span><span style="color:#24292E">) </span><span style="color:#D73A49">=></span><span style="color:#24292E"> (</span></span>
+<span class="line"><span style="color:#24292E">        &#x3C;</span><span style="color:#22863A">li</span></span>
+<span class="line"><span style="color:#6F42C1">          key</span><span style="color:#D73A49">=</span><span style="color:#24292E">{item.title}</span></span>
+<span class="line"><span style="color:#6F42C1">          className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"flex items-start justify-between gap-3 rounded-lg px-3 py-2.5"</span></span>
+<span class="line"><span style="color:#24292E">        ></span></span>
+<span class="line"><span style="color:#24292E">          &#x3C;</span><span style="color:#22863A">span</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#6F42C1">cn</span><span style="color:#24292E">(</span><span style="color:#032F62">"text-sm leading-snug"</span><span style="color:#24292E">, typeCopy)}>{item.title}&#x3C;/</span><span style="color:#22863A">span</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">          &#x3C;</span><span style="color:#22863A">span</span></span>
+<span class="line"><span style="color:#6F42C1">            className</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#6F42C1">cn</span><span style="color:#24292E">(</span></span>
+<span class="line"><span style="color:#032F62">              "shrink-0 rounded-md px-2 py-0.5 text-[11px] tabular-nums"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">              typeCopy,</span></span>
+<span class="line"><span style="color:#24292E">              tone.accentMuted,</span></span>
+<span class="line"><span style="color:#24292E">            )}</span></span>
+<span class="line"><span style="color:#24292E">          ></span></span>
+<span class="line"><span style="color:#24292E">            {item.votes}</span></span>
+<span class="line"><span style="color:#24292E">          &#x3C;/</span><span style="color:#22863A">span</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">        &#x3C;/</span><span style="color:#22863A">li</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">      ))}</span></span>
+<span class="line"><span style="color:#24292E">    &#x3C;/</span><span style="color:#22863A">ul</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">  );</span></span>
+<span class="line"><span style="color:#24292E">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49">function</span><span style="color:#6F42C1"> WorkspaceCta</span><span style="color:#24292E">({ </span><span style="color:#E36209">tone</span><span style="color:#24292E"> }</span><span style="color:#D73A49">:</span><span style="color:#24292E"> { </span><span style="color:#E36209">tone</span><span style="color:#D73A49">:</span><span style="color:#6F42C1"> Tone</span><span style="color:#24292E"> }) {</span></span>
+<span class="line"><span style="color:#D73A49">  return</span><span style="color:#24292E"> (</span></span>
+<span class="line"><span style="color:#24292E">    &#x3C;</span><span style="color:#22863A">div</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#6F42C1">cn</span><span style="color:#24292E">(</span><span style="color:#032F62">"flex flex-col gap-3 rounded-xl border p-4"</span><span style="color:#24292E">, tone.panel)}></span></span>
+<span class="line"><span style="color:#24292E">      &#x3C;</span><span style="color:#22863A">div</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"flex items-center gap-3"</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">        &#x3C;</span><span style="color:#22863A">span</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#6F42C1">cn</span><span style="color:#24292E">(</span><span style="color:#032F62">"flex size-10 items-center justify-center rounded-lg text-sm font-bold"</span><span style="color:#24292E">, tone.accent)}></span></span>
+<span class="line"><span style="color:#24292E">          P</span></span>
+<span class="line"><span style="color:#24292E">        &#x3C;/</span><span style="color:#22863A">span</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">        &#x3C;</span><span style="color:#22863A">div</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">          &#x3C;</span><span style="color:#22863A">p</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#6F42C1">cn</span><span style="color:#24292E">(</span><span style="color:#032F62">"text-sm"</span><span style="color:#24292E">, typeCopy)}>acme.workspace&#x3C;/</span><span style="color:#22863A">p</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">          &#x3C;</span><span style="color:#22863A">p</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#6F42C1">cn</span><span style="color:#24292E">(</span><span style="color:#032F62">"text-xs"</span><span style="color:#24292E">, typeBody, tone.muted)}>42 members · Pro plan&#x3C;/</span><span style="color:#22863A">p</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">        &#x3C;/</span><span style="color:#22863A">div</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">      &#x3C;/</span><span style="color:#22863A">div</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">      &#x3C;</span><span style="color:#22863A">div</span></span>
+<span class="line"><span style="color:#6F42C1">        className</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#6F42C1">cn</span><span style="color:#24292E">(</span></span>
+<span class="line"><span style="color:#032F62">          "flex h-11 items-center justify-center rounded-lg text-sm font-semibold"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">          typeCopy,</span></span>
+<span class="line"><span style="color:#24292E">          tone.accent,</span></span>
+<span class="line"><span style="color:#24292E">        )}</span></span>
+<span class="line"><span style="color:#24292E">      ></span></span>
+<span class="line"><span style="color:#24292E">        Turn on spring features</span></span>
+<span class="line"><span style="color:#24292E">      &#x3C;/</span><span style="color:#22863A">div</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">    &#x3C;/</span><span style="color:#22863A">div</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">  );</span></span>
+<span class="line"><span style="color:#24292E">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49">export</span><span style="color:#D73A49"> default</span><span style="color:#D73A49"> function</span><span style="color:#6F42C1"> StackedSectionsDemo001</span><span style="color:#24292E">() {</span></span>
+<span class="line"><span style="color:#D73A49">  return</span><span style="color:#24292E"> (</span></span>
+<span class="line"><span style="color:#24292E">    &#x3C;></span></span>
+<span class="line"><span style="color:#24292E">      &#x3C;</span><span style="color:#22863A">div</span></span>
+<span class="line"><span style="color:#6F42C1">        className</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#6F42C1">cn</span><span style="color:#24292E">(</span></span>
+<span class="line"><span style="color:#24292E">          display.variable,</span></span>
+<span class="line"><span style="color:#24292E">          display.className,</span></span>
+<span class="line"><span style="color:#24292E">          sans.variable,</span></span>
+<span class="line"><span style="color:#24292E">          sans.className,</span></span>
+<span class="line"><span style="color:#032F62">          "bg-[#e8eaef] text-[#0f1011]"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">        )}</span></span>
+<span class="line"><span style="color:#24292E">      ></span></span>
+<span class="line"><span style="color:#24292E">        &#x3C;</span><span style="color:#22863A">div</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#6F42C1">cn</span><span style="color:#24292E">(</span><span style="color:#032F62">"mx-auto w-full max-w-3xl"</span><span style="color:#24292E">, </span><span style="color:#005CC5">PAD_X</span><span style="color:#24292E">)}></span></span>
+<span class="line"><span style="color:#24292E">          &#x3C;</span><span style="color:#22863A">header</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"flex min-h-[min(30svh,260px)] flex-col justify-center gap-3 pb-[var(--demo-chrome-reserve,5rem)] pt-[max(1.25rem,env(safe-area-inset-top))]"</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">            &#x3C;</span><span style="color:#22863A">h1</span></span>
+<span class="line"><span style="color:#6F42C1">              className</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#6F42C1">cn</span><span style="color:#24292E">(</span></span>
+<span class="line"><span style="color:#24292E">                typeDisplay,</span></span>
+<span class="line"><span style="color:#032F62">                "max-w-[14ch] text-[clamp(2rem,8vw,3rem)] leading-[1.02] tracking-[-0.03em]"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">              )}</span></span>
+<span class="line"><span style="color:#24292E">            ></span></span>
+<span class="line"><span style="color:#24292E">              Spring release, one scroll</span></span>
+<span class="line"><span style="color:#24292E">            &#x3C;/</span><span style="color:#22863A">h1</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">            &#x3C;</span><span style="color:#22863A">p</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#6F42C1">cn</span><span style="color:#24292E">(</span><span style="color:#032F62">"max-w-md text-sm leading-[1.65] text-[#0f1011]/68"</span><span style="color:#24292E">, typeBody)}></span></span>
+<span class="line"><span style="color:#24292E">              A product update page for a project tool — four chapters pin and stack as you read</span></span>
+<span class="line"><span style="color:#24292E">              through what shipped this quarter.</span></span>
+<span class="line"><span style="color:#24292E">            &#x3C;/</span><span style="color:#22863A">p</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">          &#x3C;/</span><span style="color:#22863A">header</span><span style="color:#24292E">></span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#24292E">          &#x3C;</span><span style="color:#005CC5">StackedSections</span></span>
+<span class="line"><span style="color:#6F42C1">            stackOffset</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#005CC5">STACK_OFFSET</span><span style="color:#24292E">}</span></span>
+<span class="line"><span style="color:#6F42C1">            withDramaEffect</span></span>
+<span class="line"><span style="color:#6F42C1">            scrollRunway</span><span style="color:#D73A49">=</span><span style="color:#032F62">"min(50vh, 24rem)"</span></span>
+<span class="line"><span style="color:#6F42C1">            className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"w-full"</span></span>
+<span class="line"><span style="color:#24292E">          ></span></span>
+<span class="line"><span style="color:#24292E">            &#x3C;</span><span style="color:#005CC5">ReleaseChapter</span></span>
+<span class="line"><span style="color:#6F42C1">              title</span><span style="color:#D73A49">=</span><span style="color:#032F62">"Stop chasing context"</span></span>
+<span class="line"><span style="color:#6F42C1">              lead</span><span style="color:#D73A49">=</span><span style="color:#032F62">"Issues, cycles, and customer asks lived in three places."</span></span>
+<span class="line"><span style="color:#6F42C1">              body</span><span style="color:#D73A49">=</span><span style="color:#032F62">"This release pulls triage into one surface so leads can answer “what are we building and why?” without opening five tabs."</span></span>
+<span class="line"><span style="color:#6F42C1">              tone</span><span style="color:#D73A49">=</span><span style="color:#24292E">{light}</span></span>
+<span class="line"><span style="color:#24292E">            ></span></span>
+<span class="line"><span style="color:#24292E">              &#x3C;</span><span style="color:#005CC5">ScatteredTools</span><span style="color:#6F42C1"> tone</span><span style="color:#D73A49">=</span><span style="color:#24292E">{light} /></span></span>
+<span class="line"><span style="color:#24292E">            &#x3C;/</span><span style="color:#005CC5">ReleaseChapter</span><span style="color:#24292E">></span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#24292E">            &#x3C;</span><span style="color:#005CC5">ReleaseChapter</span></span>
+<span class="line"><span style="color:#6F42C1">              title</span><span style="color:#D73A49">=</span><span style="color:#032F62">"Cycles that match reality"</span></span>
+<span class="line"><span style="color:#6F42C1">              lead</span><span style="color:#D73A49">=</span><span style="color:#032F62">"Two-week rhythm with capacity hints built in."</span></span>
+<span class="line"><span style="color:#6F42C1">              body</span><span style="color:#D73A49">=</span><span style="color:#032F62">"Teams see load per lane before the sprint starts — scope slips show up as bar drift, not a surprise retro topic."</span></span>
+<span class="line"><span style="color:#6F42C1">              tone</span><span style="color:#D73A49">=</span><span style="color:#24292E">{dark}</span></span>
+<span class="line"><span style="color:#24292E">            ></span></span>
+<span class="line"><span style="color:#24292E">              &#x3C;</span><span style="color:#005CC5">CycleBoard</span><span style="color:#6F42C1"> tone</span><span style="color:#D73A49">=</span><span style="color:#24292E">{dark} /></span></span>
+<span class="line"><span style="color:#24292E">            &#x3C;/</span><span style="color:#005CC5">ReleaseChapter</span><span style="color:#24292E">></span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#24292E">            &#x3C;</span><span style="color:#005CC5">ReleaseChapter</span></span>
+<span class="line"><span style="color:#6F42C1">              title</span><span style="color:#D73A49">=</span><span style="color:#032F62">"Customer requests, ranked"</span></span>
+<span class="line"><span style="color:#6F42C1">              lead</span><span style="color:#D73A49">=</span><span style="color:#032F62">"Votes roll up from support and sales without a spreadsheet."</span></span>
+<span class="line"><span style="color:#6F42C1">              body</span><span style="color:#D73A49">=</span><span style="color:#032F62">"Product can promote a request to an issue in one gesture; the inbox stays the source of truth for what users asked for."</span></span>
+<span class="line"><span style="color:#6F42C1">              tone</span><span style="color:#D73A49">=</span><span style="color:#24292E">{light}</span></span>
+<span class="line"><span style="color:#24292E">            ></span></span>
+<span class="line"><span style="color:#24292E">              &#x3C;</span><span style="color:#005CC5">RequestInbox</span><span style="color:#6F42C1"> tone</span><span style="color:#D73A49">=</span><span style="color:#24292E">{light} /></span></span>
+<span class="line"><span style="color:#24292E">            &#x3C;/</span><span style="color:#005CC5">ReleaseChapter</span><span style="color:#24292E">></span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#24292E">            &#x3C;</span><span style="color:#005CC5">ReleaseChapter</span></span>
+<span class="line"><span style="color:#6F42C1">              title</span><span style="color:#D73A49">=</span><span style="color:#032F62">"Ship it on your workspace"</span></span>
+<span class="line"><span style="color:#6F42C1">              lead</span><span style="color:#D73A49">=</span><span style="color:#032F62">"Flags roll out per team — no all-hands required."</span></span>
+<span class="line"><span style="color:#6F42C1">              body</span><span style="color:#D73A49">=</span><span style="color:#032F62">"Admins enable the spring bundle when ready. Everyone else sees what changed in the changelog the moment they log in."</span></span>
+<span class="line"><span style="color:#6F42C1">              tone</span><span style="color:#D73A49">=</span><span style="color:#24292E">{dark}</span></span>
+<span class="line"><span style="color:#24292E">            ></span></span>
+<span class="line"><span style="color:#24292E">              &#x3C;</span><span style="color:#005CC5">WorkspaceCta</span><span style="color:#6F42C1"> tone</span><span style="color:#D73A49">=</span><span style="color:#24292E">{dark} /></span></span>
+<span class="line"><span style="color:#24292E">            &#x3C;/</span><span style="color:#005CC5">ReleaseChapter</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">          &#x3C;/</span><span style="color:#005CC5">StackedSections</span><span style="color:#24292E">></span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#24292E">          &#x3C;</span><span style="color:#22863A">footer</span></span>
+<span class="line"><span style="color:#6F42C1">            className</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#6F42C1">cn</span><span style="color:#24292E">(</span></span>
+<span class="line"><span style="color:#032F62">              "flex min-h-[min(16svh,120px)] items-center justify-center pb-[var(--demo-chrome-reserve,5rem)] text-sm text-[#0f1011]/45"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">              typeBody,</span></span>
+<span class="line"><span style="color:#24292E">            )}</span></span>
+<span class="line"><span style="color:#24292E">          ></span></span>
+<span class="line"><span style="color:#24292E">            End of release notes</span></span>
+<span class="line"><span style="color:#24292E">          &#x3C;/</span><span style="color:#22863A">footer</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">        &#x3C;/</span><span style="color:#22863A">div</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">      &#x3C;/</span><span style="color:#22863A">div</span><span style="color:#24292E">></span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#24292E">      &#x3C;</span><span style="color:#005CC5">StackedSectionsDemo001Notes</span><span style="color:#24292E"> /></span></span>
+<span class="line"><span style="color:#24292E">    &#x3C;/></span></span>
+<span class="line"><span style="color:#24292E">  );</span></span>
+<span class="line"><span style="color:#24292E">}</span></span>
+<span class="line"></span></code></pre>`,
+      htmlDark: `<pre class="shiki github-dark" tabindex="0"><code><span class="line"><span style="color:#9ECBFF">"use client"</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">import</span><span style="color:#F97583"> type</span><span style="color:#E1E4E8"> { ReactNode } </span><span style="color:#F97583">from</span><span style="color:#9ECBFF"> "react"</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#F97583">import</span><span style="color:#E1E4E8"> { Inter, Space_Grotesk } </span><span style="color:#F97583">from</span><span style="color:#9ECBFF"> "next/font/google"</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">import</span><span style="color:#E1E4E8"> StackedSections </span><span style="color:#F97583">from</span><span style="color:#9ECBFF"> "@/animata/scroll/stacked-sections"</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#F97583">import</span><span style="color:#E1E4E8"> { cn } </span><span style="color:#F97583">from</span><span style="color:#9ECBFF"> "@/lib/utils"</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">import</span><span style="color:#E1E4E8"> { StackedSectionsDemo001Notes } </span><span style="color:#F97583">from</span><span style="color:#9ECBFF"> "./stacked-sections-demo-001-notes"</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">/** PickFont — Tech + Minimal (Space Grotesk + Inter): https://pickfont.com */</span></span>
+<span class="line"><span style="color:#F97583">const</span><span style="color:#79B8FF"> display</span><span style="color:#F97583"> =</span><span style="color:#B392F0"> Space_Grotesk</span><span style="color:#E1E4E8">({</span></span>
+<span class="line"><span style="color:#E1E4E8">  subsets: [</span><span style="color:#9ECBFF">"latin"</span><span style="color:#E1E4E8">],</span></span>
+<span class="line"><span style="color:#E1E4E8">  weight: [</span><span style="color:#9ECBFF">"500"</span><span style="color:#E1E4E8">, </span><span style="color:#9ECBFF">"600"</span><span style="color:#E1E4E8">, </span><span style="color:#9ECBFF">"700"</span><span style="color:#E1E4E8">],</span></span>
+<span class="line"><span style="color:#E1E4E8">  variable: </span><span style="color:#9ECBFF">"--font-display"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">  display: </span><span style="color:#9ECBFF">"swap"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">});</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">const</span><span style="color:#79B8FF"> sans</span><span style="color:#F97583"> =</span><span style="color:#B392F0"> Inter</span><span style="color:#E1E4E8">({</span></span>
+<span class="line"><span style="color:#E1E4E8">  subsets: [</span><span style="color:#9ECBFF">"latin"</span><span style="color:#E1E4E8">],</span></span>
+<span class="line"><span style="color:#E1E4E8">  weight: [</span><span style="color:#9ECBFF">"400"</span><span style="color:#E1E4E8">, </span><span style="color:#9ECBFF">"500"</span><span style="color:#E1E4E8">, </span><span style="color:#9ECBFF">"600"</span><span style="color:#E1E4E8">],</span></span>
+<span class="line"><span style="color:#E1E4E8">  variable: </span><span style="color:#9ECBFF">"--font-sans"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">  display: </span><span style="color:#9ECBFF">"swap"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">});</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D">/** Peek band when the next pane covers this one — no eyebrow strip, just color + type */</span></span>
+<span class="line"><span style="color:#F97583">const</span><span style="color:#79B8FF"> STACK_OFFSET</span><span style="color:#F97583"> =</span><span style="color:#79B8FF"> 40</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">const</span><span style="color:#79B8FF"> PAD_X</span><span style="color:#F97583"> =</span><span style="color:#9ECBFF"> "px-6 sm:px-8"</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#F97583">const</span><span style="color:#79B8FF"> PAD_Y</span><span style="color:#F97583"> =</span><span style="color:#9ECBFF"> "py-8 sm:py-9"</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">const</span><span style="color:#79B8FF"> typeDisplay</span><span style="color:#F97583"> =</span><span style="color:#9ECBFF"> "font-(family-name:--font-display) font-semibold tracking-[-0.04em]"</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#F97583">const</span><span style="color:#79B8FF"> typeCopy</span><span style="color:#F97583"> =</span><span style="color:#9ECBFF"> "font-(family-name:--font-sans) font-medium tracking-[-0.01em]"</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#F97583">const</span><span style="color:#79B8FF"> typeBody</span><span style="color:#F97583"> =</span><span style="color:#9ECBFF"> "font-(family-name:--font-sans) font-normal tracking-normal"</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">const</span><span style="color:#79B8FF"> light</span><span style="color:#F97583"> =</span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#E1E4E8">  bg: </span><span style="color:#9ECBFF">"bg-[#f4f5f8] text-[#0f1011]"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">  muted: </span><span style="color:#9ECBFF">"text-[#0f1011]/72"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">  panel: </span><span style="color:#9ECBFF">"border-[#0f1011]/10 bg-white/80"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">  accent: </span><span style="color:#9ECBFF">"bg-[#5e6ad2] text-white"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">  accentMuted: </span><span style="color:#9ECBFF">"bg-[#5e6ad2]/12 text-[#4a52a8]"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">  dot: </span><span style="color:#9ECBFF">"bg-[#5e6ad2]"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">};</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">const</span><span style="color:#79B8FF"> dark</span><span style="color:#F97583"> =</span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#E1E4E8">  bg: </span><span style="color:#9ECBFF">"bg-[#0f1011] text-[#eeeef0]"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">  muted: </span><span style="color:#9ECBFF">"text-[#eeeef0]/72"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">  panel: </span><span style="color:#9ECBFF">"border-[#eeeef0]/12 bg-[#1a1b1e]"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">  accent: </span><span style="color:#9ECBFF">"bg-[#8b93ff] text-[#0f1011]"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">  accentMuted: </span><span style="color:#9ECBFF">"bg-[#8b93ff]/14 text-[#b4b9ff]"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">  dot: </span><span style="color:#9ECBFF">"bg-[#8b93ff]"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">};</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">type</span><span style="color:#B392F0"> Tone</span><span style="color:#F97583"> =</span><span style="color:#F97583"> typeof</span><span style="color:#E1E4E8"> light;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">function</span><span style="color:#B392F0"> ReleaseChapter</span><span style="color:#E1E4E8">({</span></span>
+<span class="line"><span style="color:#FFAB70">  title</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#FFAB70">  lead</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#FFAB70">  body</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#FFAB70">  tone</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#FFAB70">  children</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span><span style="color:#F97583">:</span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#FFAB70">  title</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> string</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#FFAB70">  lead</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> string</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#FFAB70">  body</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> string</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#FFAB70">  tone</span><span style="color:#F97583">:</span><span style="color:#B392F0"> Tone</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#FFAB70">  children</span><span style="color:#F97583">?:</span><span style="color:#B392F0"> ReactNode</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#E1E4E8">}) {</span></span>
+<span class="line"><span style="color:#F97583">  return</span><span style="color:#E1E4E8"> (</span></span>
+<span class="line"><span style="color:#E1E4E8">    &#x3C;</span><span style="color:#85E89D">section</span></span>
+<span class="line"><span style="color:#B392F0">      className</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#B392F0">cn</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"flex w-full shrink-0 flex-col overflow-hidden rounded-2xl"</span><span style="color:#E1E4E8">, tone.bg)}</span></span>
+<span class="line"><span style="color:#E1E4E8">    ></span></span>
+<span class="line"><span style="color:#E1E4E8">      &#x3C;</span><span style="color:#85E89D">div</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#B392F0">cn</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"flex flex-col gap-6"</span><span style="color:#E1E4E8">, </span><span style="color:#79B8FF">PAD_X</span><span style="color:#E1E4E8">, </span><span style="color:#79B8FF">PAD_Y</span><span style="color:#E1E4E8">)}></span></span>
+<span class="line"><span style="color:#E1E4E8">        &#x3C;</span><span style="color:#85E89D">div</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"flex flex-col gap-2.5"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">          &#x3C;</span><span style="color:#85E89D">h2</span></span>
+<span class="line"><span style="color:#B392F0">            className</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#B392F0">cn</span><span style="color:#E1E4E8">(</span></span>
+<span class="line"><span style="color:#E1E4E8">              typeDisplay,</span></span>
+<span class="line"><span style="color:#9ECBFF">              "text-[clamp(1.75rem,7vw,2.75rem)] leading-[1.05] tracking-[-0.03em]"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">            )}</span></span>
+<span class="line"><span style="color:#E1E4E8">          ></span></span>
+<span class="line"><span style="color:#E1E4E8">            {title}</span></span>
+<span class="line"><span style="color:#E1E4E8">          &#x3C;/</span><span style="color:#85E89D">h2</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">          &#x3C;</span><span style="color:#85E89D">p</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#B392F0">cn</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"text-[15px] leading-snug"</span><span style="color:#E1E4E8">, typeBody, tone.muted)}>{lead}&#x3C;/</span><span style="color:#85E89D">p</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">          &#x3C;</span><span style="color:#85E89D">p</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#B392F0">cn</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"max-w-prose text-sm leading-[1.65]"</span><span style="color:#E1E4E8">, typeBody, tone.muted)}>{body}&#x3C;/</span><span style="color:#85E89D">p</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">        &#x3C;/</span><span style="color:#85E89D">div</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">        {children}</span></span>
+<span class="line"><span style="color:#E1E4E8">      &#x3C;/</span><span style="color:#85E89D">div</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">    &#x3C;/</span><span style="color:#85E89D">section</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">  );</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">function</span><span style="color:#B392F0"> ScatteredTools</span><span style="color:#E1E4E8">({ </span><span style="color:#FFAB70">tone</span><span style="color:#E1E4E8"> }</span><span style="color:#F97583">:</span><span style="color:#E1E4E8"> { </span><span style="color:#FFAB70">tone</span><span style="color:#F97583">:</span><span style="color:#B392F0"> Tone</span><span style="color:#E1E4E8"> }) {</span></span>
+<span class="line"><span style="color:#F97583">  const</span><span style="color:#79B8FF"> rows</span><span style="color:#F97583"> =</span><span style="color:#E1E4E8"> [</span></span>
+<span class="line"><span style="color:#E1E4E8">    { label: </span><span style="color:#9ECBFF">"Standup notes"</span><span style="color:#E1E4E8">, where: </span><span style="color:#9ECBFF">"Slack thread"</span><span style="color:#E1E4E8"> },</span></span>
+<span class="line"><span style="color:#E1E4E8">    { label: </span><span style="color:#9ECBFF">"Cycle scope"</span><span style="color:#E1E4E8">, where: </span><span style="color:#9ECBFF">"Spreadsheet"</span><span style="color:#E1E4E8"> },</span></span>
+<span class="line"><span style="color:#E1E4E8">    { label: </span><span style="color:#9ECBFF">"Customer ask"</span><span style="color:#E1E4E8">, where: </span><span style="color:#9ECBFF">"Email"</span><span style="color:#E1E4E8"> },</span></span>
+<span class="line"><span style="color:#E1E4E8">  ];</span></span>
+<span class="line"><span style="color:#F97583">  return</span><span style="color:#E1E4E8"> (</span></span>
+<span class="line"><span style="color:#E1E4E8">    &#x3C;</span><span style="color:#85E89D">div</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#B392F0">cn</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"flex flex-col gap-2 rounded-xl border p-3"</span><span style="color:#E1E4E8">, tone.panel)}></span></span>
+<span class="line"><span style="color:#E1E4E8">      {rows.</span><span style="color:#B392F0">map</span><span style="color:#E1E4E8">((</span><span style="color:#FFAB70">row</span><span style="color:#E1E4E8">) </span><span style="color:#F97583">=></span><span style="color:#E1E4E8"> (</span></span>
+<span class="line"><span style="color:#E1E4E8">        &#x3C;</span><span style="color:#85E89D">div</span></span>
+<span class="line"><span style="color:#B392F0">          key</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{row.label}</span></span>
+<span class="line"><span style="color:#B392F0">          className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"flex items-center justify-between gap-3 rounded-lg bg-black/[0.03] px-3 py-2.5 dark:bg-white/[0.04]"</span></span>
+<span class="line"><span style="color:#E1E4E8">        ></span></span>
+<span class="line"><span style="color:#E1E4E8">          &#x3C;</span><span style="color:#85E89D">span</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#B392F0">cn</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"text-sm"</span><span style="color:#E1E4E8">, typeCopy)}>{row.label}&#x3C;/</span><span style="color:#85E89D">span</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">          &#x3C;</span><span style="color:#85E89D">span</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#B392F0">cn</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"text-xs"</span><span style="color:#E1E4E8">, typeBody, tone.muted)}>{row.where}&#x3C;/</span><span style="color:#85E89D">span</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">        &#x3C;/</span><span style="color:#85E89D">div</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">      ))}</span></span>
+<span class="line"><span style="color:#E1E4E8">    &#x3C;/</span><span style="color:#85E89D">div</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">  );</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">function</span><span style="color:#B392F0"> CycleBoard</span><span style="color:#E1E4E8">({ </span><span style="color:#FFAB70">tone</span><span style="color:#E1E4E8"> }</span><span style="color:#F97583">:</span><span style="color:#E1E4E8"> { </span><span style="color:#FFAB70">tone</span><span style="color:#F97583">:</span><span style="color:#B392F0"> Tone</span><span style="color:#E1E4E8"> }) {</span></span>
+<span class="line"><span style="color:#F97583">  const</span><span style="color:#79B8FF"> lanes</span><span style="color:#F97583"> =</span><span style="color:#E1E4E8"> [</span></span>
+<span class="line"><span style="color:#E1E4E8">    { name: </span><span style="color:#9ECBFF">"Backlog"</span><span style="color:#E1E4E8">, fill: </span><span style="color:#79B8FF">28</span><span style="color:#E1E4E8"> },</span></span>
+<span class="line"><span style="color:#E1E4E8">    { name: </span><span style="color:#9ECBFF">"In progress"</span><span style="color:#E1E4E8">, fill: </span><span style="color:#79B8FF">62</span><span style="color:#E1E4E8"> },</span></span>
+<span class="line"><span style="color:#E1E4E8">    { name: </span><span style="color:#9ECBFF">"Review"</span><span style="color:#E1E4E8">, fill: </span><span style="color:#79B8FF">44</span><span style="color:#E1E4E8"> },</span></span>
+<span class="line"><span style="color:#E1E4E8">    { name: </span><span style="color:#9ECBFF">"Done"</span><span style="color:#E1E4E8">, fill: </span><span style="color:#79B8FF">91</span><span style="color:#E1E4E8"> },</span></span>
+<span class="line"><span style="color:#E1E4E8">  ];</span></span>
+<span class="line"><span style="color:#F97583">  return</span><span style="color:#E1E4E8"> (</span></span>
+<span class="line"><span style="color:#E1E4E8">    &#x3C;</span><span style="color:#85E89D">div</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#B392F0">cn</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"rounded-xl border p-4"</span><span style="color:#E1E4E8">, tone.panel)}></span></span>
+<span class="line"><span style="color:#E1E4E8">      &#x3C;</span><span style="color:#85E89D">p</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#B392F0">cn</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"mb-3 text-xs"</span><span style="color:#E1E4E8">, typeCopy, tone.muted)}>Cycle · Apr 7 → Apr 21&#x3C;/</span><span style="color:#85E89D">p</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">      &#x3C;</span><span style="color:#85E89D">div</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"flex flex-col gap-3"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">        {lanes.</span><span style="color:#B392F0">map</span><span style="color:#E1E4E8">((</span><span style="color:#FFAB70">lane</span><span style="color:#E1E4E8">) </span><span style="color:#F97583">=></span><span style="color:#E1E4E8"> (</span></span>
+<span class="line"><span style="color:#E1E4E8">          &#x3C;</span><span style="color:#85E89D">div</span><span style="color:#B392F0"> key</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{lane.name} </span><span style="color:#B392F0">className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"flex items-center gap-3"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">            &#x3C;</span><span style="color:#85E89D">span</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#B392F0">cn</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"w-24 shrink-0 text-xs"</span><span style="color:#E1E4E8">, typeBody, tone.muted)}>{lane.name}&#x3C;/</span><span style="color:#85E89D">span</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">            &#x3C;</span><span style="color:#85E89D">div</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"h-2 flex-1 overflow-hidden rounded-full bg-black/8 dark:bg-white/10"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">              &#x3C;</span><span style="color:#85E89D">div</span></span>
+<span class="line"><span style="color:#B392F0">                className</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#B392F0">cn</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"h-full rounded-full"</span><span style="color:#E1E4E8">, tone.dot)}</span></span>
+<span class="line"><span style="color:#B392F0">                style</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{{ width: </span><span style="color:#9ECBFF">\`\${</span><span style="color:#E1E4E8">lane</span><span style="color:#9ECBFF">.</span><span style="color:#E1E4E8">fill</span><span style="color:#9ECBFF">}%\`</span><span style="color:#E1E4E8"> }}</span></span>
+<span class="line"><span style="color:#E1E4E8">              /></span></span>
+<span class="line"><span style="color:#E1E4E8">            &#x3C;/</span><span style="color:#85E89D">div</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">          &#x3C;/</span><span style="color:#85E89D">div</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">        ))}</span></span>
+<span class="line"><span style="color:#E1E4E8">      &#x3C;/</span><span style="color:#85E89D">div</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">    &#x3C;/</span><span style="color:#85E89D">div</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">  );</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">function</span><span style="color:#B392F0"> RequestInbox</span><span style="color:#E1E4E8">({ </span><span style="color:#FFAB70">tone</span><span style="color:#E1E4E8"> }</span><span style="color:#F97583">:</span><span style="color:#E1E4E8"> { </span><span style="color:#FFAB70">tone</span><span style="color:#F97583">:</span><span style="color:#B392F0"> Tone</span><span style="color:#E1E4E8"> }) {</span></span>
+<span class="line"><span style="color:#F97583">  const</span><span style="color:#79B8FF"> items</span><span style="color:#F97583"> =</span><span style="color:#E1E4E8"> [</span></span>
+<span class="line"><span style="color:#E1E4E8">    { title: </span><span style="color:#9ECBFF">"Export audit log to S3"</span><span style="color:#E1E4E8">, votes: </span><span style="color:#79B8FF">48</span><span style="color:#E1E4E8"> },</span></span>
+<span class="line"><span style="color:#E1E4E8">    { title: </span><span style="color:#9ECBFF">"Guest role for contractors"</span><span style="color:#E1E4E8">, votes: </span><span style="color:#79B8FF">31</span><span style="color:#E1E4E8"> },</span></span>
+<span class="line"><span style="color:#E1E4E8">    { title: </span><span style="color:#9ECBFF">"Slack → issue from reaction"</span><span style="color:#E1E4E8">, votes: </span><span style="color:#79B8FF">27</span><span style="color:#E1E4E8"> },</span></span>
+<span class="line"><span style="color:#E1E4E8">  ];</span></span>
+<span class="line"><span style="color:#F97583">  return</span><span style="color:#E1E4E8"> (</span></span>
+<span class="line"><span style="color:#E1E4E8">    &#x3C;</span><span style="color:#85E89D">ul</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#B392F0">cn</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"flex flex-col gap-2 rounded-xl border p-3"</span><span style="color:#E1E4E8">, tone.panel)}></span></span>
+<span class="line"><span style="color:#E1E4E8">      {items.</span><span style="color:#B392F0">map</span><span style="color:#E1E4E8">((</span><span style="color:#FFAB70">item</span><span style="color:#E1E4E8">) </span><span style="color:#F97583">=></span><span style="color:#E1E4E8"> (</span></span>
+<span class="line"><span style="color:#E1E4E8">        &#x3C;</span><span style="color:#85E89D">li</span></span>
+<span class="line"><span style="color:#B392F0">          key</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{item.title}</span></span>
+<span class="line"><span style="color:#B392F0">          className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"flex items-start justify-between gap-3 rounded-lg px-3 py-2.5"</span></span>
+<span class="line"><span style="color:#E1E4E8">        ></span></span>
+<span class="line"><span style="color:#E1E4E8">          &#x3C;</span><span style="color:#85E89D">span</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#B392F0">cn</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"text-sm leading-snug"</span><span style="color:#E1E4E8">, typeCopy)}>{item.title}&#x3C;/</span><span style="color:#85E89D">span</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">          &#x3C;</span><span style="color:#85E89D">span</span></span>
+<span class="line"><span style="color:#B392F0">            className</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#B392F0">cn</span><span style="color:#E1E4E8">(</span></span>
+<span class="line"><span style="color:#9ECBFF">              "shrink-0 rounded-md px-2 py-0.5 text-[11px] tabular-nums"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">              typeCopy,</span></span>
+<span class="line"><span style="color:#E1E4E8">              tone.accentMuted,</span></span>
+<span class="line"><span style="color:#E1E4E8">            )}</span></span>
+<span class="line"><span style="color:#E1E4E8">          ></span></span>
+<span class="line"><span style="color:#E1E4E8">            {item.votes}</span></span>
+<span class="line"><span style="color:#E1E4E8">          &#x3C;/</span><span style="color:#85E89D">span</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">        &#x3C;/</span><span style="color:#85E89D">li</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">      ))}</span></span>
+<span class="line"><span style="color:#E1E4E8">    &#x3C;/</span><span style="color:#85E89D">ul</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">  );</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">function</span><span style="color:#B392F0"> WorkspaceCta</span><span style="color:#E1E4E8">({ </span><span style="color:#FFAB70">tone</span><span style="color:#E1E4E8"> }</span><span style="color:#F97583">:</span><span style="color:#E1E4E8"> { </span><span style="color:#FFAB70">tone</span><span style="color:#F97583">:</span><span style="color:#B392F0"> Tone</span><span style="color:#E1E4E8"> }) {</span></span>
+<span class="line"><span style="color:#F97583">  return</span><span style="color:#E1E4E8"> (</span></span>
+<span class="line"><span style="color:#E1E4E8">    &#x3C;</span><span style="color:#85E89D">div</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#B392F0">cn</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"flex flex-col gap-3 rounded-xl border p-4"</span><span style="color:#E1E4E8">, tone.panel)}></span></span>
+<span class="line"><span style="color:#E1E4E8">      &#x3C;</span><span style="color:#85E89D">div</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"flex items-center gap-3"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">        &#x3C;</span><span style="color:#85E89D">span</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#B392F0">cn</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"flex size-10 items-center justify-center rounded-lg text-sm font-bold"</span><span style="color:#E1E4E8">, tone.accent)}></span></span>
+<span class="line"><span style="color:#E1E4E8">          P</span></span>
+<span class="line"><span style="color:#E1E4E8">        &#x3C;/</span><span style="color:#85E89D">span</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">        &#x3C;</span><span style="color:#85E89D">div</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">          &#x3C;</span><span style="color:#85E89D">p</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#B392F0">cn</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"text-sm"</span><span style="color:#E1E4E8">, typeCopy)}>acme.workspace&#x3C;/</span><span style="color:#85E89D">p</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">          &#x3C;</span><span style="color:#85E89D">p</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#B392F0">cn</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"text-xs"</span><span style="color:#E1E4E8">, typeBody, tone.muted)}>42 members · Pro plan&#x3C;/</span><span style="color:#85E89D">p</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">        &#x3C;/</span><span style="color:#85E89D">div</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">      &#x3C;/</span><span style="color:#85E89D">div</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">      &#x3C;</span><span style="color:#85E89D">div</span></span>
+<span class="line"><span style="color:#B392F0">        className</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#B392F0">cn</span><span style="color:#E1E4E8">(</span></span>
+<span class="line"><span style="color:#9ECBFF">          "flex h-11 items-center justify-center rounded-lg text-sm font-semibold"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">          typeCopy,</span></span>
+<span class="line"><span style="color:#E1E4E8">          tone.accent,</span></span>
+<span class="line"><span style="color:#E1E4E8">        )}</span></span>
+<span class="line"><span style="color:#E1E4E8">      ></span></span>
+<span class="line"><span style="color:#E1E4E8">        Turn on spring features</span></span>
+<span class="line"><span style="color:#E1E4E8">      &#x3C;/</span><span style="color:#85E89D">div</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">    &#x3C;/</span><span style="color:#85E89D">div</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">  );</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">export</span><span style="color:#F97583"> default</span><span style="color:#F97583"> function</span><span style="color:#B392F0"> StackedSectionsDemo001</span><span style="color:#E1E4E8">() {</span></span>
+<span class="line"><span style="color:#F97583">  return</span><span style="color:#E1E4E8"> (</span></span>
+<span class="line"><span style="color:#E1E4E8">    &#x3C;></span></span>
+<span class="line"><span style="color:#E1E4E8">      &#x3C;</span><span style="color:#85E89D">div</span></span>
+<span class="line"><span style="color:#B392F0">        className</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#B392F0">cn</span><span style="color:#E1E4E8">(</span></span>
+<span class="line"><span style="color:#E1E4E8">          display.variable,</span></span>
+<span class="line"><span style="color:#E1E4E8">          display.className,</span></span>
+<span class="line"><span style="color:#E1E4E8">          sans.variable,</span></span>
+<span class="line"><span style="color:#E1E4E8">          sans.className,</span></span>
+<span class="line"><span style="color:#9ECBFF">          "bg-[#e8eaef] text-[#0f1011]"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">        )}</span></span>
+<span class="line"><span style="color:#E1E4E8">      ></span></span>
+<span class="line"><span style="color:#E1E4E8">        &#x3C;</span><span style="color:#85E89D">div</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#B392F0">cn</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"mx-auto w-full max-w-3xl"</span><span style="color:#E1E4E8">, </span><span style="color:#79B8FF">PAD_X</span><span style="color:#E1E4E8">)}></span></span>
+<span class="line"><span style="color:#E1E4E8">          &#x3C;</span><span style="color:#85E89D">header</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"flex min-h-[min(30svh,260px)] flex-col justify-center gap-3 pb-[var(--demo-chrome-reserve,5rem)] pt-[max(1.25rem,env(safe-area-inset-top))]"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">            &#x3C;</span><span style="color:#85E89D">h1</span></span>
+<span class="line"><span style="color:#B392F0">              className</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#B392F0">cn</span><span style="color:#E1E4E8">(</span></span>
+<span class="line"><span style="color:#E1E4E8">                typeDisplay,</span></span>
+<span class="line"><span style="color:#9ECBFF">                "max-w-[14ch] text-[clamp(2rem,8vw,3rem)] leading-[1.02] tracking-[-0.03em]"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">              )}</span></span>
+<span class="line"><span style="color:#E1E4E8">            ></span></span>
+<span class="line"><span style="color:#E1E4E8">              Spring release, one scroll</span></span>
+<span class="line"><span style="color:#E1E4E8">            &#x3C;/</span><span style="color:#85E89D">h1</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">            &#x3C;</span><span style="color:#85E89D">p</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#B392F0">cn</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"max-w-md text-sm leading-[1.65] text-[#0f1011]/68"</span><span style="color:#E1E4E8">, typeBody)}></span></span>
+<span class="line"><span style="color:#E1E4E8">              A product update page for a project tool — four chapters pin and stack as you read</span></span>
+<span class="line"><span style="color:#E1E4E8">              through what shipped this quarter.</span></span>
+<span class="line"><span style="color:#E1E4E8">            &#x3C;/</span><span style="color:#85E89D">p</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">          &#x3C;/</span><span style="color:#85E89D">header</span><span style="color:#E1E4E8">></span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">          &#x3C;</span><span style="color:#79B8FF">StackedSections</span></span>
+<span class="line"><span style="color:#B392F0">            stackOffset</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#79B8FF">STACK_OFFSET</span><span style="color:#E1E4E8">}</span></span>
+<span class="line"><span style="color:#B392F0">            withDramaEffect</span></span>
+<span class="line"><span style="color:#B392F0">            scrollRunway</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"min(50vh, 24rem)"</span></span>
+<span class="line"><span style="color:#B392F0">            className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"w-full"</span></span>
+<span class="line"><span style="color:#E1E4E8">          ></span></span>
+<span class="line"><span style="color:#E1E4E8">            &#x3C;</span><span style="color:#79B8FF">ReleaseChapter</span></span>
+<span class="line"><span style="color:#B392F0">              title</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"Stop chasing context"</span></span>
+<span class="line"><span style="color:#B392F0">              lead</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"Issues, cycles, and customer asks lived in three places."</span></span>
+<span class="line"><span style="color:#B392F0">              body</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"This release pulls triage into one surface so leads can answer “what are we building and why?” without opening five tabs."</span></span>
+<span class="line"><span style="color:#B392F0">              tone</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{light}</span></span>
+<span class="line"><span style="color:#E1E4E8">            ></span></span>
+<span class="line"><span style="color:#E1E4E8">              &#x3C;</span><span style="color:#79B8FF">ScatteredTools</span><span style="color:#B392F0"> tone</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{light} /></span></span>
+<span class="line"><span style="color:#E1E4E8">            &#x3C;/</span><span style="color:#79B8FF">ReleaseChapter</span><span style="color:#E1E4E8">></span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">            &#x3C;</span><span style="color:#79B8FF">ReleaseChapter</span></span>
+<span class="line"><span style="color:#B392F0">              title</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"Cycles that match reality"</span></span>
+<span class="line"><span style="color:#B392F0">              lead</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"Two-week rhythm with capacity hints built in."</span></span>
+<span class="line"><span style="color:#B392F0">              body</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"Teams see load per lane before the sprint starts — scope slips show up as bar drift, not a surprise retro topic."</span></span>
+<span class="line"><span style="color:#B392F0">              tone</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{dark}</span></span>
+<span class="line"><span style="color:#E1E4E8">            ></span></span>
+<span class="line"><span style="color:#E1E4E8">              &#x3C;</span><span style="color:#79B8FF">CycleBoard</span><span style="color:#B392F0"> tone</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{dark} /></span></span>
+<span class="line"><span style="color:#E1E4E8">            &#x3C;/</span><span style="color:#79B8FF">ReleaseChapter</span><span style="color:#E1E4E8">></span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">            &#x3C;</span><span style="color:#79B8FF">ReleaseChapter</span></span>
+<span class="line"><span style="color:#B392F0">              title</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"Customer requests, ranked"</span></span>
+<span class="line"><span style="color:#B392F0">              lead</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"Votes roll up from support and sales without a spreadsheet."</span></span>
+<span class="line"><span style="color:#B392F0">              body</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"Product can promote a request to an issue in one gesture; the inbox stays the source of truth for what users asked for."</span></span>
+<span class="line"><span style="color:#B392F0">              tone</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{light}</span></span>
+<span class="line"><span style="color:#E1E4E8">            ></span></span>
+<span class="line"><span style="color:#E1E4E8">              &#x3C;</span><span style="color:#79B8FF">RequestInbox</span><span style="color:#B392F0"> tone</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{light} /></span></span>
+<span class="line"><span style="color:#E1E4E8">            &#x3C;/</span><span style="color:#79B8FF">ReleaseChapter</span><span style="color:#E1E4E8">></span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">            &#x3C;</span><span style="color:#79B8FF">ReleaseChapter</span></span>
+<span class="line"><span style="color:#B392F0">              title</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"Ship it on your workspace"</span></span>
+<span class="line"><span style="color:#B392F0">              lead</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"Flags roll out per team — no all-hands required."</span></span>
+<span class="line"><span style="color:#B392F0">              body</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"Admins enable the spring bundle when ready. Everyone else sees what changed in the changelog the moment they log in."</span></span>
+<span class="line"><span style="color:#B392F0">              tone</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{dark}</span></span>
+<span class="line"><span style="color:#E1E4E8">            ></span></span>
+<span class="line"><span style="color:#E1E4E8">              &#x3C;</span><span style="color:#79B8FF">WorkspaceCta</span><span style="color:#B392F0"> tone</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{dark} /></span></span>
+<span class="line"><span style="color:#E1E4E8">            &#x3C;/</span><span style="color:#79B8FF">ReleaseChapter</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">          &#x3C;/</span><span style="color:#79B8FF">StackedSections</span><span style="color:#E1E4E8">></span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">          &#x3C;</span><span style="color:#85E89D">footer</span></span>
+<span class="line"><span style="color:#B392F0">            className</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#B392F0">cn</span><span style="color:#E1E4E8">(</span></span>
+<span class="line"><span style="color:#9ECBFF">              "flex min-h-[min(16svh,120px)] items-center justify-center pb-[var(--demo-chrome-reserve,5rem)] text-sm text-[#0f1011]/45"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">              typeBody,</span></span>
+<span class="line"><span style="color:#E1E4E8">            )}</span></span>
+<span class="line"><span style="color:#E1E4E8">          ></span></span>
+<span class="line"><span style="color:#E1E4E8">            End of release notes</span></span>
+<span class="line"><span style="color:#E1E4E8">          &#x3C;/</span><span style="color:#85E89D">footer</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">        &#x3C;/</span><span style="color:#85E89D">div</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">      &#x3C;/</span><span style="color:#85E89D">div</span><span style="color:#E1E4E8">></span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">      &#x3C;</span><span style="color:#79B8FF">StackedSectionsDemo001Notes</span><span style="color:#E1E4E8"> /></span></span>
+<span class="line"><span style="color:#E1E4E8">    &#x3C;/></span></span>
+<span class="line"><span style="color:#E1E4E8">  );</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span>
+<span class="line"></span></code></pre>`,
+    },
+  ],
 };

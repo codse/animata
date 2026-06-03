@@ -67,6 +67,21 @@ export const DEMO_REGISTRY = [
     ],
   },
   {
+    key: "scroll/stacked-sections-demo-001",
+    groupSlug: "scroll",
+    itemSlug: "stacked-sections-demo-001",
+    label: "Plane · spring release",
+    components: [
+      {
+        docSlug: "scroll/stacked-sections",
+        category: "Scroll",
+        name: "Stacked Sections",
+        description:
+          "Sticky chapter deck with optional cover scale — flex-column stack and in-flow scroll runway.",
+      },
+    ],
+  },
+  {
     key: "hero/photographer-portfolio",
     groupSlug: "hero",
     itemSlug: "photographer-portfolio",
