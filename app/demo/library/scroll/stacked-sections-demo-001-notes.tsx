@@ -13,16 +13,16 @@ export function StackedSectionsDemo001Notes() {
         id="demo-notes-title"
         eyebrow="Recipe"
         title="Stacked sections · demo 001"
-        description="Plane-style product release scroll — four chapters with inline UI vignettes on StackedSections."
+        description="A Plane-like spring release page: four stacked chapters and a small UI panel in each."
       />
 
       <DemoNotes.Section id="concept" index={1} title="Concept">
         <DemoNotes.Prose>
           <p>
-            A quarterly release page for a project-management product. Each chapter is a full
-            viewport beat: problem, cycles, customer inbox, rollout. Light and dark panes alternate
-            so the stack reads clearly; small panels inside each chapter sell the use case without
-            leaving the story.
+            The demo reads like a quarterly ship note for a project tool. You scroll through four
+            beats (messy triage, cycles, customer requests, rollout). Panes alternate light and dark
+            so you can still see what is underneath when the next one pins. Each chapter has a tiny
+            mock UI block so the story feels real, not like placeholder copy on a gray card.
           </p>
         </DemoNotes.Prose>
       </DemoNotes.Section>
@@ -30,8 +30,8 @@ export function StackedSectionsDemo001Notes() {
       <DemoNotes.Section id="components" index={2} title="Components used">
         <DemoNotes.Prose>
           <p>
-            One Animata primitive (<code>StackedSections</code>). Release chapters, palettes, and
-            vignette blocks are local to this demo file.
+            Only <code>StackedSections</code> from the library. The chapter layout, colors, and
+            vignettes all live in this demo file.
           </p>
         </DemoNotes.Prose>
         <DemoNotes.ComponentLinks demoKey={DEMO_KEY} />
@@ -40,13 +40,13 @@ export function StackedSectionsDemo001Notes() {
       <DemoNotes.Section id="build" index={3} title="How it's built">
         <DemoNotes.Prose>
           <p>
-            <code>StackedSections</code> wraps four <code>ReleaseChapter</code> sections with{" "}
-            <code>stackOffset={40}</code> so prior panes peek as color bands when covered — no
-            eyebrow strip required.
+            Four <code>ReleaseChapter</code> sections sit inside <code>StackedSections</code> with{" "}
+            <code>stackOffset={40}</code>. That offset is the peek band when a pane gets covered;
+            you do not need a separate eyebrow row for it.
           </p>
           <p>
-            Intro and outro reserve bottom padding so the first and last chapters clear the demo
-            footer bar.
+            The intro and footer add bottom padding so the first and last chapters are not hidden
+            behind the fixed demo bar.
           </p>
         </DemoNotes.Prose>
         <DemoSourcePanel files={sources} />
