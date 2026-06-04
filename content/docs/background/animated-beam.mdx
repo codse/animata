@@ -1,6 +1,6 @@
 ---
 title: Animated Beam
-description: Animated beam background section where the meteor beam of lights move through the line.
+description: A dark section background where light beams streak diagonally down a grid of faint lines, each at its own length and speed.
 author: harimanok_
 ---
 
@@ -16,17 +16,10 @@ author: harimanok_
 
 <Steps>
 
-<Step>Add to your CSS</Step>
+<Step>No dependencies</Step>
 
-```css
-@keyframes meteor {
-  0% { transform: translateY(-20%) translateX(-50%); }
-  100% { transform: translateY(300%) translateX(-50%); }
-}
-@theme {
-  --animate-meteor: meteor var(--duration) var(--delay) ease-in-out infinite;
-}
-```
+Everything ships in the one file, including the `meteor` keyframes (in an inline `<style>`). There's
+no extra CSS to add and no config to touch.
 
 <Step>Run the following command</Step>
 
@@ -36,7 +29,7 @@ It will create a new file `animated-beam.tsx` inside the `components/animata/bac
 mkdir -p components/animata/background && touch components/animata/background/animated-beam.tsx
 ```
 
-<Step>Paste the code</Step>{" "}
+<Step>Paste the code</Step>
 
 Open the newly created file and paste the following code:
 
@@ -46,6 +39,42 @@ Open the newly created file and paste the following code:
 
 </Steps>
 
+## Usage
+
+Wrap your content with it and the beams run behind. Each beam's length, speed, width and brightness
+come from a hash of its index, so no two are quite alike and the values match between server and
+client (no hydration warnings). About a third of them move fast and bright like real meteors; the
+rest drift slowly.
+
+It runs on CSS keyframes alone, with no JavaScript at runtime and no resize listeners. The lanes are
+a fixed set, clipped to whatever width fits and centered, so the grid crops evenly on both edges
+instead of cutting off on one side. Reduced motion hides the beams.
+
+## Props
+
+<PropsTable>
+  <PropsTable.Row prop="children" type="React.ReactNode">
+    Content rendered on top of the beams.
+  </PropsTable.Row>
+  <PropsTable.Row prop="className" type="string">
+    Classes on the root element. Set a height here, e.g. `h-screen` or `min-h-96`.
+  </PropsTable.Row>
+</PropsTable>
+
+## Changelog
+
+### 2026-06-04
+
+- Dropped `getBoundingClientRect` and the resize listener. The lanes are now a fixed set of
+  fixed-width columns clipped to whatever width fits, so the line count stays responsive with no
+  layout reads. Tradeoff: it renders a fixed number of lanes (extras are clipped) rather than
+  computing the exact count for the width.
+- Centered the lane field so it crops evenly on both edges instead of cutting off on the right.
+- Beams vary per beam (length, speed, width, brightness) from a deterministic hash of their index,
+  so no two match and server/client stay in sync. About a third now run fast and bright.
+- Beams no longer peek at their resting spot before their delay (opacity is in the keyframe with
+  `backwards` fill mode).
+
 ## Credits
 
-Built by [hari](https://github.com/hari)
+Built by [hari](https://github.com/hari).

@@ -1,0 +1,72 @@
+---
+title: Shooting Stars
+description: A dark sky where light streaks shoot across at different lengths, speeds and angles over a twinkling starfield.
+author: sudhashrestha
+labels: ["new", "background", "animated"]
+---
+
+<ComponentPreview name="background-shooting-stars--primary" />
+
+## Installation
+
+### CLI
+
+<RegistryInstall category="background" name="shooting-stars" />
+
+### Manual
+
+<Steps>
+
+<Step>No dependencies</Step>
+
+Built with React, SVG and CSS keyframes. React spawns and recycles the streaks; the movement
+itself is plain CSS. There's no animation library and no WebGL.
+
+<Step>Run the following command</Step>
+
+It will create a new file called `shooting-stars.tsx` inside the `components/animata/background` directory.
+
+```bash
+mkdir -p components/animata/background && touch components/animata/background/shooting-stars.tsx
+```
+
+<Step>Paste the code</Step>
+
+Open the newly created file and paste the following code:
+
+```jsx file=<rootDir>/animata/background/shooting-stars.tsx
+
+```
+
+</Steps>
+
+## Usage
+
+Put your content inside it and the sky renders behind. It keeps a small pool of streaks running:
+each one starts just off the top or left edge, crosses the area, fades out past the bottom-right,
+then comes back with a new random length, speed, angle and position, so the sky never visibly
+loops. Each streak is an SVG rect with a tail-to-head gradient and a soft radial glow at the tip.
+
+It is not pure CSS. React owns the spawning and recycling; CSS keyframes do the motion. With
+reduced motion turned on, the streaks are dropped and only the static starfield is left. It reads
+best on a dark surface.
+
+## Props
+
+<PropsTable>
+  <PropsTable.Row prop="children" type="React.ReactNode">
+    Content rendered on top of the sky.
+  </PropsTable.Row>
+  <PropsTable.Row prop="className" type="string">
+    Classes on the root element. Set a height here, e.g. `h-screen` or `min-h-96`.
+  </PropsTable.Row>
+</PropsTable>
+
+## Credits
+
+Built by [Sudha Shrestha](https://github.com/sudhashrestha).
+
+Based on [Animated Mesh Lines](https://github.com/Jeremboo/animated-mesh-lines) by
+[Jérémie Boulay](https://github.com/Jeremboo), a three.js demo that animates a dash offset along
+each line so a bright segment travels and fades. This is the same idea rebuilt in plain SVG and CSS
+with no three.js dependency.

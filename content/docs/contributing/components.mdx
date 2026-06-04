@@ -86,6 +86,25 @@ Your prose here…
 </Steps>
 ````
 
+### Changelog section
+
+When you make a notable change to an existing component (behavior, API, a fix worth knowing, or a
+deliberate tradeoff), add a `## Changelog` section near the bottom of its doc, grouped by date
+(newest first). Keep entries short and concrete: say what changed and why, and call out tradeoffs.
+
+```mdx
+## Changelog
+
+### 2026-06-04
+
+- Dropped `getBoundingClientRect`; lane count is now clipped via CSS. Tradeoff: fixed lane count
+  instead of one computed from the width.
+- Centered the field so it crops evenly on both edges.
+```
+
+This is per-component history, separate from the site-wide [changelog](/docs/changelog), which
+still gets an entry when a component is first published.
+
 ## Proposing pull requests
 
 - **Making changes**: implement your bug fix or feature and write stories to cover different use cases. Then commit your changes, push your bug fix/feature branch to the origin (your forked repo) and open a pull request to the upstream (the repository you originally forked)‘s main branch.

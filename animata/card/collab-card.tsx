@@ -181,7 +181,7 @@ export default function CollabCard({
             <span className="collab-live-ping absolute inset-0 rounded-full bg-emerald-400/70" />
             <span className="relative inline-block h-full w-full rounded-full bg-emerald-400 shadow-[0_0_6px_rgba(52,211,153,0.75)]" />
           </span>
-          <span className="truncate tabular-nums">{liveLabel}</span>
+          <span className="truncate tabular-nums leading-snug">{liveLabel}</span>
         </span>
         <PresenceStack colors={presenceColors} extraCount={extraCount} />
       </header>

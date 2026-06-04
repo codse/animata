@@ -47,9 +47,9 @@ export const InBentoGrid: Story = {
       <div className="col-span-2">
         <CollabCard />
       </div>
-      <div className="flex min-h-40 items-center rounded-2xl border border-border bg-muted/50 p-5 text-sm leading-relaxed text-muted-foreground">
-        Drop into a wide bento cell — frame, greeting, pills, and cursors track the card width via{" "}
-        <code className="text-xs">cqi</code>.
+      <div className="flex min-h-40 items-center text-pretty rounded-2xl border border-border bg-muted/50 p-5 text-sm leading-relaxed text-muted-foreground">
+        Drop into a wide bento cell — frame, greeting, pills, and cursors track the card width via
+        cqi.
       </div>
     </div>
   ),
