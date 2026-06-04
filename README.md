@@ -1,6 +1,9 @@
 <section id="logo" align="center">
   <a href="https://animata.design/">
-    <img alt="Animata Logo" src="public/animata-logo-smil.svg" width="512" />
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="public/animata-logo-smil-dark.svg" />
+      <img alt="Animata Logo" src="public/animata-logo-smil.svg" width="512" height="215" />
+    </picture>
   </a>
   <section>
     <a href="https://discord.gg/STYEh3UW">
