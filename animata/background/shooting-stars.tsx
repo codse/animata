@@ -90,11 +90,14 @@ export default function ShootingStars({
     if (!el) return;
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+    let seeded = false;
+
     const seed = () => {
       const r = el.getBoundingClientRect();
       dims.current = { w: r.width, h: r.height };
       const { w, h } = dims.current;
       if (!w || !h) return;
+      seeded = true;
 
       const dotCount = Math.min(90, Math.max(24, Math.round((w * h) / 14000)));
       setDots(
@@ -119,6 +122,9 @@ export default function ShootingStars({
     const ro = new ResizeObserver(() => {
       const r = el.getBoundingClientRect();
       dims.current = { w: r.width, h: r.height };
+      // If we mounted at 0×0 (hidden tab, collapsed/lazy panel), seed once the
+      // container actually has a size — otherwise the sky stays empty.
+      if (!seeded && r.width && r.height) seed();
     });
     ro.observe(el);
     return () => ro.disconnect();
