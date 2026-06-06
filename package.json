@@ -15,6 +15,7 @@
     "format": "biome format --write .",
     "storybook": "storybook dev -p 6006",
     "storybook:build": "storybook build -o public/preview",
+    "og:build": "node ./scripts/build-og-images.mjs",
     "animata:new": "node ./scripts/create-new.js",
     "registry:build": "node ./scripts/build-registry.js && node ./scripts/build-docs-markdown.js && node ./scripts/build-llms-txt.js",
     "shadcn:add": "npx shadcn@latest add",
