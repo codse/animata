@@ -20,6 +20,14 @@
 // renamed, unpublished). The command exits non-zero if any item fails (it lists them as an
 // --only= line to re-run), so failures aren't missed before you commit.
 //
+// Backfill without wrangler — render everything and upload to R2 by hand:
+//   pnpm storybook:build
+//   pnpm og:build --no-upload                      # writes ./.og-out/og/<key> + the manifest URLs
+//   # sync ./.og-out/og/ to the bucket root (keys match), THEN commit lib/og-manifest.json
+// Upload the objects BEFORE deploying the manifest: a committed entry is used even if its URL 404s
+// (only a MISSING entry falls back to og.png), so a manifest that points at not-yet-uploaded keys
+// would serve broken OG images until the upload lands.
+//
 // og:image is a STILL PNG by default — no major link-unfurler (X, Facebook, Pinterest, Reddit,
 // Slack) animates og:image; they all render a static frame, and animated formats only add file
 // size + compatibility risk (Slack drops WebP entirely). Pass --animate to opt into looping GIFs
@@ -38,7 +46,7 @@ import { execFile, execSync } from "node:child_process";
 import { createHash } from "node:crypto";
 import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
-import { join } from "node:path";
+import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { promisify } from "node:util";
 
@@ -82,6 +90,11 @@ const WRANGLER = existsSync(join(ROOT, "node_modules", ".bin", "wrangler"))
 
 const args = process.argv.slice(2);
 const DRY_RUN = args.includes("--dry-run");
+// --no-upload renders into an upload-ready ./.og-out/og/<key> tree AND writes the manifest with the
+// matching URLs, but skips the wrangler upload — for backfills where you upload to R2 by hand. The
+// local files are named by their exact R2 key, so syncing ./.og-out/og/ to the bucket root lands
+// every object where the manifest already points.
+const NO_UPLOAD = args.includes("--no-upload");
 const ONLY = args.find((a) => a.startsWith("--only="))?.slice("--only=".length);
 const ONLY_TERMS = ONLY
   ? ONLY.split(",")
@@ -90,8 +103,8 @@ const ONLY_TERMS = ONLY
   : null;
 const CONCURRENCY = Number(process.env.OG_CONCURRENCY || 4);
 const VARIANT = args.find((a) => a.startsWith("--variant="))?.slice("--variant=".length) || "b";
-// Asset version suffix — keys are og/<cat>/<name>.<OG_VERSION>.<ext>. Bump (v2, …) to re-render
-// without colliding with the cached, immutable v1 objects already on R2.
+// Asset version suffix — keys are og/<cat>/<name>.<OG_VERSION>.<hash>.<ext>. Bump (v2, …) to
+// re-render everything without colliding with the cached, immutable objects already on R2.
 const OG_VERSION = process.env.OG_VERSION || "v1";
 // Still PNG by default (best for social og:image). --animate opts into looping GIFs where motion exists.
 const ANIMATE = args.includes("--animate");
@@ -480,13 +493,13 @@ async function preflight() {
       throw new Error("--animate needs `ffmpeg` on PATH (not found). Install it, or drop --animate.");
     }
   }
-  if (!DRY_RUN) {
+  if (!DRY_RUN && !NO_UPLOAD) {
     try {
       await pexec(WRANGLER, ["whoami"]);
     } catch (err) {
       throw new Error(
         `wrangler auth check failed (\`wrangler whoami\`): ${err.message?.split("\n")[0]}. ` +
-          "Run `wrangler login` (token needs R2 Object Read & Write), or pass --dry-run.",
+          "Run `wrangler login` (token needs R2 Object Read & Write), or pass --dry-run / --no-upload.",
       );
     }
   }
@@ -513,7 +526,7 @@ async function main() {
   );
   if (!items.length) return;
   await preflight();
-  if (DRY_RUN) mkdirSync(OUT_DIR, { recursive: true });
+  if (DRY_RUN || NO_UPLOAD) mkdirSync(OUT_DIR, { recursive: true });
 
   const server = await startPreviewServer(PREVIEW_DIR);
   const port = previewServerPort(server);
@@ -548,6 +561,14 @@ async function main() {
           const out = join(OUT_DIR, `${item.category}__${item.name}__${VARIANT}_${OG_VERSION}.${ext}`);
           writeFileSync(out, buf);
           console.log(`  rendered ${item.storyId} -> ${out} (${(buf.length / 1024).toFixed(0)}KB)`);
+        } else if (NO_UPLOAD) {
+          // Mirror the R2 key under .og-out/ so the whole og/ tree can be synced to the bucket
+          // root as-is, and record the URL it will live at (you upload the files yourself).
+          const out = join(OUT_DIR, key);
+          mkdirSync(dirname(out), { recursive: true });
+          writeFileSync(out, buf);
+          manifest[item.slug] = { url: `${PUBLIC_BASE}/${key}`, hash };
+          console.log(`  wrote ${key} (local — upload pending)`);
         } else {
           await uploadToR2(key, buf, ext === "gif" ? "image/gif" : "image/png");
           manifest[item.slug] = { url: `${PUBLIC_BASE}/${key}`, hash };
