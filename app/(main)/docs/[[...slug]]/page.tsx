@@ -12,6 +12,7 @@ import { DashboardTableOfContents } from "@/components/toc";
 import { badgeVariants } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { siteConfig } from "@/config/site";
+import ogManifest from "@/lib/og-manifest.json";
 import { getTableOfContents } from "@/lib/toc";
 import { absoluteUrl, cn } from "@/lib/utils";
 
@@ -41,6 +42,11 @@ export async function generateMetadata({ params }: DocPageProps): Promise<Metada
     return {};
   }
 
+  // Per-component OG screenshot (uploaded to R2 by scripts/build-og-images.mjs); falls back to
+  // the site-wide image for slugs without one (and for local builds where the manifest is empty).
+  const ogImage =
+    (ogManifest as Record<string, { url: string }>)[doc.slug]?.url ?? siteConfig.ogImage;
+
   return {
     title: doc.title,
     description: doc.description,
@@ -51,10 +57,10 @@ export async function generateMetadata({ params }: DocPageProps): Promise<Metada
       url: absoluteUrl(doc.slug),
       images: [
         {
-          url: siteConfig.ogImage,
+          url: ogImage,
           width: 1200,
           height: 630,
-          alt: siteConfig.name,
+          alt: doc.title,
         },
       ],
     },
@@ -62,7 +68,7 @@ export async function generateMetadata({ params }: DocPageProps): Promise<Metada
       card: "summary_large_image",
       title: doc.title,
       description: doc.description,
-      images: [siteConfig.ogImage],
+      images: [ogImage],
       creator: doc.author ? `@${doc.author}` : "@AnimataDesign",
     },
   };
