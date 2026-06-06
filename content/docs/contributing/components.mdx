@@ -155,6 +155,13 @@ components in one pass with a comma-separated list: `pnpm og:build --only=card-a
 is cheap — unchanged components are skipped via a content hash, so only what actually changed is
 re-shot and re-uploaded.
 
+To upload to R2 yourself instead of through `wrangler` (e.g. a first bulk backfill), run
+`pnpm og:build --no-upload`. It renders every card into `.og-out/og/<key>` and writes the manifest
+URLs, but uploads nothing — sync `.og-out/og/` to the bucket root (the filenames are the keys), then
+commit `lib/og-manifest.json`. Upload the objects **before** deploying the manifest: a committed
+entry is used even if its URL 404s, so deploying first would serve broken images until the upload
+lands.
+
 ## Proposing pull requests
 
 - **Making changes**: implement your bug fix or feature and write stories to cover different use cases. Then commit your changes, push your bug fix/feature branch to the origin (your forked repo) and open a pull request to the upstream (the repository you originally forked)‘s main branch.
