@@ -16,6 +16,8 @@
     "storybook": "storybook dev -p 6006",
     "storybook:build": "storybook build -o public/preview",
     "og:build": "node ./scripts/build-og-images.mjs",
+    "og:migrate": "node ./scripts/build-og-images.mjs --migrate-from-flat",
+    "og:upload": "node ./scripts/upload-og-r2.mjs",
     "animata:new": "node ./scripts/create-new.js",
     "registry:build": "node ./scripts/build-registry.js && node ./scripts/build-docs-markdown.js && node ./scripts/build-llms-txt.js",
     "shadcn:add": "npx shadcn@latest add",

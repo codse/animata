@@ -162,6 +162,11 @@ commit `lib/og-manifest.json`. Upload the objects **before** deploying the manif
 entry is used even if its URL 404s, so deploying first would serve broken images until the upload
 lands.
 
+If you uploaded the dry-run flat files instead (`background__animated-beam__b_v1.png` at the bucket
+root rather than `og/background/animated-beam.v1.<hash>.png`), run `pnpm og:migrate` to re-key them
+on R2 and regenerate the manifest. Use `--dry-run` first to inspect, or `--no-upload` to write
+`.og-out/og/` locally and sync that tree yourself.
+
 ## Proposing pull requests
 
 - **Making changes**: implement your bug fix or feature and write stories to cover different use cases. Then commit your changes, push your bug fix/feature branch to the origin (your forked repo) and open a pull request to the upstream (the repository you originally forked)‘s main branch.

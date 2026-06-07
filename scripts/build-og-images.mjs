@@ -24,6 +24,12 @@
 //   pnpm storybook:build
 //   pnpm og:build --no-upload                      # writes ./.og-out/og/<key> + the manifest URLs
 //   # sync ./.og-out/og/ to the bucket root (keys match), THEN commit lib/og-manifest.json
+//
+// If you accidentally uploaded the dry-run flat files (e.g. background__animated-beam__b_v1.png at
+// the bucket root) instead of the og/<cat>/<name>.<v>.<hash>.<ext> keys, migrate them in place:
+//   pnpm og:migrate                                # re-key on R2 + write lib/og-manifest.json
+//   pnpm og:migrate --dry-run                      # show what would move, no uploads
+//   pnpm og:migrate --no-upload                    # write ./.og-out/og/<key> + manifest only
 // Upload the objects BEFORE deploying the manifest: a committed entry is used even if its URL 404s
 // (only a MISSING entry falls back to og.png), so a manifest that points at not-yet-uploaded keys
 // would serve broken OG images until the upload lands.
@@ -95,6 +101,9 @@ const DRY_RUN = args.includes("--dry-run");
 // local files are named by their exact R2 key, so syncing ./.og-out/og/ to the bucket root lands
 // every object where the manifest already points.
 const NO_UPLOAD = args.includes("--no-upload");
+// Re-key flat dry-run uploads (category__name__b_v1.ext at bucket root) to content-addressed
+// og/<cat>/<name>.<v>.<hash>.<ext> keys and write the manifest. No Playwright render.
+const MIGRATE_FROM_FLAT = args.includes("--migrate-from-flat");
 const ONLY = args.find((a) => a.startsWith("--only="))?.slice("--only=".length);
 const ONLY_TERMS = ONLY
   ? ONLY.split(",")
@@ -516,11 +525,123 @@ async function renderWithRetry(page, item, port) {
   }
 }
 
+function flatAssetName(item, ext) {
+  return `${item.category}__${item.name}__${VARIANT}_${OG_VERSION}.${ext}`;
+}
+
+function contentAddressedKey(item, hash, ext) {
+  return `og/${item.category}/${item.name}.${OG_VERSION}.${hash}.${ext}`;
+}
+
+async function readFlatAsset(item) {
+  for (const ext of ["png", "gif"]) {
+    const local = join(OUT_DIR, flatAssetName(item, ext));
+    if (existsSync(local)) {
+      return { buf: readFileSync(local), ext, source: local };
+    }
+    const url = `${PUBLIC_BASE}/${flatAssetName(item, ext)}`;
+    try {
+      const head = await fetch(url, { method: "HEAD" });
+      if (!head.ok) continue;
+      const res = await fetch(url);
+      if (!res.ok) continue;
+      return { buf: Buffer.from(await res.arrayBuffer()), ext, source: url };
+    } catch {
+      /* try next ext */
+    }
+  }
+  return null;
+}
+
+function writeManifestFile(manifest, items) {
+  let pruned = 0;
+  if (!ONLY_TERMS) {
+    const live = new Set(items.map((i) => i.slug));
+    for (const slug of Object.keys(manifest)) {
+      if (!live.has(slug)) {
+        delete manifest[slug];
+        pruned++;
+        console.log(`  pruned stale manifest entry ${slug}`);
+      }
+    }
+  }
+  mkdirSync(join(ROOT, "lib"), { recursive: true });
+  const sorted = Object.fromEntries(Object.entries(manifest).sort(([a], [b]) => a.localeCompare(b)));
+  writeFileSync(MANIFEST, `${JSON.stringify(sorted, null, 2)}\n`);
+  console.log(`OG: wrote ${MANIFEST}`);
+  return pruned;
+}
+
+// Move legacy flat uploads (dry-run filenames at the bucket root) onto the content-addressed keys
+// the site manifest expects. Prefers local ./.og-out/<flat> over fetching from the CDN.
+async function migrateFromFlat(items) {
+  console.log(
+    `OG migrate: ${items.length} component doc(s)${ONLY ? ` matching "${ONLY}"` : ""}${DRY_RUN ? " [dry-run]" : NO_UPLOAD ? " [no-upload]" : ""}`,
+  );
+  await preflight();
+  if (DRY_RUN || NO_UPLOAD) mkdirSync(OUT_DIR, { recursive: true });
+
+  const manifest = existsSync(MANIFEST) ? readJSON(MANIFEST) : {};
+  let migrated = 0;
+  let skipped = 0;
+  const failedItems = [];
+
+  for (const item of items) {
+    const hash = hashItem(item);
+    if (!DRY_RUN && manifest[item.slug]?.hash === hash) {
+      skipped++;
+      continue;
+    }
+    const asset = await readFlatAsset(item);
+    if (!asset) {
+      failedItems.push(item.slug);
+      console.warn(`  MISSING flat asset for ${item.slug} (expected ${flatAssetName(item, "png")})`);
+      continue;
+    }
+    const key = contentAddressedKey(item, hash, asset.ext);
+    try {
+      if (DRY_RUN) {
+        console.log(
+          `  would migrate ${item.slug} <- ${asset.source} -> ${key} (${(asset.buf.length / 1024).toFixed(0)}KB)`,
+        );
+      } else if (NO_UPLOAD) {
+        const out = join(OUT_DIR, key);
+        mkdirSync(dirname(out), { recursive: true });
+        writeFileSync(out, asset.buf);
+        manifest[item.slug] = { url: `${PUBLIC_BASE}/${key}`, hash };
+        console.log(`  wrote ${key} from flat asset`);
+      } else {
+        await uploadToR2(key, asset.buf, asset.ext === "gif" ? "image/gif" : "image/png");
+        manifest[item.slug] = { url: `${PUBLIC_BASE}/${key}`, hash };
+        console.log(`  migrated ${key} <- ${asset.source}`);
+      }
+      migrated++;
+    } catch (err) {
+      failedItems.push(item.slug);
+      console.warn(`  FAILED ${item.slug}: ${err.message?.split("\n")[0]}`);
+    }
+  }
+
+  let pruned = 0;
+  if (!DRY_RUN) pruned = writeManifestFile(manifest, items);
+  console.log(
+    `OG migrate done — migrated ${migrated}, skipped ${skipped}, pruned ${pruned}, failed ${failedItems.length}`,
+  );
+  if (failedItems.length) {
+    console.warn(`OG: re-run the failures with --only=${failedItems.join(",")}`);
+    process.exitCode = 1;
+  }
+}
+
 async function main() {
   if (!existsSync(join(PREVIEW_DIR, "index.json"))) {
     throw new Error("public/preview/index.json missing — run `pnpm storybook:build` first");
   }
   const items = collectItems();
+  if (MIGRATE_FROM_FLAT) {
+    await migrateFromFlat(items);
+    return;
+  }
   console.log(
     `OG: ${items.length} component doc(s)${ONLY ? ` matching "${ONLY}"` : ""}${DRY_RUN ? " [dry-run]" : ""}`,
   );
@@ -556,7 +677,7 @@ async function main() {
         // Content-addressed: the hash is part of the key, so a changed component lands on a NEW
         // immutable URL (the old object stays cached harmlessly) instead of overwriting one the
         // CDN/scrapers will never refetch.
-        const key = `og/${item.category}/${item.name}.${OG_VERSION}.${hash}.${ext}`;
+        const key = contentAddressedKey(item, hash, ext);
         if (DRY_RUN) {
           const out = join(OUT_DIR, `${item.category}__${item.name}__${VARIANT}_${OG_VERSION}.${ext}`);
           writeFileSync(out, buf);
@@ -591,28 +712,7 @@ async function main() {
   server.close();
 
   let pruned = 0;
-  if (!DRY_RUN) {
-    // On a FULL run (no --only) drop manifest entries whose doc no longer resolves — deleted,
-    // renamed, unpublished, or untracked now — so the committed manifest can't point a stale slug
-    // at an image. (A failed item stays in `items`, so a transient failure won't prune it.) The
-    // orphaned R2 object is left in place: it's immutable and cheap, and nothing references it.
-    if (!ONLY_TERMS) {
-      const live = new Set(items.map((i) => i.slug));
-      for (const slug of Object.keys(manifest)) {
-        if (!live.has(slug)) {
-          delete manifest[slug];
-          pruned++;
-          console.log(`  pruned stale manifest entry ${slug}`);
-        }
-      }
-    }
-    mkdirSync(join(ROOT, "lib"), { recursive: true });
-    const sorted = Object.fromEntries(
-      Object.entries(manifest).sort(([a], [b]) => a.localeCompare(b)),
-    );
-    writeFileSync(MANIFEST, `${JSON.stringify(sorted, null, 2)}\n`);
-    console.log(`OG: wrote ${MANIFEST}`);
-  }
+  if (!DRY_RUN) pruned = writeManifestFile(manifest, items);
   console.log(
     `OG done — made ${made}, skipped ${skipped}, pruned ${pruned}, failed ${failedItems.length}`,
   );
