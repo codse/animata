@@ -1,0 +1,582 @@
+{
+  "/docs/background/animated-beam": {
+    "url": "https://assets.animata.design/og/background/animated-beam.v1.ae48cf2b3fdf05d8.png",
+    "hash": "ae48cf2b3fdf05d8"
+  },
+  "/docs/background/blurry-blob": {
+    "url": "https://assets.animata.design/og/background/blurry-blob.v1.6a722a2d82bebce9.png",
+    "hash": "6a722a2d82bebce9"
+  },
+  "/docs/background/boids-ecosystem": {
+    "url": "https://assets.animata.design/og/background/boids-ecosystem.v1.d874c192798b3e08.png",
+    "hash": "d874c192798b3e08"
+  },
+  "/docs/background/diagonal-lines": {
+    "url": "https://assets.animata.design/og/background/diagonal-lines.v1.26d7cff26745315b.png",
+    "hash": "26d7cff26745315b"
+  },
+  "/docs/background/dot": {
+    "url": "https://assets.animata.design/og/background/dot.v1.512911de884126c8.png",
+    "hash": "512911de884126c8"
+  },
+  "/docs/background/grid": {
+    "url": "https://assets.animata.design/og/background/grid.v1.2cd975309dedaac5.png",
+    "hash": "2cd975309dedaac5"
+  },
+  "/docs/background/interactive-grid": {
+    "url": "https://assets.animata.design/og/background/interactive-grid.v1.dae360847231eb1a.png",
+    "hash": "dae360847231eb1a"
+  },
+  "/docs/background/moving-gradient": {
+    "url": "https://assets.animata.design/og/background/moving-gradient.v1.c05a803d21c8aaf4.png",
+    "hash": "c05a803d21c8aaf4"
+  },
+  "/docs/background/shooting-stars": {
+    "url": "https://assets.animata.design/og/background/shooting-stars.v1.999e612365f08912.png",
+    "hash": "999e612365f08912"
+  },
+  "/docs/background/zigzag": {
+    "url": "https://assets.animata.design/og/background/zigzag.v1.dd47b3ecd353a975.png",
+    "hash": "dd47b3ecd353a975"
+  },
+  "/docs/bento-grid/eight": {
+    "url": "https://assets.animata.design/og/bento-grid/eight.v1.06916f50d294a508.png",
+    "hash": "06916f50d294a508"
+  },
+  "/docs/bento-grid/gradient": {
+    "url": "https://assets.animata.design/og/bento-grid/gradient.v1.18131ed683164226.png",
+    "hash": "18131ed683164226"
+  },
+  "/docs/bento-grid/three": {
+    "url": "https://assets.animata.design/og/bento-grid/three.v1.5bd711191aa94329.png",
+    "hash": "5bd711191aa94329"
+  },
+  "/docs/button/ai-button": {
+    "url": "https://assets.animata.design/og/button/ai-button.v1.2284998c388fc11a.png",
+    "hash": "2284998c388fc11a"
+  },
+  "/docs/button/algolia-blue-button": {
+    "url": "https://assets.animata.design/og/button/algolia-blue-button.v1.849fc8d0bfa3977a.png",
+    "hash": "849fc8d0bfa3977a"
+  },
+  "/docs/button/algolia-white-button": {
+    "url": "https://assets.animata.design/og/button/algolia-white-button.v1.2131c27782effcc7.png",
+    "hash": "2131c27782effcc7"
+  },
+  "/docs/button/animated-follow-button": {
+    "url": "https://assets.animata.design/og/button/animated-follow-button.v1.07413c7a12569483.png",
+    "hash": "07413c7a12569483"
+  },
+  "/docs/button/duolingo": {
+    "url": "https://assets.animata.design/og/button/duolingo.v1.4eeafa138c01b4bf.png",
+    "hash": "4eeafa138c01b4bf"
+  },
+  "/docs/button/get-started-button": {
+    "url": "https://assets.animata.design/og/button/get-started-button.v1.f9ee569ca5e7f870.png",
+    "hash": "f9ee569ca5e7f870"
+  },
+  "/docs/button/ripple-button": {
+    "url": "https://assets.animata.design/og/button/ripple-button.v1.1972e9446fcaec54.png",
+    "hash": "1972e9446fcaec54"
+  },
+  "/docs/button/shining-button": {
+    "url": "https://assets.animata.design/og/button/shining-button.v1.b5512f3c6621d19d.png",
+    "hash": "b5512f3c6621d19d"
+  },
+  "/docs/button/slide-arrow-button": {
+    "url": "https://assets.animata.design/og/button/slide-arrow-button.v1.f7f84a94b4fae4d9.png",
+    "hash": "f7f84a94b4fae4d9"
+  },
+  "/docs/button/status-button": {
+    "url": "https://assets.animata.design/og/button/status-button.v1.0ba11817a71d9211.png",
+    "hash": "0ba11817a71d9211"
+  },
+  "/docs/button/swipe-button": {
+    "url": "https://assets.animata.design/og/button/swipe-button.v1.562b7d0fb65f6052.png",
+    "hash": "562b7d0fb65f6052"
+  },
+  "/docs/button/toggle-switch": {
+    "url": "https://assets.animata.design/og/button/toggle-switch.v1.9d9d22f3a651395d.png",
+    "hash": "9d9d22f3a651395d"
+  },
+  "/docs/button/work-button": {
+    "url": "https://assets.animata.design/og/button/work-button.v1.7ce147dc8057d9b7.png",
+    "hash": "7ce147dc8057d9b7"
+  },
+  "/docs/card/card-comment": {
+    "url": "https://assets.animata.design/og/card/card-comment.v1.0e9673a248d33a8d.png",
+    "hash": "0e9673a248d33a8d"
+  },
+  "/docs/card/card-spread": {
+    "url": "https://assets.animata.design/og/card/card-spread.v1.2ea24b641c14f149.png",
+    "hash": "2ea24b641c14f149"
+  },
+  "/docs/card/card-stack": {
+    "url": "https://assets.animata.design/og/card/card-stack.v1.5540b04f60e29f96.png",
+    "hash": "5540b04f60e29f96"
+  },
+  "/docs/card/case-study-card": {
+    "url": "https://assets.animata.design/og/card/case-study-card.v1.3d519137bff400e0.png",
+    "hash": "3d519137bff400e0"
+  },
+  "/docs/card/collab-card": {
+    "url": "https://assets.animata.design/og/card/collab-card.v1.bb1c22f43b5b3c1b.png",
+    "hash": "bb1c22f43b5b3c1b"
+  },
+  "/docs/card/flip-card": {
+    "url": "https://assets.animata.design/og/card/flip-card.v1.94fcbf1ca7e58572.png",
+    "hash": "94fcbf1ca7e58572"
+  },
+  "/docs/card/github-card-shiny": {
+    "url": "https://assets.animata.design/og/card/github-card-shiny.v1.c8a37cfa6118f904.png",
+    "hash": "c8a37cfa6118f904"
+  },
+  "/docs/card/github-card-skew": {
+    "url": "https://assets.animata.design/og/card/github-card-skew.v1.7427e912ca6c2601.png",
+    "hash": "7427e912ca6c2601"
+  },
+  "/docs/card/glowing-card": {
+    "url": "https://assets.animata.design/og/card/glowing-card.v1.d1eb6a73b4a4d2fc.png",
+    "hash": "d1eb6a73b4a4d2fc"
+  },
+  "/docs/card/led-board": {
+    "url": "https://assets.animata.design/og/card/led-board.v1.6d715c320342ded7.png",
+    "hash": "6d715c320342ded7"
+  },
+  "/docs/card/swap-text-card": {
+    "url": "https://assets.animata.design/og/card/swap-text-card.v1.e16bb7418e3c284f.png",
+    "hash": "e16bb7418e3c284f"
+  },
+  "/docs/container/animated-border-trail": {
+    "url": "https://assets.animata.design/og/container/animated-border-trail.v1.d25c4546f118aea5.png",
+    "hash": "d25c4546f118aea5"
+  },
+  "/docs/container/announcement-ribbon": {
+    "url": "https://assets.animata.design/og/container/announcement-ribbon.v1.31cf1e6f77f7da70.png",
+    "hash": "31cf1e6f77f7da70"
+  },
+  "/docs/container/cursor-tracker": {
+    "url": "https://assets.animata.design/og/container/cursor-tracker.v1.f8c5a4cb430ea95c.png",
+    "hash": "f8c5a4cb430ea95c"
+  },
+  "/docs/container/marquee": {
+    "url": "https://assets.animata.design/og/container/marquee.v1.7af90ca72ccc2511.png",
+    "hash": "7af90ca72ccc2511"
+  },
+  "/docs/container/sibling-focus-nav": {
+    "url": "https://assets.animata.design/og/container/sibling-focus-nav.v1.3992924871615978.png",
+    "hash": "3992924871615978"
+  },
+  "/docs/fabs/flower-menu": {
+    "url": "https://assets.animata.design/og/fabs/flower-menu.v1.084a4041231fff85.png",
+    "hash": "084a4041231fff85"
+  },
+  "/docs/fabs/speed-dial": {
+    "url": "https://assets.animata.design/og/fabs/speed-dial.v1.6a31866584b06d30.png",
+    "hash": "6a31866584b06d30"
+  },
+  "/docs/graphs/bar-chart": {
+    "url": "https://assets.animata.design/og/graphs/bar-chart.v1.701d82612154c9a6.png",
+    "hash": "701d82612154c9a6"
+  },
+  "/docs/graphs/donut-chart": {
+    "url": "https://assets.animata.design/og/graphs/donut-chart.v1.5e8fba4b1becb2f8.png",
+    "hash": "5e8fba4b1becb2f8"
+  },
+  "/docs/graphs/gauge-chart": {
+    "url": "https://assets.animata.design/og/graphs/gauge-chart.v1.646005097a7f2189.png",
+    "hash": "646005097a7f2189"
+  },
+  "/docs/graphs/progress": {
+    "url": "https://assets.animata.design/og/graphs/progress.v1.afa82a187ae6f975.png",
+    "hash": "afa82a187ae6f975"
+  },
+  "/docs/graphs/ring-chart": {
+    "url": "https://assets.animata.design/og/graphs/ring-chart.v1.af5d7a80898d13fd.png",
+    "hash": "af5d7a80898d13fd"
+  },
+  "/docs/hero/hero-section-text-hover": {
+    "url": "https://assets.animata.design/og/hero/hero-section-text-hover.v1.ed085490bd40a06d.png",
+    "hash": "ed085490bd40a06d"
+  },
+  "/docs/hero/product-features": {
+    "url": "https://assets.animata.design/og/hero/product-features.v1.4a30bf58a5b054c3.png",
+    "hash": "4a30bf58a5b054c3"
+  },
+  "/docs/hero/shape-shifter": {
+    "url": "https://assets.animata.design/og/hero/shape-shifter.v1.c51923dafef8a0e7.png",
+    "hash": "c51923dafef8a0e7"
+  },
+  "/docs/hero/slack-intro": {
+    "url": "https://assets.animata.design/og/hero/slack-intro.v1.431c1ea256f8b2bf.png",
+    "hash": "431c1ea256f8b2bf"
+  },
+  "/docs/icon/hover-interaction": {
+    "url": "https://assets.animata.design/og/icon/hover-interaction.v1.5451e6751fc01dea.png",
+    "hash": "5451e6751fc01dea"
+  },
+  "/docs/icon/icon-ripple": {
+    "url": "https://assets.animata.design/og/icon/icon-ripple.v1.4c09bdd797b66b00.png",
+    "hash": "4c09bdd797b66b00"
+  },
+  "/docs/image/disclose-image": {
+    "url": "https://assets.animata.design/og/image/disclose-image.v1.fb61dc8a6fb6fd59.png",
+    "hash": "fb61dc8a6fb6fd59"
+  },
+  "/docs/image/images-reveal": {
+    "url": "https://assets.animata.design/og/image/images-reveal.v1.8b6f11078871ee26.png",
+    "hash": "8b6f11078871ee26"
+  },
+  "/docs/image/skew-image": {
+    "url": "https://assets.animata.design/og/image/skew-image.v1.81854536a8a37f47.png",
+    "hash": "81854536a8a37f47"
+  },
+  "/docs/image/tilted-cover": {
+    "url": "https://assets.animata.design/og/image/tilted-cover.v1.ffd484377ee3cad9.png",
+    "hash": "ffd484377ee3cad9"
+  },
+  "/docs/image/trailing-image": {
+    "url": "https://assets.animata.design/og/image/trailing-image.v1.cc4cd06e1158a2cc.png",
+    "hash": "cc4cd06e1158a2cc"
+  },
+  "/docs/list/avatar-list": {
+    "url": "https://assets.animata.design/og/list/avatar-list.v1.491668bcb77ed919.png",
+    "hash": "491668bcb77ed919"
+  },
+  "/docs/list/flipping-cards": {
+    "url": "https://assets.animata.design/og/list/flipping-cards.v1.544a7b2283389ca5.png",
+    "hash": "544a7b2283389ca5"
+  },
+  "/docs/list/menu-animation": {
+    "url": "https://assets.animata.design/og/list/menu-animation.v1.37a62e206cee7a0c.png",
+    "hash": "37a62e206cee7a0c"
+  },
+  "/docs/list/orbiting-items": {
+    "url": "https://assets.animata.design/og/list/orbiting-items.v1.6aa35e57003dbfa0.png",
+    "hash": "6aa35e57003dbfa0"
+  },
+  "/docs/list/orbiting-items-3-d": {
+    "url": "https://assets.animata.design/og/list/orbiting-items-3-d.v1.256fe3c90b7a6572.png",
+    "hash": "256fe3c90b7a6572"
+  },
+  "/docs/list/reveal-image": {
+    "url": "https://assets.animata.design/og/list/reveal-image.v1.03faed4cf835385d.png",
+    "hash": "03faed4cf835385d"
+  },
+  "/docs/list/transaction-list": {
+    "url": "https://assets.animata.design/og/list/transaction-list.v1.f3e358f4fb957e13.png",
+    "hash": "f3e358f4fb957e13"
+  },
+  "/docs/preloader/split-reveal": {
+    "url": "https://assets.animata.design/og/preloader/split-reveal.v1.380bbb28fff03495.png",
+    "hash": "380bbb28fff03495"
+  },
+  "/docs/preloader/vertical-tiles": {
+    "url": "https://assets.animata.design/og/preloader/vertical-tiles.v1.b2edf2a94cd951de.png",
+    "hash": "b2edf2a94cd951de"
+  },
+  "/docs/progress/animatedtimeline": {
+    "url": "https://assets.animata.design/og/progress/animatedtimeline.v1.86ed8a25f34ddf2c.png",
+    "hash": "86ed8a25f34ddf2c"
+  },
+  "/docs/progress/spinner": {
+    "url": "https://assets.animata.design/og/progress/spinner.v1.ece1a027e121202f.png",
+    "hash": "ece1a027e121202f"
+  },
+  "/docs/scroll/stacked-sections": {
+    "url": "https://assets.animata.design/og/scroll/stacked-sections.v1.3f0c72de6a796de6.png",
+    "hash": "3f0c72de6a796de6"
+  },
+  "/docs/tabs/fluid-tabs": {
+    "url": "https://assets.animata.design/og/tabs/fluid-tabs.v1.c21f86e5eb384729.png",
+    "hash": "c21f86e5eb384729"
+  },
+  "/docs/tabs/gooey-tabs": {
+    "url": "https://assets.animata.design/og/tabs/gooey-tabs.v1.36a1879e192f4eb7.png",
+    "hash": "36a1879e192f4eb7"
+  },
+  "/docs/tabs/shift-tabs": {
+    "url": "https://assets.animata.design/og/tabs/shift-tabs.v1.1626ab53aebbe39a.png",
+    "hash": "1626ab53aebbe39a"
+  },
+  "/docs/text/animated-gradient-text": {
+    "url": "https://assets.animata.design/og/text/animated-gradient-text.v1.936ffad1a3d21e17.png",
+    "hash": "936ffad1a3d21e17"
+  },
+  "/docs/text/blur-out-up": {
+    "url": "https://assets.animata.design/og/text/blur-out-up.v1.472459e7dc0933dd.png",
+    "hash": "472459e7dc0933dd"
+  },
+  "/docs/text/bold-copy": {
+    "url": "https://assets.animata.design/og/text/bold-copy.v1.137d7ac0fbc87bff.png",
+    "hash": "137d7ac0fbc87bff"
+  },
+  "/docs/text/bottom-up-letters": {
+    "url": "https://assets.animata.design/og/text/bottom-up-letters.v1.9a0b02f961ee0647.png",
+    "hash": "9a0b02f961ee0647"
+  },
+  "/docs/text/circular-text": {
+    "url": "https://assets.animata.design/og/text/circular-text.v1.5581dff13b395b2b.png",
+    "hash": "5581dff13b395b2b"
+  },
+  "/docs/text/counter": {
+    "url": "https://assets.animata.design/og/text/counter.v1.69b39f1530ed1b38.png",
+    "hash": "69b39f1530ed1b38"
+  },
+  "/docs/text/cycle-text": {
+    "url": "https://assets.animata.design/og/text/cycle-text.v1.f4632ee598545271.png",
+    "hash": "f4632ee598545271"
+  },
+  "/docs/text/double-underline": {
+    "url": "https://assets.animata.design/og/text/double-underline.v1.281bc22ab52c6f47.png",
+    "hash": "281bc22ab52c6f47"
+  },
+  "/docs/text/fade-through": {
+    "url": "https://assets.animata.design/og/text/fade-through.v1.a9bfa891372a8bd0.png",
+    "hash": "a9bfa891372a8bd0"
+  },
+  "/docs/text/focus-blur-resolve": {
+    "url": "https://assets.animata.design/og/text/focus-blur-resolve.v1.787f7d6485a203e5.png",
+    "hash": "787f7d6485a203e5"
+  },
+  "/docs/text/gibberish-text": {
+    "url": "https://assets.animata.design/og/text/gibberish-text.v1.bd6e587b2b81934b.png",
+    "hash": "bd6e587b2b81934b"
+  },
+  "/docs/text/glitch-text": {
+    "url": "https://assets.animata.design/og/text/glitch-text.v1.de2c73e79aecf11e.png",
+    "hash": "de2c73e79aecf11e"
+  },
+  "/docs/text/jitter-text": {
+    "url": "https://assets.animata.design/og/text/jitter-text.v1.585c426757b61ba4.png",
+    "hash": "585c426757b61ba4"
+  },
+  "/docs/text/jumping-text-instagram": {
+    "url": "https://assets.animata.design/og/text/jumping-text-instagram.v1.2889b16a9f7b7824.png",
+    "hash": "2889b16a9f7b7824"
+  },
+  "/docs/text/kinetic-center-build": {
+    "url": "https://assets.animata.design/og/text/kinetic-center-build.v1.9d1bb057cf02e402.png",
+    "hash": "9d1bb057cf02e402"
+  },
+  "/docs/text/line-by-line-slide": {
+    "url": "https://assets.animata.design/og/text/line-by-line-slide.v1.c8a7c53d3efea7be.png",
+    "hash": "c8a7c53d3efea7be"
+  },
+  "/docs/text/mask-reveal-up": {
+    "url": "https://assets.animata.design/og/text/mask-reveal-up.v1.5c0390a331cfd30e.png",
+    "hash": "5c0390a331cfd30e"
+  },
+  "/docs/text/micro-scale-fade": {
+    "url": "https://assets.animata.design/og/text/micro-scale-fade.v1.60601e354ff96106.png",
+    "hash": "60601e354ff96106"
+  },
+  "/docs/text/mirror-text": {
+    "url": "https://assets.animata.design/og/text/mirror-text.v1.bef6afa9db5bec9b.png",
+    "hash": "bef6afa9db5bec9b"
+  },
+  "/docs/text/per-character-rise": {
+    "url": "https://assets.animata.design/og/text/per-character-rise.v1.77187d51c613cba6.png",
+    "hash": "77187d51c613cba6"
+  },
+  "/docs/text/per-word-crossfade": {
+    "url": "https://assets.animata.design/og/text/per-word-crossfade.v1.9f3960f1ae6b6f09.png",
+    "hash": "9f3960f1ae6b6f09"
+  },
+  "/docs/text/scale-down-fade": {
+    "url": "https://assets.animata.design/og/text/scale-down-fade.v1.45ac1a3d4450abaf.png",
+    "hash": "45ac1a3d4450abaf"
+  },
+  "/docs/text/scroll-reveal": {
+    "url": "https://assets.animata.design/og/text/scroll-reveal.v1.cf315eabf6e00a8a.png",
+    "hash": "cf315eabf6e00a8a"
+  },
+  "/docs/text/shared-axis-y": {
+    "url": "https://assets.animata.design/og/text/shared-axis-y.v1.6756d69b14aff685.png",
+    "hash": "6756d69b14aff685"
+  },
+  "/docs/text/shared-axis-z": {
+    "url": "https://assets.animata.design/og/text/shared-axis-z.v1.a9b311eb80c46462.png",
+    "hash": "a9b311eb80c46462"
+  },
+  "/docs/text/shimmer-sweep": {
+    "url": "https://assets.animata.design/og/text/shimmer-sweep.v1.5bf1cf54f568d748.png",
+    "hash": "5bf1cf54f568d748"
+  },
+  "/docs/text/short-slide-down": {
+    "url": "https://assets.animata.design/og/text/short-slide-down.v1.83a0663d0c2c1f58.png",
+    "hash": "83a0663d0c2c1f58"
+  },
+  "/docs/text/short-slide-right": {
+    "url": "https://assets.animata.design/og/text/short-slide-right.v1.7646526f5430aa4e.png",
+    "hash": "7646526f5430aa4e"
+  },
+  "/docs/text/soft-blur-in": {
+    "url": "https://assets.animata.design/og/text/soft-blur-in.v1.110f20d5aa79d067.png",
+    "hash": "110f20d5aa79d067"
+  },
+  "/docs/text/split-text": {
+    "url": "https://assets.animata.design/og/text/split-text.v1.9ab1d573348e8f3c.png",
+    "hash": "9ab1d573348e8f3c"
+  },
+  "/docs/text/spring-scale-in": {
+    "url": "https://assets.animata.design/og/text/spring-scale-in.v1.cd0ac9beff379892.png",
+    "hash": "cd0ac9beff379892"
+  },
+  "/docs/text/swap-text": {
+    "url": "https://assets.animata.design/og/text/swap-text.v1.27fa4c0128c7b588.png",
+    "hash": "27fa4c0128c7b588"
+  },
+  "/docs/text/text-border-animation": {
+    "url": "https://assets.animata.design/og/text/text-border-animation.v1.5ef78cdb7267ca29.png",
+    "hash": "5ef78cdb7267ca29"
+  },
+  "/docs/text/text-explode-imessage": {
+    "url": "https://assets.animata.design/og/text/text-explode-imessage.v1.d9c8e5f4ef0489f6.png",
+    "hash": "d9c8e5f4ef0489f6"
+  },
+  "/docs/text/text-flip": {
+    "url": "https://assets.animata.design/og/text/text-flip.v1.bbc9a6e73dc30a42.png",
+    "hash": "bbc9a6e73dc30a42"
+  },
+  "/docs/text/ticker": {
+    "url": "https://assets.animata.design/og/text/ticker.v1.b75902794dbd9209.png",
+    "hash": "b75902794dbd9209"
+  },
+  "/docs/text/top-down-letters": {
+    "url": "https://assets.animata.design/og/text/top-down-letters.v1.32098344591ac347.png",
+    "hash": "32098344591ac347"
+  },
+  "/docs/text/typing-text": {
+    "url": "https://assets.animata.design/og/text/typing-text.v1.3caa1c8a48d58f5e.png",
+    "hash": "3caa1c8a48d58f5e"
+  },
+  "/docs/text/underline-hover-text": {
+    "url": "https://assets.animata.design/og/text/underline-hover-text.v1.ae732ee09e3bc6f1.png",
+    "hash": "ae732ee09e3bc6f1"
+  },
+  "/docs/text/wave-reveal": {
+    "url": "https://assets.animata.design/og/text/wave-reveal.v1.b66748d321f3caa6.png",
+    "hash": "b66748d321f3caa6"
+  },
+  "/docs/widget/alarm-clock": {
+    "url": "https://assets.animata.design/og/widget/alarm-clock.v1.5781977f6813c2a1.png",
+    "hash": "5781977f6813c2a1"
+  },
+  "/docs/widget/battery": {
+    "url": "https://assets.animata.design/og/widget/battery.v1.0ac6e24e1d6ed958.png",
+    "hash": "0ac6e24e1d6ed958"
+  },
+  "/docs/widget/battery-level": {
+    "url": "https://assets.animata.design/og/widget/battery-level.v1.d2d7ab1fb71ca70d.png",
+    "hash": "d2d7ab1fb71ca70d"
+  },
+  "/docs/widget/calendar-event": {
+    "url": "https://assets.animata.design/og/widget/calendar-event.v1.f3346441ef686220.png",
+    "hash": "f3346441ef686220"
+  },
+  "/docs/widget/calorie-counter": {
+    "url": "https://assets.animata.design/og/widget/calorie-counter.v1.f7bb14dbb6f96a26.png",
+    "hash": "f7bb14dbb6f96a26"
+  },
+  "/docs/widget/clock-with-photo": {
+    "url": "https://assets.animata.design/og/widget/clock-with-photo.v1.b11e171a4c0b0ca7.png",
+    "hash": "b11e171a4c0b0ca7"
+  },
+  "/docs/widget/cycling": {
+    "url": "https://assets.animata.design/og/widget/cycling.v1.c659c03e60ba1b74.png",
+    "hash": "c659c03e60ba1b74"
+  },
+  "/docs/widget/delivery-card": {
+    "url": "https://assets.animata.design/og/widget/delivery-card.v1.b1a5765f54312405.png",
+    "hash": "b1a5765f54312405"
+  },
+  "/docs/widget/direction-card": {
+    "url": "https://assets.animata.design/og/widget/direction-card.v1.fcaa395730f6dee3.png",
+    "hash": "fcaa395730f6dee3"
+  },
+  "/docs/widget/expense-tracker": {
+    "url": "https://assets.animata.design/og/widget/expense-tracker.v1.738a550ccec20af2.png",
+    "hash": "738a550ccec20af2"
+  },
+  "/docs/widget/flight-widget": {
+    "url": "https://assets.animata.design/og/widget/flight-widget.v1.baf8eac69ed8a4db.png",
+    "hash": "baf8eac69ed8a4db"
+  },
+  "/docs/widget/fund-widget": {
+    "url": "https://assets.animata.design/og/widget/fund-widget.v1.8375b15dae1a7738.png",
+    "hash": "8375b15dae1a7738"
+  },
+  "/docs/widget/live-score": {
+    "url": "https://assets.animata.design/og/widget/live-score.v1.ac25b4e6fc8f0f8e.png",
+    "hash": "ac25b4e6fc8f0f8e"
+  },
+  "/docs/widget/mobile-detail": {
+    "url": "https://assets.animata.design/og/widget/mobile-detail.v1.2dbf7e347a37bffd.png",
+    "hash": "2dbf7e347a37bffd"
+  },
+  "/docs/widget/music-widget": {
+    "url": "https://assets.animata.design/og/widget/music-widget.v1.be3581db35d59437.png",
+    "hash": "be3581db35d59437"
+  },
+  "/docs/widget/notes": {
+    "url": "https://assets.animata.design/og/widget/notes.v1.c0b9225490d062e2.png",
+    "hash": "c0b9225490d062e2"
+  },
+  "/docs/widget/profile": {
+    "url": "https://assets.animata.design/og/widget/profile.v1.1b93a635a7deb06d.png",
+    "hash": "1b93a635a7deb06d"
+  },
+  "/docs/widget/reminder": {
+    "url": "https://assets.animata.design/og/widget/reminder.v1.97c3b49f28dac2c8.png",
+    "hash": "97c3b49f28dac2c8"
+  },
+  "/docs/widget/reminder-widget": {
+    "url": "https://assets.animata.design/og/widget/reminder-widget.v1.a14e391c01784b56.png",
+    "hash": "a14e391c01784b56"
+  },
+  "/docs/widget/score-board": {
+    "url": "https://assets.animata.design/og/widget/score-board.v1.2e090320b93fedcb.png",
+    "hash": "2e090320b93fedcb"
+  },
+  "/docs/widget/security-alert": {
+    "url": "https://assets.animata.design/og/widget/security-alert.v1.0b41d4a2ee8ba7df.png",
+    "hash": "0b41d4a2ee8ba7df"
+  },
+  "/docs/widget/shopping-list": {
+    "url": "https://assets.animata.design/og/widget/shopping-list.v1.bab80bde60cc4b46.png",
+    "hash": "bab80bde60cc4b46"
+  },
+  "/docs/widget/sleep-tracker": {
+    "url": "https://assets.animata.design/og/widget/sleep-tracker.v1.e3574eae18445634.png",
+    "hash": "e3574eae18445634"
+  },
+  "/docs/widget/storage-status": {
+    "url": "https://assets.animata.design/og/widget/storage-status.v1.f0181448ff681717.png",
+    "hash": "f0181448ff681717"
+  },
+  "/docs/widget/storage-widget": {
+    "url": "https://assets.animata.design/og/widget/storage-widget.v1.63355b9993541dff.png",
+    "hash": "63355b9993541dff"
+  },
+  "/docs/widget/study-timer": {
+    "url": "https://assets.animata.design/og/widget/study-timer.v1.2faebeb00aa9b22d.png",
+    "hash": "2faebeb00aa9b22d"
+  },
+  "/docs/widget/vpn-widget": {
+    "url": "https://assets.animata.design/og/widget/vpn-widget.v1.659181e5f2e32a45.png",
+    "hash": "659181e5f2e32a45"
+  },
+  "/docs/widget/water-tracker": {
+    "url": "https://assets.animata.design/og/widget/water-tracker.v1.fbfe2a8e860d252b.png",
+    "hash": "fbfe2a8e860d252b"
+  },
+  "/docs/widget/weather-card": {
+    "url": "https://assets.animata.design/og/widget/weather-card.v1.35f1ed8a1c06473e.png",
+    "hash": "35f1ed8a1c06473e"
+  },
+  "/docs/widget/weekly-progress": {
+    "url": "https://assets.animata.design/og/widget/weekly-progress.v1.372f86cacb6f95d7.png",
+    "hash": "372f86cacb6f95d7"
+  }
+}

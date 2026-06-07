@@ -105,6 +105,69 @@ deliberate tradeoff), add a `## Changelog` section near the bottom of its doc, g
 This is per-component history, separate from the site-wide [changelog](/docs/changelog), which
 still gets an entry when a component is first published.
 
+## Social (OG) image
+
+Each component doc can have its own social-share image — a screenshot of the component framed in
+a branded card. These are generated locally with `scripts/build-og-images.mjs`, uploaded to the
+`animata` R2 bucket (served from `assets.animata.design`), and recorded in `lib/og-manifest.json`.
+A doc without an entry falls back to the site-wide image, so this is optional and incremental.
+
+The card layout adapts to the component: wide components get a stacked card (logo on top), and
+tall or square ones get a side layout with the demo filling the height and the branding beside it.
+The card is a still PNG by default — that's what every major link unfurler renders, even for
+animated formats. Pass `--animate` to opt into a small looping GIF for animated components (motion
+is auto-detected; static and interaction-only ones stay a PNG even with the flag).
+
+Generate one **locally and check it before pushing** — screenshots can be flaky (a slow render, an
+odd frame on a canvas component), so a human should eyeball it. Uploads go through `wrangler`, so
+you need a Cloudflare login (or `CLOUDFLARE_API_TOKEN` in `.env`) whose token has R2 write access.
+Bucket and public base default to `animata` / `https://assets.animata.design`; override with
+`R2_BUCKET` / `R2_PUBLIC_BASE` if needed.
+
+<Steps>
+
+<Step>Build the previews</Step>
+
+```bash
+pnpm storybook:build
+pnpm og:fonts:sync   # once after install — copies self-hosted fonts to public/og-fonts/
+```
+
+<Step>Preview the card without uploading</Step>
+
+Renders to `.og-out/` so you can open the PNG and confirm it looks right.
+
+```bash
+pnpm og:build --only=background-shooting-stars --dry-run
+```
+
+<Step>Upload and update the manifest</Step>
+
+Uploads to R2 and writes the slug → URL into `lib/og-manifest.json`. Commit that file.
+
+```bash
+pnpm og:build --only=background-shooting-stars
+```
+
+</Steps>
+
+`--only` matches a story id or doc slug, so `--only=shooting-stars` works too. Do several new
+components in one pass with a comma-separated list: `pnpm og:build --only=card-a,card-b`. Re-running
+is cheap — unchanged components are skipped via a content hash, so only what actually changed is
+re-shot and re-uploaded.
+
+To upload to R2 yourself instead of through `wrangler` (e.g. a first bulk backfill), run
+`pnpm og:build --no-upload`. It renders every card into `.og-out/og/<key>` and writes the manifest
+URLs, but uploads nothing — sync `.og-out/og/` to the bucket root (the filenames are the keys), then
+commit `lib/og-manifest.json`. Upload the objects **before** deploying the manifest: a committed
+entry is used even if its URL 404s, so deploying first would serve broken images until the upload
+lands.
+
+If you uploaded the dry-run flat files instead (`background__animated-beam__b_v1.png` at the bucket
+root rather than `og/background/animated-beam.v1.<hash>.png`), run `pnpm og:migrate` to re-key them
+on R2 and regenerate the manifest. Use `--dry-run` first to inspect, or `--no-upload` to write
+`.og-out/og/` locally and sync that tree yourself.
+
 ## Proposing pull requests
 
 - **Making changes**: implement your bug fix or feature and write stories to cover different use cases. Then commit your changes, push your bug fix/feature branch to the origin (your forked repo) and open a pull request to the upstream (the repository you originally forked)‘s main branch.
