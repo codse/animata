@@ -59,7 +59,7 @@ import { promisify } from "node:util";
 import { chromium } from "playwright";
 import sharp from "sharp";
 
-import { brandedTemplate, ogTemplate, pickBrandedFlavor, TEMPLATE_VERSION } from "./lib/og-template.mjs";
+import { brandedTemplate, ogFontBaseUrl, ogTemplate, pickBrandedFlavor, TEMPLATE_VERSION } from "./lib/og-template.mjs";
 import { previewServerPort, startPreviewServer } from "./lib/preview-server.mjs";
 
 const pexec = promisify(execFile);
@@ -272,9 +272,10 @@ async function prepareCard(page, item, port) {
   const layout = contain ? "side" : dim.w / dim.h >= 1.5 ? "stacked" : "side";
 
   // Pass 2 — render the chosen card with the demo in a transparent-canvas iframe.
-  await page.setContent(ogTemplate({ ...item, layout, variant: VARIANT, storyUrl }), {
-    waitUntil: "networkidle",
-  });
+  await page.setContent(
+    ogTemplate({ ...item, layout, variant: VARIANT, storyUrl, fontBaseUrl: ogFontBaseUrl(port) }),
+    { waitUntil: "load" },
+  );
   await page
     .frameLocator("iframe")
     .locator("#storybook-root, #root")
@@ -407,8 +408,9 @@ async function renderItem(page, item, port) {
         category: item.category,
         description: item.description,
         flavor: pickBrandedFlavor(item.slug),
+        fontBaseUrl: ogFontBaseUrl(port),
       }),
-      { waitUntil: "networkidle" },
+      { waitUntil: "load" },
     );
     await page.evaluate(() => document.fonts?.ready).catch(() => {});
     await page.waitForTimeout(300);
@@ -495,6 +497,12 @@ async function uploadToR2(key, buf, contentType) {
 // working wrangler auth — otherwise we'd render every card and only then fail on the first encode
 // or the first upload, wasting the whole run.
 async function preflight() {
+  const ogFontsDir = join(ROOT, "public", "og-fonts");
+  if (!existsSync(join(ogFontsDir, "outfit-latin-600-normal.woff2"))) {
+    throw new Error(
+      "public/og-fonts/ missing — run `pnpm og:fonts:sync` after install to copy self-hosted fonts.",
+    );
+  }
   if (ANIMATE) {
     try {
       await pexec("ffmpeg", ["-version"]);

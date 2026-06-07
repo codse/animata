@@ -1,16 +1,18 @@
 // Design-review harness for the branded (no-component) OG template. Renders each flavor (a/b/c)
 // for a few sample components to ./.og-out/templates/ so we can pick the look before wiring it into
 // the hybrid pipeline. Not part of any build.  Run: node ./scripts/og-template-preview.mjs
-import { mkdirSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync } from "node:fs";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { chromium } from "playwright";
 
-import { brandedTemplate } from "./lib/og-template.mjs";
+import { brandedTemplate, ogFontBaseUrl } from "./lib/og-template.mjs";
+import { previewServerPort, startPreviewServer } from "./lib/preview-server.mjs";
 
 const ROOT = fileURLToPath(new URL("..", import.meta.url));
 const OUT = join(ROOT, ".og-out", "templates");
+const PREVIEW_DIR = join(ROOT, "public", "preview");
 
 const SAMPLES = [
   {
@@ -34,7 +36,13 @@ const SAMPLES = [
 ];
 
 async function main() {
+  if (!existsSync(join(ROOT, "public", "og-fonts", "outfit-latin-600-normal.woff2"))) {
+    throw new Error("public/og-fonts/ missing — run `pnpm og:fonts:sync` first.");
+  }
   mkdirSync(OUT, { recursive: true });
+  const server = await startPreviewServer(PREVIEW_DIR);
+  const port = previewServerPort(server);
+  const fontBaseUrl = ogFontBaseUrl(port);
   const browser = await chromium.launch();
   const ctx = await browser.newContext({
     viewport: { width: 1200, height: 630 },
@@ -44,16 +52,24 @@ async function main() {
 
   for (const s of SAMPLES) {
     for (const flavor of ["a", "b", "c"]) {
-      await page.setContent(brandedTemplate({ ...s, flavor }), { waitUntil: "networkidle" });
+      await page.setContent(brandedTemplate({ ...s, flavor, fontBaseUrl }), { waitUntil: "load" });
       await page.evaluate(() => document.fonts?.ready).catch(() => {});
       await page.waitForTimeout(300);
-      const out = join(OUT, `${s.category}__${s.title.replace(/\s+/g, "-").toLowerCase()}__${flavor}.png`);
-      await page.screenshot({ path: out, clip: { x: 0, y: 0, width: 1200, height: 630 }, type: "png" });
+      const out = join(
+        OUT,
+        `${s.category}__${s.title.replace(/\s+/g, "-").toLowerCase()}__${flavor}.png`,
+      );
+      await page.screenshot({
+        path: out,
+        clip: { x: 0, y: 0, width: 1200, height: 630 },
+        type: "png",
+      });
       console.log("  rendered", out);
     }
   }
 
   await browser.close();
+  server.close();
   console.log(`templates -> ${OUT}`);
 }
 

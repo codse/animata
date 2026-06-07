@@ -1,6 +1,6 @@
 import { createReadStream, existsSync } from "node:fs";
 import { createServer } from "node:http";
-import { dirname, extname, join } from "node:path";
+import { dirname, extname, resolve, sep } from "node:path";
 
 const MIME = {
   ".html": "text/html",
@@ -23,20 +23,31 @@ const MIME = {
   ".txt": "text/plain",
 };
 
+function isWithinRoot(root, filePath) {
+  const rootResolved = resolve(root);
+  const fileResolved = resolve(filePath);
+  return fileResolved === rootResolved || fileResolved.startsWith(`${rootResolved}${sep}`);
+}
+
+/** Resolve a URL path to a file under root, or null if missing / outside root. */
+function safeFileUnderRoot(root, urlPath) {
+  if (!urlPath || urlPath.includes("\0") || urlPath.includes("\\")) return null;
+  const rel = urlPath === "/" ? "index.html" : urlPath.replace(/^\/+/, "");
+  const candidate = resolve(root, rel);
+  if (!isWithinRoot(root, candidate) || !existsSync(candidate)) return null;
+  return candidate;
+}
+
 /** Static server for `public/preview` (Storybook build). Storybook iframes need http://, not file://.
  * Falls back to the Next `public/` root so component demos that reference local assets like
  * `/music.jpg` or `/jumping-man.png` (not copied into the Storybook build) still resolve. */
 export function startPreviewServer(previewDir) {
   const publicRoot = dirname(previewDir); // public/preview -> public
-  return new Promise((resolve) => {
+  return new Promise((resolvePromise) => {
     const server = createServer((req, res) => {
       const urlPath = decodeURIComponent((req.url || "/").split("?")[0]);
-      const rel = urlPath === "/" ? "/index.html" : urlPath;
-      let filePath = join(previewDir, rel);
-      if (!filePath.startsWith(previewDir) || !existsSync(filePath)) {
-        const alt = join(publicRoot, rel); // fall back to public/ root for local demo assets
-        filePath = alt.startsWith(publicRoot) && existsSync(alt) ? alt : null;
-      }
+      const filePath =
+        safeFileUnderRoot(previewDir, urlPath) ?? safeFileUnderRoot(publicRoot, urlPath);
       if (!filePath) {
         res.writeHead(404);
         res.end("not found");
@@ -45,7 +56,7 @@ export function startPreviewServer(previewDir) {
       res.writeHead(200, { "content-type": MIME[extname(filePath)] || "application/octet-stream" });
       createReadStream(filePath).pipe(res);
     });
-    server.listen(0, "127.0.0.1", () => resolve(server));
+    server.listen(0, "127.0.0.1", () => resolvePromise(server));
   });
 }
 

@@ -4,9 +4,8 @@
 //        or  "side"    (tall demo left fills height, branding right — TALL/square components).
 //   variant: "a" warm editorial (smoke glow + serif title glow)
 //        or  "b" textured minimal (vertical hairlines, crisp serif).
-// Brand type: Young Serif (display title) + IBM Plex Sans (everything else), from Google Fonts.
-// The demo frame has a sharp border + a dot-grid that fills whatever the component doesn't cover
-// (the Storybook canvas is made transparent at screenshot time).
+// Brand type: Young Serif (display title), Outfit (wordmark/eyebrow), IBM Plex Sans (body) — self-hosted
+// under public/og-fonts/ (see scripts/sync-og-fonts.mjs) so renders are offline-deterministic.
 //
 // Bump TEMPLATE_VERSION when the design changes — it's part of the cache hash.
 export const TEMPLATE_VERSION = "24";
@@ -31,9 +30,26 @@ const LOGO = `<svg class="mark" viewBox="0 0 132.292 132.292" xmlns="http://www.
   </g>
 </svg>`;
 
-const FONTS = `<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Young+Serif&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">`;
+export function ogFontBaseUrl(port) {
+  return `http://127.0.0.1:${port}/og-fonts`;
+}
+
+export function ogFontsCss(fontBaseUrl) {
+  const base = fontBaseUrl.replace(/\/$/, "");
+  const face = (family, file, weight) =>
+    `@font-face{font-family:"${family}";font-style:normal;font-weight:${weight};font-display:swap;src:url("${base}/${file}") format("woff2");}`;
+  const faces = [
+    face("Outfit", "outfit-latin-400-normal.woff2", 400),
+    face("Outfit", "outfit-latin-500-normal.woff2", 500),
+    face("Outfit", "outfit-latin-600-normal.woff2", 600),
+    face("Outfit", "outfit-latin-700-normal.woff2", 700),
+    face("Young Serif", "young-serif-latin-400-normal.woff2", 400),
+    face("IBM Plex Sans", "ibm-plex-sans-latin-400-normal.woff2", 400),
+    face("IBM Plex Sans", "ibm-plex-sans-latin-500-normal.woff2", 500),
+    face("IBM Plex Sans", "ibm-plex-sans-latin-600-normal.woff2", 600),
+  ];
+  return `<style>${faces.join("")}</style>`;
+}
 
 const COMMON = `
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -132,7 +148,9 @@ export function ogTemplate({
   category,
   description = "",
   labels = [],
+  fontBaseUrl,
 }) {
+  const fonts = ogFontsCss(fontBaseUrl);
   const chips = labels
     .slice(0, 4)
     .map((l) => `<span class="chip">${esc(l)}</span>`)
@@ -144,7 +162,7 @@ export function ogTemplate({
   const vcss = VARIANTS[variant] || VARIANTS.b;
 
   if (layout === "side") {
-    return `<!doctype html><html><head><meta charset="utf-8"/>${FONTS}<style>${COMMON}${vcss}
+    return `<!doctype html><html><head><meta charset="utf-8"/>${fonts}<style>${COMMON}${vcss}
       body { display: flex; gap: 48px; }
       .side-region { flex: 0 0 560px; height: 100%; }
       .side { flex: 1; display: flex; flex-direction: column; justify-content: space-between; padding: 4px 0; }
@@ -161,7 +179,7 @@ export function ogTemplate({
     </body></html>`;
   }
 
-  return `<!doctype html><html><head><meta charset="utf-8"/>${FONTS}<style>${COMMON}${vcss}
+  return `<!doctype html><html><head><meta charset="utf-8"/>${fonts}<style>${COMMON}${vcss}
     body { display: flex; flex-direction: column; }
     .top { display: flex; align-items: center; justify-content: space-between; }
     .stacked-region { flex: 1; margin: 30px 0; }
@@ -255,40 +273,89 @@ const TPL_C = `
 // d–h: original GENERATIVE patterns built FROM math (not literal diagrams) — used as faint full-bleed
 // texture behind editorial text. d phyllotaxis (golden-angle sunflower), e Truchet tiles, f flow
 // field, g halftone gradient, h phyllotaxis on dark. Each is seeded by the slug so it's stable.
-function pSeed(s) { let h = 2166136261; for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); } return h >>> 0; }
-function pRng(seed) { let a = seed >>> 0; return () => { a = (a + 0x6d2b79f5) | 0; let t = Math.imul(a ^ (a >>> 15), 1 | a); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
+function pSeed(s) {
+  let h = 2166136261;
+  for (let i = 0; i < s.length; i++) {
+    h ^= s.charCodeAt(i);
+    h = Math.imul(h, 16777619);
+  }
+  return h >>> 0;
+}
+function pRng(seed) {
+  let a = seed >>> 0;
+  return () => {
+    a = (a + 0x6d2b79f5) | 0;
+    let t = Math.imul(a ^ (a >>> 15), 1 | a);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
 function patPhyllo(seed, dark) {
   const fill = dark ? "rgba(150,225,200,0.16)" : "rgba(0,0,0,0.10)";
   const GA = Math.PI * (3 - Math.sqrt(5)); // golden angle ≈ 137.5°
-  const r0 = pRng(seed)(); const cx = 840 + r0 * 40, cy = 315, n = 660, c = 17;
+  const r0 = pRng(seed)();
+  const cx = 840 + r0 * 40,
+    cy = 315,
+    n = 660,
+    c = 17;
   let s = "";
-  for (let i = 1; i < n; i++) { const a = i * GA; const r = c * Math.sqrt(i); const x = cx + r * Math.cos(a); const y = cy + r * Math.sin(a); s += `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${(1 + i * 0.006).toFixed(2)}" fill="${fill}"/>`; }
+  for (let i = 1; i < n; i++) {
+    const a = i * GA;
+    const r = c * Math.sqrt(i);
+    const x = cx + r * Math.cos(a);
+    const y = cy + r * Math.sin(a);
+    s += `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${(1 + i * 0.006).toFixed(2)}" fill="${fill}"/>`;
+  }
   return s;
 }
 function patTruchet(seed) {
-  const r = pRng(seed), cell = 84, h = cell / 2; let s = `<g fill="none" stroke="rgba(0,0,0,0.10)" stroke-width="2.5">`;
-  for (let y = 0; y < 630 + cell; y += cell) for (let x = 0; x < 1200 + cell; x += cell) {
-    if (r() < 0.5) s += `<path d="M${x} ${y + h} A ${h} ${h} 0 0 1 ${x + h} ${y}"/><path d="M${x + h} ${y + cell} A ${h} ${h} 0 0 1 ${x + cell} ${y + h}"/>`;
-    else s += `<path d="M${x + h} ${y} A ${h} ${h} 0 0 1 ${x + cell} ${y + h}"/><path d="M${x} ${y + h} A ${h} ${h} 0 0 1 ${x + h} ${y + cell}"/>`;
-  }
+  const r = pRng(seed),
+    cell = 84,
+    h = cell / 2;
+  let s = `<g fill="none" stroke="rgba(0,0,0,0.10)" stroke-width="2.5">`;
+  for (let y = 0; y < 630 + cell; y += cell)
+    for (let x = 0; x < 1200 + cell; x += cell) {
+      if (r() < 0.5)
+        s += `<path d="M${x} ${y + h} A ${h} ${h} 0 0 1 ${x + h} ${y}"/><path d="M${x + h} ${y + cell} A ${h} ${h} 0 0 1 ${x + cell} ${y + h}"/>`;
+      else
+        s += `<path d="M${x + h} ${y} A ${h} ${h} 0 0 1 ${x + cell} ${y + h}"/><path d="M${x} ${y + h} A ${h} ${h} 0 0 1 ${x + h} ${y + cell}"/>`;
+    }
   return s + `</g>`;
 }
 function patFlow(seed) {
-  const r = pRng(seed), step = 44, ph = r() * 6.283; let s = `<g stroke="rgba(0,0,0,0.14)" stroke-width="2" stroke-linecap="round">`;
-  for (let y = 26; y < 630; y += step) for (let x = 26; x < 1200; x += step) {
-    const a = Math.sin(x * 0.006 + ph) + Math.cos(y * 0.008) + Math.sin((x + y) * 0.004);
-    s += `<line x1="${x}" y1="${y}" x2="${(x + Math.cos(a) * 16).toFixed(1)}" y2="${(y + Math.sin(a) * 16).toFixed(1)}"/>`;
-  }
+  const r = pRng(seed),
+    step = 44,
+    ph = r() * 6.283;
+  let s = `<g stroke="rgba(0,0,0,0.14)" stroke-width="2" stroke-linecap="round">`;
+  for (let y = 26; y < 630; y += step)
+    for (let x = 26; x < 1200; x += step) {
+      const a = Math.sin(x * 0.006 + ph) + Math.cos(y * 0.008) + Math.sin((x + y) * 0.004);
+      s += `<line x1="${x}" y1="${y}" x2="${(x + Math.cos(a) * 16).toFixed(1)}" y2="${(y + Math.sin(a) * 16).toFixed(1)}"/>`;
+    }
   return s + `</g>`;
 }
 function patHalftone(seed) {
-  const r = pRng(seed), dir = r() < 0.5; let s = `<g fill="rgba(0,0,0,0.15)">`; const step = 30;
-  for (let y = 20; y < 630; y += step) for (let x = 20; x < 1200; x += step) { const t = dir ? x / 1200 : y / 630; s += `<circle cx="${x}" cy="${y}" r="${(0.5 + t * 4.4).toFixed(2)}"/>`; }
+  const r = pRng(seed),
+    dir = r() < 0.5;
+  let s = `<g fill="rgba(0,0,0,0.15)">`;
+  const step = 30;
+  for (let y = 20; y < 630; y += step)
+    for (let x = 20; x < 1200; x += step) {
+      const t = dir ? x / 1200 : y / 630;
+      s += `<circle cx="${x}" cy="${y}" r="${(0.5 + t * 4.4).toFixed(2)}"/>`;
+    }
   return s + `</g>`;
 }
 function patternSVG(kind, slug) {
   const seed = pSeed(slug);
-  const inner = kind === "truchet" ? patTruchet(seed) : kind === "flow" ? patFlow(seed) : kind === "halftone" ? patHalftone(seed) : patPhyllo(seed, kind === "phyllo-dark");
+  const inner =
+    kind === "truchet"
+      ? patTruchet(seed)
+      : kind === "flow"
+        ? patFlow(seed)
+        : kind === "halftone"
+          ? patHalftone(seed)
+          : patPhyllo(seed, kind === "phyllo-dark");
   return `<svg class="pat" viewBox="0 0 1200 630" preserveAspectRatio="xMidYMid slice">${inner}</svg>`;
 }
 const PAT_KIND = { d: "phyllo", e: "truchet", f: "flow", g: "halftone", h: "phyllo-dark" };
@@ -329,7 +396,15 @@ export function pickBrandedFlavor(key = "") {
   return ["a", "b", "c", "d", "e", "f", "g", "h"][h % 8];
 }
 
-export function brandedTemplate({ slug = "", title, category, description = "", flavor }) {
+export function brandedTemplate({
+  slug = "",
+  title,
+  category,
+  description = "",
+  flavor,
+  fontBaseUrl,
+}) {
+  const fonts = ogFontsCss(fontBaseUrl);
   const tpl = BRANDED[flavor] || BRANDED.a;
   const urlPath = String(slug).replace(/^\//, "");
   const url = `<div class="url"><b>animata.design</b>/${esc(urlPath)}</div>`;
@@ -337,7 +412,7 @@ export function brandedTemplate({ slug = "", title, category, description = "", 
   const eyebrow = `<div class="eyebrow">${esc(category)}</div>`;
   const name = `<div class="title">${esc(title)}</div>`;
   const desc = description ? `<div class="desc">${esc(description)}</div>` : "";
-  const head = `<head><meta charset="utf-8"/>${FONTS}<style>${BRANDED_BASE}${tpl}</style></head>`;
+  const head = `<head><meta charset="utf-8"/>${fonts}<style>${BRANDED_BASE}${tpl}</style></head>`;
 
   if (flavor === "b") {
     return `<!doctype html><html>${head}<body>${brand}${eyebrow}<div class="accent"></div>${name}${desc}${url}</body></html>`;
