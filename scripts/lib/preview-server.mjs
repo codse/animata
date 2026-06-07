@@ -1,6 +1,6 @@
-import { createReadStream, existsSync } from "node:fs";
+import { createReadStream, existsSync, realpathSync } from "node:fs";
 import { createServer } from "node:http";
-import { dirname, extname, resolve, sep } from "node:path";
+import { dirname, extname, relative, resolve, sep } from "node:path";
 
 const MIME = {
   ".html": "text/html",
@@ -23,19 +23,34 @@ const MIME = {
   ".txt": "text/plain",
 };
 
-function isWithinRoot(root, filePath) {
-  const rootResolved = resolve(root);
-  const fileResolved = resolve(filePath);
-  return fileResolved === rootResolved || fileResolved.startsWith(`${rootResolved}${sep}`);
+/** Parse pathname from a request URL; null on malformed input. */
+function parseRequestPath(req) {
+  try {
+    return new URL(req.url || "/", "http://127.0.0.1").pathname;
+  } catch {
+    return null;
+  }
 }
 
-/** Resolve a URL path to a file under root, or null if missing / outside root. */
-function safeFileUnderRoot(root, urlPath) {
-  if (!urlPath || urlPath.includes("\0") || urlPath.includes("\\")) return null;
+/** Resolve urlPath under a canonical root (realpath), or null if outside root / missing. */
+function resolveUnderRoot(rootReal, urlPath) {
+  if (!urlPath || urlPath.includes("\0")) return null;
   const rel = urlPath === "/" ? "index.html" : urlPath.replace(/^\/+/, "");
-  const candidate = resolve(root, rel);
-  if (!isWithinRoot(root, candidate) || !existsSync(candidate)) return null;
-  return candidate;
+  if (!rel || rel.includes("\\")) return null;
+
+  const candidate = resolve(rootReal, rel);
+  const relToRoot = relative(rootReal, candidate);
+  if (relToRoot.startsWith(`..${sep}`) || relToRoot === "..") return null;
+
+  let filePath;
+  try {
+    filePath = realpathSync(candidate);
+  } catch {
+    return null;
+  }
+  if (!filePath.startsWith(`${rootReal}${sep}`) && filePath !== rootReal) return null;
+  if (!existsSync(filePath)) return null;
+  return filePath;
 }
 
 /** Static server for `public/preview` (Storybook build). Storybook iframes need http://, not file://.
@@ -43,11 +58,19 @@ function safeFileUnderRoot(root, urlPath) {
  * `/music.jpg` or `/jumping-man.png` (not copied into the Storybook build) still resolve. */
 export function startPreviewServer(previewDir) {
   const publicRoot = dirname(previewDir); // public/preview -> public
+  const previewRoot = realpathSync(resolve(previewDir));
+  const publicRootReal = realpathSync(resolve(publicRoot));
+
   return new Promise((resolvePromise) => {
     const server = createServer((req, res) => {
-      const urlPath = decodeURIComponent((req.url || "/").split("?")[0]);
+      const urlPath = parseRequestPath(req);
+      if (!urlPath) {
+        res.writeHead(400);
+        res.end("bad request");
+        return;
+      }
       const filePath =
-        safeFileUnderRoot(previewDir, urlPath) ?? safeFileUnderRoot(publicRoot, urlPath);
+        resolveUnderRoot(previewRoot, urlPath) ?? resolveUnderRoot(publicRootReal, urlPath);
       if (!filePath) {
         res.writeHead(404);
         res.end("not found");
