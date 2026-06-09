@@ -1,0 +1,137 @@
+---
+title: Roll text
+description: Stacked text layers that roll vertically on hover — top slides up, bottom rises in. Playback latches until the animation finishes.
+author: sudhashrestha
+labels: ["new", "requires interaction", "hover"]
+---
+
+<ComponentPreview name="text-roll-text--primary" />
+
+## Installation
+
+### CLI
+
+<RegistryInstall category="text" name="roll-text" />
+
+The CLI installs `roll-text.tsx` and the co-located `roll-text.css` in one step.
+
+### Manual
+
+<Steps>
+
+<Step>Run the following command</Step>
+
+```bash
+mkdir -p animata/text && touch animata/text/roll-text.tsx animata/text/roll-text.css
+```
+
+<Step>Paste the code</Step>
+
+```jsx file=<rootDir>/animata/text/roll-text.css
+
+```
+
+```jsx file=<rootDir>/animata/text/roll-text.tsx
+
+```
+
+</Steps>
+
+## Usage
+
+```tsx
+import RollText from "@/animata/text/roll-text";
+
+<RollText text="Hello world" className="font-(family-name:--font-display) text-4xl text-foreground" />
+```
+
+Stagger by word or character:
+
+```tsx
+<RollText text="Word by word" stagger="word" staggerMs={50} className="text-4xl text-foreground" />
+<RollText text="Letters" stagger="character" staggerMs={32} className="text-4xl text-foreground" />
+```
+
+Inside a link or card, use `groupHover` on the label and mark the interactive ancestor with `data-roll-group`. Add `pointer-events-none` on `RollText` so the parent receives hover ( `mouseenter` does not bubble from child to parent).
+
+```tsx
+<a href="/docs" data-roll-group className="group/roll block rounded-xl p-5 ring-1 ring-foreground/10">
+  <RollText
+    groupHover
+    text="Components"
+    stagger="character"
+    className="pointer-events-none text-2xl text-foreground"
+  />
+</a>
+```
+
+Site header nav uses the same pattern: `data-roll-group` on the `Link`, `groupHover` + `pointer-events-none` on `RollText`.
+
+## How it works
+
+### Markup
+
+Each stagger unit is a `.roll-unit` — a hidden sizer sets width and height, with two absolutely positioned panels (`.roll-panel-front` and `.roll-panel-back`) stacked inside an `overflow: hidden` mask. Units flow inline inside `.roll-text__track`. No duplicate full-string overlay.
+
+### Motion
+
+Both panels show the same glyph in the same color. Closed: the front panel sits at `translateY(0)`, the back panel waits below at `translateY(150% + gap)`. On open, the front slides up and out while the back rises into place — a vertical roll through a single-color surface.
+
+Keyframes and easing live in `roll-text.css`. The root sets `--roll-duration`, `--roll-ease`, `--roll-travel`, `--roll-layer-gap`, `--roll-line-height`, and `--roll-duration-reduced`. Per-unit stagger writes `--roll-delay` and `--roll-unit-duration` inline. `durationMs` on the component maps to `--roll-duration` on the root.
+
+`font-kerning: none` and `--roll-line-height: 1.15` keep per-character boxes from clipping descenders (e.g. `g`, `y`).
+
+### Playback
+
+A small client state machine runs `closed` → `animating` → `open`.
+
+- Hover or focus triggers `playOpen`. If the pointer leaves mid-animation, units still finish — the open state latches.
+- Re-hover while open snaps closed, then replays on the next frame.
+- Re-hover while `animating` is ignored.
+- `prefers-reduced-motion: reduce` skips the roll and jumps to `open`.
+
+Completion is tracked per unit via `animationend` on each `.roll-panel-front`.
+
+### Group hover
+
+With `groupHover`, listeners attach to the nearest `[data-roll-group]` or `.group/roll` ancestor (`mouseenter` and `focusin`). Prefer `data-roll-group` for reliable lookup; keep Tailwind `group/roll` when you need named group variants elsewhere.
+
+Direct `mouseenter` / `focus` on the root still work when `groupHover` is false.
+
+### Stagger
+
+Linear start delays (`index × staggerMs`) with a shared finish time — later units get a longer `--roll-unit-duration` so the wave overlaps and lands together.
+
+### Accessibility
+
+Animated panels are `aria-hidden`. Screen readers read a single `sr-only` label. Standalone `as="span"` roots are focusable (`tabIndex={0}`) for keyboard trigger; inside a link, focus on the parent is enough.
+
+## Props
+
+<PropsTable>
+  <PropsTable.Row prop="text" type="string">
+    Label copied into both stacked layers.
+  </PropsTable.Row>
+  <PropsTable.Row prop="as" type='"span" | "a" | "button" | "p"' default='"span"'>
+    Wrapper element. Pass `href` when `as="a"`.
+  </PropsTable.Row>
+  <PropsTable.Row prop="groupHover" type="boolean" default="false">
+    Also open when the nearest `[data-roll-group]` or `group/roll` ancestor is hovered or focused. Pair with `pointer-events-none` on the label inside links.
+  </PropsTable.Row>
+  <PropsTable.Row prop="stagger" type='"none" | "word" | "character"' default='"none"'>
+    Animate the whole label at once, or one roll unit per word or character.
+  </PropsTable.Row>
+  <PropsTable.Row prop="staggerMs" type="number" default="32">
+    Linear delay step between unit start times in milliseconds.
+  </PropsTable.Row>
+  <PropsTable.Row prop="durationMs" type="number" default="250">
+    Base travel duration per unit in milliseconds. Staggered units extend so they finish together.
+  </PropsTable.Row>
+  <PropsTable.Row prop="className" type="string">
+    Classes on the root — typography, color, cursor.
+  </PropsTable.Row>
+</PropsTable>
+
+## Credits
+
+Built by [sudha](https://github.com/sudhashrestha)

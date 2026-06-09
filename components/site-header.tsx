@@ -44,30 +44,33 @@ export function SiteHeader() {
           isIndexPage && !scrolled && "bg-transparent",
         )}
       >
-        <div className="mx-auto flex h-8 max-h-8 max-w-7xl items-center justify-between px-4 sm:px-6">
+        <div className="mx-auto flex min-h-8 max-w-7xl items-center justify-between px-4 sm:px-6">
           <div className="flex min-w-0 items-center gap-2.5 sm:gap-4">
             <MobileNav />
             <nav
               aria-label="Main navigation"
-              className="hidden h-8 max-h-8 items-center gap-0 md:flex"
+              className="hidden items-center gap-0 overflow-visible md:flex"
             >
-              {docsConfig.mainNav.map((item, index) => {
+              {docsConfig.mainNav.map((item) => {
                 const href = item.href as string;
                 const isActive = href === "/" ? pathname === "/" : pathname.startsWith(href);
                 return (
                   <Link
-                    key={index}
+                    key={href}
                     href={href}
+                    data-roll-group
                     className={cn(
-                      "group/roll relative inline-flex h-8 max-h-8 items-center px-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
-                      isActive ? "text-foreground" : "text-muted-foreground",
+                      "group/roll relative inline-flex items-center overflow-visible px-2 py-0.5 text-muted-foreground transition-colors hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:text-accent",
+                      isActive && "text-accent",
                     )}
                     aria-current={isActive ? "page" : undefined}
                   >
                     <RollText
                       groupHover
                       text={item.title}
-                      className="text-xs font-medium leading-none"
+                      stagger="character"
+                      staggerMs={32}
+                      className="pointer-events-none text-inherit text-xs font-medium [font-kerning:none]"
                     />
                   </Link>
                 );

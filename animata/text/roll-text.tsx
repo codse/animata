@@ -1,7 +1,16 @@
 "use client";
 
 import type React from "react";
-import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import {
+  Fragment,
+  memo,
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 
 import { cn } from "@/lib/utils";
 
@@ -14,8 +23,8 @@ export interface RollTextProps extends React.HTMLAttributes<HTMLElement> {
   text: string;
   as?: "span" | "a" | "button" | "p";
   /**
-   * When true, the roll plays when an ancestor `group/roll` is hovered
-   * or focus-within.
+   * When true, the roll plays when the nearest `[data-roll-group]` or
+   * `group/roll` ancestor receives hover or focus.
    * @default false
    */
   groupHover?: boolean;
@@ -93,10 +102,22 @@ function splitSegments(
   });
 }
 
-const RollUnit = memo(function RollUnit({ segment }: { segment: RollSegment }) {
+const ROLL_GROUP_SELECTOR = "[data-roll-group], .group\\/roll";
+
+function findRollGroup(node: HTMLElement | null) {
+  return node?.closest(ROLL_GROUP_SELECTOR) ?? null;
+}
+
+const RollUnit = memo(function RollUnit({
+  segment,
+  onFrontAnimationEnd,
+}: {
+  segment: RollSegment;
+  onFrontAnimationEnd?: (event: React.AnimationEvent<HTMLSpanElement>) => void;
+}) {
   return (
     <span
-      className="roll-unit relative inline-block overflow-hidden align-top leading-none"
+      className="roll-unit"
       style={
         {
           "--roll-delay": `${segment.delay}ms`,
@@ -104,14 +125,14 @@ const RollUnit = memo(function RollUnit({ segment }: { segment: RollSegment }) {
         } as React.CSSProperties
       }
     >
-      <span className="invisible inline-block whitespace-pre leading-none">{segment.value}</span>
-
-      <span className="pointer-events-none absolute inset-0 z-0">
-        <span className="roll-panel-back block whitespace-pre leading-none">{segment.value}</span>
+      <span className="roll-unit__sizer" aria-hidden>
+        {segment.value}
       </span>
-
-      <span className="pointer-events-none absolute inset-0 z-1">
-        <span className="roll-panel-front block whitespace-pre leading-none">{segment.value}</span>
+      <span className="roll-panel-back" aria-hidden>
+        {segment.value}
+      </span>
+      <span className="roll-panel-front" aria-hidden onAnimationEnd={onFrontAnimationEnd}>
+        {segment.value}
       </span>
     </span>
   );
@@ -192,10 +213,11 @@ export default function RollText({
     setPhase("animating");
   }, []);
 
-  useEffect(() => {
-    if (!groupHover || !rootRef.current) return;
+  useLayoutEffect(() => {
+    if (!groupHover) return;
 
-    const group = rootRef.current.closest(".group\\/roll");
+    const node = rootRef.current;
+    const group = findRollGroup(node);
     if (!group) return;
 
     group.addEventListener("mouseenter", playOpen);
@@ -217,10 +239,9 @@ export default function RollText({
     playOpen();
   };
 
-  const handleAnimationEnd = (event: React.AnimationEvent<HTMLElement>) => {
+  const handleFrontAnimationEnd = (event: React.AnimationEvent<HTMLSpanElement>) => {
     onAnimationEnd?.(event);
     if (phaseRef.current !== "animating") return;
-    if (!(event.target as HTMLElement).classList.contains("roll-panel-front")) return;
 
     remainingRef.current -= 1;
     if (remainingRef.current <= 0) setPhase("open");
@@ -232,7 +253,7 @@ export default function RollText({
       {...(Tag === "button" ? { type: type ?? "button" } : {})}
       tabIndex={resolvedTabIndex}
       className={cn(
-        "roll-text relative inline-block cursor-default leading-none",
+        "roll-text relative inline-block cursor-default",
         isMotionActive && "roll-text--animating",
         phase === "open" && "roll-text--open",
         className,
@@ -245,25 +266,17 @@ export default function RollText({
       }
       onMouseEnter={handleMouseEnter}
       onFocus={handleFocus}
-      onAnimationEnd={handleAnimationEnd}
       {...props}
     >
       <span className="sr-only">{text}</span>
 
-      <span
-        className="roll-text__stage relative inline-block max-w-full select-none leading-none"
-        aria-hidden
-      >
-        <span className="invisible block whitespace-pre leading-none">{text}</span>
-
-        <span className="absolute left-0 top-0 w-full whitespace-pre leading-none">
-          {segments.map((segment, index) => (
-            <span key={segment.key} className="inline leading-none">
-              {stagger === "word" && index > 0 ? " " : null}
-              <RollUnit segment={segment} />
-            </span>
-          ))}
-        </span>
+      <span className="roll-text__track select-none" aria-hidden>
+        {segments.map((segment, index) => (
+          <Fragment key={segment.key}>
+            {stagger === "word" && index > 0 ? " " : null}
+            <RollUnit segment={segment} onFrontAnimationEnd={handleFrontAnimationEnd} />
+          </Fragment>
+        ))}
       </span>
     </Tag>
   );
