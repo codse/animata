@@ -38,6 +38,8 @@ export interface RollTextProps extends React.HTMLAttributes<HTMLElement> {
   staggerMs?: number;
   /** Per-unit travel duration in ms. @default 250 */
   durationMs?: number;
+  /** Button `type` when `as="button"`. @default "button" */
+  type?: "button" | "submit" | "reset";
 }
 
 type RollPhase = "closed" | "animating" | "open";
@@ -247,9 +249,13 @@ export default function RollText({
     if (remainingRef.current <= 0) setPhase("open");
   };
 
+  const setRootRef = useCallback((node: HTMLElement | null) => {
+    rootRef.current = node;
+  }, []);
+
   return (
     <Tag
-      ref={rootRef}
+      ref={setRootRef}
       {...(Tag === "button" ? { type: type ?? "button" } : {})}
       tabIndex={resolvedTabIndex}
       className={cn(
