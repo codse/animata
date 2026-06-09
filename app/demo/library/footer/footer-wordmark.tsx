@@ -98,7 +98,7 @@ export default function FooterWordmarkDemo() {
       >
         <div
           aria-hidden
-          className="mx-auto flex w-full max-w-6xl flex-1 px-6 pt-[max(1rem,env(safe-area-inset-top))] sm:px-8 lg:px-10"
+          className="mx-auto flex w-full max-w-7xl flex-1 px-6 pt-[max(1rem,env(safe-area-inset-top))] sm:px-8 lg:px-10"
         />
 
         <footer className="relative shrink-0">
@@ -137,7 +137,7 @@ export default function FooterWordmarkDemo() {
             />
 
             <div className="relative z-10 flex h-full min-h-[inherit] flex-col px-6 pb-[calc(var(--demo-chrome-reserve,5rem)+0.5rem)] pt-8 sm:px-8 sm:pt-10 lg:px-10">
-              <div className="@container/footer mx-auto flex w-full max-w-6xl flex-1 flex-col">
+              <div className="@container/footer mx-auto flex w-full max-w-7xl flex-1 flex-col">
                 <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between lg:gap-6">
                   <SiblingFocusNav
                     aria-label="Footer"

@@ -100,7 +100,7 @@ export default function OpenSourceSection() {
   return (
     <section className="border-t border-border py-20 sm:py-24 lg:py-32">
       <SquircleClipDef />
-      <div className="mx-auto max-w-6xl px-6">
+      <div className="mx-auto max-w-7xl px-6">
         <div className="text-center">
           <h2 className="font-(family-name:--font-display) text-[clamp(28px,5vw,44px)] leading-[1] text-foreground">
             Open source.

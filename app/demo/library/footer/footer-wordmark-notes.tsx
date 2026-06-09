@@ -80,7 +80,7 @@ export function FooterWordmarkNotes() {
         <DemoNotes.Code caption="Wordmark SVG">{WORDMARK_SNIPPET}</DemoNotes.Code>
         <DemoNotes.Prose>
           <p>
-            Links and copyright share the same <code>max-w-6xl</code> shell as the wordmark. They
+            Links and copyright share the same <code>max-w-7xl</code> shell as the wordmark. They
             stack on mobile; at <code>lg</code> the row goes horizontal and copyright sits
             right-aligned.
           </p>

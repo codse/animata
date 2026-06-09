@@ -145,7 +145,7 @@ function BentoCard({ children, className }: { children: React.ReactNode; classNa
 export default function StatsBento() {
   return (
     <section className="border-t border-border py-16 sm:py-20 lg:py-24">
-      <div className="mx-auto max-w-6xl px-4 sm:px-6">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6">
         {/* 1 col mobile → 2 col tablet → 3 col desktop */}
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3">
           {/* Card 1: Stars + Border Trail */}
