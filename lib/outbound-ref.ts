@@ -7,10 +7,13 @@ export function withOutboundRef(href: string, ref = OUTBOUND_REF) {
     return href;
   }
 
-  const url = new URL(href);
-  if (!url.searchParams.has("ref")) {
-    url.searchParams.set("ref", ref);
+  try {
+    const url = new URL(href);
+    if (!url.searchParams.has("ref")) {
+      url.searchParams.set("ref", ref);
+    }
+    return url.toString();
+  } catch {
+    return href;
   }
-
-  return url.toString();
 }
