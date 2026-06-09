@@ -25,6 +25,7 @@ import MicroScaleFade from "@/animata/text/micro-scale-fade";
 import MirrorText from "@/animata/text/mirror-text";
 import PerCharacterRise from "@/animata/text/per-character-rise";
 import PerWordCrossfade from "@/animata/text/per-word-crossfade";
+import RollText from "@/animata/text/roll-text";
 import ScaleDownFade from "@/animata/text/scale-down-fade";
 import SharedAxisY from "@/animata/text/shared-axis-y";
 import SharedAxisZ from "@/animata/text/shared-axis-z";
@@ -150,6 +151,15 @@ import InView from "@/components/in-view";
 
   <ComponentListItem copyId="shimmer-sweep" href="/docs/text/shimmer-sweep">
     <ShimmerSweep />
+  </ComponentListItem>
+
+  <ComponentListItem copyId="roll-text" href="/docs/text/roll-text">
+    <RollText
+      text="Roll text"
+      stagger="character"
+      staggerMs={32}
+      className="font-(family-name:--font-display) text-3xl tracking-tight text-foreground"
+    />
   </ComponentListItem>
 
   <ComponentListItem copyId="short-slide-down" href="/docs/text/short-slide-down">
