@@ -52,7 +52,9 @@ Stagger by word or character:
 <RollText text="Letters" stagger="character" staggerMs={32} className="text-4xl text-foreground" />
 ```
 
-Inside a link or card, use `groupHover` on the label and mark the interactive ancestor with `data-roll-group`. Add `pointer-events-none` on `RollText` so the parent receives hover ( `mouseenter` does not bubble from child to parent).
+`RollText` always renders a `span`. Put links and buttons on the **parent** — do not pass `href` to `RollText`.
+
+Inside a link or card, use `groupHover` and mark the ancestor with `data-roll-group`. Add `pointer-events-none` on `RollText` so hover and focus stay on the parent (`mouseenter` does not bubble from child to parent).
 
 ```tsx
 <a href="/docs" data-roll-group className="group/roll block rounded-xl p-5 ring-1 ring-foreground/10">
@@ -104,16 +106,17 @@ Linear start delays (`index × staggerMs`) with a shared finish time — later u
 
 ### Accessibility
 
-Animated panels are `aria-hidden`. Screen readers read a single `sr-only` label. Standalone `as="span"` roots are focusable (`tabIndex={0}`) for keyboard trigger; inside a link, focus on the parent is enough.
+`RollText` is a `span` — it can receive `mouseenter` and `focus` like any element. It is not focusable by default; standalone instances use `tabIndex={0}` so keyboard users can tab to the label and trigger the roll on focus.
+
+The animated duplicate (`.roll-text__track` and roll units) is `aria-hidden` — decorative motion only. Screen readers read the real label from a single `sr-only` child. Do not put `role="presentation"` on the root; that would strip the label from the tree.
+
+With `groupHover`, `tabIndex` is omitted — the wrapping link or button owns focus and activation. Pass `tabIndex={-1}` to force non-tabbable when standalone.
 
 ## Props
 
 <PropsTable>
   <PropsTable.Row prop="text" type="string">
     Label copied into both stacked layers.
-  </PropsTable.Row>
-  <PropsTable.Row prop="as" type='"span" | "a" | "button" | "p"' default='"span"'>
-    Wrapper element. Pass `href` when `as="a"`.
   </PropsTable.Row>
   <PropsTable.Row prop="groupHover" type="boolean" default="false">
     Also open when the nearest `[data-roll-group]` or `group/roll` ancestor is hovered or focused. Pair with `pointer-events-none` on the label inside links.

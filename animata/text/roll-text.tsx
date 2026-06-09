@@ -18,13 +18,13 @@ import "./roll-text.css";
 
 export type RollStagger = "none" | "word" | "character";
 
-export interface RollTextProps extends React.HTMLAttributes<HTMLElement> {
+export interface RollTextProps extends Omit<React.ComponentPropsWithoutRef<"span">, "children"> {
   /** Label duplicated across the two stacked roll layers. */
   text: string;
-  as?: "span" | "a" | "button" | "p";
   /**
    * When true, the roll plays when the nearest `[data-roll-group]` or
-   * `group/roll` ancestor receives hover or focus.
+   * `group/roll` ancestor receives hover or focus. The span is not tabbable —
+   * put `href` / actions on the wrapping link or button.
    * @default false
    */
   groupHover?: boolean;
@@ -38,8 +38,6 @@ export interface RollTextProps extends React.HTMLAttributes<HTMLElement> {
   staggerMs?: number;
   /** Per-unit travel duration in ms. @default 250 */
   durationMs?: number;
-  /** Button `type` when `as="button"`. @default "button" */
-  type?: "button" | "submit" | "reset";
 }
 
 type RollPhase = "closed" | "animating" | "open";
@@ -141,18 +139,16 @@ const RollUnit = memo(function RollUnit({
 });
 
 /**
- * Two stacked text layers — top slides up and out, back layer rises from below.
- * Both layers share the same color for a seamless vertical roll.
+ * Decorative roll label — always a `span`. Wrap in `<a>`, `<Link>`, or `<button>`
+ * for navigation or actions.
  */
 export default function RollText({
   text,
-  as: Tag = "span",
   groupHover = false,
   stagger = "none",
   staggerMs = 32,
   durationMs = 250,
   className,
-  type,
   tabIndex,
   style,
   onMouseEnter,
@@ -165,15 +161,14 @@ export default function RollText({
     [text, stagger, staggerMs, durationMs],
   );
 
-  const rootRef = useRef<HTMLElement>(null);
+  const rootRef = useRef<HTMLSpanElement>(null);
   const phaseRef = useRef<RollPhase>("closed");
   const segmentCountRef = useRef(segments.length);
   const remainingRef = useRef(0);
   const reducedMotionRef = useRef(false);
   const [phase, setPhase] = useState<RollPhase>("closed");
 
-  const isStaticSpan = Tag === "span" && !groupHover;
-  const resolvedTabIndex = tabIndex ?? (isStaticSpan ? 0 : undefined);
+  const resolvedTabIndex = tabIndex ?? (groupHover ? undefined : 0);
   const isMotionActive = phase === "animating" || phase === "open";
 
   segmentCountRef.current = segments.length;
@@ -231,14 +226,14 @@ export default function RollText({
     };
   }, [groupHover, playOpen]);
 
-  const handleMouseEnter = (event: React.MouseEvent<HTMLElement>) => {
+  const handleMouseEnter = (event: React.MouseEvent<HTMLSpanElement>) => {
     onMouseEnter?.(event);
-    playOpen();
+    if (!groupHover) playOpen();
   };
 
-  const handleFocus = (event: React.FocusEvent<HTMLElement>) => {
+  const handleFocus = (event: React.FocusEvent<HTMLSpanElement>) => {
     onFocus?.(event);
-    playOpen();
+    if (!groupHover) playOpen();
   };
 
   const handleFrontAnimationEnd = (event: React.AnimationEvent<HTMLSpanElement>) => {
@@ -249,14 +244,9 @@ export default function RollText({
     if (remainingRef.current <= 0) setPhase("open");
   };
 
-  const setRootRef = useCallback((node: HTMLElement | null) => {
-    rootRef.current = node;
-  }, []);
-
   return (
-    <Tag
-      ref={setRootRef}
-      {...(Tag === "button" ? { type: type ?? "button" } : {})}
+    <span
+      ref={rootRef}
       tabIndex={resolvedTabIndex}
       className={cn(
         "roll-text relative inline-block cursor-default",
@@ -284,6 +274,6 @@ export default function RollText({
           </Fragment>
         ))}
       </span>
-    </Tag>
+    </span>
   );
 }
