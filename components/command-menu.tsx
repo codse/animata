@@ -54,7 +54,7 @@ export function CommandMenu({ ...props }: ComponentPropsWithoutRef<typeof Comman
       <Button
         variant="outline"
         className={cn(
-          "relative h-9 justify-start gap-2 rounded-lg border border-border bg-[hsl(var(--surface-alt))] px-3 text-sm font-normal text-muted-foreground shadow-none transition-colors hover:bg-[hsl(var(--surface-alt))] hover:text-foreground sm:h-10 sm:w-48 sm:px-4",
+          "relative h-8 max-h-8 justify-start gap-2 rounded-lg border border-border bg-[hsl(var(--surface-alt))] px-3 text-sm font-normal text-muted-foreground shadow-none transition-colors hover:bg-[hsl(var(--surface-alt))] hover:text-foreground sm:w-48 sm:px-4",
         )}
         onClick={() => setOpen(true)}
         {...props}

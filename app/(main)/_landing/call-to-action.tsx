@@ -54,7 +54,7 @@ export default function CallToActionSection() {
             className="inline-flex items-center gap-2 text-[15px] font-medium text-muted-foreground transition-colors hover:text-foreground"
           >
             <Icons.gitHub className="size-4" />
-            View on GitHub →
+            View on GitHub
           </Link>
         </div>
       </div>

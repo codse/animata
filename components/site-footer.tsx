@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import type { CSSProperties } from "react";
 
 import SiblingFocusNav from "@/animata/container/sibling-focus-nav";
 import NewsletterSection from "@/app/(main)/_landing/newsletter";
@@ -17,20 +16,10 @@ import {
   footerColBrandClassName,
   footerColLinksClassName,
   footerColNewsletterClassName,
-  footerEmptyRowClassName,
   footerGridClassName,
   footerOuterGridClassName,
 } from "@/lib/footer-grid";
-import {
-  FOOTER_ACCENT,
-  FOOTER_CATEGORY_LINK,
-  FOOTER_CATEGORY_TITLE,
-  FOOTER_GOLD,
-  FOOTER_INK,
-  footerSelectionClassName,
-  footerSurfaceClassName,
-  footerSurfaceStyle,
-} from "@/lib/footer-theme";
+import { footerSelectionClassName, footerSurfaceClassName } from "@/lib/footer-theme";
 import { withOutboundRef } from "@/lib/outbound-ref";
 import { cn } from "@/lib/utils";
 
@@ -61,19 +50,7 @@ export function SiteFooter() {
 
   return (
     <footer className="relative mt-auto w-full overflow-hidden">
-      <div
-        className={cn(footerSelectionClassName, footerSurfaceClassName)}
-        style={
-          {
-            "--footer-ink": FOOTER_INK,
-            "--footer-accent": FOOTER_ACCENT,
-            "--footer-gold": FOOTER_GOLD,
-            "--footer-category-title": FOOTER_CATEGORY_TITLE,
-            "--footer-category-link": FOOTER_CATEGORY_LINK,
-            ...footerSurfaceStyle,
-          } as CSSProperties
-        }
-      >
+      <div className={cn(footerSelectionClassName, footerSurfaceClassName)}>
         <div
           className={cn(
             "relative mx-auto w-full max-w-7xl px-5 sm:px-8 lg:px-10",
@@ -86,23 +63,16 @@ export function SiteFooter() {
               <Link
                 href="/"
                 className={cn(
-                  "inline-flex items-center gap-0.5 text-[1.35rem] -translate-x-0.5",
+                  "inline-flex items-center gap-0.5 text-[1.35rem] -translate-x-0.5 text-(--footer-accent)",
                   brandLabelClassName,
                 )}
-                style={{ color: FOOTER_ACCENT }}
               >
                 <Icons.logo className="h-[1.35em] w-[1.35em] shrink-0 [&_*]:fill-(--footer-accent)" />
-                <span
-                  className="leading-none"
-                  style={{ lineHeight: 1.1, textBoxTrim: "trim-start" }}
-                >
+                <span className="leading-relaxed" style={{ textBoxTrim: "trim-start" }}>
                   animata
                 </span>
               </Link>
-              <p
-                className="mt-3 max-w-sm text-[13px] text-balance leading-[1.4] tracking-[0.01em]"
-                style={{ color: FOOTER_INK }}
-              >
+              <p className="mt-3 max-w-sm text-[13px] text-balance leading-[1.4] tracking-[0.01em] text-(--footer-ink)">
                 {siteConfig.description}
               </p>
 

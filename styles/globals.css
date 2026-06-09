@@ -451,6 +451,16 @@
     --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
     --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.06), 0 4px 16px rgba(0, 0, 0, 0.04);
     --shadow-lg: 0 4px 12px rgba(0, 0, 0, 0.06), 0 12px 32px rgba(0, 0, 0, 0.08);
+
+    /* Footer band — light (Apple-style gray) */
+    --footer-surface: #f5f5f7;
+    --footer-ink: #0f1d42;
+    --footer-ink-muted: #1a2d5c;
+    --footer-accent: #1a4fff;
+    --footer-gold: #ffcc00;
+    --footer-category-title: #1d1d1f;
+    --footer-category-link: #515154;
+    --footer-stamp: #9f9f9f;
   }
 
   /* ─── DARK — Opal inspired: pure black, minimal, precise ─── */
@@ -489,6 +499,16 @@
     --shadow-sm: none;
     --shadow-md: none;
     --shadow-lg: none;
+
+    /* Footer band — dark (Opal black + brand gold accents) */
+    --footer-surface: #1d1d1f;
+    --footer-ink: #f5f5f7;
+    --footer-ink-muted: #86868b;
+    --footer-accent: #ffcc00;
+    --footer-gold: #ffcc00;
+    --footer-category-title: #f5f5f7;
+    --footer-category-link: #86868b;
+    --footer-stamp: #48484a;
   }
 }
 
