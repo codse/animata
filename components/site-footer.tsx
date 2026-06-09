@@ -2,77 +2,162 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import type { CSSProperties } from "react";
 
+import SiblingFocusNav from "@/animata/container/sibling-focus-nav";
 import NewsletterSection from "@/app/(main)/_landing/newsletter";
+import { FooterBottom } from "@/components/footer-bottom";
+import { FooterCategoryGrid } from "@/components/footer-category-grid";
 import { Icons } from "@/components/icons";
 import { docsConfig } from "@/config/docs";
+import { siteConfig } from "@/config/site";
+import { brandLabelClassName } from "@/lib/brand-font";
 import { getFooterCategories } from "@/lib/docs";
+import {
+  footerColBrandClassName,
+  footerColLinksClassName,
+  footerColNewsletterClassName,
+  footerEmptyRowClassName,
+  footerGridClassName,
+  footerOuterGridClassName,
+} from "@/lib/footer-grid";
+import {
+  FOOTER_ACCENT,
+  FOOTER_CATEGORY_LINK,
+  FOOTER_CATEGORY_TITLE,
+  FOOTER_GOLD,
+  FOOTER_INK,
+  footerSelectionClassName,
+  footerSurfaceClassName,
+  footerSurfaceStyle,
+} from "@/lib/footer-theme";
+import { withOutboundRef } from "@/lib/outbound-ref";
 import { cn } from "@/lib/utils";
 
+const FOOTER_LINKS = [
+  {
+    title: "Components",
+    href: docsConfig.mainNav.find((item) => item.title === "Components")?.href ?? "/docs",
+  },
+  {
+    title: "Demos",
+    href: docsConfig.mainNav.find((item) => item.title === "Demos")?.href ?? "/demo",
+  },
+  { title: "Changelog", href: "/docs/changelog" },
+  { title: "Contributing", href: "/docs/contributing" },
+  { title: "Resources we use", href: "/resources" },
+] as const;
+
+const footerMainLinkClassName = cn(
+  SiblingFocusNav.getLinkClassName("opacity"),
+  "min-h-0 touch-manipulation text-[13px] font-medium leading-none tracking-[-0.015em] text-[var(--footer-ink)] hover:text-[var(--footer-accent)]",
+  "focus-visible:ring-[var(--footer-accent)]/35 focus-visible:ring-offset-0",
+);
+
 export function SiteFooter() {
-  const footerCategories: { title: string; href: string }[] = getFooterCategories(
-    docsConfig.sidebarNav,
-  );
+  const footerCategories = getFooterCategories(docsConfig.sidebarNav, { variant: "compact" });
   const pathname = usePathname();
+  const isResources = pathname === "/resources";
 
   return (
-    <footer
-      className={cn("container flex flex-col justify-between pb-12 pt-4 md:pb-16 md:pt-6", {
-        "border-t border-t-border": pathname === "/",
-      })}
-    >
-      <NewsletterSection />
+    <footer className="relative mt-auto w-full overflow-hidden">
+      <div
+        className={cn(footerSelectionClassName, footerSurfaceClassName)}
+        style={
+          {
+            "--footer-ink": FOOTER_INK,
+            "--footer-accent": FOOTER_ACCENT,
+            "--footer-gold": FOOTER_GOLD,
+            "--footer-category-title": FOOTER_CATEGORY_TITLE,
+            "--footer-category-link": FOOTER_CATEGORY_LINK,
+            ...footerSurfaceStyle,
+          } as CSSProperties
+        }
+      >
+        <div
+          className={cn(
+            "relative mx-auto w-full max-w-7xl px-5 sm:px-8 lg:px-10",
+            footerOuterGridClassName,
+          )}
+        >
+          {/* Row 1 — brand, links, newsletter */}
+          <div className={cn(footerGridClassName, "overflow-visible md:gap-y-0")}>
+            <div className={cn(footerColBrandClassName, "min-w-0 pe-3")}>
+              <Link
+                href="/"
+                className={cn(
+                  "inline-flex items-center gap-0.5 text-[1.35rem] -translate-x-0.5",
+                  brandLabelClassName,
+                )}
+                style={{ color: FOOTER_ACCENT }}
+              >
+                <Icons.logo className="h-[1.35em] w-[1.35em] shrink-0 [&_*]:fill-(--footer-accent)" />
+                <span className="leading-relaxed" style={{ textBoxTrim: "trim-start" }}>
+                  animata
+                </span>
+              </Link>
+              <p
+                className="mt-3 max-w-sm text-[13px] text-balance leading-[1.4] tracking-[0.01em]"
+                style={{ color: FOOTER_INK }}
+              >
+                {siteConfig.description}
+              </p>
 
-      <nav aria-label="Footer Navigation" className="mx-auto mt-16 w-full max-w-6xl">
-        <div className="grid grid-cols-2 gap-x-4 gap-y-2 md:grid-cols-4 lg:grid-cols-5">
-          {footerCategories.map(({ href, title }) => (
-            <Link
-              href={href}
-              key={title}
+              <div className="mt-4 flex items-center gap-3">
+                <a
+                  href={withOutboundRef(siteConfig.links.github)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="GitHub"
+                  className="inline-flex items-center justify-center text-(--footer-ink) hover:text-(--footer-accent) active:text-(--footer-accent)"
+                >
+                  <Icons.gitHub className="size-3.5" />
+                </a>
+                <a
+                  href={withOutboundRef(siteConfig.links.twitter)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="X"
+                  className="inline-flex items-center justify-center text-(--footer-ink) hover:text-(--footer-accent) active:text-(--footer-accent)"
+                >
+                  <Icons.twitter className="size-3" />
+                </a>
+              </div>
+            </div>
+
+            <SiblingFocusNav
+              mode="opacity"
+              spacingAxis="y"
+              aria-label="Explore"
               className={cn(
-                "text-sm text-muted-foreground",
-                "hover:text-foreground focus:text-foreground px-4 py-2",
+                footerColLinksClassName,
+                "w-full flex-col items-start sm:[&>a:not(:last-child)]:pb-3",
               )}
             >
-              {title}
-            </Link>
-          ))}
-        </div>
-      </nav>
+              {FOOTER_LINKS.map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className={cn(
+                    footerMainLinkClassName,
+                    link.href === "/resources" && isResources && "text-(--footer-accent)",
+                  )}
+                >
+                  {link.title}
+                </Link>
+              ))}
+            </SiblingFocusNav>
 
-      <div className="group mx-auto mt-16 w-fit">
-        <div className="flex gap-1">
-          <div className="flex gap-1">
-            <Icons.logo className="h-6 w-6 origin-[top_center] animate-[swing] transition-all duration-1000 ease-in-out direction-alternate repeat-infinite" />
-            <span>animata</span>
+            <div className={cn(footerColNewsletterClassName, "w-full min-w-0 overflow-visible")}>
+              <NewsletterSection brand />
+            </div>
           </div>
-          <p className="text-muted-foreground">by</p>
-          <div className="flex gap-1">
-            <img src="/codse.webp" width={24} height={24} alt="codse" />
-            <span>codse</span>
-          </div>
-          <p className="text-muted-foreground"> from</p>
-          <span>🇳🇵Nepal</span>
-        </div>
 
-        <small className="mt-1 block text-center text-muted-foreground">
-          many thanks to all these{" "}
-          <Link
-            target="_blank"
-            className="underline"
-            href="https://github.com/codse/animata/contributors"
-          >
-            awesome contributors
-          </Link>
-        </small>
+          <FooterCategoryGrid categories={footerCategories} />
+        </div>
       </div>
 
-      <small className="container mt-12 block max-w-6xl text-balance text-center text-muted-foreground">
-        <strong>Disclaimer</strong>: All trademarks, logos and brand names are the property of their
-        respective owners. All company, product and service names used in this website are for
-        identification purposes only. Use of these names,trademarks and brands does not imply
-        endorsement.
-      </small>
+      <FooterBottom />
     </footer>
   );
 }

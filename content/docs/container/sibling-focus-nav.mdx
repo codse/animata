@@ -1,6 +1,6 @@
 ---
 title: Sibling Focus Nav
-description: A nav row that dims or blurs sibling links on hover or keyboard focus, spotlighting the active item.
+description: A nav row that dims or blurs sibling links when one item is hovered or focused — padding-based spacing keeps the effect alive between items.
 author: hari
 labels: ["new", "hover"]
 ---
@@ -39,12 +39,35 @@ The primitive owns the group spotlight mechanic. You own the links — plain `<a
 
 Pass `mode="opacity"` (default) or `mode="blur"` on the nav. Links pick up the matching transition classes automatically when you use `SiblingFocusNav.Link`.
 
+Horizontal rows use `spacingAxis="x"` (default). Stacked navs use `spacingAxis="y"`. Do not use flex `gap` for separation — padding on each link keeps the hover spotlight active while you move between items.
+
 ```tsx
 import SiblingFocusNav from "@/animata/container/sibling-focus-nav";
 
-<SiblingFocusNav mode="blur" aria-label="Footer" className="gap-x-6">
+<SiblingFocusNav mode="blur" aria-label="Footer">
   <SiblingFocusNav.Link href="/docs">Docs</SiblingFocusNav.Link>
   <SiblingFocusNav.Link href="/changelog">Changelog</SiblingFocusNav.Link>
+</SiblingFocusNav>
+```
+
+Vertical stack (footer column):
+
+```tsx
+<SiblingFocusNav mode="opacity" spacingAxis="y" aria-label="Explore" className="flex-col items-start">
+  <SiblingFocusNav.Link href="/docs">Docs</SiblingFocusNav.Link>
+  <SiblingFocusNav.Link href="/changelog">Changelog</SiblingFocusNav.Link>
+</SiblingFocusNav>
+```
+
+Custom spacing — set `spacingAxis="none"` and apply padding on the nav:
+
+```tsx
+<SiblingFocusNav
+  spacingAxis="none"
+  className="[&>a:not(:last-child)]:pe-8"
+  aria-label="Studio"
+>
+  …
 </SiblingFocusNav>
 ```
 
@@ -54,7 +77,7 @@ With Next.js `Link`, merge the mode-aware class helper onto each child anchor:
 import Link from "next/link";
 import SiblingFocusNav from "@/animata/container/sibling-focus-nav";
 
-<SiblingFocusNav mode="opacity" aria-label="Footer">
+<SiblingFocusNav mode="opacity" spacingAxis="y" aria-label="Footer" className="flex-col items-start">
   <Link href="/docs" className={SiblingFocusNav.getLinkClassName("opacity")}>
     Docs
   </Link>
@@ -65,11 +88,27 @@ import SiblingFocusNav from "@/animata/container/sibling-focus-nav";
 
 Pure CSS on the `<nav>` — no JavaScript state. Both modes animate with `duration-200 ease-out`; `prefers-reduced-motion` disables the transition and, in blur mode, skips the filter effect.
 
-**Opacity** — on hover, `[&:hover>a]:opacity-30` dims every direct link; the item under the cursor resets with `[&>a:hover]:opacity-100`. Links use `transition-opacity`.
+**Spotlight only on a link** — siblings dim only while a direct child `<a>` is hovered or `focus-visible`, using `:has()` so empty padding in the nav does not trigger the effect:
 
-**Blur** — same sibling spotlight with `[&:hover>a]:blur-sm` / `[&>a:hover]:blur-none`. Links use `blur-0` and `transition-[filter]`.
+```css
+[&:has(>a:hover)>a:not(:hover)]:opacity-30
+[&:has(>a:focus-visible)>a:not(:focus-visible)]:opacity-30
+```
 
-For keyboard users in either mode, `[&:focus-within>a]` applies the sibling effect when any link has focus, and `[&>a:focus-visible]` keeps the focused link at full strength. Tab through the row and the spotlight follows focus the same way hover follows the pointer.
+The active link is excluded with `:not(:hover)` / `:not(:focus-visible)` so it stays at full opacity (or unblurred) without fighting a reset rule.
+
+**Opacity** — non-active links fade to `opacity-30`. Links use `transition-opacity`.
+
+**Blur** — same sibling trick with `blur-sm` on non-active links. Links use `blur-0` and `transition-[filter]`.
+
+**Padding spacing, not gap** — flex `gap` leaves dead space between hit targets; moving the pointer across that gap drops `:hover` and the spotlight flickers off. Separation is padding on each link instead:
+
+| Axis | Class | Default |
+| --- | --- | --- |
+| Horizontal (`spacingAxis="x"`) | `[&>a:not(:last-child)]:pe-6` | `1.5rem` end padding |
+| Vertical (`spacingAxis="y"`) | `[&>a:not(:last-child)]:pb-2.5` | `0.625rem` bottom padding |
+
+Export helpers: `SiblingFocusNav.spacingXClassName` and `SiblingFocusNav.spacingYClassName`.
 
 `SiblingFocusNav.Link` adds `min-h-11`, `touch-manipulation`, and a `focus-visible` ring. Override with your own classes on each link.
 

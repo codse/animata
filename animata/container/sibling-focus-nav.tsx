@@ -6,17 +6,18 @@ export type SiblingFocusNavMode = "opacity" | "blur";
 
 const SiblingFocusNavModeContext = createContext<SiblingFocusNavMode>("opacity");
 
-/** Opacity mode: dim siblings on hover or when the nav has focus; active link stays at full opacity. */
+/** Opacity mode: dim siblings only while a link is hovered or focus-visible. */
 export const siblingFocusNavOpacityGroupClassName = cn(
-  "[&:hover>a]:opacity-30 [&:focus-within>a]:opacity-30",
-  "[&>a:hover]:opacity-100 [&>a:focus-visible]:opacity-100",
+  "[&:has(>a:hover)>a:not(:hover)]:opacity-30",
+  "[&:has(>a:focus-visible)>a:not(:focus-visible)]:opacity-30",
 );
 
 /** Blur mode: same sibling trick, but with blur-sm instead of opacity. */
 export const siblingFocusNavBlurGroupClassName = cn(
-  "[&:hover>a]:blur-sm [&:focus-within>a]:blur-sm",
-  "[&>a:hover]:blur-none [&>a:focus-visible]:blur-none",
-  "motion-reduce:[&:hover>a]:blur-none motion-reduce:[&:focus-within>a]:blur-none",
+  "[&:has(>a:hover)>a:not(:hover)]:blur-sm",
+  "[&:has(>a:focus-visible)>a:not(:focus-visible)]:blur-sm",
+  "motion-reduce:[&:has(>a:hover)>a:not(:hover)]:blur-none",
+  "motion-reduce:[&:has(>a:focus-visible)>a:not(:focus-visible)]:blur-none",
 );
 
 const siblingFocusNavLinkBaseClassName = cn(
@@ -37,16 +38,38 @@ export function siblingFocusNavGroupClassName(mode: SiblingFocusNavMode = "opaci
   return mode === "blur" ? siblingFocusNavBlurGroupClassName : siblingFocusNavOpacityGroupClassName;
 }
 
+/** Horizontal separation — padding on links so hover survives the space between items. */
+export const siblingFocusNavSpacingXClassName = "[&>a:not(:last-child)]:pe-6";
+
+/** Vertical separation — same idea for stacked nav rows. */
+export const siblingFocusNavSpacingYClassName = "[&>a:not(:last-child)]:pb-2.5";
+
+type SiblingFocusNavSpacingAxis = "x" | "y" | "none";
+
 type SiblingFocusNavRootProps = ComponentProps<"nav"> & {
   mode?: SiblingFocusNavMode;
+  /** Padding-based link separation — keeps hover active between items (no flex gap). */
+  spacingAxis?: SiblingFocusNavSpacingAxis;
 };
 
-function SiblingFocusNavRoot({ mode = "opacity", className, ...props }: SiblingFocusNavRootProps) {
+function siblingFocusNavSpacingClassName(axis: SiblingFocusNavSpacingAxis) {
+  if (axis === "y") return siblingFocusNavSpacingYClassName;
+  if (axis === "none") return undefined;
+  return siblingFocusNavSpacingXClassName;
+}
+
+function SiblingFocusNavRoot({
+  mode = "opacity",
+  spacingAxis = "x",
+  className,
+  ...props
+}: SiblingFocusNavRootProps) {
   return (
     <SiblingFocusNavModeContext.Provider value={mode}>
       <nav
         className={cn(
-          "flex flex-wrap items-center gap-6",
+          "flex flex-wrap items-center",
+          siblingFocusNavSpacingClassName(spacingAxis),
           siblingFocusNavGroupClassName(mode),
           className,
         )}
@@ -73,6 +96,8 @@ const SiblingFocusNav = Object.assign(SiblingFocusNavRoot, {
   groupClassName: siblingFocusNavOpacityGroupClassName,
   getLinkClassName: siblingFocusNavLinkClassName,
   getGroupClassName: siblingFocusNavGroupClassName,
+  spacingXClassName: siblingFocusNavSpacingXClassName,
+  spacingYClassName: siblingFocusNavSpacingYClassName,
 });
 
 export default SiblingFocusNav;
