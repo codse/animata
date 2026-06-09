@@ -1,7 +1,8 @@
 ---
 title: Metis text
-description: Single-line underline that draws left-to-right on hover, retracts right-to-left on exit.
+description: Hover draws an underline in from the left; on exit it retracts back out to the right.
 labels: ["requires interaction", "hover"]
+author: sudhashrestha
 ---
 
 <ComponentPreview name="text-metis-text--primary" />
@@ -12,16 +13,23 @@ labels: ["requires interaction", "hover"]
 
 <RegistryInstall category="text" name="metis-text" />
 
+The CLI installs `metis-text.tsx` and `metis-text.css` together.
+
 ### Manual
 
 <Steps>
+
 <Step>Run the following command</Step>
 
 ```bash
-mkdir -p animata/text && touch animata/text/metis-text.tsx
+mkdir -p animata/text && touch animata/text/metis-text.tsx animata/text/metis-text.css
 ```
 
 <Step>Paste the code</Step>
+
+```jsx file=<rootDir>/animata/text/metis-text.css
+
+```
 
 ```jsx file=<rootDir>/animata/text/metis-text.tsx
 
@@ -31,7 +39,13 @@ mkdir -p animata/text && touch animata/text/metis-text.tsx
 
 ## Usage
 
-Use `groupHover` when the text sits inside a larger clickable surface (card link, list row). Put `truncate` / `line-clamp-*` on `labelClassName` so the underline is not clipped:
+```tsx
+import MetisText from "@/animata/text/metis-text";
+
+<MetisText className="text-sm text-foreground">About us</MetisText>
+```
+
+Inside a card or list row, pass `groupHover` so the line follows the whole link, not just the label. Put `truncate` or `line-clamp-*` on `labelClassName` — if you clip the root, the underline gets clipped too.
 
 ```tsx
 <a href="..." className="group block">
@@ -43,4 +57,6 @@ Use `groupHover` when the text sits inside a larger clickable surface (card link
 
 ## Credits
 
-Based on the [Metis effect](https://github.com/codrops/LineHoverStyles/) from Codrops.
+Built by [sudha](https://github.com/sudhashrestha)
+
+Underline pattern from Codrops [Line Hover Styles](https://github.com/codrops/LineHoverStyles/) (Metis effect).
