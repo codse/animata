@@ -1,0 +1,46 @@
+---
+title: Metis text
+description: Single-line underline that draws left-to-right on hover, retracts right-to-left on exit.
+labels: ["requires interaction", "hover"]
+---
+
+<ComponentPreview name="text-metis-text--primary" />
+
+## Installation
+
+### CLI
+
+<RegistryInstall category="text" name="metis-text" />
+
+### Manual
+
+<Steps>
+<Step>Run the following command</Step>
+
+```bash
+mkdir -p animata/text && touch animata/text/metis-text.tsx
+```
+
+<Step>Paste the code</Step>
+
+```jsx file=<rootDir>/animata/text/metis-text.tsx
+
+```
+
+</Steps>
+
+## Usage
+
+Use `groupHover` when the text sits inside a larger clickable surface (card link, list row). Put `truncate` / `line-clamp-*` on `labelClassName` so the underline is not clipped:
+
+```tsx
+<a href="..." className="group block">
+  <MetisText groupHover labelClassName="truncate text-sm" className="text-foreground">
+    Site title
+  </MetisText>
+</a>
+```
+
+## Credits
+
+Based on the [Metis effect](https://github.com/codrops/LineHoverStyles/) from Codrops.

@@ -1,3 +1,4 @@
+import MetisText from "@/animata/text/metis-text";
 import { withOutboundRef } from "@/lib/outbound-ref";
 import type { Resource } from "@/lib/resources";
 
@@ -21,9 +22,13 @@ export function ResourceGridItem({ resource }: { resource: Resource }) {
         </div>
 
         <div className="mt-3 flex min-w-0 flex-row items-baseline justify-between gap-3">
-          <span className="min-w-0 max-w-[calc(100%-5.5rem)] truncate text-sm font-medium text-foreground">
+          <MetisText
+            groupHover
+            className="min-w-0 max-w-[calc(100%-5.5rem)] text-sm text-foreground"
+            labelClassName="line-clamp-1 truncate"
+          >
             {resource.title}
-          </span>
+          </MetisText>
           <span className="shrink-0 font-mono text-[10px] text-muted-foreground">
             {resource.domain}
           </span>

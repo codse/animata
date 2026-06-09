@@ -109,7 +109,7 @@ function WhySection() {
 
   return (
     <section className="border-t border-border bg-[hsl(var(--surface-alt))] py-20 sm:py-24 lg:py-32">
-      <div className="mx-auto max-w-6xl px-6">
+      <div className="mx-auto max-w-7xl px-6">
         <h2 className="font-(family-name:--font-display) text-[clamp(28px,5vw,44px)] leading-none text-foreground">
           Why teams
           <br />

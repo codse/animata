@@ -79,7 +79,7 @@ function DemoNotesRoot({
       )}
     >
       <DemoNotesStyles />
-      <div className="mx-auto flex w-full min-w-0 max-w-6xl flex-col gap-y-16 px-6 sm:gap-y-20 sm:px-8 lg:px-10">
+      <div className="mx-auto flex w-full min-w-0 max-w-7xl flex-col gap-y-16 px-6 sm:gap-y-20 sm:px-8 lg:px-10">
         {children}
       </div>
     </section>

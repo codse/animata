@@ -9,7 +9,7 @@ const DISCLAIMER =
   "Disclaimer: All trademarks, logos and brand names are the property of their respective owners. All company, product and service names used in this website are for identification purposes only. Use of these names, trademarks and brands does not imply endorsement.";
 
 const attributionRowClassName =
-  "text-sm font-medium leading-none text-[color:color-mix(in_oklab,var(--footer-ink)_88%,transparent)]";
+  "text-sm leading-none text-[color:color-mix(in_oklab,var(--footer-ink)_88%,transparent)] font-(family-name:--font-brand) ";
 
 const attributionItemClassName = "inline-flex items-center gap-1.5";
 
@@ -32,13 +32,7 @@ export function FooterBottom({ className }: { className?: string }) {
           attributionRowClassName,
         )}
       >
-        <Link
-          href="/"
-          className={cn(
-            attributionLinkClassName,
-            "font-(family-name:--font-brand) lowercase tracking-[-0.045em]",
-          )}
-        >
+        <Link href="/" className={cn(attributionLinkClassName, "lowercase tracking-[-0.045em]")}>
           <Icons.logo className="size-4 shrink-0 [&_*]:fill-(--footer-gold)" />
           <span>animata</span>
         </Link>

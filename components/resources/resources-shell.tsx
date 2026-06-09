@@ -13,7 +13,7 @@ export function ResourcesShell() {
   const resources = getResources();
 
   return (
-    <div className="mx-auto w-full max-w-6xl px-5 py-16 sm:px-8 md:py-24">
+    <div className="mx-auto w-full max-w-7xl px-5 py-16 sm:px-8 md:py-24">
       <header className="max-w-2xl">
         <h1 className="font-(family-name:--font-display) text-3xl tracking-[-0.02em] text-foreground md:text-4xl lg:text-5xl">
           Resources
