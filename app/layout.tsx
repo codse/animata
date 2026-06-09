@@ -4,6 +4,7 @@ import { NuqsAdapter } from "nuqs/adapters/next/app";
 
 import { ThemeProvider } from "@/components/providers";
 import { siteConfig } from "@/config/site";
+import { brandFont } from "@/lib/brand-font";
 import { cn } from "@/lib/utils";
 
 import "@fontsource-variable/lilex";
@@ -92,7 +93,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${ibmPlex.variable} ${youngSerif.variable}`}
+      className={`${ibmPlex.variable} ${youngSerif.variable} ${brandFont.variable}`}
     >
       <head />
       <body className={cn("min-h-screen bg-background antialiased", ibmPlex.className)}>
