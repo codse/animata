@@ -8,8 +8,10 @@ Animata is a free, open-source library of animated React components built with N
 
 - Components go in `animata/<category>/<name>.tsx` with a matching `<name>.stories.tsx`
 - Use `cn()` from `@/lib/utils` for class merging — never raw string concatenation
-- CSS animations belong in inline `<style>` blocks inside the component (see `marquee.tsx`)
-- No CSS modules, no styled-components — Tailwind only
+- Tailwind for layout, color, spacing, and transitions on the component itself
+- Co-located `<name>.css` imported from the TSX for keyframes, pseudo-elements, and selectors Tailwind cannot express (see `roll-text.tsx`, `metis-text.tsx`)
+- Inline `<style>` blocks are fine for small self-contained keyframes when a separate file would be overkill (see `marquee.tsx`)
+- No CSS modules, no styled-components
 - Fonts: `--font-display` = Young Serif (headings/display), `--font-sans` = IBM Plex Sans (body), `--font-mono` = Lilex
 - Brand yellow: `#ffcc00` (from logo) — use for highlights and badges
 - shadcn registry URL format: `https://animata.design/r/{category}/{name}.json` — always use this in docs/changelog, never bare `npx shadcn add component-name`

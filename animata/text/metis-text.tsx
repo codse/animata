@@ -31,8 +31,15 @@ export default function MetisText({
   ...props
 }: MetisTextProps) {
   return (
-    <Tag className={cn("metis-text", groupHover && "metis-text--group", className)} {...props}>
-      <span className={cn("metis-text__label", labelClassName)}>{children}</span>
+    <Tag
+      className={cn(
+        "metis-text relative inline-block max-w-full",
+        groupHover && "metis-text--group",
+        className,
+      )}
+      {...props}
+    >
+      <span className={cn("block", labelClassName)}>{children}</span>
     </Tag>
   );
 }

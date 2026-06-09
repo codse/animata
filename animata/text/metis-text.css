@@ -1,14 +1,4 @@
 @layer components {
-  .metis-text {
-    position: relative;
-    display: inline-block;
-    max-width: 100%;
-  }
-
-  .metis-text__label {
-    display: block;
-  }
-
   .metis-text::after {
     content: "";
     position: absolute;
@@ -16,7 +6,7 @@
     top: 100%;
     width: 100%;
     height: 1px;
-    background: currentColor;
+    background: currentcolor;
     pointer-events: none;
     transform-origin: 100% 50%;
     transform: scale3d(0, 1, 1);

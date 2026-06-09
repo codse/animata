@@ -55,6 +55,10 @@ Inside a card or list row, pass `groupHover` so the line follows the whole link,
 </a>
 ```
 
+## How it works
+
+Layout classes (`relative`, `inline-block`, `max-w-full`, `block` on the label) live on the TSX via Tailwind. The Metis scaleX underline — `::after`, transform-origin flip on enter/exit, and `.group` hover — lives in `metis-text.css` because pseudo-elements and origin swaps are awkward in utility classes alone.
+
 ## Credits
 
 Built by [sudha](https://github.com/sudhashrestha)

@@ -46,6 +46,10 @@ config/docs.ts - Add the new entry in docsConfig.sidebarNav
 
 Simply open the `config/docs.ts` file and paste the new entry in the `docsConfig.sidebarNav` array.
 
+## Styling
+
+Use Tailwind on the component for layout and color. Put keyframes, pseudo-elements, and other rules Tailwind cannot express in a co-located `<name>.css` imported from the TSX — the CLI/registry ships both files. See [code guidelines — Styling](/docs/contributing/guidelines#styling).
+
 ## Writing docs
 
 The script above generates a placeholder documentation file for the new component. You can find the file in the `content/docs/{type}` directory. Update it with the relevant information about the component you are creating and remove the placeholder content.
