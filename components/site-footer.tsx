@@ -92,7 +92,10 @@ export function SiteFooter() {
                 style={{ color: FOOTER_ACCENT }}
               >
                 <Icons.logo className="h-[1.35em] w-[1.35em] shrink-0 [&_*]:fill-(--footer-accent)" />
-                <span className="leading-relaxed" style={{ textBoxTrim: "trim-start" }}>
+                <span
+                  className="leading-none"
+                  style={{ lineHeight: 1.1, textBoxTrim: "trim-start" }}
+                >
                   animata
                 </span>
               </Link>

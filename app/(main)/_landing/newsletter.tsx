@@ -6,7 +6,6 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import useNewsletterSubscription from "@/hooks/use-newsletter-subscription";
-import { FOOTER_INK } from "@/lib/footer-theme";
 import { cn } from "@/lib/utils";
 
 function NewsletterInput({
@@ -59,7 +58,7 @@ function NewsletterInput({
           type="submit"
           disabled={isLoading}
           className={cn(
-            "shrink-0 bg-[hsl(var(--accent))] text-white shadow-none hover:!bg-[hsl(var(--accent))]/90 hover:!text-white",
+            "shrink-0 bg-[hsl(var(--accent))] text-white shadow-none hover:bg-[hsl(var(--accent))]/90! hover:text-white!",
             compact ? "h-9 rounded-none px-4" : "w-full sm:w-auto",
           )}
         >

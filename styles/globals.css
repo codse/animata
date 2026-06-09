@@ -426,13 +426,13 @@
     --secondary-foreground: 0 0% 11%;
     --muted: 0 0% 96%;
     --muted-foreground: 0 0% 43%;
-    --accent: 226 100% 55%;
+    --accent: 262 83% 58%;
     --accent-foreground: 0 0% 100%;
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 98%;
     --border: 0 0% 90%;
     --input: 0 0% 90%;
-    --ring: 226 100% 55%;
+    --ring: 262 83% 58%;
     --radius: 0.75rem;
 
     /* Surfaces */
@@ -467,13 +467,13 @@
     --secondary-foreground: 0 0% 96%;
     --muted: 0 0% 10%;
     --muted-foreground: 0 0% 45%;
-    --accent: 226 100% 62%;
+    --accent: 262 83% 65%;
     --accent-foreground: 0 0% 100%;
     --destructive: 0 62% 30%;
     --destructive-foreground: 0 0% 98%;
     --border: 0 0% 12%;
     --input: 0 0% 12%;
-    --ring: 226 100% 62%;
+    --ring: 262 83% 65%;
 
     /* Surfaces */
     --surface-alt: 0 0% 4%;
