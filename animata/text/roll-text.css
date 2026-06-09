@@ -76,8 +76,8 @@
     }
   }
 
-  .roll-text--animating .roll-panel-front,
-  .roll-text--animating .roll-panel-back {
+  .roll-text--animating:not(.roll-text--open) .roll-panel-front,
+  .roll-text--animating:not(.roll-text--open) .roll-panel-back {
     will-change: transform;
   }
 

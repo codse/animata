@@ -29,6 +29,12 @@ export interface RollTextProps extends Omit<React.ComponentPropsWithoutRef<"span
    */
   groupHover?: boolean;
   /**
+   * When true, hover and focus do not trigger the roll — use for active nav
+   * items or other states where motion should stay static.
+   * @default false
+   */
+  disabled?: boolean;
+  /**
    * Stagger the roll across words or characters. `none` animates the whole
    * label at once.
    * @default "none"
@@ -145,6 +151,7 @@ const RollUnit = memo(function RollUnit({
 export default function RollText({
   text,
   groupHover = false,
+  disabled = false,
   stagger = "none",
   staggerMs = 32,
   durationMs = 250,
@@ -163,6 +170,7 @@ export default function RollText({
 
   const rootRef = useRef<HTMLSpanElement>(null);
   const phaseRef = useRef<RollPhase>("closed");
+  const disabledRef = useRef(disabled);
   const segmentCountRef = useRef(segments.length);
   const remainingRef = useRef(0);
   const reducedMotionRef = useRef(false);
@@ -172,10 +180,17 @@ export default function RollText({
   const isMotionActive = phase === "animating" || phase === "open";
 
   segmentCountRef.current = segments.length;
+  disabledRef.current = disabled;
 
   useEffect(() => {
     phaseRef.current = phase;
   }, [phase]);
+
+  useEffect(() => {
+    if (disabled && phase !== "closed") {
+      setPhase("closed");
+    }
+  }, [disabled, phase]);
 
   useEffect(() => {
     const media = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -190,7 +205,7 @@ export default function RollText({
   }, []);
 
   const playOpen = useCallback(() => {
-    if (phaseRef.current === "animating") return;
+    if (disabledRef.current || phaseRef.current === "animating") return;
 
     if (reducedMotionRef.current) {
       setPhase("open");
@@ -211,7 +226,7 @@ export default function RollText({
   }, []);
 
   useLayoutEffect(() => {
-    if (!groupHover) return;
+    if (!groupHover || disabled) return;
 
     const node = rootRef.current;
     const group = findRollGroup(node);
@@ -224,16 +239,16 @@ export default function RollText({
       group.removeEventListener("mouseenter", playOpen);
       group.removeEventListener("focusin", playOpen);
     };
-  }, [groupHover, playOpen]);
+  }, [groupHover, disabled, playOpen]);
 
   const handleMouseEnter = (event: React.MouseEvent<HTMLSpanElement>) => {
     onMouseEnter?.(event);
-    if (!groupHover) playOpen();
+    if (!groupHover && !disabled) playOpen();
   };
 
   const handleFocus = (event: React.FocusEvent<HTMLSpanElement>) => {
     onFocus?.(event);
-    if (!groupHover) playOpen();
+    if (!groupHover && !disabled) playOpen();
   };
 
   const handleFrontAnimationEnd = (event: React.AnimationEvent<HTMLSpanElement>) => {

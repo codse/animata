@@ -60,17 +60,21 @@ export function SiteHeader() {
                     href={href}
                     data-roll-group
                     className={cn(
-                      "group/roll relative inline-flex items-center overflow-visible px-2 py-0.5 text-muted-foreground transition-colors hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:text-accent",
-                      isActive && "text-accent",
+                      "group/roll relative inline-flex items-center overflow-visible px-2 py-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
                     )}
                     aria-current={isActive ? "page" : undefined}
                   >
                     <RollText
                       groupHover
+                      disabled={isActive}
                       text={item.title}
                       stagger="character"
                       staggerMs={32}
-                      className="pointer-events-none text-inherit text-xs font-medium [font-kerning:none]"
+                      durationMs={200}
+                      className={cn(
+                        "pointer-events-none text-xs font-medium [font-kerning:none]",
+                        isActive ? "text-accent" : "text-muted-foreground",
+                      )}
                     />
                   </Link>
                 );

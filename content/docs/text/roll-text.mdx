@@ -67,21 +67,19 @@ Inside a link or card, use `groupHover` and mark the ancestor with `data-roll-gr
 </a>
 ```
 
-Site header nav uses the same pattern: `data-roll-group` on the `Link`, `groupHover` + `pointer-events-none` on `RollText`.
+Site header nav uses the same pattern: `data-roll-group` on the `Link`, `groupHover` + `pointer-events-none` on `RollText`, fixed color on `RollText` (not `hover:text-*` on the link), and `disabled` on the active item.
 
 ## How it works
 
 ### Markup
 
-Each stagger unit is a `.roll-unit` — a hidden sizer sets width and height, with two absolutely positioned panels (`.roll-panel-front` and `.roll-panel-back`) stacked inside an `overflow: hidden` mask. Units flow inline inside `.roll-text__track`. No duplicate full-string overlay.
+Each stagger unit is a `.roll-unit` — a hidden sizer sets width and height, with two absolutely positioned panels (`.roll-panel-front` and `.roll-panel-back`) stacked inside an `overflow: hidden` mask. Units flow inline inside `.roll-text__track`.
 
 ### Motion
 
-Both panels show the same glyph in the same color. Closed: the front panel sits at `translateY(0)`, the back panel waits below at `translateY(150% + gap)`. On open, the front slides up and out while the back rises into place — a vertical roll through a single-color surface.
+Both panels show the same glyph in the same color — set it on `RollText` via `className` (e.g. `text-foreground`). Avoid `hover:text-*` on the parent link; repainting mid-roll will jitter the animation. Closed: the front panel sits at `translateY(0)`, the back panel waits below at `translateY(150% + gap)`. On open, the front slides up and out while the back rises into place.
 
-Keyframes and easing live in `roll-text.css`. The root sets `--roll-duration`, `--roll-ease`, `--roll-travel`, `--roll-layer-gap`, `--roll-line-height`, and `--roll-duration-reduced`. Per-unit stagger writes `--roll-delay` and `--roll-unit-duration` inline. `durationMs` on the component maps to `--roll-duration` on the root.
-
-`font-kerning: none` and `--roll-line-height: 1.15` keep per-character boxes from clipping descenders (e.g. `g`, `y`).
+Keyframes and easing live in `roll-text.css`. The root sets `--roll-duration`, `--roll-ease`, `--roll-travel`, `--roll-layer-gap`, `--roll-line-height`, and `--roll-duration-reduced`. Per-unit stagger writes `--roll-delay` and `--roll-unit-duration` inline. `font-kerning: none` keeps per-character boxes from clipping descenders.
 
 ### Playback
 
@@ -120,6 +118,9 @@ With `groupHover`, `tabIndex` is omitted — the wrapping link or button owns fo
   </PropsTable.Row>
   <PropsTable.Row prop="groupHover" type="boolean" default="false">
     Also open when the nearest `[data-roll-group]` or `group/roll` ancestor is hovered or focused. Pair with `pointer-events-none` on the label inside links.
+  </PropsTable.Row>
+  <PropsTable.Row prop="disabled" type="boolean" default="false">
+    Skip the roll on hover and focus — use for active nav items or other static states.
   </PropsTable.Row>
   <PropsTable.Row prop="stagger" type='"none" | "word" | "character"' default='"none"'>
     Animate the whole label at once, or one roll unit per word or character.
