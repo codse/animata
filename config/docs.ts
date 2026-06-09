@@ -239,6 +239,10 @@ const sidebarNav: SidebarNavItem[] = [
 export const docsConfig: DocsConfig = {
   mainNav: [
     {
+      title: "Index",
+      href: "/",
+    },
+    {
       title: "Components",
       href: sidebarNav[2].items?.[0]?.href ?? sidebarNav[2]?.href,
     },
