@@ -138,7 +138,7 @@ export default async function DocPage({ params }: DocPageProps) {
 
           <div className="my-3 text-right">
             <Link
-              href={`https://github.com/codse/animata/edit/main/content/${doc.path}.mdx`}
+              href={`https://github.com/codse/animata/edit/main/${getMdxFilePath(doc)}`}
               target="_blank"
               rel="noreferrer"
               className="text-sm text-secondary-foreground underline"

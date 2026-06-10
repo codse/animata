@@ -174,7 +174,7 @@ export function buildDocJsonLd(doc: PublishedDoc, description: string) {
 
 export const homePageMetadata = createPageMetadata({
   title: "Free & Open Source Animated React Components",
-  description: `Ship stunning UI faster with ${siteConfig.description} Browse hundreds of copy-paste React animations built with Tailwind CSS for Next.js — MIT licensed, theme-aware, and production-ready.`,
+  description: `Ship stunning UI faster with ${siteConfig.description}. Browse hundreds of copy-paste React animations built with Tailwind CSS for Next.js — MIT licensed, theme-aware, and production-ready.`,
   path: "/",
 });
 

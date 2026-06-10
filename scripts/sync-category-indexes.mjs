@@ -91,7 +91,7 @@ function renderIndex(category, meta, extra = "") {
   return `---
 title: ${meta.title}
 description: ${meta.description}
-author: hari
+author: sudhashrestha
 ---
 ${extra}
 <CategoryIndex category="${category}" />
@@ -112,6 +112,11 @@ For more complex use cases, consider using libraries like [Recharts](https://rec
 `
       : "";
 
-  fs.writeFileSync(target, renderIndex(category, meta, extra));
-  console.log(`synced ${category}/index.mdx`);
+  try {
+    fs.writeFileSync(target, renderIndex(category, meta, extra));
+    console.log(`synced ${category}/index.mdx`);
+  } catch (error) {
+    console.error(`failed to sync ${category}/index.mdx`, error);
+    process.exitCode = 1;
+  }
 }
