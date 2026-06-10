@@ -1,6 +1,8 @@
 import { docs as allDocs } from "#site/content";
 
 import { DEFAULT_GROUP, DEFAULT_ITEM, itemHref } from "@/app/demo/demos";
+import { hasPublishedCategoryItems } from "@/lib/docs";
+import { publishedCategoryItemCount } from "@/lib/published-docs";
 import type { MainNavItem, SidebarNavItem } from "@/types";
 
 const defaultDemoHref =
@@ -108,115 +110,134 @@ const sidebarNav: SidebarNavItem[] = [
   {
     icon: "text",
     title: "Text",
-    label: `${-1 + createLinks("text").length}`,
+    label: `${publishedCategoryItemCount("text")}`,
     href: "/docs/text",
     items: createLinks("text"),
   },
   {
     title: "Background",
+    href: "/docs/background",
     items: createLinks("background"),
   },
   {
     title: "Image",
+    href: "/docs/image",
     items: createLinks("image"),
   },
   {
     title: "Layout",
+    href: "/docs/layout",
     items: createLinks("layout"),
   },
   {
     title: "List",
+    href: "/docs/list",
     items: createLinks("list"),
   },
   {
     title: "Container",
+    href: "/docs/container",
     items: createLinks("container"),
   },
   {
     title: "Accordion",
+    href: "/docs/accordion",
     items: createLinks("accordion"),
   },
   {
     title: "Card",
+    href: "/docs/card",
     items: createLinks("card"),
   },
   {
     title: "Tabs",
+    href: "/docs/tabs",
     items: createLinks("tabs"),
   },
   {
     title: "Section",
+    href: "/docs/section",
     items: createLinks("section"),
   },
   {
     title: "Icon",
+    href: "/docs/icon",
     items: createLinks("icon"),
   },
   {
     title: "PreLoader",
+    href: "/docs/preloader",
     items: createLinks("preloader"),
   },
   {
     title: "Progress",
+    href: "/docs/progress",
     items: createLinks("progress"),
   },
   {
     title: "Graphs & charts",
+    href: "/docs/graphs",
     items: createLinks("graphs"),
   },
   {
     title: "Overlay",
+    href: "/docs/overlay",
     items: createLinks("overlay"),
   },
   {
     icon: "button",
     title: "Button",
-    label: `${-1 + createLinks("button").length}`,
+    label: `${publishedCategoryItemCount("button")}`,
     href: "/docs/button",
     items: createLinks("button"),
   },
   {
     icon: "widget",
     title: "Widget",
-    label: `${-1 + createLinks("widget").length}`,
+    label: `${publishedCategoryItemCount("widget")}`,
     href: "/docs/widget",
     items: createLinks("widget"),
   },
   {
     icon: "bento",
     title: "Bento grid",
-    label: `${-1 + createLinks("bento-grid").length}`,
+    label: `${publishedCategoryItemCount("bento-grid")}`,
     href: "/docs/bento-grid",
     items: createLinks("bento-grid"),
   },
   {
     title: "Hero",
+    href: "/docs/hero",
     items: createLinks("hero"),
   },
   {
     title: "Scroll",
+    href: "/docs/scroll",
     items: createLinks("scroll"),
   },
   {
     title: "Carousel",
+    href: "/docs/carousel",
     items: createLinks("carousel"),
   },
   {
     title: "Skeleton",
-    label: "6",
+    label: `${publishedCategoryItemCount("skeleton")}`,
     href: "/docs/skeleton",
     items: createLinks("skeleton"),
   },
   {
     title: "Feature cards",
+    href: "/docs/feature-cards",
     items: createLinks("feature-cards"),
   },
   {
     title: "Floating Action Buttons",
+    href: "/docs/fabs",
     items: createLinks("fabs"),
   },
 ]
-  .filter((category) => Boolean(category.items?.length || category.label))
+  .filter((category) => hasPublishedCategoryItems(category))
   .sort((a, b) => {
     if (a.title === "Getting Started") {
       return -1;
@@ -244,7 +265,7 @@ export const docsConfig: DocsConfig = {
     },
     {
       title: "Components",
-      href: sidebarNav[2].items?.[0]?.href ?? sidebarNav[2]?.href,
+      href: "/components",
     },
     {
       title: "Demos",

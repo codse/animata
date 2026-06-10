@@ -1,4 +1,24 @@
+import { publishedCategoryItemCount } from "@/lib/published-docs";
 import type { SidebarNavItem } from "@/types";
+
+export { publishedCategoryItemCount };
+
+export function getCategorySlug(category: SidebarNavItem): string | undefined {
+  const fromHref = category.href?.match(/^\/docs\/([^/]+)/)?.[1];
+  if (fromHref) return fromHref;
+
+  return category.items?.[0]?.href?.match(/^\/docs\/([^/]+)/)?.[1];
+}
+
+export function hasPublishedCategoryItems(category: SidebarNavItem): boolean {
+  const slug = getCategorySlug(category);
+
+  if (!slug) {
+    return Boolean(category.items?.length);
+  }
+
+  return publishedCategoryItemCount(slug) > 0;
+}
 
 export type FooterCategoryLink = {
   title: string;
@@ -36,13 +56,12 @@ function flattenSidebarLinks(items: SidebarNavItem["items"]): FooterCategoryLink
   });
 }
 
-function getCategoryIndexHref(category: SidebarNavItem): string | undefined {
+function getCategoryIndexHref(category: SidebarNavItem): string {
   if (category.href) return category.href;
 
-  const firstHref = category.items?.[0]?.href;
-  if (!firstHref) return undefined;
+  const categorySlug = getCategorySlug(category);
 
-  return firstHref.match(/^(\/docs\/[^/]+)/)?.[1];
+  return categorySlug ? `/docs/${categorySlug}` : "/docs";
 }
 
 function getFooterCategoryLinks(category: SidebarNavItem): FooterCategoryLink[] {
@@ -63,9 +82,10 @@ export function getFooterCategories(
 ): FooterCategory[] {
   return navItems
     .filter((nav) => !excludedTitles.includes(nav.title))
+    .filter((nav) => hasPublishedCategoryItems(nav))
     .map((cat) => {
       const links = getFooterCategoryLinks(cat);
-      const viewAllHref = cat.href ?? getCategoryIndexHref(cat) ?? links[0]?.href ?? "/docs";
+      const viewAllHref = getCategoryIndexHref(cat);
       const showViewAll = variant === "compact" && links.length > 4;
       const moreCount = showViewAll ? links.length - 3 : 0;
 

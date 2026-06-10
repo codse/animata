@@ -1,4 +1,6 @@
-import { docs as allDocs } from "#site/content";
+import type { docs as allDocs } from "#site/content";
+
+import { getPublishedDocs } from "@/lib/published-docs";
 
 /** Updated manually when marketing copy needs to reflect GitHub stars. */
 export const GITHUB_STARS = 2697;
@@ -16,7 +18,7 @@ export function isPublishedComponentDoc(doc: (typeof allDocs)[number]) {
   return parts.length >= 2;
 }
 
-export const publishedComponentCount = allDocs.filter(isPublishedComponentDoc).length;
+export const publishedComponentCount = getPublishedDocs().filter(isPublishedComponentDoc).length;
 
 export function formatStatPlus(value: number) {
   return `${value.toLocaleString("en-US")}+`;
