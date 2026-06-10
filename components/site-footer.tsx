@@ -53,7 +53,7 @@ export function SiteFooter() {
       <div className={cn(footerSelectionClassName, footerSurfaceClassName)}>
         <div
           className={cn(
-            "relative mx-auto w-full max-w-7xl px-5 sm:px-8 lg:px-10",
+            "relative mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8",
             footerOuterGridClassName,
           )}
         >
