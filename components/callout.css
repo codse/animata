@@ -1,0 +1,14 @@
+.callout-ink {
+  border-color: color-mix(in oklab, var(--ink) 32%, transparent);
+  background-color: color-mix(in oklab, var(--ink) 6%, transparent);
+  color: color-mix(in oklab, var(--ink) 88%, transparent);
+}
+
+.callout-ink a {
+  color: hsl(var(--foreground));
+  text-underline-offset: 3px;
+}
+
+.callout-ink a:hover {
+  color: hsl(var(--link));
+}

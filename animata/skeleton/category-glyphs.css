@@ -14,14 +14,14 @@
 .cg-card {
   --cg-darkest: #76756f;
   --cg-lightest: #e3e3e3;
-  --cg-ink: var(--cg-darkest);
-  --cg-faint: var(--cg-lightest);
+  --cg-ink: var(--ink, var(--cg-darkest));
+  --cg-faint: var(--ink-faint, var(--cg-lightest));
   --cg-soft: color-mix(in oklab, var(--cg-ink) 50%, transparent);
 }
 
 .dark .cg-card {
-  --cg-ink: var(--cg-lightest);
-  --cg-faint: var(--cg-darkest);
+  --cg-ink: var(--ink, var(--cg-lightest));
+  --cg-faint: var(--ink-faint, var(--cg-darkest));
 }
 
 /* Resting tilt is part of the design — keep it even with reduced motion. */
