@@ -11,6 +11,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
       url: `${domain}/`,
       lastModified: new Date(),
     },
+    {
+      url: `${domain}/components`,
+      lastModified: new Date(),
+    },
     ...allDocs
       .filter((doc) => doc.published)
       .map((doc) => ({

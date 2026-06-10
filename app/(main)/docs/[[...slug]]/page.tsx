@@ -2,19 +2,21 @@ import { ChevronRightIcon, ExternalLinkIcon } from "@radix-ui/react-icons";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { docs as allDocs } from "#site/content";
 import NavMenu from "@/app/(main)/docs/[[...slug]]/nav-menu";
 import CarbonAds from "@/components/ads";
 import { DocDemoLinks } from "@/components/doc-demo-links";
+import { DocJsonLd } from "@/components/doc-json-ld";
 import { Mdx } from "@/components/mdx-components";
 import { DocsPager } from "@/components/pager";
 import { DashboardTableOfContents } from "@/components/toc";
 import { badgeVariants } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { siteConfig } from "@/config/site";
+import { buildDocMetadata } from "@/lib/metadata";
 import ogManifest from "@/lib/og-manifest.json";
+import { getPublishedDoc, getPublishedDocs } from "@/lib/published-docs";
 import { getTableOfContents } from "@/lib/toc";
-import { absoluteUrl, cn } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 
 import "@/styles/mdx.css";
 interface DocPageProps {
@@ -25,13 +27,7 @@ interface DocPageProps {
 
 async function getDocFromParams(params: { slug: string[] }) {
   const slug = params.slug?.join("/") || "";
-  const doc = allDocs.find((doc) => doc.slugAsParams === slug);
-
-  if (!doc) {
-    return null;
-  }
-
-  return doc;
+  return getPublishedDoc(slug);
 }
 
 export async function generateMetadata({ params }: DocPageProps): Promise<Metadata> {
@@ -47,35 +43,11 @@ export async function generateMetadata({ params }: DocPageProps): Promise<Metada
   const ogImage =
     (ogManifest as Record<string, { url: string }>)[doc.slug]?.url ?? siteConfig.ogImage;
 
-  return {
-    title: doc.title,
-    description: doc.description,
-    openGraph: {
-      title: doc.title,
-      description: doc.description,
-      type: "article",
-      url: absoluteUrl(doc.slug),
-      images: [
-        {
-          url: ogImage,
-          width: 1200,
-          height: 630,
-          alt: doc.title,
-        },
-      ],
-    },
-    twitter: {
-      card: "summary_large_image",
-      title: doc.title,
-      description: doc.description,
-      images: [ogImage],
-      creator: doc.author ? `@${doc.author}` : "@AnimataDesign",
-    },
-  };
+  return buildDocMetadata(doc, ogImage);
 }
 
 export async function generateStaticParams() {
-  return allDocs.map((doc) => ({
+  return getPublishedDocs().map((doc) => ({
     slug: doc.slugAsParams.split("/"),
   }));
 }
@@ -92,6 +64,7 @@ export default async function DocPage({ params }: DocPageProps) {
 
   return (
     <main id="main-content" className="relative py-6 lg:gap-10 lg:py-8 xl:grid">
+      <DocJsonLd doc={doc} />
       <div className="mx-auto w-full min-w-0">
         <div className="mb-4 flex items-center space-x-1 text-sm text-muted-foreground">
           <div className="overflow-hidden text-ellipsis whitespace-nowrap">Docs</div>

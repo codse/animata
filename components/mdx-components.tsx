@@ -16,6 +16,8 @@ import { visit } from "unist-util-visit";
 import { VFile } from "vfile";
 import Modal from "@/animata/overlay/modal";
 import { Callout } from "@/components/callout";
+import { CategoryIndex } from "@/components/category-index";
+import { CategoryIndexGrid, CategoryIndexLink } from "@/components/category-index-grid";
 import { CodeBlockWrapper } from "@/components/code-block-wrapper";
 import { ComponentExample } from "@/components/component-example";
 import ComponentListItem from "@/components/component-list-item";
@@ -341,6 +343,9 @@ const components = {
       {...props}
     />
   ),
+  CategoryIndex,
+  CategoryIndexGrid,
+  CategoryIndexLink,
   ComponentList: ({ children, className }: { children: React.ReactNode; className?: string }) => {
     return (
       <div className="@container">
