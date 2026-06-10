@@ -33,12 +33,14 @@ export default function ComponentsPage() {
             <li key={category.slug}>
               <Link href={category.href} className="group block">
                 <CategorySkeleton variant={category.slug} />
-                <p className="mt-3 text-[1.2rem] leading-tight tracking-tight">
-                  <span className="font-semibold text-foreground transition-colors group-hover:text-foreground/90">
+                <p className="mt-3 px-2 text-[1.2rem] leading-tight tracking-tight">
+                  <span className="font-semibold text-foreground transition-colors duration-300 group-hover:text-foreground/40">
                     {category.title}
                   </span>
                   <span className="text-foreground/35"> · </span>
-                  <span className="font-normal text-foreground/40">{category.count}</span>
+                  <span className="font-normal text-foreground/40 transition-colors duration-300 group-hover:font-semibold group-hover:text-foreground">
+                    {category.count}
+                  </span>
                 </p>
               </Link>
             </li>

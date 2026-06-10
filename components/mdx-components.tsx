@@ -343,7 +343,7 @@ const components = {
       {...props}
     />
   ),
-  CategoryIndex,
+  CategoryIndex: (props: { category: string }) => <CategoryIndex {...props} />,
   CategoryIndexGrid,
   CategoryIndexLink,
   ComponentList: ({ children, className }: { children: React.ReactNode; className?: string }) => {

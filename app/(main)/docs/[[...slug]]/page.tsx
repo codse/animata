@@ -14,7 +14,12 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { siteConfig } from "@/config/site";
 import { buildDocMetadata } from "@/lib/metadata";
 import ogManifest from "@/lib/og-manifest.json";
-import { getPublishedDoc, getPublishedDocs } from "@/lib/published-docs";
+import {
+  getPublishedDoc,
+  getPublishedDocs,
+  isCategoryIndexDoc,
+  type PublishedDoc,
+} from "@/lib/published-docs";
 import { getTableOfContents } from "@/lib/toc";
 import { cn } from "@/lib/utils";
 
@@ -28,6 +33,14 @@ interface DocPageProps {
 async function getDocFromParams(params: { slug: string[] }) {
   const slug = params.slug?.join("/") || "";
   return getPublishedDoc(slug);
+}
+
+function getMdxFilePath(doc: PublishedDoc) {
+  if (isCategoryIndexDoc(doc)) {
+    return `content/docs/${doc.slugAsParams}/index.mdx`;
+  }
+
+  return `content/${doc.path}.mdx`;
 }
 
 export async function generateMetadata({ params }: DocPageProps): Promise<Metadata> {
@@ -121,7 +134,7 @@ export default async function DocPage({ params }: DocPageProps) {
           <CarbonAds />
         </div>
         <div className="pb-12">
-          <Mdx code={doc.body} filePath={`content/${doc.path}.mdx`} />
+          <Mdx code={doc.body} filePath={getMdxFilePath(doc)} />
 
           <div className="my-3 text-right">
             <Link
