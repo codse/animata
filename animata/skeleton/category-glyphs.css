@@ -1,0 +1,347 @@
+/**
+ * Shade tokens + hover micro-interactions for category glyphs.
+ *
+ * Exactly three shades are used everywhere for a consistent feel:
+ *   darkest  #76756f
+ *   lightest #e3e3e3
+ *   medium   color-mix(in oklab, ink 50%, transparent)
+ * Roles (ink / soft / faint) flip between light and dark mode.
+ *
+ * Hover effects are triggered by the parent `.group` (the category card link)
+ * and mimic the behavior of the component category they represent.
+ */
+
+.cg-card {
+  --cg-darkest: #76756f;
+  --cg-lightest: #e3e3e3;
+  --cg-ink: var(--cg-darkest);
+  --cg-faint: var(--cg-lightest);
+  --cg-soft: color-mix(in oklab, var(--cg-ink) 50%, transparent);
+}
+
+.dark .cg-card {
+  --cg-ink: var(--cg-lightest);
+  --cg-faint: var(--cg-darkest);
+}
+
+/* Resting tilt is part of the design — keep it even with reduced motion. */
+.cg-feature-card {
+  transform-box: fill-box;
+  transform-origin: center;
+  transform: rotate(-8deg);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .cg {
+    transform-box: fill-box;
+    transform-origin: center;
+    transition:
+      transform 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+      fill 0.5s ease,
+      opacity 0.5s ease;
+  }
+
+  /* Text — motion trail extends, staggered */
+  .cg-text-line {
+    transform-origin: left center;
+  }
+  .group:hover .cg-text-line-1 {
+    transform: scaleX(1.25);
+  }
+  .group:hover .cg-text-line-2 {
+    transform: scaleX(1.5);
+    transition-delay: 60ms;
+  }
+  .group:hover .cg-text-line-3 {
+    transform: scaleX(1.8);
+    transition-delay: 120ms;
+  }
+
+  /* Background — waves drift in alternate directions, particles grow */
+  .group:hover .cg-bg-wave-1,
+  .group:hover .cg-bg-wave-3 {
+    transform: translateX(3px);
+  }
+  .group:hover .cg-bg-wave-2 {
+    transform: translateX(-3px);
+  }
+  .group:hover .cg-bg-dot {
+    fill: var(--cg-ink);
+    transform: scale(1.4);
+  }
+
+  /* Image — sun rises, mountains settle (parallax) */
+  .group:hover .cg-image-sun {
+    transform: translateY(-2.5px) scale(1.15);
+  }
+  .group:hover .cg-image-mountains {
+    transform: translateY(1px);
+  }
+
+  /* List — rows 1–2 expand, rows 3–4 shrink */
+  .cg-list-bar {
+    transform-origin: left center;
+  }
+  .group:hover .cg-list-grow {
+    transform: scaleX(1.3);
+  }
+  .group:hover .cg-list-shrink {
+    transform: scaleX(0.7);
+  }
+
+  /* Container — clipped content marquees one step to the left */
+  .group:hover .cg-container-track {
+    transform: translateX(-14px);
+  }
+
+  /* Accordion — plus icons spin, open content darkens to ink */
+  .group:hover .cg-accordion-plus {
+    transform: rotate(90deg);
+  }
+  .group:hover .cg-accordion-content {
+    fill: var(--cg-ink);
+  }
+
+  /* Card — the stack fans out */
+  .group:hover .cg-card-back {
+    transform: translate(3px, -3px);
+  }
+  .group:hover .cg-card-mid {
+    transform: translate(1.5px, -1.5px);
+  }
+
+  /* Tabs — active pill slides to the next tab, labels swap */
+  .group:hover .cg-tabs-pill {
+    transform: translateX(14px);
+  }
+  .group:hover .cg-tabs-label-in {
+    opacity: 1;
+    transition-delay: 100ms;
+  }
+  .group:hover .cg-tabs-label-out {
+    opacity: 0;
+  }
+
+  /* Section — featured tier lifts */
+  .group:hover .cg-section-mid {
+    transform: translateY(-2px);
+  }
+
+  /* Icon — rings ripple outward while hovered */
+  .group:hover .cg-icon-ring {
+    animation: cg-ping 1.4s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+  }
+  .group:hover .cg-icon-ring-2 {
+    animation-delay: 0.15s;
+  }
+  .group:hover .cg-icon-ring-3 {
+    animation-delay: 0.3s;
+  }
+
+  /* Preloader — panels part outward */
+  .group:hover .cg-preloader-left {
+    transform: translateX(-3px);
+  }
+  .group:hover .cg-preloader-right {
+    transform: translateX(3px);
+  }
+
+  /* Progress — ring fills further */
+  .cg-progress-arc {
+    transition: stroke-dasharray 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .group:hover .cg-progress-arc {
+    stroke-dasharray: 105 113;
+  }
+
+  /* Graphs — bars grow from the baseline, staggered */
+  .cg-graph-bar {
+    transform-origin: center bottom;
+  }
+  .group:hover .cg-graph-bar {
+    transform: scaleY(1.18);
+  }
+  .group:hover .cg-graph-bar-2 {
+    transition-delay: 50ms;
+  }
+  .group:hover .cg-graph-bar-3 {
+    transition-delay: 100ms;
+  }
+  .group:hover .cg-graph-bar-4 {
+    transition-delay: 150ms;
+  }
+
+  /* Overlay — modal pops, page content dims further */
+  .group:hover .cg-overlay-modal {
+    transform: scale(1.05);
+  }
+  .group:hover .cg-overlay-page {
+    opacity: 0.45;
+  }
+
+  /* Button — pill swells, cursor moves in and presses */
+  .group:hover .cg-button-pill {
+    transform: scale(1.06);
+  }
+  .group:hover .cg-button-cursor {
+    transform: translate(-3px, -3px) scale(0.92);
+  }
+
+  /* Widget — clock hands tick forward */
+  .cg-widget-hour {
+    transform-origin: center bottom;
+  }
+  .cg-widget-minute {
+    transform-origin: 0% 0%;
+  }
+  .group:hover .cg-widget-hour {
+    transform: rotate(30deg);
+  }
+  .group:hover .cg-widget-minute {
+    transform: rotate(60deg);
+  }
+
+  /* Bento — cells breathe apart */
+  .group:hover .cg-bento-tl {
+    transform: translate(-1.5px, -1.5px);
+  }
+  .group:hover .cg-bento-tr1 {
+    transform: translate(1.5px, -1.5px);
+  }
+  .group:hover .cg-bento-tr2 {
+    transform: translate(1.5px, 0);
+  }
+  .group:hover .cg-bento-bottom {
+    transform: translateY(1.5px);
+  }
+
+  /* Hero — CTA swells, scroll cue bounces */
+  .group:hover .cg-hero-cta {
+    transform: scale(1.08);
+  }
+  .group:hover .cg-hero-chevron {
+    animation: cg-bounce 1s ease-in-out infinite;
+  }
+
+  /* Scroll — sections scroll up one row, thumb advances */
+  .group:hover .cg-scroll-rows {
+    transform: translateY(-14px);
+  }
+  .group:hover .cg-scroll-row-1 {
+    opacity: 0;
+  }
+  .group:hover .cg-scroll-row-4 {
+    opacity: 1;
+  }
+  .group:hover .cg-scroll-thumb {
+    transform: translateY(13px);
+  }
+
+  /* Carousel — peeks part, slide pops, active dot advances */
+  .group:hover .cg-carousel-peek-l {
+    transform: translateX(-2px);
+  }
+  .group:hover .cg-carousel-peek-r {
+    transform: translateX(2px);
+  }
+  .group:hover .cg-carousel-slide {
+    transform: scale(1.04);
+  }
+  .group:hover .cg-carousel-dot-out {
+    fill: var(--cg-soft);
+    transform: scale(0.82);
+  }
+  .group:hover .cg-carousel-dot-in {
+    fill: var(--cg-ink);
+    transform: scale(1.22);
+    transition-delay: 60ms;
+  }
+
+  /* Skeleton — shimmer pulse sweeps the placeholders */
+  .group:hover .cg-skel {
+    animation: cg-shimmer 1.2s ease-in-out infinite;
+  }
+  .group:hover .cg-skel-2 {
+    animation-delay: 0.1s;
+  }
+  .group:hover .cg-skel-3 {
+    animation-delay: 0.2s;
+  }
+  .group:hover .cg-skel-4 {
+    animation-delay: 0.3s;
+  }
+  .group:hover .cg-skel-5 {
+    animation-delay: 0.4s;
+  }
+  .group:hover .cg-skel-6 {
+    animation-delay: 0.5s;
+  }
+
+  /* Feature cards — card straightens, sparkle twinkles */
+  .group:hover .cg-feature-card {
+    transform: rotate(0deg);
+  }
+  .group:hover .cg-feature-sparkle {
+    animation: cg-twinkle 0.9s ease-in-out infinite;
+  }
+
+  /* FABs — speed dial fans further open, plus turns into close */
+  .group:hover .cg-fab-plus {
+    transform: rotate(45deg);
+  }
+  .group:hover .cg-fab-dot-1 {
+    transform: translate(-2.5px, 0);
+  }
+  .group:hover .cg-fab-dot-2 {
+    transform: translate(-1.8px, -1.8px);
+  }
+  .group:hover .cg-fab-dot-3 {
+    transform: translate(0, -2.5px);
+  }
+  .group:hover .cg-fab-dot-4 {
+    transform: translate(1.8px, -1.8px);
+  }
+  .group:hover .cg-fab-dot-5 {
+    transform: translate(2.5px, 0);
+  }
+}
+
+@keyframes cg-ping {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.12);
+  }
+}
+
+@keyframes cg-bounce {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(2.5px);
+  }
+}
+
+@keyframes cg-shimmer {
+  0%,
+  100% {
+    opacity: 0.45;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@keyframes cg-twinkle {
+  0%,
+  100% {
+    transform: scale(1) rotate(0deg);
+  }
+  50% {
+    transform: scale(1.25) rotate(20deg);
+  }
+}
