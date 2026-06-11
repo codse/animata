@@ -31,7 +31,7 @@ export default function ComponentsPage() {
         <ul className="mt-14 grid list-none grid-cols-2 gap-x-4 gap-y-8 p-0 sm:gap-x-6 sm:gap-y-10 md:grid-cols-3 lg:grid-cols-4">
           {categories.map((category) => (
             <li key={category.slug}>
-              <Link href={category.href} className="group block">
+              <Link href={category.href} className="group group/cg block">
                 <CategorySkeleton variant={category.slug} />
                 <p className="mt-3 px-2 text-[1.2rem] leading-tight tracking-tight">
                   <span className="font-semibold text-foreground transition-colors duration-300 group-hover:text-foreground/40">

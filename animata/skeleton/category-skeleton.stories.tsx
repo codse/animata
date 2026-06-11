@@ -7,6 +7,13 @@ const meta = {
   component: CategorySkeleton,
   parameters: { layout: "centered", backgrounds: { default: "dark" } },
   tags: ["autodocs"],
+  decorators: [
+    (Story) => (
+      <div className="group/cg w-fit">
+        <Story />
+      </div>
+    ),
+  ],
 } satisfies Meta<typeof CategorySkeleton>;
 
 export default meta;

@@ -632,6 +632,55 @@
   }
 }
 
+/** Category glyph SVG — shared motion base (pair with group/cg + group-hover/cg:* on parts). */
+@utility cg-motion {
+  transform-box: fill-box;
+  transform-origin: center;
+
+  @media (prefers-reduced-motion: no-preference) {
+    transition:
+      transform 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+      fill 0.5s ease,
+      opacity 0.5s ease;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
+}
+
+/** Keyframe-driven glyph parts — no transform transition (avoids fighting animation). */
+@utility cg-motion-frame {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+/** Progress ring arc — stroke only; never add transform-box (conflicts with SVG rotate). */
+@utility cg-progress-arc {
+  @media (prefers-reduced-motion: no-preference) {
+    transition: stroke-dasharray 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
+}
+
+/** Feature-card glyph — resting tilt, straightens on group-hover/cg. */
+@utility cg-feature-tilt {
+  transform-box: fill-box;
+  transform-origin: center;
+  transform: rotate(-8deg);
+
+  @media (prefers-reduced-motion: no-preference) {
+    transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
+}
+
 [style*="opacity: 1"] > .scroll-baby {
   @apply text-yellow-300 dark:text-yellow-500;
 }

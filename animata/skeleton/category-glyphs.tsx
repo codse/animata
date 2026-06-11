@@ -4,27 +4,12 @@
  * category so users can recognize it at a glance.
  *
  * Shading uses three tokens on the parent SVG (--cg-ink / --cg-soft / --cg-faint).
- * Hover micro-interactions are Tailwind classes on each part; parent card link is `group`.
+ * Hover micro-interactions use Tailwind on each part; ancestor must be `group/cg`.
  */
 
 import type { ReactNode } from "react";
 
 import { cn } from "@/lib/utils";
-
-/** Default motion base for animated SVG parts (parent link must be `group`). */
-const CG =
-  "[transform-box:fill-box] origin-center motion-safe:transition-[transform_0.5s_cubic-bezier(0.22,1,0.36,1),fill_0.5s_ease,opacity_0.5s_ease] motion-reduce:transition-none";
-
-/** Hover-driven keyframe animations — no transform transition (avoids fighting animation). */
-const CG_ANIM = "[transform-box:fill-box] origin-center motion-reduce:transition-none";
-
-/** Progress arc only — never add transform-box/origin (conflicts with SVG rotate attr). */
-const CG_PROGRESS =
-  "motion-safe:transition-[stroke-dasharray_0.7s_cubic-bezier(0.22,1,0.36,1)] motion-safe:group-hover:[stroke-dasharray:105_113]";
-
-/** Feature card resting tilt — straightens on group hover. */
-const CG_FEATURE =
-  "[transform-box:fill-box] origin-center -rotate-8 motion-safe:transition-[transform_0.5s_cubic-bezier(0.22,1,0.36,1)] motion-safe:group-hover:rotate-0 motion-reduce:transition-none";
 
 const INK = "var(--cg-ink)";
 const SOFT = "var(--cg-soft)";
@@ -84,7 +69,7 @@ const GLYPHS: Record<string, ReactNode> = {
         stroke={SOFT}
         strokeWidth="2.2"
         strokeLinecap={CAP}
-        className={cn(CG, "origin-left motion-safe:group-hover:scale-x-125")}
+        className={cn("cg-motion", "origin-left motion-safe:group-hover/cg:scale-x-125")}
       />
       <path
         d="M37 30 H46"
@@ -92,8 +77,8 @@ const GLYPHS: Record<string, ReactNode> = {
         strokeWidth="2.2"
         strokeLinecap={CAP}
         className={cn(
-          CG,
-          "origin-left motion-safe:group-hover:scale-x-150 motion-safe:group-hover:delay-[60ms]",
+          "cg-motion",
+          "origin-left motion-safe:group-hover/cg:scale-x-150 motion-safe:group-hover/cg:delay-[60ms]",
         )}
       />
       <path
@@ -102,8 +87,8 @@ const GLYPHS: Record<string, ReactNode> = {
         strokeWidth="2.2"
         strokeLinecap={CAP}
         className={cn(
-          CG,
-          "origin-left motion-safe:group-hover:scale-x-[1.8] motion-safe:group-hover:delay-[120ms]",
+          "cg-motion",
+          "origin-left motion-safe:group-hover/cg:scale-x-[1.8] motion-safe:group-hover/cg:delay-[120ms]",
         )}
       />
     </>
@@ -125,10 +110,10 @@ const GLYPHS: Record<string, ReactNode> = {
           strokeWidth="2.2"
           strokeLinecap={CAP}
           className={cn(
-            CG,
+            "cg-motion",
             i === 1
-              ? "motion-safe:group-hover:-translate-x-[3px]"
-              : "motion-safe:group-hover:translate-x-[3px]",
+              ? "motion-safe:group-hover/cg:-translate-x-[3px]"
+              : "motion-safe:group-hover/cg:translate-x-[3px]",
           )}
         />
       ))}
@@ -145,8 +130,8 @@ const GLYPHS: Record<string, ReactNode> = {
           r="1.5"
           fill={SOFT}
           className={cn(
-            CG,
-            "motion-safe:group-hover:scale-[1.4] motion-safe:group-hover:fill-[var(--cg-ink)]",
+            "cg-motion",
+            "motion-safe:group-hover/cg:scale-[1.4] motion-safe:group-hover/cg:fill-[var(--cg-ink)]",
           )}
         />
       ))}
@@ -172,14 +157,14 @@ const GLYPHS: Record<string, ReactNode> = {
         r="3.5"
         fill={INK}
         className={cn(
-          CG,
-          "motion-safe:group-hover:-translate-y-[2.5px] motion-safe:group-hover:scale-[1.15]",
+          "cg-motion",
+          "motion-safe:group-hover/cg:-translate-y-[2.5px] motion-safe:group-hover/cg:scale-[1.15]",
         )}
       />
       <path
         d="M14 42 L24 31 L31 38 L41 27 L50 36 V48 H14 Z"
         fill={SOFT}
-        className={cn(CG, "motion-safe:group-hover:translate-y-px")}
+        className={cn("cg-motion", "motion-safe:group-hover/cg:translate-y-px")}
       />
     </>
   ),
@@ -210,11 +195,11 @@ const GLYPHS: Record<string, ReactNode> = {
             rx="1.75"
             fill={String(shade)}
             className={cn(
-              CG,
+              "cg-motion",
               "origin-left",
               i < 2
-                ? "motion-safe:group-hover:scale-x-[1.3]"
-                : "motion-safe:group-hover:scale-x-[0.7]",
+                ? "motion-safe:group-hover/cg:scale-x-[1.3]"
+                : "motion-safe:group-hover/cg:scale-x-[0.7]",
             )}
           />
         </g>
@@ -243,7 +228,7 @@ const GLYPHS: Record<string, ReactNode> = {
       />
       <g
         clipPath="url(#cg-container-clip)"
-        className={cn(CG, "motion-safe:group-hover:-translate-x-3.5")}
+        className={cn("cg-motion", "motion-safe:group-hover/cg:-translate-x-3.5")}
       >
         {[
           [14, SOFT],
@@ -267,7 +252,7 @@ const GLYPHS: Record<string, ReactNode> = {
         stroke={SOFT}
         strokeWidth="1.6"
         strokeLinecap={CAP}
-        className={cn(CG, "motion-safe:group-hover:rotate-90")}
+        className={cn("cg-motion", "motion-safe:group-hover/cg:rotate-90")}
       />
 
       <rect x="12" y="22" width="40" height="20" rx="2" fill={FAINT} />
@@ -279,7 +264,7 @@ const GLYPHS: Record<string, ReactNode> = {
         w={28}
         h={2.5}
         fill={SOFT}
-        className={cn(CG, "motion-safe:group-hover:fill-[var(--cg-ink)]")}
+        className={cn("cg-motion", "motion-safe:group-hover/cg:fill-[var(--cg-ink)]")}
       />
       <Bar
         cx={28}
@@ -287,7 +272,7 @@ const GLYPHS: Record<string, ReactNode> = {
         w={24}
         h={2.5}
         fill={SOFT}
-        className={cn(CG, "motion-safe:group-hover:fill-[var(--cg-ink)]")}
+        className={cn("cg-motion", "motion-safe:group-hover/cg:fill-[var(--cg-ink)]")}
       />
 
       <rect x="12" y="44" width="40" height="8" rx="2" fill={FAINT} />
@@ -297,7 +282,7 @@ const GLYPHS: Record<string, ReactNode> = {
         stroke={SOFT}
         strokeWidth="1.6"
         strokeLinecap={CAP}
-        className={cn(CG, "motion-safe:group-hover:rotate-90")}
+        className={cn("cg-motion", "motion-safe:group-hover/cg:rotate-90")}
       />
     </>
   ),
@@ -313,8 +298,8 @@ const GLYPHS: Record<string, ReactNode> = {
         rx="4"
         fill={FAINT}
         className={cn(
-          CG,
-          "motion-safe:group-hover:translate-x-[3px] motion-safe:group-hover:-translate-y-[3px]",
+          "cg-motion",
+          "motion-safe:group-hover/cg:translate-x-[3px] motion-safe:group-hover/cg:-translate-y-[3px]",
         )}
       />
       <rect
@@ -325,8 +310,8 @@ const GLYPHS: Record<string, ReactNode> = {
         rx="4"
         fill={SOFT}
         className={cn(
-          CG,
-          "motion-safe:group-hover:translate-x-[1.5px] motion-safe:group-hover:-translate-y-[1.5px]",
+          "cg-motion",
+          "motion-safe:group-hover/cg:translate-x-[1.5px] motion-safe:group-hover/cg:-translate-y-[1.5px]",
         )}
       />
       <rect
@@ -355,7 +340,7 @@ const GLYPHS: Record<string, ReactNode> = {
         height="8"
         rx="4"
         fill={INK}
-        className={cn(CG, "motion-safe:group-hover:translate-x-3.5")}
+        className={cn("cg-motion", "motion-safe:group-hover/cg:translate-x-3.5")}
       />
       <Bar
         cx={18}
@@ -365,8 +350,8 @@ const GLYPHS: Record<string, ReactNode> = {
         fill={SOFT}
         o={0}
         className={cn(
-          CG,
-          "opacity-0 motion-safe:group-hover:opacity-100 motion-safe:group-hover:delay-100",
+          "cg-motion",
+          "opacity-0 motion-safe:group-hover/cg:opacity-100 motion-safe:group-hover/cg:delay-100",
         )}
       />
       <Bar
@@ -375,7 +360,7 @@ const GLYPHS: Record<string, ReactNode> = {
         w={8}
         h={2.5}
         fill={SOFT}
-        className={cn(CG, "motion-safe:group-hover:opacity-0")}
+        className={cn("cg-motion", "motion-safe:group-hover/cg:opacity-0")}
       />
       <Bar cx={46} y={18.75} w={8} h={2.5} fill={SOFT} />
 
@@ -394,7 +379,7 @@ const GLYPHS: Record<string, ReactNode> = {
       <Bar cx={16} y={28} w={7} h={2.5} fill={SOFT} />
       <rect x="12.5" y="34" width="7" height="7" rx="1" fill={SOFT} />
 
-      <g className={cn(CG, "motion-safe:group-hover:-translate-y-0.5")}>
+      <g className={cn("cg-motion", "motion-safe:group-hover/cg:-translate-y-0.5")}>
         <rect x="26" y="18" width="12" height="34" rx="2" fill={SOFT} />
         <Bar cx={32} y={22.5} w={8} h={2.5} />
         <rect x="28.5" y="29" width="7" height="9" rx="1" fill={INK} />
@@ -418,8 +403,8 @@ const GLYPHS: Record<string, ReactNode> = {
         stroke={FAINT}
         strokeWidth="1.6"
         className={cn(
-          CG_ANIM,
-          "motion-safe:group-hover:animate-cg-ping motion-safe:group-hover:[animation-delay:0.3s]",
+          "cg-motion-frame",
+          "motion-safe:group-hover/cg:animate-cg-ping motion-safe:group-hover/cg:[animation-delay:0.3s]",
         )}
       />
       <circle
@@ -430,8 +415,8 @@ const GLYPHS: Record<string, ReactNode> = {
         stroke={SOFT}
         strokeWidth="2"
         className={cn(
-          CG_ANIM,
-          "motion-safe:group-hover:animate-cg-ping motion-safe:group-hover:[animation-delay:0.15s]",
+          "cg-motion-frame",
+          "motion-safe:group-hover/cg:animate-cg-ping motion-safe:group-hover/cg:[animation-delay:0.15s]",
         )}
       />
       <circle
@@ -441,7 +426,7 @@ const GLYPHS: Record<string, ReactNode> = {
         fill="none"
         stroke={INK}
         strokeWidth="2.2"
-        className={cn(CG_ANIM, "motion-safe:group-hover:animate-cg-ping")}
+        className={cn("cg-motion-frame", "motion-safe:group-hover/cg:animate-cg-ping")}
       />
       <circle cx="32" cy="32" r="2.5" fill={INK} />
     </>
@@ -457,7 +442,7 @@ const GLYPHS: Record<string, ReactNode> = {
         height="36"
         rx="2"
         fill={SOFT}
-        className={cn(CG, "motion-safe:group-hover:-translate-x-[3px]")}
+        className={cn("cg-motion", "motion-safe:group-hover/cg:-translate-x-[3px]")}
       />
       <rect
         x="33"
@@ -466,7 +451,7 @@ const GLYPHS: Record<string, ReactNode> = {
         height="36"
         rx="2"
         fill={SOFT}
-        className={cn(CG, "motion-safe:group-hover:translate-x-[3px]")}
+        className={cn("cg-motion", "motion-safe:group-hover/cg:translate-x-[3px]")}
       />
       <path d="M32 14 V50" stroke={INK} strokeWidth="2.2" strokeLinecap={CAP} />
       <path
@@ -476,7 +461,7 @@ const GLYPHS: Record<string, ReactNode> = {
         strokeWidth="2"
         strokeLinecap={CAP}
         strokeLinejoin={JOIN}
-        className={cn(CG, "motion-safe:group-hover:-translate-x-[3px]")}
+        className={cn("cg-motion", "motion-safe:group-hover/cg:-translate-x-[3px]")}
       />
       <path
         d="M39 28 L43 32 L39 36"
@@ -485,7 +470,7 @@ const GLYPHS: Record<string, ReactNode> = {
         strokeWidth="2"
         strokeLinecap={CAP}
         strokeLinejoin={JOIN}
-        className={cn(CG, "motion-safe:group-hover:translate-x-[3px]")}
+        className={cn("cg-motion", "motion-safe:group-hover/cg:translate-x-[3px]")}
       />
     </>
   ),
@@ -504,7 +489,7 @@ const GLYPHS: Record<string, ReactNode> = {
         strokeLinecap={CAP}
         strokeDasharray="79 113"
         transform="rotate(-90 32 32)"
-        className={CG_PROGRESS}
+        className="cg-progress-arc motion-safe:group-hover/cg:[stroke-dasharray:105_113]"
       />
       <Bar cx={32} y={30.25} w={14} h={3.5} fill={SOFT} />
     </>
@@ -528,11 +513,11 @@ const GLYPHS: Record<string, ReactNode> = {
           rx="2"
           fill={String(shade)}
           className={cn(
-            CG,
-            "origin-[center_bottom] motion-safe:group-hover:scale-y-[1.18]",
-            i === 1 && "motion-safe:group-hover:delay-[50ms]",
-            i === 2 && "motion-safe:group-hover:delay-100",
-            i === 3 && "motion-safe:group-hover:delay-150",
+            "cg-motion",
+            "origin-[center_bottom] motion-safe:group-hover/cg:scale-y-[1.18]",
+            i === 1 && "motion-safe:group-hover/cg:delay-[50ms]",
+            i === 2 && "motion-safe:group-hover/cg:delay-100",
+            i === 3 && "motion-safe:group-hover/cg:delay-150",
           )}
         />
       ))}
@@ -549,7 +534,7 @@ const GLYPHS: Record<string, ReactNode> = {
         w={40}
         h={3.5}
         fill={SOFT}
-        className={cn(CG, "motion-safe:group-hover:opacity-45")}
+        className={cn("cg-motion", "motion-safe:group-hover/cg:opacity-45")}
       />
       <Bar
         cx={32}
@@ -557,7 +542,7 @@ const GLYPHS: Record<string, ReactNode> = {
         w={48}
         h={3.5}
         fill={SOFT}
-        className={cn(CG, "motion-safe:group-hover:opacity-45")}
+        className={cn("cg-motion", "motion-safe:group-hover/cg:opacity-45")}
       />
       <Bar
         cx={32}
@@ -565,7 +550,7 @@ const GLYPHS: Record<string, ReactNode> = {
         w={48}
         h={3.5}
         fill={SOFT}
-        className={cn(CG, "motion-safe:group-hover:opacity-45")}
+        className={cn("cg-motion", "motion-safe:group-hover/cg:opacity-45")}
       />
       <Bar
         cx={32}
@@ -573,9 +558,9 @@ const GLYPHS: Record<string, ReactNode> = {
         w={40}
         h={3.5}
         fill={SOFT}
-        className={cn(CG, "motion-safe:group-hover:opacity-45")}
+        className={cn("cg-motion", "motion-safe:group-hover/cg:opacity-45")}
       />
-      <g className={cn(CG, "motion-safe:group-hover:scale-[1.05]")}>
+      <g className={cn("cg-motion", "motion-safe:group-hover/cg:scale-[1.05]")}>
         <rect
           x="17"
           y="19"
@@ -602,7 +587,7 @@ const GLYPHS: Record<string, ReactNode> = {
   /** CTA pill with a click cursor */
   button: (
     <>
-      <g className={cn(CG, "motion-safe:group-hover:scale-[1.06]")}>
+      <g className={cn("cg-motion", "motion-safe:group-hover/cg:scale-[1.06]")}>
         <rect x="12" y="18" width="40" height="16" rx="8" fill={INK} />
         <rect x="21" y="24.25" width="16" height="3.5" rx="1.75" fill={FAINT} />
       </g>
@@ -613,8 +598,8 @@ const GLYPHS: Record<string, ReactNode> = {
         strokeWidth="1"
         strokeLinejoin={JOIN}
         className={cn(
-          CG,
-          "motion-safe:group-hover:-translate-x-[3px] motion-safe:group-hover:-translate-y-[3px] motion-safe:group-hover:scale-[0.92]",
+          "cg-motion",
+          "motion-safe:group-hover/cg:-translate-x-[3px] motion-safe:group-hover/cg:-translate-y-[3px] motion-safe:group-hover/cg:scale-[0.92]",
         )}
       />
     </>
@@ -639,14 +624,17 @@ const GLYPHS: Record<string, ReactNode> = {
         stroke={INK}
         strokeWidth="2.2"
         strokeLinecap={CAP}
-        className={cn(CG, "origin-[center_bottom] motion-safe:group-hover:rotate-[30deg]")}
+        className={cn(
+          "cg-motion",
+          "origin-[center_bottom] motion-safe:group-hover/cg:rotate-[30deg]",
+        )}
       />
       <path
         d="M32 32 L37 35"
         stroke={SOFT}
         strokeWidth="2"
         strokeLinecap={CAP}
-        className={cn(CG, "origin-[0%_0%] motion-safe:group-hover:rotate-[60deg]")}
+        className={cn("cg-motion", "origin-[0%_0%] motion-safe:group-hover/cg:rotate-[60deg]")}
       />
       <circle cx="32" cy="32" r="1.4" fill={INK} />
     </>
@@ -663,8 +651,8 @@ const GLYPHS: Record<string, ReactNode> = {
         rx="3"
         fill={INK}
         className={cn(
-          CG,
-          "motion-safe:group-hover:-translate-x-[1.5px] motion-safe:group-hover:-translate-y-[1.5px]",
+          "cg-motion",
+          "motion-safe:group-hover/cg:-translate-x-[1.5px] motion-safe:group-hover/cg:-translate-y-[1.5px]",
         )}
       />
       <rect
@@ -675,8 +663,8 @@ const GLYPHS: Record<string, ReactNode> = {
         rx="3"
         fill={SOFT}
         className={cn(
-          CG,
-          "motion-safe:group-hover:translate-x-[1.5px] motion-safe:group-hover:-translate-y-[1.5px]",
+          "cg-motion",
+          "motion-safe:group-hover/cg:translate-x-[1.5px] motion-safe:group-hover/cg:-translate-y-[1.5px]",
         )}
       />
       <rect
@@ -686,7 +674,7 @@ const GLYPHS: Record<string, ReactNode> = {
         height="10"
         rx="3"
         fill={FAINT}
-        className={cn(CG, "motion-safe:group-hover:translate-x-[1.5px]")}
+        className={cn("cg-motion", "motion-safe:group-hover/cg:translate-x-[1.5px]")}
       />
       <rect
         x="10"
@@ -695,7 +683,7 @@ const GLYPHS: Record<string, ReactNode> = {
         height="16"
         rx="3"
         fill={SOFT}
-        className={cn(CG, "motion-safe:group-hover:translate-y-[1.5px]")}
+        className={cn("cg-motion", "motion-safe:group-hover/cg:translate-y-[1.5px]")}
       />
     </>
   ),
@@ -705,7 +693,7 @@ const GLYPHS: Record<string, ReactNode> = {
     <>
       <Bar cx={32} y={14} w={40} h={6} />
       <Bar cx={32} y={24} w={30} h={4} fill={SOFT} />
-      <g className={cn(CG, "motion-safe:group-hover:scale-[1.08]")}>
+      <g className={cn("cg-motion", "motion-safe:group-hover/cg:scale-[1.08]")}>
         <rect x="22" y="32" width="20" height="10" rx="5" fill={INK} />
         <Bar cx={32} y={35.5} w={10} h={3} fill={FAINT} />
       </g>
@@ -716,7 +704,7 @@ const GLYPHS: Record<string, ReactNode> = {
         strokeWidth="2"
         strokeLinecap={CAP}
         strokeLinejoin={JOIN}
-        className={cn(CG_ANIM, "motion-safe:group-hover:animate-cg-bounce")}
+        className={cn("cg-motion-frame", "motion-safe:group-hover/cg:animate-cg-bounce")}
       />
     </>
   ),
@@ -724,7 +712,7 @@ const GLYPHS: Record<string, ReactNode> = {
   /** Sections + scrollbar thumb */
   scroll: (
     <>
-      <g className={cn(CG, "motion-safe:group-hover:-translate-y-3.5")}>
+      <g className={cn("cg-motion", "motion-safe:group-hover/cg:-translate-y-3.5")}>
         <rect
           x="10"
           y="14"
@@ -732,7 +720,7 @@ const GLYPHS: Record<string, ReactNode> = {
           height="8"
           rx="2"
           fill={INK}
-          className={cn(CG, "motion-safe:group-hover:opacity-0")}
+          className={cn("cg-motion", "motion-safe:group-hover/cg:opacity-0")}
         />
         <rect x="10" y="28" width="36" height="8" rx="2" fill={SOFT} />
         <rect x="10" y="42" width="36" height="8" rx="2" fill={FAINT} />
@@ -744,7 +732,7 @@ const GLYPHS: Record<string, ReactNode> = {
           rx="2"
           fill={FAINT}
           opacity="0"
-          className={cn(CG, "motion-safe:group-hover:opacity-100")}
+          className={cn("cg-motion", "motion-safe:group-hover/cg:opacity-100")}
         />
       </g>
       <rect x="50" y="14" width="3.5" height="36" rx="1.75" fill={FAINT} />
@@ -755,7 +743,7 @@ const GLYPHS: Record<string, ReactNode> = {
         height="11"
         rx="1.75"
         fill={SOFT}
-        className={cn(CG, "motion-safe:group-hover:translate-y-[13px]")}
+        className={cn("cg-motion", "motion-safe:group-hover/cg:translate-y-[13px]")}
       />
     </>
   ),
@@ -770,7 +758,7 @@ const GLYPHS: Record<string, ReactNode> = {
         height="26"
         rx="4"
         fill={FAINT}
-        className={cn(CG, "motion-safe:group-hover:-translate-x-0.5")}
+        className={cn("cg-motion", "motion-safe:group-hover/cg:-translate-x-0.5")}
       />
       <rect
         x="48"
@@ -779,10 +767,10 @@ const GLYPHS: Record<string, ReactNode> = {
         height="26"
         rx="4"
         fill={FAINT}
-        className={cn(CG, "motion-safe:group-hover:translate-x-0.5")}
+        className={cn("cg-motion", "motion-safe:group-hover/cg:translate-x-0.5")}
       />
 
-      <g className={cn(CG, "motion-safe:group-hover:scale-[1.04]")}>
+      <g className={cn("cg-motion", "motion-safe:group-hover/cg:scale-[1.04]")}>
         <rect
           x="20"
           y="10"
@@ -805,8 +793,8 @@ const GLYPHS: Record<string, ReactNode> = {
         r="2.2"
         fill={INK}
         className={cn(
-          CG,
-          "motion-safe:group-hover:scale-[0.82] motion-safe:group-hover:fill-[var(--cg-soft)]",
+          "cg-motion",
+          "motion-safe:group-hover/cg:scale-[0.82] motion-safe:group-hover/cg:fill-[var(--cg-soft)]",
         )}
       />
       <circle
@@ -815,8 +803,8 @@ const GLYPHS: Record<string, ReactNode> = {
         r="1.8"
         fill={SOFT}
         className={cn(
-          CG,
-          "motion-safe:group-hover:scale-[1.22] motion-safe:group-hover:fill-[var(--cg-ink)] motion-safe:group-hover:delay-[60ms]",
+          "cg-motion",
+          "motion-safe:group-hover/cg:scale-[1.22] motion-safe:group-hover/cg:fill-[var(--cg-ink)] motion-safe:group-hover/cg:delay-[60ms]",
         )}
       />
     </>
@@ -840,7 +828,7 @@ const GLYPHS: Record<string, ReactNode> = {
         cy="21"
         r="5"
         fill={SOFT}
-        className={cn(CG_ANIM, "motion-safe:group-hover:animate-cg-shimmer")}
+        className={cn("cg-motion-frame", "motion-safe:group-hover/cg:animate-cg-shimmer")}
       />
       <rect
         x="30"
@@ -850,8 +838,8 @@ const GLYPHS: Record<string, ReactNode> = {
         rx="1.5"
         fill={SOFT}
         className={cn(
-          CG_ANIM,
-          "motion-safe:group-hover:animate-cg-shimmer motion-safe:group-hover:[animation-delay:0.1s]",
+          "cg-motion-frame",
+          "motion-safe:group-hover/cg:animate-cg-shimmer motion-safe:group-hover/cg:[animation-delay:0.1s]",
         )}
       />
       <rect
@@ -862,8 +850,8 @@ const GLYPHS: Record<string, ReactNode> = {
         rx="1.25"
         fill={FAINT}
         className={cn(
-          CG_ANIM,
-          "motion-safe:group-hover:animate-cg-shimmer motion-safe:group-hover:[animation-delay:0.2s]",
+          "cg-motion-frame",
+          "motion-safe:group-hover/cg:animate-cg-shimmer motion-safe:group-hover/cg:[animation-delay:0.2s]",
         )}
       />
       <rect
@@ -874,8 +862,8 @@ const GLYPHS: Record<string, ReactNode> = {
         rx="1.5"
         fill={SOFT}
         className={cn(
-          CG_ANIM,
-          "motion-safe:group-hover:animate-cg-shimmer motion-safe:group-hover:[animation-delay:0.3s]",
+          "cg-motion-frame",
+          "motion-safe:group-hover/cg:animate-cg-shimmer motion-safe:group-hover/cg:[animation-delay:0.3s]",
         )}
       />
       <rect
@@ -886,8 +874,8 @@ const GLYPHS: Record<string, ReactNode> = {
         rx="1.5"
         fill={SOFT}
         className={cn(
-          CG_ANIM,
-          "motion-safe:group-hover:animate-cg-shimmer motion-safe:group-hover:[animation-delay:0.4s]",
+          "cg-motion-frame",
+          "motion-safe:group-hover/cg:animate-cg-shimmer motion-safe:group-hover/cg:[animation-delay:0.4s]",
         )}
       />
       <rect
@@ -898,8 +886,8 @@ const GLYPHS: Record<string, ReactNode> = {
         rx="1.5"
         fill={FAINT}
         className={cn(
-          CG_ANIM,
-          "motion-safe:group-hover:animate-cg-shimmer motion-safe:group-hover:[animation-delay:0.5s]",
+          "cg-motion-frame",
+          "motion-safe:group-hover/cg:animate-cg-shimmer motion-safe:group-hover/cg:[animation-delay:0.5s]",
         )}
       />
     </>
@@ -908,7 +896,7 @@ const GLYPHS: Record<string, ReactNode> = {
   /** Tilted feature card + highlight sparkle */
   "feature-cards": (
     <>
-      <g className={CG_FEATURE}>
+      <g className="cg-feature-tilt motion-safe:group-hover/cg:rotate-0">
         <rect
           x="16"
           y="18"
@@ -927,7 +915,7 @@ const GLYPHS: Record<string, ReactNode> = {
       <path
         d="M51 9 L52.5 13 L56.5 14.5 L52.5 16 L51 20 L49.5 16 L45.5 14.5 L49.5 13 Z"
         fill={INK}
-        className={cn(CG_ANIM, "motion-safe:group-hover:animate-cg-twinkle")}
+        className={cn("cg-motion-frame", "motion-safe:group-hover/cg:animate-cg-twinkle")}
       />
     </>
   ),
@@ -949,14 +937,14 @@ const GLYPHS: Record<string, ReactNode> = {
           r="4"
           fill={SOFT}
           className={cn(
-            CG,
-            i === 0 && "motion-safe:group-hover:-translate-x-[2.5px]",
+            "cg-motion",
+            i === 0 && "motion-safe:group-hover/cg:-translate-x-[2.5px]",
             i === 1 &&
-              "motion-safe:group-hover:-translate-x-[1.8px] motion-safe:group-hover:-translate-y-[1.8px]",
-            i === 2 && "motion-safe:group-hover:-translate-y-[2.5px]",
+              "motion-safe:group-hover/cg:-translate-x-[1.8px] motion-safe:group-hover/cg:-translate-y-[1.8px]",
+            i === 2 && "motion-safe:group-hover/cg:-translate-y-[2.5px]",
             i === 3 &&
-              "motion-safe:group-hover:translate-x-[1.8px] motion-safe:group-hover:-translate-y-[1.8px]",
-            i === 4 && "motion-safe:group-hover:translate-x-[2.5px]",
+              "motion-safe:group-hover/cg:translate-x-[1.8px] motion-safe:group-hover/cg:-translate-y-[1.8px]",
+            i === 4 && "motion-safe:group-hover/cg:translate-x-[2.5px]",
           )}
         />
       ))}
@@ -966,7 +954,7 @@ const GLYPHS: Record<string, ReactNode> = {
         stroke={FAINT}
         strokeWidth="2"
         strokeLinecap={CAP}
-        className={cn(CG, "motion-safe:group-hover:rotate-45")}
+        className={cn("cg-motion", "motion-safe:group-hover/cg:rotate-45")}
       />
     </>
   ),
