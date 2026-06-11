@@ -204,9 +204,6 @@ importers:
       '@fontsource/outfit':
         specifier: ^5.2.8
         version: 5.2.8
-      '@fontsource/young-serif':
-        specifier: ^5.2.7
-        version: 5.2.7
       '@mdx-js/mdx':
         specifier: ^3.1.1
         version: 3.1.1
@@ -1529,9 +1526,6 @@ packages:
 
   '@fontsource/outfit@5.2.8':
     resolution: {integrity: sha512-rXC6g0MqD7cOBjht0bMqc43qM6lRqDLML9KXsmg9uykz0wLQhy8Z/ajrMG6iyoT3NJR+MYgU+OEHp7uHoTb+Yw==}
-
-  '@fontsource/young-serif@5.2.7':
-    resolution: {integrity: sha512-BltTmAlXLWQpu9XCQa+dfDJHQXt0EHUA4h9Q53VToDW3Onq0dkWzCPM1EyhinqfuwD9tb/5cEcGoRcRwiyiUUA==}
 
   '@img/colour@1.1.0':
     resolution: {integrity: sha512-Td76q7j57o/tLVdgS746cYARfSyxk8iEfRxewL9h4OMzYhbW4TAcppl0mT4eyqXddh6L/jwoM75mo7ixa/pCeQ==}
@@ -7456,8 +7450,6 @@ snapshots:
   '@fontsource/ibm-plex-sans@5.2.8': {}
 
   '@fontsource/outfit@5.2.8': {}
-
-  '@fontsource/young-serif@5.2.7': {}
 
   '@img/colour@1.1.0': {}
 
