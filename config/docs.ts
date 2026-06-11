@@ -19,11 +19,15 @@ const sortAlphabetically = (a: SidebarNavItem, b: SidebarNavItem) => {
 
 const createLinks = (category: string) => {
   return allDocs
-    .filter((doc) => doc.slug.startsWith(`/docs/${category}`) && doc.published)
+    .filter(
+      (doc) =>
+        doc.slug.startsWith(`/docs/${category}`) &&
+        doc.published &&
+        doc.slug !== `/docs/${category}`,
+    )
     .map((doc) => ({
-      // Make sure the index page is the first item
       title: doc.title,
-      sortId: doc.slug === `/docs/${category}` ? "000" : doc.title,
+      sortId: doc.title,
       href: doc.slug,
       label: doc.labels?.includes("new") ? "new" : undefined,
       items: [],
@@ -34,6 +38,7 @@ const createLinks = (category: string) => {
 const sidebarNav: SidebarNavItem[] = [
   {
     title: "Getting Started",
+    href: "/docs",
     items: [
       {
         title: "Introduction",
@@ -49,7 +54,6 @@ const sidebarNav: SidebarNavItem[] = [
         title: "Changelog",
         href: "/docs/changelog",
         items: [
-          { title: "Overview", href: "/docs/changelog", items: [] },
           { title: "June 2026", href: "/docs/changelog/2026-06", items: [] },
           { title: "May 2026", href: "/docs/changelog/2026-05", items: [] },
           { title: "April 2026", href: "/docs/changelog/2026-04", items: [] },
@@ -71,11 +75,6 @@ const sidebarNav: SidebarNavItem[] = [
     href: "/docs/contributing",
     items: [
       {
-        title: "Overview",
-        href: "/docs/contributing",
-        items: [],
-      },
-      {
         title: "Running locally",
         href: "/docs/contributing/running-locally",
         items: [],
@@ -83,6 +82,11 @@ const sidebarNav: SidebarNavItem[] = [
       {
         title: "Adding components",
         href: "/docs/contributing/components",
+        items: [],
+      },
+      {
+        title: "Category glyph tiles",
+        href: "/docs/contributing/category-glyphs",
         items: [],
       },
       {
@@ -108,7 +112,6 @@ const sidebarNav: SidebarNavItem[] = [
     ],
   },
   {
-    icon: "text",
     title: "Text",
     label: `${publishedCategoryItemCount("text")}`,
     href: "/docs/text",
@@ -185,21 +188,18 @@ const sidebarNav: SidebarNavItem[] = [
     items: createLinks("overlay"),
   },
   {
-    icon: "button",
     title: "Button",
     label: `${publishedCategoryItemCount("button")}`,
     href: "/docs/button",
     items: createLinks("button"),
   },
   {
-    icon: "widget",
     title: "Widget",
     label: `${publishedCategoryItemCount("widget")}`,
     href: "/docs/widget",
     items: createLinks("widget"),
   },
   {
-    icon: "bento",
     title: "Bento grid",
     label: `${publishedCategoryItemCount("bento-grid")}`,
     href: "/docs/bento-grid",
