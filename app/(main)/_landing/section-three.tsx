@@ -43,11 +43,7 @@ export default function SectionThree() {
           link="/docs/text/glitch-text"
           className="mx-auto mb-10 block max-w-2xl overflow-hidden rounded-2xl"
         >
-          <div className="relative flex min-h-[240px] items-center justify-center bg-linear-to-b from-[#4B0082] via-[#3B0066] to-[#2B004A] px-6 py-14">
-            <GlitchText className="font-(family-name:--font-display) text-5xl font-black uppercase tracking-tight text-white md:text-7xl">
-              animata
-            </GlitchText>
-          </div>
+          <GlitchText text="animata" starCount={100} />
         </ComponentLinkWrapper>
 
         {/* Supporting cast — in cards */}
