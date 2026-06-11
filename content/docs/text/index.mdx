@@ -25,6 +25,7 @@ import MicroScaleFade from "@/animata/text/micro-scale-fade";
 import MirrorText from "@/animata/text/mirror-text";
 import PerCharacterRise from "@/animata/text/per-character-rise";
 import PerWordCrossfade from "@/animata/text/per-word-crossfade";
+import RollText from "@/animata/text/roll-text";
 import ScaleDownFade from "@/animata/text/scale-down-fade";
 import SharedAxisY from "@/animata/text/shared-axis-y";
 import SharedAxisZ from "@/animata/text/shared-axis-z";
@@ -51,7 +52,7 @@ import InView from "@/components/in-view";
   </ComponentListItem>
 
   <ComponentListItem copyId="blur-out-up" href="/docs/text/blur-out-up">
-    <BlurOutUp />
+    <TextAnimatorListDemo><BlurOutUp /></TextAnimatorListDemo>
   </ComponentListItem>
 
   <ComponentListItem copyId="bold-copy" href="/docs/text/bold-copy">
@@ -59,7 +60,7 @@ import InView from "@/components/in-view";
   </ComponentListItem>
 
   <ComponentListItem copyId="bottom-up-letters" href="/docs/text/bottom-up-letters">
-    <BottomUpLetters />
+    <TextAnimatorListDemo><BottomUpLetters /></TextAnimatorListDemo>
   </ComponentListItem>
 
   <ComponentListItem copyId="circular-text" href="/docs/text/circular-text">
@@ -79,11 +80,11 @@ import InView from "@/components/in-view";
   </ComponentListItem>
 
   <ComponentListItem copyId="fade-through" href="/docs/text/fade-through">
-    <FadeThrough />
+    <TextAnimatorListDemo><FadeThrough /></TextAnimatorListDemo>
   </ComponentListItem>
 
   <ComponentListItem copyId="focus-blur-resolve" href="/docs/text/focus-blur-resolve">
-    <FocusBlurResolve />
+    <TextAnimatorListDemo><FocusBlurResolve /></TextAnimatorListDemo>
   </ComponentListItem>
 
   <ComponentListItem copyId="gibberish-text" href="/docs/text/gibberish-text">
@@ -94,7 +95,9 @@ import InView from "@/components/in-view";
 
   <ComponentListItem copyId="glitch-text" href="/docs/text/glitch-text">
     <InView>
-      <GlitchText text="1000 Stars" starCount={40} className="text-2xl sm:text-3xl md:text-4xl" />
+      <GlitchText className="font-(family-name:--font-display) text-2xl font-black uppercase tracking-tight text-white sm:text-3xl md:text-4xl">
+        1000 Stars
+      </GlitchText>
     </InView>
   </ComponentListItem>
 
@@ -109,19 +112,19 @@ import InView from "@/components/in-view";
   </ComponentListItem>
 
   <ComponentListItem copyId="kinetic-center-build" href="/docs/text/kinetic-center-build">
-    <KineticCenterBuild />
+    <TextAnimatorListDemo><KineticCenterBuild /></TextAnimatorListDemo>
   </ComponentListItem>
 
   <ComponentListItem copyId="line-by-line-slide" href="/docs/text/line-by-line-slide">
-    <LineByLineSlide />
+    <TextAnimatorListDemo><LineByLineSlide /></TextAnimatorListDemo>
   </ComponentListItem>
 
   <ComponentListItem copyId="mask-reveal-up" href="/docs/text/mask-reveal-up">
-    <MaskRevealUp />
+    <TextAnimatorListDemo><MaskRevealUp /></TextAnimatorListDemo>
   </ComponentListItem>
 
   <ComponentListItem copyId="micro-scale-fade" href="/docs/text/micro-scale-fade">
-    <MicroScaleFade />
+    <TextAnimatorListDemo><MicroScaleFade /></TextAnimatorListDemo>
   </ComponentListItem>
 
   <ComponentListItem copyId="mirror-text" href="/docs/text/mirror-text">
@@ -129,39 +132,48 @@ import InView from "@/components/in-view";
   </ComponentListItem>
 
   <ComponentListItem copyId="per-character-rise" href="/docs/text/per-character-rise">
-    <PerCharacterRise />
+    <TextAnimatorListDemo><PerCharacterRise /></TextAnimatorListDemo>
   </ComponentListItem>
 
   <ComponentListItem copyId="per-word-crossfade" href="/docs/text/per-word-crossfade">
-    <PerWordCrossfade />
+    <TextAnimatorListDemo><PerWordCrossfade /></TextAnimatorListDemo>
   </ComponentListItem>
 
   <ComponentListItem copyId="scale-down-fade" href="/docs/text/scale-down-fade">
-    <ScaleDownFade />
+    <TextAnimatorListDemo><ScaleDownFade /></TextAnimatorListDemo>
   </ComponentListItem>
 
   <ComponentListItem copyId="shared-axis-y" href="/docs/text/shared-axis-y">
-    <SharedAxisY />
+    <TextAnimatorListDemo><SharedAxisY /></TextAnimatorListDemo>
   </ComponentListItem>
 
   <ComponentListItem copyId="shared-axis-z" href="/docs/text/shared-axis-z">
-    <SharedAxisZ />
+    <TextAnimatorListDemo><SharedAxisZ /></TextAnimatorListDemo>
   </ComponentListItem>
 
   <ComponentListItem copyId="shimmer-sweep" href="/docs/text/shimmer-sweep">
-    <ShimmerSweep />
+    <TextAnimatorListDemo><ShimmerSweep /></TextAnimatorListDemo>
+  </ComponentListItem>
+
+  <ComponentListItem copyId="roll-text" href="/docs/text/roll-text">
+    <RollText
+      text="Roll text"
+      stagger="character"
+      staggerMs={32}
+      className="font-(family-name:--font-display) text-3xl tracking-tight text-foreground"
+    />
   </ComponentListItem>
 
   <ComponentListItem copyId="short-slide-down" href="/docs/text/short-slide-down">
-    <ShortSlideDown />
+    <TextAnimatorListDemo><ShortSlideDown /></TextAnimatorListDemo>
   </ComponentListItem>
 
   <ComponentListItem copyId="short-slide-right" href="/docs/text/short-slide-right">
-    <ShortSlideRight />
+    <TextAnimatorListDemo><ShortSlideRight /></TextAnimatorListDemo>
   </ComponentListItem>
 
   <ComponentListItem copyId="soft-blur-in" href="/docs/text/soft-blur-in">
-    <SoftBlurIn />
+    <TextAnimatorListDemo><SoftBlurIn /></TextAnimatorListDemo>
   </ComponentListItem>
 
   <ComponentListItem copyId="split-text" href="/docs/text/split-text">
@@ -171,7 +183,7 @@ import InView from "@/components/in-view";
   </ComponentListItem>
 
   <ComponentListItem copyId="spring-scale-in" href="/docs/text/spring-scale-in">
-    <SpringScaleIn />
+    <TextAnimatorListDemo><SpringScaleIn /></TextAnimatorListDemo>
   </ComponentListItem>
 
   <ComponentListItem copyId="swap-text" href="/docs/text/swap-text">
@@ -197,7 +209,7 @@ import InView from "@/components/in-view";
   </ComponentListItem>
 
   <ComponentListItem copyId="top-down-letters" href="/docs/text/top-down-letters">
-    <TopDownLetters />
+    <TextAnimatorListDemo><TopDownLetters /></TextAnimatorListDemo>
   </ComponentListItem>
 
   <ComponentListItem copyId="typing-text" href="/docs/text/typing-text">

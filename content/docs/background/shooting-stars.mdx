@@ -17,22 +17,19 @@ labels: ["new", "background", "animated"]
 
 <Steps>
 
-<Step>No dependencies</Step>
-
-Built with React, SVG and CSS keyframes. React spawns and recycles the streaks; the movement
-itself is plain CSS. There's no animation library and no WebGL.
-
 <Step>Run the following command</Step>
 
-It will create a new file called `shooting-stars.tsx` inside the `components/animata/background` directory.
+It will create `shooting-stars.tsx` and the co-located `shooting-stars.css` inside `components/animata/background`.
 
 ```bash
-mkdir -p components/animata/background && touch components/animata/background/shooting-stars.tsx
+mkdir -p components/animata/background && touch components/animata/background/shooting-stars.tsx components/animata/background/shooting-stars.css
 ```
 
 <Step>Paste the code</Step>
 
-Open the newly created file and paste the following code:
+```jsx file=<rootDir>/animata/background/shooting-stars.css
+
+```
 
 ```jsx file=<rootDir>/animata/background/shooting-stars.tsx
 

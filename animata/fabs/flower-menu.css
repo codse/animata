@@ -1,0 +1,12 @@
+@layer components {
+  .flower-petal {
+    transition-property: transform, opacity;
+    transition-timing-function: cubic-bezier(0.2, 0, 0, 1);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .flower-petal {
+      transition: none !important;
+    }
+  }
+}

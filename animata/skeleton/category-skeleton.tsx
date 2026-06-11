@@ -1,0 +1,45 @@
+import { CategoryGlyph } from "@/animata/skeleton/category-glyphs";
+import { cn } from "@/lib/utils";
+
+export type CategorySkeletonVariant = string;
+
+type CategorySkeletonProps = {
+  variant: CategorySkeletonVariant;
+  className?: string;
+};
+
+const CARD_W = 358;
+const CARD_H = 201;
+/** Glyph viewBox is 64×64; scale so art fills ~78% of card height */
+const GLYPH_SCALE = 2.35;
+
+export default function CategorySkeleton({ variant, className }: CategorySkeletonProps) {
+  return (
+    <svg
+      viewBox={`0 0 ${CARD_W} ${CARD_H}`}
+      className={cn(
+        "[--cg-darkest:#76756f] [--cg-lightest:#e3e3e3] [--cg-ink:var(--ink,var(--cg-darkest))] [--cg-faint:var(--ink-faint,var(--cg-lightest))] [--cg-soft:color-mix(in_oklab,var(--cg-ink)_50%,transparent)] dark:[--cg-ink:var(--ink,var(--cg-lightest))] dark:[--cg-faint:var(--ink-faint,var(--cg-darkest))]",
+        "w-full overflow-visible rounded-2xl text-foreground motion-safe:transition-[scale,transform] motion-safe:duration-300 motion-safe:ease-out",
+        className,
+      )}
+      aria-hidden="true"
+    >
+      <rect
+        width={CARD_W}
+        height={CARD_H}
+        rx="16"
+        fill="currentColor"
+        fillOpacity="0.04"
+        stroke="currentColor"
+        strokeOpacity="0.1"
+        strokeWidth="1"
+      />
+
+      <g
+        transform={`translate(${CARD_W / 2} ${CARD_H / 2}) scale(${GLYPH_SCALE}) translate(-32 -32)`}
+      >
+        <CategoryGlyph variant={variant} />
+      </g>
+    </svg>
+  );
+}

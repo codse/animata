@@ -115,7 +115,7 @@ export default function FooterWordmarkDemo() {
       >
         <div
           aria-hidden
-          className="mx-auto flex w-full max-w-6xl flex-1 px-6 pt-[max(1rem,env(safe-area-inset-top))] sm:px-8 lg:px-10"
+          className="mx-auto flex w-full max-w-7xl flex-1 px-6 pt-[max(1rem,env(safe-area-inset-top))] sm:px-8 lg:px-10"
         />
 
         <footer className="relative shrink-0">
@@ -154,7 +154,7 @@ export default function FooterWordmarkDemo() {
             />
 
             <div className="relative z-10 flex h-full min-h-[inherit] flex-col px-6 pb-[calc(var(--demo-chrome-reserve,5rem)+0.5rem)] pt-8 sm:px-8 sm:pt-10 lg:px-10">
-              <div className="@container/footer mx-auto flex w-full max-w-6xl flex-1 flex-col">
+              <div className="@container/footer mx-auto flex w-full max-w-7xl flex-1 flex-col">
                 <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between lg:gap-6">
                   <SiblingFocusNav
                     aria-label="Footer"
@@ -299,7 +299,7 @@ export default function FooterWordmarkDemo() {
 <span class="line"><span style="color:#24292E">      ></span></span>
 <span class="line"><span style="color:#24292E">        &#x3C;</span><span style="color:#22863A">div</span></span>
 <span class="line"><span style="color:#6F42C1">          aria-hidden</span></span>
-<span class="line"><span style="color:#6F42C1">          className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"mx-auto flex w-full max-w-6xl flex-1 px-6 pt-[max(1rem,env(safe-area-inset-top))] sm:px-8 lg:px-10"</span></span>
+<span class="line"><span style="color:#6F42C1">          className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"mx-auto flex w-full max-w-7xl flex-1 px-6 pt-[max(1rem,env(safe-area-inset-top))] sm:px-8 lg:px-10"</span></span>
 <span class="line"><span style="color:#24292E">        /></span></span>
 <span class="line"></span>
 <span class="line"><span style="color:#24292E">        &#x3C;</span><span style="color:#22863A">footer</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"relative shrink-0"</span><span style="color:#24292E">></span></span>
@@ -338,7 +338,7 @@ export default function FooterWordmarkDemo() {
 <span class="line"><span style="color:#24292E">            /></span></span>
 <span class="line"></span>
 <span class="line"><span style="color:#24292E">            &#x3C;</span><span style="color:#22863A">div</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"relative z-10 flex h-full min-h-[inherit] flex-col px-6 pb-[calc(var(--demo-chrome-reserve,5rem)+0.5rem)] pt-8 sm:px-8 sm:pt-10 lg:px-10"</span><span style="color:#24292E">></span></span>
-<span class="line"><span style="color:#24292E">              &#x3C;</span><span style="color:#22863A">div</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"@container/footer mx-auto flex w-full max-w-6xl flex-1 flex-col"</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">              &#x3C;</span><span style="color:#22863A">div</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"@container/footer mx-auto flex w-full max-w-7xl flex-1 flex-col"</span><span style="color:#24292E">></span></span>
 <span class="line"><span style="color:#24292E">                &#x3C;</span><span style="color:#22863A">div</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between lg:gap-6"</span><span style="color:#24292E">></span></span>
 <span class="line"><span style="color:#24292E">                  &#x3C;</span><span style="color:#005CC5">SiblingFocusNav</span></span>
 <span class="line"><span style="color:#6F42C1">                    aria-label</span><span style="color:#D73A49">=</span><span style="color:#032F62">"Footer"</span></span>
@@ -483,7 +483,7 @@ export default function FooterWordmarkDemo() {
 <span class="line"><span style="color:#E1E4E8">      ></span></span>
 <span class="line"><span style="color:#E1E4E8">        &#x3C;</span><span style="color:#85E89D">div</span></span>
 <span class="line"><span style="color:#B392F0">          aria-hidden</span></span>
-<span class="line"><span style="color:#B392F0">          className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"mx-auto flex w-full max-w-6xl flex-1 px-6 pt-[max(1rem,env(safe-area-inset-top))] sm:px-8 lg:px-10"</span></span>
+<span class="line"><span style="color:#B392F0">          className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"mx-auto flex w-full max-w-7xl flex-1 px-6 pt-[max(1rem,env(safe-area-inset-top))] sm:px-8 lg:px-10"</span></span>
 <span class="line"><span style="color:#E1E4E8">        /></span></span>
 <span class="line"></span>
 <span class="line"><span style="color:#E1E4E8">        &#x3C;</span><span style="color:#85E89D">footer</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"relative shrink-0"</span><span style="color:#E1E4E8">></span></span>
@@ -522,7 +522,7 @@ export default function FooterWordmarkDemo() {
 <span class="line"><span style="color:#E1E4E8">            /></span></span>
 <span class="line"></span>
 <span class="line"><span style="color:#E1E4E8">            &#x3C;</span><span style="color:#85E89D">div</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"relative z-10 flex h-full min-h-[inherit] flex-col px-6 pb-[calc(var(--demo-chrome-reserve,5rem)+0.5rem)] pt-8 sm:px-8 sm:pt-10 lg:px-10"</span><span style="color:#E1E4E8">></span></span>
-<span class="line"><span style="color:#E1E4E8">              &#x3C;</span><span style="color:#85E89D">div</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"@container/footer mx-auto flex w-full max-w-6xl flex-1 flex-col"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">              &#x3C;</span><span style="color:#85E89D">div</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"@container/footer mx-auto flex w-full max-w-7xl flex-1 flex-col"</span><span style="color:#E1E4E8">></span></span>
 <span class="line"><span style="color:#E1E4E8">                &#x3C;</span><span style="color:#85E89D">div</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between lg:gap-6"</span><span style="color:#E1E4E8">></span></span>
 <span class="line"><span style="color:#E1E4E8">                  &#x3C;</span><span style="color:#79B8FF">SiblingFocusNav</span></span>
 <span class="line"><span style="color:#B392F0">                    aria-label</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"Footer"</span></span>
@@ -1051,7 +1051,7 @@ const PREMIERES = [
 ] as const;
 
 function CinemaContent({ className, children }: { className?: string; children: React.ReactNode }) {
-  return <div className={cn("mx-auto w-full max-w-6xl px-5 sm:px-8", className)}>{children}</div>;
+  return <div className={cn("mx-auto w-full max-w-7xl px-5 sm:px-8", className)}>{children}</div>;
 }
 
 function BackdropSlide({ title, image }: { title: string; image: string }) {
@@ -1598,7 +1598,7 @@ export default function CinemaRow() {
 <span class="line"><span style="color:#24292E">] </span><span style="color:#D73A49">as</span><span style="color:#D73A49"> const</span><span style="color:#24292E">;</span></span>
 <span class="line"></span>
 <span class="line"><span style="color:#D73A49">function</span><span style="color:#6F42C1"> CinemaContent</span><span style="color:#24292E">({ </span><span style="color:#E36209">className</span><span style="color:#24292E">, </span><span style="color:#E36209">children</span><span style="color:#24292E"> }</span><span style="color:#D73A49">:</span><span style="color:#24292E"> { </span><span style="color:#E36209">className</span><span style="color:#D73A49">?:</span><span style="color:#005CC5"> string</span><span style="color:#24292E">; </span><span style="color:#E36209">children</span><span style="color:#D73A49">:</span><span style="color:#6F42C1"> React</span><span style="color:#24292E">.</span><span style="color:#6F42C1">ReactNode</span><span style="color:#24292E"> }) {</span></span>
-<span class="line"><span style="color:#D73A49">  return</span><span style="color:#24292E"> &#x3C;</span><span style="color:#22863A">div</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#6F42C1">cn</span><span style="color:#24292E">(</span><span style="color:#032F62">"mx-auto w-full max-w-6xl px-5 sm:px-8"</span><span style="color:#24292E">, className)}>{children}&#x3C;/</span><span style="color:#22863A">div</span><span style="color:#24292E">>;</span></span>
+<span class="line"><span style="color:#D73A49">  return</span><span style="color:#24292E"> &#x3C;</span><span style="color:#22863A">div</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#6F42C1">cn</span><span style="color:#24292E">(</span><span style="color:#032F62">"mx-auto w-full max-w-7xl px-5 sm:px-8"</span><span style="color:#24292E">, className)}>{children}&#x3C;/</span><span style="color:#22863A">div</span><span style="color:#24292E">>;</span></span>
 <span class="line"><span style="color:#24292E">}</span></span>
 <span class="line"></span>
 <span class="line"><span style="color:#D73A49">function</span><span style="color:#6F42C1"> BackdropSlide</span><span style="color:#24292E">({ </span><span style="color:#E36209">title</span><span style="color:#24292E">, </span><span style="color:#E36209">image</span><span style="color:#24292E"> }</span><span style="color:#D73A49">:</span><span style="color:#24292E"> { </span><span style="color:#E36209">title</span><span style="color:#D73A49">:</span><span style="color:#005CC5"> string</span><span style="color:#24292E">; </span><span style="color:#E36209">image</span><span style="color:#D73A49">:</span><span style="color:#005CC5"> string</span><span style="color:#24292E"> }) {</span></span>
@@ -2145,7 +2145,7 @@ export default function CinemaRow() {
 <span class="line"><span style="color:#E1E4E8">] </span><span style="color:#F97583">as</span><span style="color:#F97583"> const</span><span style="color:#E1E4E8">;</span></span>
 <span class="line"></span>
 <span class="line"><span style="color:#F97583">function</span><span style="color:#B392F0"> CinemaContent</span><span style="color:#E1E4E8">({ </span><span style="color:#FFAB70">className</span><span style="color:#E1E4E8">, </span><span style="color:#FFAB70">children</span><span style="color:#E1E4E8"> }</span><span style="color:#F97583">:</span><span style="color:#E1E4E8"> { </span><span style="color:#FFAB70">className</span><span style="color:#F97583">?:</span><span style="color:#79B8FF"> string</span><span style="color:#E1E4E8">; </span><span style="color:#FFAB70">children</span><span style="color:#F97583">:</span><span style="color:#B392F0"> React</span><span style="color:#E1E4E8">.</span><span style="color:#B392F0">ReactNode</span><span style="color:#E1E4E8"> }) {</span></span>
-<span class="line"><span style="color:#F97583">  return</span><span style="color:#E1E4E8"> &#x3C;</span><span style="color:#85E89D">div</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#B392F0">cn</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"mx-auto w-full max-w-6xl px-5 sm:px-8"</span><span style="color:#E1E4E8">, className)}>{children}&#x3C;/</span><span style="color:#85E89D">div</span><span style="color:#E1E4E8">>;</span></span>
+<span class="line"><span style="color:#F97583">  return</span><span style="color:#E1E4E8"> &#x3C;</span><span style="color:#85E89D">div</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#B392F0">cn</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"mx-auto w-full max-w-7xl px-5 sm:px-8"</span><span style="color:#E1E4E8">, className)}>{children}&#x3C;/</span><span style="color:#85E89D">div</span><span style="color:#E1E4E8">>;</span></span>
 <span class="line"><span style="color:#E1E4E8">}</span></span>
 <span class="line"></span>
 <span class="line"><span style="color:#F97583">function</span><span style="color:#B392F0"> BackdropSlide</span><span style="color:#E1E4E8">({ </span><span style="color:#FFAB70">title</span><span style="color:#E1E4E8">, </span><span style="color:#FFAB70">image</span><span style="color:#E1E4E8"> }</span><span style="color:#F97583">:</span><span style="color:#E1E4E8"> { </span><span style="color:#FFAB70">title</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> string</span><span style="color:#E1E4E8">; </span><span style="color:#FFAB70">image</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> string</span><span style="color:#E1E4E8"> }) {</span></span>
@@ -3747,8 +3747,8 @@ export default function PhotographerPortfolio() {
       language: "tsx",
       code: `"use client";
 
-import type { ReactNode } from "react";
 import { Inter, Space_Grotesk } from "next/font/google";
+import type { ReactNode } from "react";
 
 import StackedSections from "@/animata/scroll/stacked-sections";
 import { cn } from "@/lib/utils";
@@ -3814,9 +3814,7 @@ function ReleaseChapter({
   children?: ReactNode;
 }) {
   return (
-    <section
-      className={cn("flex w-full shrink-0 flex-col overflow-hidden rounded-2xl", tone.bg)}
-    >
+    <section className={cn("flex w-full shrink-0 flex-col overflow-hidden rounded-2xl", tone.bg)}>
       <div className={cn("flex flex-col gap-6", PAD_X, PAD_Y)}>
         <div className="flex flex-col gap-2.5">
           <h2
@@ -3917,7 +3915,12 @@ function WorkspaceCta({ tone }: { tone: Tone }) {
   return (
     <div className={cn("flex flex-col gap-3 rounded-xl border p-4", tone.panel)}>
       <div className="flex items-center gap-3">
-        <span className={cn("flex size-10 items-center justify-center rounded-lg text-sm font-bold", tone.accent)}>
+        <span
+          className={cn(
+            "flex size-10 items-center justify-center rounded-lg text-sm font-bold",
+            tone.accent,
+          )}
+        >
           P
         </span>
         <div>
@@ -4027,8 +4030,8 @@ export default function StackedSectionsDemo001() {
 `,
       htmlLight: `<pre class="shiki github-light" tabindex="0"><code><span class="line"><span style="color:#032F62">"use client"</span><span style="color:#24292E">;</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#D73A49">import</span><span style="color:#D73A49"> type</span><span style="color:#24292E"> { ReactNode } </span><span style="color:#D73A49">from</span><span style="color:#032F62"> "react"</span><span style="color:#24292E">;</span></span>
 <span class="line"><span style="color:#D73A49">import</span><span style="color:#24292E"> { Inter, Space_Grotesk } </span><span style="color:#D73A49">from</span><span style="color:#032F62"> "next/font/google"</span><span style="color:#24292E">;</span></span>
+<span class="line"><span style="color:#D73A49">import</span><span style="color:#D73A49"> type</span><span style="color:#24292E"> { ReactNode } </span><span style="color:#D73A49">from</span><span style="color:#032F62"> "react"</span><span style="color:#24292E">;</span></span>
 <span class="line"></span>
 <span class="line"><span style="color:#D73A49">import</span><span style="color:#24292E"> StackedSections </span><span style="color:#D73A49">from</span><span style="color:#032F62"> "@/animata/scroll/stacked-sections"</span><span style="color:#24292E">;</span></span>
 <span class="line"><span style="color:#D73A49">import</span><span style="color:#24292E"> { cn } </span><span style="color:#D73A49">from</span><span style="color:#032F62"> "@/lib/utils"</span><span style="color:#24292E">;</span></span>
@@ -4094,9 +4097,7 @@ export default function StackedSectionsDemo001() {
 <span class="line"><span style="color:#E36209">  children</span><span style="color:#D73A49">?:</span><span style="color:#6F42C1"> ReactNode</span><span style="color:#24292E">;</span></span>
 <span class="line"><span style="color:#24292E">}) {</span></span>
 <span class="line"><span style="color:#D73A49">  return</span><span style="color:#24292E"> (</span></span>
-<span class="line"><span style="color:#24292E">    &#x3C;</span><span style="color:#22863A">section</span></span>
-<span class="line"><span style="color:#6F42C1">      className</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#6F42C1">cn</span><span style="color:#24292E">(</span><span style="color:#032F62">"flex w-full shrink-0 flex-col overflow-hidden rounded-2xl"</span><span style="color:#24292E">, tone.bg)}</span></span>
-<span class="line"><span style="color:#24292E">    ></span></span>
+<span class="line"><span style="color:#24292E">    &#x3C;</span><span style="color:#22863A">section</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#6F42C1">cn</span><span style="color:#24292E">(</span><span style="color:#032F62">"flex w-full shrink-0 flex-col overflow-hidden rounded-2xl"</span><span style="color:#24292E">, tone.bg)}></span></span>
 <span class="line"><span style="color:#24292E">      &#x3C;</span><span style="color:#22863A">div</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#6F42C1">cn</span><span style="color:#24292E">(</span><span style="color:#032F62">"flex flex-col gap-6"</span><span style="color:#24292E">, </span><span style="color:#005CC5">PAD_X</span><span style="color:#24292E">, </span><span style="color:#005CC5">PAD_Y</span><span style="color:#24292E">)}></span></span>
 <span class="line"><span style="color:#24292E">        &#x3C;</span><span style="color:#22863A">div</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"flex flex-col gap-2.5"</span><span style="color:#24292E">></span></span>
 <span class="line"><span style="color:#24292E">          &#x3C;</span><span style="color:#22863A">h2</span></span>
@@ -4197,7 +4198,12 @@ export default function StackedSectionsDemo001() {
 <span class="line"><span style="color:#D73A49">  return</span><span style="color:#24292E"> (</span></span>
 <span class="line"><span style="color:#24292E">    &#x3C;</span><span style="color:#22863A">div</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#6F42C1">cn</span><span style="color:#24292E">(</span><span style="color:#032F62">"flex flex-col gap-3 rounded-xl border p-4"</span><span style="color:#24292E">, tone.panel)}></span></span>
 <span class="line"><span style="color:#24292E">      &#x3C;</span><span style="color:#22863A">div</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"flex items-center gap-3"</span><span style="color:#24292E">></span></span>
-<span class="line"><span style="color:#24292E">        &#x3C;</span><span style="color:#22863A">span</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#6F42C1">cn</span><span style="color:#24292E">(</span><span style="color:#032F62">"flex size-10 items-center justify-center rounded-lg text-sm font-bold"</span><span style="color:#24292E">, tone.accent)}></span></span>
+<span class="line"><span style="color:#24292E">        &#x3C;</span><span style="color:#22863A">span</span></span>
+<span class="line"><span style="color:#6F42C1">          className</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#6F42C1">cn</span><span style="color:#24292E">(</span></span>
+<span class="line"><span style="color:#032F62">            "flex size-10 items-center justify-center rounded-lg text-sm font-bold"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">            tone.accent,</span></span>
+<span class="line"><span style="color:#24292E">          )}</span></span>
+<span class="line"><span style="color:#24292E">        ></span></span>
 <span class="line"><span style="color:#24292E">          P</span></span>
 <span class="line"><span style="color:#24292E">        &#x3C;/</span><span style="color:#22863A">span</span><span style="color:#24292E">></span></span>
 <span class="line"><span style="color:#24292E">        &#x3C;</span><span style="color:#22863A">div</span><span style="color:#24292E">></span></span>
@@ -4307,8 +4313,8 @@ export default function StackedSectionsDemo001() {
 <span class="line"></span></code></pre>`,
       htmlDark: `<pre class="shiki github-dark" tabindex="0"><code><span class="line"><span style="color:#9ECBFF">"use client"</span><span style="color:#E1E4E8">;</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#F97583">import</span><span style="color:#F97583"> type</span><span style="color:#E1E4E8"> { ReactNode } </span><span style="color:#F97583">from</span><span style="color:#9ECBFF"> "react"</span><span style="color:#E1E4E8">;</span></span>
 <span class="line"><span style="color:#F97583">import</span><span style="color:#E1E4E8"> { Inter, Space_Grotesk } </span><span style="color:#F97583">from</span><span style="color:#9ECBFF"> "next/font/google"</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#F97583">import</span><span style="color:#F97583"> type</span><span style="color:#E1E4E8"> { ReactNode } </span><span style="color:#F97583">from</span><span style="color:#9ECBFF"> "react"</span><span style="color:#E1E4E8">;</span></span>
 <span class="line"></span>
 <span class="line"><span style="color:#F97583">import</span><span style="color:#E1E4E8"> StackedSections </span><span style="color:#F97583">from</span><span style="color:#9ECBFF"> "@/animata/scroll/stacked-sections"</span><span style="color:#E1E4E8">;</span></span>
 <span class="line"><span style="color:#F97583">import</span><span style="color:#E1E4E8"> { cn } </span><span style="color:#F97583">from</span><span style="color:#9ECBFF"> "@/lib/utils"</span><span style="color:#E1E4E8">;</span></span>
@@ -4374,9 +4380,7 @@ export default function StackedSectionsDemo001() {
 <span class="line"><span style="color:#FFAB70">  children</span><span style="color:#F97583">?:</span><span style="color:#B392F0"> ReactNode</span><span style="color:#E1E4E8">;</span></span>
 <span class="line"><span style="color:#E1E4E8">}) {</span></span>
 <span class="line"><span style="color:#F97583">  return</span><span style="color:#E1E4E8"> (</span></span>
-<span class="line"><span style="color:#E1E4E8">    &#x3C;</span><span style="color:#85E89D">section</span></span>
-<span class="line"><span style="color:#B392F0">      className</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#B392F0">cn</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"flex w-full shrink-0 flex-col overflow-hidden rounded-2xl"</span><span style="color:#E1E4E8">, tone.bg)}</span></span>
-<span class="line"><span style="color:#E1E4E8">    ></span></span>
+<span class="line"><span style="color:#E1E4E8">    &#x3C;</span><span style="color:#85E89D">section</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#B392F0">cn</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"flex w-full shrink-0 flex-col overflow-hidden rounded-2xl"</span><span style="color:#E1E4E8">, tone.bg)}></span></span>
 <span class="line"><span style="color:#E1E4E8">      &#x3C;</span><span style="color:#85E89D">div</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#B392F0">cn</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"flex flex-col gap-6"</span><span style="color:#E1E4E8">, </span><span style="color:#79B8FF">PAD_X</span><span style="color:#E1E4E8">, </span><span style="color:#79B8FF">PAD_Y</span><span style="color:#E1E4E8">)}></span></span>
 <span class="line"><span style="color:#E1E4E8">        &#x3C;</span><span style="color:#85E89D">div</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"flex flex-col gap-2.5"</span><span style="color:#E1E4E8">></span></span>
 <span class="line"><span style="color:#E1E4E8">          &#x3C;</span><span style="color:#85E89D">h2</span></span>
@@ -4477,7 +4481,12 @@ export default function StackedSectionsDemo001() {
 <span class="line"><span style="color:#F97583">  return</span><span style="color:#E1E4E8"> (</span></span>
 <span class="line"><span style="color:#E1E4E8">    &#x3C;</span><span style="color:#85E89D">div</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#B392F0">cn</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"flex flex-col gap-3 rounded-xl border p-4"</span><span style="color:#E1E4E8">, tone.panel)}></span></span>
 <span class="line"><span style="color:#E1E4E8">      &#x3C;</span><span style="color:#85E89D">div</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"flex items-center gap-3"</span><span style="color:#E1E4E8">></span></span>
-<span class="line"><span style="color:#E1E4E8">        &#x3C;</span><span style="color:#85E89D">span</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#B392F0">cn</span><span style="color:#E1E4E8">(</span><span style="color:#9ECBFF">"flex size-10 items-center justify-center rounded-lg text-sm font-bold"</span><span style="color:#E1E4E8">, tone.accent)}></span></span>
+<span class="line"><span style="color:#E1E4E8">        &#x3C;</span><span style="color:#85E89D">span</span></span>
+<span class="line"><span style="color:#B392F0">          className</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#B392F0">cn</span><span style="color:#E1E4E8">(</span></span>
+<span class="line"><span style="color:#9ECBFF">            "flex size-10 items-center justify-center rounded-lg text-sm font-bold"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">            tone.accent,</span></span>
+<span class="line"><span style="color:#E1E4E8">          )}</span></span>
+<span class="line"><span style="color:#E1E4E8">        ></span></span>
 <span class="line"><span style="color:#E1E4E8">          P</span></span>
 <span class="line"><span style="color:#E1E4E8">        &#x3C;/</span><span style="color:#85E89D">span</span><span style="color:#E1E4E8">></span></span>
 <span class="line"><span style="color:#E1E4E8">        &#x3C;</span><span style="color:#85E89D">div</span><span style="color:#E1E4E8">></span></span>

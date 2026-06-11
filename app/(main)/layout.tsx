@@ -1,4 +1,3 @@
-import AnnouncementRibbon from "@/animata/container/announcement-ribbon";
 import { CSPostHogProvider } from "@/app/(main)/providers";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
@@ -12,8 +11,10 @@ export default function MainLayout({ children }: MainLayoutProps) {
   return (
     <CSPostHogProvider>
       <div vaul-drawer-wrapper="">
-        <div className="relative flex min-h-screen flex-col bg-background">
-          <AnnouncementRibbon repeat={12} className="sticky top-0 z-60" />
+        <div
+          style={{ "--site-header-height": "50px" }}
+          className="relative flex min-h-screen flex-col bg-background"
+        >
           <SiteHeader />
           <main className="flex-1">{children}</main>
           <SiteFooter />

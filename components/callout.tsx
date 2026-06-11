@@ -10,9 +10,15 @@ interface CalloutProps {
 
 export function Callout({ title, children, icon, className, ...props }: CalloutProps) {
   return (
-    <Alert {...props} className={cn("border-muted-foreground/50", className)}>
+    <Alert
+      {...props}
+      className={cn(
+        "mb-6 border-[color-mix(in_oklab,var(--ink)_32%,transparent)] bg-[color-mix(in_oklab,var(--ink)_6%,transparent)] text-[color-mix(in_oklab,var(--ink)_88%,transparent)] [&_a]:text-foreground [&_a]:underline-offset-[3px] [&_a:hover]:text-link",
+        className,
+      )}
+    >
       {icon && <span className="mr-4 text-2xl">{icon}</span>}
-      {title && <AlertTitle>{title}</AlertTitle>}
+      {title && <AlertTitle className="text-foreground">{title}</AlertTitle>}
       <AlertDescription>{children}</AlertDescription>
     </Alert>
   );

@@ -4,11 +4,11 @@
 //        or  "side"    (tall demo left fills height, branding right — TALL/square components).
 //   variant: "a" warm editorial (smoke glow + serif title glow)
 //        or  "b" textured minimal (vertical hairlines, crisp serif).
-// Brand type: Young Serif (display title), Outfit (wordmark/eyebrow), IBM Plex Sans (body) — self-hosted
+// Brand type: Instrument Sans (display title), Outfit (wordmark/eyebrow), IBM Plex Sans (body) — self-hosted
 // under public/og-fonts/ (see scripts/sync-og-fonts.mjs) so renders are offline-deterministic.
 //
 // Bump TEMPLATE_VERSION when the design changes — it's part of the cache hash.
-export const TEMPLATE_VERSION = "24";
+export const TEMPLATE_VERSION = "25";
 
 const esc = (s) =>
   String(s ?? "").replace(
@@ -43,7 +43,7 @@ export function ogFontsCss(fontBaseUrl) {
     face("Outfit", "outfit-latin-500-normal.woff2", 500),
     face("Outfit", "outfit-latin-600-normal.woff2", 600),
     face("Outfit", "outfit-latin-700-normal.woff2", 700),
-    face("Young Serif", "young-serif-latin-400-normal.woff2", 400),
+    face("Instrument Sans Variable", "instrument-sans-latin-wght-normal.woff2", "400 700"),
     face("IBM Plex Sans", "ibm-plex-sans-latin-400-normal.woff2", 400),
     face("IBM Plex Sans", "ibm-plex-sans-latin-500-normal.woff2", 500),
     face("IBM Plex Sans", "ibm-plex-sans-latin-600-normal.woff2", 600),
@@ -66,7 +66,7 @@ const COMMON = `
   .accent { width: 52px; height: 5px; border-radius: 3px; background: #ffcc00; }
   .accent-row { display: flex; align-items: center; gap: 14px; }
   .accent-row .eyebrow { line-height: 1; }
-  .title { font-family: "Young Serif", Georgia, serif; font-weight: 400; letter-spacing: -0.005em; line-height: 1.03; }
+  .title { font-family: "Instrument Sans Variable", ui-sans-serif, system-ui, sans-serif; font-weight: 600; letter-spacing: -0.02em; line-height: 1.03; }
   .desc { font-family: "IBM Plex Sans", -apple-system, sans-serif; font-size: 22px; line-height: 1.45; color: #6b665c; max-width: 760px; margin-top: 16px;
     display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
   .chips { display: flex; gap: 9px; flex-wrap: wrap; }
@@ -216,7 +216,7 @@ const BRANDED_BASE = `
   .word { font-family:"Outfit", sans-serif; font-size:34px; font-weight:600; letter-spacing:-0.01em; line-height:1; }
   .eyebrow { font-family:"Outfit", sans-serif; font-size:21px; font-weight:600; letter-spacing:0.18em; text-transform:uppercase; color:#8c877d; }
   .accent { width:64px; height:6px; border-radius:3px; background:#ffcc00; }
-  .title { font-family:"Young Serif", Georgia, serif; font-weight:400; letter-spacing:-0.01em; line-height:1.0; color:#16140f; }
+  .title { font-family:"Instrument Sans Variable", ui-sans-serif, system-ui, sans-serif; font-weight:600; letter-spacing:-0.02em; line-height:1.0; color:#16140f; }
   .desc { font-size:26px; line-height:1.45; color:#6b665c; max-width:880px;
     display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
   .url { font-family:"IBM Plex Sans", sans-serif; font-size:21px; font-weight:500; letter-spacing:0.01em; color:#8c877d; }

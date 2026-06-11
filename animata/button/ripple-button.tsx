@@ -1,5 +1,8 @@
 "use client";
+
 import { useCallback, useRef, useState } from "react";
+
+import "./ripple-button.css";
 
 interface RippleButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children: React.ReactNode;
@@ -97,31 +100,6 @@ export default function RippleButton({ children, ...props }: RippleButtonProps) 
     >
       <span className="relative z-[2]">{children}</span>
       <span ref={rippleRef} className="ripple" />
-      <style>{`
-        .ripple {
-          position: absolute;
-          border-radius: 50%;
-          pointer-events: none;
-          background-color: #000000;
-          z-index: 1;
-          opacity: 0;
-          transition: transform 50ms linear;
-        }
-        .ripple-enter {
-          animation: ripple-enter 250ms ease-out forwards;
-        }
-        .ripple-leave {
-          animation: ripple-leave 250ms ease-out forwards;
-        }
-        @keyframes ripple-enter {
-          from { transform: scale(0); opacity: 1; }
-          to { transform: scale(1); opacity: 1; }
-        }
-        @keyframes ripple-leave {
-          from { transform: scale(1); opacity: 1; }
-          to { transform: scale(0); opacity: 1; }
-        }
-      `}</style>
     </button>
   );
 }

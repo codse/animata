@@ -2,7 +2,6 @@
 title: "Per-Character Rise"
 description: "Letters slide up from below with no blur — crisp, deliberate, kinetic. Apple's clean tvOS-style reveal."
 author: pixelpoint
-labels: ["new"]
 ---
 
 <ComponentPreview name="text-per-character-rise--primary" />
@@ -13,6 +12,8 @@ labels: ["new"]
 
 <RegistryInstall category="text" name="per-character-rise" />
 
+The CLI installs the preset, `text-animator.tsx`, and `text-animator.css` in one step.
+
 ### Manual
 
 <Steps>
@@ -20,15 +21,19 @@ labels: ["new"]
 <Step>Install the shared runtime</Step>
 
 Every preset in the text category shares its WAAPI loop with the same
-`text-animator` runtime (styles are inlined into the file via a
-`<style>` block). Skip this step if you already added it for another
-text preset.
+`text-animator` runtime and co-located `text-animator.css`. Skip this step if you already added them for another text preset.
 
 ```bash
-mkdir -p components/animata/text && touch components/animata/text/text-animator.tsx
+mkdir -p components/animata/text && touch components/animata/text/text-animator.tsx components/animata/text/text-animator.css
 ```
 
-Paste the runtime into `text-animator.tsx`:
+<Step>Paste the runtime</Step>
+
+Paste into `text-animator.css` and `text-animator.tsx`:
+
+```jsx file=<rootDir>/animata/text/text-animator.css
+
+```
 
 ```tsx file=<rootDir>/animata/text/text-animator.tsx
 

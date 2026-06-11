@@ -15,6 +15,8 @@ import {
 
 import { cn } from "@/lib/utils";
 
+import "./split-reveal.css";
+
 type PreloaderPhase = "loading" | "fade-ui" | "reveal" | "done";
 
 export interface SplitRevealProgressState {
@@ -34,8 +36,6 @@ interface SplitRevealContextValue extends SplitRevealProgressState {
 }
 
 const SplitRevealContext = createContext<SplitRevealContextValue | null>(null);
-
-const REVEAL_EASE = "cubic-bezier(0.76, 0, 0.24, 1)";
 
 export function useSplitReveal() {
   const context = use(SplitRevealContext);
@@ -167,59 +167,6 @@ function useScrollLock(active: boolean) {
   }, [active]);
 }
 
-function SplitRevealStyles() {
-  return (
-    <style>{`
-      @keyframes split-reveal-shutter-top {
-        from {
-          transform: translate3d(0, 0, 0);
-        }
-        to {
-          transform: translate3d(0, -100%, 0);
-        }
-      }
-
-      @keyframes split-reveal-shutter-bottom {
-        from {
-          transform: translate3d(0, 0, 0);
-        }
-        to {
-          transform: translate3d(0, 100%, 0);
-        }
-      }
-
-      [data-split-reveal-overlay] [data-split-reveal-progress] {
-        opacity: 1;
-        transition: opacity var(--split-reveal-progress-fade) ease-out;
-      }
-
-      [data-split-reveal-overlay][data-phase="fade-ui"] [data-split-reveal-progress],
-      [data-split-reveal-overlay][data-phase="reveal"] [data-split-reveal-progress] {
-        opacity: 0;
-      }
-
-      [data-split-reveal-overlay][data-phase="reveal"] [data-split-reveal-shutter="top"] {
-        animation: split-reveal-shutter-top var(--split-reveal-duration) ${REVEAL_EASE} forwards;
-      }
-
-      [data-split-reveal-overlay][data-phase="reveal"] [data-split-reveal-shutter="bottom"] {
-        animation: split-reveal-shutter-bottom var(--split-reveal-duration) ${REVEAL_EASE} forwards;
-      }
-
-      @media (prefers-reduced-motion: reduce) {
-        [data-split-reveal-overlay][data-phase="reveal"] [data-split-reveal-shutter] {
-          animation: none;
-          opacity: 0;
-        }
-
-        [data-split-reveal-overlay] [data-split-reveal-progress] {
-          transition: none;
-        }
-      }
-    `}</style>
-  );
-}
-
 function SplitRevealOverlayFrame({ className, children, ...props }: ComponentProps<"div">) {
   const { phase, zIndex, revealDuration, progressFadeMs, isActive } = useSplitReveal();
 
@@ -248,7 +195,6 @@ function SplitRevealOverlayFrame({ className, children, ...props }: ComponentPro
       data-split-reveal-overlay=""
       {...props}
     >
-      <SplitRevealStyles />
       {children}
     </div>
   );

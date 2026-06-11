@@ -4,16 +4,25 @@ import Link, { type LinkProps } from "next/link";
 import { useRouter } from "next/navigation";
 import * as React from "react";
 
+import { CategoryNavAccordion } from "@/components/category-nav-accordion";
 import { Icons } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { docsConfig } from "@/config/docs";
 import { siteConfig } from "@/config/site";
+import { brandLabelClassName } from "@/lib/brand-font";
+import { getFooterCategories } from "@/lib/docs";
 import { cn } from "@/lib/utils";
 
 export function MobileNav() {
   const [open, setOpen] = React.useState(false);
+  const categories = React.useMemo(
+    () => getFooterCategories(docsConfig.sidebarNav, { variant: "full" }),
+    [],
+  );
+
+  const closeSheet = React.useCallback(() => setOpen(false), []);
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
@@ -54,72 +63,46 @@ export function MobileNav() {
           <span className="sr-only">Toggle Menu</span>
         </Button>
       </SheetTrigger>
-      <SheetContent side="left" className="pr-0">
-        <MobileLink href="/" className="flex items-center" onOpenChange={setOpen}>
-          <Icons.logo className="mr-2 h-4 w-4" />
-          <span className="font-bold">{siteConfig.name}</span>
-        </MobileLink>
-        <ScrollArea className="my-4 h-[calc(100vh-4rem)] pb-4 pl-4">
-          <div className="flex flex-col space-y-3">
-            {docsConfig.mainNav?.map(
-              (item) =>
-                item.href && (
-                  <MobileLink key={item.href} href={item.href} onOpenChange={setOpen}>
-                    {item.title}
-                  </MobileLink>
-                ),
+      <SheetContent side="left" className="flex h-full w-full flex-col gap-0 p-0 sm:max-w-sm">
+        <div className="px-5 pt-6 pr-12">
+          <MobileLink
+            href="/"
+            onOpenChange={setOpen}
+            className={cn(
+              "inline-flex items-center gap-0.5 text-[1.35rem] -translate-x-0.5 text-(--footer-accent)",
+              brandLabelClassName,
             )}
-          </div>
-          <div className="flex flex-col space-y-2">
-            {docsConfig.sidebarNav.map((item, index) => (
-              <div key={index} className="flex flex-col space-y-3 pt-6">
-                <h4 className="font-medium">{item.title}</h4>
-                {item?.items?.map((subItem) => {
-                  if (subItem.items?.length) {
-                    return (
-                      <React.Fragment key={subItem.href ?? subItem.title}>
-                        <span className="text-xs font-medium text-muted-foreground/60">
-                          {subItem.title}
-                        </span>
-                        {subItem.items.map((child) =>
-                          !child.disabled && child.href ? (
-                            <MobileLink
-                              key={child.href}
-                              href={child.href}
-                              onOpenChange={setOpen}
-                              className="pl-3 text-muted-foreground"
-                            >
-                              {child.title}
-                            </MobileLink>
-                          ) : null,
-                        )}
-                      </React.Fragment>
-                    );
-                  }
-                  return (
-                    <React.Fragment key={subItem.href}>
-                      {!subItem.disabled &&
-                        (subItem.href ? (
-                          <MobileLink
-                            href={subItem.href}
-                            onOpenChange={setOpen}
-                            className="text-muted-foreground"
-                          >
-                            {subItem.title}
-                            {subItem.label && (
-                              <span className="ml-2 rounded-md bg-[#adfa1d] px-1.5 py-0.5 text-xs leading-none text-[#000000] no-underline group-hover:no-underline">
-                                {subItem.label}
-                              </span>
-                            )}
-                          </MobileLink>
-                        ) : (
-                          subItem.title
-                        ))}
-                    </React.Fragment>
-                  );
-                })}
-              </div>
-            ))}
+          >
+            <Icons.logo className="h-[1.35em] w-[1.35em] shrink-0 [&_*]:fill-(--footer-accent)" />
+            <span className="leading-relaxed" style={{ textBoxTrim: "trim-start" }}>
+              {siteConfig.name}
+            </span>
+          </MobileLink>
+        </div>
+        <ScrollArea className="min-h-0 flex-1">
+          <div className="px-5 pb-6 pt-4">
+            <div className="flex flex-col">
+              {docsConfig.mainNav?.map(
+                (item) =>
+                  item.href && (
+                    <MobileLink
+                      key={item.href}
+                      href={item.href}
+                      onOpenChange={setOpen}
+                      className="block px-2 py-[6px] touch-manipulation text-sm font-medium [-webkit-tap-highlight-color:transparent]"
+                    >
+                      {item.title}
+                    </MobileLink>
+                  ),
+              )}
+            </div>
+
+            <CategoryNavAccordion
+              categories={categories}
+              variant="sheet"
+              className="mt-6"
+              onLinkClick={closeSheet}
+            />
           </div>
         </ScrollArea>
       </SheetContent>

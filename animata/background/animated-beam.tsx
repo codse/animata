@@ -1,5 +1,7 @@
 import { cn } from "@/lib/utils";
 
+import "./animated-beam.css";
+
 // Deterministic 0–1 pseudo-random from an integer — same on server and client,
 // so each beam gets its own length/speed/etc. without a hydration mismatch.
 const prand = (n: number) => {
@@ -56,18 +58,6 @@ function Beam({ index }: { index: number }) {
 function Background() {
   return (
     <div className="absolute inset-0 z-0 flex flex-row justify-center overflow-hidden bg-linear-to-t from-indigo-900 to-indigo-950">
-      <style>{`
-        @keyframes meteor {
-          0% { transform: translateY(-20%) translateX(-50%); opacity: 0; }
-          12% { opacity: var(--opacity, 1); }
-          88% { opacity: var(--opacity, 1); }
-          100% { transform: translateY(300%) translateX(-50%); opacity: 0; }
-        }
-        @media (prefers-reduced-motion: reduce) {
-          .ab-beam { animation: none !important; opacity: 0 !important; }
-        }
-      `}</style>
-
       {/* soft glow */}
       <div
         style={{

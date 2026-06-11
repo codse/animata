@@ -2,6 +2,8 @@ import { motion, useAnimation } from "motion/react";
 import type React from "react";
 import { useEffect, useRef, useState } from "react";
 
+import "./content-scan.css";
+
 interface ContentScannerProps {
   content: string;
   highlightWords: string[];
@@ -227,20 +229,6 @@ const ContentScanner: React.FC<ContentScannerProps> = ({
           </div>
         </div>
       </div>
-
-      <style>{`
-        .highlight {
-          transition: background-color 0.3s ease;
-          box-decoration-break: clone;
-          -webkit-box-decoration-break: clone;
-        }
-        .highlight.active {
-          background-color: #DAD9FE;
-        }
-        .scanned-text {
-          color: #4B0082;
-        }
-      `}</style>
     </div>
   );
 };

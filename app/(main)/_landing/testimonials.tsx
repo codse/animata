@@ -61,7 +61,7 @@ function Testimonial({ comment, author }: { comment: string; author: string }) {
 export default function Testimonials() {
   return (
     <div className="border-t border-border py-20 sm:py-24 lg:py-32">
-      <div className="mx-auto max-w-6xl px-6">
+      <div className="mx-auto max-w-7xl px-6">
         <div className="mb-12 sm:mb-14">
           <h2 className="font-[family-name:var(--font-display)] text-[clamp(28px,5vw,44px)] leading-[1] text-foreground">
             Loved by developers

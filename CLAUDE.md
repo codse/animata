@@ -8,13 +8,16 @@ Animata is a free, open-source library of animated React components built with N
 
 - Components go in `animata/<category>/<name>.tsx` with a matching `<name>.stories.tsx`
 - Use `cn()` from `@/lib/utils` for class merging — never raw string concatenation
-- CSS animations belong in inline `<style>` blocks inside the component (see `marquee.tsx`)
-- No CSS modules, no styled-components — Tailwind only
-- Fonts: `--font-display` = Young Serif (headings/display), `--font-sans` = IBM Plex Sans (body), `--font-mono` = Lilex
+- Tailwind for layout, color, spacing, and transitions on the component itself
+- Co-located `<name>.css` imported from the TSX for keyframes, pseudo-elements, and selectors Tailwind cannot express (see `roll-text.tsx`, `metis-text.tsx`)
+- No inline `<style>` blocks — use co-located `<name>.css` imported from the TSX (see `marquee.tsx`, `roll-text.tsx`)
+- No CSS modules, no styled-components
+- Fonts: `--font-display` = Instrument Sans (headings/display), `--font-sans` = IBM Plex Sans (body), `--font-mono` = Lilex
 - Brand yellow: `#ffcc00` (from logo) — use for highlights and badges
 - shadcn registry URL format: `https://animata.design/r/{category}/{name}.json` — always use this in docs/changelog, never bare `npx shadcn add component-name`
 - Theme accent: `hsl(var(--accent))` = purple/violet
 - All new components must be theme-responsive (light + dark)
+- **New component category?** Add a category glyph for `/components` — read `content/docs/contributing/category-glyphs.mdx` (three-shade tokens, stroke tiers, `cg-motion` hover). Full repo spec: `content/docs/contributing/category-glyphs-spec.md`. Do not put spec markdown under `animata/` (webpack lazy-loads that tree).
 
 ## Changelog rule — ALWAYS update this
 
@@ -71,6 +74,10 @@ Add to the relevant `YYYY-MM.mdx` file. No need to touch the index unless the su
 
 ```text
 animata/               # Component source (copy-paste friendly)
+  skeleton/
+    category-glyphs.tsx    # /components tile SVG pictograms (GLYPHS map)
+    category-glyphs.css    # cg-motion base + SVG scale/rotate hover exceptions
+    category-skeleton.tsx  # Tile frame + shade tokens
   container/           # Layout wrappers (marquee, dock, ribbon…)
   text/                # Text animation effects
   button/              # Button variants
@@ -87,7 +94,9 @@ content/docs/
   changelog/
     index.mdx          # overview + table of all months — ← KEEP THIS UPDATED
     YYYY-MM.mdx        # one file per month (e.g. 2026-04.mdx)
-  contributing/        # Contributor guides
+  contributing/
+    category-glyphs.mdx      # Category tile SVG guide (published)
+    category-glyphs-spec.md  # Full spec — keep in sync; not under animata/
 config/
   docs.ts              # Sidebar nav config — register new component categories here
 styles/globals.css     # Tailwind v4 theme tokens

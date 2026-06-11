@@ -49,7 +49,7 @@ type Story = StoryObj<typeof meta>;
 export const Primary: Story = {
   render: () => (
     <FooterGradientFrame>
-      <SiblingFocusNav aria-label="Footer links" className="flex-wrap gap-x-6 gap-y-2">
+      <SiblingFocusNav aria-label="Footer links" className="flex-wrap">
         {FOOTER_LINKS.map((label) => (
           <SiblingFocusNav.Link key={label} href="#" className={footerLinkClassName}>
             <ArrowRight
@@ -77,8 +77,9 @@ export const Blur: Story = {
     >
       <SiblingFocusNav
         mode="blur"
+        spacingAxis="none"
         aria-label="Studio navigation"
-        className="flex-wrap gap-x-8 gap-y-3 sm:gap-x-10"
+        className="flex-wrap [&>a:not(:last-child)]:pe-8 sm:[&>a:not(:last-child)]:pe-10"
       >
         {["Work", "Studio", "Journal", "Contact"].map((label) => (
           <SiblingFocusNav.Link

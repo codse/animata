@@ -1,0 +1,66 @@
+---
+title: Metis text
+description: Hover draws an underline in from the left; on exit it retracts back out to the right.
+labels: ["requires interaction", "hover"]
+author: sudhashrestha
+---
+
+<ComponentPreview name="text-metis-text--primary" />
+
+## Installation
+
+### CLI
+
+<RegistryInstall category="text" name="metis-text" />
+
+The CLI installs `metis-text.tsx` and `metis-text.css` together.
+
+### Manual
+
+<Steps>
+
+<Step>Run the following command</Step>
+
+```bash
+mkdir -p animata/text && touch animata/text/metis-text.tsx animata/text/metis-text.css
+```
+
+<Step>Paste the code</Step>
+
+```jsx file=<rootDir>/animata/text/metis-text.css
+
+```
+
+```jsx file=<rootDir>/animata/text/metis-text.tsx
+
+```
+
+</Steps>
+
+## Usage
+
+```tsx
+import MetisText from "@/animata/text/metis-text";
+
+<MetisText className="text-sm text-foreground">About us</MetisText>
+```
+
+Inside a card or list row, pass `groupHover` so the line follows the whole link, not just the label. Put `truncate` or `line-clamp-*` on `labelClassName` — if you clip the root, the underline gets clipped too.
+
+```tsx
+<a href="..." className="group block">
+  <MetisText groupHover labelClassName="truncate text-sm" className="text-foreground">
+    Site title
+  </MetisText>
+</a>
+```
+
+## How it works
+
+Layout classes (`relative`, `inline-block`, `max-w-full`, `block` on the label) live on the TSX via Tailwind. The Metis scaleX underline — `::after`, transform-origin flip on enter/exit, and `.group` hover — lives in `metis-text.css` because pseudo-elements and origin swaps are awkward in utility classes alone.
+
+## Credits
+
+Built by [sudha](https://github.com/sudhashrestha)
+
+Underline pattern from Codrops [Line Hover Styles](https://github.com/codrops/LineHoverStyles/) (Metis effect).

@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @import "tw-animate-css";
+@import "../animata/text/text-animator-demo.css";
 
 @custom-variant dark (&:where(.dark, .dark *));
 
@@ -109,6 +110,12 @@
   --animate-led: led 100ms ease-in-out;
   --animate-float: float 3s ease-in-out infinite;
   --animate-rotate-full: rotate-full 45s linear infinite;
+
+  /* Category glyphs — must live here; @theme inline in category-glyphs.css (@reference) does not emit animate-cg-* */
+  --animate-cg-ping: cg-ping 1.4s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+  --animate-cg-bounce: cg-bounce 1s ease-in-out infinite;
+  --animate-cg-shimmer: cg-shimmer 1.2s ease-in-out infinite;
+  --animate-cg-twinkle: cg-twinkle 0.9s ease-in-out infinite;
 
   @keyframes fill {
     0% {
@@ -402,6 +409,46 @@
       transform: translateY(0);
     }
   }
+
+  @keyframes cg-ping {
+    0%,
+    100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.12);
+    }
+  }
+
+  @keyframes cg-bounce {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(2.5px);
+    }
+  }
+
+  @keyframes cg-shimmer {
+    0%,
+    100% {
+      opacity: 0.45;
+    }
+    50% {
+      opacity: 1;
+    }
+  }
+
+  @keyframes cg-twinkle {
+    0%,
+    100% {
+      transform: scale(1) rotate(0deg);
+    }
+    50% {
+      transform: scale(1.25) rotate(20deg);
+    }
+  }
 }
 
 @layer base {
@@ -443,6 +490,10 @@
     /* Text */
     --text-secondary: 0 0% 43%;
 
+    /* Ink — shared by docs callouts, category glyphs, etc. */
+    --ink: #76756f;
+    --ink-faint: #e3e3e3;
+
     /* Links */
     --link: 210 100% 40%;
     --link-hover: 210 100% 32%;
@@ -451,6 +502,16 @@
     --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
     --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.06), 0 4px 16px rgba(0, 0, 0, 0.04);
     --shadow-lg: 0 4px 12px rgba(0, 0, 0, 0.06), 0 12px 32px rgba(0, 0, 0, 0.08);
+
+    /* Footer band — light (Apple-style gray) */
+    --footer-surface: #f5f5f7;
+    --footer-ink: #0f1d42;
+    --footer-ink-muted: #1a2d5c;
+    --footer-accent: #1a4fff;
+    --footer-gold: #ffcc00;
+    --footer-category-title: #1d1d1f;
+    --footer-category-link: #515154;
+    --footer-stamp: #9f9f9f;
   }
 
   /* ─── DARK — Opal inspired: pure black, minimal, precise ─── */
@@ -481,6 +542,9 @@
     --surface-dark: 0 0% 2%;
     --text-secondary: 0 0% 55%;
 
+    --ink: #e3e3e3;
+    --ink-faint: #76756f;
+
     /* Links */
     --link: 262 80% 70%;
     --link-hover: 262 80% 80%;
@@ -489,6 +553,16 @@
     --shadow-sm: none;
     --shadow-md: none;
     --shadow-lg: none;
+
+    /* Footer band — dark (Opal black + brand gold accents) */
+    --footer-surface: #1d1d1f;
+    --footer-ink: #f5f5f7;
+    --footer-ink-muted: #86868b;
+    --footer-accent: #ffcc00;
+    --footer-gold: #ffcc00;
+    --footer-category-title: #f5f5f7;
+    --footer-category-link: #86868b;
+    --footer-stamp: #48484a;
   }
 }
 

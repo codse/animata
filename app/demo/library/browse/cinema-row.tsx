@@ -153,7 +153,7 @@ const PREMIERES = [
 ] as const;
 
 function CinemaContent({ className, children }: { className?: string; children: React.ReactNode }) {
-  return <div className={cn("mx-auto w-full max-w-6xl px-5 sm:px-8", className)}>{children}</div>;
+  return <div className={cn("mx-auto w-full max-w-7xl px-5 sm:px-8", className)}>{children}</div>;
 }
 
 function BackdropSlide({ title, image }: { title: string; image: string }) {

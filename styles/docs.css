@@ -1,15 +1,19 @@
 @reference "./globals.css";
 
 .docs-shell {
-  --font-docs:
-    "Instrument Sans Variable", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
-    "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-
-  font-family: var(--font-docs);
-  font-feature-settings: "ss02", "ss09";
+  font-family: var(--font-display);
   font-optical-sizing: auto;
 }
 
 .docs-shell .font-heading {
-  font-family: var(--font-docs);
+  font-family: var(--font-display);
+}
+
+.docs-content {
+  font-feature-settings: "ss02", "ss09";
+}
+
+.docs-sidebar-scroller {
+  scrollbar-width: thin;
+  scrollbar-color: hsl(var(--border)) transparent;
 }

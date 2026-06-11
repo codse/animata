@@ -1,0 +1,16 @@
+@layer components {
+  .highlight {
+    transition: background-color 0.3s ease;
+    box-decoration-break: clone;
+    -webkit-box-decoration-break: clone;
+  }
+
+  .highlight.active {
+    background-color: #ffcc00;
+    color: hsl(var(--foreground));
+  }
+
+  .scanned-text {
+    color: hsl(var(--foreground));
+  }
+}

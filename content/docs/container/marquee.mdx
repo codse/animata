@@ -17,33 +17,19 @@ author: harimanok_
 
 <Steps>
 
-<Step>Add to your CSS</Step>
-```css
-@keyframes marquee-x {
-  from { transform: translateX(0); }
-  to { transform: translateX(calc(-100% - var(--gap))); }
-}
-@keyframes marquee-y {
-  from { transform: translateY(0); }
-  to { transform: translateY(calc(-100% - var(--gap))); }
-}
-@theme {
-  --animate-marquee-horizontal: marquee-x var(--duration) infinite linear;
-  --animate-marquee-vertical: marquee-y var(--duration) linear infinite;
-}
-```
-
 <Step>Run the following command</Step>
 
-It will create a new file called `marquee.tsx` inside the `components/animata/container` directory.
+It will create `marquee.tsx` and the co-located `marquee.css` inside `components/animata/container`.
 
 ```bash
-mkdir -p components/animata/container && touch components/animata/container/marquee.tsx
+mkdir -p components/animata/container && touch components/animata/container/marquee.tsx components/animata/container/marquee.css
 ```
 
 <Step>Paste the code</Step>
 
-Open the newly created file and paste the following code:
+```jsx file=<rootDir>/animata/container/marquee.css
+
+```
 
 ```jsx file=<rootDir>/animata/container/marquee.tsx
 

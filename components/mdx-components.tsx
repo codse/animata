@@ -16,6 +16,8 @@ import { visit } from "unist-util-visit";
 import { VFile } from "vfile";
 import Modal from "@/animata/overlay/modal";
 import { Callout } from "@/components/callout";
+import { CategoryIndex } from "@/components/category-index";
+import { CategoryIndexGrid, CategoryIndexLink } from "@/components/category-index-grid";
 import { CodeBlockWrapper } from "@/components/code-block-wrapper";
 import { ComponentExample } from "@/components/component-example";
 import ComponentListItem from "@/components/component-list-item";
@@ -29,6 +31,7 @@ import { InView } from "@/components/in-view";
 import PreviewContainer from "@/components/preview-container";
 import { PropsTable } from "@/components/props-table";
 import { RegistryInstall } from "@/components/registry-install";
+import { TextAnimatorListDemo } from "@/components/text-animator-list-demo";
 import {
   Accordion,
   AccordionContent,
@@ -132,7 +135,21 @@ const postProcess = () => (tree: UnistTree) => {
         const rawString = pre.properties.__rawString__ as string | undefined;
 
         if (rawString?.startsWith("mkdir")) {
-          const path = rawString.split(" ").pop();
+          const trimmed = rawString.trim();
+          pre.properties.__unix__ = trimmed;
+
+          const touchMatch = trimmed.match(/^mkdir\s+-p\s+(.+?)\s+&&\s+touch\s+(.+)$/);
+          if (touchMatch) {
+            const dir = touchMatch[1].trim().replace(/^["']|["']$/g, "");
+            const files = touchMatch[2].trim().split(/\s+/);
+            pre.properties.__windows__ = [
+              `mkdir "${dir}"`,
+              ...files.map((file) => `type null > "${file}"`),
+            ].join(" && ");
+            return;
+          }
+
+          const path = trimmed.split(" ").pop();
           if (!path) {
             return;
           }
@@ -140,7 +157,6 @@ const postProcess = () => (tree: UnistTree) => {
           const filename = path.split("/").pop() ?? "";
           const dir = path.replace(`/${filename}`, "");
           pre.properties.__windows__ = `mkdir "${dir}" && type null > ${path}`;
-          pre.properties.__unix__ = `mkdir -p ${dir} && touch ${path}`;
         }
 
         if (rawString?.startsWith("npm install")) {
@@ -163,6 +179,7 @@ const components = {
   AlertTitle,
   AlertDescription,
   InView,
+  TextAnimatorListDemo,
   PreviewContainer,
   PreviewGrid: ({ children }: { children: React.ReactNode }) => (
     <div className="not-prose my-8 grid w-full grid-cols-1 gap-4 md:grid-cols-2">{children}</div>
@@ -341,6 +358,9 @@ const components = {
       {...props}
     />
   ),
+  CategoryIndex: (props: { category: string }) => <CategoryIndex {...props} />,
+  CategoryIndexGrid,
+  CategoryIndexLink,
   ComponentList: ({ children, className }: { children: React.ReactNode; className?: string }) => {
     return (
       <div className="@container">

@@ -1,48 +1,74 @@
-import { Tomorrow } from "next/font/google";
+"use client";
 
 import { cn } from "@/lib/utils";
 
-const tomorrow = Tomorrow({
-  subsets: ["latin"],
-  weight: ["800", "900"],
-  variable: "--font-tomorrow",
-});
+import "./glitch-text.css";
 
+export interface GlitchTextProps extends Omit<React.ComponentPropsWithoutRef<"span">, "children"> {
+  children: string;
+  /** Unitless multiplier on `--glitch-step`. @default 5 (via CSS) */
+  intensity?: number;
+  /** Base offset unit — em scales with font size. @default "0.01em" */
+  step?: string;
+  /** Glitch burst cycle. Numbers are seconds (`2.5` → `2.5s`). @default 2.5 */
+  duration?: number | string;
+  /** Main layer color (on top). @default "#ffffff" */
+  baseColor?: string;
+  /** Back ghost layer A. @default "#ff00ff" */
+  colorA?: string;
+  /** Back ghost layer B. @default "#00ffff" */
+  colorB?: string;
+  /** Ghost layer blend mode. @default "screen" */
+  blendMode?: "screen" | "normal";
+}
+
+function glitchDuration(duration: number | string) {
+  return typeof duration === "number" ? `${duration}s` : duration;
+}
+
+/**
+ * RGB glitch via stacked text layers — ghosts animate transform only (compositor),
+ * base stays full-color on top. Props map to CSS variables; defaults live in `glitch-text.css`.
+ */
 export default function GlitchText({
-  text = "1000 Stars",
+  children,
   className,
-  starCount = 50,
-}: {
-  text: string;
-  className?: string;
-  starCount?: number;
-}) {
+  intensity,
+  step,
+  duration,
+  baseColor,
+  colorA,
+  colorB,
+  blendMode,
+  style,
+  ...props
+}: GlitchTextProps) {
   return (
-    <div className="full-content relative flex items-center justify-center overflow-hidden">
-      <div className="relative flex flex-col items-center justify-center bg-linear-to-b from-[#4B0082] via-[#3B0066] to-[#2B004A]">
-        {[...Array(starCount)].map((_, i) => (
-          <div
-            key={i}
-            className="star absolute aspect-square animate-[twinkle_5s_infinite] rounded-full bg-[#fafafa] opacity-75"
-            style={{
-              width: `${Math.random() * 4}px`,
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              animationDelay: `${Math.random() * 5}s`,
-            }}
-          />
-        ))}
-        <h1
-          className={cn(
-            "glitch-text z-10 animate-[glitch_0.5s_infinite] p-6 text-4xl font-black md:p-12 md:text-8xl",
-            className,
-            tomorrow.className,
-          )}
-          aria-label={text}
-        >
-          {text}
-        </h1>
-      </div>
-    </div>
+    <span
+      {...props}
+      className={cn("glitch-text", className)}
+      style={
+        {
+          ...(intensity !== undefined && { "--glitch-intensity": intensity }),
+          ...(step !== undefined && { "--glitch-step": step }),
+          ...(duration !== undefined && {
+            "--glitch-duration": glitchDuration(duration),
+          }),
+          ...(baseColor !== undefined && { "--glitch-color-base": baseColor }),
+          ...(colorA !== undefined && { "--glitch-color-a": colorA }),
+          ...(colorB !== undefined && { "--glitch-color-b": colorB }),
+          ...(blendMode !== undefined && { "--glitch-blend-mode": blendMode }),
+          ...style,
+        } as React.CSSProperties
+      }
+    >
+      <span aria-hidden className="glitch-text__ghost-a select-none">
+        {children}
+      </span>
+      <span aria-hidden className="glitch-text__ghost-b select-none">
+        {children}
+      </span>
+      <span className="glitch-text__base">{children}</span>
+    </span>
   );
 }

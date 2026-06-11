@@ -6,6 +6,8 @@ import { useCallback, useEffect, useId, useRef, useState } from "react";
 
 import { cn } from "@/lib/utils";
 
+import "./flower-menu.css";
+
 type MenuItem = {
   icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
   href: string;
@@ -200,18 +202,6 @@ export default function FlowerMenu({
       style={{ width: containerSize, height: containerSize, minHeight: containerSize }}
       {...props}
     >
-      <style>{`
-        .flower-petal {
-          transition-property: transform, opacity;
-          transition-timing-function: cubic-bezier(0.2, 0, 0, 1);
-        }
-        @media (prefers-reduced-motion: reduce) {
-          .flower-petal {
-            transition: none !important;
-          }
-        }
-      `}</style>
-
       <MenuToggler
         isOpen={isOpen}
         onToggle={toggle}

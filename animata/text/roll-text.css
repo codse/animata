@@ -1,0 +1,86 @@
+@layer components {
+  .roll-text {
+    --roll-duration: 450ms;
+    --roll-duration-reduced: 150ms;
+    --roll-ease: cubic-bezier(0.77, 0, 0.175, 1);
+    --roll-line-height: 1;
+    font-kerning: none;
+    line-height: var(--roll-line-height);
+  }
+
+  .roll-text:focus-visible {
+    outline: 2px solid hsl(var(--ring));
+    outline-offset: 3px;
+  }
+
+  .roll-text__track {
+    display: inline;
+    line-height: inherit;
+    white-space: pre;
+  }
+
+  /* inline-grid + overflow:hidden keeps the text baseline (from the sizer in
+     row 1) while clipping the translated stack. */
+  .roll-unit {
+    position: relative;
+    display: inline-grid;
+    overflow: hidden;
+    vertical-align: baseline;
+    font-kerning: none;
+    line-height: inherit;
+  }
+
+  .roll-unit__sizer,
+  .roll-unit__stack {
+    grid-area: 1 / 1;
+    line-height: inherit;
+  }
+
+  .roll-unit__sizer {
+    visibility: hidden;
+    pointer-events: none;
+    user-select: none;
+    white-space: pre;
+  }
+
+  .roll-unit__stack {
+    position: absolute;
+    inset-inline: 0;
+    top: 0;
+    display: flex;
+    flex-direction: column;
+    white-space: pre;
+    transform: translateY(0);
+  }
+
+  .roll-unit__line {
+    display: block;
+    line-height: inherit;
+    white-space: inherit;
+  }
+
+  @keyframes roll-stack-open {
+    from {
+      transform: translateY(0);
+    }
+
+    to {
+      transform: translateY(-50%);
+    }
+  }
+
+  .roll-text--animating .roll-unit__stack {
+    animation: roll-stack-open var(--roll-unit-duration, var(--roll-duration)) var(--roll-ease)
+      var(--roll-delay, 0ms) forwards;
+  }
+
+  .roll-text--open:not(.roll-text--animating) .roll-unit__stack {
+    transform: translateY(-50%);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .roll-text--animating .roll-unit__stack {
+      animation-duration: var(--roll-duration-reduced);
+    }
+  }
+}
