@@ -13,8 +13,8 @@ Adding a **new component category** (not just a new component inside an existing
 1. Register the category in `config/docs.ts` with `href: "/docs/<slug>"`.
 2. Add `content/docs/<slug>/index.mdx`.
 3. Add a `GLYPHS["<slug>"]` entry in `animata/skeleton/category-glyphs.tsx`.
-4. Add hover CSS in `category-glyphs.css` for any animated parts.
-5. Add a story in `category-skeleton.stories.tsx`.
+4. Compose hover motion on animated parts in `category-glyphs.tsx` — `cn("cg-motion", …)` plus Tailwind `motion-safe:group-hover/cg:*` utilities (see below).
+5. Add a story in `category-skeleton.stories.tsx` (wrap with `group/cg` like the existing decorator).
 
 The `/components` grid picks up categories automatically from `lib/component-categories.ts` when the published count is greater than zero.
 
@@ -26,7 +26,7 @@ The `/components` grid picks up categories automatically from `lib/component-cat
 
 ## Three shades only
 
-Never hardcode hex in glyph markup. Use the tokens from `category-glyphs.css`:
+Never hardcode hex in glyph markup. Shade tokens (`--cg-ink`, `--cg-soft`, `--cg-faint`) are set on the tile SVG in `category-skeleton.tsx`:
 
 | Token | Role |
 |-------|------|
@@ -56,7 +56,7 @@ Use round caps and joins on all strokes.
 
 ## Hover animations
 
-Tag animated parts with `className="cg cg-<name>"`. Rules live in `category-glyphs.css` under `.group:hover`, wrapped in `prefers-reduced-motion: no-preference`. The motion should echo the category (scroll rows move, button pill expands, container content marquees).
+Tag animated parts with `className={cn("cg-motion", ...)}` and compose hover transforms as Tailwind utility classes on the same element (e.g. `motion-safe:group-hover/cg:scale-x-125`). The tile ancestor must be `group/cg` (`Link` on `/components`) so those variants fire. `category-glyphs.css` does **not** define hover transforms — it only sets `transform-box`, `transform-origin`, and transition properties on `.cg-motion`, gated by `prefers-reduced-motion`. Specialized bases: `cg-motion-frame` (keyframes, no transform transition), `cg-progress-arc` (stroke-dasharray only), `cg-feature-tilt` (resting tilt). The motion should echo the category (scroll rows move, button pill expands, container content marquees).
 
 ## Quick checklist
 
