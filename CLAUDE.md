@@ -12,11 +12,12 @@ Animata is a free, open-source library of animated React components built with N
 - Co-located `<name>.css` imported from the TSX for keyframes, pseudo-elements, and selectors Tailwind cannot express (see `roll-text.tsx`, `metis-text.tsx`)
 - Inline `<style>` blocks are fine for small self-contained keyframes when a separate file would be overkill (see `marquee.tsx`)
 - No CSS modules, no styled-components
-- Fonts: `--font-display` = Young Serif (headings/display), `--font-sans` = IBM Plex Sans (body), `--font-mono` = Lilex
+- Fonts: `--font-display` = Instrument Sans (headings/display), `--font-sans` = IBM Plex Sans (body), `--font-mono` = Lilex
 - Brand yellow: `#ffcc00` (from logo) — use for highlights and badges
 - shadcn registry URL format: `https://animata.design/r/{category}/{name}.json` — always use this in docs/changelog, never bare `npx shadcn add component-name`
 - Theme accent: `hsl(var(--accent))` = purple/violet
 - All new components must be theme-responsive (light + dark)
+- **New component category?** Add a category glyph for `/components` — read `animata/skeleton/CATEGORY-GLYPHS.md` (three-shade tokens, stroke tiers, hover spec)
 
 ## Changelog rule — ALWAYS update this
 
@@ -73,6 +74,8 @@ Add to the relevant `YYYY-MM.mdx` file. No need to touch the index unless the su
 
 ```text
 animata/               # Component source (copy-paste friendly)
+  skeleton/
+    CATEGORY-GLYPHS.md # Spec for /components category tile SVGs — read before new categories
   container/           # Layout wrappers (marquee, dock, ribbon…)
   text/                # Text animation effects
   button/              # Button variants

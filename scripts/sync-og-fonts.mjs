@@ -14,8 +14,8 @@ const FILES = [
   ["@fontsource/outfit/files/outfit-latin-600-normal.woff2", "outfit-latin-600-normal.woff2"],
   ["@fontsource/outfit/files/outfit-latin-700-normal.woff2", "outfit-latin-700-normal.woff2"],
   [
-    "@fontsource/young-serif/files/young-serif-latin-400-normal.woff2",
-    "young-serif-latin-400-normal.woff2",
+    "@fontsource-variable/instrument-sans/files/instrument-sans-latin-wght-normal.woff2",
+    "instrument-sans-latin-wght-normal.woff2",
   ],
   [
     "@fontsource/ibm-plex-sans/files/ibm-plex-sans-latin-400-normal.woff2",

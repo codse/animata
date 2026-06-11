@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { IBM_Plex_Sans, Young_Serif } from "next/font/google";
+import { IBM_Plex_Sans } from "next/font/google";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 
 import { ThemeProvider } from "@/components/providers";
@@ -8,18 +8,13 @@ import { brandFont } from "@/lib/brand-font";
 import { cn } from "@/lib/utils";
 
 import "@fontsource-variable/lilex";
+import "@/styles/fonts.css";
 import "@/styles/globals.css";
 
 const ibmPlex = IBM_Plex_Sans({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
   variable: "--font-sans",
-});
-
-const youngSerif = Young_Serif({
-  subsets: ["latin"],
-  weight: ["400"],
-  variable: "--font-display",
 });
 
 export const metadata: Metadata = {
@@ -93,7 +88,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${ibmPlex.variable} ${youngSerif.variable} ${brandFont.variable}`}
+      className={`${ibmPlex.variable} ${brandFont.variable}`}
     >
       <head />
       <body className={cn("min-h-screen bg-background antialiased", ibmPlex.className)}>
