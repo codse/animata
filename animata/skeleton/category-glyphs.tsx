@@ -11,6 +11,8 @@ import type { ReactNode } from "react";
 
 import { cn } from "@/lib/utils";
 
+import "./category-glyphs.css";
+
 const INK = "var(--cg-ink)";
 const SOFT = "var(--cg-soft)";
 const FAINT = "var(--cg-faint)";
@@ -896,7 +898,7 @@ const GLYPHS: Record<string, ReactNode> = {
   /** Tilted feature card + highlight sparkle */
   "feature-cards": (
     <>
-      <g className="cg-feature-tilt motion-safe:group-hover/cg:rotate-0">
+      <g className={cn("cg-feature-tilt", "motion-safe:group-hover/cg:rotate-0")}>
         <rect
           x="16"
           y="18"

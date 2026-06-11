@@ -402,51 +402,6 @@
       transform: translateY(0);
     }
   }
-
-  @keyframes cg-ping {
-    0%,
-    100% {
-      transform: scale(1);
-    }
-    50% {
-      transform: scale(1.12);
-    }
-  }
-
-  @keyframes cg-bounce {
-    0%,
-    100% {
-      transform: translateY(0);
-    }
-    50% {
-      transform: translateY(2.5px);
-    }
-  }
-
-  @keyframes cg-shimmer {
-    0%,
-    100% {
-      opacity: 0.45;
-    }
-    50% {
-      opacity: 1;
-    }
-  }
-
-  @keyframes cg-twinkle {
-    0%,
-    100% {
-      transform: scale(1) rotate(0deg);
-    }
-    50% {
-      transform: scale(1.25) rotate(20deg);
-    }
-  }
-
-  --animate-cg-ping: cg-ping 1.4s cubic-bezier(0.22, 1, 0.36, 1) infinite;
-  --animate-cg-bounce: cg-bounce 1s ease-in-out infinite;
-  --animate-cg-shimmer: cg-shimmer 1.2s ease-in-out infinite;
-  --animate-cg-twinkle: cg-twinkle 0.9s ease-in-out infinite;
 }
 
 @layer base {
@@ -629,59 +584,6 @@
   &::after {
     content: "";
     @apply absolute -inset-4 rounded-xl border shadow-xl;
-  }
-}
-
-/** Category glyph SVG — shared motion base (pair with group/cg + group-hover/cg:* on parts). */
-@utility cg-motion {
-  transform-box: fill-box;
-  transform-origin: center;
-
-  @media (prefers-reduced-motion: no-preference) {
-    /* TW v4 utilities animate translate/scale/rotate — not transform alone */
-    transition:
-      translate 0.5s cubic-bezier(0.22, 1, 0.36, 1),
-      scale 0.5s cubic-bezier(0.22, 1, 0.36, 1),
-      rotate 0.5s cubic-bezier(0.22, 1, 0.36, 1),
-      transform 0.5s cubic-bezier(0.22, 1, 0.36, 1),
-      fill 0.5s ease,
-      opacity 0.5s ease;
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    transition: none;
-  }
-}
-
-/** Keyframe-driven glyph parts — no transform transition (avoids fighting animation). */
-@utility cg-motion-frame {
-  transform-box: fill-box;
-  transform-origin: center;
-}
-
-/** Progress ring arc — stroke only; never add transform-box (conflicts with SVG rotate). */
-@utility cg-progress-arc {
-  @media (prefers-reduced-motion: no-preference) {
-    transition: stroke-dasharray 0.7s cubic-bezier(0.22, 1, 0.36, 1);
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    transition: none;
-  }
-}
-
-/** Feature-card glyph — resting tilt, straightens on group-hover/cg. */
-@utility cg-feature-tilt {
-  transform-box: fill-box;
-  transform-origin: center;
-  rotate: -8deg;
-
-  @media (prefers-reduced-motion: no-preference) {
-    transition: rotate 0.5s cubic-bezier(0.22, 1, 0.36, 1);
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    transition: none;
   }
 }
 
