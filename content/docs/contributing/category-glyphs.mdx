@@ -4,39 +4,39 @@ date: 2026-06-10
 description: How to design and ship SVG pictograms for the /components category grid.
 ---
 
-The `/components` page shows one skeleton tile per docs category. Each tile is an SVG pictogram plus a subtle hover animation. This page summarizes the constraints; the **canonical spec** lives in the repo at `content/docs/contributing/category-glyphs-spec.md` — read that before editing glyphs.
+Each category on `/components` gets a skeleton tile: a small SVG pictogram with a light hover animation. If you are adding or editing one, start here.
 
 ## When you need a new glyph
 
-Adding a **new component category** (not just a new component inside an existing one) requires:
+You only need this when you add a **new component category** (a new sidebar section), not when you add a component to an existing one.
 
 1. Register the category in `config/docs.ts` with `href: "/docs/<slug>"`.
 2. Add `content/docs/<slug>/index.mdx`.
-3. Add a `GLYPHS["<slug>"]` entry in `animata/skeleton/category-glyphs.tsx`.
-4. Compose hover motion on animated parts in `category-glyphs.tsx` — `cn("cg-motion", …)` plus Tailwind `motion-safe:group-hover/cg:*` utilities (see below).
-5. Add a story in `category-skeleton.stories.tsx` (wrap with `group/cg` like the existing decorator).
+3. Add `GLYPHS["<slug>"]` in `animata/skeleton/category-glyphs.tsx`.
+4. Wire hover motion on any animated parts in that same file: `cn("cg-motion", …)` plus Tailwind classes like `motion-safe:group-hover/cg:scale-x-125` (see Hover animations).
+5. Add a story in `category-skeleton.stories.tsx`. The decorator already wraps stories in `group/cg`.
 
-The `/components` grid picks up categories automatically from `lib/component-categories.ts` when the published count is greater than zero.
+Once the category has at least one published component, `/components` picks it up automatically via `lib/component-categories.ts`.
 
 ## Canvas
 
-- ViewBox `0 0 64 64`, optically centered on `(32, 32)`.
-- Stroke-first pictograms — literal symbols (carousel = slide + side peeks, overlay = modal over dimmed page), not abstract shapes.
-- Keep ink inside roughly `(8, 8)`–`(56, 56)`.
+- ViewBox `0 0 64 64`, centered on `(32, 32)`.
+- Stroke-first pictograms. Draw the thing literally (carousel = slide plus side peeks, overlay = modal on a dimmed page), not abstract decoration.
+- Keep ink inside roughly `(8, 8)` to `(56, 56)`.
 
 ## Three shades only
 
-Never hardcode hex in glyph markup. Shade tokens (`--cg-ink`, `--cg-soft`, `--cg-faint`) are set on the tile SVG in `category-skeleton.tsx`:
+Do not hardcode hex in glyph markup. The tile SVG in `category-skeleton.tsx` sets `--cg-ink`, `--cg-soft`, and `--cg-faint`.
 
 | Token | Role |
 |-------|------|
-| **INK** (`--cg-ink`) | Focal / active / interactive — primary strokes, front card, open accordion row |
-| **SOFT** (`--cg-soft`) | Supporting content — 50% mix of ink; secondary bars, mid layers |
-| **FAINT** (`--cg-faint`) | Surfaces, tracks, distant layers; knockouts on INK fills (button label, hero CTA) |
+| INK (`--cg-ink`) | What you look at first: primary strokes, front card, open accordion row |
+| SOFT (`--cg-soft`) | Secondary content: 50% ink mix, mid layers, supporting bars |
+| FAINT (`--cg-faint`) | Surfaces and tracks; also knockouts on INK fills (button label, hero CTA) |
 
-Light mode: ink = `#76756f`, faint = `#e3e3e3`. Dark mode flips ink and faint; soft re-derives from ink.
+Light mode uses ink `#76756f` and faint `#e3e3e3`. Dark mode swaps those; soft always derives from ink.
 
-Shades communicate **layers**, not decoration. Do not use opacity to invent a fourth shade — crossfade fills between tokens on hover instead.
+Each shade should read as a layer (foreground, content, surface), not as decoration. Do not fake a fourth shade with opacity. On hover, crossfade fills between tokens instead.
 
 ## Stroke tiers
 
@@ -44,26 +44,50 @@ Shades communicate **layers**, not decoration. Do not use opacity to invent a fo
 |--------|-----|
 | 2.2 | Primary frames and seams |
 | 2 | Interior details (hands, chevrons, inner rings) |
-| 1.6 | Micro accessories (×, ±, avatar rings) |
+| 1.6 | Small extras (×, ±, avatar rings) |
 
-Use round caps and joins on all strokes.
+Round caps and joins on all strokes.
 
 ## Corner radius
 
 - Card-like frames: `rx={4}`.
 - Pills: fully rounded (`rx = height / 2`).
-- Clip paths inside a frame: `outer rx − inset`.
+- Clip paths inside a frame: outer `rx` minus inset.
 
 ## Hover animations
 
-Tag animated parts with `className={cn("cg-motion", ...)}` and compose hover transforms as Tailwind utility classes on the same element (e.g. `motion-safe:group-hover/cg:scale-x-125`). The tile ancestor must be `group/cg` (`Link` on `/components`) so those variants fire. `category-glyphs.css` does **not** define hover transforms — it only sets `transform-box`, `transform-origin`, and transition properties on `.cg-motion`, gated by `prefers-reduced-motion`. Specialized bases: `cg-motion-frame` (keyframes, no transform transition), `cg-progress-arc` (stroke-dasharray only), `cg-feature-tilt` (resting tilt). The motion should echo the category (scroll rows move, button pill expands, container content marquees).
+Put `cg-motion` on any part that moves, then add Tailwind hover utilities on the same element:
 
-## Quick checklist
+```tsx
+className={cn("cg-motion", "origin-left motion-safe:group-hover/cg:scale-x-125")}
+```
 
-- Literal, symmetric, readable at small size
-- Only INK / SOFT / FAINT
-- Stroke tier matches importance
-- Clear focal layer (one INK hero per glyph)
-- Story + light/dark check on `/components`
+The parent tile must be `group/cg` (the `Link` on `/components`, or the Storybook decorator) or the hover classes never run.
 
-See `content/docs/contributing/category-glyphs-spec.md` for the full spec, reference glyphs, and wiring details.
+`category-glyphs.css` does not define the hover transforms. It only sets `transform-box`, `transform-origin`, and transitions on `.cg-motion`, with `prefers-reduced-motion` respected. Other helpers when you need them:
+
+- `cg-motion-frame` for keyframe loops (no transform transition, so animation does not fight CSS transitions)
+- `cg-progress-arc` for stroke-dasharray only
+- `cg-feature-tilt` for a resting tilt that straightens on hover
+
+Pick motion that fits the category: scroll rows slide, button pills swell, container content marquees.
+
+## Reference glyphs
+
+| Category | Layer story | Hover idea |
+|----------|-------------|------------|
+| `card` | FAINT → SOFT → INK stack back to front | Fan apart |
+| `accordion` | Closed rows SOFT; open row INK + SOFT body | ± rotates; body → INK |
+| `overlay` | SOFT page bars behind; FAINT modal + INK CTA | Modal scales; page dims |
+| `container` | INK frame; SOFT/INK blocks clipped inside | Track marquees left |
+| `scroll` | INK → SOFT → FAINT rows; thumb at top | Rows translate up |
+| `button` | INK pill; FAINT knockout label | Pill scales; cursor presses |
+
+## Before you ship
+
+- Literal and symmetric; readable at small size
+- INK, SOFT, and FAINT only
+- Stroke weight matches importance
+- One clear INK focal element
+- Hover matches the category when you can
+- Story added; checked in light and dark on `/components`

@@ -157,4 +157,4 @@ className={cn(
 
 ## Docs mirror
 
-Published summary: [/docs/contributing/category-glyphs](/docs/contributing/category-glyphs).
+Published copy: [/docs/contributing/category-glyphs](/docs/contributing/category-glyphs). Keep this file in sync when you change the spec.
