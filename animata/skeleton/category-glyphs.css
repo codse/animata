@@ -1,52 +1,5 @@
 @reference "../../styles/globals.css";
 
-@theme inline {
-  @keyframes cg-ping {
-    0%,
-    100% {
-      transform: scale(1);
-    }
-    50% {
-      transform: scale(1.12);
-    }
-  }
-
-  @keyframes cg-bounce {
-    0%,
-    100% {
-      transform: translateY(0);
-    }
-    50% {
-      transform: translateY(2.5px);
-    }
-  }
-
-  @keyframes cg-shimmer {
-    0%,
-    100% {
-      opacity: 0.45;
-    }
-    50% {
-      opacity: 1;
-    }
-  }
-
-  @keyframes cg-twinkle {
-    0%,
-    100% {
-      transform: scale(1) rotate(0deg);
-    }
-    50% {
-      transform: scale(1.25) rotate(20deg);
-    }
-  }
-
-  --animate-cg-ping: cg-ping 1.4s cubic-bezier(0.22, 1, 0.36, 1) infinite;
-  --animate-cg-bounce: cg-bounce 1s ease-in-out infinite;
-  --animate-cg-shimmer: cg-shimmer 1.2s ease-in-out infinite;
-  --animate-cg-twinkle: cg-twinkle 0.9s ease-in-out infinite;
-}
-
 /** Category glyph SVG — shared motion base (pair with group/cg + group-hover/cg:* on parts). */
 .cg-motion {
   transform-box: fill-box;
@@ -54,11 +7,13 @@
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  /* TW v4 utilities animate translate/scale/rotate — not transform alone */
+  /* TW v4 utilities use individual transform properties — transition each one */
   .cg-motion {
     transition:
       translate 0.5s cubic-bezier(0.22, 1, 0.36, 1),
       scale 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+      scale-x 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+      scale-y 0.5s cubic-bezier(0.22, 1, 0.36, 1),
       rotate 0.5s cubic-bezier(0.22, 1, 0.36, 1),
       transform 0.5s cubic-bezier(0.22, 1, 0.36, 1),
       fill 0.5s ease,
@@ -107,5 +62,66 @@
 @media (prefers-reduced-motion: reduce) {
   .cg-feature-tilt {
     transition: none;
+  }
+}
+
+/**
+ * SVG scale-x / scale-y exceptions — TW v4 longhands (scale-x, scale-y) fail on stroke
+ * paths and bottom-anchored rects; unified transform here. Animations use Tailwind
+ * (animate-cg-* in globals.css). Everything else: group-hover/cg:* in TSX.
+ */
+@media (prefers-reduced-motion: no-preference) {
+  .cg-text-line {
+    transform-origin: left center;
+  }
+  .group\/cg:hover .cg-text-line-1 {
+    transform: scaleX(1.25);
+  }
+  .group\/cg:hover .cg-text-line-2 {
+    transform: scaleX(1.5);
+    transition-delay: 60ms;
+  }
+  .group\/cg:hover .cg-text-line-3 {
+    transform: scaleX(1.8);
+    transition-delay: 120ms;
+  }
+
+  .cg-list-bar {
+    transform-origin: left center;
+  }
+  .group\/cg:hover .cg-list-grow {
+    transform: scaleX(1.3);
+  }
+  .group\/cg:hover .cg-list-shrink {
+    transform: scaleX(0.7);
+  }
+
+  .cg-graph-bar {
+    transform-origin: center bottom;
+  }
+  .group\/cg:hover .cg-graph-bar {
+    transform: scaleY(1.18);
+  }
+  .group\/cg:hover .cg-graph-bar-2 {
+    transition-delay: 50ms;
+  }
+  .group\/cg:hover .cg-graph-bar-3 {
+    transition-delay: 100ms;
+  }
+  .group\/cg:hover .cg-graph-bar-4 {
+    transition-delay: 150ms;
+  }
+
+  .cg-widget-hour {
+    transform-origin: center bottom;
+  }
+  .cg-widget-minute {
+    transform-origin: 0% 0%;
+  }
+  .group\/cg:hover .cg-widget-hour {
+    transform: rotate(30deg);
+  }
+  .group\/cg:hover .cg-widget-minute {
+    transform: rotate(60deg);
   }
 }
