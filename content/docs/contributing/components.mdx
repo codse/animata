@@ -46,6 +46,8 @@ config/docs.ts - Add the new entry in docsConfig.sidebarNav
 
 Simply open the `config/docs.ts` file and paste the new entry in the `docsConfig.sidebarNav` array.
 
+If the new type is a **top-level category** (new sidebar section), you also need a category glyph for `/components`. Follow [category glyph tiles](/docs/contributing/category-glyphs) and `animata/skeleton/CATEGORY-GLYPHS.md`.
+
 ## Styling
 
 Use Tailwind on the component for layout and color. Put keyframes, pseudo-elements, and other rules Tailwind cannot express in a co-located `<name>.css` imported from the TSX — the CLI/registry ships both files. See [code guidelines — Styling](/docs/contributing/guidelines#styling).

@@ -1,0 +1,69 @@
+---
+title: Category glyph tiles
+date: 2026-06-10
+description: How to design and ship SVG pictograms for the /components category grid.
+---
+
+The `/components` page shows one skeleton tile per docs category. Each tile is an SVG pictogram plus a subtle hover animation. This page summarizes the constraints; the **canonical spec** lives in the repo at `animata/skeleton/CATEGORY-GLYPHS.md` — read that before editing glyphs.
+
+## When you need a new glyph
+
+Adding a **new component category** (not just a new component inside an existing one) requires:
+
+1. Register the category in `config/docs.ts` with `href: "/docs/<slug>"`.
+2. Add `content/docs/<slug>/index.mdx`.
+3. Add a `GLYPHS["<slug>"]` entry in `animata/skeleton/category-glyphs.tsx`.
+4. Add hover CSS in `category-glyphs.css` for any animated parts.
+5. Add a story in `category-skeleton.stories.tsx`.
+
+The `/components` grid picks up categories automatically from `lib/component-categories.ts` when the published count is greater than zero.
+
+## Canvas
+
+- ViewBox `0 0 64 64`, optically centered on `(32, 32)`.
+- Stroke-first pictograms — literal symbols (carousel = slide + side peeks, overlay = modal over dimmed page), not abstract shapes.
+- Keep ink inside roughly `(8, 8)`–`(56, 56)`.
+
+## Three shades only
+
+Never hardcode hex in glyph markup. Use the tokens from `category-glyphs.css`:
+
+| Token | Role |
+|-------|------|
+| **INK** (`--cg-ink`) | Focal / active / interactive — primary strokes, front card, open accordion row |
+| **SOFT** (`--cg-soft`) | Supporting content — 50% mix of ink; secondary bars, mid layers |
+| **FAINT** (`--cg-faint`) | Surfaces, tracks, distant layers; knockouts on INK fills (button label, hero CTA) |
+
+Light mode: ink = `#76756f`, faint = `#e3e3e3`. Dark mode flips ink and faint; soft re-derives from ink.
+
+Shades communicate **layers**, not decoration. Do not use opacity to invent a fourth shade — crossfade fills between tokens on hover instead.
+
+## Stroke tiers
+
+| Weight | Use |
+|--------|-----|
+| 2.2 | Primary frames and seams |
+| 2 | Interior details (hands, chevrons, inner rings) |
+| 1.6 | Micro accessories (×, ±, avatar rings) |
+
+Use round caps and joins on all strokes.
+
+## Corner radius
+
+- Card-like frames: `rx={4}`.
+- Pills: fully rounded (`rx = height / 2`).
+- Clip paths inside a frame: `outer rx − inset`.
+
+## Hover animations
+
+Tag animated parts with `className="cg cg-<name>"`. Rules live in `category-glyphs.css` under `.group:hover`, wrapped in `prefers-reduced-motion: no-preference`. The motion should echo the category (scroll rows move, button pill expands, container content marquees).
+
+## Quick checklist
+
+- Literal, symmetric, readable at small size
+- Only INK / SOFT / FAINT
+- Stroke tier matches importance
+- Clear focal layer (one INK hero per glyph)
+- Story + light/dark check on `/components`
+
+See `animata/skeleton/CATEGORY-GLYPHS.md` for the full spec, reference glyphs, and wiring details.
