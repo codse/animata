@@ -251,7 +251,7 @@ export function DocsSidebarNav({ items, variant = "docs", className }: DocsSideb
                   hidden: !isOpen,
                 })}
               >
-                <DocsSidebarNavItems items={item.items} pathname={pathname} query={query} />
+                <DocsSidebarNavItems items={item.items} pathname={pathname} />
               </div>
             ) : null}
 
@@ -326,64 +326,13 @@ export function DocsSidebarNav({ items, variant = "docs", className }: DocsSideb
 interface DocsSidebarNavItemsProps {
   items: SidebarNavItem[];
   pathname: string | null;
-  query?: string;
-  depth?: number;
 }
 
-export function DocsSidebarNavItems({
-  items,
-  pathname,
-  query = "",
-  depth = 0,
-}: DocsSidebarNavItemsProps) {
+export function DocsSidebarNavItems({ items, pathname }: DocsSidebarNavItemsProps) {
   return items?.length ? (
-    <div
-      className={cn("grid auto-rows-max grid-flow-row gap-0.5 text-sm", depth > 0 && "mt-1 pl-2")}
-    >
+    <div className="grid auto-rows-max grid-flow-row gap-0.5 text-sm">
       {items.map((item) => {
-        const itemKey = item.href ?? `${item.title}-${depth}`;
-        const childMatches = matchesFilter(query, ...collectSearchParts(item));
-        const visibleChildren = item.items ? filterNestedItems(item.items, query) : [];
-        const showNestedSection =
-          Boolean(item.items?.length) && (childMatches || visibleChildren.length);
-
-        if (item.items?.length && showNestedSection) {
-          const nestedHref = item.href;
-          const nestedActive = nestedHref ? pathname === nestedHref : false;
-
-          return (
-            <div key={itemKey} className="grid gap-0.5">
-              {nestedHref && !item.disabled ? (
-                <Link
-                  href={nestedHref}
-                  data-sidebar-link={nestedHref}
-                  className={cn(
-                    "group flex w-full items-center rounded-md border border-transparent px-2 py-1 capitalize hover:underline",
-                    nestedActive ? "bg-muted font-normal text-foreground" : "text-muted-foreground",
-                  )}
-                >
-                  <span className="truncate">{item.title}</span>
-                  {item.label ? (
-                    <span className="ml-2 rounded-md bg-lime-300 px-1.5 py-0.5 text-xs leading-none text-[#000000] no-underline group-hover:no-underline">
-                      {item.label}
-                    </span>
-                  ) : null}
-                </Link>
-              ) : (
-                <span className="px-2 py-1 text-xs font-medium tracking-wide text-muted-foreground uppercase">
-                  {item.title}
-                </span>
-              )}
-
-              <DocsSidebarNavItems
-                items={query.trim() ? visibleChildren : item.items}
-                pathname={pathname}
-                query={query}
-                depth={depth + 1}
-              />
-            </div>
-          );
-        }
+        const itemKey = item.href ?? item.title;
 
         if (item.href && !item.disabled) {
           return (
