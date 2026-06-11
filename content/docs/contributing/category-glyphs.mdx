@@ -1,0 +1,93 @@
+---
+title: Category glyph tiles
+date: 2026-06-10
+description: How to design and ship SVG pictograms for the /components category grid.
+---
+
+Each category on `/components` gets a skeleton tile: a small SVG pictogram with a light hover animation. If you are adding or editing one, start here.
+
+## When you need a new glyph
+
+You only need this when you add a **new component category** (a new sidebar section), not when you add a component to an existing one.
+
+1. Register the category in `config/docs.ts` with `href: "/docs/<slug>"`.
+2. Add `content/docs/<slug>/index.mdx`.
+3. Add `GLYPHS["<slug>"]` in `animata/skeleton/category-glyphs.tsx`.
+4. Wire hover motion on any animated parts in that same file: `cn("cg-motion", …)` plus Tailwind classes like `motion-safe:group-hover/cg:scale-x-125` (see Hover animations).
+5. Add a story in `category-skeleton.stories.tsx`. The decorator already wraps stories in `group/cg`.
+
+Once the category has at least one published component, `/components` picks it up automatically via `lib/component-categories.ts`.
+
+## Canvas
+
+- ViewBox `0 0 64 64`, centered on `(32, 32)`.
+- Stroke-first pictograms. Draw the thing literally (carousel = slide plus side peeks, overlay = modal on a dimmed page), not abstract decoration.
+- Keep ink inside roughly `(8, 8)` to `(56, 56)`.
+
+## Three shades only
+
+Do not hardcode hex in glyph markup. The tile SVG in `category-skeleton.tsx` sets `--cg-ink`, `--cg-soft`, and `--cg-faint`.
+
+| Token | Role |
+|-------|------|
+| INK (`--cg-ink`) | What you look at first: primary strokes, front card, open accordion row |
+| SOFT (`--cg-soft`) | Secondary content: 50% ink mix, mid layers, supporting bars |
+| FAINT (`--cg-faint`) | Surfaces and tracks; also knockouts on INK fills (button label, hero CTA) |
+
+Light mode uses ink `#76756f` and faint `#e3e3e3`. Dark mode swaps those; soft always derives from ink.
+
+Each shade should read as a layer (foreground, content, surface), not as decoration. Do not fake a fourth shade with opacity. On hover, crossfade fills between tokens instead.
+
+## Stroke tiers
+
+| Weight | Use |
+|--------|-----|
+| 2.2 | Primary frames and seams |
+| 2 | Interior details (hands, chevrons, inner rings) |
+| 1.6 | Small extras (×, ±, avatar rings) |
+
+Round caps and joins on all strokes.
+
+## Corner radius
+
+- Card-like frames: `rx={4}`.
+- Pills: fully rounded (`rx = height / 2`).
+- Clip paths inside a frame: outer `rx` minus inset.
+
+## Hover animations
+
+Put `cg-motion` on any part that moves, then add Tailwind hover utilities on the same element:
+
+```tsx
+className={cn("cg-motion", "origin-left motion-safe:group-hover/cg:scale-x-125")}
+```
+
+The parent tile must be `group/cg` (the `Link` on `/components`, or the Storybook decorator) or the hover classes never run.
+
+`category-glyphs.css` does not define the hover transforms. It only sets `transform-box`, `transform-origin`, and transitions on `.cg-motion`, with `prefers-reduced-motion` respected. Other helpers when you need them:
+
+- `cg-motion-frame` for keyframe loops (no transform transition, so animation does not fight CSS transitions)
+- `cg-progress-arc` for stroke-dasharray only
+- `cg-feature-tilt` for a resting tilt that straightens on hover
+
+Pick motion that fits the category: scroll rows slide, button pills swell, container content marquees.
+
+## Reference glyphs
+
+| Category | Layer story | Hover idea |
+|----------|-------------|------------|
+| `card` | FAINT → SOFT → INK stack back to front | Fan apart |
+| `accordion` | Closed rows SOFT; open row INK + SOFT body | ± rotates; body → INK |
+| `overlay` | SOFT page bars behind; FAINT modal + INK CTA | Modal scales; page dims |
+| `container` | INK frame; SOFT/INK blocks clipped inside | Track marquees left |
+| `scroll` | INK → SOFT → FAINT rows; thumb at top | Rows translate up |
+| `button` | INK pill; FAINT knockout label | Pill scales; cursor presses |
+
+## Before you ship
+
+- Literal and symmetric; readable at small size
+- INK, SOFT, and FAINT only
+- Stroke weight matches importance
+- One clear INK focal element
+- Hover matches the category when you can
+- Story added; checked in light and dark on `/components`

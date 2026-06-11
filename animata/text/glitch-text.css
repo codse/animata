@@ -1,0 +1,111 @@
+@layer components {
+  .glitch-text {
+    --glitch-intensity: 5;
+    --glitch-step: 0.01em;
+    --glitch-duration: 2.5s;
+    --glitch-color-base: #ffffff;
+    --glitch-color-a: #ff00ff;
+    --glitch-color-b: #00ffff;
+    --glitch-blend-mode: screen;
+
+    /* Derived offsets — em-relative so glitch scales with font-size. */
+    --glitch-x: calc(var(--glitch-intensity) * var(--glitch-step));
+    --glitch-y: max(var(--glitch-step), calc(var(--glitch-x) * 0.35));
+    --glitch-x-1: calc((var(--glitch-intensity) - 1) * var(--glitch-step));
+    --glitch-x-2: calc((var(--glitch-intensity) - 2) * var(--glitch-step));
+
+    position: relative;
+    display: inline-grid;
+    grid-template-areas: stack;
+  }
+
+  .glitch-text__ghost-a,
+  .glitch-text__ghost-b,
+  .glitch-text__base {
+    grid-area: stack;
+  }
+
+  .glitch-text__ghost-a {
+    color: var(--glitch-color-a);
+    mix-blend-mode: var(--glitch-blend-mode);
+    animation: glitch-a var(--glitch-duration) infinite;
+  }
+
+  .glitch-text__ghost-b {
+    color: var(--glitch-color-b);
+    mix-blend-mode: var(--glitch-blend-mode);
+    animation: glitch-b var(--glitch-duration) infinite;
+  }
+
+  .glitch-text__base {
+    position: relative;
+    z-index: 2;
+    color: var(--glitch-color-base);
+  }
+
+  @keyframes glitch-a {
+    0%,
+    88%,
+    100% {
+      transform: translate(0, 0);
+      opacity: 0.85;
+    }
+
+    90% {
+      transform: translate(calc(var(--glitch-x) * -1), calc(var(--glitch-y) * -1));
+      opacity: 1;
+    }
+
+    92% {
+      transform: translate(var(--glitch-x-1), var(--glitch-y));
+      opacity: 0.9;
+    }
+
+    94% {
+      transform: translate(calc(var(--glitch-x-2) * -1), 0);
+      opacity: 1;
+    }
+
+    96% {
+      transform: translate(var(--glitch-x), calc(var(--glitch-y) * -1));
+      opacity: 0.85;
+    }
+  }
+
+  @keyframes glitch-b {
+    0%,
+    86%,
+    100% {
+      transform: translate(0, 0);
+      opacity: 0.85;
+    }
+
+    88% {
+      transform: translate(var(--glitch-x), var(--glitch-y));
+      opacity: 1;
+    }
+
+    91% {
+      transform: translate(calc(var(--glitch-x) * -1), calc(var(--glitch-y) * -1));
+      opacity: 0.9;
+    }
+
+    93% {
+      transform: translate(var(--glitch-x-1), 0);
+      opacity: 1;
+    }
+
+    95% {
+      transform: translate(calc(var(--glitch-x-2) * -1), var(--glitch-y));
+      opacity: 0.85;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .glitch-text__ghost-a,
+    .glitch-text__ghost-b {
+      animation: none;
+      opacity: 0.35;
+    }
+  }
+}

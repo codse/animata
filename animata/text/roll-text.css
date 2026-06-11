@@ -3,9 +3,7 @@
     --roll-duration: 450ms;
     --roll-duration-reduced: 150ms;
     --roll-ease: cubic-bezier(0.77, 0, 0.175, 1);
-    --roll-travel: 150%;
-    --roll-layer-gap: 0.05em;
-    --roll-line-height: 1.15;
+    --roll-line-height: 1;
     font-kerning: none;
     line-height: var(--roll-line-height);
   }
@@ -21,87 +19,67 @@
     white-space: pre;
   }
 
+  /* inline-grid + overflow:hidden keeps the text baseline (from the sizer in
+     row 1) while clipping the translated stack. */
   .roll-unit {
     position: relative;
-    display: inline-block;
+    display: inline-grid;
     overflow: hidden;
     vertical-align: baseline;
     font-kerning: none;
     line-height: inherit;
   }
 
+  .roll-unit__sizer,
+  .roll-unit__stack {
+    grid-area: 1 / 1;
+    line-height: inherit;
+  }
+
   .roll-unit__sizer {
-    display: block;
     visibility: hidden;
     pointer-events: none;
     user-select: none;
-    line-height: inherit;
+    white-space: pre;
   }
 
-  .roll-panel-front,
-  .roll-panel-back {
+  .roll-unit__stack {
     position: absolute;
     inset-inline: 0;
     top: 0;
+    display: flex;
+    flex-direction: column;
     white-space: pre;
+    transform: translateY(0);
+  }
+
+  .roll-unit__line {
+    display: block;
     line-height: inherit;
-    backface-visibility: hidden;
+    white-space: inherit;
   }
 
-  .roll-panel-front {
-    transform: translateY(0) translateZ(0);
-  }
-
-  .roll-panel-back {
-    transform: translateY(calc(var(--roll-travel) + var(--roll-layer-gap))) translateZ(0);
-  }
-
-  @keyframes roll-front-open {
+  @keyframes roll-stack-open {
     from {
-      transform: translateY(0) translateZ(0);
+      transform: translateY(0);
     }
 
     to {
-      transform: translateY(calc(-1 * var(--roll-travel) - var(--roll-layer-gap))) translateZ(0);
+      transform: translateY(-50%);
     }
   }
 
-  @keyframes roll-back-open {
-    from {
-      transform: translateY(calc(var(--roll-travel) + var(--roll-layer-gap))) translateZ(0);
-    }
-
-    to {
-      transform: translateY(0) translateZ(0);
-    }
-  }
-
-  .roll-text--animating:not(.roll-text--open) .roll-panel-front,
-  .roll-text--animating:not(.roll-text--open) .roll-panel-back {
-    will-change: transform;
-  }
-
-  .roll-text--animating .roll-panel-front {
-    animation: roll-front-open var(--roll-unit-duration, var(--roll-duration)) var(--roll-ease)
+  .roll-text--animating .roll-unit__stack {
+    animation: roll-stack-open var(--roll-unit-duration, var(--roll-duration)) var(--roll-ease)
       var(--roll-delay, 0ms) forwards;
   }
 
-  .roll-text--animating .roll-panel-back {
-    animation: roll-back-open var(--roll-unit-duration, var(--roll-duration)) var(--roll-ease)
-      var(--roll-delay, 0ms) forwards;
-  }
-
-  .roll-text--open:not(.roll-text--animating) .roll-panel-front {
-    transform: translateY(calc(-1 * var(--roll-travel) - var(--roll-layer-gap))) translateZ(0);
-  }
-
-  .roll-text--open:not(.roll-text--animating) .roll-panel-back {
-    transform: translateY(0) translateZ(0);
+  .roll-text--open:not(.roll-text--animating) .roll-unit__stack {
+    transform: translateY(-50%);
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .roll-text--animating .roll-panel-front,
-    .roll-text--animating .roll-panel-back {
+    .roll-text--animating .roll-unit__stack {
       animation-duration: var(--roll-duration-reduced);
     }
   }

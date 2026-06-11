@@ -1,7 +1,8 @@
 ---
-title: Glitch Text
-description: Glitch text effect
+title: Glitch text
+description: RGB-split glitch on text — two colored ghosts jitter on a loop while the label stays sharp on top.
 author: harimanok_
+labels: ["text", "animated"]
 ---
 
 <ComponentPreview name="text-glitch-text--primary" />
@@ -12,38 +13,23 @@ author: harimanok_
 
 <RegistryInstall category="text" name="glitch-text" />
 
+The CLI installs `glitch-text.tsx` and the co-located `glitch-text.css` in one step.
+
 ### Manual
 
 <Steps>
 
-<Step>Add to your CSS</Step>
-
-```css
-@keyframes glitch {
-  0% { color: #fff; text-shadow: 2px 2px 0px #00ffff, -2px -2px 0px #ff00ff; }
-  25% { color: #00ffff; text-shadow: -2px -2px 0px #fff, 2px 2px 0px #ff00ff; }
-  50% { color: #ff00ff; text-shadow: 2px -2px 0px #00ffff, -2px 2px 0px #fff; }
-  75% { color: #eee; text-shadow: -2px 2px 0px #ff00ff, 2px -2px 0px #00ffff; }
-  100% { color: #fff; text-shadow: 2px 2px 0px #00ffff, -2px -2px 0px #ff00ff; }
-}
-@keyframes twinkle {
-  0% { opacity: 0; }
-  50% { opacity: 1; }
-  100% { opacity: 0; }
-}
-```
-
 <Step>Run the following command</Step>
 
-It will create a new file `glitch-text.tsx` inside the `components/animata/text` directory.
-
 ```bash
-mkdir -p components/animata/text && touch components/animata/text/glitch-text.tsx
+mkdir -p animata/text && touch animata/text/glitch-text.tsx animata/text/glitch-text.css
 ```
 
-<Step>Paste the code</Step>{" "}
+<Step>Paste the code</Step>
 
-Open the newly created file and paste the following code:
+```jsx file=<rootDir>/animata/text/glitch-text.css
+
+```
 
 ```jsx file=<rootDir>/animata/text/glitch-text.tsx
 
@@ -51,6 +37,109 @@ Open the newly created file and paste the following code:
 
 </Steps>
 
+## Usage
+
+```tsx
+import GlitchText from "@/animata/text/glitch-text";
+
+<GlitchText className="font-(family-name:--font-mono) text-8xl font-bold tracking-tight">
+  404
+</GlitchText>
+```
+
+`GlitchText` is text only. Drop it on your own background — a gradient, a starfield, a solid block. Size it for display type; the offset is em-relative, but the effect is hard to read at body scale.
+
+Set the readable color with `baseColor` (or `--glitch-color-base`). Ghost colors use `colorA` / `colorB`. Font, weight, and casing live on `className`.
+
+```tsx
+<HyperspaceScatter className="min-h-[480px]">
+  <GlitchText
+    baseColor="#ffffff"
+    className="font-(family-name:--font-mono) text-8xl font-bold tracking-tight"
+  >
+    404
+  </GlitchText>
+</HyperspaceScatter>
+```
+
+Tune the burst with props — each one writes a matching `--glitch-*` variable on the root:
+
+```tsx
+<GlitchText
+  baseColor="#ffffff"
+  intensity={8}
+  duration={3}
+  colorA="#ff00ff"
+  colorB="#00ffff"
+  className="text-6xl font-black"
+>
+  signal lost
+</GlitchText>
+```
+
+Prefer CSS-only? Same variables on `.glitch-text`, or Tailwind arbitrary properties like `[--glitch-intensity:8]`. Pass `style` last if you need to override a prop.
+
+`GlitchText` always renders a `span`. Wrap it in a heading or link when you need that semantics — do not expect `as` on the component.
+
+## How it works
+
+### Markup
+
+The root is an inline grid (`.glitch-text`) with three stacked layers in the same cell: `.glitch-text__ghost-a`, `.glitch-text__ghost-b`, and `.glitch-text__base`. Each layer repeats the same string; the ghosts are `aria-hidden`.
+
+### Motion
+
+Ghosts animate `transform` and `opacity` only — no layout thrash, no JS loop. The base layer sits on top at full opacity. Keyframes live in `glitch-text.css`.
+
+Bursts run on a cycle (`--glitch-duration`, default `2.5s`). Most of the time the ghosts sit still; for a few frames they snap sideways. Horizontal travel is `--glitch-intensity` × `--glitch-step` (default `5` × `0.01em`), with a smaller vertical offset derived from that. Bump `intensity` for a harsher glitch, or `step` if you want a different em scale.
+
+Ghost colors default to magenta and cyan with `mix-blend-mode: screen`. Change `blendMode` to `normal` on dark backgrounds if screen washes out.
+
+### Reduced motion
+
+At `prefers-reduced-motion: reduce`, the ghosts stop animating and fade to `0.35` opacity — the label stays readable.
+
+### Accessibility
+
+Screen readers get the string once from `.glitch-text__base`. The two ghost copies are decorative and hidden from the tree.
+
+## Props
+
+<PropsTable>
+  <PropsTable.Row prop="children" type="string">
+    Label copied into all three layers.
+  </PropsTable.Row>
+  <PropsTable.Row prop="className" type="string">
+    Typography on the root — font, size, weight, tracking, casing.
+  </PropsTable.Row>
+  <PropsTable.Row prop="intensity" type="number" default="5">
+    Unitless multiplier on `--glitch-step` for horizontal offset.
+  </PropsTable.Row>
+  <PropsTable.Row prop="step" type="string" default='"0.01em"'>
+    Base offset unit. Em-relative so the glitch scales with font size.
+  </PropsTable.Row>
+  <PropsTable.Row prop="duration" type="number | string" default="2.5">
+    Length of one glitch cycle. Numbers count as seconds (`3` → `3s`).
+  </PropsTable.Row>
+  <PropsTable.Row prop="baseColor" type="string" default='"#ffffff"'>
+    Top layer — the text you actually read.
+  </PropsTable.Row>
+  <PropsTable.Row prop="colorA" type="string" default='"#ff00ff"'>
+    First ghost layer.
+  </PropsTable.Row>
+  <PropsTable.Row prop="colorB" type="string" default='"#00ffff"'>
+    Second ghost layer.
+  </PropsTable.Row>
+  <PropsTable.Row prop="blendMode" type='"screen" | "normal"' default='"screen"'>
+    Blend mode on both ghosts.
+  </PropsTable.Row>
+  <PropsTable.Row prop="style" type="React.CSSProperties">
+    Merged after glitch props — override any `--glitch-*` variable.
+  </PropsTable.Row>
+</PropsTable>
+
+Defaults for `--glitch-intensity`, `--glitch-step`, `--glitch-duration`, and the color variables also live on `.glitch-text` in `glitch-text.css` if you skip the props entirely.
+
 ## Credits
 
-Built by [hari](https://github.com/hari)
+Built by [hari](https://github.com/hari).
