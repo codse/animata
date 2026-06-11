@@ -44,12 +44,12 @@ export function SiteHeader() {
           isIndexPage && !scrolled && "bg-transparent",
         )}
       >
-        <div className="mx-auto flex min-h-8 max-w-7xl items-center justify-between px-4 sm:px-6">
+        <div className="mx-auto flex min-h-8 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
           <div className="flex min-w-0 items-center gap-2.5 sm:gap-4">
             <MobileNav />
             <nav
               aria-label="Main navigation"
-              className="hidden items-center gap-0 overflow-visible md:flex"
+              className="hidden -translate-x-2.5 items-center gap-0 overflow-visible md:flex"
             >
               {docsConfig.mainNav.map((item) => {
                 const href = item.href as string;

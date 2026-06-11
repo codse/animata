@@ -443,6 +443,10 @@
     /* Text */
     --text-secondary: 0 0% 43%;
 
+    /* Ink — shared by docs callouts, category glyphs, etc. */
+    --ink: #76756f;
+    --ink-faint: #e3e3e3;
+
     /* Links */
     --link: 210 100% 40%;
     --link-hover: 210 100% 32%;
@@ -490,6 +494,9 @@
     --surface-card: 0 0% 6%;
     --surface-dark: 0 0% 2%;
     --text-secondary: 0 0% 55%;
+
+    --ink: #e3e3e3;
+    --ink-faint: #76756f;
 
     /* Links */
     --link: 262 80% 70%;
