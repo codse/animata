@@ -1,0 +1,17 @@
+@layer components {
+  @property --border-trail-angle {
+    syntax: "<angle>";
+    initial-value: 0deg;
+    inherits: false;
+  }
+
+  @keyframes border-trail {
+    0% {
+      --border-trail-angle: 0deg;
+    }
+
+    100% {
+      --border-trail-angle: 360deg;
+    }
+  }
+}

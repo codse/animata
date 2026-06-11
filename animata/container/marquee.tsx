@@ -1,5 +1,7 @@
 import { cn } from "@/lib/utils";
 
+import "./marquee.css";
+
 interface MarqueeProps extends React.HTMLAttributes<HTMLDivElement> {
   /**
    * Should the marquee scroll horizontally or vertically.
@@ -54,25 +56,6 @@ export default function Marquee({
         className,
       )}
     >
-      <style>{`
-        @keyframes marquee-x {
-          from { transform: translateX(0); }
-          to { transform: translateX(calc(-100% - var(--gap))); }
-        }
-        @keyframes marquee-y {
-          from { transform: translateY(0); }
-          to { transform: translateY(calc(-100% - var(--gap))); }
-        }
-        .marquee-horizontal {
-          animation: marquee-x var(--duration) infinite linear;
-        }
-        .marquee-vertical {
-          animation: marquee-y var(--duration) infinite linear;
-        }
-        .group\\/marquee:hover .marquee-pause-on-hover {
-          animation-play-state: paused;
-        }
-      `}</style>
       {Array.from({ length: repeat }).map((_, index) => (
         <div
           key={`item-${index}`}

@@ -44,7 +44,7 @@ Use Tailwind on the component for layout, color, spacing, and simple transitions
 
 Keep the CSS file focused: if a rule is a one-liner utility (`relative`, `inline-block`, `block`), prefer Tailwind on the element instead of duplicating it in CSS.
 
-Inline `<style>` blocks inside the component are acceptable for small, self-contained keyframes when a separate file would be heavier than the animation itself (see `marquee.tsx`). Do not use CSS modules or styled-components.
+Do not use inline `<style>` blocks in components — put `@keyframes`, pseudo-elements, and selectors Tailwind cannot express in a co-located `<name>.css` imported from the TSX. Do not use CSS modules or styled-components.
 
 ## Conditional Classes
 

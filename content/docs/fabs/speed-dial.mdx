@@ -24,15 +24,17 @@ npm install lucide-react
 
 <Step>Run the following command</Step>
 
-It will create a new file `speed-dial.tsx` inside the `components/animata/fabs` directory.
+It will create `speed-dial.tsx` and the co-located `speed-dial.css` inside `components/animata/fabs`.
 
 ```bash
-mkdir -p components/animata/fabs && touch components/animata/fabs/speed-dial.tsx
+mkdir -p components/animata/fabs && touch components/animata/fabs/speed-dial.tsx components/animata/fabs/speed-dial.css
 ```
 
 <Step>Paste the code</Step>{" "}
 
-Open the newly created file and paste the following code:
+```jsx file=<rootDir>/animata/fabs/speed-dial.css
+
+```
 
 ```jsx file=<rootDir>/animata/fabs/speed-dial.tsx
 
@@ -46,7 +48,7 @@ Click opens the menu; hover doesn't. That matters on touch devices. The trigger 
 
 Each action is a `role="menuitem"` at `size-11` (44×44 px). Labels live in `aria-label` and an `sr-only` span, not beside the icon. The action list is positioned absolutely (`left-full`, `bottom-full`, and so on relative to `direction`) so the FAB doesn't jump when items appear.
 
-Motion is CSS only: direction-specific `@keyframes` in a scoped `<style>` block, 120ms per item, staggered with `animation-delay: calc(12ms + var(--i) * 22ms)`. No Motion package. The plus icon rotates 45° via `transition-transform` over 150ms. Reduced-motion users get the layout without the keyframes.
+Motion is CSS only: direction-specific `@keyframes` in the co-located `speed-dial.css`, 120ms per item, staggered with `animation-delay: calc(12ms + var(--i) * 22ms)`. No Motion package. The plus icon rotates 45° via `transition-transform` over 150ms. Reduced-motion users get the layout without the keyframes.
 
 Keyboard: arrows move along the axis you picked with `direction`; Home and End hit the first and last item; Escape or an outside tap closes and refocuses the trigger.
 

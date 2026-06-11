@@ -1,9 +1,9 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-
+import { TEXT_ANIMATOR_DEMO_CLASS } from "@/animata/text/text-animator-demo";
 import { cn } from "@/lib/utils";
-
+import "./text-animator-demo.css";
 import "./text-animator.css";
 
 export type TextAnimationTarget = "whole" | "per-character" | "per-word" | "per-line";
@@ -983,12 +983,12 @@ export default function TextAnimator({
     };
   }, [spec, samplesKey, phrasesKey, speed, holdMs, gapMs, yTravel, titleClassName]);
 
+  const demoMode = className != null && String(className).includes(TEXT_ANIMATOR_DEMO_CLASS);
+
   return (
     <div
-      className={cn(
-        "relative flex aspect-video w-full items-center justify-center overflow-hidden",
-        className,
-      )}
+      data-text-animator-demo={demoMode ? "" : undefined}
+      className={cn("relative flex w-full items-center justify-center overflow-hidden", className)}
     >
       <div ref={stageRef} className={cn("text-animation-stage absolute inset-0", stageClassName)}>
         {failed && effectiveSamples[0] ? (

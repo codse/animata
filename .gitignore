@@ -20,6 +20,7 @@
 # misc
 .DS_Store
 *.pem
+.patterns/
 
 # debug
 npm-debug.log*

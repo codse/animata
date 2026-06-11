@@ -1,0 +1,5 @@
+@layer components {
+  [data-stacked-content][data-stacked-covered] {
+    transform-origin: 50% 0%;
+  }
+}

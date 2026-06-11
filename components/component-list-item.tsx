@@ -79,7 +79,7 @@ function DisplayInView({ children }: { children: React.ReactNode }) {
   // not setting to once: true, so that it unmounts the component this triggering re-render
   const isInView = useInView(ref);
   return (
-    <div ref={ref} className="w-full h-full flex items-center justify-center">
+    <div ref={ref} className="flex min-h-56 w-full items-center justify-center">
       {isInView && children}
     </div>
   );

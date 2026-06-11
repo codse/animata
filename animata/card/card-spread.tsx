@@ -6,6 +6,8 @@ import Notes, { NotesCard } from "@/animata/widget/notes";
 import ShoppingList from "@/animata/widget/shopping-list";
 import { cn } from "@/lib/utils";
 
+import "./card-spread.css";
+
 /** w-48 + gap-3 — horizontal step between spread slots */
 const CARD_STEP = "12.75rem";
 
@@ -72,38 +74,6 @@ export default function CardSpread() {
 
   return (
     <div className="inline-flex min-h-80 items-end justify-center overflow-visible p-8">
-      <style>{`
-        .card-spread-stage {
-          /* Quick throw, soft settle — expand on click only */
-          --ease-throw: cubic-bezier(0.22, 1.18, 0.36, 1);
-        }
-
-        .card-spread-motion--expand {
-          transition: transform 480ms var(--ease-throw);
-        }
-
-        .card-spread-motion--collapse {
-          transition: transform 520ms cubic-bezier(0.33, 1, 0.68, 1);
-        }
-
-        .card-spread-stage--expand {
-          transition: width 480ms var(--ease-throw);
-        }
-
-        .card-spread-stage--collapse {
-          transition: width 520ms cubic-bezier(0.33, 1, 0.68, 1);
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-          .card-spread-motion--expand,
-          .card-spread-motion--collapse,
-          .card-spread-stage--expand,
-          .card-spread-stage--collapse {
-            transition-duration: 0.01ms !important;
-          }
-        }
-      `}</style>
-
       <div
         role="button"
         tabIndex={0}

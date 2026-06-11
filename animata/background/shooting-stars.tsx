@@ -4,6 +4,8 @@ import { useCallback, useEffect, useRef, useState } from "react";
 
 import { cn } from "@/lib/utils";
 
+import "./shooting-stars.css";
+
 /**
  * ShootingStars — a night sky where streaks shoot across with variable length,
  * speed and direction, over a twinkling starfield.
@@ -144,19 +146,6 @@ export default function ShootingStars({
         ref={containerRef}
         className="absolute inset-0 z-0 bg-linear-to-b from-indigo-950 to-[#05050f]"
       >
-        <style>{`
-          @keyframes ss-shoot {
-            0%   { transform: translate(0px, 0px); opacity: 0; }
-            6%   { opacity: 1; }
-            82%  { opacity: 1; }
-            100% { transform: translate(var(--dx), var(--dy)); opacity: 0; }
-          }
-          @keyframes ss-twinkle {
-            0%, 100% { opacity: var(--o); }
-            50%      { opacity: calc(var(--o) * 0.25); }
-          }
-        `}</style>
-
         <div
           className="absolute inset-x-0 top-1/4 h-3/4 opacity-40"
           style={{

@@ -285,7 +285,7 @@ export function DocsSidebarNav({ items, variant = "docs", className }: DocsSideb
   return items.length ? (
     <div className={cn("grid h-full min-h-0 grid-rows-[auto_minmax(0,1fr)]", className)}>
       <div className="pr-6 pb-3">
-        <div className="relative">
+        <div className="relative translate-x-px translate-y-0.5">
           <Search className="pointer-events-none absolute top-1/2 left-2.5 size-3.5 -translate-y-1/2 text-muted-foreground" />
           <Input
             value={query}

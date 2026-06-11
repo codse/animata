@@ -1,0 +1,129 @@
+@layer components {
+  .collab-cursor {
+    display: inline-block;
+    transform-origin: 20% 20%;
+    will-change: transform;
+    animation-fill-mode: both;
+  }
+
+  .collab-cursor--host {
+    animation: collab-host 9s ease-in-out infinite;
+  }
+
+  .collab-cursor--first {
+    animation: collab-first 5.5s ease-in-out infinite;
+  }
+
+  .collab-cursor--second {
+    animation: collab-second 5.5s ease-in-out infinite 0.8s;
+  }
+
+  .collab-cursor [data-burst] {
+    opacity: 0;
+    animation: collab-burst 5.5s ease-in-out infinite;
+    animation-fill-mode: both;
+  }
+
+  .collab-cursor--first [data-burst] {
+    animation-delay: 1.1s;
+  }
+
+  .collab-cursor--second [data-burst] {
+    animation-delay: 2.7s;
+  }
+
+  .collab-live-ping {
+    animation: collab-ping 2.4s cubic-bezier(0, 0, 0.2, 1) infinite;
+  }
+
+  @keyframes collab-host {
+    0%,
+    100% {
+      transform: translate3d(0, 0, 0) rotate(-14deg);
+    }
+
+    22% {
+      transform: translate3d(54cqi, 2cqi, 0) rotate(-4deg);
+    }
+
+    48% {
+      transform: translate3d(56cqi, 19cqi, 0) rotate(10deg);
+    }
+
+    72% {
+      transform: translate3d(-1cqi, 21cqi, 0) rotate(-2deg);
+    }
+  }
+
+  @keyframes collab-first {
+    0%,
+    100% {
+      transform: translate3d(0, 0, 0) rotate(0deg);
+    }
+
+    30% {
+      transform: translate3d(-1.2cqi, -1cqi, 0) rotate(-5deg);
+    }
+
+    60% {
+      transform: translate3d(0.8cqi, 0.6cqi, 0) rotate(3deg);
+    }
+  }
+
+  @keyframes collab-second {
+    0%,
+    100% {
+      transform: translate3d(0, 0, 0) rotate(0deg);
+    }
+
+    35% {
+      transform: translate3d(1.4cqi, -0.8cqi, 0) rotate(6deg);
+    }
+
+    65% {
+      transform: translate3d(-0.6cqi, 0.6cqi, 0) rotate(-3deg);
+    }
+  }
+
+  @keyframes collab-burst {
+    0%,
+    14% {
+      opacity: 0;
+      transform: scale(0.4);
+    }
+
+    22% {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    34%,
+    100% {
+      opacity: 0;
+      transform: scale(1.5);
+    }
+  }
+
+  @keyframes collab-ping {
+    0% {
+      transform: scale(1);
+      opacity: 0.7;
+    }
+
+    75%,
+    100% {
+      transform: scale(2.4);
+      opacity: 0;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .collab-cursor,
+    .collab-cursor [data-burst],
+    .collab-live-ping {
+      animation: none;
+      opacity: 1;
+      transform: none;
+    }
+  }
+}

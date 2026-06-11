@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @import "tw-animate-css";
+@import "../animata/text/text-animator-demo.css";
 
 @custom-variant dark (&:where(.dark, .dark *));
 
