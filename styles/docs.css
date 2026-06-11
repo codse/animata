@@ -13,3 +13,8 @@
 .docs-shell .font-heading {
   font-family: var(--font-docs);
 }
+
+.docs-sidebar-scroller {
+  scrollbar-width: thin;
+  scrollbar-color: hsl(var(--border)) transparent;
+}
