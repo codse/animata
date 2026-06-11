@@ -266,7 +266,7 @@ export function DocsSidebarNav({ items, variant = "docs", className }: DocsSideb
             ) : null}
 
             {item.title === "Contributing" ? (
-              <div className="mt-2 mb-1 pl-4 text-xs font-semibold text-muted-foreground uppercase">
+              <div className="mt-2 mb-1 pl-5.5 text-xs font-semibold text-muted-foreground uppercase">
                 Components
               </div>
             ) : null}
