@@ -66,14 +66,10 @@ function segmentTiming(
   staggerMs: number,
   durationMs: number,
 ): { delay: number; duration: number } {
-  const delay = staggerDelay(index, count, staggerMs);
-
-  if (count <= 1) {
-    return { delay, duration: durationMs };
-  }
-
-  const maxDelay = staggerDelay(count - 1, count, staggerMs);
-  return { delay, duration: durationMs + maxDelay - delay };
+  return {
+    delay: staggerDelay(index, count, staggerMs),
+    duration: durationMs,
+  };
 }
 
 function splitSegments(
@@ -116,10 +112,10 @@ function findRollGroup(node: HTMLElement | null) {
 
 const RollUnit = memo(function RollUnit({
   segment,
-  onFrontAnimationEnd,
+  onStackAnimationEnd,
 }: {
   segment: RollSegment;
-  onFrontAnimationEnd?: (event: React.AnimationEvent<HTMLSpanElement>) => void;
+  onStackAnimationEnd?: (event: React.AnimationEvent<HTMLSpanElement>) => void;
 }) {
   return (
     <span
@@ -134,11 +130,9 @@ const RollUnit = memo(function RollUnit({
       <span className="roll-unit__sizer" aria-hidden>
         {segment.value}
       </span>
-      <span className="roll-panel-back" aria-hidden>
-        {segment.value}
-      </span>
-      <span className="roll-panel-front" aria-hidden onAnimationEnd={onFrontAnimationEnd}>
-        {segment.value}
+      <span className="roll-unit__stack" aria-hidden onAnimationEnd={onStackAnimationEnd}>
+        <span className="roll-unit__line">{segment.value}</span>
+        <span className="roll-unit__line">{segment.value}</span>
       </span>
     </span>
   );
@@ -177,7 +171,6 @@ export default function RollText({
   const [phase, setPhase] = useState<RollPhase>("closed");
 
   const resolvedTabIndex = tabIndex ?? (groupHover ? undefined : 0);
-  const isMotionActive = phase === "animating" || phase === "open";
 
   segmentCountRef.current = segments.length;
   disabledRef.current = disabled;
@@ -251,7 +244,7 @@ export default function RollText({
     if (!groupHover && !disabled) playOpen();
   };
 
-  const handleFrontAnimationEnd = (event: React.AnimationEvent<HTMLSpanElement>) => {
+  const handleStackAnimationEnd = (event: React.AnimationEvent<HTMLSpanElement>) => {
     onAnimationEnd?.(event);
     if (phaseRef.current !== "animating") return;
 
@@ -265,7 +258,7 @@ export default function RollText({
       tabIndex={resolvedTabIndex}
       className={cn(
         "roll-text relative inline-block cursor-default",
-        isMotionActive && "roll-text--animating",
+        phase === "animating" && "roll-text--animating",
         phase === "open" && "roll-text--open",
         className,
       )}
@@ -285,7 +278,7 @@ export default function RollText({
         {segments.map((segment, index) => (
           <Fragment key={segment.key}>
             {stagger === "word" && index > 0 ? " " : null}
-            <RollUnit segment={segment} onFrontAnimationEnd={handleFrontAnimationEnd} />
+            <RollUnit segment={segment} onStackAnimationEnd={handleStackAnimationEnd} />
           </Fragment>
         ))}
       </span>
