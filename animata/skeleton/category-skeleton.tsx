@@ -1,4 +1,3 @@
-import { CG_SHADE_VARS } from "@/animata/skeleton/category-glyph-motion";
 import { CategoryGlyph } from "@/animata/skeleton/category-glyphs";
 import { cn } from "@/lib/utils";
 
@@ -19,8 +18,7 @@ export default function CategorySkeleton({ variant, className }: CategorySkeleto
     <svg
       viewBox={`0 0 ${CARD_W} ${CARD_H}`}
       className={cn(
-        CG_SHADE_VARS,
-        "w-full overflow-visible rounded-2xl text-foreground transition-transform duration-300 ease-out group-hover:scale-[1.02]",
+        "cg-card w-full overflow-visible rounded-2xl text-foreground transition-transform duration-300 ease-out group-hover:scale-[1.02]",
         className,
       )}
       aria-hidden="true"

@@ -3,7 +3,7 @@
  * Stroke-first, Apple-style pictograms. Each glyph is a literal symbol of the
  * category so users can recognize it at a glance.
  *
- * Shading uses exactly three tokens (on the parent SVG via Tailwind):
+ * Shading uses exactly three tokens (defined in category-glyphs.css):
  *   INK   — focal / active / interactive (primary shapes)
  *   SOFT  — supporting content (secondary elements)
  *   FAINT — surfaces, tracks, distant layers + knockouts on INK
@@ -15,81 +15,13 @@
  *   1.6 — micro accessories (close ×, accordion ±, avatar rings)
  * Card-like frames use rx 4; pills are always fully rounded (rx = h/2).
  *
- * Hover micro-interactions use Tailwind group-hover classes (category-glyph-motion.ts).
- *
- * Full spec for new/edited glyphs: animata/skeleton/CATEGORY-GLYPHS.md
- * (also /docs/contributing/category-glyphs).
+ * Parts tagged with `cg cg-*` classes get subtle hover micro-interactions
+ * (see category-glyphs.css) that mimic the behavior of the component type.
  */
 
 import type { ReactNode } from "react";
 
-import {
-  cg,
-  cgAccordionContent,
-  cgAccordionPlus,
-  cgBentoBottom,
-  cgBentoTl,
-  cgBentoTr1,
-  cgBentoTr2,
-  cgBgDot,
-  cgBgWave2,
-  cgBgWave13,
-  cgButtonCursor,
-  cgButtonPill,
-  cgCardBack,
-  cgCardMid,
-  cgCarouselDotIn,
-  cgCarouselDotOut,
-  cgCarouselPeekL,
-  cgCarouselPeekR,
-  cgCarouselSlide,
-  cgContainerTrack,
-  cgFabDot1,
-  cgFabDot2,
-  cgFabDot3,
-  cgFabDot4,
-  cgFabDot5,
-  cgFabPlus,
-  cgFeatureCard,
-  cgFeatureSparkle,
-  cgGraphBar,
-  cgGraphBar2,
-  cgGraphBar3,
-  cgGraphBar4,
-  cgHeroChevron,
-  cgHeroCta,
-  cgIconRing1,
-  cgIconRing2,
-  cgIconRing3,
-  cgImageMountains,
-  cgImageSun,
-  cgListGrow,
-  cgListShrink,
-  cgOverlayModal,
-  cgOverlayPage,
-  cgPreloaderLeft,
-  cgPreloaderRight,
-  cgProgressArc,
-  cgScrollRow1,
-  cgScrollRow4,
-  cgScrollRows,
-  cgScrollThumb,
-  cgSectionMid,
-  cgSkel,
-  cgSkel2,
-  cgSkel3,
-  cgSkel4,
-  cgSkel5,
-  cgSkel6,
-  cgTabsLabelIn,
-  cgTabsLabelOut,
-  cgTabsPill,
-  cgTextLine1,
-  cgTextLine2,
-  cgTextLine3,
-  cgWidgetHour,
-  cgWidgetMinute,
-} from "./category-glyph-motion";
+import "./category-glyphs.css";
 
 const INK = "var(--cg-ink)";
 const SOFT = "var(--cg-soft)";
@@ -149,21 +81,21 @@ const GLYPHS: Record<string, ReactNode> = {
         stroke={SOFT}
         strokeWidth="2.2"
         strokeLinecap={CAP}
-        className={cg(cgTextLine1)}
+        className="cg cg-text-line cg-text-line-1"
       />
       <path
         d="M37 30 H46"
         stroke={SOFT}
         strokeWidth="2.2"
         strokeLinecap={CAP}
-        className={cg(cgTextLine2)}
+        className="cg cg-text-line cg-text-line-2"
       />
       <path
         d="M37 38 H43"
         stroke={FAINT}
         strokeWidth="2.2"
         strokeLinecap={CAP}
-        className={cg(cgTextLine3)}
+        className="cg cg-text-line cg-text-line-3"
       />
     </>
   ),
@@ -183,7 +115,7 @@ const GLYPHS: Record<string, ReactNode> = {
           stroke={String(stroke)}
           strokeWidth="2.2"
           strokeLinecap={CAP}
-          className={cg(i === 1 ? cgBgWave2 : cgBgWave13)}
+          className={`cg cg-bg-wave-${i + 1}`}
         />
       ))}
       {[
@@ -192,7 +124,7 @@ const GLYPHS: Record<string, ReactNode> = {
         [20, 48],
         [44, 48],
       ].map(([cx, cy]) => (
-        <circle key={`${cx}-${cy}`} cx={cx} cy={cy} r="1.5" fill={SOFT} className={cg(cgBgDot)} />
+        <circle key={`${cx}-${cy}`} cx={cx} cy={cy} r="1.5" fill={SOFT} className="cg cg-bg-dot" />
       ))}
     </>
   ),
@@ -210,11 +142,11 @@ const GLYPHS: Record<string, ReactNode> = {
         stroke={INK}
         strokeWidth="2.2"
       />
-      <circle cx="24.5" cy="26" r="3.5" fill={INK} className={cg(cgImageSun)} />
+      <circle cx="24.5" cy="26" r="3.5" fill={INK} className="cg cg-image-sun" />
       <path
         d="M14 42 L24 31 L31 38 L41 27 L50 36 V48 H14 Z"
         fill={SOFT}
-        className={cg(cgImageMountains)}
+        className="cg cg-image-mountains"
       />
     </>
   ),
@@ -244,7 +176,7 @@ const GLYPHS: Record<string, ReactNode> = {
             height="3.5"
             rx="1.75"
             fill={String(shade)}
-            className={cg(i < 2 ? cgListGrow : cgListShrink)}
+            className={`cg cg-list-bar ${i < 2 ? "cg-list-grow" : "cg-list-shrink"}`}
           />
         </g>
       ))}
@@ -270,7 +202,7 @@ const GLYPHS: Record<string, ReactNode> = {
         stroke={INK}
         strokeWidth="2.2"
       />
-      <g clipPath="url(#cg-container-clip)" className={cg(cgContainerTrack)}>
+      <g clipPath="url(#cg-container-clip)" className="cg cg-container-track">
         {[
           [14, SOFT],
           [28, INK],
@@ -293,14 +225,14 @@ const GLYPHS: Record<string, ReactNode> = {
         stroke={SOFT}
         strokeWidth="1.6"
         strokeLinecap={CAP}
-        className={cg(cgAccordionPlus)}
+        className="cg cg-accordion-plus"
       />
 
       <rect x="12" y="22" width="40" height="20" rx="2" fill={FAINT} />
       <Bar cx={26} y={25.5} w={20} h={3} />
       <path d="M45 27 H49" stroke={INK} strokeWidth="1.6" strokeLinecap={CAP} />
-      <Bar cx={30} y={32.5} w={28} h={2.5} fill={SOFT} className={cg(cgAccordionContent)} />
-      <Bar cx={28} y={37.5} w={24} h={2.5} fill={SOFT} className={cg(cgAccordionContent)} />
+      <Bar cx={30} y={32.5} w={28} h={2.5} fill={SOFT} className="cg cg-accordion-content" />
+      <Bar cx={28} y={37.5} w={24} h={2.5} fill={SOFT} className="cg cg-accordion-content" />
 
       <rect x="12" y="44" width="40" height="8" rx="2" fill={FAINT} />
       <Bar cx={25} y={46.5} w={18} h={3} fill={SOFT} />
@@ -309,7 +241,7 @@ const GLYPHS: Record<string, ReactNode> = {
         stroke={SOFT}
         strokeWidth="1.6"
         strokeLinecap={CAP}
-        className={cg(cgAccordionPlus)}
+        className="cg cg-accordion-plus"
       />
     </>
   ),
@@ -317,8 +249,8 @@ const GLYPHS: Record<string, ReactNode> = {
   /** Fanned stack of cards */
   card: (
     <>
-      <rect x="20" y="16" width="32" height="24" rx="4" fill={FAINT} className={cg(cgCardBack)} />
-      <rect x="16" y="20" width="32" height="24" rx="4" fill={SOFT} className={cg(cgCardMid)} />
+      <rect x="20" y="16" width="32" height="24" rx="4" fill={FAINT} className="cg cg-card-back" />
+      <rect x="16" y="20" width="32" height="24" rx="4" fill={SOFT} className="cg cg-card-mid" />
       <rect
         x="12"
         y="24"
@@ -338,9 +270,9 @@ const GLYPHS: Record<string, ReactNode> = {
   tabs: (
     <>
       <rect x="10" y="14" width="44" height="12" rx="6" fill={FAINT} />
-      <rect x="12" y="16" width="12" height="8" rx="4" fill={INK} className={cg(cgTabsPill)} />
-      <Bar cx={18} y={18.75} w={8} h={2.5} fill={SOFT} o={0} className={cg(cgTabsLabelIn)} />
-      <Bar cx={32} y={18.75} w={8} h={2.5} fill={SOFT} className={cg(cgTabsLabelOut)} />
+      <rect x="12" y="16" width="12" height="8" rx="4" fill={INK} className="cg cg-tabs-pill" />
+      <Bar cx={18} y={18.75} w={8} h={2.5} fill={SOFT} o={0} className="cg cg-tabs-label-in" />
+      <Bar cx={32} y={18.75} w={8} h={2.5} fill={SOFT} className="cg cg-tabs-label-out" />
       <Bar cx={46} y={18.75} w={8} h={2.5} fill={SOFT} />
 
       <rect x="10" y="31" width="44" height="19" rx="4" fill={FAINT} />
@@ -358,7 +290,7 @@ const GLYPHS: Record<string, ReactNode> = {
       <Bar cx={16} y={28} w={7} h={2.5} fill={SOFT} />
       <rect x="12.5" y="34" width="7" height="7" rx="1" fill={SOFT} />
 
-      <g className={cg(cgSectionMid)}>
+      <g className="cg cg-section-mid">
         <rect x="26" y="18" width="12" height="34" rx="2" fill={SOFT} />
         <Bar cx={32} y={22.5} w={8} h={2.5} />
         <rect x="28.5" y="29" width="7" height="9" rx="1" fill={INK} />
@@ -381,7 +313,7 @@ const GLYPHS: Record<string, ReactNode> = {
         fill="none"
         stroke={FAINT}
         strokeWidth="1.6"
-        className={cg(cgIconRing3)}
+        className="cg cg-icon-ring cg-icon-ring-3"
       />
       <circle
         cx="32"
@@ -390,7 +322,7 @@ const GLYPHS: Record<string, ReactNode> = {
         fill="none"
         stroke={SOFT}
         strokeWidth="2"
-        className={cg(cgIconRing2)}
+        className="cg cg-icon-ring cg-icon-ring-2"
       />
       <circle
         cx="32"
@@ -399,7 +331,7 @@ const GLYPHS: Record<string, ReactNode> = {
         fill="none"
         stroke={INK}
         strokeWidth="2.2"
-        className={cg(cgIconRing1)}
+        className="cg cg-icon-ring cg-icon-ring-1"
       />
       <circle cx="32" cy="32" r="2.5" fill={INK} />
     </>
@@ -415,7 +347,7 @@ const GLYPHS: Record<string, ReactNode> = {
         height="36"
         rx="2"
         fill={SOFT}
-        className={cg(cgPreloaderLeft)}
+        className="cg cg-preloader-left"
       />
       <rect
         x="33"
@@ -424,7 +356,7 @@ const GLYPHS: Record<string, ReactNode> = {
         height="36"
         rx="2"
         fill={SOFT}
-        className={cg(cgPreloaderRight)}
+        className="cg cg-preloader-right"
       />
       <path d="M32 14 V50" stroke={INK} strokeWidth="2.2" strokeLinecap={CAP} />
       <path
@@ -434,7 +366,7 @@ const GLYPHS: Record<string, ReactNode> = {
         strokeWidth="2"
         strokeLinecap={CAP}
         strokeLinejoin={JOIN}
-        className={cg(cgPreloaderLeft)}
+        className="cg cg-preloader-left"
       />
       <path
         d="M39 28 L43 32 L39 36"
@@ -443,7 +375,7 @@ const GLYPHS: Record<string, ReactNode> = {
         strokeWidth="2"
         strokeLinecap={CAP}
         strokeLinejoin={JOIN}
-        className={cg(cgPreloaderRight)}
+        className="cg cg-preloader-right"
       />
     </>
   ),
@@ -462,7 +394,7 @@ const GLYPHS: Record<string, ReactNode> = {
         strokeLinecap={CAP}
         strokeDasharray="79 113"
         transform="rotate(-90 32 32)"
-        className={cg(cgProgressArc)}
+        className="cg-progress-arc"
       />
       <Bar cx={32} y={30.25} w={14} h={3.5} fill={SOFT} />
     </>
@@ -485,12 +417,7 @@ const GLYPHS: Record<string, ReactNode> = {
           height={Number(h)}
           rx="2"
           fill={String(shade)}
-          className={cg(
-            cgGraphBar,
-            i === 1 && cgGraphBar2,
-            i === 2 && cgGraphBar3,
-            i === 3 && cgGraphBar4,
-          )}
+          className={`cg cg-graph-bar cg-graph-bar-${i + 1}`}
         />
       ))}
       <rect x="12" y="47" width="40" height="2" rx="1" fill={FAINT} />
@@ -500,11 +427,11 @@ const GLYPHS: Record<string, ReactNode> = {
   /** Modal floating above dimmed page content */
   overlay: (
     <>
-      <Bar cx={32} y={9} w={40} h={3.5} fill={SOFT} className={cg(cgOverlayPage)} />
-      <Bar cx={32} y={26} w={48} h={3.5} fill={SOFT} className={cg(cgOverlayPage)} />
-      <Bar cx={32} y={36} w={48} h={3.5} fill={SOFT} className={cg(cgOverlayPage)} />
-      <Bar cx={32} y={51.5} w={40} h={3.5} fill={SOFT} className={cg(cgOverlayPage)} />
-      <g className={cg(cgOverlayModal)}>
+      <Bar cx={32} y={9} w={40} h={3.5} fill={SOFT} className="cg cg-overlay-page" />
+      <Bar cx={32} y={26} w={48} h={3.5} fill={SOFT} className="cg cg-overlay-page" />
+      <Bar cx={32} y={36} w={48} h={3.5} fill={SOFT} className="cg cg-overlay-page" />
+      <Bar cx={32} y={51.5} w={40} h={3.5} fill={SOFT} className="cg cg-overlay-page" />
+      <g className="cg cg-overlay-modal">
         <rect
           x="17"
           y="19"
@@ -531,7 +458,7 @@ const GLYPHS: Record<string, ReactNode> = {
   /** CTA pill with a click cursor */
   button: (
     <>
-      <g className={cg(cgButtonPill)}>
+      <g className="cg cg-button-pill">
         <rect x="12" y="18" width="40" height="16" rx="8" fill={INK} />
         <rect x="21" y="24.25" width="16" height="3.5" rx="1.75" fill={FAINT} />
       </g>
@@ -541,7 +468,7 @@ const GLYPHS: Record<string, ReactNode> = {
         stroke={FAINT}
         strokeWidth="1"
         strokeLinejoin={JOIN}
-        className={cg(cgButtonCursor)}
+        className="cg cg-button-cursor"
       />
     </>
   ),
@@ -565,14 +492,14 @@ const GLYPHS: Record<string, ReactNode> = {
         stroke={INK}
         strokeWidth="2.2"
         strokeLinecap={CAP}
-        className={cg(cgWidgetHour)}
+        className="cg cg-widget-hour"
       />
       <path
         d="M32 32 L37 35"
         stroke={SOFT}
         strokeWidth="2"
         strokeLinecap={CAP}
-        className={cg(cgWidgetMinute)}
+        className="cg cg-widget-minute"
       />
       <circle cx="32" cy="32" r="1.4" fill={INK} />
     </>
@@ -581,10 +508,18 @@ const GLYPHS: Record<string, ReactNode> = {
   /** Bento composition */
   "bento-grid": (
     <>
-      <rect x="10" y="12" width="24" height="22" rx="3" fill={INK} className={cg(cgBentoTl)} />
-      <rect x="36" y="12" width="18" height="10" rx="3" fill={SOFT} className={cg(cgBentoTr1)} />
-      <rect x="36" y="24" width="18" height="10" rx="3" fill={FAINT} className={cg(cgBentoTr2)} />
-      <rect x="10" y="36" width="44" height="16" rx="3" fill={SOFT} className={cg(cgBentoBottom)} />
+      <rect x="10" y="12" width="24" height="22" rx="3" fill={INK} className="cg cg-bento-tl" />
+      <rect x="36" y="12" width="18" height="10" rx="3" fill={SOFT} className="cg cg-bento-tr1" />
+      <rect x="36" y="24" width="18" height="10" rx="3" fill={FAINT} className="cg cg-bento-tr2" />
+      <rect
+        x="10"
+        y="36"
+        width="44"
+        height="16"
+        rx="3"
+        fill={SOFT}
+        className="cg cg-bento-bottom"
+      />
     </>
   ),
 
@@ -593,7 +528,7 @@ const GLYPHS: Record<string, ReactNode> = {
     <>
       <Bar cx={32} y={14} w={40} h={6} />
       <Bar cx={32} y={24} w={30} h={4} fill={SOFT} />
-      <g className={cg(cgHeroCta)}>
+      <g className="cg cg-hero-cta">
         <rect x="22" y="32" width="20" height="10" rx="5" fill={INK} />
         <Bar cx={32} y={35.5} w={10} h={3} fill={FAINT} />
       </g>
@@ -604,7 +539,7 @@ const GLYPHS: Record<string, ReactNode> = {
         strokeWidth="2"
         strokeLinecap={CAP}
         strokeLinejoin={JOIN}
-        className={cg(cgHeroChevron)}
+        className="cg cg-hero-chevron"
       />
     </>
   ),
@@ -612,8 +547,16 @@ const GLYPHS: Record<string, ReactNode> = {
   /** Sections + scrollbar thumb */
   scroll: (
     <>
-      <g className={cg(cgScrollRows)}>
-        <rect x="10" y="14" width="36" height="8" rx="2" fill={INK} className={cg(cgScrollRow1)} />
+      <g className="cg cg-scroll-rows">
+        <rect
+          x="10"
+          y="14"
+          width="36"
+          height="8"
+          rx="2"
+          fill={INK}
+          className="cg cg-scroll-row-1"
+        />
         <rect x="10" y="28" width="36" height="8" rx="2" fill={SOFT} />
         <rect x="10" y="42" width="36" height="8" rx="2" fill={FAINT} />
         <rect
@@ -624,7 +567,7 @@ const GLYPHS: Record<string, ReactNode> = {
           rx="2"
           fill={FAINT}
           opacity="0"
-          className={cg(cgScrollRow4)}
+          className="cg cg-scroll-row-4"
         />
       </g>
       <rect x="50" y="14" width="3.5" height="36" rx="1.75" fill={FAINT} />
@@ -635,7 +578,7 @@ const GLYPHS: Record<string, ReactNode> = {
         height="11"
         rx="1.75"
         fill={SOFT}
-        className={cg(cgScrollThumb)}
+        className="cg cg-scroll-thumb"
       />
     </>
   ),
@@ -650,7 +593,7 @@ const GLYPHS: Record<string, ReactNode> = {
         height="26"
         rx="4"
         fill={FAINT}
-        className={cg(cgCarouselPeekL)}
+        className="cg cg-carousel-peek-l"
       />
       <rect
         x="48"
@@ -659,10 +602,10 @@ const GLYPHS: Record<string, ReactNode> = {
         height="26"
         rx="4"
         fill={FAINT}
-        className={cg(cgCarouselPeekR)}
+        className="cg cg-carousel-peek-r"
       />
 
-      <g className={cg(cgCarouselSlide)}>
+      <g className="cg cg-carousel-slide">
         <rect
           x="20"
           y="10"
@@ -679,8 +622,8 @@ const GLYPHS: Record<string, ReactNode> = {
       </g>
 
       <circle cx="25" cy="52" r="1.8" fill={SOFT} />
-      <circle cx="32" cy="52" r="2.2" fill={INK} className={cg(cgCarouselDotOut)} />
-      <circle cx="39" cy="52" r="1.8" fill={SOFT} className={cg(cgCarouselDotIn)} />
+      <circle cx="32" cy="52" r="2.2" fill={INK} className="cg cg-carousel-dot-out" />
+      <circle cx="39" cy="52" r="1.8" fill={SOFT} className="cg cg-carousel-dot-in" />
     </>
   ),
 
@@ -697,7 +640,7 @@ const GLYPHS: Record<string, ReactNode> = {
         stroke={FAINT}
         strokeWidth="2.2"
       />
-      <circle cx="21" cy="21" r="5" fill={SOFT} className={cg(cgSkel)} />
+      <circle cx="21" cy="21" r="5" fill={SOFT} className="cg cg-skel cg-skel-1" />
       <rect
         x="30"
         y="17.5"
@@ -705,7 +648,7 @@ const GLYPHS: Record<string, ReactNode> = {
         height="3"
         rx="1.5"
         fill={SOFT}
-        className={cg(cgSkel, cgSkel2)}
+        className="cg cg-skel cg-skel-2"
       />
       <rect
         x="30"
@@ -714,7 +657,7 @@ const GLYPHS: Record<string, ReactNode> = {
         height="2.5"
         rx="1.25"
         fill={FAINT}
-        className={cg(cgSkel, cgSkel3)}
+        className="cg cg-skel cg-skel-3"
       />
       <rect
         x="16"
@@ -723,7 +666,7 @@ const GLYPHS: Record<string, ReactNode> = {
         height="3"
         rx="1.5"
         fill={SOFT}
-        className={cg(cgSkel, cgSkel4)}
+        className="cg cg-skel cg-skel-4"
       />
       <rect
         x="16"
@@ -732,7 +675,7 @@ const GLYPHS: Record<string, ReactNode> = {
         height="3"
         rx="1.5"
         fill={SOFT}
-        className={cg(cgSkel, cgSkel5)}
+        className="cg cg-skel cg-skel-5"
       />
       <rect
         x="16"
@@ -741,7 +684,7 @@ const GLYPHS: Record<string, ReactNode> = {
         height="3"
         rx="1.5"
         fill={FAINT}
-        className={cg(cgSkel, cgSkel6)}
+        className="cg cg-skel cg-skel-6"
       />
     </>
   ),
@@ -749,7 +692,7 @@ const GLYPHS: Record<string, ReactNode> = {
   /** Tilted feature card + highlight sparkle */
   "feature-cards": (
     <>
-      <g className={cgFeatureCard}>
+      <g className="cg cg-feature-card">
         <rect
           x="16"
           y="18"
@@ -768,7 +711,7 @@ const GLYPHS: Record<string, ReactNode> = {
       <path
         d="M51 9 L52.5 13 L56.5 14.5 L52.5 16 L51 20 L49.5 16 L45.5 14.5 L49.5 13 Z"
         fill={INK}
-        className={cg(cgFeatureSparkle)}
+        className="cg cg-feature-sparkle"
       />
     </>
   ),
@@ -789,7 +732,7 @@ const GLYPHS: Record<string, ReactNode> = {
           cy={cy}
           r="4"
           fill={SOFT}
-          className={cg([cgFabDot1, cgFabDot2, cgFabDot3, cgFabDot4, cgFabDot5][i])}
+          className={`cg cg-fab-dot cg-fab-dot-${i + 1}`}
         />
       ))}
       <circle cx="32" cy="40" r="8" fill={INK} />
@@ -798,7 +741,7 @@ const GLYPHS: Record<string, ReactNode> = {
         stroke={FAINT}
         strokeWidth="2"
         strokeLinecap={CAP}
-        className={cg(cgFabPlus)}
+        className="cg cg-fab-plus"
       />
     </>
   ),
