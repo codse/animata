@@ -18,7 +18,8 @@ export default function CategorySkeleton({ variant, className }: CategorySkeleto
     <svg
       viewBox={`0 0 ${CARD_W} ${CARD_H}`}
       className={cn(
-        "cg-card w-full overflow-visible rounded-2xl text-foreground transition-transform duration-300 ease-out group-hover:scale-[1.02]",
+        "[--cg-darkest:#76756f] [--cg-lightest:#e3e3e3] [--cg-ink:var(--ink,var(--cg-darkest))] [--cg-faint:var(--ink-faint,var(--cg-lightest))] [--cg-soft:color-mix(in_oklab,var(--cg-ink)_50%,transparent)] dark:[--cg-ink:var(--ink,var(--cg-lightest))] dark:[--cg-faint:var(--ink-faint,var(--cg-darkest))]",
+        "w-full overflow-visible rounded-2xl text-foreground transition-transform duration-300 ease-out group-hover:scale-[1.02]",
         className,
       )}
       aria-hidden="true"
