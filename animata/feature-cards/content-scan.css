@@ -6,10 +6,11 @@
   }
 
   .highlight.active {
-    background-color: #dad9fe;
+    background-color: #ffcc00;
+    color: hsl(var(--foreground));
   }
 
   .scanned-text {
-    color: #4b0082;
+    color: hsl(var(--foreground));
   }
 }
