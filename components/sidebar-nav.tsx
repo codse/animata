@@ -16,7 +16,17 @@ export interface DocsSidebarNavProps {
   variant?: "docs" | "plain";
 }
 
-const SPECIAL_HEADER_COUNT = 2;
+const SPECIAL_HEADER_TITLES = new Set(["Getting Started", "Contributing"]);
+
+function isSpecialHeader(item: SidebarNavItem) {
+  return SPECIAL_HEADER_TITLES.has(item.title);
+}
+
+function findSidebarLink(pathname: string, root: ParentNode = document) {
+  return Array.from(root.querySelectorAll("[data-sidebar-link]")).find(
+    (element) => element.getAttribute("data-sidebar-link") === pathname,
+  );
+}
 
 function normalizeForFilter(value: string) {
   return value
@@ -173,7 +183,7 @@ export function DocsSidebarNav({ items, variant = "docs", className }: DocsSideb
       return next;
     });
 
-    const node = document.querySelector(`[data-sidebar-link="${pathname}"]`);
+    const node = findSidebarLink(pathname);
     node?.scrollIntoView({ behavior: "instant", block: "nearest" });
     updateEdges();
   }, [items, pathname, updateEdges]);
@@ -192,7 +202,7 @@ export function DocsSidebarNav({ items, variant = "docs", className }: DocsSideb
 
   const navList = filteredItems.length ? (
     <div className="w-full pb-4">
-      {filteredItems.map((item, index) => {
+      {filteredItems.map((item) => {
         const sectionKey = getCategoryKey(item);
         const isOpen = isFiltering || !closed.has(sectionKey);
         const categoryHref = item.href ?? item.items?.[0]?.href;
@@ -232,8 +242,8 @@ export function DocsSidebarNav({ items, variant = "docs", className }: DocsSideb
                   )}
                 >
                   <span className="truncate">{item.title}</span>
-                  {hasChildren && index >= SPECIAL_HEADER_COUNT ? (
-                    <span className="flex aspect-square shrink-0 items-center justify-center rounded-full bg-gray-200 px-1 py-0.5 text-[10px] leading-none text-[#000000] no-underline">
+                  {hasChildren && !isSpecialHeader(item) ? (
+                    <span className="flex aspect-square shrink-0 items-center justify-center rounded-full bg-muted px-1 py-0.5 text-[10px] leading-none text-muted-foreground no-underline">
                       {item.label || item.items?.length}
                     </span>
                   ) : null}
@@ -255,7 +265,7 @@ export function DocsSidebarNav({ items, variant = "docs", className }: DocsSideb
               </div>
             ) : null}
 
-            {index === SPECIAL_HEADER_COUNT - 1 ? (
+            {item.title === "Contributing" ? (
               <div className="mt-2 mb-1 pl-4 text-xs font-semibold text-muted-foreground uppercase">
                 Components
               </div>
@@ -352,7 +362,7 @@ export function DocsSidebarNavItems({ items, pathname }: DocsSidebarNavItemsProp
             >
               <span className="truncate">{item.title}</span>
               {item.label ? (
-                <span className="ml-2 rounded-md bg-lime-300 px-1.5 py-0.5 text-xs leading-none text-[#000000] no-underline group-hover:no-underline">
+                <span className="ml-2 rounded-md bg-[var(--footer-gold)] px-1.5 py-0.5 text-xs leading-none text-neutral-900 no-underline group-hover:no-underline">
                   {item.label}
                 </span>
               ) : null}
