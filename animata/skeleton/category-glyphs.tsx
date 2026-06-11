@@ -4,7 +4,9 @@
  * category so users can recognize it at a glance.
  *
  * Shading uses three tokens on the parent SVG (--cg-ink / --cg-soft / --cg-faint).
- * Hover micro-interactions use Tailwind on each part; ancestor must be `group/cg`.
+ * Hover micro-interactions: default is Tailwind `group-hover/cg:*` on each part
+ * (ancestor must be `group/cg`). Four glyphs use CSS scale/rotate exceptions in
+ * category-glyphs.css; keyframe tokens live in styles/globals.css @theme.
  */
 
 import type { ReactNode } from "react";
@@ -71,27 +73,21 @@ const GLYPHS: Record<string, ReactNode> = {
         stroke={SOFT}
         strokeWidth="2.2"
         strokeLinecap={CAP}
-        className={cn("cg-motion", "origin-left motion-safe:group-hover/cg:scale-x-125")}
+        className={cn("cg-motion", "cg-text-line", "cg-text-line-1")}
       />
       <path
         d="M37 30 H46"
         stroke={SOFT}
         strokeWidth="2.2"
         strokeLinecap={CAP}
-        className={cn(
-          "cg-motion",
-          "origin-left motion-safe:group-hover/cg:scale-x-150 motion-safe:group-hover/cg:delay-[60ms]",
-        )}
+        className={cn("cg-motion", "cg-text-line", "cg-text-line-2")}
       />
       <path
         d="M37 38 H43"
         stroke={FAINT}
         strokeWidth="2.2"
         strokeLinecap={CAP}
-        className={cn(
-          "cg-motion",
-          "origin-left motion-safe:group-hover/cg:scale-x-[1.8] motion-safe:group-hover/cg:delay-[120ms]",
-        )}
+        className={cn("cg-motion", "cg-text-line", "cg-text-line-3")}
       />
     </>
   ),
@@ -196,13 +192,7 @@ const GLYPHS: Record<string, ReactNode> = {
             height="3.5"
             rx="1.75"
             fill={String(shade)}
-            className={cn(
-              "cg-motion",
-              "origin-left",
-              i < 2
-                ? "motion-safe:group-hover/cg:scale-x-[1.3]"
-                : "motion-safe:group-hover/cg:scale-x-[0.7]",
-            )}
+            className={cn("cg-motion", "cg-list-bar", i < 2 ? "cg-list-grow" : "cg-list-shrink")}
           />
         </g>
       ))}
@@ -406,7 +396,8 @@ const GLYPHS: Record<string, ReactNode> = {
         strokeWidth="1.6"
         className={cn(
           "cg-motion-frame",
-          "motion-safe:group-hover/cg:animate-cg-ping motion-safe:group-hover/cg:[animation-delay:0.3s]",
+          "motion-safe:group-hover/cg:animate-cg-ping",
+          "motion-safe:group-hover/cg:[animation-delay:0.3s]",
         )}
       />
       <circle
@@ -418,7 +409,8 @@ const GLYPHS: Record<string, ReactNode> = {
         strokeWidth="2"
         className={cn(
           "cg-motion-frame",
-          "motion-safe:group-hover/cg:animate-cg-ping motion-safe:group-hover/cg:[animation-delay:0.15s]",
+          "motion-safe:group-hover/cg:animate-cg-ping",
+          "motion-safe:group-hover/cg:[animation-delay:0.15s]",
         )}
       />
       <circle
@@ -514,13 +506,7 @@ const GLYPHS: Record<string, ReactNode> = {
           height={Number(h)}
           rx="2"
           fill={String(shade)}
-          className={cn(
-            "cg-motion",
-            "origin-[center_bottom] motion-safe:group-hover/cg:scale-y-[1.18]",
-            i === 1 && "motion-safe:group-hover/cg:delay-[50ms]",
-            i === 2 && "motion-safe:group-hover/cg:delay-100",
-            i === 3 && "motion-safe:group-hover/cg:delay-150",
-          )}
+          className={cn("cg-motion", "cg-graph-bar", `cg-graph-bar-${i + 1}`)}
         />
       ))}
       <rect x="12" y="47" width="40" height="2" rx="1" fill={FAINT} />
@@ -626,17 +612,14 @@ const GLYPHS: Record<string, ReactNode> = {
         stroke={INK}
         strokeWidth="2.2"
         strokeLinecap={CAP}
-        className={cn(
-          "cg-motion",
-          "origin-[center_bottom] motion-safe:group-hover/cg:rotate-[30deg]",
-        )}
+        className={cn("cg-motion", "cg-widget-hour")}
       />
       <path
         d="M32 32 L37 35"
         stroke={SOFT}
         strokeWidth="2"
         strokeLinecap={CAP}
-        className={cn("cg-motion", "origin-[0%_0%] motion-safe:group-hover/cg:rotate-[60deg]")}
+        className={cn("cg-motion", "cg-widget-minute")}
       />
       <circle cx="32" cy="32" r="1.4" fill={INK} />
     </>
@@ -841,7 +824,8 @@ const GLYPHS: Record<string, ReactNode> = {
         fill={SOFT}
         className={cn(
           "cg-motion-frame",
-          "motion-safe:group-hover/cg:animate-cg-shimmer motion-safe:group-hover/cg:[animation-delay:0.1s]",
+          "motion-safe:group-hover/cg:animate-cg-shimmer",
+          "motion-safe:group-hover/cg:[animation-delay:0.1s]",
         )}
       />
       <rect
@@ -853,7 +837,8 @@ const GLYPHS: Record<string, ReactNode> = {
         fill={FAINT}
         className={cn(
           "cg-motion-frame",
-          "motion-safe:group-hover/cg:animate-cg-shimmer motion-safe:group-hover/cg:[animation-delay:0.2s]",
+          "motion-safe:group-hover/cg:animate-cg-shimmer",
+          "motion-safe:group-hover/cg:[animation-delay:0.2s]",
         )}
       />
       <rect
@@ -865,7 +850,8 @@ const GLYPHS: Record<string, ReactNode> = {
         fill={SOFT}
         className={cn(
           "cg-motion-frame",
-          "motion-safe:group-hover/cg:animate-cg-shimmer motion-safe:group-hover/cg:[animation-delay:0.3s]",
+          "motion-safe:group-hover/cg:animate-cg-shimmer",
+          "motion-safe:group-hover/cg:[animation-delay:0.3s]",
         )}
       />
       <rect
@@ -877,7 +863,8 @@ const GLYPHS: Record<string, ReactNode> = {
         fill={SOFT}
         className={cn(
           "cg-motion-frame",
-          "motion-safe:group-hover/cg:animate-cg-shimmer motion-safe:group-hover/cg:[animation-delay:0.4s]",
+          "motion-safe:group-hover/cg:animate-cg-shimmer",
+          "motion-safe:group-hover/cg:[animation-delay:0.4s]",
         )}
       />
       <rect
@@ -889,7 +876,8 @@ const GLYPHS: Record<string, ReactNode> = {
         fill={FAINT}
         className={cn(
           "cg-motion-frame",
-          "motion-safe:group-hover/cg:animate-cg-shimmer motion-safe:group-hover/cg:[animation-delay:0.5s]",
+          "motion-safe:group-hover/cg:animate-cg-shimmer",
+          "motion-safe:group-hover/cg:[animation-delay:0.5s]",
         )}
       />
     </>

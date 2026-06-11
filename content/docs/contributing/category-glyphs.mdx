@@ -13,7 +13,7 @@ You only need this when you add a **new component category** (a new sidebar sect
 1. Register the category in `config/docs.ts` with `href: "/docs/<slug>"`.
 2. Add `content/docs/<slug>/index.mdx`.
 3. Add `GLYPHS["<slug>"]` in `animata/skeleton/category-glyphs.tsx`.
-4. Wire hover motion on any animated parts in that same file: `cn("cg-motion", …)` plus Tailwind classes like `motion-safe:group-hover/cg:scale-x-125` (see Hover animations).
+4. Wire hover motion on animated parts (Tailwind `group-hover/cg:*` by default; see [Hover animations](#hover-animations) for CSS exceptions and keyframe loops).
 5. Add a story in `category-skeleton.stories.tsx`. The decorator already wraps stories in `group/cg`.
 
 Once the category has at least one published component, `/components` picks it up automatically via `lib/component-categories.ts`.
@@ -56,19 +56,43 @@ Round caps and joins on all strokes.
 
 ## Hover animations
 
-Put `cg-motion` on any part that moves, then add Tailwind hover utilities on the same element:
+**Default:** put `cg-motion` on any part that moves, then Tailwind hover utilities on the same element:
 
 ```tsx
-className={cn("cg-motion", "origin-left motion-safe:group-hover/cg:scale-x-125")}
+className={cn("cg-motion", "motion-safe:group-hover/cg:scale-[1.06]")}
 ```
 
-The parent tile must be `group/cg` (the `Link` on `/components`, or the Storybook decorator) or the hover classes never run.
+The parent tile must be `group/cg` (the `Link` on `/components`, or the Storybook decorator) or `group-hover/cg:*` never runs.
 
-`category-glyphs.css` does not define the hover transforms. It only sets `transform-box`, `transform-origin`, and transitions on `.cg-motion`, with `prefers-reduced-motion` respected. Other helpers when you need them:
+**Keyframe loops** (icon ripple, skeleton shimmer, hero bounce, feature-cards twinkle): use `cg-motion-frame` plus Tailwind animation utilities:
 
-- `cg-motion-frame` for keyframe loops (no transform transition, so animation does not fight CSS transitions)
-- `cg-progress-arc` for stroke-dasharray only
-- `cg-feature-tilt` for a resting tilt that straightens on hover
+```tsx
+className={cn(
+  "cg-motion-frame",
+  "motion-safe:group-hover/cg:animate-cg-ping",
+  "motion-safe:group-hover/cg:[animation-delay:0.15s]",
+)}
+```
+
+`--animate-cg-*` tokens and `@keyframes cg-*` live in `styles/globals.css` inside `@theme`. They cannot live in `category-glyphs.css` — that file uses `@reference` to globals, and `@theme inline` there does not emit `animate-cg-*` utilities.
+
+**SVG scale exceptions** — Tailwind v4 `scale-x-*` / `scale-y-*` longhands fail on stroke paths and bottom-anchored rects. Four categories use semantic classes + CSS hover rules in `category-glyphs.css` instead:
+
+| Category | Classes | Effect |
+|----------|---------|--------|
+| `text` | `cg-text-line`, `cg-text-line-1` … `3` | motion trail lines scale from left |
+| `list` | `cg-list-bar`, `cg-list-grow` / `cg-list-shrink` | top rows expand, bottom rows shrink |
+| `graphs` | `cg-graph-bar`, `cg-graph-bar-1` … `4` | bars grow from baseline |
+| `widget` | `cg-widget-hour`, `cg-widget-minute` | clock hands rotate |
+
+Everything else stays Tailwind on the element.
+
+**CSS helpers** (no hover rules except the four rows above):
+
+- `cg-motion` — `transform-box`, transitions (`prefers-reduced-motion` respected)
+- `cg-motion-frame` — same box/origin, no transform transition (for keyframe loops)
+- `cg-progress-arc` — `stroke-dasharray` only
+- `cg-feature-tilt` — resting `-8deg` tilt; pair with `motion-safe:group-hover/cg:rotate-0`
 
 Pick motion that fits the category: scroll rows slide, button pills swell, container content marquees.
 

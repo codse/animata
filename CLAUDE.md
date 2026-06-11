@@ -76,7 +76,7 @@ Add to the relevant `YYYY-MM.mdx` file. No need to touch the index unless the su
 animata/               # Component source (copy-paste friendly)
   skeleton/
     category-glyphs.tsx    # /components tile SVG pictograms (GLYPHS map)
-    category-glyphs.css    # cg-motion base + keyframes (hover transforms live in TSX)
+    category-glyphs.css    # cg-motion base + SVG scale/rotate hover exceptions
     category-skeleton.tsx  # Tile frame + shade tokens
   container/           # Layout wrappers (marquee, dock, ribbon…)
   text/                # Text animation effects
