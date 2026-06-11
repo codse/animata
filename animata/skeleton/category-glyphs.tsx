@@ -589,7 +589,7 @@ const GLYPHS: Record<string, ReactNode> = {
     <>
       <g className={cn("cg-motion", "motion-safe:group-hover/cg:scale-[1.06]")}>
         <rect x="12" y="18" width="40" height="16" rx="8" fill={INK} />
-        <rect x="21" y="24.25" width="16" height="3.5" rx="1.75" fill={FAINT} />
+        <rect x="20" y="24.25" width="24" height="3.5" rx="1.75" fill={FAINT} />
       </g>
       <path
         d="M42 30 L42 46 L46.5 41.5 L49 48 L52 46.8 L49.5 40.5 L55 40 Z"
