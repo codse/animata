@@ -6,10 +6,10 @@ Guidelines for the SVG pictograms on `/components` — one tile per docs categor
 
 | File | Role |
 |------|------|
-| `category-glyphs.tsx` | Glyph SVG markup, `GLYPHS` map, hover Tailwind on animated parts |
-| `category-glyphs.css` | Motion base classes, keyframe definitions, transition defaults |
-| `category-skeleton.tsx` | Card frame; shade tokens on the tile SVG; scales glyph into the tile |
-| `category-skeleton.stories.tsx` | Storybook preview per variant (`group/cg` decorator) |
+| `animata/skeleton/category-glyphs.tsx` | Glyph SVG markup, `GLYPHS` map, hover Tailwind on animated parts |
+| `animata/skeleton/category-glyphs.css` | Motion base classes, keyframe definitions, transition defaults |
+| `animata/skeleton/category-skeleton.tsx` | Card frame; shade tokens on the tile SVG; scales glyph into the tile |
+| `animata/skeleton/category-skeleton.stories.tsx` | Storybook preview per variant (`group/cg` decorator) |
 
 **When you need a new glyph**
 
