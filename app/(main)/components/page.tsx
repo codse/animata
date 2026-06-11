@@ -30,7 +30,7 @@ export default function ComponentsPage() {
           <li key={category.slug} className="min-w-0">
             <Link href={category.href} className="group group/cg block">
               <CategorySkeleton variant={category.slug} />
-              <p className="mt-3 px-2 text-base leading-snug tracking-tight sm:text-[1.2rem]">
+              <p className="mt-3 px-2.5 text-base leading-snug tracking-tight sm:text-lg">
                 <span className="font-semibold text-foreground transition-colors duration-300 group-hover:text-foreground/40">
                   {category.title}
                 </span>
