@@ -14,7 +14,20 @@ const INSTALL_FIXTURES = [
     id: "simple",
     label: "single file, no npm deps",
     item: "preloader/split-reveal.json",
-    expectFiles: ["components/animata/preloader/split-reveal.tsx"],
+    expectFiles: [
+      "components/animata/preloader/split-reveal.tsx",
+      "components/animata/preloader/split-reveal.css",
+    ],
+    expectDeps: [],
+  },
+  {
+    id: "co-located-css",
+    label: "co-located css from ./ import in primary component",
+    item: "background/animated-beam.json",
+    expectFiles: [
+      "components/animata/background/animated-beam.tsx",
+      "components/animata/background/animated-beam.css",
+    ],
     expectDeps: [],
   },
   {

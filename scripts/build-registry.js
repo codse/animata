@@ -303,9 +303,13 @@ function buildItem(mdxPath) {
     return null;
   }
 
-  const bundledRefs = new Set([primaryRef]);
-  const files = [registryFileEntry(primaryRef, primarySource)];
-  const queue = [primarySource];
+  const bundledRefs = new Set();
+  const files = [];
+  const queue = [];
+  if (!addBundledSourceFile(primaryRef, files, bundledRefs, queue)) {
+    console.warn(`  skip: could not bundle ${primaryRef} (referenced by ${rel})`);
+    return null;
+  }
 
   for (const ref of fileRefs) {
     if (ref === primaryRef) continue;
