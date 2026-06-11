@@ -66,9 +66,9 @@
 }
 
 /**
- * SVG scale-x / scale-y exceptions — TW v4 longhands (scale-x, scale-y) fail on stroke
- * paths and bottom-anchored rects; unified transform here. Animations use Tailwind
- * (animate-cg-* in globals.css). Everything else: group-hover/cg:* in TSX.
+ * SVG scale-x / scale-y exceptions — TW v4 longhands fail on stroke paths and
+ * bottom-anchored rects; unified transform here. animate-cg-* tokens + keyframes
+ * live in globals.css (@theme inline in this file does not emit TW utilities).
  */
 @media (prefers-reduced-motion: no-preference) {
   .cg-text-line {

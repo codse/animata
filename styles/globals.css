@@ -110,6 +110,7 @@
   --animate-float: float 3s ease-in-out infinite;
   --animate-rotate-full: rotate-full 45s linear infinite;
 
+  /* Category glyphs — must live here; @theme inline in category-glyphs.css (@reference) does not emit animate-cg-* */
   --animate-cg-ping: cg-ping 1.4s cubic-bezier(0.22, 1, 0.36, 1) infinite;
   --animate-cg-bounce: cg-bounce 1s ease-in-out infinite;
   --animate-cg-shimmer: cg-shimmer 1.2s ease-in-out infinite;

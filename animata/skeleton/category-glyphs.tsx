@@ -4,7 +4,9 @@
  * category so users can recognize it at a glance.
  *
  * Shading uses three tokens on the parent SVG (--cg-ink / --cg-soft / --cg-faint).
- * Hover micro-interactions use Tailwind on each part; ancestor must be `group/cg`.
+ * Hover micro-interactions: default is Tailwind `group-hover/cg:*` on each part
+ * (ancestor must be `group/cg`). Four glyphs use CSS scale/rotate exceptions in
+ * category-glyphs.css; keyframe tokens live in styles/globals.css @theme.
  */
 
 import type { ReactNode } from "react";

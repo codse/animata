@@ -7,7 +7,8 @@ Guidelines for the SVG pictograms on `/components` — one tile per docs categor
 | File | Role |
 |------|------|
 | `animata/skeleton/category-glyphs.tsx` | Glyph SVG markup, `GLYPHS` map, hover Tailwind on animated parts |
-| `animata/skeleton/category-glyphs.css` | Motion base classes, keyframe definitions, transition defaults |
+| `animata/skeleton/category-glyphs.css` | Motion base classes, SVG scale/rotate hover exceptions, transition defaults |
+| `styles/globals.css` (`@theme`) | `--animate-cg-*` tokens and `@keyframes cg-*` for glyph keyframe loops |
 | `animata/skeleton/category-skeleton.tsx` | Card frame; shade tokens on the tile SVG; scales glyph into the tile |
 | `animata/skeleton/category-skeleton.stories.tsx` | Storybook preview per variant (`group/cg` decorator) |
 
@@ -16,7 +17,7 @@ Guidelines for the SVG pictograms on `/components` — one tile per docs categor
 1. Add the category to `config/docs.ts` (`sidebarNav` + `href: "/docs/<slug>"`).
 2. Add a category index MDX at `content/docs/<slug>/index.mdx`.
 3. Add an entry to `GLYPHS` in `category-glyphs.tsx` keyed by the **slug** (e.g. `"bento-grid"`, not `"Bento grid"`).
-4. Compose hover motion on animated parts in `category-glyphs.tsx` with `cn("cg-motion", …)` plus Tailwind `motion-safe:group-hover/cg:*` utilities (see Hover micro-interactions).
+4. Compose hover motion on animated parts in `category-glyphs.tsx` — Tailwind `motion-safe:group-hover/cg:*` by default (see Hover micro-interactions for CSS exceptions and keyframe loops).
 5. Add a Storybook story in `category-skeleton.stories.tsx`.
 6. Confirm `/components` lists the category (via `lib/component-categories.ts` — automatic when published count > 0).
 
@@ -102,23 +103,55 @@ Do not mix `rx={3}`, `rx={3.5}`, `rx={6}` on the same object class.
 
 ## Hover micro-interactions
 
-Hover transforms live in **TSX**, not CSS. Tag animated parts with `className={cn("cg-motion", …)}` and compose Tailwind utilities on the same element:
+Hover behavior uses **three patterns**. Pick the one that matches the SVG part.
+
+### 1. Tailwind (default)
+
+Most glyphs: `className={cn("cg-motion", …)}` plus `motion-safe:group-hover/cg:*` on the same element. Works for translate, uniform scale, rotate on rects/groups, opacity, and fill crossfades.
+
+```tsx
+className={cn("cg-motion", "motion-safe:group-hover/cg:scale-[1.06]")}
+```
+
+The tile ancestor must be **`group/cg`** (`Link` on `/components`, Storybook decorator) so `group-hover/cg:*` variants fire.
+
+### 2. Tailwind keyframe loops
+
+Ripple, shimmer, bounce, twinkle: `cg-motion-frame` plus `motion-safe:group-hover/cg:animate-cg-*` and optional `[animation-delay:…]`.
 
 ```tsx
 className={cn(
-  "cg-motion",
-  "origin-left motion-safe:group-hover/cg:scale-x-125",
+  "cg-motion-frame",
+  "motion-safe:group-hover/cg:animate-cg-ping",
+  "motion-safe:group-hover/cg:[animation-delay:0.15s]",
 )}
 ```
 
-- The tile ancestor must be **`group/cg`** (`Link` on `/components`, Storybook decorator) so `group-hover/cg:*` variants fire.
-- `category-glyphs.css` does **not** define hover transforms. It only sets shared motion bases:
-  - **`.cg-motion`** — `transform-box`, `transform-origin`, and transition properties (gated by `prefers-reduced-motion`).
-  - **`.cg-motion-frame`** — same box/origin, no transform transition (for keyframe-driven parts so CSS animation is not fighting transitions).
-  - **`.cg-progress-arc`** — `stroke-dasharray` transition only (no `transform-box`; conflicts with SVG rotate).
-  - **`.cg-feature-tilt`** — resting `-8deg` tilt; pair with `motion-safe:group-hover/cg:rotate-0`.
-- Keyframe loops (`animate-cg-ping`, `animate-cg-bounce`, etc.) are defined in `category-glyphs.css` `@theme` and applied via Tailwind on `cg-motion-frame` parts.
-- Animation should **mimic the component category** (button swells, scroll rows translate, accordion content darkens to INK, container marquee slides).
+**`--animate-cg-ping`**, **`--animate-cg-bounce`**, **`--animate-cg-shimmer`**, **`--animate-cg-twinkle`** and their `@keyframes` live in **`styles/globals.css`** inside `@theme`. Do not move them into `category-glyphs.css` — that file is `@reference`-only and `@theme inline` there does not emit `animate-cg-*` utilities.
+
+Used on: `icon`, `skeleton`, `hero`, `feature-cards`.
+
+### 3. CSS scale/rotate exceptions
+
+Tailwind v4 **`scale-x-*` / `scale-y-*`** use individual transform longhands that fail on SVG stroke paths and bottom-anchored rects. Four categories use semantic classes + `.group\/cg:hover` rules in **`category-glyphs.css`** (unified `transform: scaleX()` / `scaleY()` / `rotate()`):
+
+| Category | TSX classes | Hover effect |
+|----------|-------------|--------------|
+| `text` | `cg-text-line`, `cg-text-line-1` … `3` | trail lines extend, staggered |
+| `list` | `cg-list-bar`, `cg-list-grow` / `cg-list-shrink` | top rows grow, bottom shrink |
+| `graphs` | `cg-graph-bar`, `cg-graph-bar-1` … `4` | bars grow from baseline |
+| `widget` | `cg-widget-hour`, `cg-widget-minute` | clock hands tick forward |
+
+Do not use Tailwind `scale-x-*` / `scale-y-*` on stroke `<path>`s or graph bars — use this pattern instead.
+
+### CSS helpers (bases only, except §3)
+
+- **`.cg-motion`** — `transform-box: fill-box`, `transform-origin`, transitions (gated by `prefers-reduced-motion`).
+- **`.cg-motion-frame`** — same box/origin, no transform transition (keyframe loops only).
+- **`.cg-progress-arc`** — `stroke-dasharray` transition only (no `transform-box`; conflicts with SVG rotate).
+- **`.cg-feature-tilt`** — resting `-8deg` tilt; pair with `motion-safe:group-hover/cg:rotate-0`.
+
+Animation should **mimic the component category** (button swells, scroll rows translate, accordion content darkens to INK, container marquee slides).
 
 ---
 
@@ -130,7 +163,7 @@ className={cn(
 - [ ] Stroke tier matches role (2.2 / 2 / 1.6)
 - [ ] Card frames use `rx={4}`; pills fully rounded
 - [ ] Layer story is clear (which element is focal?)
-- [ ] Hover behavior matches category semantics (optional but preferred)
+- [ ] Hover behavior matches category semantics; correct pattern (Tailwind / keyframe / CSS exception)
 - [ ] Decorative SVGs in stories: include `<title>` if Biome `noSvgWithoutTitle` fires
 - [ ] Story added; spot-check light + dark on `/components`
 

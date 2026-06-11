@@ -23,6 +23,22 @@ export const Text: Story = {
   args: { variant: "text", className: "w-80" },
 };
 
+export const List: Story = {
+  args: { variant: "list", className: "w-80" },
+};
+
+export const Icon: Story = {
+  args: { variant: "icon", className: "w-80" },
+};
+
+export const Graphs: Story = {
+  args: { variant: "graphs", className: "w-80" },
+};
+
+export const Skeleton: Story = {
+  args: { variant: "skeleton", className: "w-80" },
+};
+
 export const Background: Story = {
   args: { variant: "background", className: "w-80" },
 };
