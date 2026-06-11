@@ -18,15 +18,17 @@ author: harimanok_
 
 <Step>Run the following command</Step>
 
-It will create a new file `animated-border-trail.tsx` inside the `components/animata/container` directory.
+It will create `animated-border-trail.tsx` and the co-located `animated-border-trail.css` inside `components/animata/container`.
 
 ```bash
-mkdir -p components/animata/container && touch components/animata/container/animated-border-trail.tsx
+mkdir -p components/animata/container && touch components/animata/container/animated-border-trail.tsx components/animata/container/animated-border-trail.css
 ```
 
 <Step>Paste the code</Step>
 
-Open the newly created file and paste the following code:
+```jsx file=<rootDir>/animata/container/animated-border-trail.css
+
+```
 
 ```jsx file=<rootDir>/animata/container/animated-border-trail.tsx
 
@@ -36,7 +38,7 @@ Open the newly created file and paste the following code:
 
 ## How it works
 
-No global CSS setup is required. The component ships a scoped `<style>` block with `@property --border-trail-angle` and a `@keyframes border-trail` rule — both are needed because Tailwind utilities cannot register typed custom properties or animate them.
+Keyframes and the typed `@property --border-trail-angle` live in the co-located `animated-border-trail.css` import — Tailwind utilities cannot register typed custom properties or animate them.
 
 The trail layer is an absolutely positioned `conic-gradient` whose start angle reads `--border-trail-angle`. Keyframes sweep that property from `0deg` to `360deg`; duration comes from the `duration` prop via an inline `animation` style so each instance can run at its own speed without a separate `@theme` token.
 

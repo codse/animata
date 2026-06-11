@@ -16,22 +16,19 @@ author: harimanok_
 
 <Steps>
 
-<Step>No dependencies</Step>
-
-Everything ships in the one file, including the `meteor` keyframes (in an inline `<style>`). There's
-no extra CSS to add and no config to touch.
-
 <Step>Run the following command</Step>
 
-It will create a new file `animated-beam.tsx` inside the `components/animata/background` directory.
+It will create `animated-beam.tsx` and the co-located `animated-beam.css` inside `components/animata/background`.
 
 ```bash
-mkdir -p components/animata/background && touch components/animata/background/animated-beam.tsx
+mkdir -p components/animata/background && touch components/animata/background/animated-beam.tsx components/animata/background/animated-beam.css
 ```
 
 <Step>Paste the code</Step>
 
-Open the newly created file and paste the following code:
+```jsx file=<rootDir>/animata/background/animated-beam.css
+
+```
 
 ```jsx file=<rootDir>/animata/background/animated-beam.tsx
 

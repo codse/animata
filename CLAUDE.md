@@ -10,7 +10,7 @@ Animata is a free, open-source library of animated React components built with N
 - Use `cn()` from `@/lib/utils` for class merging — never raw string concatenation
 - Tailwind for layout, color, spacing, and transitions on the component itself
 - Co-located `<name>.css` imported from the TSX for keyframes, pseudo-elements, and selectors Tailwind cannot express (see `roll-text.tsx`, `metis-text.tsx`)
-- Inline `<style>` blocks are fine for small self-contained keyframes when a separate file would be overkill (see `marquee.tsx`)
+- No inline `<style>` blocks — use co-located `<name>.css` imported from the TSX (see `marquee.tsx`, `roll-text.tsx`)
 - No CSS modules, no styled-components
 - Fonts: `--font-display` = Instrument Sans (headings/display), `--font-sans` = IBM Plex Sans (body), `--font-mono` = Lilex
 - Brand yellow: `#ffcc00` (from logo) — use for highlights and badges

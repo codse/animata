@@ -220,6 +220,14 @@ function addBundledSourceFile(ref, files, bundledRefs, queue) {
   bundledRefs.add(ref);
   files.push(registryFileEntry(ref, content));
   queue.push(content);
+
+  const dir = path.posix.dirname(ref);
+  for (const spec of parseImports(content)) {
+    if (!spec.startsWith("./") || !spec.endsWith(".css")) continue;
+    const cssRef = path.posix.normalize(path.posix.join(dir, spec));
+    addBundledSourceFile(cssRef, files, bundledRefs, queue);
+  }
+
   return true;
 }
 

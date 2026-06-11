@@ -1,0 +1,32 @@
+@layer components {
+  @keyframes ss-shoot {
+    0% {
+      transform: translate(0px, 0px);
+      opacity: 0;
+    }
+
+    6% {
+      opacity: 1;
+    }
+
+    82% {
+      opacity: 1;
+    }
+
+    100% {
+      transform: translate(var(--dx), var(--dy));
+      opacity: 0;
+    }
+  }
+
+  @keyframes ss-twinkle {
+    0%,
+    100% {
+      opacity: var(--o);
+    }
+
+    50% {
+      opacity: calc(var(--o) * 0.25);
+    }
+  }
+}

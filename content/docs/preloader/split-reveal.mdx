@@ -18,15 +18,17 @@ labels: ["new"]
 <Steps>
 <Step>Run the following command</Step>
 
-It will create a new file `split-reveal.tsx` inside the `components/animata/preloader` directory.
+It will create `split-reveal.tsx` and the co-located `split-reveal.css` inside `components/animata/preloader`.
 
 ```bash
-mkdir -p components/animata/preloader && touch components/animata/preloader/split-reveal.tsx
+mkdir -p components/animata/preloader && touch components/animata/preloader/split-reveal.tsx components/animata/preloader/split-reveal.css
 ```
 
 <Step>Paste the code</Step>{" "}
 
-Open the newly created file and paste the following code:
+```jsx file=<rootDir>/animata/preloader/split-reveal.css
+
+```
 
 ```jsx file=<rootDir>/animata/preloader/split-reveal.tsx
 

@@ -4,6 +4,8 @@ import * as React from "react";
 
 import { cn } from "@/lib/utils";
 
+import "./stacked-sections.css";
+
 export type StackedSectionsProps = {
   /**
    * One pane per direct child — sticky card > inner content (scale only).
@@ -165,12 +167,6 @@ export default function StackedSections({
 
   return (
     <>
-      <style>{`
-        [data-stacked-content][data-stacked-covered] {
-          transform-origin: 50% 0%;
-        }
-      `}</style>
-
       <div
         ref={deckRef}
         data-stacked-deck=""
