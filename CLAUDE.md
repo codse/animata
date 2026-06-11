@@ -17,7 +17,7 @@ Animata is a free, open-source library of animated React components built with N
 - shadcn registry URL format: `https://animata.design/r/{category}/{name}.json` — always use this in docs/changelog, never bare `npx shadcn add component-name`
 - Theme accent: `hsl(var(--accent))` = purple/violet
 - All new components must be theme-responsive (light + dark)
-- **New component category?** Add a category glyph for `/components` — read `animata/skeleton/CATEGORY-GLYPHS.md` (three-shade tokens, stroke tiers, hover spec)
+- **New component category?** Add a category glyph for `/components` — read `content/docs/contributing/category-glyphs.mdx` (three-shade tokens, stroke tiers, `cg-motion` hover). Full repo spec: `content/docs/contributing/category-glyphs-spec.md`. Do not put spec markdown under `animata/` (webpack lazy-loads that tree).
 
 ## Changelog rule — ALWAYS update this
 
@@ -75,7 +75,9 @@ Add to the relevant `YYYY-MM.mdx` file. No need to touch the index unless the su
 ```text
 animata/               # Component source (copy-paste friendly)
   skeleton/
-    CATEGORY-GLYPHS.md # Spec for /components category tile SVGs — read before new categories
+    category-glyphs.tsx    # /components tile SVG pictograms (GLYPHS map)
+    category-glyphs.css    # cg-motion base + keyframes (hover transforms live in TSX)
+    category-skeleton.tsx  # Tile frame + shade tokens
   container/           # Layout wrappers (marquee, dock, ribbon…)
   text/                # Text animation effects
   button/              # Button variants
@@ -92,7 +94,9 @@ content/docs/
   changelog/
     index.mdx          # overview + table of all months — ← KEEP THIS UPDATED
     YYYY-MM.mdx        # one file per month (e.g. 2026-04.mdx)
-  contributing/        # Contributor guides
+  contributing/
+    category-glyphs.mdx      # Category tile SVG guide (published)
+    category-glyphs-spec.md  # Full spec — keep in sync; not under animata/
 config/
   docs.ts              # Sidebar nav config — register new component categories here
 styles/globals.css     # Tailwind v4 theme tokens
