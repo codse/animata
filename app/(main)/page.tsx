@@ -46,7 +46,7 @@ function Hero() {
   return (
     <section className="px-6 pb-12 pt-16 sm:pb-16 sm:pt-20">
       <div className="mx-auto max-w-3xl text-center">
-        <h1 className="font-(family-name:--font-display) text-[clamp(2.75rem,7vw,4.5rem)] leading-[1.05] tracking-[-0.01em] text-foreground">
+        <h1 className="font-(family-name:--font-display) text-[clamp(2.75rem,7vw,4.5rem)] leading-[1.05] tracking-tight text-foreground font-bold">
           Ship faster.
           <br />
           Look better.
