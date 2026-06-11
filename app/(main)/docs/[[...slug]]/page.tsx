@@ -78,7 +78,7 @@ export default async function DocPage({ params }: DocPageProps) {
   return (
     <main id="main-content" className="relative py-6 lg:gap-10 lg:py-8 xl:grid">
       <DocJsonLd doc={doc} />
-      <div className="mx-auto w-full min-w-0">
+      <div className="docs-content mx-auto w-full min-w-0">
         <div className="mb-4 flex items-center space-x-1 text-sm text-muted-foreground">
           <div className="overflow-hidden text-ellipsis whitespace-nowrap">Docs</div>
           <ChevronRightIcon className="h-4 w-4" />

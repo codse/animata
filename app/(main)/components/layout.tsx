@@ -1,9 +1,9 @@
 import { DocsShellLayout } from "@/components/docs-shell-layout";
 
-interface DocsLayoutProps {
+interface ComponentsLayoutProps {
   children: React.ReactNode;
 }
 
-export default function DocsLayout({ children }: DocsLayoutProps) {
+export default function ComponentsLayout({ children }: ComponentsLayoutProps) {
   return <DocsShellLayout>{children}</DocsShellLayout>;
 }
