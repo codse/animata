@@ -85,7 +85,7 @@ export default async function BlogPage({ params }: BlogPageProps) {
   const toc = await getTableOfContents(blog.body);
 
   return (
-    <main className="relative py-6 lg:gap-10 lg:py-8 xl:grid xl:grid-cols-[1fr_200px]">
+    <main className="relative py-6 lg:grid lg:grid-cols-[1fr_200px] lg:gap-10 lg:py-8">
       <div className="mx-auto w-full min-w-0">
         <div className="mb-4 flex items-center space-x-1 text-sm text-muted-foreground">
           <div className="overflow-hidden text-ellipsis whitespace-nowrap">Blog</div>
@@ -154,7 +154,7 @@ export default async function BlogPage({ params }: BlogPageProps) {
         <DocsPager doc={blog} />
       </div>
       {blog.toc && (
-        <div className="hidden text-sm xl:block">
+        <div className="hidden text-sm lg:block">
           <div className="sticky top-[6.25rem] -mt-10 pt-4">
             <ScrollArea className="pb-10">
               <div className="sticky top-[6.25rem] -mt-10 h-[calc(100vh-6.25rem)] py-12">
