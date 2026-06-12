@@ -317,14 +317,14 @@ export function DocsSidebarNav({ items, variant = "docs", className }: DocsSideb
         <div
           aria-hidden
           className={cn(
-            "pointer-events-none absolute inset-x-0 top-0 z-10 h-8 bg-gradient-to-b from-background to-transparent transition-opacity duration-150",
+            "docs-sidebar-fade-top pointer-events-none absolute inset-x-0 top-0 z-10 h-8 transition-opacity duration-150",
             edges.top ? "opacity-100" : "opacity-0",
           )}
         />
         <div
           aria-hidden
           className={cn(
-            "pointer-events-none absolute inset-x-0 bottom-0 z-10 h-8 bg-gradient-to-t from-background to-transparent transition-opacity duration-150",
+            "docs-sidebar-fade-bottom pointer-events-none absolute inset-x-0 bottom-0 z-10 h-8 transition-opacity duration-150",
             edges.bottom ? "opacity-100" : "opacity-0",
           )}
         />
@@ -340,7 +340,7 @@ interface DocsSidebarNavItemsProps {
 
 export function DocsSidebarNavItems({ items, pathname }: DocsSidebarNavItemsProps) {
   return items?.length ? (
-    <div className="grid auto-rows-max grid-flow-row gap-0.5 text-sm">
+    <div className="grid auto-rows-max grid-flow-row gap-0.5 text-sm font-normal text-foreground">
       {items.map((item) => {
         const itemKey = item.href ?? item.title;
 
@@ -353,9 +353,7 @@ export function DocsSidebarNavItems({ items, pathname }: DocsSidebarNavItemsProp
               className={cn(
                 "group flex w-full items-center rounded-md border border-transparent px-2 py-1 capitalize hover:underline",
                 item.disabled && "cursor-not-allowed opacity-60",
-                pathname === item.href
-                  ? "bg-muted font-normal text-foreground"
-                  : "text-muted-foreground",
+                pathname === item.href ? "bg-muted" : undefined,
               )}
               target={item.external ? "_blank" : ""}
               rel={item.external ? "noreferrer" : ""}
@@ -374,7 +372,7 @@ export function DocsSidebarNavItems({ items, pathname }: DocsSidebarNavItemsProp
           <span
             key={itemKey}
             className={cn(
-              "flex w-full cursor-not-allowed items-center rounded-md p-2 text-muted-foreground hover:underline",
+              "flex w-full cursor-not-allowed items-center rounded-md p-2 hover:underline",
               item.disabled && "cursor-not-allowed opacity-60",
             )}
           >

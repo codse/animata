@@ -1,10 +1,10 @@
 ---
 title: June 2026
-description: Stacked Sections, widget glance polish, Card Spread and Collab Card, and catalog cleanup.
+description: Stacked Sections, widget glance polish, Card Spread, Collab Card, Card Stack API trim, and catalog cleanup.
 date: 2026-06-01
 ---
 
-Added Stacked Sections for pinned chapter scroll stories. Wave 1 widgets got Apple-style type hierarchy and props-driven demos. Card Spread was rebuilt for deck, peek, and throw-on-click motion. Four oversized widgets left the public catalog, and the internal widget standards doc was removed from contributing.
+Added Stacked Sections for pinned chapter scroll stories. Wave 1 widgets got Apple-style type hierarchy and props-driven demos. Card Spread was rebuilt for deck, peek, and throw-on-click motion. Card Stack was trimmed to bare-bones stack mechanics with profile UI moved to the Storybook demo. Four oversized widgets left the public catalog, and the internal widget standards doc was removed from contributing.
 
 ## New components
 
@@ -72,11 +72,15 @@ Added Stacked Sections for pinned chapter scroll stories. Wave 1 widgets got App
   </ChangeLogEntry>
   <ChangeLogEntry href="/docs/card/card-spread">
     <h3>Card Spread</h3>
-    <p>Stacked deck with a subtle hover peek and click-to-spread throw easing. Use when you want several related cards in one compact stack that expands on demand.</p>
+    <p>Stacked deck with a subtle hover peek and click-to-spread throw easing. Spread positions come from a four-column grid with stack offsets applied via transform on every breakpoint; fixed a Safari jitter bug caused by animating stage width alongside card transforms.</p>
   </ChangeLogEntry>
   <ChangeLogEntry href="/docs/card/collab-card">
     <h3>Collab Card</h3>
     <p>Bento-sized multiplayer feature card with live presence, a Figma-style selection frame, and animated teammate cursors — reskin with props for Notion, Plane, or your own co-editing story.</p>
+  </ChangeLogEntry>
+  <ChangeLogEntry href="/docs/card/card-stack">
+    <h3>Card Stack</h3>
+    <p>Trimmed the component to bare-bones stack mechanics (`CardStack`, `Viewport`, `List`, `Card`, `Trigger`). Profile card UI — masks, header, media, metrics — moved to the Storybook demo composition. Added `full` on `Trigger` for click-anywhere overlay vs discrete button.</p>
   </ChangeLogEntry>
 </ChangeLogComponents>
 

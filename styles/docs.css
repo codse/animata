@@ -13,7 +13,21 @@
   font-feature-settings: "ss02", "ss09";
 }
 
+.docs-shell aside {
+  font-family: var(--font-sans);
+  font-weight: 400;
+}
+
 .docs-sidebar-scroller {
   scrollbar-width: thin;
   scrollbar-color: hsl(var(--border)) transparent;
+}
+
+/* Safari: `to-transparent` interpolates through black — fade to bg/0 instead */
+.docs-sidebar-fade-top {
+  background: linear-gradient(to bottom, hsl(var(--background)), hsl(var(--background) / 0));
+}
+
+.docs-sidebar-fade-bottom {
+  background: linear-gradient(to top, hsl(var(--background)), hsl(var(--background) / 0));
 }

@@ -34,11 +34,8 @@ const INSTALL_FIXTURES = [
     id: "doc-bundled-shapes",
     label: "mdx bundled file refs + shape imports",
     item: "card/card-stack.json",
-    expectFiles: [
-      "components/animata/card/card-stack.tsx",
-      "components/shapes/card-stack-mask-defs.tsx",
-    ],
-    expectDeps: ["lucide-react", "motion"],
+    expectFiles: ["components/animata/card/card-stack.tsx"],
+    expectDeps: ["motion"],
   },
   {
     id: "co-located-shared",

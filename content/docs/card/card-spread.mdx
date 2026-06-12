@@ -1,11 +1,15 @@
 ---
 title: Card Spread
-description: A stacked deck of widget cards with a subtle hover peek and a click-to-spread throw animation.
+description: A stacked deck of widget cards with a hover peek and a throw-on-spread animation — layout-first, CSS-only.
 author: sudhashrestha
 labels: ["requires interaction", "click", "hover"]
 ---
 
 <ComponentPreview name="card-card-spread--primary" />
+
+Four related cards share one compact stack until someone asks to see more. Hover the deck and the tiles fan slightly; hit **Spread cards** and they throw into a row. Good for dashboards, widget galleries, or anywhere you want several `w-48` tiles without eating horizontal space up front.
+
+The demo wires up Notes, Shopping List, and a couple of note variants. Swap in your own card components as long as they keep the same footprint.
 
 ## Installation
 
@@ -18,7 +22,7 @@ labels: ["requires interaction", "click", "hover"]
 <Steps>
 <Step>Run the following command</Step>
 
-It will create `card-spread.tsx` and `card-spread.css` inside the `components/animata/card` directory.
+This creates `card-spread.tsx` and `card-spread.css` in `components/animata/card`.
 
 ```bash
 mkdir -p components/animata/card && touch components/animata/card/card-spread.tsx components/animata/card/card-spread.css
@@ -36,17 +40,23 @@ mkdir -p components/animata/card && touch components/animata/card/card-spread.ts
 
 </Steps>
 
-## Usage
+## How it works
 
-The stack has three states:
+The cards always sit in a four-column row at `w-48` each. On narrow viewports the stage scrolls horizontally instead of reflowing into fewer columns. That's their real spread position. In the deck state, each card is shifted toward the center of that row so they pile on top of each other — outer cards travel farther, so the throw opens from the middle.
 
-1. **Deck** — all cards share one origin (transform-only, no absolute fan layout).
-2. **Hover** — a light vertical peek on the outer layer; spread motion is unchanged.
-3. **Click** — cards throw into their spread positions with a custom `--ease-throw` curve; collapse uses a separate ease-out gather.
+Click **Spread cards** and those shifts animate back to zero. The cards land in the grid slots they already occupy. Spread uses a quick throw with a slight overshoot (`--ease-throw`); stacking back up uses a gentler ease-out (`--ease-gather`). Only `transform` is animated — nothing about the container width changes, which keeps the motion smooth across browsers.
 
-Toggle with click or <kbd>Enter</kbd> / <kbd>Space</kbd> when the stage is focused. The demo composes Notes, Shopping List, and related widget cards — swap in your own `w-48` tiles as needed.
+Hover is separate. While the deck is stacked, moving over the stage gives each card a small rotate nudge on an outer wrapper. That peek does not run once the row is spread, so it never competes with the throw.
 
-Motion is CSS-only: an inner wrapper handles spread/collapse; an outer wrapper handles hover peek so the two never fight for `transform`.
+State is a checkbox behind the toggle label — no React state, no click handler on the cards themselves. When spread, the tiles underneath stay interactive (checkboxes, links, and so on).
+
+## Customization
+
+Swap the card components in the `cards` array. Keep them at `w-48` unless you also update the grid gap and the per-card `translate3d(calc(...))` deck offsets in the CSS. The stage uses `overflow-x-auto` — adjust padding or scroll-snap there if you want a different narrow-screen feel.
+
+To change the throw character, edit `--ease-throw` and `--ease-gather` in `card-spread.css`. Per-card spread tilt and deck hover peek are set per `:nth-child` in the same file.
+
+Adding or removing cards means updating both the array and the matching CSS rules for deck offset, z-index, and rotation.
 
 ## Credits
 
