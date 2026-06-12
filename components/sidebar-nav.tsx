@@ -317,14 +317,14 @@ export function DocsSidebarNav({ items, variant = "docs", className }: DocsSideb
         <div
           aria-hidden
           className={cn(
-            "pointer-events-none absolute inset-x-0 top-0 z-10 h-8 bg-gradient-to-b from-background to-transparent transition-opacity duration-150",
+            "docs-sidebar-fade-top pointer-events-none absolute inset-x-0 top-0 z-10 h-8 transition-opacity duration-150",
             edges.top ? "opacity-100" : "opacity-0",
           )}
         />
         <div
           aria-hidden
           className={cn(
-            "pointer-events-none absolute inset-x-0 bottom-0 z-10 h-8 bg-gradient-to-t from-background to-transparent transition-opacity duration-150",
+            "docs-sidebar-fade-bottom pointer-events-none absolute inset-x-0 bottom-0 z-10 h-8 transition-opacity duration-150",
             edges.bottom ? "opacity-100" : "opacity-0",
           )}
         />
