@@ -73,93 +73,101 @@ export default async function DocPage({ params }: DocPageProps) {
     notFound();
   }
 
-  const toc = await getTableOfContents(doc.content);
+  const toc = await getTableOfContents(doc.body);
 
   return (
-    <main id="main-content" className="relative py-6 lg:gap-10 lg:py-8 xl:grid">
+    <>
       <DocJsonLd doc={doc} />
-      <div className="docs-content mx-auto w-full min-w-0">
-        <div className="mb-4 flex items-center space-x-1 text-sm text-muted-foreground">
-          <div className="overflow-hidden text-ellipsis whitespace-nowrap">Docs</div>
-          <ChevronRightIcon className="h-4 w-4" />
-          <NavMenu title={doc.title} />
-        </div>
-        <div className="space-y-2">
-          <h1 className={cn("scroll-m-20 text-4xl font-bold tracking-tight")}>{doc.title}</h1>
-          {doc.description && (
-            <p className="w-full text-balance text-muted-foreground">{doc.description}</p>
-          )}
-          <div
-            className={cn("flex items-center space-x-2 text-sm text-muted-foreground", {
-              invisible: !doc.labels?.length,
-            })}
-          >
-            {doc.labels?.map((label) => {
-              return (
-                <span key={label} className={cn(badgeVariants({ variant: "secondary" }), "gap-1")}>
-                  {label}
-                </span>
-              );
-            })}
+      <main
+        id="main-content"
+        className="relative py-6 lg:grid lg:grid-cols-[1fr_200px] lg:gap-10 lg:py-8"
+      >
+        <div className="docs-content mx-auto w-full min-w-0">
+          <div className="mb-4 flex items-center space-x-1 text-sm text-muted-foreground">
+            <div className="overflow-hidden text-ellipsis whitespace-nowrap">Docs</div>
+            <ChevronRightIcon className="h-4 w-4" />
+            <NavMenu title={doc.title} />
           </div>
-        </div>
-        {doc.links ? (
-          <div className="flex items-center space-x-2 pt-4">
-            {doc.links?.doc && (
-              <Link
-                href={doc.links.doc}
-                target="_blank"
-                rel="noreferrer"
-                className={cn(badgeVariants({ variant: "secondary" }), "gap-1")}
-              >
-                Docs
-                <ExternalLinkIcon className="h-3 w-3" />
-              </Link>
+          <div className="space-y-2">
+            <h1 className={cn("scroll-m-20 text-4xl font-bold tracking-tight")}>{doc.title}</h1>
+            {doc.description && (
+              <p className="w-full text-balance text-muted-foreground">{doc.description}</p>
             )}
-            {doc.links?.api && (
-              <Link
-                href={doc.links.api}
-                target="_blank"
-                rel="noreferrer"
-                className={cn(badgeVariants({ variant: "secondary" }), "gap-1")}
-              >
-                API Reference
-                <ExternalLinkIcon className="h-3 w-3" />
-              </Link>
-            )}
-          </div>
-        ) : null}
-        <DocDemoLinks docSlug={doc.slugAsParams} />
-        <div className="relative w-fit overflow-y-hidden">
-          <CarbonAds />
-        </div>
-        <div className="pb-12">
-          <Mdx code={doc.body} filePath={getMdxFilePath(doc)} />
-
-          <div className="my-3 text-right">
-            <Link
-              href={`https://github.com/codse/animata/edit/main/${getMdxFilePath(doc)}`}
-              target="_blank"
-              rel="noreferrer"
-              className="text-sm text-secondary-foreground underline"
+            <div
+              className={cn("flex items-center space-x-2 text-sm text-muted-foreground", {
+                invisible: !doc.labels?.length,
+              })}
             >
-              Edit this page on GitHub
-            </Link>
+              {doc.labels?.map((label) => {
+                return (
+                  <span
+                    key={label}
+                    className={cn(badgeVariants({ variant: "secondary" }), "gap-1")}
+                  >
+                    {label}
+                  </span>
+                );
+              })}
+            </div>
           </div>
-        </div>
-        <DocsPager doc={doc} />
-      </div>
-      {doc.toc && (
-        <div className="hidden text-sm xl:block">
-          <div className="sticky top-[6.25rem] -mt-10 pt-4">
-            <ScrollArea className="pb-10">
-              <div className="sticky top-[6.25rem] -mt-10 h-[calc(100vh-6.25rem)] py-12">
-                <DashboardTableOfContents toc={toc} />
-              </div>
-            </ScrollArea>
+          {doc.links ? (
+            <div className="flex items-center space-x-2 pt-4">
+              {doc.links?.doc && (
+                <Link
+                  href={doc.links.doc}
+                  target="_blank"
+                  rel="noreferrer"
+                  className={cn(badgeVariants({ variant: "secondary" }), "gap-1")}
+                >
+                  Docs
+                  <ExternalLinkIcon className="h-3 w-3" />
+                </Link>
+              )}
+              {doc.links?.api && (
+                <Link
+                  href={doc.links.api}
+                  target="_blank"
+                  rel="noreferrer"
+                  className={cn(badgeVariants({ variant: "secondary" }), "gap-1")}
+                >
+                  API Reference
+                  <ExternalLinkIcon className="h-3 w-3" />
+                </Link>
+              )}
+            </div>
+          ) : null}
+          <DocDemoLinks docSlug={doc.slugAsParams} />
+          <div className="relative w-fit overflow-y-hidden">
+            <CarbonAds />
           </div>
+          <div className="pb-12">
+            <Mdx code={doc.body} filePath={getMdxFilePath(doc)} />
+
+            <div className="my-3 text-right">
+              <Link
+                href={`https://github.com/codse/animata/edit/main/${getMdxFilePath(doc)}`}
+                target="_blank"
+                rel="noreferrer"
+                className="text-sm text-secondary-foreground underline"
+              >
+                Edit this page on GitHub
+              </Link>
+            </div>
+          </div>
+          <DocsPager doc={doc} />
         </div>
-      )}
-    </main>
+        {doc.toc && (
+          <div className="hidden text-sm lg:block">
+            <div className="sticky top-[6.25rem] -mt-10 pt-4">
+              <ScrollArea className="pb-10">
+                <div className="sticky top-[6.25rem] -mt-10 h-[calc(100vh-6.25rem)] py-12">
+                  <DashboardTableOfContents toc={toc} />
+                </div>
+              </ScrollArea>
+            </div>
+          </div>
+        )}
+      </main>
+    </>
   );
 }
