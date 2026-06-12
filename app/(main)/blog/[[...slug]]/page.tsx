@@ -82,10 +82,10 @@ export default async function BlogPage({ params }: BlogPageProps) {
     notFound();
   }
 
-  const toc = await getTableOfContents(blog.content);
+  const toc = await getTableOfContents(blog.body);
 
   return (
-    <main className="relative py-6 lg:gap-10 lg:py-8 xl:grid xl:grid-cols-[1fr_150px]">
+    <main className="relative py-6 lg:gap-10 lg:py-8 xl:grid xl:grid-cols-[1fr_200px]">
       <div className="mx-auto w-full min-w-0">
         <div className="mb-4 flex items-center space-x-1 text-sm text-muted-foreground">
           <div className="overflow-hidden text-ellipsis whitespace-nowrap">Blog</div>
