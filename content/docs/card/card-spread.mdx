@@ -52,7 +52,7 @@ State is a checkbox behind the toggle label — no React state, no click handler
 
 ## Customization
 
-Swap the card components in the `cards` array. Keep them at `w-48` unless you also update the grid gap and `--deck-step` in the CSS. The stage uses `overflow-x-auto` — adjust padding or scroll-snap there if you want a different narrow-screen feel.
+Swap the card components in the `cards` array. Keep them at `w-48` unless you also update the grid gap and the per-card `translate3d(calc(...))` deck offsets in the CSS. The stage uses `overflow-x-auto` — adjust padding or scroll-snap there if you want a different narrow-screen feel.
 
 To change the throw character, edit `--ease-throw` and `--ease-gather` in `card-spread.css`. Per-card spread tilt and deck hover peek are set per `:nth-child` in the same file.
 
