@@ -3,11 +3,7 @@
 import "@fontsource-variable/instrument-sans";
 import { type CSSProperties, type ReactNode, type RefObject, useRef, useState } from "react";
 
-import CardStack, {
-  CARD_STACK_MASK_IDS,
-  type CardStackItem,
-  useCardStack,
-} from "@/animata/card/card-stack";
+import CardStack, { type CardStackItem, useCardStack } from "@/animata/card/card-stack";
 import TrailingImage from "@/animata/image/trailing-image";
 import SplitReveal from "@/animata/preloader/split-reveal";
 import { MapPinIcon } from "@/components/ui/map-pin";
@@ -79,48 +75,48 @@ const HERO_TONE = {
   ink: "text-black",
 } as const;
 
-const PORTFOLIO: CardStackItem[] = [
+type PortfolioItem = CardStackItem & {
+  image: string;
+  title: string;
+  tagline: string;
+};
+
+const PORTFOLIO: PortfolioItem[] = [
   {
     id: "vows",
     image: lummi(LUMMI_ASSETS.portfolio.vows),
     title: "Vows",
     tagline: "Cliffside ceremony",
-    maskId: CARD_STACK_MASK_IDS[0],
   },
   {
     id: "ceremony",
     image: lummi(LUMMI_ASSETS.portfolio.ceremony),
     title: "Ceremony",
     tagline: "Church exit",
-    maskId: CARD_STACK_MASK_IDS[0],
   },
   {
     id: "reception",
     image: lummi(LUMMI_ASSETS.portfolio.reception),
     title: "Reception",
     tagline: "Evening dance",
-    maskId: CARD_STACK_MASK_IDS[0],
   },
   {
     id: "candid",
     image: lummi(LUMMI_ASSETS.portfolio.candid),
     title: "Candid",
     tagline: "Real laughter",
-    maskId: CARD_STACK_MASK_IDS[0],
   },
   {
     id: "florals",
     image: lummi(LUMMI_ASSETS.portfolio.florals),
     title: "Florals",
     tagline: "Bouquet detail",
-    maskId: CARD_STACK_MASK_IDS[0],
   },
   {
     id: "festival",
     image: lummi(LUMMI_ASSETS.portfolio.festival),
     title: "Event",
     tagline: "Summer festival",
-    maskId: CARD_STACK_MASK_IDS[0],
   },
 ];
 
@@ -201,7 +197,7 @@ function ViewfinderFrame() {
 }
 
 function PrintCaption() {
-  const { activeItem } = useCardStack();
+  const { activeItem } = useCardStack<PortfolioItem>();
   const rawIndex = activeItem ? PORTFOLIO.findIndex((item) => item.id === activeItem.id) : -1;
   const index = rawIndex === -1 ? 1 : rawIndex + 1;
   const settings =
@@ -244,36 +240,34 @@ const STACK_PEEK = "aspect-[8/1]";
 
 function PrintStack() {
   return (
-    <CardStack.Frame className="absolute inset-0 overflow-visible">
-      <CardStack.LiveRegion />
-      <CardStack.Trigger aria-label="Show next photo" className="absolute inset-0 block text-left">
-        <CardStack.Viewport className="absolute inset-0 overflow-visible !min-h-0 pt-[14%] sm:pt-0">
-          <CardStack.List>
-            {(item, index, layer) => (
-              <CardStack.Card
-                key={item.id}
-                layer={layer}
-                stackIndex={index}
-                className="!inset-x-0 !top-0 !h-fit !w-full gap-0 overflow-visible rounded-none !bg-transparent p-0 shadow-none ring-0"
-              >
-                <figure className="relative aspect-[4/5] w-full overflow-hidden bg-black/5">
-                  <img
-                    src={item.image}
-                    alt={`${PHOTOGRAPHER.studio} — ${item.title}`}
-                    width={PRINT_WIDTH}
-                    height={PRINT_HEIGHT}
-                    decoding="async"
-                    draggable={false}
-                    className="size-full object-cover object-center"
-                  />
-                  {index === 0 ? <ViewfinderFrame /> : null}
-                </figure>
-              </CardStack.Card>
-            )}
-          </CardStack.List>
-        </CardStack.Viewport>
-      </CardStack.Trigger>
-    </CardStack.Frame>
+    <section className="absolute inset-0 overflow-visible" aria-label="Photo stack">
+      <CardStack.Viewport className="absolute inset-0 overflow-visible pt-[14%] sm:pt-0">
+        <CardStack.List>
+          {(item: PortfolioItem, index, layer) => (
+            <CardStack.Card
+              key={item.id}
+              layer={layer}
+              stackIndex={index}
+              className="!inset-x-0 !top-0 !h-fit !w-full overflow-visible rounded-none p-0 shadow-none ring-0"
+            >
+              <figure className="relative aspect-[4/5] w-full overflow-hidden bg-black/5">
+                <img
+                  src={item.image}
+                  alt={`${PHOTOGRAPHER.studio} — ${item.title}`}
+                  width={PRINT_WIDTH}
+                  height={PRINT_HEIGHT}
+                  decoding="async"
+                  draggable={false}
+                  className="size-full object-cover object-center"
+                />
+                {index === 0 ? <ViewfinderFrame /> : null}
+              </figure>
+            </CardStack.Card>
+          )}
+        </CardStack.List>
+      </CardStack.Viewport>
+      <CardStack.Trigger full aria-label="Show next photo" />
+    </section>
   );
 }
 

@@ -2549,11 +2549,7 @@ export default function CinemaRow() {
 import "@fontsource-variable/instrument-sans";
 import { type CSSProperties, type ReactNode, type RefObject, useRef, useState } from "react";
 
-import CardStack, {
-  CARD_STACK_MASK_IDS,
-  type CardStackItem,
-  useCardStack,
-} from "@/animata/card/card-stack";
+import CardStack, { type CardStackItem, useCardStack } from "@/animata/card/card-stack";
 import TrailingImage from "@/animata/image/trailing-image";
 import SplitReveal from "@/animata/preloader/split-reveal";
 import { MapPinIcon } from "@/components/ui/map-pin";
@@ -2625,48 +2621,48 @@ const HERO_TONE = {
   ink: "text-black",
 } as const;
 
-const PORTFOLIO: CardStackItem[] = [
+type PortfolioItem = CardStackItem & {
+  image: string;
+  title: string;
+  tagline: string;
+};
+
+const PORTFOLIO: PortfolioItem[] = [
   {
     id: "vows",
     image: lummi(LUMMI_ASSETS.portfolio.vows),
     title: "Vows",
     tagline: "Cliffside ceremony",
-    maskId: CARD_STACK_MASK_IDS[0],
   },
   {
     id: "ceremony",
     image: lummi(LUMMI_ASSETS.portfolio.ceremony),
     title: "Ceremony",
     tagline: "Church exit",
-    maskId: CARD_STACK_MASK_IDS[0],
   },
   {
     id: "reception",
     image: lummi(LUMMI_ASSETS.portfolio.reception),
     title: "Reception",
     tagline: "Evening dance",
-    maskId: CARD_STACK_MASK_IDS[0],
   },
   {
     id: "candid",
     image: lummi(LUMMI_ASSETS.portfolio.candid),
     title: "Candid",
     tagline: "Real laughter",
-    maskId: CARD_STACK_MASK_IDS[0],
   },
   {
     id: "florals",
     image: lummi(LUMMI_ASSETS.portfolio.florals),
     title: "Florals",
     tagline: "Bouquet detail",
-    maskId: CARD_STACK_MASK_IDS[0],
   },
   {
     id: "festival",
     image: lummi(LUMMI_ASSETS.portfolio.festival),
     title: "Event",
     tagline: "Summer festival",
-    maskId: CARD_STACK_MASK_IDS[0],
   },
 ];
 
@@ -2747,7 +2743,7 @@ function ViewfinderFrame() {
 }
 
 function PrintCaption() {
-  const { activeItem } = useCardStack();
+  const { activeItem } = useCardStack<PortfolioItem>();
   const rawIndex = activeItem ? PORTFOLIO.findIndex((item) => item.id === activeItem.id) : -1;
   const index = rawIndex === -1 ? 1 : rawIndex + 1;
   const settings =
@@ -2790,36 +2786,34 @@ const STACK_PEEK = "aspect-[8/1]";
 
 function PrintStack() {
   return (
-    <CardStack.Frame className="absolute inset-0 overflow-visible">
-      <CardStack.LiveRegion />
-      <CardStack.Trigger aria-label="Show next photo" className="absolute inset-0 block text-left">
-        <CardStack.Viewport className="absolute inset-0 overflow-visible !min-h-0 pt-[14%] sm:pt-0">
-          <CardStack.List>
-            {(item, index, layer) => (
-              <CardStack.Card
-                key={item.id}
-                layer={layer}
-                stackIndex={index}
-                className="!inset-x-0 !top-0 !h-fit !w-full gap-0 overflow-visible rounded-none !bg-transparent p-0 shadow-none ring-0"
-              >
-                <figure className="relative aspect-[4/5] w-full overflow-hidden bg-black/5">
-                  <img
-                    src={item.image}
-                    alt={\`\${PHOTOGRAPHER.studio} — \${item.title}\`}
-                    width={PRINT_WIDTH}
-                    height={PRINT_HEIGHT}
-                    decoding="async"
-                    draggable={false}
-                    className="size-full object-cover object-center"
-                  />
-                  {index === 0 ? <ViewfinderFrame /> : null}
-                </figure>
-              </CardStack.Card>
-            )}
-          </CardStack.List>
-        </CardStack.Viewport>
-      </CardStack.Trigger>
-    </CardStack.Frame>
+    <section className="absolute inset-0 overflow-visible" aria-label="Photo stack">
+      <CardStack.Viewport className="absolute inset-0 overflow-visible pt-[14%] sm:pt-0">
+        <CardStack.List>
+          {(item: PortfolioItem, index, layer) => (
+            <CardStack.Card
+              key={item.id}
+              layer={layer}
+              stackIndex={index}
+              className="!inset-x-0 !top-0 !h-fit !w-full overflow-visible rounded-none p-0 shadow-none ring-0"
+            >
+              <figure className="relative aspect-[4/5] w-full overflow-hidden bg-black/5">
+                <img
+                  src={item.image}
+                  alt={\`\${PHOTOGRAPHER.studio} — \${item.title}\`}
+                  width={PRINT_WIDTH}
+                  height={PRINT_HEIGHT}
+                  decoding="async"
+                  draggable={false}
+                  className="size-full object-cover object-center"
+                />
+                {index === 0 ? <ViewfinderFrame /> : null}
+              </figure>
+            </CardStack.Card>
+          )}
+        </CardStack.List>
+      </CardStack.Viewport>
+      <CardStack.Trigger full aria-label="Show next photo" />
+    </section>
   );
 }
 
@@ -2947,11 +2941,7 @@ export default function PhotographerPortfolio() {
 <span class="line"><span style="color:#D73A49">import</span><span style="color:#032F62"> "@fontsource-variable/instrument-sans"</span><span style="color:#24292E">;</span></span>
 <span class="line"><span style="color:#D73A49">import</span><span style="color:#24292E"> { </span><span style="color:#D73A49">type</span><span style="color:#24292E"> CSSProperties, </span><span style="color:#D73A49">type</span><span style="color:#24292E"> ReactNode, </span><span style="color:#D73A49">type</span><span style="color:#24292E"> RefObject, useRef, useState } </span><span style="color:#D73A49">from</span><span style="color:#032F62"> "react"</span><span style="color:#24292E">;</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#D73A49">import</span><span style="color:#24292E"> CardStack, {</span></span>
-<span class="line"><span style="color:#24292E">  CARD_STACK_MASK_IDS,</span></span>
-<span class="line"><span style="color:#D73A49">  type</span><span style="color:#24292E"> CardStackItem,</span></span>
-<span class="line"><span style="color:#24292E">  useCardStack,</span></span>
-<span class="line"><span style="color:#24292E">} </span><span style="color:#D73A49">from</span><span style="color:#032F62"> "@/animata/card/card-stack"</span><span style="color:#24292E">;</span></span>
+<span class="line"><span style="color:#D73A49">import</span><span style="color:#24292E"> CardStack, { </span><span style="color:#D73A49">type</span><span style="color:#24292E"> CardStackItem, useCardStack } </span><span style="color:#D73A49">from</span><span style="color:#032F62"> "@/animata/card/card-stack"</span><span style="color:#24292E">;</span></span>
 <span class="line"><span style="color:#D73A49">import</span><span style="color:#24292E"> TrailingImage </span><span style="color:#D73A49">from</span><span style="color:#032F62"> "@/animata/image/trailing-image"</span><span style="color:#24292E">;</span></span>
 <span class="line"><span style="color:#D73A49">import</span><span style="color:#24292E"> SplitReveal </span><span style="color:#D73A49">from</span><span style="color:#032F62"> "@/animata/preloader/split-reveal"</span><span style="color:#24292E">;</span></span>
 <span class="line"><span style="color:#D73A49">import</span><span style="color:#24292E"> { MapPinIcon } </span><span style="color:#D73A49">from</span><span style="color:#032F62"> "@/components/ui/map-pin"</span><span style="color:#24292E">;</span></span>
@@ -3023,48 +3013,48 @@ export default function PhotographerPortfolio() {
 <span class="line"><span style="color:#24292E">  ink: </span><span style="color:#032F62">"text-black"</span><span style="color:#24292E">,</span></span>
 <span class="line"><span style="color:#24292E">} </span><span style="color:#D73A49">as</span><span style="color:#D73A49"> const</span><span style="color:#24292E">;</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#D73A49">const</span><span style="color:#005CC5"> PORTFOLIO</span><span style="color:#D73A49">:</span><span style="color:#6F42C1"> CardStackItem</span><span style="color:#24292E">[] </span><span style="color:#D73A49">=</span><span style="color:#24292E"> [</span></span>
+<span class="line"><span style="color:#D73A49">type</span><span style="color:#6F42C1"> PortfolioItem</span><span style="color:#D73A49"> =</span><span style="color:#6F42C1"> CardStackItem</span><span style="color:#D73A49"> &#x26;</span><span style="color:#24292E"> {</span></span>
+<span class="line"><span style="color:#E36209">  image</span><span style="color:#D73A49">:</span><span style="color:#005CC5"> string</span><span style="color:#24292E">;</span></span>
+<span class="line"><span style="color:#E36209">  title</span><span style="color:#D73A49">:</span><span style="color:#005CC5"> string</span><span style="color:#24292E">;</span></span>
+<span class="line"><span style="color:#E36209">  tagline</span><span style="color:#D73A49">:</span><span style="color:#005CC5"> string</span><span style="color:#24292E">;</span></span>
+<span class="line"><span style="color:#24292E">};</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49">const</span><span style="color:#005CC5"> PORTFOLIO</span><span style="color:#D73A49">:</span><span style="color:#6F42C1"> PortfolioItem</span><span style="color:#24292E">[] </span><span style="color:#D73A49">=</span><span style="color:#24292E"> [</span></span>
 <span class="line"><span style="color:#24292E">  {</span></span>
 <span class="line"><span style="color:#24292E">    id: </span><span style="color:#032F62">"vows"</span><span style="color:#24292E">,</span></span>
 <span class="line"><span style="color:#24292E">    image: </span><span style="color:#6F42C1">lummi</span><span style="color:#24292E">(</span><span style="color:#005CC5">LUMMI_ASSETS</span><span style="color:#24292E">.portfolio.vows),</span></span>
 <span class="line"><span style="color:#24292E">    title: </span><span style="color:#032F62">"Vows"</span><span style="color:#24292E">,</span></span>
 <span class="line"><span style="color:#24292E">    tagline: </span><span style="color:#032F62">"Cliffside ceremony"</span><span style="color:#24292E">,</span></span>
-<span class="line"><span style="color:#24292E">    maskId: </span><span style="color:#005CC5">CARD_STACK_MASK_IDS</span><span style="color:#24292E">[</span><span style="color:#005CC5">0</span><span style="color:#24292E">],</span></span>
 <span class="line"><span style="color:#24292E">  },</span></span>
 <span class="line"><span style="color:#24292E">  {</span></span>
 <span class="line"><span style="color:#24292E">    id: </span><span style="color:#032F62">"ceremony"</span><span style="color:#24292E">,</span></span>
 <span class="line"><span style="color:#24292E">    image: </span><span style="color:#6F42C1">lummi</span><span style="color:#24292E">(</span><span style="color:#005CC5">LUMMI_ASSETS</span><span style="color:#24292E">.portfolio.ceremony),</span></span>
 <span class="line"><span style="color:#24292E">    title: </span><span style="color:#032F62">"Ceremony"</span><span style="color:#24292E">,</span></span>
 <span class="line"><span style="color:#24292E">    tagline: </span><span style="color:#032F62">"Church exit"</span><span style="color:#24292E">,</span></span>
-<span class="line"><span style="color:#24292E">    maskId: </span><span style="color:#005CC5">CARD_STACK_MASK_IDS</span><span style="color:#24292E">[</span><span style="color:#005CC5">0</span><span style="color:#24292E">],</span></span>
 <span class="line"><span style="color:#24292E">  },</span></span>
 <span class="line"><span style="color:#24292E">  {</span></span>
 <span class="line"><span style="color:#24292E">    id: </span><span style="color:#032F62">"reception"</span><span style="color:#24292E">,</span></span>
 <span class="line"><span style="color:#24292E">    image: </span><span style="color:#6F42C1">lummi</span><span style="color:#24292E">(</span><span style="color:#005CC5">LUMMI_ASSETS</span><span style="color:#24292E">.portfolio.reception),</span></span>
 <span class="line"><span style="color:#24292E">    title: </span><span style="color:#032F62">"Reception"</span><span style="color:#24292E">,</span></span>
 <span class="line"><span style="color:#24292E">    tagline: </span><span style="color:#032F62">"Evening dance"</span><span style="color:#24292E">,</span></span>
-<span class="line"><span style="color:#24292E">    maskId: </span><span style="color:#005CC5">CARD_STACK_MASK_IDS</span><span style="color:#24292E">[</span><span style="color:#005CC5">0</span><span style="color:#24292E">],</span></span>
 <span class="line"><span style="color:#24292E">  },</span></span>
 <span class="line"><span style="color:#24292E">  {</span></span>
 <span class="line"><span style="color:#24292E">    id: </span><span style="color:#032F62">"candid"</span><span style="color:#24292E">,</span></span>
 <span class="line"><span style="color:#24292E">    image: </span><span style="color:#6F42C1">lummi</span><span style="color:#24292E">(</span><span style="color:#005CC5">LUMMI_ASSETS</span><span style="color:#24292E">.portfolio.candid),</span></span>
 <span class="line"><span style="color:#24292E">    title: </span><span style="color:#032F62">"Candid"</span><span style="color:#24292E">,</span></span>
 <span class="line"><span style="color:#24292E">    tagline: </span><span style="color:#032F62">"Real laughter"</span><span style="color:#24292E">,</span></span>
-<span class="line"><span style="color:#24292E">    maskId: </span><span style="color:#005CC5">CARD_STACK_MASK_IDS</span><span style="color:#24292E">[</span><span style="color:#005CC5">0</span><span style="color:#24292E">],</span></span>
 <span class="line"><span style="color:#24292E">  },</span></span>
 <span class="line"><span style="color:#24292E">  {</span></span>
 <span class="line"><span style="color:#24292E">    id: </span><span style="color:#032F62">"florals"</span><span style="color:#24292E">,</span></span>
 <span class="line"><span style="color:#24292E">    image: </span><span style="color:#6F42C1">lummi</span><span style="color:#24292E">(</span><span style="color:#005CC5">LUMMI_ASSETS</span><span style="color:#24292E">.portfolio.florals),</span></span>
 <span class="line"><span style="color:#24292E">    title: </span><span style="color:#032F62">"Florals"</span><span style="color:#24292E">,</span></span>
 <span class="line"><span style="color:#24292E">    tagline: </span><span style="color:#032F62">"Bouquet detail"</span><span style="color:#24292E">,</span></span>
-<span class="line"><span style="color:#24292E">    maskId: </span><span style="color:#005CC5">CARD_STACK_MASK_IDS</span><span style="color:#24292E">[</span><span style="color:#005CC5">0</span><span style="color:#24292E">],</span></span>
 <span class="line"><span style="color:#24292E">  },</span></span>
 <span class="line"><span style="color:#24292E">  {</span></span>
 <span class="line"><span style="color:#24292E">    id: </span><span style="color:#032F62">"festival"</span><span style="color:#24292E">,</span></span>
 <span class="line"><span style="color:#24292E">    image: </span><span style="color:#6F42C1">lummi</span><span style="color:#24292E">(</span><span style="color:#005CC5">LUMMI_ASSETS</span><span style="color:#24292E">.portfolio.festival),</span></span>
 <span class="line"><span style="color:#24292E">    title: </span><span style="color:#032F62">"Event"</span><span style="color:#24292E">,</span></span>
 <span class="line"><span style="color:#24292E">    tagline: </span><span style="color:#032F62">"Summer festival"</span><span style="color:#24292E">,</span></span>
-<span class="line"><span style="color:#24292E">    maskId: </span><span style="color:#005CC5">CARD_STACK_MASK_IDS</span><span style="color:#24292E">[</span><span style="color:#005CC5">0</span><span style="color:#24292E">],</span></span>
 <span class="line"><span style="color:#24292E">  },</span></span>
 <span class="line"><span style="color:#24292E">];</span></span>
 <span class="line"></span>
@@ -3145,7 +3135,7 @@ export default function PhotographerPortfolio() {
 <span class="line"><span style="color:#24292E">}</span></span>
 <span class="line"></span>
 <span class="line"><span style="color:#D73A49">function</span><span style="color:#6F42C1"> PrintCaption</span><span style="color:#24292E">() {</span></span>
-<span class="line"><span style="color:#D73A49">  const</span><span style="color:#24292E"> { </span><span style="color:#005CC5">activeItem</span><span style="color:#24292E"> } </span><span style="color:#D73A49">=</span><span style="color:#6F42C1"> useCardStack</span><span style="color:#24292E">();</span></span>
+<span class="line"><span style="color:#D73A49">  const</span><span style="color:#24292E"> { </span><span style="color:#005CC5">activeItem</span><span style="color:#24292E"> } </span><span style="color:#D73A49">=</span><span style="color:#6F42C1"> useCardStack</span><span style="color:#24292E">&#x3C;</span><span style="color:#6F42C1">PortfolioItem</span><span style="color:#24292E">>();</span></span>
 <span class="line"><span style="color:#D73A49">  const</span><span style="color:#005CC5"> rawIndex</span><span style="color:#D73A49"> =</span><span style="color:#24292E"> activeItem </span><span style="color:#D73A49">?</span><span style="color:#005CC5"> PORTFOLIO</span><span style="color:#24292E">.</span><span style="color:#6F42C1">findIndex</span><span style="color:#24292E">((</span><span style="color:#E36209">item</span><span style="color:#24292E">) </span><span style="color:#D73A49">=></span><span style="color:#24292E"> item.id </span><span style="color:#D73A49">===</span><span style="color:#24292E"> activeItem.id) </span><span style="color:#D73A49">:</span><span style="color:#D73A49"> -</span><span style="color:#005CC5">1</span><span style="color:#24292E">;</span></span>
 <span class="line"><span style="color:#D73A49">  const</span><span style="color:#005CC5"> index</span><span style="color:#D73A49"> =</span><span style="color:#24292E"> rawIndex </span><span style="color:#D73A49">===</span><span style="color:#D73A49"> -</span><span style="color:#005CC5">1</span><span style="color:#D73A49"> ?</span><span style="color:#005CC5"> 1</span><span style="color:#D73A49"> :</span><span style="color:#24292E"> rawIndex </span><span style="color:#D73A49">+</span><span style="color:#005CC5"> 1</span><span style="color:#24292E">;</span></span>
 <span class="line"><span style="color:#D73A49">  const</span><span style="color:#005CC5"> settings</span><span style="color:#D73A49"> =</span></span>
@@ -3188,36 +3178,34 @@ export default function PhotographerPortfolio() {
 <span class="line"></span>
 <span class="line"><span style="color:#D73A49">function</span><span style="color:#6F42C1"> PrintStack</span><span style="color:#24292E">() {</span></span>
 <span class="line"><span style="color:#D73A49">  return</span><span style="color:#24292E"> (</span></span>
-<span class="line"><span style="color:#24292E">    &#x3C;</span><span style="color:#005CC5">CardStack.Frame</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"absolute inset-0 overflow-visible"</span><span style="color:#24292E">></span></span>
-<span class="line"><span style="color:#24292E">      &#x3C;</span><span style="color:#005CC5">CardStack.LiveRegion</span><span style="color:#24292E"> /></span></span>
-<span class="line"><span style="color:#24292E">      &#x3C;</span><span style="color:#005CC5">CardStack.Trigger</span><span style="color:#6F42C1"> aria-label</span><span style="color:#D73A49">=</span><span style="color:#032F62">"Show next photo"</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"absolute inset-0 block text-left"</span><span style="color:#24292E">></span></span>
-<span class="line"><span style="color:#24292E">        &#x3C;</span><span style="color:#005CC5">CardStack.Viewport</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"absolute inset-0 overflow-visible !min-h-0 pt-[14%] sm:pt-0"</span><span style="color:#24292E">></span></span>
-<span class="line"><span style="color:#24292E">          &#x3C;</span><span style="color:#005CC5">CardStack.List</span><span style="color:#24292E">></span></span>
-<span class="line"><span style="color:#24292E">            {(</span><span style="color:#E36209">item</span><span style="color:#24292E">, </span><span style="color:#E36209">index</span><span style="color:#24292E">, </span><span style="color:#E36209">layer</span><span style="color:#24292E">) </span><span style="color:#D73A49">=></span><span style="color:#24292E"> (</span></span>
-<span class="line"><span style="color:#24292E">              &#x3C;</span><span style="color:#005CC5">CardStack.Card</span></span>
-<span class="line"><span style="color:#6F42C1">                key</span><span style="color:#D73A49">=</span><span style="color:#24292E">{item.id}</span></span>
-<span class="line"><span style="color:#6F42C1">                layer</span><span style="color:#D73A49">=</span><span style="color:#24292E">{layer}</span></span>
-<span class="line"><span style="color:#6F42C1">                stackIndex</span><span style="color:#D73A49">=</span><span style="color:#24292E">{index}</span></span>
-<span class="line"><span style="color:#6F42C1">                className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"!inset-x-0 !top-0 !h-fit !w-full gap-0 overflow-visible rounded-none !bg-transparent p-0 shadow-none ring-0"</span></span>
-<span class="line"><span style="color:#24292E">              ></span></span>
-<span class="line"><span style="color:#24292E">                &#x3C;</span><span style="color:#22863A">figure</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"relative aspect-[4/5] w-full overflow-hidden bg-black/5"</span><span style="color:#24292E">></span></span>
-<span class="line"><span style="color:#24292E">                  &#x3C;</span><span style="color:#22863A">img</span></span>
-<span class="line"><span style="color:#6F42C1">                    src</span><span style="color:#D73A49">=</span><span style="color:#24292E">{item.image}</span></span>
-<span class="line"><span style="color:#6F42C1">                    alt</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#032F62">\`\${</span><span style="color:#005CC5">PHOTOGRAPHER</span><span style="color:#032F62">.</span><span style="color:#24292E">studio</span><span style="color:#032F62">} — \${</span><span style="color:#24292E">item</span><span style="color:#032F62">.</span><span style="color:#24292E">title</span><span style="color:#032F62">}\`</span><span style="color:#24292E">}</span></span>
-<span class="line"><span style="color:#6F42C1">                    width</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#005CC5">PRINT_WIDTH</span><span style="color:#24292E">}</span></span>
-<span class="line"><span style="color:#6F42C1">                    height</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#005CC5">PRINT_HEIGHT</span><span style="color:#24292E">}</span></span>
-<span class="line"><span style="color:#6F42C1">                    decoding</span><span style="color:#D73A49">=</span><span style="color:#032F62">"async"</span></span>
-<span class="line"><span style="color:#6F42C1">                    draggable</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#005CC5">false</span><span style="color:#24292E">}</span></span>
-<span class="line"><span style="color:#6F42C1">                    className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"size-full object-cover object-center"</span></span>
-<span class="line"><span style="color:#24292E">                  /></span></span>
-<span class="line"><span style="color:#24292E">                  {index </span><span style="color:#D73A49">===</span><span style="color:#005CC5"> 0</span><span style="color:#D73A49"> ?</span><span style="color:#24292E"> &#x3C;</span><span style="color:#005CC5">ViewfinderFrame</span><span style="color:#24292E"> /> </span><span style="color:#D73A49">:</span><span style="color:#005CC5"> null</span><span style="color:#24292E">}</span></span>
-<span class="line"><span style="color:#24292E">                &#x3C;/</span><span style="color:#22863A">figure</span><span style="color:#24292E">></span></span>
-<span class="line"><span style="color:#24292E">              &#x3C;/</span><span style="color:#005CC5">CardStack.Card</span><span style="color:#24292E">></span></span>
-<span class="line"><span style="color:#24292E">            )}</span></span>
-<span class="line"><span style="color:#24292E">          &#x3C;/</span><span style="color:#005CC5">CardStack.List</span><span style="color:#24292E">></span></span>
-<span class="line"><span style="color:#24292E">        &#x3C;/</span><span style="color:#005CC5">CardStack.Viewport</span><span style="color:#24292E">></span></span>
-<span class="line"><span style="color:#24292E">      &#x3C;/</span><span style="color:#005CC5">CardStack.Trigger</span><span style="color:#24292E">></span></span>
-<span class="line"><span style="color:#24292E">    &#x3C;/</span><span style="color:#005CC5">CardStack.Frame</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">    &#x3C;</span><span style="color:#22863A">section</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"absolute inset-0 overflow-visible"</span><span style="color:#6F42C1"> aria-label</span><span style="color:#D73A49">=</span><span style="color:#032F62">"Photo stack"</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">      &#x3C;</span><span style="color:#005CC5">CardStack.Viewport</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"absolute inset-0 overflow-visible pt-[14%] sm:pt-0"</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">        &#x3C;</span><span style="color:#005CC5">CardStack.List</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">          {(</span><span style="color:#E36209">item</span><span style="color:#D73A49">:</span><span style="color:#6F42C1"> PortfolioItem</span><span style="color:#24292E">, </span><span style="color:#E36209">index</span><span style="color:#24292E">, </span><span style="color:#E36209">layer</span><span style="color:#24292E">) </span><span style="color:#D73A49">=></span><span style="color:#24292E"> (</span></span>
+<span class="line"><span style="color:#24292E">            &#x3C;</span><span style="color:#005CC5">CardStack.Card</span></span>
+<span class="line"><span style="color:#6F42C1">              key</span><span style="color:#D73A49">=</span><span style="color:#24292E">{item.id}</span></span>
+<span class="line"><span style="color:#6F42C1">              layer</span><span style="color:#D73A49">=</span><span style="color:#24292E">{layer}</span></span>
+<span class="line"><span style="color:#6F42C1">              stackIndex</span><span style="color:#D73A49">=</span><span style="color:#24292E">{index}</span></span>
+<span class="line"><span style="color:#6F42C1">              className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"!inset-x-0 !top-0 !h-fit !w-full overflow-visible rounded-none p-0 shadow-none ring-0"</span></span>
+<span class="line"><span style="color:#24292E">            ></span></span>
+<span class="line"><span style="color:#24292E">              &#x3C;</span><span style="color:#22863A">figure</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"relative aspect-[4/5] w-full overflow-hidden bg-black/5"</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">                &#x3C;</span><span style="color:#22863A">img</span></span>
+<span class="line"><span style="color:#6F42C1">                  src</span><span style="color:#D73A49">=</span><span style="color:#24292E">{item.image}</span></span>
+<span class="line"><span style="color:#6F42C1">                  alt</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#032F62">\`\${</span><span style="color:#005CC5">PHOTOGRAPHER</span><span style="color:#032F62">.</span><span style="color:#24292E">studio</span><span style="color:#032F62">} — \${</span><span style="color:#24292E">item</span><span style="color:#032F62">.</span><span style="color:#24292E">title</span><span style="color:#032F62">}\`</span><span style="color:#24292E">}</span></span>
+<span class="line"><span style="color:#6F42C1">                  width</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#005CC5">PRINT_WIDTH</span><span style="color:#24292E">}</span></span>
+<span class="line"><span style="color:#6F42C1">                  height</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#005CC5">PRINT_HEIGHT</span><span style="color:#24292E">}</span></span>
+<span class="line"><span style="color:#6F42C1">                  decoding</span><span style="color:#D73A49">=</span><span style="color:#032F62">"async"</span></span>
+<span class="line"><span style="color:#6F42C1">                  draggable</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#005CC5">false</span><span style="color:#24292E">}</span></span>
+<span class="line"><span style="color:#6F42C1">                  className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"size-full object-cover object-center"</span></span>
+<span class="line"><span style="color:#24292E">                /></span></span>
+<span class="line"><span style="color:#24292E">                {index </span><span style="color:#D73A49">===</span><span style="color:#005CC5"> 0</span><span style="color:#D73A49"> ?</span><span style="color:#24292E"> &#x3C;</span><span style="color:#005CC5">ViewfinderFrame</span><span style="color:#24292E"> /> </span><span style="color:#D73A49">:</span><span style="color:#005CC5"> null</span><span style="color:#24292E">}</span></span>
+<span class="line"><span style="color:#24292E">              &#x3C;/</span><span style="color:#22863A">figure</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">            &#x3C;/</span><span style="color:#005CC5">CardStack.Card</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">          )}</span></span>
+<span class="line"><span style="color:#24292E">        &#x3C;/</span><span style="color:#005CC5">CardStack.List</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">      &#x3C;/</span><span style="color:#005CC5">CardStack.Viewport</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">      &#x3C;</span><span style="color:#005CC5">CardStack.Trigger</span><span style="color:#6F42C1"> full</span><span style="color:#6F42C1"> aria-label</span><span style="color:#D73A49">=</span><span style="color:#032F62">"Show next photo"</span><span style="color:#24292E"> /></span></span>
+<span class="line"><span style="color:#24292E">    &#x3C;/</span><span style="color:#22863A">section</span><span style="color:#24292E">></span></span>
 <span class="line"><span style="color:#24292E">  );</span></span>
 <span class="line"><span style="color:#24292E">}</span></span>
 <span class="line"></span>
@@ -3345,11 +3333,7 @@ export default function PhotographerPortfolio() {
 <span class="line"><span style="color:#F97583">import</span><span style="color:#9ECBFF"> "@fontsource-variable/instrument-sans"</span><span style="color:#E1E4E8">;</span></span>
 <span class="line"><span style="color:#F97583">import</span><span style="color:#E1E4E8"> { </span><span style="color:#F97583">type</span><span style="color:#E1E4E8"> CSSProperties, </span><span style="color:#F97583">type</span><span style="color:#E1E4E8"> ReactNode, </span><span style="color:#F97583">type</span><span style="color:#E1E4E8"> RefObject, useRef, useState } </span><span style="color:#F97583">from</span><span style="color:#9ECBFF"> "react"</span><span style="color:#E1E4E8">;</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#F97583">import</span><span style="color:#E1E4E8"> CardStack, {</span></span>
-<span class="line"><span style="color:#E1E4E8">  CARD_STACK_MASK_IDS,</span></span>
-<span class="line"><span style="color:#F97583">  type</span><span style="color:#E1E4E8"> CardStackItem,</span></span>
-<span class="line"><span style="color:#E1E4E8">  useCardStack,</span></span>
-<span class="line"><span style="color:#E1E4E8">} </span><span style="color:#F97583">from</span><span style="color:#9ECBFF"> "@/animata/card/card-stack"</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#F97583">import</span><span style="color:#E1E4E8"> CardStack, { </span><span style="color:#F97583">type</span><span style="color:#E1E4E8"> CardStackItem, useCardStack } </span><span style="color:#F97583">from</span><span style="color:#9ECBFF"> "@/animata/card/card-stack"</span><span style="color:#E1E4E8">;</span></span>
 <span class="line"><span style="color:#F97583">import</span><span style="color:#E1E4E8"> TrailingImage </span><span style="color:#F97583">from</span><span style="color:#9ECBFF"> "@/animata/image/trailing-image"</span><span style="color:#E1E4E8">;</span></span>
 <span class="line"><span style="color:#F97583">import</span><span style="color:#E1E4E8"> SplitReveal </span><span style="color:#F97583">from</span><span style="color:#9ECBFF"> "@/animata/preloader/split-reveal"</span><span style="color:#E1E4E8">;</span></span>
 <span class="line"><span style="color:#F97583">import</span><span style="color:#E1E4E8"> { MapPinIcon } </span><span style="color:#F97583">from</span><span style="color:#9ECBFF"> "@/components/ui/map-pin"</span><span style="color:#E1E4E8">;</span></span>
@@ -3421,48 +3405,48 @@ export default function PhotographerPortfolio() {
 <span class="line"><span style="color:#E1E4E8">  ink: </span><span style="color:#9ECBFF">"text-black"</span><span style="color:#E1E4E8">,</span></span>
 <span class="line"><span style="color:#E1E4E8">} </span><span style="color:#F97583">as</span><span style="color:#F97583"> const</span><span style="color:#E1E4E8">;</span></span>
 <span class="line"></span>
-<span class="line"><span style="color:#F97583">const</span><span style="color:#79B8FF"> PORTFOLIO</span><span style="color:#F97583">:</span><span style="color:#B392F0"> CardStackItem</span><span style="color:#E1E4E8">[] </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> [</span></span>
+<span class="line"><span style="color:#F97583">type</span><span style="color:#B392F0"> PortfolioItem</span><span style="color:#F97583"> =</span><span style="color:#B392F0"> CardStackItem</span><span style="color:#F97583"> &#x26;</span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#FFAB70">  image</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> string</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#FFAB70">  title</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> string</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#FFAB70">  tagline</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> string</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#E1E4E8">};</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">const</span><span style="color:#79B8FF"> PORTFOLIO</span><span style="color:#F97583">:</span><span style="color:#B392F0"> PortfolioItem</span><span style="color:#E1E4E8">[] </span><span style="color:#F97583">=</span><span style="color:#E1E4E8"> [</span></span>
 <span class="line"><span style="color:#E1E4E8">  {</span></span>
 <span class="line"><span style="color:#E1E4E8">    id: </span><span style="color:#9ECBFF">"vows"</span><span style="color:#E1E4E8">,</span></span>
 <span class="line"><span style="color:#E1E4E8">    image: </span><span style="color:#B392F0">lummi</span><span style="color:#E1E4E8">(</span><span style="color:#79B8FF">LUMMI_ASSETS</span><span style="color:#E1E4E8">.portfolio.vows),</span></span>
 <span class="line"><span style="color:#E1E4E8">    title: </span><span style="color:#9ECBFF">"Vows"</span><span style="color:#E1E4E8">,</span></span>
 <span class="line"><span style="color:#E1E4E8">    tagline: </span><span style="color:#9ECBFF">"Cliffside ceremony"</span><span style="color:#E1E4E8">,</span></span>
-<span class="line"><span style="color:#E1E4E8">    maskId: </span><span style="color:#79B8FF">CARD_STACK_MASK_IDS</span><span style="color:#E1E4E8">[</span><span style="color:#79B8FF">0</span><span style="color:#E1E4E8">],</span></span>
 <span class="line"><span style="color:#E1E4E8">  },</span></span>
 <span class="line"><span style="color:#E1E4E8">  {</span></span>
 <span class="line"><span style="color:#E1E4E8">    id: </span><span style="color:#9ECBFF">"ceremony"</span><span style="color:#E1E4E8">,</span></span>
 <span class="line"><span style="color:#E1E4E8">    image: </span><span style="color:#B392F0">lummi</span><span style="color:#E1E4E8">(</span><span style="color:#79B8FF">LUMMI_ASSETS</span><span style="color:#E1E4E8">.portfolio.ceremony),</span></span>
 <span class="line"><span style="color:#E1E4E8">    title: </span><span style="color:#9ECBFF">"Ceremony"</span><span style="color:#E1E4E8">,</span></span>
 <span class="line"><span style="color:#E1E4E8">    tagline: </span><span style="color:#9ECBFF">"Church exit"</span><span style="color:#E1E4E8">,</span></span>
-<span class="line"><span style="color:#E1E4E8">    maskId: </span><span style="color:#79B8FF">CARD_STACK_MASK_IDS</span><span style="color:#E1E4E8">[</span><span style="color:#79B8FF">0</span><span style="color:#E1E4E8">],</span></span>
 <span class="line"><span style="color:#E1E4E8">  },</span></span>
 <span class="line"><span style="color:#E1E4E8">  {</span></span>
 <span class="line"><span style="color:#E1E4E8">    id: </span><span style="color:#9ECBFF">"reception"</span><span style="color:#E1E4E8">,</span></span>
 <span class="line"><span style="color:#E1E4E8">    image: </span><span style="color:#B392F0">lummi</span><span style="color:#E1E4E8">(</span><span style="color:#79B8FF">LUMMI_ASSETS</span><span style="color:#E1E4E8">.portfolio.reception),</span></span>
 <span class="line"><span style="color:#E1E4E8">    title: </span><span style="color:#9ECBFF">"Reception"</span><span style="color:#E1E4E8">,</span></span>
 <span class="line"><span style="color:#E1E4E8">    tagline: </span><span style="color:#9ECBFF">"Evening dance"</span><span style="color:#E1E4E8">,</span></span>
-<span class="line"><span style="color:#E1E4E8">    maskId: </span><span style="color:#79B8FF">CARD_STACK_MASK_IDS</span><span style="color:#E1E4E8">[</span><span style="color:#79B8FF">0</span><span style="color:#E1E4E8">],</span></span>
 <span class="line"><span style="color:#E1E4E8">  },</span></span>
 <span class="line"><span style="color:#E1E4E8">  {</span></span>
 <span class="line"><span style="color:#E1E4E8">    id: </span><span style="color:#9ECBFF">"candid"</span><span style="color:#E1E4E8">,</span></span>
 <span class="line"><span style="color:#E1E4E8">    image: </span><span style="color:#B392F0">lummi</span><span style="color:#E1E4E8">(</span><span style="color:#79B8FF">LUMMI_ASSETS</span><span style="color:#E1E4E8">.portfolio.candid),</span></span>
 <span class="line"><span style="color:#E1E4E8">    title: </span><span style="color:#9ECBFF">"Candid"</span><span style="color:#E1E4E8">,</span></span>
 <span class="line"><span style="color:#E1E4E8">    tagline: </span><span style="color:#9ECBFF">"Real laughter"</span><span style="color:#E1E4E8">,</span></span>
-<span class="line"><span style="color:#E1E4E8">    maskId: </span><span style="color:#79B8FF">CARD_STACK_MASK_IDS</span><span style="color:#E1E4E8">[</span><span style="color:#79B8FF">0</span><span style="color:#E1E4E8">],</span></span>
 <span class="line"><span style="color:#E1E4E8">  },</span></span>
 <span class="line"><span style="color:#E1E4E8">  {</span></span>
 <span class="line"><span style="color:#E1E4E8">    id: </span><span style="color:#9ECBFF">"florals"</span><span style="color:#E1E4E8">,</span></span>
 <span class="line"><span style="color:#E1E4E8">    image: </span><span style="color:#B392F0">lummi</span><span style="color:#E1E4E8">(</span><span style="color:#79B8FF">LUMMI_ASSETS</span><span style="color:#E1E4E8">.portfolio.florals),</span></span>
 <span class="line"><span style="color:#E1E4E8">    title: </span><span style="color:#9ECBFF">"Florals"</span><span style="color:#E1E4E8">,</span></span>
 <span class="line"><span style="color:#E1E4E8">    tagline: </span><span style="color:#9ECBFF">"Bouquet detail"</span><span style="color:#E1E4E8">,</span></span>
-<span class="line"><span style="color:#E1E4E8">    maskId: </span><span style="color:#79B8FF">CARD_STACK_MASK_IDS</span><span style="color:#E1E4E8">[</span><span style="color:#79B8FF">0</span><span style="color:#E1E4E8">],</span></span>
 <span class="line"><span style="color:#E1E4E8">  },</span></span>
 <span class="line"><span style="color:#E1E4E8">  {</span></span>
 <span class="line"><span style="color:#E1E4E8">    id: </span><span style="color:#9ECBFF">"festival"</span><span style="color:#E1E4E8">,</span></span>
 <span class="line"><span style="color:#E1E4E8">    image: </span><span style="color:#B392F0">lummi</span><span style="color:#E1E4E8">(</span><span style="color:#79B8FF">LUMMI_ASSETS</span><span style="color:#E1E4E8">.portfolio.festival),</span></span>
 <span class="line"><span style="color:#E1E4E8">    title: </span><span style="color:#9ECBFF">"Event"</span><span style="color:#E1E4E8">,</span></span>
 <span class="line"><span style="color:#E1E4E8">    tagline: </span><span style="color:#9ECBFF">"Summer festival"</span><span style="color:#E1E4E8">,</span></span>
-<span class="line"><span style="color:#E1E4E8">    maskId: </span><span style="color:#79B8FF">CARD_STACK_MASK_IDS</span><span style="color:#E1E4E8">[</span><span style="color:#79B8FF">0</span><span style="color:#E1E4E8">],</span></span>
 <span class="line"><span style="color:#E1E4E8">  },</span></span>
 <span class="line"><span style="color:#E1E4E8">];</span></span>
 <span class="line"></span>
@@ -3543,7 +3527,7 @@ export default function PhotographerPortfolio() {
 <span class="line"><span style="color:#E1E4E8">}</span></span>
 <span class="line"></span>
 <span class="line"><span style="color:#F97583">function</span><span style="color:#B392F0"> PrintCaption</span><span style="color:#E1E4E8">() {</span></span>
-<span class="line"><span style="color:#F97583">  const</span><span style="color:#E1E4E8"> { </span><span style="color:#79B8FF">activeItem</span><span style="color:#E1E4E8"> } </span><span style="color:#F97583">=</span><span style="color:#B392F0"> useCardStack</span><span style="color:#E1E4E8">();</span></span>
+<span class="line"><span style="color:#F97583">  const</span><span style="color:#E1E4E8"> { </span><span style="color:#79B8FF">activeItem</span><span style="color:#E1E4E8"> } </span><span style="color:#F97583">=</span><span style="color:#B392F0"> useCardStack</span><span style="color:#E1E4E8">&#x3C;</span><span style="color:#B392F0">PortfolioItem</span><span style="color:#E1E4E8">>();</span></span>
 <span class="line"><span style="color:#F97583">  const</span><span style="color:#79B8FF"> rawIndex</span><span style="color:#F97583"> =</span><span style="color:#E1E4E8"> activeItem </span><span style="color:#F97583">?</span><span style="color:#79B8FF"> PORTFOLIO</span><span style="color:#E1E4E8">.</span><span style="color:#B392F0">findIndex</span><span style="color:#E1E4E8">((</span><span style="color:#FFAB70">item</span><span style="color:#E1E4E8">) </span><span style="color:#F97583">=></span><span style="color:#E1E4E8"> item.id </span><span style="color:#F97583">===</span><span style="color:#E1E4E8"> activeItem.id) </span><span style="color:#F97583">:</span><span style="color:#F97583"> -</span><span style="color:#79B8FF">1</span><span style="color:#E1E4E8">;</span></span>
 <span class="line"><span style="color:#F97583">  const</span><span style="color:#79B8FF"> index</span><span style="color:#F97583"> =</span><span style="color:#E1E4E8"> rawIndex </span><span style="color:#F97583">===</span><span style="color:#F97583"> -</span><span style="color:#79B8FF">1</span><span style="color:#F97583"> ?</span><span style="color:#79B8FF"> 1</span><span style="color:#F97583"> :</span><span style="color:#E1E4E8"> rawIndex </span><span style="color:#F97583">+</span><span style="color:#79B8FF"> 1</span><span style="color:#E1E4E8">;</span></span>
 <span class="line"><span style="color:#F97583">  const</span><span style="color:#79B8FF"> settings</span><span style="color:#F97583"> =</span></span>
@@ -3586,36 +3570,34 @@ export default function PhotographerPortfolio() {
 <span class="line"></span>
 <span class="line"><span style="color:#F97583">function</span><span style="color:#B392F0"> PrintStack</span><span style="color:#E1E4E8">() {</span></span>
 <span class="line"><span style="color:#F97583">  return</span><span style="color:#E1E4E8"> (</span></span>
-<span class="line"><span style="color:#E1E4E8">    &#x3C;</span><span style="color:#79B8FF">CardStack.Frame</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"absolute inset-0 overflow-visible"</span><span style="color:#E1E4E8">></span></span>
-<span class="line"><span style="color:#E1E4E8">      &#x3C;</span><span style="color:#79B8FF">CardStack.LiveRegion</span><span style="color:#E1E4E8"> /></span></span>
-<span class="line"><span style="color:#E1E4E8">      &#x3C;</span><span style="color:#79B8FF">CardStack.Trigger</span><span style="color:#B392F0"> aria-label</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"Show next photo"</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"absolute inset-0 block text-left"</span><span style="color:#E1E4E8">></span></span>
-<span class="line"><span style="color:#E1E4E8">        &#x3C;</span><span style="color:#79B8FF">CardStack.Viewport</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"absolute inset-0 overflow-visible !min-h-0 pt-[14%] sm:pt-0"</span><span style="color:#E1E4E8">></span></span>
-<span class="line"><span style="color:#E1E4E8">          &#x3C;</span><span style="color:#79B8FF">CardStack.List</span><span style="color:#E1E4E8">></span></span>
-<span class="line"><span style="color:#E1E4E8">            {(</span><span style="color:#FFAB70">item</span><span style="color:#E1E4E8">, </span><span style="color:#FFAB70">index</span><span style="color:#E1E4E8">, </span><span style="color:#FFAB70">layer</span><span style="color:#E1E4E8">) </span><span style="color:#F97583">=></span><span style="color:#E1E4E8"> (</span></span>
-<span class="line"><span style="color:#E1E4E8">              &#x3C;</span><span style="color:#79B8FF">CardStack.Card</span></span>
-<span class="line"><span style="color:#B392F0">                key</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{item.id}</span></span>
-<span class="line"><span style="color:#B392F0">                layer</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{layer}</span></span>
-<span class="line"><span style="color:#B392F0">                stackIndex</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{index}</span></span>
-<span class="line"><span style="color:#B392F0">                className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"!inset-x-0 !top-0 !h-fit !w-full gap-0 overflow-visible rounded-none !bg-transparent p-0 shadow-none ring-0"</span></span>
-<span class="line"><span style="color:#E1E4E8">              ></span></span>
-<span class="line"><span style="color:#E1E4E8">                &#x3C;</span><span style="color:#85E89D">figure</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"relative aspect-[4/5] w-full overflow-hidden bg-black/5"</span><span style="color:#E1E4E8">></span></span>
-<span class="line"><span style="color:#E1E4E8">                  &#x3C;</span><span style="color:#85E89D">img</span></span>
-<span class="line"><span style="color:#B392F0">                    src</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{item.image}</span></span>
-<span class="line"><span style="color:#B392F0">                    alt</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#9ECBFF">\`\${</span><span style="color:#79B8FF">PHOTOGRAPHER</span><span style="color:#9ECBFF">.</span><span style="color:#E1E4E8">studio</span><span style="color:#9ECBFF">} — \${</span><span style="color:#E1E4E8">item</span><span style="color:#9ECBFF">.</span><span style="color:#E1E4E8">title</span><span style="color:#9ECBFF">}\`</span><span style="color:#E1E4E8">}</span></span>
-<span class="line"><span style="color:#B392F0">                    width</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#79B8FF">PRINT_WIDTH</span><span style="color:#E1E4E8">}</span></span>
-<span class="line"><span style="color:#B392F0">                    height</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#79B8FF">PRINT_HEIGHT</span><span style="color:#E1E4E8">}</span></span>
-<span class="line"><span style="color:#B392F0">                    decoding</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"async"</span></span>
-<span class="line"><span style="color:#B392F0">                    draggable</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#79B8FF">false</span><span style="color:#E1E4E8">}</span></span>
-<span class="line"><span style="color:#B392F0">                    className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"size-full object-cover object-center"</span></span>
-<span class="line"><span style="color:#E1E4E8">                  /></span></span>
-<span class="line"><span style="color:#E1E4E8">                  {index </span><span style="color:#F97583">===</span><span style="color:#79B8FF"> 0</span><span style="color:#F97583"> ?</span><span style="color:#E1E4E8"> &#x3C;</span><span style="color:#79B8FF">ViewfinderFrame</span><span style="color:#E1E4E8"> /> </span><span style="color:#F97583">:</span><span style="color:#79B8FF"> null</span><span style="color:#E1E4E8">}</span></span>
-<span class="line"><span style="color:#E1E4E8">                &#x3C;/</span><span style="color:#85E89D">figure</span><span style="color:#E1E4E8">></span></span>
-<span class="line"><span style="color:#E1E4E8">              &#x3C;/</span><span style="color:#79B8FF">CardStack.Card</span><span style="color:#E1E4E8">></span></span>
-<span class="line"><span style="color:#E1E4E8">            )}</span></span>
-<span class="line"><span style="color:#E1E4E8">          &#x3C;/</span><span style="color:#79B8FF">CardStack.List</span><span style="color:#E1E4E8">></span></span>
-<span class="line"><span style="color:#E1E4E8">        &#x3C;/</span><span style="color:#79B8FF">CardStack.Viewport</span><span style="color:#E1E4E8">></span></span>
-<span class="line"><span style="color:#E1E4E8">      &#x3C;/</span><span style="color:#79B8FF">CardStack.Trigger</span><span style="color:#E1E4E8">></span></span>
-<span class="line"><span style="color:#E1E4E8">    &#x3C;/</span><span style="color:#79B8FF">CardStack.Frame</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">    &#x3C;</span><span style="color:#85E89D">section</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"absolute inset-0 overflow-visible"</span><span style="color:#B392F0"> aria-label</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"Photo stack"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">      &#x3C;</span><span style="color:#79B8FF">CardStack.Viewport</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"absolute inset-0 overflow-visible pt-[14%] sm:pt-0"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">        &#x3C;</span><span style="color:#79B8FF">CardStack.List</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">          {(</span><span style="color:#FFAB70">item</span><span style="color:#F97583">:</span><span style="color:#B392F0"> PortfolioItem</span><span style="color:#E1E4E8">, </span><span style="color:#FFAB70">index</span><span style="color:#E1E4E8">, </span><span style="color:#FFAB70">layer</span><span style="color:#E1E4E8">) </span><span style="color:#F97583">=></span><span style="color:#E1E4E8"> (</span></span>
+<span class="line"><span style="color:#E1E4E8">            &#x3C;</span><span style="color:#79B8FF">CardStack.Card</span></span>
+<span class="line"><span style="color:#B392F0">              key</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{item.id}</span></span>
+<span class="line"><span style="color:#B392F0">              layer</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{layer}</span></span>
+<span class="line"><span style="color:#B392F0">              stackIndex</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{index}</span></span>
+<span class="line"><span style="color:#B392F0">              className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"!inset-x-0 !top-0 !h-fit !w-full overflow-visible rounded-none p-0 shadow-none ring-0"</span></span>
+<span class="line"><span style="color:#E1E4E8">            ></span></span>
+<span class="line"><span style="color:#E1E4E8">              &#x3C;</span><span style="color:#85E89D">figure</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"relative aspect-[4/5] w-full overflow-hidden bg-black/5"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">                &#x3C;</span><span style="color:#85E89D">img</span></span>
+<span class="line"><span style="color:#B392F0">                  src</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{item.image}</span></span>
+<span class="line"><span style="color:#B392F0">                  alt</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#9ECBFF">\`\${</span><span style="color:#79B8FF">PHOTOGRAPHER</span><span style="color:#9ECBFF">.</span><span style="color:#E1E4E8">studio</span><span style="color:#9ECBFF">} — \${</span><span style="color:#E1E4E8">item</span><span style="color:#9ECBFF">.</span><span style="color:#E1E4E8">title</span><span style="color:#9ECBFF">}\`</span><span style="color:#E1E4E8">}</span></span>
+<span class="line"><span style="color:#B392F0">                  width</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#79B8FF">PRINT_WIDTH</span><span style="color:#E1E4E8">}</span></span>
+<span class="line"><span style="color:#B392F0">                  height</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#79B8FF">PRINT_HEIGHT</span><span style="color:#E1E4E8">}</span></span>
+<span class="line"><span style="color:#B392F0">                  decoding</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"async"</span></span>
+<span class="line"><span style="color:#B392F0">                  draggable</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#79B8FF">false</span><span style="color:#E1E4E8">}</span></span>
+<span class="line"><span style="color:#B392F0">                  className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"size-full object-cover object-center"</span></span>
+<span class="line"><span style="color:#E1E4E8">                /></span></span>
+<span class="line"><span style="color:#E1E4E8">                {index </span><span style="color:#F97583">===</span><span style="color:#79B8FF"> 0</span><span style="color:#F97583"> ?</span><span style="color:#E1E4E8"> &#x3C;</span><span style="color:#79B8FF">ViewfinderFrame</span><span style="color:#E1E4E8"> /> </span><span style="color:#F97583">:</span><span style="color:#79B8FF"> null</span><span style="color:#E1E4E8">}</span></span>
+<span class="line"><span style="color:#E1E4E8">              &#x3C;/</span><span style="color:#85E89D">figure</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">            &#x3C;/</span><span style="color:#79B8FF">CardStack.Card</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">          )}</span></span>
+<span class="line"><span style="color:#E1E4E8">        &#x3C;/</span><span style="color:#79B8FF">CardStack.List</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">      &#x3C;/</span><span style="color:#79B8FF">CardStack.Viewport</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">      &#x3C;</span><span style="color:#79B8FF">CardStack.Trigger</span><span style="color:#B392F0"> full</span><span style="color:#B392F0"> aria-label</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"Show next photo"</span><span style="color:#E1E4E8"> /></span></span>
+<span class="line"><span style="color:#E1E4E8">    &#x3C;/</span><span style="color:#85E89D">section</span><span style="color:#E1E4E8">></span></span>
 <span class="line"><span style="color:#E1E4E8">  );</span></span>
 <span class="line"><span style="color:#E1E4E8">}</span></span>
 <span class="line"></span>

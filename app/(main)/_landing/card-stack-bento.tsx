@@ -4,6 +4,11 @@ import Link from "next/link";
 import { useState } from "react";
 
 import CardStack, { useCardStack } from "@/animata/card/card-stack";
+import {
+  type CardStackProfileItem,
+  CardStackProfileLiveRegion,
+  CardStackProfileMasks,
+} from "@/animata/card/card-stack-profile";
 import { DEMO_PEOPLE } from "@/app/demo/library/shared/card-stack-people";
 import { ProfileStackCard } from "@/app/demo/library/shared/profile-stack-card";
 import { cn } from "@/lib/utils";
@@ -12,35 +17,34 @@ const BENTO_PEOPLE = DEMO_PEOPLE.slice(0, 4);
 
 function BentoStackInner() {
   const [viewed, setViewed] = useState(0);
-  const { activeItem } = useCardStack();
+  const { activeItem } = useCardStack<CardStackProfileItem>();
 
   return (
-    <CardStack.Frame className="mx-auto w-full max-w-[16rem]">
-      <CardStack.Masks />
-      <CardStack.LiveRegion />
+    <section className="relative mx-auto w-full max-w-[16rem]">
+      <CardStackProfileMasks />
+      <CardStackProfileLiveRegion item={activeItem} />
+      <CardStack.Viewport className="min-h-[14rem] sm:min-h-[15rem]">
+        <CardStack.List>
+          {(item: CardStackProfileItem, index, layer) => (
+            <ProfileStackCard
+              key={item.id}
+              item={item}
+              index={index}
+              layer={layer}
+              cardClassName="shadow-lg ring-border/60"
+            />
+          )}
+        </CardStack.List>
+      </CardStack.Viewport>
       <CardStack.Trigger
-        className="w-full"
+        full
         onClick={() => setViewed((count) => Math.min(BENTO_PEOPLE.length, count + 1))}
-      >
-        <CardStack.Viewport className="min-h-[14rem] sm:min-h-[15rem]">
-          <CardStack.List>
-            {(item, index, layer) => (
-              <ProfileStackCard
-                key={item.id}
-                item={item}
-                index={index}
-                layer={layer}
-                cardClassName="shadow-lg ring-border/60"
-              />
-            )}
-          </CardStack.List>
-        </CardStack.Viewport>
-      </CardStack.Trigger>
+      />
       <p className="mt-3 text-center text-[11px] text-muted-foreground">
         {viewed}/{BENTO_PEOPLE.length} viewed
         {activeItem ? ` · ${activeItem.title.split(" ")[0]}` : ""}
       </p>
-    </CardStack.Frame>
+    </section>
   );
 }
 

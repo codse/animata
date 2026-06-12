@@ -1,6 +1,5 @@
 "use client";
 
-import type { LucideIcon } from "lucide-react";
 import { AnimatePresence, type HTMLMotionProps, motion, type Transition } from "motion/react";
 import {
   type ComponentProps,
@@ -17,39 +16,19 @@ import {
   useSyncExternalStore,
 } from "react";
 
-import { CardStackMaskDefs } from "@/components/shapes/card-stack-mask-defs";
 import { cn } from "@/lib/utils";
-
-export const CARD_STACK_MASK_IDS = [
-  "cardstack_mask_ellipse-1",
-  "cardstack_mask_flower-14",
-  "cardstack_mask_flower-1",
-  "cardstack_mask_misc-5",
-] as const;
-
-export type CardStackMaskId = (typeof CARD_STACK_MASK_IDS)[number];
-
-export type CardStackMediaAspect = "fill" | "square" | "4/5" | "3/4" | "16/10";
 
 export interface CardStackItem {
   id: string;
-  image: string;
-  title: string;
-  tagline: string;
-  counts?: {
-    like: number;
-    comment: number;
-  };
-  maskId: CardStackMaskId;
 }
 
 export interface CardStackLayerMotion {
   className: string;
-  initial: HTMLMotionProps<"article">["initial"];
-  animate: HTMLMotionProps<"article">["animate"];
-  exit?: HTMLMotionProps<"article">["exit"];
+  initial: HTMLMotionProps<"div">["initial"];
+  animate: HTMLMotionProps<"div">["animate"];
+  exit?: HTMLMotionProps<"div">["exit"];
   transition: Transition;
-  style?: HTMLMotionProps<"article">["style"];
+  style?: HTMLMotionProps<"div">["style"];
 }
 
 const DEFAULT_STACK_DEPTH = 3;
@@ -107,19 +86,6 @@ export function createCardStackThrowImpulse(): CardStackThrowImpulse {
 
 const CARD_STACK_STACK_ORIGIN = "50% 0%";
 const CARD_STACK_EXIT_Y = "200%";
-
-const CARD_STACK_MASK_STYLE = {
-  maskSize: "cover",
-  maskPosition: "center",
-  maskRepeat: "no-repeat",
-} as const;
-
-const MEDIA_ASPECT_CLASS: Record<Exclude<CardStackMediaAspect, "fill">, string> = {
-  square: "aspect-square",
-  "4/5": "aspect-[4/5]",
-  "3/4": "aspect-[3/4]",
-  "16/10": "aspect-[16/10]",
-};
 
 function subscribeReducedMotion(callback: () => void) {
   const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -195,7 +161,7 @@ function getCardStackInitial(
   stackIndex: number,
   depth: number,
   layer: CardStackLayerMotion,
-): HTMLMotionProps<"article">["initial"] {
+): HTMLMotionProps<"div">["initial"] {
   if (stackIndex !== 0 && stackIndex !== depth - 1) {
     return false;
   }
@@ -208,7 +174,7 @@ function getCardStackExit(
   layer: CardStackLayerMotion,
   reducedMotion: boolean,
   throwImpulse: CardStackThrowImpulse | null,
-): HTMLMotionProps<"article">["exit"] {
+): HTMLMotionProps<"div">["exit"] {
   if (stackIndex !== 0) {
     return undefined;
   }
@@ -236,10 +202,10 @@ function getCardStackExit(
   };
 }
 
-interface CardStackContextValue {
-  items: CardStackItem[];
-  visibleItems: CardStackItem[];
-  activeItem: CardStackItem | undefined;
+interface CardStackContextValue<T extends CardStackItem = CardStackItem> {
+  items: T[];
+  visibleItems: T[];
+  activeItem: T | undefined;
   depth: number;
   isAnimating: boolean;
   pressActive: boolean;
@@ -253,31 +219,31 @@ interface CardStackContextValue {
 
 const CardStackContext = createContext<CardStackContextValue | null>(null);
 
-export function useCardStack() {
+export function useCardStack<T extends CardStackItem = CardStackItem>() {
   const context = use(CardStackContext);
   if (!context) {
     throw new Error("CardStack primitives must be used within <CardStack>.");
   }
-  return context;
+  return context as CardStackContextValue<T>;
 }
 
-interface CardStackRootProps {
-  items: CardStackItem[];
+interface CardStackRootProps<T extends CardStackItem> {
+  items: T[];
   depth?: number;
   autoplay?: boolean;
   autoplayInterval?: number;
-  onItemsChange?: (items: CardStackItem[]) => void;
+  onItemsChange?: (items: T[]) => void;
   children: ReactNode;
 }
 
-function CardStackRoot({
+function CardStackRoot<T extends CardStackItem>({
   items,
   depth = DEFAULT_STACK_DEPTH,
   autoplay = false,
   autoplayInterval = DEFAULT_AUTOPLAY_INTERVAL,
   onItemsChange,
   children,
-}: CardStackRootProps) {
+}: CardStackRootProps<T>) {
   const reducedMotion = usePrefersReducedMotion();
   const stackDepth = Math.min(Math.max(1, depth), STACK_LAYER_PRESETS.length);
   const layers = useMemo(
@@ -323,7 +289,7 @@ function CardStackRoot({
       if (current.length <= 1) return current;
       const next = [...current];
       next.push(next.shift()!);
-      onItemsChange?.(next);
+      onItemsChange?.(next as T[]);
       return next;
     });
   }, [onItemsChange]);
@@ -442,84 +408,133 @@ function CardStackRoot({
   return <CardStackContext value={value}>{children}</CardStackContext>;
 }
 
-function CardStackFrame({
-  "aria-label": ariaLabel = "Interactive card stack",
-  className,
-  children,
-  ...props
-}: ComponentProps<"section">) {
-  return (
-    <section aria-label={ariaLabel} className={cn("relative", className)} {...props}>
-      {children}
-    </section>
-  );
+export interface CardStackTriggerProps {
+  /** When true, renders an absolute inset-0 overlay for click-anywhere advance. When false (default), renders a real `<button>` for a discrete control. */
+  full?: boolean;
+  "aria-label"?: string;
+  className?: string;
+  children?: ReactNode;
+  onClick?: (event: React.MouseEvent<HTMLElement>) => void;
+  onKeyDown?: (event: React.KeyboardEvent<HTMLElement>) => void;
+  onPointerDown?: (event: React.PointerEvent<HTMLElement>) => void;
+  onPointerUp?: (event: React.PointerEvent<HTMLElement>) => void;
+  onPointerLeave?: (event: React.PointerEvent<HTMLElement>) => void;
+  onPointerCancel?: (event: React.PointerEvent<HTMLElement>) => void;
 }
 
-function CardStackPanel({ className, children, ...props }: ComponentProps<"div">) {
-  return (
-    <div className={cn("relative z-10", className)} {...props}>
-      {children}
-    </div>
-  );
-}
-
-function CardStackLiveRegion({ className }: { className?: string }) {
-  const { activeItem } = useCardStack();
-
-  return (
-    <p className={cn("sr-only", className)} aria-live="polite" aria-atomic="true">
-      {activeItem ? `Showing ${activeItem.title}, ${activeItem.tagline}` : "No cards available"}
-    </p>
-  );
-}
-
-function CardStackTrigger({
-  "aria-label": ariaLabel = "Show next card",
-  className,
-  children,
+function useCardStackTriggerHandlers({
+  isAnimating,
+  setPressActive,
+  advance,
   onClick,
+  onKeyDown,
   onPointerDown,
   onPointerUp,
   onPointerLeave,
   onPointerCancel,
-  ...props
-}: ComponentProps<"button">) {
+}: {
+  isAnimating: boolean;
+  setPressActive: (active: boolean) => void;
+  advance: () => void;
+  onClick?: (event: React.MouseEvent<HTMLElement>) => void;
+  onKeyDown?: (event: React.KeyboardEvent<HTMLElement>) => void;
+  onPointerDown?: (event: React.PointerEvent<HTMLElement>) => void;
+  onPointerUp?: (event: React.PointerEvent<HTMLElement>) => void;
+  onPointerLeave?: (event: React.PointerEvent<HTMLElement>) => void;
+  onPointerCancel?: (event: React.PointerEvent<HTMLElement>) => void;
+}) {
+  return {
+    onPointerDown: (event: React.PointerEvent<HTMLElement>) => {
+      onPointerDown?.(event);
+      if (!event.defaultPrevented && !isAnimating) {
+        setPressActive(true);
+      }
+    },
+    onPointerUp: (event: React.PointerEvent<HTMLElement>) => {
+      onPointerUp?.(event);
+      window.setTimeout(() => setPressActive(false), 0);
+    },
+    onPointerLeave: (event: React.PointerEvent<HTMLElement>) => {
+      onPointerLeave?.(event);
+      setPressActive(false);
+    },
+    onPointerCancel: (event: React.PointerEvent<HTMLElement>) => {
+      onPointerCancel?.(event);
+      setPressActive(false);
+    },
+    onClick: (event: React.MouseEvent<HTMLElement>) => {
+      onClick?.(event);
+      if (!event.defaultPrevented) {
+        advance();
+      }
+    },
+    onKeyDown: (event: React.KeyboardEvent<HTMLElement>) => {
+      onKeyDown?.(event);
+      if (event.defaultPrevented) return;
+      if (event.key === "Enter" || event.key === " " || event.key === "Spacebar") {
+        event.preventDefault();
+        advance();
+      }
+    },
+  };
+}
+
+function CardStackTrigger({
+  full = false,
+  "aria-label": ariaLabel = "Show next card",
+  className,
+  children,
+  onClick,
+  onKeyDown,
+  onPointerDown,
+  onPointerUp,
+  onPointerLeave,
+  onPointerCancel,
+}: CardStackTriggerProps) {
   const { advance, isAnimating, setPressActive } = useCardStack();
+  const handlers = useCardStackTriggerHandlers({
+    isAnimating,
+    setPressActive,
+    advance,
+    onClick,
+    onKeyDown,
+    onPointerDown,
+    onPointerUp,
+    onPointerLeave,
+    onPointerCancel,
+  });
+
+  if (full) {
+    return (
+      // biome-ignore lint/a11y/useSemanticElements: overlay sits above card content; a wrapping <button> would be invalid markup
+      <div
+        role="button"
+        tabIndex={0}
+        aria-label={ariaLabel}
+        {...handlers}
+        className={cn(
+          "absolute inset-0 z-40 cursor-pointer outline-none",
+          "focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+          className,
+        )}
+      />
+    );
+  }
 
   return (
     <button
       type="button"
       aria-label={ariaLabel}
-      onPointerDown={(event) => {
-        onPointerDown?.(event);
-        if (!event.defaultPrevented && !isAnimating) {
-          setPressActive(true);
-        }
-      }}
-      onPointerUp={(event) => {
-        onPointerUp?.(event);
-        window.setTimeout(() => setPressActive(false), 0);
-      }}
-      onPointerLeave={(event) => {
-        onPointerLeave?.(event);
-        setPressActive(false);
-      }}
-      onPointerCancel={(event) => {
-        onPointerCancel?.(event);
-        setPressActive(false);
-      }}
-      onClick={(event) => {
-        onClick?.(event);
-        if (!event.defaultPrevented) {
-          advance();
-        }
-      }}
+      onPointerDown={handlers.onPointerDown}
+      onPointerUp={handlers.onPointerUp}
+      onPointerLeave={handlers.onPointerLeave}
+      onPointerCancel={handlers.onPointerCancel}
+      onClick={handlers.onClick}
       className={cn(
-        "relative block w-full cursor-pointer outline-none",
+        "inline-flex shrink-0 cursor-pointer items-center justify-center outline-none",
         "focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
         className,
       )}
-      {...props}
     >
       {children}
     </button>
@@ -528,24 +543,18 @@ function CardStackTrigger({
 
 function CardStackViewport({ className, children, ...props }: ComponentProps<"div">) {
   return (
-    <div
-      className={cn(
-        "relative mx-auto w-full overflow-visible pt-20 sm:pt-24 min-h-[26rem] sm:min-h-[28rem]",
-        className,
-      )}
-      {...props}
-    >
+    <div className={cn("relative w-full overflow-visible", className)} {...props}>
       {children}
     </div>
   );
 }
 
-interface CardStackListProps {
-  children: (item: CardStackItem, index: number, layer: CardStackLayerMotion) => ReactNode;
+interface CardStackListProps<T extends CardStackItem> {
+  children: (item: T, index: number, layer: CardStackLayerMotion) => ReactNode;
 }
 
-function CardStackList({ children }: CardStackListProps) {
-  const { visibleItems, layers, handleExitComplete } = useCardStack();
+function CardStackList<T extends CardStackItem>({ children }: CardStackListProps<T>) {
+  const { visibleItems, layers, handleExitComplete } = useCardStack<T>();
 
   return (
     <AnimatePresence initial={false} mode="sync" onExitComplete={handleExitComplete}>
@@ -567,7 +576,7 @@ function CardStackList({ children }: CardStackListProps) {
   );
 }
 
-interface CardStackCardProps extends HTMLMotionProps<"article"> {
+interface CardStackCardProps extends HTMLMotionProps<"div"> {
   layer: CardStackLayerMotion;
   stackIndex: number;
   stackDepth?: number;
@@ -598,12 +607,9 @@ function CardStackCard({
   const transition = isPressed ? PRESS_SPRING : layer.transition;
 
   return (
-    <motion.article
+    <motion.div
       className={cn(
-        "absolute inset-x-0 top-0 flex h-fit w-full flex-col gap-3 rounded-4xl p-0",
-        "bg-linear-to-br from-pink-100 via-white to-white shadow-xl ring-1 ring-border",
-        "will-change-transform motion-reduce:transition-none",
-        "dark:from-pink-950 dark:via-card dark:to-card",
+        "absolute inset-x-0 top-0 w-full will-change-transform motion-reduce:transition-none",
         layer.className,
         className,
       )}
@@ -622,197 +628,23 @@ function CardStackCard({
   );
 }
 
-function CardStackHeader({ className, ...props }: ComponentProps<"header">) {
-  return <header className={cn("flex gap-2 p-4 items-center", className)} {...props} />;
-}
-
-interface CardStackAvatarProps extends ComponentProps<"div"> {
-  src: string;
-}
-
-function CardStackAvatar({ src, className, ...props }: CardStackAvatarProps) {
-  return (
-    <div
-      className={cn(
-        "relative size-7 shrink-0 overflow-hidden rounded-full ring-2 ring-border",
-        className,
-      )}
-      {...props}
-    >
-      <img
-        src={src}
-        alt=""
-        aria-hidden
-        width={28}
-        height={28}
-        decoding="async"
-        className="size-full object-cover"
-      />
-    </div>
-  );
-}
-
-interface CardStackMetaProps extends ComponentProps<"div"> {
-  title: string;
-  tagline: string;
-}
-
-function CardStackMeta({ title, tagline, className, ...props }: CardStackMetaProps) {
-  return (
-    <div className={cn("min-w-0 flex flex-col gap-0.5 items-start", className)} {...props}>
-      <h3 className="truncate text-xs font-medium leading-none tracking-wide text-foreground">
-        {title}
-      </h3>
-      <p className="truncate text-[10px] leading-none overflow-visible text-muted-foreground">
-        {tagline}
-      </p>
-    </div>
-  );
-}
-
-interface CardStackMediaProps extends Omit<ComponentProps<"img">, "src" | "alt"> {
-  src: string;
-  alt: string;
-  maskId: CardStackMaskId;
-  aspect?: CardStackMediaAspect;
-}
-
-function CardStackMedia({
-  src,
-  alt,
-  maskId,
-  aspect = "square",
-  className,
-  style,
-  ...props
-}: CardStackMediaProps) {
-  const maskStyle = {
-    ...CARD_STACK_MASK_STYLE,
-    maskImage: `url(#${maskId})`,
-    WebkitMaskImage: `url(#${maskId})`,
-    WebkitMaskSize: CARD_STACK_MASK_STYLE.maskSize,
-    WebkitMaskPosition: CARD_STACK_MASK_STYLE.maskPosition,
-    WebkitMaskRepeat: CARD_STACK_MASK_STYLE.maskRepeat,
-    ...style,
-  };
-
-  return (
-    <figure
-      className={cn(
-        "mx-auto shrink-0 overflow-hidden",
-        aspect === "square" && "aspect-square size-52",
-        aspect === "fill" && "min-h-0 w-full flex-1",
-        aspect !== "square" && aspect !== "fill" && MEDIA_ASPECT_CLASS[aspect],
-        className,
-      )}
-    >
-      <img
-        src={src}
-        alt={alt}
-        width={208}
-        height={208}
-        decoding="async"
-        draggable={false}
-        className="size-full object-cover"
-        style={maskStyle}
-        {...props}
-      />
-    </figure>
-  );
-}
-
-function CardStackBody({ className, ...props }: ComponentProps<"div">) {
-  return <div className={cn("flex flex-1 flex-col bg-card", className)} {...props} />;
-}
-
-function CardStackFooter({ className, ...props }: ComponentProps<"footer">) {
-  return (
-    <footer
-      className={cn("flex items-center gap-3 px-4 pb-4 pt-1 text-sm text-foreground", className)}
-      {...props}
-    />
-  );
-}
-
-interface CardStackMetricProps extends ComponentProps<"span"> {
-  icon: LucideIcon;
-  label: string;
-  value: number | string;
-}
-
-function CardStackMetric({ icon: Icon, label, value, className, ...props }: CardStackMetricProps) {
-  return (
-    <span className={cn("inline-flex items-center gap-1", className)} {...props}>
-      <Icon aria-hidden className="size-6 shrink-0" />
-      <span className="sr-only">{label}: </span>
-      {value}
-    </span>
-  );
-}
-
-interface CardStackActionProps extends ComponentProps<"span"> {
-  icon?: LucideIcon;
-}
-
-function CardStackAction({ icon: Icon, className, children, ...props }: CardStackActionProps) {
-  return (
-    <span
-      className={cn(
-        "ml-auto inline-flex items-center gap-1.5 text-xs font-medium text-muted-foreground",
-        className,
-      )}
-      {...props}
-    >
-      {children}
-      {Icon ? <Icon aria-hidden className="size-4 shrink-0" /> : null}
-    </span>
-  );
-}
-
-interface CardStackMasksProps {
-  className?: string;
-}
-
-function CardStackMasks({ className }: CardStackMasksProps) {
-  return <CardStackMaskDefs className={cn("pointer-events-none absolute", className)} />;
-}
-
 const CardStack = Object.assign(CardStackRoot, {
-  Frame: CardStackFrame,
-  Panel: CardStackPanel,
-  LiveRegion: CardStackLiveRegion,
   Trigger: CardStackTrigger,
   Viewport: CardStackViewport,
   List: CardStackList,
   Card: CardStackCard,
-  Header: CardStackHeader,
-  Avatar: CardStackAvatar,
-  Meta: CardStackMeta,
-  Body: CardStackBody,
-  Media: CardStackMedia,
-  Footer: CardStackFooter,
-  Metric: CardStackMetric,
-  Action: CardStackAction,
-  Masks: CardStackMasks,
-});
+}) as typeof CardStackRoot & {
+  Trigger: typeof CardStackTrigger;
+  Viewport: typeof CardStackViewport;
+  List: typeof CardStackList;
+  Card: typeof CardStackCard;
+};
 
 export default CardStack;
 export {
   CardStack,
-  CardStackAction,
-  CardStackAvatar,
-  CardStackBody,
   CardStackCard,
-  CardStackFooter,
-  CardStackFrame,
-  CardStackHeader,
   CardStackList,
-  CardStackLiveRegion,
-  CardStackMasks,
-  CardStackMedia,
-  CardStackMeta,
-  CardStackMetric,
-  CardStackPanel,
   CardStackRoot,
   CardStackTrigger,
   CardStackViewport,
