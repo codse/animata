@@ -74,13 +74,16 @@ export default async function DocPage({ params }: DocPageProps) {
   }
 
   const toc = await getTableOfContents(doc.body);
+  const hasToc = doc.toc && toc?.items?.length;
 
   return (
     <>
       <DocJsonLd doc={doc} />
       <main
         id="main-content"
-        className="relative py-6 lg:grid lg:grid-cols-[1fr_200px] lg:gap-10 lg:py-8"
+        className={cn("relative py-6 lg:grid lg:grid-cols-[1fr_200px] lg:gap-10 lg:py-8", {
+          "lg:grid-cols-[1fr]": !hasToc,
+        })}
       >
         <div className="docs-content mx-auto w-full min-w-0">
           <div className="mb-4 flex items-center space-x-1 text-sm text-muted-foreground">
@@ -156,7 +159,7 @@ export default async function DocPage({ params }: DocPageProps) {
           </div>
           <DocsPager doc={doc} />
         </div>
-        {doc.toc && (
+        {hasToc && (
           <div className="hidden text-sm lg:block">
             <div className="sticky top-[6.25rem] -mt-10 pt-4">
               <ScrollArea className="pb-10">
