@@ -27,7 +27,9 @@ export function ProfileStackCard({
       layer={layer}
       showMetrics={showMetrics}
       className={cardClassName}
-      footerTrailing={<ArrowRight aria-hidden className="ml-auto size-6 shrink-0 text-black/40" />}
+      footerTrailing={
+        <ArrowRight aria-hidden className="ml-auto size-6 shrink-0 text-muted-foreground" />
+      }
     />
   );
 }

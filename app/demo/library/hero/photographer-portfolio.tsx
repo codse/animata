@@ -76,6 +76,7 @@ const HERO_TONE = {
 } as const;
 
 type PortfolioItem = CardStackItem & {
+  id: PortfolioId;
   image: string;
   title: string;
   tagline: string;
@@ -200,10 +201,7 @@ function PrintCaption() {
   const { activeItem } = useCardStack<PortfolioItem>();
   const rawIndex = activeItem ? PORTFOLIO.findIndex((item) => item.id === activeItem.id) : -1;
   const index = rawIndex === -1 ? 1 : rawIndex + 1;
-  const settings =
-    activeItem && activeItem.id in SHOT_SETTINGS
-      ? SHOT_SETTINGS[activeItem.id as PortfolioId]
-      : SHOT_SETTINGS.vows;
+  const settings = activeItem ? SHOT_SETTINGS[activeItem.id] : SHOT_SETTINGS.vows;
 
   if (!activeItem || !settings) {
     return null;

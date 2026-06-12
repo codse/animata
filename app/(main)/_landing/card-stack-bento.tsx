@@ -15,8 +15,7 @@ import { cn } from "@/lib/utils";
 
 const BENTO_PEOPLE = DEMO_PEOPLE.slice(0, 4);
 
-function BentoStackInner() {
-  const [viewed, setViewed] = useState(0);
+function BentoStackInner({ viewed }: { viewed: number }) {
   const { activeItem } = useCardStack<CardStackProfileItem>();
 
   return (
@@ -36,10 +35,7 @@ function BentoStackInner() {
           )}
         </CardStack.List>
       </CardStack.Viewport>
-      <CardStack.Trigger
-        full
-        onClick={() => setViewed((count) => Math.min(BENTO_PEOPLE.length, count + 1))}
-      />
+      <CardStack.Trigger full />
       <p className="mt-3 text-center text-[11px] text-muted-foreground">
         {viewed}/{BENTO_PEOPLE.length} viewed
         {activeItem ? ` · ${activeItem.title.split(" ")[0]}` : ""}
@@ -49,6 +45,8 @@ function BentoStackInner() {
 }
 
 export function CardStackBento() {
+  const [viewed, setViewed] = useState(1);
+
   return (
     <div className={cn("flex h-full flex-col")}>
       <span className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground sm:text-xs">
@@ -56,8 +54,12 @@ export function CardStackBento() {
       </span>
       <p className="mt-2 text-sm text-foreground">Click through the deck</p>
       <div className="mt-auto flex justify-center pt-4">
-        <CardStack items={BENTO_PEOPLE} depth={3}>
-          <BentoStackInner />
+        <CardStack
+          items={BENTO_PEOPLE}
+          depth={3}
+          onItemsChange={() => setViewed((count) => Math.min(BENTO_PEOPLE.length, count + 1))}
+        >
+          <BentoStackInner viewed={viewed} />
         </CardStack>
       </div>
       <Link

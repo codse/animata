@@ -2622,6 +2622,7 @@ const HERO_TONE = {
 } as const;
 
 type PortfolioItem = CardStackItem & {
+  id: PortfolioId;
   image: string;
   title: string;
   tagline: string;
@@ -2746,10 +2747,7 @@ function PrintCaption() {
   const { activeItem } = useCardStack<PortfolioItem>();
   const rawIndex = activeItem ? PORTFOLIO.findIndex((item) => item.id === activeItem.id) : -1;
   const index = rawIndex === -1 ? 1 : rawIndex + 1;
-  const settings =
-    activeItem && activeItem.id in SHOT_SETTINGS
-      ? SHOT_SETTINGS[activeItem.id as PortfolioId]
-      : SHOT_SETTINGS.vows;
+  const settings = activeItem ? SHOT_SETTINGS[activeItem.id] : SHOT_SETTINGS.vows;
 
   if (!activeItem || !settings) {
     return null;
@@ -3014,6 +3012,7 @@ export default function PhotographerPortfolio() {
 <span class="line"><span style="color:#24292E">} </span><span style="color:#D73A49">as</span><span style="color:#D73A49"> const</span><span style="color:#24292E">;</span></span>
 <span class="line"></span>
 <span class="line"><span style="color:#D73A49">type</span><span style="color:#6F42C1"> PortfolioItem</span><span style="color:#D73A49"> =</span><span style="color:#6F42C1"> CardStackItem</span><span style="color:#D73A49"> &#x26;</span><span style="color:#24292E"> {</span></span>
+<span class="line"><span style="color:#E36209">  id</span><span style="color:#D73A49">:</span><span style="color:#6F42C1"> PortfolioId</span><span style="color:#24292E">;</span></span>
 <span class="line"><span style="color:#E36209">  image</span><span style="color:#D73A49">:</span><span style="color:#005CC5"> string</span><span style="color:#24292E">;</span></span>
 <span class="line"><span style="color:#E36209">  title</span><span style="color:#D73A49">:</span><span style="color:#005CC5"> string</span><span style="color:#24292E">;</span></span>
 <span class="line"><span style="color:#E36209">  tagline</span><span style="color:#D73A49">:</span><span style="color:#005CC5"> string</span><span style="color:#24292E">;</span></span>
@@ -3138,10 +3137,7 @@ export default function PhotographerPortfolio() {
 <span class="line"><span style="color:#D73A49">  const</span><span style="color:#24292E"> { </span><span style="color:#005CC5">activeItem</span><span style="color:#24292E"> } </span><span style="color:#D73A49">=</span><span style="color:#6F42C1"> useCardStack</span><span style="color:#24292E">&#x3C;</span><span style="color:#6F42C1">PortfolioItem</span><span style="color:#24292E">>();</span></span>
 <span class="line"><span style="color:#D73A49">  const</span><span style="color:#005CC5"> rawIndex</span><span style="color:#D73A49"> =</span><span style="color:#24292E"> activeItem </span><span style="color:#D73A49">?</span><span style="color:#005CC5"> PORTFOLIO</span><span style="color:#24292E">.</span><span style="color:#6F42C1">findIndex</span><span style="color:#24292E">((</span><span style="color:#E36209">item</span><span style="color:#24292E">) </span><span style="color:#D73A49">=></span><span style="color:#24292E"> item.id </span><span style="color:#D73A49">===</span><span style="color:#24292E"> activeItem.id) </span><span style="color:#D73A49">:</span><span style="color:#D73A49"> -</span><span style="color:#005CC5">1</span><span style="color:#24292E">;</span></span>
 <span class="line"><span style="color:#D73A49">  const</span><span style="color:#005CC5"> index</span><span style="color:#D73A49"> =</span><span style="color:#24292E"> rawIndex </span><span style="color:#D73A49">===</span><span style="color:#D73A49"> -</span><span style="color:#005CC5">1</span><span style="color:#D73A49"> ?</span><span style="color:#005CC5"> 1</span><span style="color:#D73A49"> :</span><span style="color:#24292E"> rawIndex </span><span style="color:#D73A49">+</span><span style="color:#005CC5"> 1</span><span style="color:#24292E">;</span></span>
-<span class="line"><span style="color:#D73A49">  const</span><span style="color:#005CC5"> settings</span><span style="color:#D73A49"> =</span></span>
-<span class="line"><span style="color:#24292E">    activeItem </span><span style="color:#D73A49">&#x26;&#x26;</span><span style="color:#24292E"> activeItem.id </span><span style="color:#D73A49">in</span><span style="color:#005CC5"> SHOT_SETTINGS</span></span>
-<span class="line"><span style="color:#D73A49">      ?</span><span style="color:#005CC5"> SHOT_SETTINGS</span><span style="color:#24292E">[activeItem.id </span><span style="color:#D73A49">as</span><span style="color:#6F42C1"> PortfolioId</span><span style="color:#24292E">]</span></span>
-<span class="line"><span style="color:#D73A49">      :</span><span style="color:#005CC5"> SHOT_SETTINGS</span><span style="color:#24292E">.vows;</span></span>
+<span class="line"><span style="color:#D73A49">  const</span><span style="color:#005CC5"> settings</span><span style="color:#D73A49"> =</span><span style="color:#24292E"> activeItem </span><span style="color:#D73A49">?</span><span style="color:#005CC5"> SHOT_SETTINGS</span><span style="color:#24292E">[activeItem.id] </span><span style="color:#D73A49">:</span><span style="color:#005CC5"> SHOT_SETTINGS</span><span style="color:#24292E">.vows;</span></span>
 <span class="line"></span>
 <span class="line"><span style="color:#D73A49">  if</span><span style="color:#24292E"> (</span><span style="color:#D73A49">!</span><span style="color:#24292E">activeItem </span><span style="color:#D73A49">||</span><span style="color:#D73A49"> !</span><span style="color:#24292E">settings) {</span></span>
 <span class="line"><span style="color:#D73A49">    return</span><span style="color:#005CC5"> null</span><span style="color:#24292E">;</span></span>
@@ -3406,6 +3402,7 @@ export default function PhotographerPortfolio() {
 <span class="line"><span style="color:#E1E4E8">} </span><span style="color:#F97583">as</span><span style="color:#F97583"> const</span><span style="color:#E1E4E8">;</span></span>
 <span class="line"></span>
 <span class="line"><span style="color:#F97583">type</span><span style="color:#B392F0"> PortfolioItem</span><span style="color:#F97583"> =</span><span style="color:#B392F0"> CardStackItem</span><span style="color:#F97583"> &#x26;</span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#FFAB70">  id</span><span style="color:#F97583">:</span><span style="color:#B392F0"> PortfolioId</span><span style="color:#E1E4E8">;</span></span>
 <span class="line"><span style="color:#FFAB70">  image</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> string</span><span style="color:#E1E4E8">;</span></span>
 <span class="line"><span style="color:#FFAB70">  title</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> string</span><span style="color:#E1E4E8">;</span></span>
 <span class="line"><span style="color:#FFAB70">  tagline</span><span style="color:#F97583">:</span><span style="color:#79B8FF"> string</span><span style="color:#E1E4E8">;</span></span>
@@ -3530,10 +3527,7 @@ export default function PhotographerPortfolio() {
 <span class="line"><span style="color:#F97583">  const</span><span style="color:#E1E4E8"> { </span><span style="color:#79B8FF">activeItem</span><span style="color:#E1E4E8"> } </span><span style="color:#F97583">=</span><span style="color:#B392F0"> useCardStack</span><span style="color:#E1E4E8">&#x3C;</span><span style="color:#B392F0">PortfolioItem</span><span style="color:#E1E4E8">>();</span></span>
 <span class="line"><span style="color:#F97583">  const</span><span style="color:#79B8FF"> rawIndex</span><span style="color:#F97583"> =</span><span style="color:#E1E4E8"> activeItem </span><span style="color:#F97583">?</span><span style="color:#79B8FF"> PORTFOLIO</span><span style="color:#E1E4E8">.</span><span style="color:#B392F0">findIndex</span><span style="color:#E1E4E8">((</span><span style="color:#FFAB70">item</span><span style="color:#E1E4E8">) </span><span style="color:#F97583">=></span><span style="color:#E1E4E8"> item.id </span><span style="color:#F97583">===</span><span style="color:#E1E4E8"> activeItem.id) </span><span style="color:#F97583">:</span><span style="color:#F97583"> -</span><span style="color:#79B8FF">1</span><span style="color:#E1E4E8">;</span></span>
 <span class="line"><span style="color:#F97583">  const</span><span style="color:#79B8FF"> index</span><span style="color:#F97583"> =</span><span style="color:#E1E4E8"> rawIndex </span><span style="color:#F97583">===</span><span style="color:#F97583"> -</span><span style="color:#79B8FF">1</span><span style="color:#F97583"> ?</span><span style="color:#79B8FF"> 1</span><span style="color:#F97583"> :</span><span style="color:#E1E4E8"> rawIndex </span><span style="color:#F97583">+</span><span style="color:#79B8FF"> 1</span><span style="color:#E1E4E8">;</span></span>
-<span class="line"><span style="color:#F97583">  const</span><span style="color:#79B8FF"> settings</span><span style="color:#F97583"> =</span></span>
-<span class="line"><span style="color:#E1E4E8">    activeItem </span><span style="color:#F97583">&#x26;&#x26;</span><span style="color:#E1E4E8"> activeItem.id </span><span style="color:#F97583">in</span><span style="color:#79B8FF"> SHOT_SETTINGS</span></span>
-<span class="line"><span style="color:#F97583">      ?</span><span style="color:#79B8FF"> SHOT_SETTINGS</span><span style="color:#E1E4E8">[activeItem.id </span><span style="color:#F97583">as</span><span style="color:#B392F0"> PortfolioId</span><span style="color:#E1E4E8">]</span></span>
-<span class="line"><span style="color:#F97583">      :</span><span style="color:#79B8FF"> SHOT_SETTINGS</span><span style="color:#E1E4E8">.vows;</span></span>
+<span class="line"><span style="color:#F97583">  const</span><span style="color:#79B8FF"> settings</span><span style="color:#F97583"> =</span><span style="color:#E1E4E8"> activeItem </span><span style="color:#F97583">?</span><span style="color:#79B8FF"> SHOT_SETTINGS</span><span style="color:#E1E4E8">[activeItem.id] </span><span style="color:#F97583">:</span><span style="color:#79B8FF"> SHOT_SETTINGS</span><span style="color:#E1E4E8">.vows;</span></span>
 <span class="line"></span>
 <span class="line"><span style="color:#F97583">  if</span><span style="color:#E1E4E8"> (</span><span style="color:#F97583">!</span><span style="color:#E1E4E8">activeItem </span><span style="color:#F97583">||</span><span style="color:#F97583"> !</span><span style="color:#E1E4E8">settings) {</span></span>
 <span class="line"><span style="color:#F97583">    return</span><span style="color:#79B8FF"> null</span><span style="color:#E1E4E8">;</span></span>

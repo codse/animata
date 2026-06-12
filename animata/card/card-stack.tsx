@@ -258,6 +258,10 @@ function CardStackRoot<T extends CardStackItem>({
   const stepTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const autoplayTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const advanceRef = useRef<() => void>(() => {});
+  const onItemsChangeRef = useRef(onItemsChange);
+  onItemsChangeRef.current = onItemsChange;
+  const skipItemsChangeNotifyRef = useRef(false);
+  const hasUserRotatedRef = useRef(false);
 
   const visibleItems = itemList.slice(0, stackDepth);
   const activeItem = visibleItems[0];
@@ -281,18 +285,28 @@ function CardStackRoot<T extends CardStackItem>({
     clearAutoplayTimer();
     isAnimatingRef.current = false;
     setIsAnimating(false);
+    skipItemsChangeNotifyRef.current = true;
     setItemList(items);
   }, [items, clearStepTimer, clearAutoplayTimer]);
 
+  useEffect(() => {
+    if (skipItemsChangeNotifyRef.current) {
+      skipItemsChangeNotifyRef.current = false;
+      return;
+    }
+    if (!hasUserRotatedRef.current) return;
+    onItemsChangeRef.current?.(itemList as T[]);
+  }, [itemList]);
+
   const rotateOne = useCallback(() => {
+    hasUserRotatedRef.current = true;
     setItemList((current) => {
       if (current.length <= 1) return current;
       const next = [...current];
       next.push(next.shift()!);
-      onItemsChange?.(next as T[]);
       return next;
     });
-  }, [onItemsChange]);
+  }, []);
 
   const finishStep = useCallback(() => {
     clearStepTimer();
@@ -530,6 +544,7 @@ function CardStackTrigger({
       onPointerLeave={handlers.onPointerLeave}
       onPointerCancel={handlers.onPointerCancel}
       onClick={handlers.onClick}
+      onKeyDown={onKeyDown}
       className={cn(
         "inline-flex shrink-0 cursor-pointer items-center justify-center outline-none",
         "focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
