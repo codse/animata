@@ -28,10 +28,10 @@ function RemodelNotes() {
 }
 
 const cards = [
-  { component: Notes },
-  { component: ShoppingList },
-  { component: RemodelNotes },
-  { component: Reminders },
+  { id: "notes", component: Notes },
+  { id: "shopping-list", component: ShoppingList },
+  { id: "remodel-notes", component: RemodelNotes },
+  { id: "reminders", component: Reminders },
 ] as const;
 
 export default function CardSpread() {
@@ -49,7 +49,7 @@ export default function CardSpread() {
             const Card = item.component;
 
             return (
-              <div key={item.component.name} className="card-spread-item w-48 shrink-0">
+              <div key={item.id} className="card-spread-item w-48 shrink-0">
                 <div className="card-spread-item__hover">
                   <div className="card-spread-item__internal">
                     <Card />

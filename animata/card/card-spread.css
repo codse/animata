@@ -86,6 +86,7 @@
 
   .card-spread-item__internal {
     @apply origin-bottom motion-reduce:transition-none;
+
     transition: transform 520ms var(--ease-gather);
   }
 
