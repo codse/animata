@@ -1,0 +1,129 @@
+---
+title: Changelog
+description: Four tiers of release notes, from site overview to per-component history.
+date: 2026-06-12
+---
+
+We write release notes at four levels. Same change, different amount of detail depending on where someone lands. If you ship something users will notice, update every tier that applies.
+
+## The four tiers
+
+| Tier | File | Length | Purpose |
+| --- | --- | --- | --- |
+| 1 — Site overview | `content/docs/changelog/index.mdx` | One line per month | What shipped; link to the monthly page |
+| 2 — Monthly release | `content/docs/changelog/YYYY-MM.mdx` | Paragraph + component cards | The month's story; new / improved / docs |
+| 3 — Category index | `content/docs/{category}/index.mdx` | One table row per change | History for that category only |
+| 4 — Component doc | `content/docs/{category}/{name}.mdx` | Dated bullets | Full history for people using that component |
+
+Write top-down: nail the one-liner (tier 1), flesh it out in the monthly file (tier 2), add a row on the category index (tier 3), put the nitty-gritty on the component page (tier 4).
+
+## Tier 1 — Site overview
+
+File: `content/docs/changelog/index.mdx`
+
+Two sections. **Recent releases** holds the two newest months: one sentence each, links to anything worth calling out. **All releases** is a table of every month with a short highlight.
+
+No component cards. No implementation notes. If someone only reads this page, they should know what month to open next.
+
+```mdx
+### [June 2026](/docs/changelog/2026-06)
+
+[Stacked Sections](/docs/scroll/stacked-sections), widget glance polish, and Card Stack API trim.
+
+| Month | Highlights |
+| --- | --- |
+| [June 2026](/docs/changelog/2026-06) | Stacked Sections, widget polish, Card Stack trim |
+```
+
+New month file? Put it in **Recent releases** and bump the older of the two into **All releases**.
+
+## Tier 2 — Monthly release
+
+File: `content/docs/changelog/YYYY-MM.mdx` (new file when the calendar month turns)
+
+Frontmatter:
+
+```yaml
+---
+title: Month YYYY
+description: One-line summary of the main themes.
+date: YYYY-MM-01
+---
+```
+
+Start with a short paragraph about what the month was about. Not a bullet list.
+
+Then group entries:
+
+- New components — `<ChangeLogComponents>` with one `<ChangeLogEntry href="…">` per component
+- Improved components — same for updates and fixes worth mentioning
+- Documentation — optional; site-wide doc or infra stuff
+
+Each entry gets an `<h3>` and one paragraph: what it is, when you'd reach for it, anything odd about the implementation. More than tier 1 or 3, less than tier 4.
+
+Don't forget `config/docs.ts` under Changelog (newest month first).
+
+## Tier 3 — Category index
+
+File: `content/docs/{category}/index.mdx`
+
+Below `<CategoryIndex />`, add a **Recent changes** section. Table only.
+
+| Date | Component | Change |
+| --- | --- | --- |
+| 2026-06 | [Card Stack](/docs/card/card-stack) | Bare-bones stack API; profile UI moved to Storybook demo |
+| 2026-06 | [Card Spread](/docs/card/card-spread) | Throw easing; fixed Safari jitter on spread |
+
+Date is `YYYY-MM`, matching the monthly file you touched. Component links to the doc. Change is a short phrase; tier 4 has the rest.
+
+Only rows for that category. New components and real updates both count. If the table gets stale after ~6 months, trim old rows or fold them into an "Earlier" note.
+
+## Tier 4 — Component doc
+
+File: `content/docs/{category}/{name}.mdx`
+
+`## Changelog` near the bottom, above **Credits**. Newest date first. Bullets, past tense. Mention tradeoffs when there are any.
+
+```mdx
+## Changelog
+
+### 2026-06-12
+
+- Trimmed the public API to stack mechanics only (`CardStack`, `Viewport`, `List`, `Card`, `Trigger`). Profile card UI (masks, header, media, metrics) lives in the Storybook demo composition, not the registry bundle.
+- Added `full` on `CardStack.Trigger`: default is a discrete `<button>`; `full` renders an absolute inset-0 overlay for click-anywhere advance.
+- Fixed invalid markup from wrapping card flow content in a `<button>`.
+
+### 2026-06-04
+
+- Initial publish.
+```
+
+First publish can be just "Initial publish." You still want tier 3 and tier 4 once the component doc exists, even if tier 2 already covered the launch.
+
+## What warrants an entry
+
+| Action | Tier 1 | Tier 2 | Tier 3 | Tier 4 |
+| --- | --- | --- | --- | --- |
+| New component | Yes — mention in month summary | Yes — New components | Yes — table row | Yes — initial publish |
+| User-visible update / fix | If it shapes the month | Yes — Improved components | Yes — table row | Yes — dated bullets |
+| API or behavior break | Yes | Yes | Yes | Yes — call out migration |
+| Landing / docs-only site change | Yes | Yes — Documentation | No | No |
+| Major dependency upgrade | Yes | Yes — prose | No | No |
+| Dependency patch bumps | No | No | No | No |
+| CI / Actions only | No | No | No | No |
+| Typo in docs | No | No | No | No |
+
+## Writing style
+
+Past tense. "Added X", not "We're excited to announce X." No emojis, no ✨ 🛠 🐛 prefixes.
+
+Tier 2: say what the thing does and when you'd use it, not just its name. Tier 4: what changed, why, migration notes if someone has to do work. Registry URLs: `https://animata.design/r/{category}/{name}.json` when install matters. Not bare `npx shadcn add component-name`.
+
+## Checklist
+
+Shipping a notable component change:
+
+1. Tier 2 — entry in the current `YYYY-MM.mdx` (new month + `config/docs.ts` if needed)
+2. Tier 1 — `changelog/index.mdx` if the summary or recent table is wrong now
+3. Tier 3 — row on `content/docs/{category}/index.mdx`
+4. Tier 4 — dated section on the component MDX

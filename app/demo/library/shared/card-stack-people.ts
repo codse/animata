@@ -1,6 +1,6 @@
-import { CARD_STACK_MASK_IDS, type CardStackItem } from "@/animata/card/card-stack";
+import { CARD_STACK_MASK_IDS, type CardStackProfileItem } from "@/animata/card/card-stack-profile";
 
-export const DEMO_PEOPLE: CardStackItem[] = [
+export const DEMO_PEOPLE: CardStackProfileItem[] = [
   {
     id: "maya",
     image:
@@ -132,7 +132,7 @@ export const CANDIDATE_META: Record<string, { role: string; stage: string; skill
   },
 };
 
-export const LOOKBOOK_ITEMS: CardStackItem[] = [
+export const LOOKBOOK_ITEMS: CardStackProfileItem[] = [
   {
     id: "shell",
     image: "https://images.unsplash.com/photo-1556821840-3a63f95609a7?auto=format&w=800&q=80",
@@ -175,7 +175,7 @@ export const LOOKBOOK_ITEMS: CardStackItem[] = [
   },
 ];
 
-export const GUEST_ITEMS: CardStackItem[] = DEMO_PEOPLE.map((person) => ({
+export const GUEST_ITEMS: CardStackProfileItem[] = DEMO_PEOPLE.map((person) => ({
   ...person,
   tagline: person.tagline.split(" · ")[0] ?? person.tagline,
 }));

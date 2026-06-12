@@ -85,6 +85,11 @@ const sidebarNav: SidebarNavItem[] = [
         items: [],
       },
       {
+        title: "Changelog",
+        href: "/docs/contributing/changelog",
+        items: [],
+      },
+      {
         title: "Category glyph tiles",
         href: "/docs/contributing/category-glyphs",
         items: [],

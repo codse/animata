@@ -21,44 +21,43 @@ Animata is a free, open-source library of animated React components built with N
 
 ## Changelog rule — ALWAYS update this
 
-The changelog lives at `content/docs/changelog/` — one MDX file per month plus an index.
+Release notes use **four tiers**. Full process, examples, and checklist: [contributing changelog](/docs/contributing/changelog).
 
-### Structure
+| Tier | Where | Length |
+| --- | --- | --- |
+| 1 — Site overview | `content/docs/changelog/index.mdx` | One line per month |
+| 2 — Monthly release | `content/docs/changelog/YYYY-MM.mdx` | Paragraph + component cards |
+| 3 — Category index | `content/docs/{category}/index.mdx` | Table: date · component · change |
+| 4 — Component doc | `content/docs/{category}/{name}.mdx` → `## Changelog` | Dated bullets, most detail |
 
 ```text
 content/docs/changelog/
-  index.mdx        # overview page — shows 2 most recent months + table linking all others
-  2026-04.mdx      # April 2026 (newest first)
-  2026-03.mdx
-  ...
+  index.mdx        # tier 1 — recent months + table of all months
+  YYYY-MM.mdx      # tier 2 — one file per month (newest first)
+content/docs/{category}/
+  index.mdx        # tier 3 — Recent changes table
+  {name}.mdx       # tier 4 — ## Changelog at bottom
 ```
 
 ### When adding a new month
 
-1. Create `content/docs/changelog/YYYY-MM.mdx` with this frontmatter:
-   ```yaml
-   ---
-   title: Month YYYY
-   description: One-line summary of the main themes.
-   date: YYYY-MM-DD
-   ---
-   ```
-2. Write the content as prose, not bullet lists. Each new component gets a short paragraph — what it is, when you'd use it, anything notable about the implementation.
-3. Add the new month to `config/docs.ts` under the Changelog items array (newest first).
-4. Update `content/docs/changelog/index.mdx`: promote the new month to "Recent releases" and move the oldest of the current two into the table.
+1. Create `content/docs/changelog/YYYY-MM.mdx` with frontmatter (`title`, `description`, `date`).
+2. Write tier-2 prose and `<ChangeLogEntry>` blocks — see [contributing changelog](/docs/contributing/changelog).
+3. Add the month to `config/docs.ts` under Changelog (newest first).
+4. Update tier 1 in `changelog/index.mdx`: promote to **Recent releases**, demote oldest to **All releases**.
 
 ### When updating an existing month
 
-Add to the relevant `YYYY-MM.mdx` file. No need to touch the index unless the summary line there is now misleading.
+Add to the relevant `YYYY-MM.mdx`. Update tier 3 (category index table) and tier 4 (component `## Changelog`). Touch tier 1 only if the month summary line is now misleading.
 
 ### What warrants a changelog entry
 
-| Action | Update changelog? |
-|---|---|
-| New component | Yes — new section in the current month file |
-| Landing/docs UI update | Yes — brief paragraph |
-| Major dependency upgrade | Yes — explain what changed and why it matters |
-| User-visible bug fix | Yes — one sentence is fine |
+| Action | Update? |
+| --- | --- |
+| New component | All four tiers |
+| User-visible update or fix | Tiers 2–4; tier 1 if it shapes the month |
+| Landing/docs UI (site-wide) | Tiers 1–2 |
+| Major dependency upgrade | Tiers 1–2 |
 | Dependency patch bumps | No |
 | CI / GitHub Actions only | No |
 | Typo fix in docs | No |
@@ -66,9 +65,8 @@ Add to the relevant `YYYY-MM.mdx` file. No need to touch the index unless the su
 ### Writing style
 
 - Past tense. "Added X" not "We're excited to announce X."
-- No emojis, no prefix symbols (no ✨ 🛠 🐛).
-- Each component gets a description of what it does and when you'd use it — not just its name.
-- If a fix has a root cause worth knowing, say so briefly.
+- No emojis, no prefix symbols.
+- Detail increases down the tiers — one line at the top, bullets at the component doc.
 
 ## File map (quick reference)
 
@@ -97,6 +95,7 @@ content/docs/
   contributing/
     category-glyphs.mdx      # Category tile SVG guide (published)
     category-glyphs-spec.md  # Full spec — keep in sync; not under animata/
+    changelog.mdx            # Four-tier release notes process
 config/
   docs.ts              # Sidebar nav config — register new component categories here
 styles/globals.css     # Tailwind v4 theme tokens

@@ -1,8 +1,16 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { ArrowRight, Heart, MessageCircle } from "lucide-react";
-import CardStack, { CARD_STACK_MASK_IDS, type CardStackItem } from "@/animata/card/card-stack";
+import { ArrowRight } from "lucide-react";
 
-const demoCards: CardStackItem[] = [
+import CardStack, { useCardStack } from "@/animata/card/card-stack";
+import {
+  CARD_STACK_MASK_IDS,
+  CardStackProfileCard,
+  type CardStackProfileItem,
+  CardStackProfileLiveRegion,
+  CardStackProfileMasks,
+} from "@/animata/card/card-stack-profile";
+
+const demoCards: CardStackProfileItem[] = [
   {
     id: "hari",
     image:
@@ -59,6 +67,11 @@ const demoCards: CardStackItem[] = [
   },
 ];
 
+function StoryLiveRegion() {
+  const { activeItem } = useCardStack<CardStackProfileItem>();
+  return <CardStackProfileLiveRegion item={activeItem} />;
+}
+
 const meta = {
   title: "Card/Card Stack",
   component: CardStack,
@@ -84,52 +97,44 @@ export const Primary: Story = {
   render: ({ items, depth }) => (
     <div className="full-content w-full">
       <CardStack items={items} depth={depth}>
-        <CardStack.Frame className="relative w-full max-w-sm mx-auto overflow-hidden">
-          <CardStack.Masks />
+        <section
+          aria-label="Interactive card stack"
+          className="relative mx-auto w-full max-w-sm overflow-hidden"
+        >
+          <CardStackProfileMasks />
 
           <div className="relative flex flex-col px-4 pb-10 pt-16 sm:px-6 sm:pt-20">
-            <CardStack.LiveRegion />
+            <StoryLiveRegion />
 
-            <CardStack.Trigger className="w-full drop-shadow-2xl">
-              <CardStack.Viewport>
-                <CardStack.List>
-                  {(item, index, layer) => (
-                    <CardStack.Card key={item.id} layer={layer} stackIndex={index}>
-                      <CardStack.Header>
-                        <CardStack.Avatar src={item.image} />
-                        <CardStack.Meta title={item.title} tagline={item.tagline} />
-                      </CardStack.Header>
-
-                      <CardStack.Media
-                        src={item.image}
-                        alt={`Portrait of ${item.title}`}
-                        maskId={item.maskId}
-                      />
-
-                      <CardStack.Footer>
-                        <CardStack.Metric
-                          icon={Heart}
-                          label="Likes"
-                          value={item.counts?.like ?? 0}
-                        />
-                        <CardStack.Metric
-                          icon={MessageCircle}
-                          label="Comments"
-                          value={item.counts?.comment ?? 0}
-                          className="ms-1"
-                        />
+            <CardStack.Viewport className="min-h-[26rem] pt-20 sm:min-h-[28rem] sm:pt-24">
+              <CardStack.List>
+                {(item: CardStackProfileItem, index, layer) => (
+                  <CardStackProfileCard
+                    key={item.id}
+                    item={item}
+                    index={index}
+                    layer={layer}
+                    footerTrailing={
+                      index === 0 ? (
+                        <CardStack.Trigger aria-label="Show next card" className="ml-auto">
+                          <ArrowRight
+                            aria-hidden
+                            className="size-6 shrink-0 text-muted-foreground"
+                          />
+                        </CardStack.Trigger>
+                      ) : (
                         <ArrowRight
                           aria-hidden
                           className="ml-auto size-6 shrink-0 text-muted-foreground"
                         />
-                      </CardStack.Footer>
-                    </CardStack.Card>
-                  )}
-                </CardStack.List>
-              </CardStack.Viewport>
-            </CardStack.Trigger>
+                      )
+                    }
+                  />
+                )}
+              </CardStack.List>
+            </CardStack.Viewport>
           </div>
-        </CardStack.Frame>
+        </section>
       </CardStack>
     </div>
   ),
