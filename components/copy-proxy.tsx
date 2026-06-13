@@ -7,6 +7,7 @@ export function CopyProxy({ id, value }: { id: string; value: string }) {
     <button
       type="button"
       id={id}
+      aria-label="Copy to clipboard"
       onClick={() => {
         copyToClipboardWithMeta(value);
       }}

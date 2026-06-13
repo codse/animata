@@ -290,12 +290,3 @@ export const Icons = {
     </svg>
   ),
 };
-
-export const builtWith: Record<string, React.FC<IconProps>> = {
-  "Framer Motion": Icons.framerMotion,
-  react: Icons.react,
-  tailwind: Icons.tailwind,
-  NextJS: Icons.nextJS,
-  storybook: Icons.storybook,
-  "Content Layer": Icons.contentLayer,
-};

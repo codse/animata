@@ -30,15 +30,19 @@ const sortAlphabetically = (a: BlogPost, b: BlogPost) => {
 
 const createLinks = (category: string): BlogPost[] => {
   return allBlogs
-    .filter((doc) => doc.published)
-    .map((doc) => ({
-      // Make sure the index page is the first item
-      title: doc.title,
-      sortId: doc.slug === `/blog/${category}` ? "000" : doc.title,
-      href: doc.slug,
-      items: [],
-      date: new Date(doc.date ?? Date.now()),
-    }))
+    .flatMap((doc) =>
+      doc.published
+        ? [
+            {
+              title: doc.title,
+              sortId: doc.slug === `/blog/${category}` ? "000" : doc.title,
+              href: doc.slug,
+              items: [],
+              date: new Date(doc.date ?? Date.now()),
+            },
+          ]
+        : [],
+    )
     .sort(sortAlphabetically);
 };
 

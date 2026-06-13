@@ -1,4 +1,4 @@
-import { Fragment, type ReactNode, useRef, useState } from "react";
+import { Fragment, type KeyboardEvent, type ReactNode, useRef, useState } from "react";
 
 export default function RemountOnMouseIn({
   children,
@@ -13,18 +13,35 @@ export default function RemountOnMouseIn({
   duration?: number;
 }) {
   const [key, setKey] = useState(0);
-  const lastUpdate = useRef(Date.now());
+  const lastUpdate = useRef(0);
 
   const update = () => {
-    if (Date.now() - lastUpdate.current > (duration ?? 1000)) {
+    const now = Date.now();
+    if (lastUpdate.current === 0) {
+      lastUpdate.current = now;
+    }
+    if (now - lastUpdate.current > (duration ?? 1000)) {
       setKey((prev) => prev + 1);
-      lastUpdate.current = Date.now();
+      lastUpdate.current = now;
+    }
+  };
+
+  const handleKeyDown = (event: KeyboardEvent<HTMLButtonElement>) => {
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      update();
     }
   };
 
   return (
-    <div className={className} onClick={update} onMouseEnter={update}>
+    <button
+      type="button"
+      className={className}
+      onClick={update}
+      onMouseEnter={update}
+      onKeyDown={handleKeyDown}
+    >
       <Fragment key={`force-${key}`}>{children}</Fragment>
-    </div>
+    </button>
   );
 }

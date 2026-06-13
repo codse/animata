@@ -13,18 +13,23 @@ export type ComponentCategory = {
 
 export function getComponentCategories(): ComponentCategory[] {
   return docsConfig.sidebarNav
-    .filter((item) => !EXCLUDED_NAV_TITLES.has(item.title))
-    .map((item) => {
-      const slug = getCategorySlug(item);
-      if (!slug) return null;
+    .flatMap((item) => {
+      if (EXCLUDED_NAV_TITLES.has(item.title)) return [];
 
-      return {
-        slug,
-        title: item.title,
-        href: item.href ?? `/docs/${slug}`,
-        count: publishedCategoryItemCount(slug),
-      };
+      const slug = getCategorySlug(item);
+      if (!slug) return [];
+
+      const count = publishedCategoryItemCount(slug);
+      if (count <= 0) return [];
+
+      return [
+        {
+          slug,
+          title: item.title,
+          href: item.href ?? `/docs/${slug}`,
+          count,
+        },
+      ];
     })
-    .filter((item): item is ComponentCategory => item !== null && item.count > 0)
     .sort((a, b) => a.title.localeCompare(b.title));
 }

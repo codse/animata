@@ -46,6 +46,7 @@ export function FooterSubscribe({
             type="email"
             autoComplete="email"
             placeholder="Email"
+            aria-label="Email address"
             value={email}
             onChange={(event) => onEmailChange(event.target.value)}
             className={subscribeInputClassName}

@@ -69,20 +69,22 @@ export function CommandMenu({ ...props }: ComponentPropsWithoutRef<typeof Comman
         <CommandList>
           <CommandEmpty>No results found.</CommandEmpty>
           <CommandGroup heading="Links">
-            {docsConfig.mainNav
-              .filter((item) => !item.external)
-              .map((navItem) => (
-                <CommandItem
-                  key={navItem.href}
-                  value={navItem.title}
-                  onSelect={() => {
-                    runCommand(() => router.push(navItem.href as string));
-                  }}
-                >
-                  <FileIcon className="mr-2 h-4 w-4" />
-                  {navItem.title}
-                </CommandItem>
-              ))}
+            {docsConfig.mainNav.flatMap((navItem) =>
+              navItem.external
+                ? []
+                : [
+                    <CommandItem
+                      key={navItem.href}
+                      value={navItem.title}
+                      onSelect={() => {
+                        runCommand(() => router.push(navItem.href as string));
+                      }}
+                    >
+                      <FileIcon className="mr-2 h-4 w-4" />
+                      {navItem.title}
+                    </CommandItem>,
+                  ],
+            )}
           </CommandGroup>
           {docsConfig.sidebarNav.map((group) => (
             <CommandGroup key={group.title} heading={group.title}>
