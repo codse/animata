@@ -3,7 +3,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { TEXT_ANIMATOR_DEMO_CLASS } from "@/animata/text/text-animator-demo";
 import { cn } from "@/lib/utils";
-import "./text-animator-demo.css";
 import "./text-animator.css";
 
 export type TextAnimationTarget = "whole" | "per-character" | "per-word" | "per-line";
@@ -925,6 +924,15 @@ export default function TextAnimator({
   // unlikely to appear in user-supplied copy.
   const samplesKey = useMemo(() => samples?.join("") ?? "", [samples]);
   const phrasesKey = useMemo(() => phrases?.map((p) => p.join("")).join("") ?? "", [phrases]);
+  const contentKey = `${samplesKey}|${phrasesKey}`;
+  const prevContentKeyRef = useRef(contentKey);
+
+  if (contentKey !== prevContentKeyRef.current) {
+    prevContentKeyRef.current = contentKey;
+    if (failed) {
+      setFailed(false);
+    }
+  }
 
   // Refs let the effect read the latest samples/phrases without listing them
   // as deps (we drive re-runs via the content keys above).
@@ -939,7 +947,6 @@ export default function TextAnimator({
   useEffect(() => {
     const stage = stageRef.current;
     if (!stage) return;
-    setFailed(false);
     if (spec.id) stage.dataset.animationId = spec.id;
 
     const runtime = {
