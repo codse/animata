@@ -1,6 +1,5 @@
 import { motion } from "motion/react";
 import { useMemo } from "react";
-
 import { cn } from "@/lib/utils";
 
 export default function CircularText({

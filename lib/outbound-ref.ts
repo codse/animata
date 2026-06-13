@@ -1,5 +1,5 @@
 /** Referral tag appended to external links leaving animata.design */
-export const OUTBOUND_REF = "animata.design";
+const OUTBOUND_REF = "animata.design";
 
 /** Append ?ref=animata.design to http(s) URLs. Query string stays before any #hash. */
 export function withOutboundRef(href: string, ref = OUTBOUND_REF) {

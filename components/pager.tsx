@@ -37,7 +37,7 @@ export function DocsPager({ doc }: DocsPagerProps) {
   );
 }
 
-export function getPagerForDoc(doc: { slug: string }) {
+function getPagerForDoc(doc: { slug: string }) {
   const flattenedLinks = [null, ...flatten(docsConfig.sidebarNav), null];
   const activeIndex = flattenedLinks.findIndex((link) => doc.slug === link?.href);
   const prev = activeIndex !== 0 ? flattenedLinks[activeIndex - 1] : null;
@@ -48,7 +48,7 @@ export function getPagerForDoc(doc: { slug: string }) {
   };
 }
 
-export function flatten(links: NavItemWithChildren[]): NavItem[] {
+function flatten(links: NavItemWithChildren[]): NavItem[] {
   return links
     .reduce<NavItem[]>((flat, link) => {
       return flat.concat(link.items?.length ? flatten(link.items) : link);

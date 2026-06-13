@@ -13,7 +13,7 @@ export const siblingFocusNavOpacityGroupClassName = cn(
 );
 
 /** Blur mode: same sibling trick, but with blur-sm instead of opacity. */
-export const siblingFocusNavBlurGroupClassName = cn(
+const siblingFocusNavBlurGroupClassName = cn(
   "[&:has(>a:hover)>a:not(:hover)]:blur-sm",
   "[&:has(>a:focus-visible)>a:not(:focus-visible)]:blur-sm",
   "motion-reduce:[&:has(>a:hover)>a:not(:hover)]:blur-none",

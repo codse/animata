@@ -1,4 +1,5 @@
 "use client";
+
 import { motion } from "motion/react";
 import { useState } from "react";
 
@@ -25,6 +26,7 @@ export default function NavTabs({ tabs }: { tabs: string[] }) {
 const Tab = ({ text, selected, setSelected }: TabProps) => {
   return (
     <button
+      type="button"
       onClick={() => setSelected(text)}
       className={cn(
         "relative rounded-md p-2 text-sm transition-colors",

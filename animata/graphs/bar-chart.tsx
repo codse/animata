@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 
 import { cn } from "@/lib/utils";
 
@@ -22,16 +22,18 @@ interface BarChartProps {
 }
 
 export default function BarChart({ items, className, height: providedHeight }: BarChartProps) {
-  const [{ height }, setSize] = useState({
-    height: providedHeight ?? 12,
-  });
-
   const containerRef = useRef<HTMLDivElement>(null);
+  const [measuredHeight, setMeasuredHeight] = useState<number | undefined>();
+  const height = providedHeight ?? measuredHeight ?? 12;
 
-  useEffect(() => {
-    setSize({
-      height: providedHeight ?? containerRef.current?.offsetHeight ?? 12,
-    });
+  useLayoutEffect(() => {
+    if (providedHeight !== undefined || !containerRef.current) return;
+    const node = containerRef.current;
+    const updateHeight = () => setMeasuredHeight(node.offsetHeight);
+    updateHeight();
+    const observer = new ResizeObserver(updateHeight);
+    observer.observe(node);
+    return () => observer.disconnect();
   }, [providedHeight]);
 
   const [shouldUseValue, setShouldUseValue] = useState(false);

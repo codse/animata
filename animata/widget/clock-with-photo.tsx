@@ -1,6 +1,5 @@
-/* eslint-disable @next/next/no-img-element */
 "use client";
-
+/* eslint-disable @next/next/no-img-element */
 import { useEffect, useState } from "react";
 
 import { absoluteUrl, cn } from "@/lib/utils";
@@ -19,7 +18,7 @@ const getTime = () => {
 };
 
 export default function ClockWithPhoto() {
-  const [time, setTime] = useState(getTime());
+  const [time, setTime] = useState(getTime);
 
   useEffect(() => {
     let timeout: NodeJS.Timeout;
@@ -30,7 +29,7 @@ export default function ClockWithPhoto() {
       timeout = setTimeout(updateTime, secondsUntilNextMinute * 1000);
     };
 
-    updateTime();
+    timeout = setTimeout(updateTime, 0);
 
     return () => clearTimeout(timeout);
   }, []);
@@ -45,7 +44,7 @@ export default function ClockWithPhoto() {
         />
         <img
           src={absoluteUrl("/jumping-man.png")}
-          alt="Your photo"
+          alt="Portrait"
           className="absolute left-0 top-0 z-20 mt-2 h-48 w-44 p-2 transition-all duration-500 group-hover/clock:translate-x-full group-hover/clock:opacity-0"
         />
       </div>

@@ -11,6 +11,22 @@ interface ContentScannerProps {
   reverseDuration?: number;
 }
 
+function startProbabilityTicker(
+  mode: "up" | "down",
+  scanDuration: number,
+  reverseDuration: number,
+  contentLength: number,
+  highlightCount: number,
+  setAiProbability: React.Dispatch<React.SetStateAction<number>>,
+) {
+  const max = Math.floor(contentLength / Math.max(highlightCount, 1));
+  const tickMs = mode === "up" ? (scanDuration * 1000) / 55 : (reverseDuration * 1000) / 40;
+  const id = setInterval(() => {
+    setAiProbability((prev) => (mode === "up" ? Math.min(prev + 1, max) : Math.max(prev - 1, 0)));
+  }, tickMs);
+  return () => clearInterval(id);
+}
+
 const ContentScanner: React.FC<ContentScannerProps> = ({
   content,
   highlightWords,
@@ -24,9 +40,6 @@ const ContentScanner: React.FC<ContentScannerProps> = ({
   const contentRef = useRef<HTMLDivElement>(null);
   const scannerAnimation = useAnimation();
   const [highlightedWords, setHighlightedWords] = useState<string[]>([]);
-  const [animationPhase, setAnimationPhase] = useState<"idle" | "forward" | "paused" | "reverse">(
-    "idle",
-  );
 
   const startScanning = async () => {
     if (scanning || !containerRef.current) return;
@@ -34,66 +47,43 @@ const ContentScanner: React.FC<ContentScannerProps> = ({
     setScanning(true);
     setAiProbability(0);
     setHighlightedWords([]);
-    setAnimationPhase("forward");
 
     const containerWidth = containerRef.current.offsetWidth - 110;
+    const stopForward = startProbabilityTicker(
+      "up",
+      scanDuration,
+      reverseDuration,
+      content.length,
+      highlightWords.length,
+      setAiProbability,
+    );
 
-    // Forward scan
     await scannerAnimation.start({
       x: containerWidth,
       transition: { duration: scanDuration, ease: "linear" },
     });
+    stopForward();
 
-    setAnimationPhase("paused");
-
-    // Pause
     await new Promise((resolve) => setTimeout(resolve, 200));
 
-    setAnimationPhase("reverse");
+    const stopReverse = startProbabilityTicker(
+      "down",
+      scanDuration,
+      reverseDuration,
+      content.length,
+      highlightWords.length,
+      setAiProbability,
+    );
 
-    // Backward scan
     await scannerAnimation.start({
       x: "-87%",
       transition: { duration: reverseDuration, ease: "linear" },
     });
+    stopReverse();
 
     setScanning(false);
     setHighlightedWords([]);
-    setAnimationPhase("idle");
   };
-
-  useEffect(() => {
-    let interval: NodeJS.Timeout;
-    let pauseTimeout: NodeJS.Timeout;
-
-    if (animationPhase === "forward") {
-      interval = setInterval(
-        () => {
-          setAiProbability((prev) =>
-            Math.min(prev + 1, Math.floor(content.length / highlightWords.length)),
-          );
-        },
-        (scanDuration * 1000) / 55,
-      );
-    } else if (animationPhase === "paused") {
-      //delay before starting reverse
-      pauseTimeout = setTimeout(() => {
-        setAnimationPhase("reverse");
-      }, 200);
-    } else if (animationPhase === "reverse") {
-      interval = setInterval(
-        () => {
-          setAiProbability((prev) => Math.max(prev - 1, 0));
-        },
-        (reverseDuration * 1000) / 40,
-      );
-    }
-
-    return () => {
-      clearInterval(interval);
-      clearTimeout(pauseTimeout);
-    };
-  }, [animationPhase, scanDuration, reverseDuration, content.length, highlightWords.length]);
 
   useEffect(() => {
     if (scanning && scannerRef.current && contentRef.current) {
@@ -214,6 +204,7 @@ const ContentScanner: React.FC<ContentScannerProps> = ({
       <div className="rounded">
         <div className="flex justify-center">
           <button
+            type="button"
             onClick={startScanning}
             className="mt-4 rounded bg-[#887FF2] px-4 py-2 text-white"
             disabled={scanning}

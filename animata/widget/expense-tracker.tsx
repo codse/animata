@@ -1,4 +1,6 @@
 "use client";
+import { useMemo } from "react";
+
 import { cn } from "@/lib/utils";
 
 interface SpendingItem {
@@ -25,6 +27,10 @@ export default function ExpenseTracker({
   spending = spendingTrackerProps.spending,
 }: SpendingDetailsProps) {
   const totalSpending = spending.reduce((acc, item) => acc + item.amount, 0);
+  const periodLabel = useMemo(() => {
+    const now = new Date();
+    return `${now.toLocaleString("default", { month: "long" }).toUpperCase()} ${now.getFullYear()}`;
+  }, []);
 
   return (
     <div
@@ -32,10 +38,7 @@ export default function ExpenseTracker({
         "flex h-52 w-52 flex-col rounded-3xl border bg-background p-4 dark:border-zinc-700",
       )}
     >
-      <h4 className="mb-1 text-sm font-semibold text-muted-foreground">
-        {new Date().toLocaleString("default", { month: "long" }).toUpperCase()}{" "}
-        {new Date().getFullYear()}
-      </h4>
+      <h4 className="mb-1 text-sm font-semibold text-muted-foreground">{periodLabel}</h4>
       <div className="group/expense flex flex-1 items-end justify-between">
         {spending.map((item, index) => (
           <div

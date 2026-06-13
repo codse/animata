@@ -14,11 +14,13 @@ export function DashboardTableOfContents({ toc }: TocProps) {
   const itemIds = React.useMemo(
     () =>
       toc.items
-        ? toc.items
-            .flatMap((item) => [item.url, item?.items?.map((item) => item.url)])
-            .flat()
-            .map((id) => id?.split("#")[1] ?? "")
-            .filter(Boolean)
+        ? toc.items.flatMap((item) => {
+            const urls = [item.url, ...(item.items?.map((sub) => sub.url) ?? [])];
+            return urls.flatMap((url) => {
+              const id = url?.split("#")[1];
+              return id ? [id] : [];
+            });
+          })
         : [],
     [toc],
   );

@@ -19,8 +19,8 @@ const ibmPlex = IBM_Plex_Sans({
 
 export const metadata: Metadata = {
   title: {
-    default: `Free & Open Source Animated ReactJS Components | ${siteConfig.name}`,
-    template: "%s | Free & Open Source Animated ReactJS Components",
+    default: `Free Animated React Components | ${siteConfig.name}`,
+    template: `%s | ${siteConfig.name}`,
   },
   metadataBase: new URL(siteConfig.url),
   description: siteConfig.description,

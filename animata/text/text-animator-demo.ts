@@ -1,4 +1,4 @@
-/** Demo frame classes — typography lives in co-located text-animator-demo.css (imported by text-animator.tsx). */
+/** Demo frame classes — typography lives in co-located text-animator-demo.css (imported via styles/globals.css). */
 export const TEXT_ANIMATOR_DEMO_CLASS = "text-animator-demo";
 
 /** Storybook frame — bordered tile matching doc previews. */

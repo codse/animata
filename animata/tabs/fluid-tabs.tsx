@@ -11,6 +11,7 @@ import {
   type ReactNode,
   use,
   useId,
+  useMemo,
 } from "react";
 import { cn } from "@/lib/utils";
 import {
@@ -56,6 +57,11 @@ function useFluidTabs() {
   return context;
 }
 
+function FluidTabSlot({ index, children }: { index: number; children: ReactNode }) {
+  const value = useMemo(() => ({ index }), [index]);
+  return <FluidTabSlotContext.Provider value={value}>{children}</FluidTabSlotContext.Provider>;
+}
+
 function useFluidTabSlot() {
   const context = use(FluidTabSlotContext);
   if (!context) {
@@ -86,16 +92,19 @@ function FluidTabsRoot({
   });
   const indicatorLayoutId = `fluid-tab-indicator-${useId().replace(/:/g, "")}`;
 
+  const rootContext = useMemo(
+    () => ({
+      activeIndex,
+      setActiveIndex,
+      focusedIndex,
+      setFocusedIndex,
+      indicatorLayoutId,
+    }),
+    [activeIndex, setActiveIndex, focusedIndex, setFocusedIndex, indicatorLayoutId],
+  );
+
   return (
-    <FluidTabsContext.Provider
-      value={{
-        activeIndex,
-        setActiveIndex,
-        focusedIndex,
-        setFocusedIndex,
-        indicatorLayoutId,
-      }}
-    >
+    <FluidTabsContext.Provider value={rootContext}>
       <div className={cn("flex w-full max-w-md items-center justify-center", className)}>
         {children}
       </div>
@@ -127,6 +136,7 @@ function FluidTabsList({
     >
       <div
         role="tablist"
+        tabIndex={0}
         onFocusCapture={(event: FocusEvent<HTMLElement>) => {
           onFocusCapture?.(event);
           handleTabListFocusCapture(event, activeIndex, setFocusedIndex);
@@ -140,9 +150,9 @@ function FluidTabsList({
         className="flex w-full gap-1"
       >
         {tabs.map((tab, index) => (
-          <FluidTabSlotContext.Provider key={tab.key ?? index} value={{ index }}>
+          <FluidTabSlot key={tab.key ?? index} index={index}>
             {tab}
-          </FluidTabSlotContext.Provider>
+          </FluidTabSlot>
         ))}
       </div>
     </nav>

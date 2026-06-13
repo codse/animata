@@ -32,5 +32,5 @@
     ".velite",
     ".next/dev/types/**/*.ts"
   ],
-  "exclude": ["node_modules", "_internal"]
+  "exclude": ["node_modules", "_internal", "**/_archive/**", "doctor.config.ts"]
 }

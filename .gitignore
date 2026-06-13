@@ -47,3 +47,6 @@ public/llms.txt
 public/llms-full.txt
 _internal/
 .superset/
+
+# react-doctor local report
+react-doctor-report.json

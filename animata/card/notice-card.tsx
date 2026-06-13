@@ -41,7 +41,11 @@ export default function NoticeCard({
         />
 
         {/* Stable inner content */}
-        <div className="relative z-10 rounded-3xl p-6 text-center shadow-md" onClick={handleClick}>
+        <button
+          type="button"
+          className="relative z-10 w-full rounded-3xl border-0 bg-transparent p-6 text-center shadow-md"
+          onClick={handleClick}
+        >
           <div className="flex min-w-36 flex-col items-center">
             {/* Icon */}
             <div>
@@ -107,7 +111,7 @@ export default function NoticeCard({
               </span>
             </div>
           </div>
-        </div>
+        </button>
       </div>
     </div>
   );

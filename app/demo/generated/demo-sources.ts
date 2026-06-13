@@ -180,7 +180,10 @@ export default function FooterWordmarkDemo() {
                       </Link>
                     ))}
                   </SiblingFocusNav>
-                  <p className="font-mono text-[11px] leading-relaxed tracking-[0.04em] text-white/78 lg:shrink-0 lg:text-right lg:text-[10px] lg:tracking-[0.06em] lg:text-white/72 lg:whitespace-nowrap">
+                  <p
+                    className="font-mono text-[11px] leading-relaxed tracking-[0.04em] text-white/78 lg:shrink-0 lg:text-right lg:text-[10px] lg:tracking-[0.06em] lg:text-white/72 lg:whitespace-nowrap"
+                    suppressHydrationWarning
+                  >
                     © {new Date().getFullYear()} {siteConfig.name}, Inc. All rights reserved.
                   </p>
                 </div>
@@ -364,7 +367,10 @@ export default function FooterWordmarkDemo() {
 <span class="line"><span style="color:#24292E">                      &#x3C;/</span><span style="color:#005CC5">Link</span><span style="color:#24292E">></span></span>
 <span class="line"><span style="color:#24292E">                    ))}</span></span>
 <span class="line"><span style="color:#24292E">                  &#x3C;/</span><span style="color:#005CC5">SiblingFocusNav</span><span style="color:#24292E">></span></span>
-<span class="line"><span style="color:#24292E">                  &#x3C;</span><span style="color:#22863A">p</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"font-mono text-[11px] leading-relaxed tracking-[0.04em] text-white/78 lg:shrink-0 lg:text-right lg:text-[10px] lg:tracking-[0.06em] lg:text-white/72 lg:whitespace-nowrap"</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">                  &#x3C;</span><span style="color:#22863A">p</span></span>
+<span class="line"><span style="color:#6F42C1">                    className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"font-mono text-[11px] leading-relaxed tracking-[0.04em] text-white/78 lg:shrink-0 lg:text-right lg:text-[10px] lg:tracking-[0.06em] lg:text-white/72 lg:whitespace-nowrap"</span></span>
+<span class="line"><span style="color:#6F42C1">                    suppressHydrationWarning</span></span>
+<span class="line"><span style="color:#24292E">                  ></span></span>
 <span class="line"><span style="color:#24292E">                    © {</span><span style="color:#D73A49">new</span><span style="color:#6F42C1"> Date</span><span style="color:#24292E">().</span><span style="color:#6F42C1">getFullYear</span><span style="color:#24292E">()} {siteConfig.name}, Inc. All rights reserved.</span></span>
 <span class="line"><span style="color:#24292E">                  &#x3C;/</span><span style="color:#22863A">p</span><span style="color:#24292E">></span></span>
 <span class="line"><span style="color:#24292E">                &#x3C;/</span><span style="color:#22863A">div</span><span style="color:#24292E">></span></span>
@@ -548,7 +554,10 @@ export default function FooterWordmarkDemo() {
 <span class="line"><span style="color:#E1E4E8">                      &#x3C;/</span><span style="color:#79B8FF">Link</span><span style="color:#E1E4E8">></span></span>
 <span class="line"><span style="color:#E1E4E8">                    ))}</span></span>
 <span class="line"><span style="color:#E1E4E8">                  &#x3C;/</span><span style="color:#79B8FF">SiblingFocusNav</span><span style="color:#E1E4E8">></span></span>
-<span class="line"><span style="color:#E1E4E8">                  &#x3C;</span><span style="color:#85E89D">p</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"font-mono text-[11px] leading-relaxed tracking-[0.04em] text-white/78 lg:shrink-0 lg:text-right lg:text-[10px] lg:tracking-[0.06em] lg:text-white/72 lg:whitespace-nowrap"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">                  &#x3C;</span><span style="color:#85E89D">p</span></span>
+<span class="line"><span style="color:#B392F0">                    className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"font-mono text-[11px] leading-relaxed tracking-[0.04em] text-white/78 lg:shrink-0 lg:text-right lg:text-[10px] lg:tracking-[0.06em] lg:text-white/72 lg:whitespace-nowrap"</span></span>
+<span class="line"><span style="color:#B392F0">                    suppressHydrationWarning</span></span>
+<span class="line"><span style="color:#E1E4E8">                  ></span></span>
 <span class="line"><span style="color:#E1E4E8">                    © {</span><span style="color:#F97583">new</span><span style="color:#B392F0"> Date</span><span style="color:#E1E4E8">().</span><span style="color:#B392F0">getFullYear</span><span style="color:#E1E4E8">()} {siteConfig.name}, Inc. All rights reserved.</span></span>
 <span class="line"><span style="color:#E1E4E8">                  &#x3C;/</span><span style="color:#85E89D">p</span><span style="color:#E1E4E8">></span></span>
 <span class="line"><span style="color:#E1E4E8">                &#x3C;/</span><span style="color:#85E89D">div</span><span style="color:#E1E4E8">></span></span>

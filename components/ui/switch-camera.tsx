@@ -2,7 +2,7 @@
 
 import { motion, useAnimation, type Variants } from "motion/react";
 import type { HTMLAttributes } from "react";
-import { forwardRef, useCallback, useImperativeHandle, useRef } from "react";
+import { useCallback, useImperativeHandle, useRef } from "react";
 
 import { cn } from "@/lib/utils";
 
@@ -23,47 +23,53 @@ const PATH_VARIANTS: Variants = {
   },
 };
 
-const SwitchCameraIcon = forwardRef<SwitchCameraIconHandle, SwitchCameraIconProps>(
-  ({ onMouseEnter, onMouseLeave, className, size = 28, ...props }, ref) => {
-    const controls = useAnimation();
-    const isControlledRef = useRef(false);
+function SwitchCameraIcon({
+  onMouseEnter,
+  onMouseLeave,
+  className,
+  size = 28,
+  ref,
+  ...props
+}: SwitchCameraIconProps & { ref?: React.Ref<SwitchCameraIconHandle> }) {
+  const controls = useAnimation();
+  const isControlledRef = useRef(false);
 
-    useImperativeHandle(ref, () => {
-      isControlledRef.current = true;
-      return {
-        startAnimation: () => controls.start("animate"),
-        stopAnimation: () => controls.start("normal"),
-      };
-    });
+  useImperativeHandle(ref, () => {
+    isControlledRef.current = true;
+    return {
+      startAnimation: () => controls.start("animate"),
+      stopAnimation: () => controls.start("normal"),
+    };
+  });
 
-    const handleMouseEnter = useCallback(
-      (event: React.MouseEvent<HTMLDivElement>) => {
-        onMouseEnter?.(event);
-        if (!isControlledRef.current) {
-          controls.start("animate");
-        }
-      },
-      [controls, onMouseEnter],
-    );
+  const handleMouseEnter = useCallback(
+    (event: React.MouseEvent<HTMLDivElement>) => {
+      onMouseEnter?.(event);
+      if (!isControlledRef.current) {
+        controls.start("animate");
+      }
+    },
+    [controls, onMouseEnter],
+  );
 
-    const handleMouseLeave = useCallback(
-      (event: React.MouseEvent<HTMLDivElement>) => {
-        onMouseLeave?.(event);
-        if (!isControlledRef.current) {
-          controls.start("normal");
-        }
-      },
-      [controls, onMouseLeave],
-    );
+  const handleMouseLeave = useCallback(
+    (event: React.MouseEvent<HTMLDivElement>) => {
+      onMouseLeave?.(event);
+      if (!isControlledRef.current) {
+        controls.start("normal");
+      }
+    },
+    [controls, onMouseLeave],
+  );
 
-    return (
-      <div
-        className={cn(className)}
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
-        {...props}
-      >
-        <motion.svg
+  return (
+    <div
+      className={cn(className)}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+      {...props}
+    >
+<motion.svg
           animate={controls}
           fill="none"
           height={size}
@@ -102,11 +108,8 @@ const SwitchCameraIcon = forwardRef<SwitchCameraIconHandle, SwitchCameraIconProp
             variants={PATH_VARIANTS}
           />
         </motion.svg>
-      </div>
-    );
-  },
-);
-
-SwitchCameraIcon.displayName = "SwitchCameraIcon";
+</div>
+  );
+}
 
 export { SwitchCameraIcon };

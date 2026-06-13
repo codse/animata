@@ -1,6 +1,12 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { cn } from "@/lib/utils";
+
+function seededRandom(rowIndex: number, colIndex: number, salt: number) {
+  const seed = rowIndex * 374761393 + colIndex * 668265263 + salt * 1442695041;
+  const x = Math.sin(seed) * 10000;
+  return x - Math.floor(x);
+}
 
 const charMap: Record<string, number[][]> = {
   C: [
@@ -184,12 +190,10 @@ export default function LEDBoard({
    */
   word: string;
 }) {
-  const [{ rows, cols, matrix }, setBoard] = useState<Board>(createBoard(word));
-
-  useEffect(() => setBoard(createBoard(word)), [word]);
+  const { rows, cols, matrix } = useMemo(() => createBoard(word), [word]);
 
   const [isHovering, setIsHovering] = useState(false);
-  const [, setForceUpdate] = useState(0);
+  const [forceUpdate, setForceUpdate] = useState(0);
 
   useEffect(() => {
     if (isHovering) {
@@ -219,10 +223,11 @@ export default function LEDBoard({
               return null;
             }
 
-            const shouldAnimate = !isHovering && isLit && Math.random() > 0.8;
+            const shouldAnimate =
+              !isHovering && isLit && seededRandom(rowIndex, colIndex, forceUpdate) > 0.8;
             let delay = 0;
             if (shouldAnimate) {
-              delay = Math.floor(Math.random() * 1000);
+              delay = Math.floor(seededRandom(rowIndex, colIndex, forceUpdate + 1) * 1000);
             }
 
             return (

@@ -1,4 +1,5 @@
-import { AnimatePresence, motion, type PanInfo } from "motion/react";
+import type { PanInfo } from "motion/react";
+import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useState } from "react";
 
 import { cn } from "@/lib/utils";

@@ -1,11 +1,9 @@
-import * as React from "react";
+import { useSyncExternalStore } from "react";
 
 export function useMounted() {
-  const [mounted, setMounted] = React.useState(false);
-
-  React.useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  return mounted;
+  return useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false,
+  );
 }

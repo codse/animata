@@ -175,15 +175,13 @@ export default function RollText({
   segmentCountRef.current = segments.length;
   disabledRef.current = disabled;
 
+  if (disabled && phase !== "closed") {
+    setPhase("closed");
+  }
+
   useEffect(() => {
     phaseRef.current = phase;
   }, [phase]);
-
-  useEffect(() => {
-    if (disabled && phase !== "closed") {
-      setPhase("closed");
-    }
-  }, [disabled, phase]);
 
   useEffect(() => {
     const media = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -244,13 +242,16 @@ export default function RollText({
     if (!groupHover && !disabled) playOpen();
   };
 
-  const handleStackAnimationEnd = (event: React.AnimationEvent<HTMLSpanElement>) => {
-    onAnimationEnd?.(event);
-    if (phaseRef.current !== "animating") return;
+  const handleStackAnimationEnd = useCallback(
+    (event: React.AnimationEvent<HTMLSpanElement>) => {
+      onAnimationEnd?.(event);
+      if (phaseRef.current !== "animating") return;
 
-    remainingRef.current -= 1;
-    if (remainingRef.current <= 0) setPhase("open");
-  };
+      remainingRef.current -= 1;
+      if (remainingRef.current <= 0) setPhase("open");
+    },
+    [onAnimationEnd],
+  );
 
   return (
     <span

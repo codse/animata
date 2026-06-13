@@ -1,25 +1,43 @@
 import type { MetadataRoute } from "next";
 
-import { docs as allDocs } from "#site/content";
+import { blogs as allBlogs, docs as allDocs } from "#site/content";
 
 export const dynamic = "force-static";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const domain = process.env.NEXT_PUBLIC_APP_URL;
-  return [
-    {
-      url: `${domain}/`,
-      lastModified: new Date(),
-    },
-    {
-      url: `${domain}/components`,
-      lastModified: new Date(),
-    },
-    ...allDocs
-      .filter((doc) => doc.published)
-      .map((doc) => ({
-        url: `${domain}/docs/${doc.slugAsParams}`,
-        lastModified: doc.date ?? doc.dateModified,
-      })),
+  const now = new Date();
+
+  const staticRoutes: MetadataRoute.Sitemap = [
+    { url: `${domain}/`, lastModified: now },
+    { url: `${domain}/components`, lastModified: now },
+    { url: `${domain}/resources`, lastModified: now },
+    { url: `${domain}/credits`, lastModified: now },
+    { url: `${domain}/text-animations`, lastModified: now },
+    { url: `${domain}/blog`, lastModified: now },
   ];
+
+  const docRoutes = allDocs.flatMap((doc) =>
+    doc.published
+      ? [
+          {
+            url: `${domain}${doc.slug}`,
+            lastModified: doc.date ?? doc.dateModified ?? now,
+          },
+        ]
+      : [],
+  );
+
+  const blogRoutes = allBlogs.flatMap((blog) =>
+    blog.published && blog.slug !== "/blog"
+      ? [
+          {
+            url: `${domain}${blog.slug}`,
+            lastModified: blog.date ?? blog.dateModified ?? now,
+          },
+        ]
+      : [],
+  );
+
+  return [...staticRoutes, ...docRoutes, ...blogRoutes];
 }

@@ -125,6 +125,7 @@ export default function AiButton() {
 
   return (
     <button
+      type="button"
       className="group/ai relative my-8 rounded-full bg-linear-to-r from-blue-300/30 via-blue-500/30 via-40% to-purple-500/30 p-1 text-white transition-transform hover:scale-110 active:scale-105"
       onMouseEnter={() => setIsHovering(true)}
       onMouseLeave={() => setIsHovering(false)}

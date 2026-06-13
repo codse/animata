@@ -34,7 +34,7 @@ export default function FlipCard({
         <div className="absolute inset-0 backface-hidden">
           <img
             src={image}
-            alt="image"
+            alt={title}
             className="h-full w-full rounded-2xl object-cover shadow-2xl shadow-black/40"
           />
           <div className="absolute bottom-4 left-4 text-xl font-bold text-white">{title}</div>

@@ -479,8 +479,6 @@ export const RESOURCES: Resource[] = [
   },
 ];
 
-export const RESOURCE_COUNT = RESOURCES.length;
-
 export function getResources(): Resource[] {
   return RESOURCES;
 }

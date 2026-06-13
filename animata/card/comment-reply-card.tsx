@@ -72,10 +72,16 @@ export default function CommentReplyCard({ initialComments }: { initialComments:
             <span className="text-lg font-semibold text-white">Comment</span>
           </div>
           <div className="flex space-x-2">
-            <button className="rounded-full p-1 text-gray-400 hover:bg-gray-700 hover:text-white">
+            <button
+              type="button"
+              className="rounded-full p-1 text-gray-400 hover:bg-gray-700 hover:text-white"
+            >
               <Check size={20} />
             </button>
-            <button className="rounded-full p-1 text-gray-400 hover:bg-gray-700 hover:text-white">
+            <button
+              type="button"
+              className="rounded-full p-1 text-gray-400 hover:bg-gray-700 hover:text-white"
+            >
               <X size={20} />
             </button>
           </div>
@@ -177,6 +183,7 @@ export default function CommentReplyCard({ initialComments }: { initialComments:
               <input
                 ref={inputRef}
                 type="text"
+                aria-label="Reply"
                 className="grow bg-transparent text-white placeholder-gray-400 focus:outline-hidden"
                 placeholder="Reply"
                 value={newComment}
@@ -188,6 +195,7 @@ export default function CommentReplyCard({ initialComments }: { initialComments:
                 }}
               />
               <button
+                type="button"
                 onClick={handleAddComment}
                 className="ml-2 rounded-3xl bg-yellow-400 px-4 py-1 font-semibold text-black transition-colors hover:bg-yellow-500"
               >

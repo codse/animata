@@ -1,7 +1,7 @@
 "use client";
 
 import { LocateIcon, TruckIcon } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { cn } from "@/lib/utils";
 
@@ -23,15 +23,20 @@ export default function DeliveryCard({
   timeAgo = "30 min",
   simulateProgress = false,
 }: DeliveryCardProps) {
-  const [demoProgress, setDemoProgress] = useState(progress);
+  const [demoProgress, setDemoProgress] = useState(0);
+  const simulateRef = useRef(simulateProgress);
+
+  if (simulateProgress !== simulateRef.current) {
+    simulateRef.current = simulateProgress;
+    if (simulateProgress) {
+      setDemoProgress(progress);
+    }
+  }
+
   const displayProgress = simulateProgress ? demoProgress : progress;
   const clamped = Math.min(100, Math.max(0, displayProgress));
   const status = clamped <= 0 ? "Processing" : clamped >= 100 ? "Delivered" : "In transit";
   const headline = clamped >= 100 ? "Arrived" : "Arrives today";
-
-  useEffect(() => {
-    setDemoProgress(progress);
-  }, [progress]);
 
   useEffect(() => {
     if (!simulateProgress) return;
@@ -79,7 +84,7 @@ export default function DeliveryCard({
               className="relative h-0.5 bg-amber-400 transition-[width] duration-500 ease-in-out dark:bg-amber-300"
               style={{ width: `${clamped}%` }}
             >
-              <TruckIcon className="absolute right-0 top-1/2 z-50 size-8 -translate-y-1/2 translate-x-1/2 rounded-full bg-amber-400 p-1.5 text-zinc-900 dark:bg-amber-300 dark:text-zinc-800" />
+              <TruckIcon className="absolute right-0 top-1/2 z-50 size-8 -translate-y-1/2 translate-x-1/2 rounded-full bg-amber-400 p-1.5 text-amber-950 dark:bg-amber-300 dark:text-amber-950" />
             </div>
           </div>
 

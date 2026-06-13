@@ -123,19 +123,19 @@ const TimelineItem: React.FC<TimelineItemProps> = ({
       className="flex last:mb-0"
       onMouseEnter={onEnter}
       onFocus={onEnter}
-      onClick={onClick}
-      onKeyDown={
-        clickable
-          ? (e) => {
+      {...(clickable
+        ? {
+            onClick,
+            role: "button" as const,
+            tabIndex: 0,
+            onKeyDown: (e: React.KeyboardEvent<HTMLDivElement>) => {
               if (e.key === "Enter" || e.key === " ") {
                 e.preventDefault();
                 onClick?.();
               }
-            }
-          : undefined
-      }
-      role={clickable ? "button" : undefined}
-      tabIndex={clickable ? 0 : undefined}
+            },
+          }
+        : {})}
     >
       <div className="relative mr-4 flex flex-col items-center">
         <div
@@ -187,10 +187,12 @@ const defaultStyles: TimelineStyles = {
   dateColor: "inherit",
 };
 
+const EMPTY_TIMELINE_STYLES: Partial<TimelineStyles> = {};
+
 export function AnimatedTimeline({
   events,
   className = "",
-  styles: customStyles = {},
+  styles: customStyles,
   customEventRender,
   onEventHover,
   onEventClick,
@@ -200,7 +202,7 @@ export function AnimatedTimeline({
     active: initialActiveIndex ?? null,
     prev: null,
   });
-  const styles = { ...defaultStyles, ...customStyles };
+  const styles = { ...defaultStyles, ...(customStyles ?? EMPTY_TIMELINE_STYLES) };
 
   const setActive = (index: number | null) => {
     setState((s) => (s.active === index ? s : { active: index, prev: s.active }));

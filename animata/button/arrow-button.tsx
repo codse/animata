@@ -24,6 +24,7 @@ export default function ArrowButton({
 }: ArrowButtonProps) {
   return (
     <button
+      type="button"
       style={{ borderColor: borderColor }}
       {...props}
       className={cn(

@@ -19,7 +19,8 @@ const PhotoBooth = ({ collections, className, ...props }: PhotoBoothProps) => {
           >
             <img
               src={image}
-              alt="photo_booth"
+              alt=""
+              aria-hidden
               className={cn(
                 "absolute inset-0 h-full w-full max-w-full rounded-lg object-cover transition-transform duration-500 hover:scale-125",
                 className,
