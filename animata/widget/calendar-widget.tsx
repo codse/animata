@@ -1,6 +1,6 @@
 import { Calendar as CalendarIcon, DotIcon } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 
 const monthArray = [
   "",
@@ -24,10 +24,12 @@ interface EventType {
   time: string;
 }
 
+const EMPTY_CALENDAR_EVENTS: EventType[] = [];
+
 export default function CalendarWidget({
   initialSelectedDate = 1,
   initialShowEvents = true,
-  eventsData = [],
+  eventsData,
   month = 1,
   year = new Date().getFullYear(),
 }: {
@@ -37,6 +39,7 @@ export default function CalendarWidget({
   month?: number;
   year?: number;
 }) {
+  const resolvedEvents = eventsData ?? EMPTY_CALENDAR_EVENTS;
   const [selectedDate, setSelectedDate] = useState(initialSelectedDate);
   const [showEvents, setShowEvents] = useState(initialShowEvents);
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -44,16 +47,12 @@ export default function CalendarWidget({
   const dates = Array.from({ length: 30 }, (_, i) => i + 1);
   const daySymbols = ["S", "M", "T", "W", "T", "F", "S"];
 
-  const filteredEvents = eventsData.filter((event: EventType) => event.date === selectedDate);
+  const filteredEvents = resolvedEvents.filter((event: EventType) => event.date === selectedDate);
 
-  useEffect(() => {
-    if (scrollRef.current) {
-      const selectedElement = scrollRef.current.querySelector(`[data-date="${selectedDate}"]`);
-      if (selectedElement) {
-        selectedElement.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
-      }
-    }
-  }, [selectedDate]);
+  const scrollToDate = (date: number) => {
+    const selectedElement = scrollRef.current?.querySelector(`[data-date="${date}"]`);
+    selectedElement?.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
+  };
 
   return (
     <motion.div
@@ -76,6 +75,7 @@ export default function CalendarWidget({
               className="flex w-10 shrink-0 flex-col items-center justify-center gap-y-2 rounded-lg"
               onClick={() => {
                 setSelectedDate(date);
+                scrollToDate(date);
                 setShowEvents(true);
               }}
               whileHover={{ scale: 1.05 }}
@@ -100,7 +100,7 @@ export default function CalendarWidget({
                 )}
               </AnimatePresence>
               <span>
-                {eventsData.find((alldates: EventType) => alldates.date === date) ? (
+                {eventsData?.find((alldates: EventType) => alldates.date === date) ? (
                   <DotIcon />
                 ) : (
                   ""

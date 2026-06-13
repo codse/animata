@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 import { cn } from "@/lib/utils";
 
@@ -50,7 +50,13 @@ export default function ShoppingList({
   title = "Shopping list",
   items = DEFAULT_ITEMS,
 }: ShoppingListProps) {
-  const [rows, setRows] = useState(items);
+  const itemsRef = useRef<ShoppingListItem[] | null>(null);
+  const [rows, setRows] = useState<ShoppingListItem[]>([]);
+
+  if (items !== itemsRef.current) {
+    itemsRef.current = items;
+    setRows(items);
+  }
 
   const toggle = (id: string) => {
     setRows((prev) =>

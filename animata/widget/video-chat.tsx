@@ -42,12 +42,16 @@ interface ControlIconStateProps {
 
 function SquareDiv({ bgColor = "bg-green-600", children, onClick }: SquareDivProps) {
   return (
-    <div
-      className={cn("flex h-6 w-6 cursor-pointer items-center justify-center rounded-md", bgColor)}
+    <button
+      type="button"
+      className={cn(
+        "flex h-6 w-6 cursor-pointer items-center justify-center rounded-md border-0 p-0 text-inherit",
+        bgColor,
+      )}
       onClick={onClick}
     >
       {children}
-    </div>
+    </button>
   );
 }
 
@@ -152,7 +156,7 @@ export default function VideoChat() {
         </div>
         {!minimize && <ControlIconState iconState={iconState} toggleIconState={toggleIconState} />}
         <div className="flex items-center gap-2">
-          <button onClick={() => setMinimize(!minimize)}>
+          <button type="button" onClick={() => setMinimize(!minimize)}>
             {minimize ? (
               <div className="relative flex">
                 <Maximize size={16} />
