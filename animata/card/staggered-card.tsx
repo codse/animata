@@ -52,6 +52,7 @@ export default function StaggeredCard({
     <div className={cn("relative h-fit w-fit", className)} {...props}>
       {/* feel free to replace the button with your own */}
       <button
+        type="button"
         className="cursor-pointer rounded-md bg-neutral-700 px-3 py-1.5 text-lg font-medium text-neutral-100 active:bg-neutral-600"
         onClick={toggleOpen}
       >
