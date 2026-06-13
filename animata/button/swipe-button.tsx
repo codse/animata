@@ -22,6 +22,7 @@ export default function SwipeButton({
   const common = "block px-4 py-2 text-2xl font-bold duration-300 ease-in-out";
   return (
     <button
+      type="button"
       {...props}
       className={cn("group/button relative min-w-fit overflow-hidden rounded-md", className)}
     >
