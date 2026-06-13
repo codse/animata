@@ -6,6 +6,11 @@ date: 2026-06-01
 
 Added Stacked Sections for pinned chapter scroll stories. Wave 1 widgets got Apple-style type hierarchy and props-driven demos. Card Spread was rebuilt for deck, peek, and throw-on-click motion. Card Stack was trimmed to bare-bones stack mechanics with profile UI moved to the Storybook demo. Four oversized widgets left the public catalog, and the internal widget standards doc was removed from contributing.
 
+
+## Site quality
+
+Ran a site-wide react-doctor remediation pass and cleared the scan to zero errors and zero warnings across the component library and docs app. Consolidated Motion imports behind a shared `LazyMotion` helper with the lazy `domAnimation` bundle, tightened pnpm install behavior, added a GitHub Actions workflow that runs react-doctor on pull requests and pushes to main, and logged the baseline-to-done audit in `issues.md` at the repo root.
+
 ## New components
 
 <ChangeLogComponents>
@@ -85,6 +90,10 @@ Added Stacked Sections for pinned chapter scroll stories. Wave 1 widgets got App
 </ChangeLogComponents>
 
 ## Documentation
+
+Improved search snippets site-wide — shorter `| Animata` title template, optional `seoTitle` and `seoDescription` on docs and blog posts, and action-oriented meta copy for the button category. Added `robots.txt`, expanded the sitemap to include blog and secondary routes, and wired dedicated metadata for the home and 404 pages.
+
+Published [Top Animated React Buttons (2026)](/docs/guides/animated-react-buttons) as a curated button hub with registry install commands. Added comparison posts: [Magic UI alternatives](/blog/magic-ui-alternatives) and [Aceternity UI vs Animata](/blog/aceternity-ui-vs-animata).
 
 Added a Resources page at `/resources` — 26 curated design galleries with grateful, first-person copy and OG previews, linked from the footer only. Redesigned the site footer with structured columns, social links, and a resources callout.
 
