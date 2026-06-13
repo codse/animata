@@ -17,13 +17,17 @@ import { siteStats } from "@/config/site-stats";
 import { cn } from "@/lib/utils";
 
 // Get component categories from the sidebar nav (skip Getting Started + Contributing)
-const categories = docsConfig.sidebarNav
-  .filter((item) => item.title !== "Getting Started" && item.title !== "Contributing")
-  .map((item) => ({
-    label: item.title,
-    href: item.items?.[0]?.href ?? item.href ?? "/docs",
-    count: item.items?.length ?? 0,
-  }));
+const categories = docsConfig.sidebarNav.flatMap((item) =>
+  item.title === "Getting Started" || item.title === "Contributing"
+    ? []
+    : [
+        {
+          label: item.title,
+          href: item.items?.[0]?.href ?? item.href ?? "/docs",
+          count: item.items?.length ?? 0,
+        },
+      ],
+);
 
 const components = siteStats.componentCount;
 
