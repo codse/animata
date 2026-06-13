@@ -120,16 +120,21 @@ export default function ShootingStars({
       setStars(Array.from({ length: starCount }, () => makeStar(nextId.current++, w, h, true)));
     };
 
-    seed();
+    const seedFrame = requestAnimationFrame(() => seed());
     const ro = new ResizeObserver(() => {
       const r = el.getBoundingClientRect();
       dims.current = { w: r.width, h: r.height };
       // If we mounted at 0×0 (hidden tab, collapsed/lazy panel), seed once the
       // container actually has a size — otherwise the sky stays empty.
-      if (!seeded && r.width && r.height) seed();
+      if (!seeded && r.width && r.height) {
+        requestAnimationFrame(() => seed());
+      }
     });
     ro.observe(el);
-    return () => ro.disconnect();
+    return () => {
+      cancelAnimationFrame(seedFrame);
+      ro.disconnect();
+    };
   }, []);
 
   const recycle = useCallback((id: number) => {

@@ -9,6 +9,7 @@ import {
   type KeyboardEvent,
   type ReactNode,
   use,
+  useMemo,
 } from "react";
 import { cn } from "@/lib/utils";
 import {
@@ -41,6 +42,11 @@ function useShiftTabs() {
   return context;
 }
 
+function ShiftTabSlot({ index, children }: { index: number; children: ReactNode }) {
+  const value = useMemo(() => ({ index }), [index]);
+  return <ShiftTabSlotContext.Provider value={value}>{children}</ShiftTabSlotContext.Provider>;
+}
+
 function useShiftTabSlot() {
   const context = use(ShiftTabSlotContext);
   if (!context) {
@@ -70,10 +76,13 @@ function ShiftTabsRoot({
     onActiveIndexChange,
   });
 
+  const rootContext = useMemo(
+    () => ({ activeIndex, setActiveIndex, focusedIndex, setFocusedIndex }),
+    [activeIndex, setActiveIndex, focusedIndex, setFocusedIndex],
+  );
+
   return (
-    <ShiftTabsContext.Provider
-      value={{ activeIndex, setActiveIndex, focusedIndex, setFocusedIndex }}
-    >
+    <ShiftTabsContext.Provider value={rootContext}>
       <div className={className}>{children}</div>
     </ShiftTabsContext.Provider>
   );
@@ -99,6 +108,7 @@ function ShiftTabsList({
     <nav aria-label={ariaLabel} className={cn("overflow-visible", className)} {...props}>
       <div
         role="tablist"
+        tabIndex={0}
         onFocusCapture={(event: FocusEvent<HTMLElement>) => {
           onFocusCapture?.(event);
           handleTabListFocusCapture(event, activeIndex, setFocusedIndex);
@@ -112,9 +122,9 @@ function ShiftTabsList({
         className="flex flex-wrap items-center justify-center gap-3 sm:gap-4"
       >
         {tabs.map((tab, index) => (
-          <ShiftTabSlotContext.Provider key={tab.key ?? index} value={{ index }}>
+          <ShiftTabSlot key={tab.key ?? index} index={index}>
             {tab}
-          </ShiftTabSlotContext.Provider>
+          </ShiftTabSlot>
         ))}
       </div>
     </nav>

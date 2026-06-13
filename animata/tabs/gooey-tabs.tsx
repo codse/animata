@@ -1,6 +1,7 @@
 "use client";
 
-import { type HTMLMotionProps, motion } from "motion/react";
+import type { HTMLMotionProps } from "motion/react";
+import { motion } from "motion/react";
 import {
   Children,
   type ComponentProps,
@@ -11,6 +12,7 @@ import {
   type ReactNode,
   use,
   useId,
+  useMemo,
 } from "react";
 import { cn } from "@/lib/utils";
 import {
@@ -46,6 +48,19 @@ function useGooeyTabs() {
     throw new Error("GooeyTabs primitives must be used within <GooeyTabs>.");
   }
   return context;
+}
+
+function GooeyTabSlot({
+  index,
+  count,
+  children,
+}: {
+  index: number;
+  count: number;
+  children: ReactNode;
+}) {
+  const value = useMemo(() => ({ index, count }), [index, count]);
+  return <GooeyTabSlotContext.Provider value={value}>{children}</GooeyTabSlotContext.Provider>;
 }
 
 function useGooeyTabSlot() {
@@ -140,19 +155,31 @@ function GooeyTabsRoot({
   });
   const filterId = `gooey-tabs-${useId().replace(/:/g, "")}`;
 
+  const rootContext = useMemo(
+    () => ({
+      activeIndex,
+      setActiveIndex,
+      focusedIndex,
+      setFocusedIndex,
+      filterId,
+      intensity,
+      contrast,
+      lightness,
+    }),
+    [
+      activeIndex,
+      setActiveIndex,
+      focusedIndex,
+      setFocusedIndex,
+      filterId,
+      intensity,
+      contrast,
+      lightness,
+    ],
+  );
+
   return (
-    <GooeyTabsContext.Provider
-      value={{
-        activeIndex,
-        setActiveIndex,
-        focusedIndex,
-        setFocusedIndex,
-        filterId,
-        intensity,
-        contrast,
-        lightness,
-      }}
-    >
+    <GooeyTabsContext.Provider value={rootContext}>
       <div className={className}>{children}</div>
     </GooeyTabsContext.Provider>
   );
@@ -186,6 +213,7 @@ function GooeyTabsList({
       <nav aria-label={ariaLabel} className="overflow-visible" {...props}>
         <div
           role="tablist"
+          tabIndex={0}
           onFocusCapture={(event: FocusEvent<HTMLElement>) => {
             onFocusCapture?.(event);
             handleTabListFocusCapture(event, activeIndex, setFocusedIndex);
@@ -199,9 +227,9 @@ function GooeyTabsList({
           className="flex flex-wrap"
         >
           {tabs.map((tab, index) => (
-            <GooeyTabSlotContext.Provider key={tab.key ?? index} value={{ index, count }}>
+            <GooeyTabSlot key={tab.key ?? index} index={index} count={count}>
               {tab}
-            </GooeyTabSlotContext.Provider>
+            </GooeyTabSlot>
           ))}
         </div>
       </nav>

@@ -10,11 +10,11 @@ export default function List() {
       ))}
 
       <div className="mt-auto flex w-full justify-end gap-2">
-        <button className="w-2/5 rounded-sm bg-green-500 p-2">
+        <button type="button" aria-label="Confirm" className="w-2/5 rounded-sm bg-green-500 p-2">
           <span className="block h-1.5 rounded-sm bg-muted" />
         </button>
 
-        <button className="w-1/5 rounded-sm bg-muted p-2">
+        <button type="button" aria-label="Dismiss" className="w-1/5 rounded-sm bg-muted p-2">
           <span className="block h-1.5 rounded-sm bg-gray-300" />
         </button>
       </div>

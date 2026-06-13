@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 interface CardProps {
   show: React.ReactNode;
   reveal: React.ReactNode;
+  revealColor: string;
 }
 
 interface CardDetailsProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -19,7 +20,7 @@ interface FlippingCardProps {
   list: CardDetailsProps[];
 }
 
-const Card = ({ show, reveal }: CardProps) => {
+const Card = ({ show, reveal, revealColor }: CardProps) => {
   const common = "absolute flex w-full h-full  [backface-visibility:hidden]";
   return (
     <div className={cn("group/flip h-60 w-48 [perspective:1000px]")}>
@@ -31,10 +32,7 @@ const Card = ({ show, reveal }: CardProps) => {
         <div className={cn("bg-white", common)}>{show}</div>
         <div
           className={cn("[transform:rotateY(180deg)]", common)}
-          style={{
-            // Note: Set your own color over here
-            backgroundColor: `#${(((1 << 24) * Math.random()) | 0).toString(16).padStart(6, "0")}`,
-          }}
+          style={{ backgroundColor: revealColor }}
         >
           {reveal}
         </div>
@@ -44,8 +42,11 @@ const Card = ({ show, reveal }: CardProps) => {
 };
 
 const CardDetails = ({ title, image, font, index }: CardDetailsProps) => {
+  const revealColor = `hsl(${((index ?? 0) * 47) % 360} 45% 55%)`;
+
   return (
     <Card
+      revealColor={revealColor}
       show={
         <div className="flex w-full flex-col border-[1px] border-black/15 px-3 py-4 text-sm">
           <span className="border-t-2 border-black text-black pt-1">{font}</span>

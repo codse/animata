@@ -1,4 +1,4 @@
-import { type FocusEvent, type KeyboardEvent, useEffect, useState } from "react";
+import { type FocusEvent, type KeyboardEvent, useCallback, useState } from "react";
 
 import { cn } from "@/lib/utils";
 
@@ -21,24 +21,24 @@ export function useTabSelection({
   onActiveIndexChange?: (index: number) => void;
 }) {
   const [uncontrolledIndex, setUncontrolledIndex] = useState(defaultActiveIndex);
-  const [focusedIndex, setFocusedIndex] = useState(
-    defaultActiveIndex >= 0 ? defaultActiveIndex : 0,
-  );
+  const [keyboardFocusIndex, setKeyboardFocusIndex] = useState<number | null>(null);
   const activeIndex = activeIndexProp ?? uncontrolledIndex;
+  const focusedIndex = keyboardFocusIndex ?? (activeIndex >= 0 ? activeIndex : 0);
 
-  const setActiveIndex = (index: number) => {
-    onActiveIndexChange?.(index);
-    if (activeIndexProp === undefined) {
-      setUncontrolledIndex(index);
-    }
-    setFocusedIndex(index);
-  };
+  const setActiveIndex = useCallback(
+    (index: number) => {
+      onActiveIndexChange?.(index);
+      if (activeIndexProp === undefined) {
+        setUncontrolledIndex(index);
+      }
+      setKeyboardFocusIndex(null);
+    },
+    [activeIndexProp, onActiveIndexChange],
+  );
 
-  useEffect(() => {
-    if (activeIndex >= 0) {
-      setFocusedIndex(activeIndex);
-    }
-  }, [activeIndex]);
+  const setFocusedIndex = useCallback((index: number) => {
+    setKeyboardFocusIndex(index);
+  }, []);
 
   return { activeIndex, setActiveIndex, focusedIndex, setFocusedIndex };
 }

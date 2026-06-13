@@ -6,7 +6,11 @@ export default function CookieBanner() {
         <div className="h-2 w-3/4 rounded-md bg-muted" />
         <div className="h-2 w-3/5 rounded-md bg-muted" />
       </div>
-      <button className="w-full rounded-sm bg-blue-400 p-2">
+      <button
+        type="button"
+        aria-label="Accept cookies"
+        className="w-full rounded-sm bg-blue-400 p-2"
+      >
         <span className="block h-1.5 rounded-sm bg-muted" />
       </button>
     </div>

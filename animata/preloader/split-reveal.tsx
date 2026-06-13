@@ -8,8 +8,8 @@ import {
   use,
   useEffect,
   useMemo,
+  useReducer,
   useRef,
-  useState,
   useSyncExternalStore,
 } from "react";
 
@@ -191,7 +191,6 @@ function SplitRevealOverlayFrame({ className, children, ...props }: ComponentPro
       data-phase={phase}
       aria-busy={phase === "loading"}
       aria-live="polite"
-      role="status"
       data-split-reveal-overlay=""
       {...props}
     >
@@ -359,10 +358,34 @@ function SplitRevealRoot({
   const reduceMotion = usePrefersReducedMotion();
   const onCompleteRef = useRef(onComplete);
   const phaseRef = useRef<PreloaderPhase>("loading");
-  const [bootId, setBootId] = useState(0);
-  const [phase, setPhase] = useState<PreloaderPhase>("loading");
-  const [loaded, setLoaded] = useState(0);
-  const [total, setTotal] = useState(0);
+  const startPreloadRef = useRef<() => void>(() => {});
+  type PreloadSnapshot = { phase: PreloaderPhase; loaded: number; total: number };
+
+  const preloadReducer = (
+    state: PreloadSnapshot,
+    action:
+      | { type: "reset"; total: number }
+      | { type: "progress"; loaded: number; total: number }
+      | { type: "phase"; phase: PreloaderPhase },
+  ): PreloadSnapshot => {
+    switch (action.type) {
+      case "reset":
+        return { phase: "loading", loaded: 0, total: action.total };
+      case "progress":
+        return { ...state, loaded: action.loaded, total: action.total };
+      case "phase":
+        return { ...state, phase: action.phase };
+      default:
+        return state;
+    }
+  };
+
+  const [preload, dispatchPreload] = useReducer(preloadReducer, {
+    phase: "loading",
+    loaded: 0,
+    total: 0,
+  });
+  const { phase, loaded, total } = preload;
 
   phaseRef.current = phase;
 
@@ -375,8 +398,7 @@ function SplitRevealRoot({
     onCompleteRef.current = onComplete;
   }, [onComplete]);
 
-  // bootId intentionally restarts preload after bfcache / tab restore
-  // biome-ignore lint/correctness/useExhaustiveDependencies: bootId is the restart signal
+  // Restart preload after bfcache / tab restore via startPreloadRef.
   useEffect(() => {
     let runId = 0;
     let fadeTimer: number | undefined;
@@ -403,7 +425,7 @@ function SplitRevealRoot({
         return;
       }
       onCompleteRef.current?.();
-      setPhase("done");
+      dispatchPreload({ type: "phase", phase: "done" });
     };
 
     const startReveal = (currentRun: number) => {
@@ -412,14 +434,14 @@ function SplitRevealRoot({
         return;
       }
 
-      setPhase("fade-ui");
+      dispatchPreload({ type: "phase", phase: "fade-ui" });
 
       revealTimer = window.setTimeout(() => {
         if (currentRun !== runId) {
           return;
         }
 
-        setPhase("reveal");
+        dispatchPreload({ type: "phase", phase: "reveal" });
         doneTimer = window.setTimeout(() => finish(currentRun), revealDuration * 1000);
       }, progressFadeMs);
     };
@@ -431,9 +453,7 @@ function SplitRevealRoot({
 
       const imageCount = uniqueImages.length;
 
-      setPhase("loading");
-      setLoaded(0);
-      setTotal(imageCount);
+      dispatchPreload({ type: "reset", total: imageCount });
 
       if (imageCount === 0) {
         fadeTimer = window.setTimeout(() => startReveal(currentRun), holdMs);
@@ -444,8 +464,7 @@ function SplitRevealRoot({
         if (currentRun !== runId) {
           return;
         }
-        setLoaded(nextLoaded);
-        setTotal(nextTotal);
+        dispatchPreload({ type: "progress", loaded: nextLoaded, total: nextTotal });
       }).then(() => {
         if (currentRun !== runId) {
           return;
@@ -456,23 +475,24 @@ function SplitRevealRoot({
     };
 
     start();
+    startPreloadRef.current = start;
 
     return () => {
       runId += 1;
       clearTimers();
     };
-  }, [bootId, holdMs, progressFadeMs, reduceMotion, revealDuration, uniqueImages]);
+  }, [holdMs, progressFadeMs, reduceMotion, revealDuration, uniqueImages]);
 
   useEffect(() => {
     const onPageShow = (event: PageTransitionEvent) => {
       if (event.persisted && phaseRef.current !== "done") {
-        setBootId((id) => id + 1);
+        startPreloadRef.current();
       }
     };
 
     const onResume = () => {
       if (phaseRef.current !== "done") {
-        setBootId((id) => id + 1);
+        startPreloadRef.current();
       }
     };
 

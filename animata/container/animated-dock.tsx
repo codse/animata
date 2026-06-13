@@ -1,11 +1,11 @@
 import { Menu, X } from "lucide-react"; // Importing icons from lucide-react
 import {
-  AnimatePresence, // Enables animation presence detection
-  type MotionValue, // Type for motion values
-  motion, // Main component for animations
-  useMotionValue, // Hook to create a motion value
-  useSpring, // Hook to create smooth spring animations
-  useTransform, // Hook to transform motion values
+  AnimatePresence,
+  type MotionValue,
+  motion,
+  useMotionValue,
+  useSpring,
+  useTransform,
 } from "motion/react";
 import Link from "next/link"; // Next.js Link component for navigation
 import type React from "react"; // Importing React hooks
@@ -172,6 +172,7 @@ const SmallDock = ({
       </AnimatePresence>
       {/* Button to toggle the small dock open/close */}
       <button
+        type="button"
         onClick={() => setIsOpen(!isOpen)} // Toggle isOpen state on click
         className="flex h-10 w-10 items-center justify-center rounded-full bg-white/20 text-black shadow-md backdrop-blur-md dark:bg-black/20 dark:text-white"
       >

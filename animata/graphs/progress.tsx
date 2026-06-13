@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 
 import { cn } from "@/lib/utils";
 
@@ -11,13 +11,13 @@ export default function Progress({ progress }: { progress: number }) {
   const bars = Math.floor(width / (barWidth + gap));
   const containerRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     setWidth(containerRef.current?.offsetWidth ?? 0);
   }, []);
 
   const [shouldUseValue, setShouldUseValue] = useState(false);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const timeout = setTimeout(() => {
       // This is a hack to force the animation to run for the first time.
       // We can use framer-motion to achieve this but just keeping it simple for now.

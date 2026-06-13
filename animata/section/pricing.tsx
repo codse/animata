@@ -182,12 +182,14 @@ function AnimatedPrice({
   yearlyPrice,
   billingCycle,
 }: AnimatedPriceProps): React.JSX.Element {
-  const [price, setPrice] = useState(monthlyPrice);
+  const priceRef = useRef(monthlyPrice);
+  const [displayPrice, setDisplayPrice] = useState<string | null>(null);
   const animationRef = useRef<number | null>(null);
+  const price = displayPrice ?? priceRef.current;
 
   useEffect(() => {
     const targetPrice = billingCycle === "Monthly" ? monthlyPrice : yearlyPrice;
-    const startValue = parseFloat(price.replace(/[^0-9.-]+/g, ""));
+    const startValue = parseFloat(priceRef.current.replace(/[^0-9.-]+/g, ""));
     const endValue = parseFloat(targetPrice.replace(/[^0-9.-]+/g, ""));
     const duration = 50; // Animation duration in milliseconds
     const startTime = Date.now();
@@ -197,12 +199,14 @@ function AnimatedPrice({
       const progress = Math.min(elapsedTime / duration, 1);
       const currentValue = startValue + (endValue - startValue) * progress;
 
-      setPrice(`$${currentValue.toFixed(2)}`);
+      setDisplayPrice(`$${currentValue.toFixed(2)}`);
+      priceRef.current = `$${currentValue.toFixed(2)}`;
 
       if (progress < 1) {
         animationRef.current = requestAnimationFrame(animatePrice);
       } else {
-        setPrice(targetPrice);
+        priceRef.current = targetPrice;
+        setDisplayPrice(targetPrice);
       }
     };
 
@@ -213,7 +217,7 @@ function AnimatedPrice({
         cancelAnimationFrame(animationRef.current);
       }
     };
-  }, [price, billingCycle, monthlyPrice, yearlyPrice]);
+  }, [billingCycle, monthlyPrice, yearlyPrice]);
 
   return (
     <div>

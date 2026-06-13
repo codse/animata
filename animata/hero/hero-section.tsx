@@ -28,7 +28,7 @@ function ImageWithWave() {
         height={100}
         src={animataImage.src}
         className="-top-6 h-10 w-10 translate-y-5 animate-fadeIn fade-in-0 md:-top-10 md:h-16 md:w-16 md:translate-y-0"
-        alt="Hero image"
+        alt="Animata logo"
       />
       <WaveReveal
         className="my-4 pl-[0px] text-slate-300 sm:text-[60px] md:px-0 md:text-[70px] lg:text-[80px]"
@@ -103,6 +103,7 @@ function InfoContainer({ changeStackAlign }: { changeStackAlign: (card: string) 
   const underlinedWord = (text: string, card: string) => (
     <span
       onMouseOver={() => changeStackAlign(card)}
+      onFocus={() => changeStackAlign(card)}
       className="cursor-pointer underline decoration-yellow-300 decoration-wavy"
     >
       {" "}
