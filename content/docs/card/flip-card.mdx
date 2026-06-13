@@ -34,6 +34,31 @@ Open the newly created file and paste the following code:
 
 </Steps>
 
+## Usage
+
+`FlipCard` is bare bones: perspective, hover flip, and front/back faces. You bring the markup and styling.
+
+Pass `rotate="x"` or `rotate="y"` (default) on the root. Style each face with `className` on `FlipCard.Front` and `FlipCard.Back`.
+
+```tsx
+import FlipCard from "@/animata/card/flip-card";
+
+<FlipCard rotate="y" className="h-72 w-56">
+  <FlipCard.Front>
+    <img src="/photo.jpg" alt="Programming" className="h-full w-full rounded-2xl object-cover" />
+    <div className="absolute bottom-4 left-4 text-xl font-bold text-white">Programming</div>
+  </FlipCard.Front>
+  <FlipCard.Back className="rounded-2xl bg-black/80 p-4 text-slate-200">
+    <h2 className="text-base font-bold text-white">What is programming?</h2>
+    <p className="mt-4 text-base leading-normal text-gray-100">Your copy here.</p>
+  </FlipCard.Back>
+</FlipCard>
+```
+
+## Changelog
+
+- **2026-06** — Replaced fixed `image` / `title` / `description` props with composable `FlipCard.Front` and `FlipCard.Back` faces.
+
 ## Credits
 
 Built by [Bibek Bhattarai](https://github.com/morphhyy)
