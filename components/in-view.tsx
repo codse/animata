@@ -15,18 +15,42 @@ export function InView({
   rootMargin?: string;
   className?: string;
 }) {
+  return (
+    <InViewObserver key={rootMargin} rootMargin={rootMargin} className={className}>
+      {children}
+    </InViewObserver>
+  );
+}
+
+function InViewObserver({
+  children,
+  rootMargin,
+  className,
+}: {
+  children: React.ReactNode;
+  rootMargin: string;
+  className?: string;
+}) {
   const ref = useRef<HTMLDivElement | null>(null);
   const [visible, setVisible] = useState(false);
 
+  // rootMargin changes remount this component via key={rootMargin} on the wrapper.
+  // biome-ignore lint/correctness/useExhaustiveDependencies: intentional remount via parent key
   useEffect(() => {
+    if (visible) {
+      return;
+    }
+
     const el = ref.current;
-    if (!el || visible) return;
+    if (!el) {
+      return;
+    }
+
     const observer = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
           if (entry.isIntersecting) {
             setVisible(true);
-            observer.disconnect();
             break;
           }
         }
@@ -35,7 +59,7 @@ export function InView({
     );
     observer.observe(el);
     return () => observer.disconnect();
-  }, [visible, rootMargin]);
+  }, [visible]);
 
   return (
     <div ref={ref} className={className}>

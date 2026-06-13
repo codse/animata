@@ -109,10 +109,18 @@ function getCategoryKey(item: SidebarNavItem) {
 function useSidebarScrollEdges(enabled: boolean) {
   const scrollerRef = useRef<HTMLDivElement>(null);
   const [edges, setEdges] = useState({ top: false, bottom: false });
+  const [prevEnabled, setPrevEnabled] = useState(enabled);
+
+  if (enabled !== prevEnabled) {
+    setPrevEnabled(enabled);
+    if (!enabled) {
+      setEdges({ top: false, bottom: false });
+    }
+  }
 
   const updateEdges = useCallback(() => {
     const node = scrollerRef.current;
-    if (!node) {
+    if (!node || !enabled) {
       return;
     }
 
@@ -123,14 +131,12 @@ function useSidebarScrollEdges(enabled: boolean) {
       top: overflow && scrollTop > 1,
       bottom: overflow && scrollTop + clientHeight < scrollHeight - 1,
     });
-  }, []);
+  }, [enabled]);
 
   useEffect(() => {
     if (!enabled) {
       return;
     }
-
-    updateEdges();
 
     const node = scrollerRef.current;
     if (!node) {
@@ -158,38 +164,38 @@ function useSidebarScrollEdges(enabled: boolean) {
 export function DocsSidebarNav({ items, variant = "docs", className }: DocsSidebarNavProps) {
   const pathname = usePathname();
   const [query, setQuery] = useState("");
-  const [closed, setClosed] = useState(new Set<string>());
+  const [userClosed, setUserClosed] = useState(new Set<string>());
   const { scrollerRef, edges, updateEdges } = useSidebarScrollEdges(variant === "docs");
 
   const filteredItems = useMemo(() => filterSidebarItems(items, query), [items, query]);
   const isFiltering = query.trim().length > 0;
 
+  const closed = useMemo(() => {
+    const next = new Set(userClosed);
+    const segments = pathname.split("/").filter(Boolean);
+    const categorySlug = segments[1];
+
+    if (categorySlug) {
+      next.delete(`/docs/${categorySlug}`);
+    }
+
+    for (const item of items) {
+      if (isCategoryActive(item, pathname)) {
+        next.delete(getCategoryKey(item));
+      }
+    }
+
+    return next;
+  }, [items, pathname, userClosed]);
+
   useEffect(() => {
-    setClosed((current) => {
-      const next = new Set(current);
-      const segments = pathname.split("/").filter(Boolean);
-      const categorySlug = segments[1];
-
-      if (categorySlug) {
-        next.delete(`/docs/${categorySlug}`);
-      }
-
-      for (const item of items) {
-        if (isCategoryActive(item, pathname)) {
-          next.delete(getCategoryKey(item));
-        }
-      }
-
-      return next;
-    });
-
     const node = findSidebarLink(pathname);
     node?.scrollIntoView({ behavior: "instant", block: "nearest" });
     updateEdges();
-  }, [items, pathname, updateEdges]);
+  }, [pathname, updateEdges]);
 
   const toggleSection = (key: string) => {
-    setClosed((prev) => {
+    setUserClosed((prev) => {
       const next = new Set(prev);
       if (next.has(key)) {
         next.delete(key);
@@ -338,7 +344,7 @@ interface DocsSidebarNavItemsProps {
   pathname: string | null;
 }
 
-export function DocsSidebarNavItems({ items, pathname }: DocsSidebarNavItemsProps) {
+function DocsSidebarNavItems({ items, pathname }: DocsSidebarNavItemsProps) {
   return items?.length ? (
     <div className="grid auto-rows-max grid-flow-row gap-0.5 text-sm font-normal text-foreground">
       {items.map((item) => {
