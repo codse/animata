@@ -445,11 +445,10 @@ function DemoChromeBar({
         !visible && "pointer-events-none",
       )}
     >
-      <div
-        role="group"
+      <fieldset
         aria-label="Demo controls"
         className={cn(
-          "demo-chrome-pill pointer-events-auto flex max-w-full items-center gap-0.5 overflow-x-auto rounded-full border border-white/14 bg-[#121212]/72 p-1 text-white/88 shadow-[0_8px_32px_-8px_rgb(0_0_0_/_0.55)] backdrop-blur-xl [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden",
+          "demo-chrome-pill pointer-events-auto m-0 flex max-w-full items-center gap-0.5 overflow-x-auto rounded-full border border-white/14 bg-[#121212]/72 p-1 text-white/88 shadow-[0_8px_32px_-8px_rgb(0_0_0_/_0.55)] backdrop-blur-xl [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden",
           visible && "pointer-events-auto",
         )}
         onMouseLeave={hideChromeTip}
@@ -521,7 +520,7 @@ function DemoChromeBar({
           onShowTip={showChromeTip}
           className="hidden sm:grid"
         />
-      </div>
+      </fieldset>
       <DemoChromeTooltip tip={chromeTip} />
     </motion.div>
   );

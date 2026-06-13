@@ -4,15 +4,16 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { blogs as allBlogs } from "#site/content";
 import NavMenu from "@/app/(main)/docs/[[...slug]]/nav-menu";
+import { BlogJsonLd } from "@/components/blog-json-ld";
 import { Mdx } from "@/components/mdx-components";
 import { DocsPager } from "@/components/pager";
 import { DashboardTableOfContents } from "@/components/toc";
 import { badgeVariants } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { blogSidebarNav } from "@/config/blog";
-import { siteConfig } from "@/config/site";
+import { buildBlogMetadata } from "@/lib/metadata";
 import { getTableOfContents } from "@/lib/toc";
-import { absoluteUrl, cn } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 
 import "@/styles/mdx.css";
 
@@ -41,31 +42,7 @@ export async function generateMetadata({ params }: BlogPageProps): Promise<Metad
     return {};
   }
 
-  return {
-    title: blog.title,
-    description: blog.description,
-    openGraph: {
-      title: blog.title,
-      description: blog.description,
-      type: "article",
-      url: absoluteUrl(blog.slug),
-      images: [
-        {
-          url: siteConfig.ogImage,
-          width: 1200,
-          height: 630,
-          alt: siteConfig.name,
-        },
-      ],
-    },
-    twitter: {
-      card: "summary_large_image",
-      title: blog.title,
-      description: blog.description,
-      images: [siteConfig.ogImage],
-      creator: blog.author ? `@${blog.author}` : "@AnimataDesign",
-    },
-  };
+  return buildBlogMetadata(blog);
 }
 
 export async function generateStaticParams() {
@@ -86,6 +63,7 @@ export default async function BlogPage({ params }: BlogPageProps) {
 
   return (
     <main className="relative py-6 lg:grid lg:grid-cols-[1fr_200px] lg:gap-10 lg:py-8">
+      <BlogJsonLd blog={blog} />
       <div className="mx-auto w-full min-w-0">
         <div className="mb-4 flex items-center space-x-1 text-sm text-muted-foreground">
           <div className="overflow-hidden text-ellipsis whitespace-nowrap">Blog</div>

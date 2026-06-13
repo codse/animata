@@ -1,0 +1,88 @@
+---
+title: Aceternity UI vs Animata
+date: 2026-06-12
+description: Which React animation library fits your project — Aceternity UI or Animata? Developer experience, licensing, shadcn compatibility, and where each library wins.
+seoTitle: Aceternity UI vs Animata — Which React Animation Library?
+seoDescription: Compare Aceternity UI and Animata for animated React components. shadcn registry, Tailwind CSS, copy-paste code, Storybook previews, and open-source licensing.
+author: AnimataDesign
+labels:
+  - Guides
+  - React
+toc: true
+---
+
+**Aceternity UI vs Animata** is a common search once you've seen both libraries on Twitter or in a launch video. They share a stack — React, Tailwind CSS, motion-heavy UI — but they optimize for different jobs.
+
+## What each library optimizes for
+
+**Aceternity UI** built its reputation on cinematic components: tracing beams, spotlight cards, floating navbars, and background effects that look exceptional in product trailers. The catalog skews toward **visual spectacle** and **marketing polish**.
+
+**Animata** optimizes for **components you ship inside products**: buttons with real state machines, text animations for dashboards, widgets, skeletons, and containers you paste into apps that live for years. The catalog skews toward **micro-interactions** and **repeatable UI patterns**.
+
+## Developer experience
+
+| Topic | Animata | Aceternity UI |
+| --- | --- | --- |
+| **Getting a component** | shadcn registry URL or copy from docs | CLI / copy from docs |
+| **Seeing it work** | Storybook story per component + doc preview | Doc preview |
+| **Customization** | Edit the file you own | Edit the file you own |
+| **Docs structure** | Category indexes + per-component install | Component gallery |
+| **Live demos** | `/demo` routes for immersive previews | Primarily inline docs |
+
+Both expect Tailwind CSS. Animata documents Next.js setup explicitly and keeps layout in Tailwind while animation details often live in co-located `.css` files you can read and modify.
+
+## shadcn compatibility
+
+Animata publishes every public component to the shadcn registry:
+
+```bash
+pnpm dlx shadcn@latest add https://animata.design/r/button/ai-button.json
+```
+
+That matches how many teams already add UI primitives. If your repo already uses shadcn's `components.json`, Animata slots in without a parallel install story.
+
+## Licensing and long-term maintenance
+
+Animata's public catalog is **MIT licensed** and **open source on GitHub**. You can fork, patch, and ship without a subscription gate on core components.
+
+Aceternity (like Magic UI) has moved some assets behind Pro tiers over time. For internal tools and OSS side projects, verify license terms per component before you build on it.
+
+For production SaaS with compliance review, **predictable OSS licensing** often tips the scale toward Animata.
+
+## Where Animata differentiates
+
+High-signal components worth comparing side by side:
+
+- **[Animated React Buttons](/docs/guides/animated-react-buttons)** — AI shimmer, ripple, swipe confirm, status transitions
+- **[Text animations](/docs/text)** — typewriter, blur reveals, staggered lines for hero copy
+- **[Animated beam](/docs/background/animated-beam)** — node connections (overlaps Aceternity's beam aesthetic)
+- **[Marquee](/docs/container/marquee)** — performant scroll rows for logos and testimonials
+- **[Widgets](/docs/widget)** — glanceable cards for dashboards
+
+Browse the full set on [/components](/components).
+
+## Where Aceternity differentiates
+
+Aceternity remains strong when you need:
+
+- Hero sections with immediate visual impact
+- 3D-ish cards and parallax-heavy layouts
+- Background effects that carry an entire landing page
+
+If your goal is a one-page launch site with maximum "demo day" energy, Aceternity's defaults can get you there faster. If your goal is a **component library inside an app**, Animata's smaller, composable pieces tend to age better.
+
+## Practical recommendation
+
+| Your situation | Start with |
+| --- | --- |
+| Shipping a SaaS dashboard or settings UI | Animata |
+| Marketing site with one hero moment | Aceternity or Magic UI |
+| Need MIT + copy-paste for every file | Animata |
+| Already standardized on shadcn registry | Animata |
+| Evaluating multiple options | [Magic UI alternatives](/blog/magic-ui-alternatives) |
+
+## Next steps
+
+1. [Setup Animata](/docs/setup) in your Next.js project
+2. Try the [animated buttons guide](/docs/guides/animated-react-buttons)
+3. Star the repo on [GitHub](https://github.com/codse/animata) if it fits your stack
