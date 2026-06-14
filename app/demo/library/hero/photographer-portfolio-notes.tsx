@@ -30,19 +30,14 @@ const LAYOUT_SNIPPET = `{/* mobile: column stack; desktop: 2:3 row, both pinned 
   </div>
 </div>`;
 
-const PRELOADER_SNIPPET = `<section>{/* your page */}</section>
-
-<SplitReveal
-  images={PRELOAD_IMAGES}
-  lockScroll
-  onComplete={() => setPreloaderDone(true)}
-  renderProgress={({ loaded, total, progress }) => (
-    <>
-      <SplitReveal.ProgressTrack progress={progress} foregroundColor="#000" />
-      <p>Loading frames · {loaded}/{total}</p>
-    </>
-  )}
-/>`;
+const PRELOADER_SNIPPET = `<SplitReveal lockScroll onComplete={() => setPreloaderDone(true)}>
+  <SplitReveal.Images urls={PRELOAD_IMAGES} />
+  <SplitReveal.Overlay>
+    <SplitReveal.Shutter side="top" />
+    <SplitReveal.Shutter side="bottom" />
+    <SplitReveal.Progress />
+  </SplitReveal.Overlay>
+</SplitReveal>`;
 
 export function PhotographerPortfolioNotes() {
   const sources = DEMO_SOURCES[DEMO_KEY] ?? [];
@@ -79,9 +74,10 @@ export function PhotographerPortfolioNotes() {
       <DemoNotes.Section id="components" index={2} title="Components used">
         <DemoNotes.Prose>
           <p>
-            <code>SplitReveal</code> sits next to the page as a fixed overlay. Pass{" "}
-            <code>images</code>, wire <code>onComplete</code>, done. We skipped the{" "}
-            <code>.Content</code> wrapper on purpose; the real layout mounts normally underneath.
+            <code>SplitReveal</code> sits next to the page as a fixed overlay. Compose{" "}
+            <code>Images</code>, <code>Overlay</code>, shutters, and the default{" "}
+            <code>Progress</code> track on the center seam. Wire <code>onComplete</code> when the
+            reveal finishes.
           </p>
           <p>
             <code>CardStack</code> advances the portfolio. Autoplay only starts after the preloader

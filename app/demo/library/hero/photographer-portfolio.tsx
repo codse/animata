@@ -363,25 +363,19 @@ export default function PhotographerPortfolio() {
       </section>
 
       <SplitReveal
-        images={PRELOAD_IMAGES}
         backgroundColor={CANVAS}
         foregroundColor={INK}
         zIndex={120}
         lockScroll
         onComplete={() => setPreloaderDone(true)}
-        renderProgress={({ loaded, total, progress }) => (
-          <>
-            <SplitReveal.ProgressTrack progress={progress} foregroundColor={INK} />
-            <p className="mt-3 text-center text-[11px] font-medium uppercase tracking-[0.12em] text-black/45">
-              Loading frames
-              <span className="px-1.5 text-black/20">·</span>
-              {String(loaded).padStart(2, "0")}
-              <span className="text-black/20">/</span>
-              {String(total).padStart(2, "0")}
-            </p>
-          </>
-        )}
-      />
+      >
+        <SplitReveal.Images urls={PRELOAD_IMAGES} />
+        <SplitReveal.Overlay>
+          <SplitReveal.Shutter side="top" />
+          <SplitReveal.Shutter side="bottom" />
+          <SplitReveal.Progress />
+        </SplitReveal.Overlay>
+      </SplitReveal>
 
       <PhotographerPortfolioNotes />
     </>

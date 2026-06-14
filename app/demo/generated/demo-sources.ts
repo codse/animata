@@ -2918,25 +2918,19 @@ export default function PhotographerPortfolio() {
       </section>
 
       <SplitReveal
-        images={PRELOAD_IMAGES}
         backgroundColor={CANVAS}
         foregroundColor={INK}
         zIndex={120}
         lockScroll
         onComplete={() => setPreloaderDone(true)}
-        renderProgress={({ loaded, total, progress }) => (
-          <>
-            <SplitReveal.ProgressTrack progress={progress} foregroundColor={INK} />
-            <p className="mt-3 text-center text-[11px] font-medium uppercase tracking-[0.12em] text-black/45">
-              Loading frames
-              <span className="px-1.5 text-black/20">·</span>
-              {String(loaded).padStart(2, "0")}
-              <span className="text-black/20">/</span>
-              {String(total).padStart(2, "0")}
-            </p>
-          </>
-        )}
-      />
+      >
+        <SplitReveal.Images urls={PRELOAD_IMAGES} />
+        <SplitReveal.Overlay>
+          <SplitReveal.Shutter side="top" />
+          <SplitReveal.Shutter side="bottom" />
+          <SplitReveal.Progress />
+        </SplitReveal.Overlay>
+      </SplitReveal>
 
       <PhotographerPortfolioNotes />
     </>
@@ -3308,25 +3302,19 @@ export default function PhotographerPortfolio() {
 <span class="line"><span style="color:#24292E">      &#x3C;/</span><span style="color:#22863A">section</span><span style="color:#24292E">></span></span>
 <span class="line"></span>
 <span class="line"><span style="color:#24292E">      &#x3C;</span><span style="color:#005CC5">SplitReveal</span></span>
-<span class="line"><span style="color:#6F42C1">        images</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#005CC5">PRELOAD_IMAGES</span><span style="color:#24292E">}</span></span>
 <span class="line"><span style="color:#6F42C1">        backgroundColor</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#005CC5">CANVAS</span><span style="color:#24292E">}</span></span>
 <span class="line"><span style="color:#6F42C1">        foregroundColor</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#005CC5">INK</span><span style="color:#24292E">}</span></span>
 <span class="line"><span style="color:#6F42C1">        zIndex</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#005CC5">120</span><span style="color:#24292E">}</span></span>
 <span class="line"><span style="color:#6F42C1">        lockScroll</span></span>
 <span class="line"><span style="color:#6F42C1">        onComplete</span><span style="color:#D73A49">=</span><span style="color:#24292E">{() </span><span style="color:#D73A49">=></span><span style="color:#6F42C1"> setPreloaderDone</span><span style="color:#24292E">(</span><span style="color:#005CC5">true</span><span style="color:#24292E">)}</span></span>
-<span class="line"><span style="color:#6F42C1">        renderProgress</span><span style="color:#D73A49">=</span><span style="color:#24292E">{({ </span><span style="color:#E36209">loaded</span><span style="color:#24292E">, </span><span style="color:#E36209">total</span><span style="color:#24292E">, </span><span style="color:#E36209">progress</span><span style="color:#24292E"> }) </span><span style="color:#D73A49">=></span><span style="color:#24292E"> (</span></span>
-<span class="line"><span style="color:#24292E">          &#x3C;></span></span>
-<span class="line"><span style="color:#24292E">            &#x3C;</span><span style="color:#005CC5">SplitReveal.ProgressTrack</span><span style="color:#6F42C1"> progress</span><span style="color:#D73A49">=</span><span style="color:#24292E">{progress} </span><span style="color:#6F42C1">foregroundColor</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#005CC5">INK</span><span style="color:#24292E">} /></span></span>
-<span class="line"><span style="color:#24292E">            &#x3C;</span><span style="color:#22863A">p</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"mt-3 text-center text-[11px] font-medium uppercase tracking-[0.12em] text-black/45"</span><span style="color:#24292E">></span></span>
-<span class="line"><span style="color:#24292E">              Loading frames</span></span>
-<span class="line"><span style="color:#24292E">              &#x3C;</span><span style="color:#22863A">span</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"px-1.5 text-black/20"</span><span style="color:#24292E">>·&#x3C;/</span><span style="color:#22863A">span</span><span style="color:#24292E">></span></span>
-<span class="line"><span style="color:#24292E">              {</span><span style="color:#6F42C1">String</span><span style="color:#24292E">(loaded).</span><span style="color:#6F42C1">padStart</span><span style="color:#24292E">(</span><span style="color:#005CC5">2</span><span style="color:#24292E">, </span><span style="color:#032F62">"0"</span><span style="color:#24292E">)}</span></span>
-<span class="line"><span style="color:#24292E">              &#x3C;</span><span style="color:#22863A">span</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"text-black/20"</span><span style="color:#24292E">>/&#x3C;/</span><span style="color:#22863A">span</span><span style="color:#24292E">></span></span>
-<span class="line"><span style="color:#24292E">              {</span><span style="color:#6F42C1">String</span><span style="color:#24292E">(total).</span><span style="color:#6F42C1">padStart</span><span style="color:#24292E">(</span><span style="color:#005CC5">2</span><span style="color:#24292E">, </span><span style="color:#032F62">"0"</span><span style="color:#24292E">)}</span></span>
-<span class="line"><span style="color:#24292E">            &#x3C;/</span><span style="color:#22863A">p</span><span style="color:#24292E">></span></span>
-<span class="line"><span style="color:#24292E">          &#x3C;/></span></span>
-<span class="line"><span style="color:#24292E">        )}</span></span>
-<span class="line"><span style="color:#24292E">      /></span></span>
+<span class="line"><span style="color:#24292E">      ></span></span>
+<span class="line"><span style="color:#24292E">        &#x3C;</span><span style="color:#005CC5">SplitReveal.Images</span><span style="color:#6F42C1"> urls</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#005CC5">PRELOAD_IMAGES</span><span style="color:#24292E">} /></span></span>
+<span class="line"><span style="color:#24292E">        &#x3C;</span><span style="color:#005CC5">SplitReveal.Overlay</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">          &#x3C;</span><span style="color:#005CC5">SplitReveal.Shutter</span><span style="color:#6F42C1"> side</span><span style="color:#D73A49">=</span><span style="color:#032F62">"top"</span><span style="color:#24292E"> /></span></span>
+<span class="line"><span style="color:#24292E">          &#x3C;</span><span style="color:#005CC5">SplitReveal.Shutter</span><span style="color:#6F42C1"> side</span><span style="color:#D73A49">=</span><span style="color:#032F62">"bottom"</span><span style="color:#24292E"> /></span></span>
+<span class="line"><span style="color:#24292E">          &#x3C;</span><span style="color:#005CC5">SplitReveal.Progress</span><span style="color:#24292E"> /></span></span>
+<span class="line"><span style="color:#24292E">        &#x3C;/</span><span style="color:#005CC5">SplitReveal.Overlay</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">      &#x3C;/</span><span style="color:#005CC5">SplitReveal</span><span style="color:#24292E">></span></span>
 <span class="line"></span>
 <span class="line"><span style="color:#24292E">      &#x3C;</span><span style="color:#005CC5">PhotographerPortfolioNotes</span><span style="color:#24292E"> /></span></span>
 <span class="line"><span style="color:#24292E">    &#x3C;/></span></span>
@@ -3698,25 +3686,19 @@ export default function PhotographerPortfolio() {
 <span class="line"><span style="color:#E1E4E8">      &#x3C;/</span><span style="color:#85E89D">section</span><span style="color:#E1E4E8">></span></span>
 <span class="line"></span>
 <span class="line"><span style="color:#E1E4E8">      &#x3C;</span><span style="color:#79B8FF">SplitReveal</span></span>
-<span class="line"><span style="color:#B392F0">        images</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#79B8FF">PRELOAD_IMAGES</span><span style="color:#E1E4E8">}</span></span>
 <span class="line"><span style="color:#B392F0">        backgroundColor</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#79B8FF">CANVAS</span><span style="color:#E1E4E8">}</span></span>
 <span class="line"><span style="color:#B392F0">        foregroundColor</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#79B8FF">INK</span><span style="color:#E1E4E8">}</span></span>
 <span class="line"><span style="color:#B392F0">        zIndex</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#79B8FF">120</span><span style="color:#E1E4E8">}</span></span>
 <span class="line"><span style="color:#B392F0">        lockScroll</span></span>
 <span class="line"><span style="color:#B392F0">        onComplete</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{() </span><span style="color:#F97583">=></span><span style="color:#B392F0"> setPreloaderDone</span><span style="color:#E1E4E8">(</span><span style="color:#79B8FF">true</span><span style="color:#E1E4E8">)}</span></span>
-<span class="line"><span style="color:#B392F0">        renderProgress</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{({ </span><span style="color:#FFAB70">loaded</span><span style="color:#E1E4E8">, </span><span style="color:#FFAB70">total</span><span style="color:#E1E4E8">, </span><span style="color:#FFAB70">progress</span><span style="color:#E1E4E8"> }) </span><span style="color:#F97583">=></span><span style="color:#E1E4E8"> (</span></span>
-<span class="line"><span style="color:#E1E4E8">          &#x3C;></span></span>
-<span class="line"><span style="color:#E1E4E8">            &#x3C;</span><span style="color:#79B8FF">SplitReveal.ProgressTrack</span><span style="color:#B392F0"> progress</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{progress} </span><span style="color:#B392F0">foregroundColor</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#79B8FF">INK</span><span style="color:#E1E4E8">} /></span></span>
-<span class="line"><span style="color:#E1E4E8">            &#x3C;</span><span style="color:#85E89D">p</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"mt-3 text-center text-[11px] font-medium uppercase tracking-[0.12em] text-black/45"</span><span style="color:#E1E4E8">></span></span>
-<span class="line"><span style="color:#E1E4E8">              Loading frames</span></span>
-<span class="line"><span style="color:#E1E4E8">              &#x3C;</span><span style="color:#85E89D">span</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"px-1.5 text-black/20"</span><span style="color:#E1E4E8">>·&#x3C;/</span><span style="color:#85E89D">span</span><span style="color:#E1E4E8">></span></span>
-<span class="line"><span style="color:#E1E4E8">              {</span><span style="color:#B392F0">String</span><span style="color:#E1E4E8">(loaded).</span><span style="color:#B392F0">padStart</span><span style="color:#E1E4E8">(</span><span style="color:#79B8FF">2</span><span style="color:#E1E4E8">, </span><span style="color:#9ECBFF">"0"</span><span style="color:#E1E4E8">)}</span></span>
-<span class="line"><span style="color:#E1E4E8">              &#x3C;</span><span style="color:#85E89D">span</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"text-black/20"</span><span style="color:#E1E4E8">>/&#x3C;/</span><span style="color:#85E89D">span</span><span style="color:#E1E4E8">></span></span>
-<span class="line"><span style="color:#E1E4E8">              {</span><span style="color:#B392F0">String</span><span style="color:#E1E4E8">(total).</span><span style="color:#B392F0">padStart</span><span style="color:#E1E4E8">(</span><span style="color:#79B8FF">2</span><span style="color:#E1E4E8">, </span><span style="color:#9ECBFF">"0"</span><span style="color:#E1E4E8">)}</span></span>
-<span class="line"><span style="color:#E1E4E8">            &#x3C;/</span><span style="color:#85E89D">p</span><span style="color:#E1E4E8">></span></span>
-<span class="line"><span style="color:#E1E4E8">          &#x3C;/></span></span>
-<span class="line"><span style="color:#E1E4E8">        )}</span></span>
-<span class="line"><span style="color:#E1E4E8">      /></span></span>
+<span class="line"><span style="color:#E1E4E8">      ></span></span>
+<span class="line"><span style="color:#E1E4E8">        &#x3C;</span><span style="color:#79B8FF">SplitReveal.Images</span><span style="color:#B392F0"> urls</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#79B8FF">PRELOAD_IMAGES</span><span style="color:#E1E4E8">} /></span></span>
+<span class="line"><span style="color:#E1E4E8">        &#x3C;</span><span style="color:#79B8FF">SplitReveal.Overlay</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">          &#x3C;</span><span style="color:#79B8FF">SplitReveal.Shutter</span><span style="color:#B392F0"> side</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"top"</span><span style="color:#E1E4E8"> /></span></span>
+<span class="line"><span style="color:#E1E4E8">          &#x3C;</span><span style="color:#79B8FF">SplitReveal.Shutter</span><span style="color:#B392F0"> side</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"bottom"</span><span style="color:#E1E4E8"> /></span></span>
+<span class="line"><span style="color:#E1E4E8">          &#x3C;</span><span style="color:#79B8FF">SplitReveal.Progress</span><span style="color:#E1E4E8"> /></span></span>
+<span class="line"><span style="color:#E1E4E8">        &#x3C;/</span><span style="color:#79B8FF">SplitReveal.Overlay</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">      &#x3C;/</span><span style="color:#79B8FF">SplitReveal</span><span style="color:#E1E4E8">></span></span>
 <span class="line"></span>
 <span class="line"><span style="color:#E1E4E8">      &#x3C;</span><span style="color:#79B8FF">PhotographerPortfolioNotes</span><span style="color:#E1E4E8"> /></span></span>
 <span class="line"><span style="color:#E1E4E8">    &#x3C;/></span></span>
