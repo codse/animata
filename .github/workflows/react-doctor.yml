@@ -1,46 +1,29 @@
 name: React Doctor
 
 on:
+  # Scans the PR's changed files and posts a sticky summary comment listing only the new issues introduced relative to the merge base of the target branch.
   pull_request:
-    branches:
-      - main
+    types: [opened, synchronize, reopened, ready_for_review]
+  # Scans `main` on every push to track the health-score trend and catch regressions that slipped past PR review.
   push:
-    branches:
-      - main
+    branches: [main]
 
 permissions:
   contents: read
-  pull-requests: read
+  pull-requests: write
+  issues: write
+  statuses: write
+
+# Cancels any in-flight scan for the same PR (or branch, on push) the moment a new commit arrives, so reviewers only ever see the latest run.
+concurrency:
+  group: react-doctor-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
 
 jobs:
   react-doctor:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           fetch-depth: 0
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: 11.5.0
-
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: "22"
-          cache: "pnpm"
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-
-      - name: Run React Doctor
-        uses: millionco/react-doctor@75932719d11ef50e110eac01ce04acdc05fde074 # v2
-        with:
-          scope: changed
-          blocking: error
-          version: "0.5.5"
-          comment: "false"
-          review-comments: "false"
-          commit-status: "false"
+      - uses: millionco/react-doctor@v2
