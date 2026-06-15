@@ -18,11 +18,7 @@ author: morphhyy
 <Steps>
 <Step>Install dependencies</Step>
 
-This uses [Marquee](/docs/container/marquee) for the text. Install it by following the instructions [here](/docs/container/marquee#installation).
-
-```bash
-npm install motion
-```
+This uses [Flip Card](/docs/card/flip-card) for the hover flip. Install it by following its installation steps.
 
 <Step>Run the following command</Step>
 
@@ -41,6 +37,38 @@ Open the newly created file and paste the following code:
 ```
 
 </Steps>
+
+## Usage
+
+`FlippingCards` is bare bones: a responsive grid wrapper and sized flip items. Each `FlippingCards.Item` wraps [Flip Card](/docs/card/flip-card) mechanics — use `Item.Front` and `Item.Back` for face markup.
+
+The Storybook demo shows a typography grid with per-card accent colors via `getFlippingCardsAccent(index)`.
+
+```tsx
+import FlippingCards, { getFlippingCardsAccent } from "@/animata/list/flipping-cards";
+
+<FlippingCards>
+  {items.map((item, index) => (
+    <FlippingCards.Item key={item.id}>
+      <FlippingCards.Item.Front className="flex bg-white p-4">
+        <span>{item.label}</span>
+      </FlippingCards.Item.Front>
+      <FlippingCards.Item.Back
+        className="flex flex-col p-4"
+        style={{ backgroundColor: getFlippingCardsAccent(index) }}
+      >
+        <p>{item.detail}</p>
+      </FlippingCards.Item.Back>
+    </FlippingCards.Item>
+  ))}
+</FlippingCards>
+```
+
+Override grid or card size with `className` on `FlippingCards` or each `Item`.
+
+## Changelog
+
+- **2026-06** — Replaced the `list` prop and inline 3D flip with composable `FlippingCards.Item`, `Item.Front`, and `Item.Back` built on Flip Card.
 
 ## Credits
 

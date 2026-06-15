@@ -35,11 +35,17 @@ export const Primary: Story = {
       <p className="flex full-content items-center justify-center bg-zinc-100 max-w-md text-center text-balance leading-loose text-xl tracking-tight text-zinc-900 px-6 py-12">
         Page content mounts normally. SplitReveal covers it until images load.
       </p>
-      <SplitReveal {...args} />
+      <SplitReveal {...args}>
+        <SplitReveal.Images urls={SAMPLE_IMAGES} />
+        <SplitReveal.Overlay>
+          <SplitReveal.Shutter side="top" />
+          <SplitReveal.Shutter side="bottom" />
+          <SplitReveal.Progress />
+        </SplitReveal.Overlay>
+      </SplitReveal>
     </>
   ),
   args: {
-    images: SAMPLE_IMAGES,
     backgroundColor: "#fff",
     foregroundColor: "#000",
     revealDuration: 0.85,

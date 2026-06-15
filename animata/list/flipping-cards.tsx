@@ -1,93 +1,36 @@
-import { PlusCircle } from "lucide-react";
+import type { ComponentProps } from "react";
 
-import Marquee from "@/animata/container/marquee";
+import FlipCard, { FlipCardBack, FlipCardFront } from "@/animata/card/flip-card";
 import { cn } from "@/lib/utils";
 
-interface CardProps {
-  show: React.ReactNode;
-  reveal: React.ReactNode;
-  revealColor: string;
+type FlippingCardsRootProps = ComponentProps<"div">;
+
+function FlippingCardsRoot({ className, ...props }: FlippingCardsRootProps) {
+  return <div className={cn("grid grid-cols-3 gap-5 max-sm:grid-cols-2", className)} {...props} />;
 }
 
-interface CardDetailsProps extends React.HTMLAttributes<HTMLDivElement> {
-  title: string;
-  font: string;
-  image: string;
-  index?: number;
-}
+type FlippingCardsItemProps = ComponentProps<typeof FlipCard>;
 
-interface FlippingCardProps {
-  list: CardDetailsProps[];
-}
-
-const Card = ({ show, reveal, revealColor }: CardProps) => {
-  const common = "absolute flex w-full h-full  [backface-visibility:hidden]";
+function FlippingCardsItem({ className, ...props }: FlippingCardsItemProps) {
   return (
-    <div className={cn("group/flip h-60 w-48 [perspective:1000px]")}>
-      <div
-        className={cn(
-          "relative h-full transition-transform delay-75 duration-500 ease-linear [transform-style:preserve-3d] group-hover/flip:[transform:rotateY(-180deg)]",
-        )}
-      >
-        <div className={cn("bg-white", common)}>{show}</div>
-        <div
-          className={cn("[transform:rotateY(180deg)]", common)}
-          style={{ backgroundColor: revealColor }}
-        >
-          {reveal}
-        </div>
-      </div>
-    </div>
+    <FlipCard className={cn("h-60 w-48 [&>div]:rounded-none", className)} rotate="y" {...props} />
   );
+}
+
+const FlippingCardsItemWithFaces = Object.assign(FlippingCardsItem, {
+  Front: FlipCardFront,
+  Back: FlipCardBack,
+});
+
+const FlippingCards = Object.assign(FlippingCardsRoot, {
+  Item: FlippingCardsItemWithFaces,
+}) as typeof FlippingCardsRoot & {
+  Item: typeof FlippingCardsItemWithFaces;
 };
 
-const CardDetails = ({ title, image, font, index }: CardDetailsProps) => {
-  const revealColor = `hsl(${((index ?? 0) * 47) % 360} 45% 55%)`;
-
-  return (
-    <Card
-      revealColor={revealColor}
-      show={
-        <div className="flex w-full flex-col border-[1px] border-black/15 px-3 py-4 text-sm">
-          <span className="border-t-2 border-black text-black pt-1">{font}</span>
-
-          <span className="mt-4 border-b-2 border-black text-black px-1 font-serif text-8xl">
-            {title}
-          </span>
-          <div className="mt-12 flex items-center justify-between">
-            <span>{(index ?? 0) + 1}</span>
-            <PlusCircle size={18} />
-          </div>
-        </div>
-      }
-      reveal={
-        <div className="flex w-full flex-col justify-between overflow-hidden py-4 text-sm">
-          <img alt="" src={image} className="size-32 px-2" />
-          <Marquee className="font-serif text-5xl text-white" applyMask={false}>
-            {font.split(" ")[0]}
-          </Marquee>
-          <div className="flex items-center justify-between px-3">
-            <span className="text-black">See more</span>
-            <PlusCircle size={18} color="black" />
-          </div>
-        </div>
-      }
-    />
-  );
-};
-
-export default function FlippingCard({ list }: FlippingCardProps) {
-  return (
-    <div className="grid grid-cols-3 gap-5 max-sm:grid-cols-2">
-      {list.map((item, index) => (
-        <CardDetails
-          key={`card_${index}`}
-          index={index}
-          title={item.title}
-          font={item.font}
-          image={item.image}
-        />
-      ))}
-    </div>
-  );
+export function getFlippingCardsAccent(_index: number) {
+  return "hsl(var(--accent))";
 }
+
+export default FlippingCards;
+export { FlippingCards, FlippingCardsItemWithFaces as FlippingCardsItem };

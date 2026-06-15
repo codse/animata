@@ -12,11 +12,13 @@ const SITE_URL = (process.env.NEXT_PUBLIC_APP_URL || "https://animata.design").r
 const INSTALL_FIXTURES = [
   {
     id: "simple",
-    label: "single file, no npm deps",
+    label: "modular preloader + bundled hooks",
     item: "preloader/split-reveal.json",
     expectFiles: [
       "components/animata/preloader/split-reveal.tsx",
       "components/animata/preloader/split-reveal.css",
+      "hooks/use-lock-body.ts",
+      "hooks/use-prefers-reduced-motion.ts",
     ],
     expectDeps: [],
   },
@@ -34,7 +36,7 @@ const INSTALL_FIXTURES = [
     id: "doc-bundled-shapes",
     label: "mdx bundled file refs + shape imports",
     item: "card/card-stack.json",
-    expectFiles: ["components/animata/card/card-stack.tsx"],
+    expectFiles: ["components/animata/card/card-stack.tsx", "hooks/use-prefers-reduced-motion.ts"],
     expectDeps: ["motion"],
   },
   {

@@ -87,6 +87,18 @@ Ran a site-wide react-doctor remediation pass and cleared the scan to zero error
     <h3>Card Stack</h3>
     <p>Trimmed the component to bare-bones stack mechanics (`CardStack`, `Viewport`, `List`, `Card`, `Trigger`). Profile card UI — masks, header, media, metrics — moved to the Storybook demo composition. Added `full` on `Trigger` for click-anywhere overlay vs discrete button.</p>
   </ChangeLogEntry>
+  <ChangeLogEntry href="/docs/card/flip-card">
+    <h3>Flip Card</h3>
+    <p>Replaced fixed image/title/description props with composable `FlipCard.Front` and `FlipCard.Back` faces. Hover flip along X or Y stays on the root.</p>
+  </ChangeLogEntry>
+  <ChangeLogEntry href="/docs/list/flipping-cards">
+    <h3>Flipping Cards</h3>
+    <p>Replaced the `list` prop and inline flip markup with `FlippingCards`, `Item`, `Item.Front`, and `Item.Back` — grid layout on the list, flip mechanics delegated to Flip Card.</p>
+  </ChangeLogEntry>
+  <ChangeLogEntry href="/docs/preloader/split-reveal">
+    <h3>Split Reveal</h3>
+    <p>Moved image preloading to opt-in `SplitReveal.Images`. Added `SplitReveal.Task` for custom async or generator progress, plus `ready` and `progress` props for external boot control. Shutters and progress UI compose under `SplitReveal.Overlay`.</p>
+  </ChangeLogEntry>
 </ChangeLogComponents>
 
 ## Documentation
