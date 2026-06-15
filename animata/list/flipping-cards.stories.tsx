@@ -60,10 +60,10 @@ export const Primary: Story = {
     <FlippingCards>
       {demoItems.map((item, index) => (
         <FlippingCards.Item key={item.title}>
-          <FlippingCards.Item.Front className="flex bg-white">
-            <div className="flex w-full flex-col border border-black/15 px-3 py-4 text-sm">
-              <span className="border-t-2 border-black pt-1 text-black">{item.font}</span>
-              <span className="mt-4 border-b-2 border-black px-1 font-serif text-8xl text-black">
+          <FlippingCards.Item.Front className="flex bg-background">
+            <div className="flex w-full flex-col border border-border px-3 py-4 text-sm text-foreground">
+              <span className="border-t-2 border-foreground pt-1">{item.font}</span>
+              <span className="mt-4 border-b-2 border-foreground px-1 font-serif text-8xl">
                 {item.title}
               </span>
               <div className="mt-12 flex items-center justify-between">

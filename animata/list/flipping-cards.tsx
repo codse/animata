@@ -28,8 +28,8 @@ const FlippingCards = Object.assign(FlippingCardsRoot, {
   Item: typeof FlippingCardsItemWithFaces;
 };
 
-export function getFlippingCardsAccent(index: number) {
-  return `hsl(${(index * 47) % 360} 45% 55%)`;
+export function getFlippingCardsAccent(_index: number) {
+  return "hsl(var(--accent))";
 }
 
 export default FlippingCards;
