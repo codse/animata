@@ -25,6 +25,7 @@ const SplitReveal = Object.assign(SplitRevealRoot, {
 
 export default SplitReveal;
 
+export { usePrefersReducedMotion } from "@/hooks/use-prefers-reduced-motion";
 export { useSplitReveal, useSplitRevealInternal } from "./context";
 export { executeTask } from "./execute-task";
 export { SplitRevealImages } from "./images";
@@ -49,5 +50,3 @@ export type {
   SplitRevealTaskGenerator,
   SplitRevealTaskRun,
 } from "./types";
-export { usePrefersReducedMotion } from "./use-prefers-reduced-motion";
-export { useScrollLock } from "./use-scroll-lock";

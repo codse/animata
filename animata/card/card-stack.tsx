@@ -14,8 +14,8 @@ import {
   useMemo,
   useRef,
   useState,
-  useSyncExternalStore,
 } from "react";
+import { usePrefersReducedMotion } from "@/hooks/use-prefers-reduced-motion";
 import { cn } from "@/lib/utils";
 
 export interface CardStackItem {
@@ -86,20 +86,6 @@ export function createCardStackThrowImpulse(): CardStackThrowImpulse {
 
 const CARD_STACK_STACK_ORIGIN = "50% 0%";
 const CARD_STACK_EXIT_Y = "200%";
-
-function subscribeReducedMotion(callback: () => void) {
-  const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
-  mq.addEventListener("change", callback);
-  return () => mq.removeEventListener("change", callback);
-}
-
-function getReducedMotionSnapshot() {
-  return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-}
-
-function usePrefersReducedMotion() {
-  return useSyncExternalStore(subscribeReducedMotion, getReducedMotionSnapshot, () => false);
-}
 
 export function getCardStackLayers(
   reducedMotion: boolean,

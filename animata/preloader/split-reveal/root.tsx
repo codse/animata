@@ -2,6 +2,9 @@
 
 import { useCallback, useEffect, useMemo, useReducer, useRef, useState } from "react";
 
+import { useLockBody } from "@/hooks/use-lock-body";
+import { usePrefersReducedMotion } from "@/hooks/use-prefers-reduced-motion";
+
 import { SplitRevealContext, SplitRevealInternalContext } from "./context";
 import { executeTask } from "./execute-task";
 import type {
@@ -11,8 +14,6 @@ import type {
   SplitRevealRootProps,
   SplitRevealTaskDefinition,
 } from "./types";
-import { usePrefersReducedMotion } from "./use-prefers-reduced-motion";
-import { useScrollLock } from "./use-scroll-lock";
 
 export function SplitRevealRoot({
   children,
@@ -31,6 +32,9 @@ export function SplitRevealRoot({
   const onCompleteRef = useRef(onComplete);
   const phaseRef = useRef<PreloaderPhase>("loading");
   const tasksRef = useRef<Map<string, SplitRevealTaskDefinition>>(new Map());
+  const bootstrappedRef = useRef(false);
+  const controlledProgressRef = useRef(controlledProgress);
+  controlledProgressRef.current = controlledProgress;
   const [bootstrapEpoch, setBootstrapEpoch] = useState(0);
 
   const requestBootstrap = useCallback(() => {
@@ -105,7 +109,7 @@ export function SplitRevealRoot({
       const isNew = !tasksRef.current.has(id);
       tasksRef.current.set(id, task);
 
-      if (isNew && phaseRef.current === "loading") {
+      if (isNew && phaseRef.current === "loading" && bootstrappedRef.current) {
         requestBootstrap();
       }
 
@@ -210,10 +214,11 @@ export function SplitRevealRoot({
       const hasTasks = tasks.length > 0;
 
       if (!hasTasks) {
-        const nextTotal = controlledProgress?.total ?? 0;
-        const nextLoaded = controlledProgress?.loaded ?? 0;
+        const progress = controlledProgressRef.current;
+        const nextTotal = progress?.total ?? 0;
+        const nextLoaded = progress?.loaded ?? 0;
         dispatchPreload({ type: "reset", total: nextTotal });
-        if (controlledProgress !== undefined) {
+        if (progress !== undefined) {
           dispatchPreload({
             type: "progress",
             loaded: nextLoaded,
@@ -249,23 +254,17 @@ export function SplitRevealRoot({
     };
 
     bootstrapRef.current = bootstrap;
+    bootstrappedRef.current = true;
     bootstrap();
 
     return () => {
       runId += 1;
+      bootstrappedRef.current = false;
       clearTimers();
       abortController?.abort();
       bootstrapRef.current = null;
     };
-  }, [
-    controlledProgress,
-    controlledReady,
-    holdMs,
-    progressFadeMs,
-    readyControlled,
-    reduceMotion,
-    revealDuration,
-  ]);
+  }, [controlledReady, holdMs, progressFadeMs, readyControlled, reduceMotion, revealDuration]);
 
   useEffect(() => {
     if (bootstrapEpoch === 0) {
@@ -304,7 +303,7 @@ export function SplitRevealRoot({
     };
   }, [requestBootstrap]);
 
-  useScrollLock(lockScroll && isActive);
+  useLockBody(lockScroll && isActive);
 
   const contextValue = useMemo(
     () => ({
