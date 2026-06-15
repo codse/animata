@@ -13,15 +13,27 @@ labels: ["new"]
 
 <RegistryInstall category="preloader" name="split-reveal" />
 
+The registry item installs the `split-reveal/` modules, `split-reveal.css`, and shared hooks at `hooks/use-lock-body.ts` and `hooks/use-prefers-reduced-motion.ts`.
+
 ### Manual
 
 <Steps>
+<Step>Copy shared hooks</Step>
+
+```jsx file=<rootDir>/hooks/use-lock-body.ts
+
+```
+
+```jsx file=<rootDir>/hooks/use-prefers-reduced-motion.ts
+
+```
+
 <Step>Run the following command</Step>
 
-It will create `split-reveal.tsx` and the co-located `split-reveal.css` inside `components/animata/preloader`.
+It will create `split-reveal.tsx`, the co-located `split-reveal/` modules, and `split-reveal.css` inside `components/animata/preloader`.
 
 ```bash
-mkdir -p components/animata/preloader && touch components/animata/preloader/split-reveal.tsx components/animata/preloader/split-reveal.css
+mkdir -p components/animata/preloader/split-reveal && touch components/animata/preloader/split-reveal.tsx components/animata/preloader/split-reveal.css
 ```
 
 <Step>Paste the code</Step>{" "}
