@@ -14,11 +14,11 @@ const FlipCardContext = createContext<FlipCardContextValue | null>(null);
 
 const ROTATION_CLASS = {
   x: {
-    hover: "group-hover/card:rotate-x-180 motion-reduce:group-hover/card:rotate-x-0",
+    hover: "group-hover/card:rotate-x-180",
     back: "rotate-x-180",
   },
   y: {
-    hover: "group-hover/card:rotate-y-180 motion-reduce:group-hover/card:rotate-y-0",
+    hover: "group-hover/card:rotate-y-180",
     back: "rotate-y-180",
   },
 } as const;

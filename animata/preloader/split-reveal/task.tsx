@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useId, useRef } from "react";
+import { useEffect, useId } from "react";
 
 import { useSplitRevealInternal } from "./context";
 import type {
@@ -17,15 +17,11 @@ export type SplitRevealTaskProps = {
 export function SplitRevealTask({ run, generator }: SplitRevealTaskProps) {
   const id = useId();
   const { registerTask } = useSplitRevealInternal();
-  const runRef = useRef(run);
-  const generatorRef = useRef(generator);
-  runRef.current = run;
-  generatorRef.current = generator;
 
   useEffect(() => {
     const task: SplitRevealTaskDefinition = {
-      run: runRef.current ? (ctx) => runRef.current?.(ctx) ?? Promise.resolve() : undefined,
-      generator: generatorRef.current,
+      run,
+      generator,
     };
 
     if (!task.run && !task.generator) {
@@ -33,7 +29,7 @@ export function SplitRevealTask({ run, generator }: SplitRevealTaskProps) {
     }
 
     return registerTask(id, task);
-  }, [id, registerTask]);
+  }, [id, registerTask, run, generator]);
 
   return null;
 }

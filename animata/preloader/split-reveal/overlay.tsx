@@ -6,7 +6,12 @@ import { cn } from "@/lib/utils";
 
 import { useSplitReveal } from "./context";
 
-export function SplitRevealOverlay({ className, children, ...props }: ComponentProps<"div">) {
+export function SplitRevealOverlay({
+  className,
+  children,
+  style,
+  ...props
+}: ComponentProps<"div">) {
   const { phase, zIndex, revealDuration, progressFadeMs, isActive } = useSplitReveal();
 
   if (!isActive) {
@@ -22,6 +27,7 @@ export function SplitRevealOverlay({ className, children, ...props }: ComponentP
       )}
       style={
         {
+          ...style,
           zIndex,
           "--split-reveal-duration": `${revealDuration}s`,
           "--split-reveal-progress-fade": `${progressFadeMs}ms`,

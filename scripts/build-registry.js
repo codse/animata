@@ -214,8 +214,13 @@ function registryFileEntry(ref, content) {
 
 function resolveRelativeImport(dir, spec) {
   const base = path.posix.normalize(path.posix.join(dir, spec));
+  const absBase = path.resolve(ROOT, base);
+  const relToRoot = path.relative(ROOT, absBase);
+  if (relToRoot.startsWith("..") || path.isAbsolute(relToRoot)) {
+    return null;
+  }
   if (path.extname(base)) {
-    return readIfExists(path.join(ROOT, base)) ? base : null;
+    return readIfExists(absBase) ? base : null;
   }
   for (const ext of [".tsx", ".ts"]) {
     const candidate = `${base}${ext}`;
@@ -265,7 +270,7 @@ function addBundledSourceFile(ref, files, bundledRefs, queue) {
 function parseImports(source) {
   const imports = [];
   const re =
-    /(?:import\s+(?:[^'"]*?\s+from\s+)?|export\s+(?:\*|\{[^}]*\})\s+from\s+)["']([^"']+)["']/g;
+    /(?:import\s+(?:[^'"]*?\s+from\s+)?|export\s+(?:type\s+)?(?:\*|\{[^}]*\})\s+from\s+)["']([^"']+)["']/g;
   for (const m of source.matchAll(re)) {
     imports.push(m[1]);
   }

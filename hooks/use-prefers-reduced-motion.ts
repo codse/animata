@@ -4,8 +4,17 @@ import { useSyncExternalStore } from "react";
 
 function subscribeReducedMotion(callback: () => void) {
   const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
-  mq.addEventListener("change", callback);
-  return () => mq.removeEventListener("change", callback);
+  if (typeof mq.addEventListener === "function") {
+    mq.addEventListener("change", callback);
+    return () => mq.removeEventListener("change", callback);
+  }
+
+  const legacyMq = mq as MediaQueryList & {
+    addListener: (listener: () => void) => void;
+    removeListener: (listener: () => void) => void;
+  };
+  legacyMq.addListener(callback);
+  return () => legacyMq.removeListener(callback);
 }
 
 function getReducedMotionSnapshot() {

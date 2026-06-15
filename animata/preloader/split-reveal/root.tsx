@@ -19,8 +19,8 @@ export function SplitRevealRoot({
   children,
   progress: controlledProgress,
   ready: controlledReady,
-  backgroundColor = "#fff",
-  foregroundColor = "#000",
+  backgroundColor = "hsl(var(--background))",
+  foregroundColor = "hsl(var(--foreground))",
   revealDuration = 0.85,
   progressFadeMs = 280,
   holdMs = 240,
@@ -34,7 +34,10 @@ export function SplitRevealRoot({
   const tasksRef = useRef<Map<string, SplitRevealTaskDefinition>>(new Map());
   const bootstrappedRef = useRef(false);
   const controlledProgressRef = useRef(controlledProgress);
+  const controlledReadyRef = useRef(controlledReady);
   controlledProgressRef.current = controlledProgress;
+  controlledReadyRef.current = controlledReady;
+  const maybeRevealRef = useRef<(() => void) | null>(null);
   const [bootstrapEpoch, setBootstrapEpoch] = useState(0);
 
   const requestBootstrap = useCallback(() => {
@@ -189,7 +192,7 @@ export function SplitRevealRoot({
     const maybeReveal = (currentRun: number) => {
       const hasTasks = tasksRef.current.size > 0;
       const tasksReady = !hasTasks || tasksDone;
-      const readyOk = !readyControlled || controlledReady === true;
+      const readyOk = !readyControlled || controlledReadyRef.current === true;
 
       if (!tasksReady || !readyOk) {
         return;
@@ -205,9 +208,11 @@ export function SplitRevealRoot({
     const bootstrap = () => {
       runId += 1;
       const currentRun = runId;
+      maybeRevealRef.current = () => maybeReveal(currentRun);
       clearTimers();
       abortController?.abort();
       abortController = new AbortController();
+      const signal = abortController.signal;
       tasksDone = false;
 
       const tasks = [...tasksRef.current.values()];
@@ -239,12 +244,8 @@ export function SplitRevealRoot({
         dispatchPreload({ type: "progress", loaded: next.loaded, total: next.total });
       };
 
-      Promise.all(
-        tasks.map((task) =>
-          executeTask(task, report, abortController?.signal ?? new AbortSignal()),
-        ),
-      ).then(() => {
-        if (currentRun !== runId || abortController?.signal.aborted) {
+      Promise.allSettled(tasks.map((task) => executeTask(task, report, signal))).then(() => {
+        if (currentRun !== runId || signal.aborted) {
           return;
         }
 
@@ -260,11 +261,20 @@ export function SplitRevealRoot({
     return () => {
       runId += 1;
       bootstrappedRef.current = false;
+      maybeRevealRef.current = null;
       clearTimers();
       abortController?.abort();
       bootstrapRef.current = null;
     };
-  }, [controlledReady, holdMs, progressFadeMs, readyControlled, reduceMotion, revealDuration]);
+  }, [holdMs, progressFadeMs, readyControlled, reduceMotion, revealDuration]);
+
+  useEffect(() => {
+    if (!readyControlled || controlledReady !== true) {
+      return;
+    }
+
+    maybeRevealRef.current?.();
+  }, [controlledReady, readyControlled]);
 
   useEffect(() => {
     if (bootstrapEpoch === 0) {

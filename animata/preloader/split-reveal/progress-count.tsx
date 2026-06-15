@@ -17,10 +17,10 @@ export function SplitRevealProgressCount({
         "mt-3 text-center text-[11px] font-medium tabular-nums tracking-[0.12em]",
         className,
       )}
-      style={{ color: `${foregroundColor}73` }}
+      style={{ color: `color-mix(in srgb, ${foregroundColor} 45%, transparent)` }}
     >
       {String(loaded).padStart(2, "0")}
-      <span style={{ color: `${foregroundColor}33` }}> / </span>
+      <span style={{ color: `color-mix(in srgb, ${foregroundColor} 20%, transparent)` }}> / </span>
       {String(total).padStart(2, "0")}
     </p>
   );

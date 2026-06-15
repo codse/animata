@@ -13,11 +13,16 @@ export async function executeTask(
   }
 
   if (task.generator) {
+    if (signal.aborted) {
+      return;
+    }
+
     const iterator = task.generator(ctx);
     let result = await iterator.next();
 
     while (!result.done) {
       if (signal.aborted) {
+        await iterator.return?.();
         return;
       }
       if (result.value) {

@@ -36,7 +36,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Run React Doctor
-        uses: millionco/react-doctor@v2
+        uses: millionco/react-doctor@75932719d11ef50e110eac01ce04acdc05fde074 # v2
         with:
           scope: changed
           blocking: error
