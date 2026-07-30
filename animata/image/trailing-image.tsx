@@ -12,7 +12,6 @@ import {
   useLayoutEffect,
   useRef,
 } from "react";
-
 import { useMousePosition } from "@/hooks/use-mouse-position";
 import { cn, getDistance, lerp } from "@/lib/utils";
 
@@ -38,85 +37,84 @@ interface AnimatedImageProps {
   onActivityChange?: (delta: number) => void;
 }
 
-const AnimatedImage = forwardRef<AnimatedImageRef, AnimatedImageProps>(
-  ({ src, onActivityChange }, ref) => {
-    const controls = useAnimation();
-    const isRunning = useRef(false);
-    const onActivityChangeRef = useRef(onActivityChange);
-    onActivityChangeRef.current = onActivityChange;
+const AnimatedImage = forwardRef<AnimatedImageRef, AnimatedImageProps>(function AnimatedImage(
+  { src, onActivityChange },
+  ref,
+) {
+  const controls = useAnimation();
+  const isRunning = useRef(false);
+  const onActivityChangeRef = useRef(onActivityChange);
+  onActivityChangeRef.current = onActivityChange;
 
-    useImperativeHandle(ref, () => ({
-      isActive: () => isRunning.current,
-      show: async ({
+  useImperativeHandle(ref, () => ({
+    isActive: () => isRunning.current,
+    show: async ({
+      x,
+      y,
+      newX,
+      newY,
+      zIndex,
+    }: {
+      x: number;
+      y: number;
+      zIndex: number;
+      newX: number;
+      newY: number;
+    }) => {
+      controls.stop();
+
+      controls.set({
+        opacity: isRunning.current ? 1 : 0.75,
+        zIndex,
         x,
         y,
-        newX,
-        newY,
-        zIndex,
-      }: {
-        x: number;
-        y: number;
-        zIndex: number;
-        newX: number;
-        newY: number;
-      }) => {
-        controls.stop();
+        scale: 1,
+        transition: { ease: "circOut" },
+      });
 
-        controls.set({
-          opacity: isRunning.current ? 1 : 0.75,
-          zIndex,
-          x,
-          y,
+      isRunning.current = true;
+      onActivityChangeRef.current?.(1);
+
+      try {
+        await controls.start({
+          opacity: 1,
+          x: newX,
+          y: newY,
           scale: 1,
-          transition: { ease: "circOut" },
+          transition: { duration: 0.9, ease: "circOut" },
         });
 
-        isRunning.current = true;
-        onActivityChangeRef.current?.(1);
-
-        try {
-          await controls.start({
-            opacity: 1,
+        await Promise.all([
+          controls.start({
             x: newX,
             y: newY,
-            scale: 1,
-            transition: { duration: 0.9, ease: "circOut" },
-          });
+            scale: 0.1,
+            transition: { duration: 1, ease: "easeInOut" },
+          }),
+          controls.start({
+            opacity: 0,
+            transition: { duration: 1.1, ease: "easeOut" },
+          }),
+        ]);
+      } finally {
+        isRunning.current = false;
+        onActivityChangeRef.current?.(-1);
+      }
+    },
+  }));
 
-          await Promise.all([
-            controls.start({
-              x: newX,
-              y: newY,
-              scale: 0.1,
-              transition: { duration: 1, ease: "easeInOut" },
-            }),
-            controls.start({
-              opacity: 0,
-              transition: { duration: 1.1, ease: "easeOut" },
-            }),
-          ]);
-        } finally {
-          isRunning.current = false;
-          onActivityChangeRef.current?.(-1);
-        }
-      },
-    }));
-
-    return (
-      <motion.img
-        initial={{ opacity: 0, scale: 1 }}
-        animate={controls}
-        src={src}
-        alt=""
-        aria-hidden
-        draggable={false}
-        className="pointer-events-none absolute h-56 w-44 -translate-x-1/2 -translate-y-1/2 select-none object-cover"
-      />
-    );
-  },
-);
-
-AnimatedImage.displayName = "AnimatedImage";
+  return (
+    <motion.img
+      initial={{ opacity: 0, scale: 1 }}
+      animate={controls}
+      src={src}
+      alt=""
+      aria-hidden
+      draggable={false}
+      className="pointer-events-none absolute h-56 w-44 -translate-x-1/2 -translate-y-1/2 select-none object-cover"
+    />
+  );
+});
 
 const DEFAULT_IMAGES = [
   "https://assets.lummi.ai/assets/Qma1aBRXFsApFohRJrpJczE5QXGY6HhHKz24ybuw1khbou?auto=format&w=500",
@@ -220,6 +218,15 @@ function useExcludeZoneRects(excludeRefs: RefObject<HTMLElement | null>[], enabl
   return { excludeRectsRef, measureExcludeRects };
 }
 
+const EMPTY_EXCLUDE_REFS: RefObject<HTMLElement | null>[] = [];
+
+function createTrailRefs(count: number) {
+  return Array.from(
+    { length: count },
+    () => createRef<AnimatedImageRef>() as RefObject<AnimatedImageRef>,
+  );
+}
+
 export default function TrailingImage({
   images = DEFAULT_IMAGES,
   className,
@@ -229,30 +236,29 @@ export default function TrailingImage({
   layerOnly = false,
   contained = false,
   contentClassName,
-  excludeRefs = [],
+  excludeRefs,
   maxTrailZIndex,
 }: TrailingImageProps) {
   const resolvedImages = images.length > 0 ? images : DEFAULT_IMAGES;
+  const resolvedExcludeRefs = excludeRefs ?? EMPTY_EXCLUDE_REFS;
   const containerRef = useRef<HTMLDivElement>(null);
   const trailCount = Math.max(20, resolvedImages.length);
-  const trailsRef = useRef(
-    Array.from(
-      { length: trailCount },
-      () => createRef<AnimatedImageRef>() as RefObject<AnimatedImageRef>,
-    ),
-  );
+  const trailsRef = useRef<RefObject<AnimatedImageRef>[] | null>(null);
+  if (!trailsRef.current || trailsRef.current.length !== trailCount) {
+    trailsRef.current = createTrailRefs(trailCount);
+  }
 
   const lastPosition = useRef({ x: 0, y: 0 });
   const cachedPosition = useRef({ x: 0, y: 0 });
   const imageIndex = useRef(0);
   const zIndex = useRef(1);
   const activeTrailCountRef = useRef(0);
-  const excludeRefsRef = useRef(excludeRefs);
-  excludeRefsRef.current = excludeRefs;
+  const excludeRefsRef = useRef(resolvedExcludeRefs);
+  excludeRefsRef.current = resolvedExcludeRefs;
   const maxTrailZIndexRef = useRef(maxTrailZIndex);
   maxTrailZIndexRef.current = maxTrailZIndex;
-  const hasExcludeZones = excludeRefs.length > 0;
-  const { excludeRectsRef } = useExcludeZoneRects(excludeRefs, hasExcludeZones);
+  const hasExcludeZones = resolvedExcludeRefs.length > 0;
+  const { excludeRectsRef } = useExcludeZoneRects(resolvedExcludeRefs, hasExcludeZones);
 
   const pendingPointerRef = useRef<{
     x: number;
@@ -300,14 +306,14 @@ export default function TrailingImage({
       cachedPosition.current = newCachePosition;
 
       if (distance > threshold) {
-        imageIndex.current = (imageIndex.current + 1) % trailsRef.current.length;
+        imageIndex.current = (imageIndex.current + 1) % (trailsRef.current?.length ?? 1);
         const nextZ = zIndex.current + 1;
         zIndex.current =
           maxTrailZIndexRef.current !== undefined
             ? Math.min(nextZ, maxTrailZIndexRef.current)
             : nextZ;
         lastPosition.current = cursor;
-        trailsRef.current[imageIndex.current].current?.show?.({
+        trailsRef.current?.[imageIndex.current]?.current?.show?.({
           x: newCachePosition.x,
           y: newCachePosition.y,
           zIndex: zIndex.current,

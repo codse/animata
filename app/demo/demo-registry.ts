@@ -22,7 +22,7 @@ export interface DemoRegistryEntry {
   components: DemoComponentLink[];
 }
 
-export const DEMO_REGISTRY: DemoRegistryEntry[] = registry;
+const DEMO_REGISTRY: DemoRegistryEntry[] = registry;
 
 export function componentDocHref(docSlug: string) {
   return `/docs/${docSlug}` as const;
@@ -32,7 +32,7 @@ export function demoHref(entry: Pick<DemoRegistryEntry, "groupSlug" | "itemSlug"
   return `/demo/${entry.groupSlug}/${entry.itemSlug}` as const;
 }
 
-export function getDemoRegistryEntry(key: string) {
+function getDemoRegistryEntry(key: string) {
   return DEMO_REGISTRY.find((entry) => entry.key === key);
 }
 
@@ -44,8 +44,4 @@ export function getDemosUsingComponent(docSlug: string) {
   return DEMO_REGISTRY.filter((entry) =>
     entry.components.some((component) => component.docSlug === docSlug),
   );
-}
-
-export function demoRegistryKey(groupSlug: string, itemSlug: string) {
-  return `${groupSlug}/${itemSlug}` as const;
 }

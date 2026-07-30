@@ -1,5 +1,4 @@
 import fs from "node:fs";
-import type { BlogPosting, WithContext } from "schema-dts";
 import { defineCollection, defineConfig, s } from "velite";
 
 function getDateModified(data: { dateModified?: string; date?: string; path: string }) {
@@ -16,34 +15,11 @@ function getDateModified(data: { dateModified?: string; date?: string; path: str
   );
 }
 
-function buildStructuredData(data: {
-  title: string;
-  date?: string;
-  description: string;
-  author?: string;
-  path: string;
-  dateModified: string;
-}) {
-  return {
-    "@context": "https://schema.org",
-    "@type": "BlogPosting",
-    headline: data.title,
-    datePublished: data.date,
-    dateModified: data.dateModified,
-    description: data.description,
-    image: `/api/og?title=${encodeURI(data.title)}`,
-    url: `https://animata.design/${data.path}`,
-    author: {
-      "@type": "Person",
-      name: data.author,
-      url: `https://twitter.com/${data.author}`,
-    },
-  } as WithContext<BlogPosting>;
-}
-
 const contentSchema = s.object({
   title: s.string(),
   description: s.string(),
+  seoTitle: s.string().optional(),
+  seoDescription: s.string().optional(),
   date: s.isodate().optional(),
   published: s.boolean().default(true),
   links: s
@@ -75,7 +51,6 @@ const docs = defineCollection({
       slug: `/${data.path}`,
       slugAsParams: data.path.split("/").slice(1).join("/"),
       dateModified,
-      structuredData: buildStructuredData({ ...data, dateModified }),
     };
   }),
 });
@@ -92,7 +67,6 @@ const blogs = defineCollection({
       slug: `/${data.path}`,
       slugAsParams: data.path.split("/").slice(1).join("/"),
       dateModified,
-      structuredData: buildStructuredData({ ...data, dateModified }),
     };
   }),
 });

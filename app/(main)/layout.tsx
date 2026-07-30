@@ -10,15 +10,13 @@ interface MainLayoutProps {
 export default function MainLayout({ children }: MainLayoutProps) {
   return (
     <CSPostHogProvider>
-      <div vaul-drawer-wrapper="">
-        <div
-          style={{ "--site-header-height": "50px" }}
-          className="relative flex min-h-screen flex-col bg-background"
-        >
-          <SiteHeader />
-          <main className="flex-1">{children}</main>
-          <SiteFooter />
-        </div>
+      <div
+        style={{ "--site-header-height": "50px" }}
+        className="relative flex min-h-screen flex-col bg-background"
+      >
+        <SiteHeader />
+        <main className="flex-1">{children}</main>
+        <SiteFooter />
       </div>
       <TailwindIndicator />
     </CSPostHogProvider>

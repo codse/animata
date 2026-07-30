@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useLayoutEffect, useMemo, useRef, useState } from "react";
 
 import { cn } from "@/lib/utils";
 
@@ -22,19 +22,21 @@ interface SurveyCardProps {
 }
 
 export default function SurveyCard({ items, width: providedWidth, surveyTitle }: SurveyCardProps) {
-  const [{ width }, setSize] = useState({
-    width: providedWidth ?? 250,
-  });
-  // Calculate total votes and max votes using useMemo
   const totalVotes = useMemo(() => items.reduce((acc, item) => acc + item.vote, 0), [items]);
   const maxVote = useMemo(() => Math.max(...items.map((item) => item.vote)), [items]);
 
   const containerRef = useRef<HTMLDivElement>(null);
+  const [measuredWidth, setMeasuredWidth] = useState<number | undefined>();
+  const width = providedWidth ?? measuredWidth ?? 250;
 
-  useEffect(() => {
-    setSize({
-      width: providedWidth ?? containerRef.current?.offsetWidth ?? 250,
-    });
+  useLayoutEffect(() => {
+    if (providedWidth !== undefined || !containerRef.current) return;
+    const node = containerRef.current;
+    const updateWidth = () => setMeasuredWidth(node.offsetWidth);
+    updateWidth();
+    const observer = new ResizeObserver(updateWidth);
+    observer.observe(node);
+    return () => observer.disconnect();
   }, [providedWidth]);
 
   const [isParentHovered, setIsParentHovered] = useState(false);
@@ -56,6 +58,8 @@ export default function SurveyCard({ items, width: providedWidth, surveyTitle }:
       style={{ width }}
       onMouseOver={handleParentMouseOver}
       onMouseOut={handleParentMouseOut}
+      onFocus={handleParentMouseOver}
+      onBlur={handleParentMouseOut}
     >
       <div className="flex w-full justify-start">
         <h1 className="text-2xl font-bold">{surveyTitle}</h1>

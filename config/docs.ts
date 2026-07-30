@@ -19,19 +19,19 @@ const sortAlphabetically = (a: SidebarNavItem, b: SidebarNavItem) => {
 
 const createLinks = (category: string) => {
   return allDocs
-    .filter(
-      (doc) =>
-        doc.slug.startsWith(`/docs/${category}`) &&
-        doc.published &&
-        doc.slug !== `/docs/${category}`,
+    .flatMap((doc) =>
+      doc.slug.startsWith(`/docs/${category}`) && doc.published && doc.slug !== `/docs/${category}`
+        ? [
+            {
+              title: doc.title,
+              sortId: doc.title,
+              href: doc.slug,
+              label: doc.labels?.includes("new") ? "new" : undefined,
+              items: [],
+            },
+          ]
+        : [],
     )
-    .map((doc) => ({
-      title: doc.title,
-      sortId: doc.title,
-      href: doc.slug,
-      label: doc.labels?.includes("new") ? "new" : undefined,
-      items: [],
-    }))
     .sort(sortAlphabetically);
 };
 
@@ -49,6 +49,17 @@ const sidebarNav: SidebarNavItem[] = [
         title: "Setup",
         href: "/docs/setup",
         items: [],
+      },
+      {
+        title: "Guides",
+        href: "/docs/guides/animated-react-buttons",
+        items: [
+          {
+            title: "Animated React Buttons",
+            href: "/docs/guides/animated-react-buttons",
+            items: [],
+          },
+        ],
       },
       {
         title: "Changelog",

@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useLayoutEffect, useMemo, useRef, useState } from "react";
 
 import { cn } from "@/lib/utils";
 
@@ -8,7 +8,7 @@ function useGridLayout() {
   const containerRef = useRef<HTMLDivElement>(null);
   const [layout, setLayout] = useState({ vertical: 0, horizontal: 0 });
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const updateLayout = () => {
       const rect = containerRef.current?.getBoundingClientRect();
       if (!rect) {
@@ -72,7 +72,7 @@ function Grid() {
   const [active, setActive] = useState(0);
   const timerRef = useRef<NodeJS.Timeout>(undefined);
 
-  const onMouseEnter = useCallback(() => {
+  const onActivate = useCallback(() => {
     if (timerRef.current) {
       clearInterval(timerRef.current);
     }
@@ -108,13 +108,15 @@ function Grid() {
 
       const shouldHighlight = active - x === x || active - y === y;
       return (
-        <div
+        <button
+          type="button"
+          aria-label="Highlight grid path"
           key={`${x}-${y}`}
           style={{
             transform: `translate(${xPos}px, ${y}px)`,
           }}
-          onMouseEnter={onMouseEnter}
-          onClick={onMouseEnter}
+          onMouseEnter={onActivate}
+          onFocus={onActivate}
           className={boxClassName}
         >
           <div
@@ -129,15 +131,14 @@ function Grid() {
               },
             )}
           />
-        </div>
+        </button>
       );
     });
-  }, [squares, horizontal, active, onMouseEnter]);
+  }, [squares, horizontal, active, onActivate]);
 
   return (
     <div
       ref={containerRef}
-      onClick={onMouseEnter}
       className={cn("absolute inset-0 h-full max-h-96 w-full", {
         "top-1/4": vertical > 96 * 4, // 96 * 4 is the height of the grid
       })}

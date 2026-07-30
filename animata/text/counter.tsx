@@ -1,4 +1,4 @@
-import { useInView, useMotionValue, useSpring } from "motion/react";
+import { useInView, useMotionValue, useMotionValueEvent, useSpring } from "motion/react";
 import { useEffect, useRef } from "react";
 
 import { cn } from "@/lib/utils";
@@ -68,13 +68,11 @@ export default function Counter({
     return () => clearTimeout(timer);
   }, [isInView, delay, isGoingUp, targetValue, motionValue]);
 
-  useEffect(() => {
-    springValue.on("change", (value) => {
-      if (ref.current) {
-        ref.current.textContent = format ? format(value) : String(value);
-      }
-    });
-  }, [springValue, format]);
+  useMotionValueEvent(springValue, "change", (value) => {
+    if (ref.current) {
+      ref.current.textContent = format ? format(value) : String(value);
+    }
+  });
 
   const initialDisplay = format
     ? format(isGoingUp ? 0 : targetValue)

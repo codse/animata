@@ -10,13 +10,13 @@ const EmailCard = () => {
 
         {/* From Email (Static) */}
         <div className="flex flex-col">
-          <label className="font-medium">From</label>
+          <span className="font-medium">From</span>
           <p className="mt-1 rounded-md border border-gray-300 p-2 bg-gray-100">you@example.com</p>
         </div>
 
         {/* To Email (Static) */}
         <div className="flex flex-col">
-          <label className="font-medium">To</label>
+          <span className="font-medium">To</span>
           <p className="mt-1 rounded-md border border-gray-300 p-2 bg-gray-100">
             recipient@example.com
           </p>
@@ -24,7 +24,7 @@ const EmailCard = () => {
 
         {/* Subject (Static) */}
         <div className="flex flex-col">
-          <label className="font-medium">Subject</label>
+          <span className="font-medium">Subject</span>
           <p className="mt-1 rounded-md border border-gray-300 p-2 bg-gray-100">
             The Pokemon I caught this week
           </p>
@@ -32,7 +32,7 @@ const EmailCard = () => {
 
         {/* Body (Static) */}
         <div className="flex flex-col">
-          <label className="font-medium">Body</label>
+          <span className="font-medium">Body</span>
           <p className="mt-1 h-24 rounded-md border border-gray-300 p-2 bg-gray-100">
             I caught a Charmander, a Squirtle, and a Bulbasaur this week!
           </p>
@@ -40,9 +40,7 @@ const EmailCard = () => {
 
         {/* Send Button (Static, purely for aesthetic purposes) */}
         <div className="mt-4 self-end rounded-full bg-gray-600 p-2 text-white cursor-pointer transition-colors duration-300 hover:bg-green-600">
-          <span role="img" aria-label="send">
-            ➤
-          </span>
+          <span aria-hidden="true">➤</span>
         </div>
       </div>
 

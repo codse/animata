@@ -163,7 +163,10 @@ export default function FooterWordmarkDemo() {
                       </Link>
                     ))}
                   </SiblingFocusNav>
-                  <p className="font-mono text-[11px] leading-relaxed tracking-[0.04em] text-white/78 lg:shrink-0 lg:text-right lg:text-[10px] lg:tracking-[0.06em] lg:text-white/72 lg:whitespace-nowrap">
+                  <p
+                    className="font-mono text-[11px] leading-relaxed tracking-[0.04em] text-white/78 lg:shrink-0 lg:text-right lg:text-[10px] lg:tracking-[0.06em] lg:text-white/72 lg:whitespace-nowrap"
+                    suppressHydrationWarning
+                  >
                     © {new Date().getFullYear()} {siteConfig.name}, Inc. All rights reserved.
                   </p>
                 </div>

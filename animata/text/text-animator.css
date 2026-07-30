@@ -1,55 +1,35 @@
+@reference "tailwindcss";
+
 @layer components {
   .text-animation-stage {
-    container-type: inline-size;
-    display: grid;
-    height: 100%;
-    min-height: 0;
-    width: 100%;
-    place-items: center;
-    grid-template-areas: "title";
+    @apply @container grid h-full min-h-0 w-full place-items-center [grid-template-areas:'title'];
   }
 
   .text-animation-title {
-    margin: 0;
-    grid-area: title;
-    pointer-events: none;
-    transform-style: preserve-3d;
+    @apply m-0 pointer-events-none transform-3d [grid-area:title];
   }
 
   .text-animation-unit {
-    display: inline-block;
-    white-space: pre;
-    backface-visibility: hidden;
-    transform-origin: 50% 55%;
-    will-change: transform, opacity, filter;
+    @apply inline-block whitespace-pre backface-hidden origin-[50%_55%] [will-change:transform,opacity,filter];
   }
 
   .text-animation-unit.line {
-    display: block;
+    @apply block;
   }
 
   .text-animation-kinetic-line {
-    position: relative;
-    height: 72px;
-    width: min(92%, 270px);
+    @apply relative h-[72px] w-[min(92%,270px)];
   }
 
   .text-animation-kinetic-stack {
-    position: relative;
-    height: 132px;
-    width: min(92%, 270px);
+    @apply relative h-[132px] w-[min(92%,270px)];
   }
 
   .text-animation-kinetic-word {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    white-space: nowrap;
-    backface-visibility: hidden;
-    will-change: transform, opacity, filter;
+    @apply absolute top-1/2 left-1/2 whitespace-nowrap backface-hidden [will-change:transform,opacity,filter];
   }
 
   .text-animation-fallback {
-    opacity: 0.74;
+    @apply opacity-[0.74];
   }
 }

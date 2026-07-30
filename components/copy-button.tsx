@@ -11,6 +11,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useCopyReset } from "@/hooks/use-copy-reset";
 import { type Event, trackEvent } from "@/lib/events";
 import { cn } from "@/lib/utils";
 
@@ -36,13 +37,7 @@ export function CopyButton({
   proxyId,
   ...props
 }: CopyButtonProps) {
-  const [hasCopied, setHasCopied] = React.useState(false);
-
-  React.useEffect(() => {
-    setTimeout(() => {
-      setHasCopied(false);
-    }, 2000);
-  }, []);
+  const [hasCopied, setHasCopied] = useCopyReset();
 
   return (
     <Button
@@ -85,18 +80,15 @@ interface CopyWithClassNamesProps extends DropdownMenuTriggerProps {
 }
 
 export function CopyWithClassNames({ value, classNames, className }: CopyWithClassNamesProps) {
-  const [hasCopied, setHasCopied] = React.useState(false);
+  const [hasCopied, setHasCopied] = useCopyReset();
 
-  React.useEffect(() => {
-    setTimeout(() => {
-      setHasCopied(false);
-    }, 2000);
-  }, []);
-
-  const copyToClipboard = React.useCallback((value: string) => {
-    copyToClipboardWithMeta(value);
-    setHasCopied(true);
-  }, []);
+  const copyToClipboard = React.useCallback(
+    (value: string) => {
+      copyToClipboardWithMeta(value);
+      setHasCopied(true);
+    },
+    [setHasCopied],
+  );
 
   return (
     <DropdownMenu>
@@ -130,24 +122,21 @@ interface CopyTouchCommandButtonProps extends DropdownMenuTriggerProps {
 }
 
 export function CopyTouchCommandButton({ commands, className }: CopyTouchCommandButtonProps) {
-  const [hasCopied, setHasCopied] = React.useState(false);
+  const [hasCopied, setHasCopied] = useCopyReset();
 
-  React.useEffect(() => {
-    setTimeout(() => {
-      setHasCopied(false);
-    }, 2000);
-  }, []);
-
-  const copyCommand = React.useCallback((value: string, os: "windows" | "macOS/Linux") => {
-    copyToClipboardWithMeta(value, {
-      name: "copy_touch_command",
-      properties: {
-        command: value,
-        os,
-      },
-    });
-    setHasCopied(true);
-  }, []);
+  const copyCommand = React.useCallback(
+    (value: string, os: "windows" | "macOS/Linux") => {
+      copyToClipboardWithMeta(value, {
+        name: "copy_touch_command",
+        properties: {
+          command: value,
+          os,
+        },
+      });
+      setHasCopied(true);
+    },
+    [setHasCopied],
+  );
 
   return (
     <DropdownMenu>
@@ -177,24 +166,21 @@ export function CopyTouchCommandButton({ commands, className }: CopyTouchCommand
 }
 
 export function CopyNpmCommandButton({ commands, className }: CopyNpmCommandButtonProps) {
-  const [hasCopied, setHasCopied] = React.useState(false);
+  const [hasCopied, setHasCopied] = useCopyReset();
 
-  React.useEffect(() => {
-    setTimeout(() => {
-      setHasCopied(false);
-    }, 2000);
-  }, []);
-
-  const copyCommand = React.useCallback((value: string, pm: "npm" | "pnpm" | "yarn" | "bun") => {
-    copyToClipboardWithMeta(value, {
-      name: "copy_npm_command",
-      properties: {
-        command: value,
-        pm,
-      },
-    });
-    setHasCopied(true);
-  }, []);
+  const copyCommand = React.useCallback(
+    (value: string, pm: "npm" | "pnpm" | "yarn" | "bun") => {
+      copyToClipboardWithMeta(value, {
+        name: "copy_npm_command",
+        properties: {
+          command: value,
+          pm,
+        },
+      });
+      setHasCopied(true);
+    },
+    [setHasCopied],
+  );
 
   return (
     <DropdownMenu>

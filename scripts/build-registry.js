@@ -212,6 +212,33 @@ function registryFileEntry(ref, content) {
   };
 }
 
+function resolveRelativeImport(dir, spec) {
+  const base = path.posix.normalize(path.posix.join(dir, spec));
+  const absBase = path.resolve(ROOT, base);
+  const relToRoot = path.relative(ROOT, absBase);
+  if (relToRoot.startsWith("..") || path.isAbsolute(relToRoot)) {
+    return null;
+  }
+  if (path.extname(base)) {
+    return readIfExists(absBase) ? base : null;
+  }
+  for (const ext of [".tsx", ".ts"]) {
+    const candidate = `${base}${ext}`;
+    if (readIfExists(path.join(ROOT, candidate))) {
+      return candidate;
+    }
+  }
+  const indexTsx = path.posix.join(base, "index.tsx");
+  if (readIfExists(path.join(ROOT, indexTsx))) {
+    return indexTsx;
+  }
+  const indexTs = path.posix.join(base, "index.ts");
+  if (readIfExists(path.join(ROOT, indexTs))) {
+    return indexTs;
+  }
+  return null;
+}
+
 function addBundledSourceFile(ref, files, bundledRefs, queue) {
   if (bundledRefs.has(ref)) return false;
   const abs = path.join(ROOT, ref);
@@ -223,9 +250,18 @@ function addBundledSourceFile(ref, files, bundledRefs, queue) {
 
   const dir = path.posix.dirname(ref);
   for (const spec of parseImports(content)) {
-    if (!spec.startsWith("./") || !spec.endsWith(".css")) continue;
-    const cssRef = path.posix.normalize(path.posix.join(dir, spec));
-    addBundledSourceFile(cssRef, files, bundledRefs, queue);
+    if (!spec.startsWith("./")) continue;
+
+    if (spec.endsWith(".css")) {
+      const cssRef = path.posix.normalize(path.posix.join(dir, spec));
+      addBundledSourceFile(cssRef, files, bundledRefs, queue);
+      continue;
+    }
+
+    const coLocatedRef = resolveRelativeImport(dir, spec);
+    if (coLocatedRef) {
+      addBundledSourceFile(coLocatedRef, files, bundledRefs, queue);
+    }
   }
 
   return true;
@@ -233,7 +269,8 @@ function addBundledSourceFile(ref, files, bundledRefs, queue) {
 
 function parseImports(source) {
   const imports = [];
-  const re = /import\s+(?:[^'"]*?\s+from\s+)?["']([^"']+)["']/g;
+  const re =
+    /(?:import\s+(?:[^'"]*?\s+from\s+)?|export\s+(?:type\s+)?(?:\*|\{[^}]*\})\s+from\s+)["']([^"']+)["']/g;
   for (const m of source.matchAll(re)) {
     imports.push(m[1]);
   }

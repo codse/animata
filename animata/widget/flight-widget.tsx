@@ -17,7 +17,7 @@ const getTime = () => {
 };
 
 export default function FlightWidget() {
-  const [formattedTime, setFormattedTime] = useState(getTime());
+  const [formattedTime, setFormattedTime] = useState(() => getTime());
 
   useEffect(() => {
     const now = new Date();

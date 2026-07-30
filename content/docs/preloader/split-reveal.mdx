@@ -13,15 +13,27 @@ labels: ["new"]
 
 <RegistryInstall category="preloader" name="split-reveal" />
 
+The registry item installs the `split-reveal/` modules, `split-reveal.css`, and shared hooks at `hooks/use-lock-body.ts` and `hooks/use-prefers-reduced-motion.ts`.
+
 ### Manual
 
 <Steps>
+<Step>Copy shared hooks</Step>
+
+```jsx file=<rootDir>/hooks/use-lock-body.ts
+
+```
+
+```jsx file=<rootDir>/hooks/use-prefers-reduced-motion.ts
+
+```
+
 <Step>Run the following command</Step>
 
-It will create `split-reveal.tsx` and the co-located `split-reveal.css` inside `components/animata/preloader`.
+It will create `split-reveal.tsx`, the co-located `split-reveal/` modules, and `split-reveal.css` inside `components/animata/preloader`.
 
 ```bash
-mkdir -p components/animata/preloader && touch components/animata/preloader/split-reveal.tsx components/animata/preloader/split-reveal.css
+mkdir -p components/animata/preloader/split-reveal && touch components/animata/preloader/split-reveal.tsx components/animata/preloader/split-reveal.css
 ```
 
 <Step>Paste the code</Step>{" "}
@@ -38,34 +50,106 @@ mkdir -p components/animata/preloader && touch components/animata/preloader/spli
 
 ## Usage
 
-Place it next to your page. No wrapper required.
+`SplitReveal` is bare bones: phase timing, scroll lock, and shutter animation. Loading work and overlay UI are opt-in via composition.
+
+Place it next to your page. Compose a loader task, the overlay, and whichever UI pieces you need.
 
 ```tsx
 <section>{/* your layout */}</section>
 
-<SplitReveal
-  images={imageUrls}
-  lockScroll
-  onComplete={() => setReady(true)}
-  renderProgress={({ loaded, total }) => (
-    <p>
-      {loaded}/{total}
-    </p>
-  )}
+<SplitReveal lockScroll onComplete={() => setReady(true)}>
+  <SplitReveal.Images urls={imageUrls} />
+  <SplitReveal.Overlay>
+    <SplitReveal.Shutter side="top" />
+    <SplitReveal.Shutter side="bottom" />
+    <SplitReveal.Progress />
+  </SplitReveal.Overlay>
+</SplitReveal>
+```
+
+### Custom async work
+
+Use `SplitReveal.Task` for any async boot sequence — fetch calls, WASM init, or an async generator that yields progress.
+
+```tsx
+<SplitReveal onComplete={() => setReady(true)}>
+  <SplitReveal.Task
+    run={async ({ report, signal }) => {
+      report({ loaded: 0, total: 3 });
+      await warmCache(signal);
+      report({ loaded: 1, total: 3 });
+      await loadFonts(signal);
+      report({ loaded: 2, total: 3 });
+      await hydrateStore(signal);
+      report({ loaded: 3, total: 3 });
+    }}
+  />
+  <SplitReveal.Overlay>{/* shutters only, or nothing */}</SplitReveal.Overlay>
+</SplitReveal>
+```
+
+Async generators work too — yield `{ loaded, total }` updates from `SplitReveal.Task`:
+
+```tsx
+<SplitReveal.Task
+  generator={async function* ({ report, signal }) {
+    report({ loaded: 0, total: 2 });
+    yield;
+    await fetchManifest(signal);
+    report({ loaded: 1, total: 2 });
+    yield;
+    await prefetchRoutes(signal);
+    report({ loaded: 2, total: 2 });
+  }}
 />
 ```
 
-Use `renderProgress` to swap the center counter while keeping the default shutters. Pass `children` to replace the whole overlay.
+Or drive everything externally with `progress` and `ready` — no `Task` or `Images` required.
 
-After the last image decodes, the loader waits (`holdMs`), fades the progress UI (`progressFadeMs`), then splits the shutters. Timing runs on CSS keyframes with a custom cubic-bezier. `revealDuration` defaults to `0.85`s.
+```tsx
+<SplitReveal
+  ready={bootProgress >= 100}
+  progress={{ loaded: bootProgress, total: 100 }}
+  onComplete={() => setReady(true)}
+>
+  <SplitReveal.Overlay>
+    <SplitReveal.Shutter side="top" />
+    <SplitReveal.Shutter side="bottom" />
+  </SplitReveal.Overlay>
+</SplitReveal>
+```
+
+Custom center UI: pass a render function to `SplitReveal.Progress` or compose `ProgressTrack` / `ProgressCount` / `ProgressSlot` yourself inside `Overlay`.
+
+### Pick only what you need
+
+Source lives in co-located modules under `split-reveal/`. Import the compound API from the entry file, or pull individual pieces for smaller bundles:
+
+```tsx
+import SplitReveal from "@/animata/preloader/split-reveal";
+
+import { SplitRevealRoot } from "@/animata/preloader/split-reveal/root";
+import { SplitRevealOverlay } from "@/animata/preloader/split-reveal/overlay";
+import { preloadImages } from "@/animata/preloader/split-reveal/preload-images";
+```
+
+Skip `Images` if you use `Task` or external `ready` / `progress`. Skip `Progress*` if you only want shutters. The shadcn registry installs every module the entry re-exports — copy individual files manually if you want a minimal subset.
+
+After loading completes, the loader waits (`holdMs`), fades the progress UI (`progressFadeMs`), then splits the shutters. Timing runs on CSS keyframes with a custom cubic-bezier. `revealDuration` defaults to `0.85`s.
 
 ## How it works
 
-The component preloads every URL in `images` with `Image()` plus `decode()` when available. Scroll locks while the overlay is active and releases on `done`.
+`SplitReveal.Images` preloads URLs with `Image()` plus `decode()` when available. `SplitReveal.Task` accepts a `run` promise or `generator` async iterator that reports `{ loaded, total }`.
 
-Phases go `loading` → `fade-ui` → `reveal` → `done`. Shutters are plain divs animated with `@keyframes`; no Motion dependency. `useSplitReveal()` exposes phase, counts, and colors if you build a custom overlay in `children`.
+Scroll locks while the overlay is active and releases on `done`.
+
+Phases go `loading` → `fade-ui` → `reveal` → `done`. Shutters are plain divs animated with `@keyframes`; no Motion dependency. `useSplitReveal()` exposes phase, counts, and colors for custom overlay markup.
 
 Restoring a tab from bfcache gets a fresh boot id so the preloader does not stick on a stale `0/0` count.
+
+## Changelog
+
+- **2026-06** — Moved image preloading to opt-in `SplitReveal.Images`. Added `SplitReveal.Task` for custom async/generator progress and `ready` / `progress` props for external control. Shutters and progress UI are composable under `SplitReveal.Overlay`. Split source into co-located modules under `split-reveal/` for tree-shaking and selective copy.
 
 ## Credits
 

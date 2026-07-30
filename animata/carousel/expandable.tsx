@@ -1,4 +1,4 @@
-import { type HTMLAttributes, useEffect, useState } from "react";
+import { type HTMLAttributes, useEffect, useRef, useState } from "react";
 
 import WaveReveal from "@/animata/text/wave-reveal";
 import { cn } from "@/lib/utils";
@@ -68,7 +68,7 @@ const items = [
 
 export default function Expandable({ list = items, autoPlay = true, className }: ExpandableProps) {
   const [activeItem, setActiveItem] = useState(0);
-  const [isHovering, setIsHovering] = useState(false);
+  const isHoveringRef = useRef(false);
 
   useEffect(() => {
     if (!autoPlay) {
@@ -76,13 +76,13 @@ export default function Expandable({ list = items, autoPlay = true, className }:
     }
 
     const interval = setInterval(() => {
-      if (!isHovering) {
+      if (!isHoveringRef.current) {
         setActiveItem((prev) => (prev + 1) % list.length);
       }
     }, 5000);
 
     return () => clearInterval(interval);
-  }, [autoPlay, list.length, isHovering]);
+  }, [autoPlay, list.length]);
 
   return (
     <div className={cn("flex h-96 w-full gap-1", className)}>
@@ -94,10 +94,10 @@ export default function Expandable({ list = items, autoPlay = true, className }:
           activeItem={activeItem}
           onMouseEnter={() => {
             setActiveItem(index);
-            setIsHovering(true);
+            isHoveringRef.current = true;
           }}
           onMouseLeave={() => {
-            setIsHovering(false);
+            isHoveringRef.current = false;
           }}
         />
       ))}

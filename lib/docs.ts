@@ -1,8 +1,6 @@
 import { publishedCategoryItemCount } from "@/lib/published-docs";
 import type { SidebarNavItem } from "@/types";
 
-export { publishedCategoryItemCount };
-
 export function getCategorySlug(category: SidebarNavItem): string | undefined {
   const fromHref = category.href?.match(/^\/docs\/([^/]+)/)?.[1];
   if (fromHref) return fromHref;
@@ -47,9 +45,9 @@ function flattenSidebarLinks(items: SidebarNavItem["items"]): FooterCategoryLink
 
   return items.flatMap((item) => {
     if (item.items?.length) {
-      return item.items
-        .filter((child) => child.href)
-        .map((child) => ({ title: child.title, href: child.href as string }));
+      return item.items.flatMap((child) =>
+        child.href ? [{ title: child.title, href: child.href }] : [],
+      );
     }
 
     return item.href ? [{ title: item.title, href: item.href }] : [];
@@ -80,22 +78,25 @@ export function getFooterCategories(
     variant = "compact",
   }: GetFooterCategoriesOptions = {},
 ): FooterCategory[] {
-  return navItems
-    .filter((nav) => !excludedTitles.includes(nav.title))
-    .filter((nav) => hasPublishedCategoryItems(nav))
-    .map((cat) => {
-      const links = getFooterCategoryLinks(cat);
-      const viewAllHref = getCategoryIndexHref(cat);
-      const showViewAll = variant === "compact" && links.length > 4;
-      const moreCount = showViewAll ? links.length - 3 : 0;
+  return navItems.flatMap((cat) => {
+    if (excludedTitles.includes(cat.title) || !hasPublishedCategoryItems(cat)) {
+      return [];
+    }
 
-      return {
+    const links = getFooterCategoryLinks(cat);
+    const viewAllHref = getCategoryIndexHref(cat);
+    const showViewAll = variant === "compact" && links.length > 4;
+    const moreCount = showViewAll ? links.length - 3 : 0;
+
+    return [
+      {
         title: cat.title,
         href: viewAllHref,
         links: showViewAll ? links.slice(0, 3) : links,
         showViewAll,
         viewAllHref,
         moreCount,
-      };
-    });
+      },
+    ];
+  });
 }

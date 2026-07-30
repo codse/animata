@@ -24,8 +24,9 @@ export default function LiveScoreWidget({
   scorer,
 }: ScoreProps) {
   const [scored, setScored] = useState(false);
-  const [awScore, setAwScore] = useState(awayScore);
+  const [awayScoreDelta, setAwayScoreDelta] = useState(0);
   const [popAnimation, setPopAnimation] = useState(false);
+  const awScore = awayScore + awayScoreDelta;
 
   return (
     <div className="p-10">
@@ -87,12 +88,13 @@ export default function LiveScoreWidget({
       </motion.div>
 
       <button
+        type="button"
         className="absolute bottom-4 right-4 rounded-full bg-white p-2"
         onClick={() => {
           setScored(true);
           setPopAnimation(true);
           setTimeout(() => {
-            setAwScore(awScore + 1);
+            setAwayScoreDelta((delta) => delta + 1);
           }, 500);
           setTimeout(() => {
             setScored(false);

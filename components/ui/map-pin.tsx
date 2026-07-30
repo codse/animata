@@ -3,7 +3,7 @@
 import type { Variants } from "motion/react";
 import { motion, useAnimation } from "motion/react";
 import type { HTMLAttributes } from "react";
-import { forwardRef, useCallback, useImperativeHandle, useRef } from "react";
+import { useCallback, useImperativeHandle, useRef } from "react";
 
 import { cn } from "@/lib/utils";
 
@@ -45,48 +45,54 @@ const CIRCLE_VARIANTS: Variants = {
   },
 };
 
-const MapPinIcon = forwardRef<MapPinIconHandle, MapPinIconProps>(
-  ({ onMouseEnter, onMouseLeave, className, size = 28, ...props }, ref) => {
-    const controls = useAnimation();
-    const isControlledRef = useRef(false);
+function MapPinIcon({
+  onMouseEnter,
+  onMouseLeave,
+  className,
+  size = 28,
+  ref,
+  ...props
+}: MapPinIconProps & { ref?: React.Ref<MapPinIconHandle> }) {
+  const controls = useAnimation();
+  const isControlledRef = useRef(false);
 
-    useImperativeHandle(ref, () => {
-      isControlledRef.current = true;
+  useImperativeHandle(ref, () => {
+    isControlledRef.current = true;
 
-      return {
-        startAnimation: () => controls.start("animate"),
-        stopAnimation: () => controls.start("normal"),
-      };
-    });
+    return {
+      startAnimation: () => controls.start("animate"),
+      stopAnimation: () => controls.start("normal"),
+    };
+  });
 
-    const handleMouseEnter = useCallback(
-      (e: React.MouseEvent<HTMLDivElement>) => {
-        onMouseEnter?.(e);
-        if (!isControlledRef.current) {
-          controls.start("animate");
-        }
-      },
-      [controls, onMouseEnter],
-    );
+  const handleMouseEnter = useCallback(
+    (e: React.MouseEvent<HTMLDivElement>) => {
+      onMouseEnter?.(e);
+      if (!isControlledRef.current) {
+        controls.start("animate");
+      }
+    },
+    [controls, onMouseEnter],
+  );
 
-    const handleMouseLeave = useCallback(
-      (e: React.MouseEvent<HTMLDivElement>) => {
-        onMouseLeave?.(e);
-        if (!isControlledRef.current) {
-          controls.start("normal");
-        }
-      },
-      [controls, onMouseLeave],
-    );
+  const handleMouseLeave = useCallback(
+    (e: React.MouseEvent<HTMLDivElement>) => {
+      onMouseLeave?.(e);
+      if (!isControlledRef.current) {
+        controls.start("normal");
+      }
+    },
+    [controls, onMouseLeave],
+  );
 
-    return (
-      <div
-        className={cn(className)}
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
-        {...props}
-      >
-        <motion.svg
+  return (
+    <div
+      className={cn(className)}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+      {...props}
+    >
+<motion.svg
           animate={controls}
           fill="none"
           height={size}
@@ -110,11 +116,8 @@ const MapPinIcon = forwardRef<MapPinIconHandle, MapPinIconProps>(
             variants={CIRCLE_VARIANTS}
           />
         </motion.svg>
-      </div>
-    );
-  }
-);
-
-MapPinIcon.displayName = "MapPinIcon";
+</div>
+  );
+}
 
 export { MapPinIcon };

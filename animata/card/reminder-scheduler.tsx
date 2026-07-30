@@ -1,5 +1,7 @@
+"use client";
+
 import type React from "react";
-import { useEffect, useState } from "react";
+import { useEffect, useId, useState } from "react";
 
 import { cn } from "@/lib/utils";
 
@@ -19,6 +21,7 @@ const ReminderScheduler: React.FC<ReminderSchedulerProps> = ({
   daysOfWeek,
 }) => {
   const selectedDays = isRepeating ? new Set(["Th", "Fr", "Su"]) : new Set(["Mo", "We", "Sa"]);
+  const repeatSelectId = useId();
   return (
     <div className="mx-auto max-w-sm rounded-3xl border border-gray-200 bg-white p-6 shadow-md">
       {/* Toggle Switch */}
@@ -31,8 +34,11 @@ const ReminderScheduler: React.FC<ReminderSchedulerProps> = ({
       <div
         className={`mb-4 flex justify-between transition-opacity duration-500 ease-in-out ${!isRepeating ? "opacity-40" : ""}`}
       >
-        <label className="mt-5 text-slate-800">Repeat</label>
+        <label htmlFor={repeatSelectId} className="mt-5 text-slate-800">
+          Repeat
+        </label>
         <select
+          id={repeatSelectId}
           disabled={!isRepeating}
           value={repeatInterval}
           onChange={(e) => setRepeatInterval(e.target.value)}
@@ -65,9 +71,17 @@ const ReminderScheduler: React.FC<ReminderSchedulerProps> = ({
 };
 
 const Switch = ({ toggle, value }: { toggle: () => void; value: boolean }) => {
+  const id = useId();
   return (
-    <label className="inline-flex cursor-pointer items-center">
-      <input checked={value} type="checkbox" className="peer sr-only" onChange={toggle} />
+    <label htmlFor={id} className="inline-flex cursor-pointer items-center">
+      <input
+        id={id}
+        checked={value}
+        type="checkbox"
+        className="peer sr-only"
+        onChange={toggle}
+        aria-label="Toggle repeating reminder"
+      />
       <div className="rtl:peer-checked:after:-translate-x-[unset] peer relative h-8 w-[53px] rounded-full bg-gray-200 transition-colors duration-500 after:absolute after:start-[5px] after:top-[4px] after:h-6 after:w-6 after:rounded-full after:border after:border-white after:bg-white after:transition-transform after:duration-300 after:content-[''] peer-checked:bg-[#95ef90] peer-checked:after:translate-x-[19px] peer-checked:after:border-white"></div>
     </label>
   );
@@ -116,9 +130,11 @@ function SwapText({
   const longWord = finalText.length > initialText.length ? finalText : null;
   return (
     <div {...props} className={cn("relative overflow-hidden text-foreground", className)}>
-      <div
+      <button
+        type="button"
+        disabled={disableClick}
         className={cn(
-          "group/reminder cursor-pointer select-none text-3xl font-bold",
+          "group/reminder w-full cursor-pointer select-none border-0 bg-transparent p-0 text-left text-3xl font-bold text-inherit",
           textClassName,
         )}
         onClick={() => !disableClick && setActive((current) => !current)}
@@ -141,7 +157,7 @@ function SwapText({
         >
           {finalText}
         </span>
-      </div>
+      </button>
     </div>
   );
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import { Bell } from "lucide-react";
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 import { cn } from "@/lib/utils";
 
@@ -33,7 +33,13 @@ export default function ReminderWidget({
   title = "Packing",
   items = DEFAULT_ITEMS,
 }: ReminderWidgetProps) {
-  const [rows, setRows] = useState(items);
+  const itemsRef = useRef<ReminderWidgetItem[] | null>(null);
+  const [rows, setRows] = useState<ReminderWidgetItem[]>([]);
+
+  if (items !== itemsRef.current) {
+    itemsRef.current = items;
+    setRows(items);
+  }
 
   const remaining = rows.filter((item) => !item.done).length;
 

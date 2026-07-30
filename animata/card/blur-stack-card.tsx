@@ -1,7 +1,7 @@
 "use client";
+
 import { motion } from "motion/react";
 import { useState } from "react";
-
 import { cn } from "@/lib/utils";
 
 interface RowProps {
@@ -54,9 +54,11 @@ export default function BlueStackCards() {
     <div className="h-[40rem]">
       <div className="relative flex h-full w-full items-center justify-center">
         {cards.map((card, index) => (
-          <div
+          <button
+            type="button"
             key={`blur_card_${card.id}`}
-            className={cn("absolute mx-auto", {
+            aria-label={`Select ${card.title} card`}
+            className={cn("absolute mx-auto border-0 bg-transparent p-0 text-left", {
               "blur-[2px]": index !== 0,
             })}
             style={{
@@ -93,7 +95,7 @@ export default function BlueStackCards() {
                 </div>
               </div>
             </motion.div>
-          </div>
+          </button>
         ))}
       </div>
     </div>

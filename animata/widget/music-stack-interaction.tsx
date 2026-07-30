@@ -104,22 +104,34 @@ export default function MusicStackInteraction({ albums }: albumsProps) {
 
       <motion.div className="duration-2000 absolute bottom-4 left-0 right-0 -mb-4 flex w-auto items-center justify-center rounded-xl bg-gray-800 p-4 text-white shadow-2xl transition-all">
         <div className="flex w-32 items-center space-x-2 rounded-full bg-gray-900 p-2">
-          <div
-            className={cn("flex h-8 w-16 cursor-pointer items-center justify-center rounded-full", {
-              "bg-gray-700": isGridView,
-            })}
+          <button
+            type="button"
+            aria-label={isGridView ? "Grid view selected" : "Switch to grid view"}
+            aria-pressed={isGridView}
+            className={cn(
+              "flex h-8 w-16 cursor-pointer items-center justify-center rounded-full border-0 bg-transparent p-0 text-inherit",
+              {
+                "bg-gray-700": isGridView,
+              },
+            )}
             onClick={handleToggleView}
           >
             <LayoutGrid />
-          </div>
-          <div
-            className={cn("flex h-8 w-16 cursor-pointer items-center justify-center rounded-full", {
-              "bg-gray-700": !isGridView,
-            })}
+          </button>
+          <button
+            type="button"
+            aria-label={!isGridView ? "Stack view selected" : "Switch to stack view"}
+            aria-pressed={!isGridView}
+            className={cn(
+              "flex h-8 w-16 cursor-pointer items-center justify-center rounded-full border-0 bg-transparent p-0 text-inherit",
+              {
+                "bg-gray-700": !isGridView,
+              },
+            )}
             onClick={handleToggleView}
           >
             <Layers />
-          </div>
+          </button>
         </div>
       </motion.div>
     </div>

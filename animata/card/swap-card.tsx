@@ -49,12 +49,23 @@ export default function SwapCard({
               firstImageClass,
             )}
           >
-            <FlipCard
-              className="h-72"
-              title={firstTitle}
-              description={firstDescription}
-              image={firstImage}
-            />
+            <FlipCard className="h-72">
+              <FlipCard.Front>
+                <img
+                  src={firstImage}
+                  alt={firstTitle}
+                  className="h-full w-full rounded-2xl object-cover shadow-2xl shadow-black/40"
+                />
+                <div className="absolute bottom-4 left-4 text-xl font-bold text-white">
+                  {firstTitle}
+                </div>
+              </FlipCard.Front>
+              <FlipCard.Back className="rounded-2xl bg-black/80 p-4 text-slate-200">
+                <p className="mt-1 border-t border-t-gray-200 py-4 text-base font-medium leading-normal text-gray-100">
+                  {firstDescription}
+                </p>
+              </FlipCard.Back>
+            </FlipCard>
           </div>
           <div
             className={cn(
@@ -63,12 +74,23 @@ export default function SwapCard({
               secondImageClass,
             )}
           >
-            <FlipCard
-              className="h-72"
-              title={secondTitle}
-              description={secondDescription}
-              image={secondImage}
-            />
+            <FlipCard className="h-72">
+              <FlipCard.Front>
+                <img
+                  src={secondImage}
+                  alt={secondTitle}
+                  className="h-full w-full rounded-2xl object-cover shadow-2xl shadow-black/40"
+                />
+                <div className="absolute bottom-4 left-4 text-xl font-bold text-white">
+                  {secondTitle}
+                </div>
+              </FlipCard.Front>
+              <FlipCard.Back className="rounded-2xl bg-black/80 p-4 text-slate-200">
+                <p className="mt-1 border-t border-t-gray-200 py-4 text-base font-medium leading-normal text-gray-100">
+                  {secondDescription}
+                </p>
+              </FlipCard.Back>
+            </FlipCard>
           </div>
         </div>
       </div>

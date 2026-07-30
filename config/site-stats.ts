@@ -3,11 +3,11 @@ import type { docs as allDocs } from "#site/content";
 import { getPublishedDocs } from "@/lib/published-docs";
 
 /** Updated manually when marketing copy needs to reflect GitHub stars. */
-export const GITHUB_STARS = 2697;
+const GITHUB_STARS = 2697;
 
 const NON_COMPONENT_SECTIONS = new Set(["contributing", "changelog"]);
 
-export function isPublishedComponentDoc(doc: (typeof allDocs)[number]) {
+function isPublishedComponentDoc(doc: (typeof allDocs)[number]) {
   if (!doc.published) return false;
   if (doc.slug === "/docs" || doc.slug === "/docs/setup") return false;
 
@@ -18,9 +18,9 @@ export function isPublishedComponentDoc(doc: (typeof allDocs)[number]) {
   return parts.length >= 2;
 }
 
-export const publishedComponentCount = getPublishedDocs().filter(isPublishedComponentDoc).length;
+const publishedComponentCount = getPublishedDocs().filter(isPublishedComponentDoc).length;
 
-export function formatStatPlus(value: number) {
+function formatStatPlus(value: number) {
   return `${value.toLocaleString("en-US")}+`;
 }
 

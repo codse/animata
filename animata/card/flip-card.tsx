@@ -1,59 +1,85 @@
+"use client";
+
+import { type ComponentProps, createContext, use, useMemo } from "react";
+
 import { cn } from "@/lib/utils";
 
-interface FlipCardProps extends React.HTMLAttributes<HTMLDivElement> {
-  image: string;
-  title: string;
-  description: string;
-  subtitle?: string;
-  rotate?: "x" | "y";
+export type FlipCardRotate = "x" | "y";
+
+type FlipCardContextValue = {
+  rotate: FlipCardRotate;
+};
+
+const FlipCardContext = createContext<FlipCardContextValue | null>(null);
+
+const ROTATION_CLASS = {
+  x: {
+    hover: "group-hover/card:rotate-x-180",
+    back: "rotate-x-180",
+  },
+  y: {
+    hover: "group-hover/card:rotate-y-180",
+    back: "rotate-y-180",
+  },
+} as const;
+
+function useFlipCard() {
+  const context = use(FlipCardContext);
+  if (!context) {
+    throw new Error("FlipCard.Front and FlipCard.Back must be used within <FlipCard>.");
+  }
+  return context;
 }
 
-export default function FlipCard({
-  image,
-  title,
-  description,
-  subtitle,
-  rotate = "y",
-  className,
-  ...props
-}: FlipCardProps) {
-  const rotationClass = {
-    x: ["group-hover/card:rotate-x-180", "rotate-x-180"],
-    y: ["group-hover/card:rotate-y-180", "rotate-y-180"],
-  } as const;
+type FlipCardRootProps = ComponentProps<"div"> & {
+  rotate?: FlipCardRotate;
+};
+
+function FlipCardRoot({ rotate = "y", className, children, ...props }: FlipCardRootProps) {
+  const value = useMemo(() => ({ rotate }), [rotate]);
 
   return (
-    <div className={cn("group/card h-72 w-56 perspective-[1000px]", className)} {...props}>
-      <div
-        className={cn(
-          "relative h-full rounded-2xl transition-transform duration-500 transform-3d",
-          rotationClass[rotate][0],
-        )}
-      >
-        {/* Front */}
-        <div className="absolute inset-0 backface-hidden">
-          <img
-            src={image}
-            alt="image"
-            className="h-full w-full rounded-2xl object-cover shadow-2xl shadow-black/40"
-          />
-          <div className="absolute bottom-4 left-4 text-xl font-bold text-white">{title}</div>
-        </div>
-        {/* Back */}
+    <FlipCardContext.Provider value={value}>
+      <div className={cn("group/card h-72 w-56 perspective-[1000px]", className)} {...props}>
         <div
           className={cn(
-            "absolute inset-0 rounded-2xl bg-black/80 p-4 text-slate-200 backface-hidden",
-            rotationClass[rotate][1],
+            "relative h-full rounded-2xl transition-transform duration-500 ease-out transform-3d will-change-transform motion-reduce:transition-none",
+            ROTATION_CLASS[rotate].hover,
           )}
         >
-          <div className="flex min-h-full flex-col gap-2">
-            <h1 className="text-base font-bold text-white">{subtitle}</h1>
-            <p className="mt-1 border-t border-t-gray-200 py-4 text-base font-medium leading-normal text-gray-100">
-              {description}
-            </p>
-          </div>
+          {children}
         </div>
       </div>
-    </div>
+    </FlipCardContext.Provider>
   );
 }
+
+type FlipCardFaceProps = ComponentProps<"div">;
+
+function FlipCardFront({ className, ...props }: FlipCardFaceProps) {
+  useFlipCard();
+
+  return <div className={cn("absolute inset-0 backface-hidden", className)} {...props} />;
+}
+
+function FlipCardBack({ className, ...props }: FlipCardFaceProps) {
+  const { rotate } = useFlipCard();
+
+  return (
+    <div
+      className={cn("absolute inset-0 backface-hidden", ROTATION_CLASS[rotate].back, className)}
+      {...props}
+    />
+  );
+}
+
+const FlipCard = Object.assign(FlipCardRoot, {
+  Front: FlipCardFront,
+  Back: FlipCardBack,
+}) as typeof FlipCardRoot & {
+  Front: typeof FlipCardFront;
+  Back: typeof FlipCardBack;
+};
+
+export default FlipCard;
+export { FlipCard, FlipCardBack, FlipCardFront, FlipCardRoot };

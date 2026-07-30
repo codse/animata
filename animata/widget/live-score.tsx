@@ -110,9 +110,9 @@ export default function LiveScore() {
       });
     };
 
-    updateScore();
+    const timeoutId = setTimeout(updateScore, 0);
 
-    return () => clearTimeout(timer);
+    return () => clearTimeout(timeoutId);
   }, []);
 
   // #endregion

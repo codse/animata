@@ -6,8 +6,6 @@ import { cloneElement, isValidElement } from "react";
 import { TEXT_ANIMATOR_INDEX_FRAME_CLASS } from "@/animata/text/text-animator-demo";
 import { cn } from "@/lib/utils";
 
-import "@/animata/text/text-animator-demo.css";
-
 type DemoChildProps = { className?: string };
 
 /**

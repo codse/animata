@@ -1,6 +1,7 @@
 "use client";
 
-import { AnimatePresence, type HTMLMotionProps, motion, type Transition } from "motion/react";
+import type { HTMLMotionProps, Transition } from "motion/react";
+import { AnimatePresence, motion } from "motion/react";
 import {
   type ComponentProps,
   cloneElement,
@@ -13,9 +14,8 @@ import {
   useMemo,
   useRef,
   useState,
-  useSyncExternalStore,
 } from "react";
-
+import { usePrefersReducedMotion } from "@/hooks/use-prefers-reduced-motion";
 import { cn } from "@/lib/utils";
 
 export interface CardStackItem {
@@ -86,20 +86,6 @@ export function createCardStackThrowImpulse(): CardStackThrowImpulse {
 
 const CARD_STACK_STACK_ORIGIN = "50% 0%";
 const CARD_STACK_EXIT_Y = "200%";
-
-function subscribeReducedMotion(callback: () => void) {
-  const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
-  mq.addEventListener("change", callback);
-  return () => mq.removeEventListener("change", callback);
-}
-
-function getReducedMotionSnapshot() {
-  return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-}
-
-function usePrefersReducedMotion() {
-  return useSyncExternalStore(subscribeReducedMotion, getReducedMotionSnapshot, () => false);
-}
 
 export function getCardStackLayers(
   reducedMotion: boolean,
@@ -250,7 +236,8 @@ function CardStackRoot<T extends CardStackItem>({
     () => getCardStackLayers(reducedMotion, stackDepth),
     [reducedMotion, stackDepth],
   );
-  const [itemList, setItemList] = useState(items);
+  const [itemList, setItemList] = useState<T[]>([]);
+  const prevItemsRef = useRef<T[] | null>(null);
   const [isAnimating, setIsAnimating] = useState(false);
   const [pressActive, setPressActive] = useState(false);
   const [throwImpulse, setThrowImpulse] = useState<CardStackThrowImpulse | null>(null);
@@ -280,14 +267,24 @@ function CardStackRoot<T extends CardStackItem>({
     }
   }, []);
 
-  useEffect(() => {
+  if (items !== prevItemsRef.current) {
     clearStepTimer();
     clearAutoplayTimer();
     isAnimatingRef.current = false;
     setIsAnimating(false);
     skipItemsChangeNotifyRef.current = true;
+    prevItemsRef.current = items;
     setItemList(items);
-  }, [items, clearStepTimer, clearAutoplayTimer]);
+  }
+
+  useEffect(() => {
+    if (skipItemsChangeNotifyRef.current) {
+      skipItemsChangeNotifyRef.current = false;
+      return;
+    }
+    if (!hasUserRotatedRef.current) return;
+    onItemsChangeRef.current?.(itemList as T[]);
+  }, [itemList]);
 
   useEffect(() => {
     if (skipItemsChangeNotifyRef.current) {
@@ -520,14 +517,12 @@ function CardStackTrigger({
 
   if (full) {
     return (
-      // biome-ignore lint/a11y/useSemanticElements: overlay sits above card content; a wrapping <button> would be invalid markup
-      <div
-        role="button"
-        tabIndex={0}
+      <button
+        type="button"
         aria-label={ariaLabel}
         {...handlers}
         className={cn(
-          "absolute inset-0 z-40 cursor-pointer outline-none",
+          "absolute inset-0 z-40 cursor-pointer border-0 bg-transparent p-0 outline-none",
           "focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
           className,
         )}

@@ -1,8 +1,7 @@
 "use client";
 
 import { AnimatePresence, motion } from "motion/react";
-import { useEffect, useMemo, useRef, useState } from "react";
-
+import { useEffect, useMemo, useReducer, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 
 interface TeamClockProps {
@@ -24,6 +23,79 @@ interface TeamClockProps {
   use24HourFormat: boolean;
 }
 
+type TeamClockState = {
+  isExpanded: boolean;
+  angle: number;
+  currentTime: Date;
+  isMobile: boolean;
+  selectedUser: string | null;
+  hoveredUser: string | null;
+};
+
+type TeamClockAction =
+  | { type: "toggle" }
+  | { type: "tick"; time: Date }
+  | { type: "setMobile"; isMobile: boolean }
+  | { type: "selectUser"; userName: string; timeDifference: string; users: TeamClockProps["users"] }
+  | {
+      type: "hoverUser";
+      userName: string | null;
+      timeDifference: string | null;
+      users: TeamClockProps["users"];
+    };
+
+function teamClockReducer(state: TeamClockState, action: TeamClockAction): TeamClockState {
+  switch (action.type) {
+    case "toggle":
+      return { ...state, isExpanded: !state.isExpanded };
+    case "tick":
+      return { ...state, currentTime: action.time };
+    case "setMobile":
+      return { ...state, isMobile: action.isMobile };
+    case "selectUser": {
+      if (state.selectedUser === action.userName) {
+        return { ...state, selectedUser: null, angle: 0 };
+      }
+      return {
+        ...state,
+        selectedUser: action.userName,
+        angle: parseInt(action.timeDifference, 10) * 30,
+      };
+    }
+    case "hoverUser": {
+      if (action.userName && action.timeDifference) {
+        return {
+          ...state,
+          hoveredUser: action.userName,
+          angle: parseInt(action.timeDifference, 10) * 30,
+        };
+      }
+      if (!state.selectedUser) {
+        return { ...state, hoveredUser: null, angle: 0 };
+      }
+      const selectedUserData = action.users.find((user) => user.name === state.selectedUser);
+      return {
+        ...state,
+        hoveredUser: null,
+        angle: selectedUserData ? parseInt(selectedUserData.timeDifference, 10) * 30 : 0,
+      };
+    }
+    default:
+      return state;
+  }
+}
+
+function createInitialTeamClockState(): TeamClockState {
+  return {
+    isExpanded: false,
+    angle: 0,
+    currentTime: new Date(),
+    isMobile: typeof window !== "undefined" ? window.innerWidth < 768 : false,
+    selectedUser: null,
+    hoveredUser: null,
+  };
+}
+
 export default function TeamClock({
   users,
   clockSize,
@@ -36,19 +108,14 @@ export default function TeamClock({
   showSeconds = false,
   use24HourFormat = false,
 }: TeamClockProps) {
-  const [isExpanded, setIsExpanded] = useState(false);
-  const [angle, setAngle] = useState(0);
-  const [currentTime, setCurrentTime] = useState(new Date());
-  const [isMobile, setIsMobile] = useState(false);
-  const [selectedUser, setSelectedUser] = useState<string | null>(null);
-  const [hoveredUser, setHoveredUser] = useState<string | null>(null);
+  const [state, dispatch] = useReducer(teamClockReducer, undefined, createInitialTeamClockState);
+  const { isExpanded, angle, currentTime, isMobile, selectedUser, hoveredUser } = state;
 
   useEffect(() => {
     const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
+      dispatch({ type: "setMobile", isMobile: window.innerWidth < 768 });
     };
 
-    checkMobile();
     window.addEventListener("resize", checkMobile);
 
     return () => window.removeEventListener("resize", checkMobile);
@@ -56,41 +123,22 @@ export default function TeamClock({
 
   useEffect(() => {
     const timer = setInterval(() => {
-      setCurrentTime(new Date());
+      dispatch({ type: "tick", time: new Date() });
     }, 1000);
 
     return () => clearInterval(timer);
   }, []);
 
   const handleToggle = () => {
-    setIsExpanded(!isExpanded);
+    dispatch({ type: "toggle" });
   };
 
   const handleUserSelect = (userName: string, timeDifference: string) => {
-    if (selectedUser === userName) {
-      setSelectedUser(null);
-      setAngle(0);
-    } else {
-      setSelectedUser(userName);
-      setAngle(parseInt(timeDifference, 10) * 30);
-    }
+    dispatch({ type: "selectUser", userName, timeDifference, users });
   };
 
   const handleUserHover = (userName: string | null, timeDifference: string | null) => {
-    if (userName && timeDifference) {
-      setHoveredUser(userName);
-      setAngle(parseInt(timeDifference, 10) * 30);
-    } else {
-      setHoveredUser(null);
-      if (!selectedUser) {
-        setAngle(0);
-      } else {
-        const selectedUserData = users.find((user) => user.name === selectedUser);
-        if (selectedUserData) {
-          setAngle(parseInt(selectedUserData.timeDifference, 10) * 30);
-        }
-      }
-    }
+    dispatch({ type: "hoverUser", userName, timeDifference, users });
   };
 
   return (
@@ -182,6 +230,7 @@ export default function TeamClock({
                   onHover={handleUserHover}
                   isSelected={selectedUser === user.name}
                   isHovered={hoveredUser === user.name}
+                  isMobile={isMobile}
                   currentTime={currentTime}
                   animationDuration={animationDuration}
                   accentColor={accentColor}
@@ -215,11 +264,10 @@ function Clock({
   textColor,
   backgroundColor,
 }: ClockProps) {
-  const [time, setTime] = useState<Date | null>(null);
+  const [time, setTime] = useState(() => new Date());
   const gradientRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    setTime(new Date());
     const interval = setInterval(() => {
       setTime(new Date());
     }, 1000);
@@ -240,10 +288,6 @@ function Clock({
           }deg, rgba(200,0,0,0.3), rgba(200,0,0,0.0) ${-angle}deg)`;
     }
   }, [angle, time]);
-
-  if (!time) {
-    return null;
-  }
 
   const hours = time.getHours();
   const minutes = time.getMinutes();
@@ -315,6 +359,7 @@ interface ListElementProp {
   onHover: (name: string | null, timeDifference: string | null) => void;
   isSelected: boolean;
   isHovered: boolean;
+  isMobile: boolean;
   currentTime: Date;
   animationDuration: number;
   accentColor: string;
@@ -324,28 +369,16 @@ interface ListElementProp {
 
 function ListElement(props: ListElementProp) {
   const [isHovered, setIsHovered] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-
-    checkMobile();
-    window.addEventListener("resize", checkMobile);
-
-    return () => window.removeEventListener("resize", checkMobile);
-  }, []);
 
   const handleEnter = () => {
-    if (!isMobile) {
+    if (!props.isMobile) {
       setIsHovered(true);
       props.onHover(props.name, props.timeDifference);
     }
   };
 
   const handleLeave = () => {
-    if (!isMobile) {
+    if (!props.isMobile) {
       setIsHovered(false);
       props.onHover(null, null);
     }

@@ -6,6 +6,11 @@ date: 2026-06-01
 
 Added Stacked Sections for pinned chapter scroll stories. Wave 1 widgets got Apple-style type hierarchy and props-driven demos. Card Spread was rebuilt for deck, peek, and throw-on-click motion. Card Stack was trimmed to bare-bones stack mechanics with profile UI moved to the Storybook demo. Four oversized widgets left the public catalog, and the internal widget standards doc was removed from contributing.
 
+
+## Site quality
+
+Ran a site-wide react-doctor remediation pass and cleared the scan to zero errors and zero warnings across the component library and docs app. Consolidated Motion imports behind a shared `LazyMotion` helper with the lazy `domAnimation` bundle, tightened pnpm install behavior, and added a GitHub Actions workflow that runs react-doctor on pull requests and pushes to main.
+
 ## New components
 
 <ChangeLogComponents>
@@ -82,9 +87,25 @@ Added Stacked Sections for pinned chapter scroll stories. Wave 1 widgets got App
     <h3>Card Stack</h3>
     <p>Trimmed the component to bare-bones stack mechanics (`CardStack`, `Viewport`, `List`, `Card`, `Trigger`). Profile card UI — masks, header, media, metrics — moved to the Storybook demo composition. Added `full` on `Trigger` for click-anywhere overlay vs discrete button.</p>
   </ChangeLogEntry>
+  <ChangeLogEntry href="/docs/card/flip-card">
+    <h3>Flip Card</h3>
+    <p>Replaced fixed image/title/description props with composable `FlipCard.Front` and `FlipCard.Back` faces. Hover flip along X or Y stays on the root.</p>
+  </ChangeLogEntry>
+  <ChangeLogEntry href="/docs/list/flipping-cards">
+    <h3>Flipping Cards</h3>
+    <p>Replaced the `list` prop and inline flip markup with `FlippingCards`, `Item`, `Item.Front`, and `Item.Back` — grid layout on the list, flip mechanics delegated to Flip Card.</p>
+  </ChangeLogEntry>
+  <ChangeLogEntry href="/docs/preloader/split-reveal">
+    <h3>Split Reveal</h3>
+    <p>Moved image preloading to opt-in `SplitReveal.Images`. Added `SplitReveal.Task` for custom async or generator progress, plus `ready` and `progress` props for external boot control. Shutters and progress UI compose under `SplitReveal.Overlay`.</p>
+  </ChangeLogEntry>
 </ChangeLogComponents>
 
 ## Documentation
+
+Added `robots.txt`, expanded the sitemap to include blog and secondary routes, and wired dedicated metadata for the home and 404 pages.
+
+Published [Top Animated React Buttons (2026)](/docs/guides/animated-react-buttons) as a curated button hub with registry install commands.
 
 Added a Resources page at `/resources` — 26 curated design galleries with grateful, first-person copy and OG previews, linked from the footer only. Redesigned the site footer with structured columns, social links, and a resources callout.
 

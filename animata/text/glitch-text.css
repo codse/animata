@@ -3,7 +3,7 @@
     --glitch-intensity: 5;
     --glitch-step: 0.01em;
     --glitch-duration: 2.5s;
-    --glitch-color-base: #ffffff;
+    --glitch-color-base: var(--text-foreground);
     --glitch-color-a: #ff00ff;
     --glitch-color-b: #00ffff;
     --glitch-blend-mode: screen;

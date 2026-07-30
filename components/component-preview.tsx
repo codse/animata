@@ -138,6 +138,8 @@ function PropsEditor({
               <button
                 id={`prop-${key}`}
                 type="button"
+                aria-label={`Toggle ${key}`}
+                aria-pressed={value}
                 onClick={() => onChange(key, !value)}
                 className={cn(
                   "h-5 w-9 rounded-full transition-colors",
@@ -155,6 +157,7 @@ function PropsEditor({
               <input
                 id={`prop-${key}`}
                 type="number"
+                aria-label={key}
                 value={value}
                 onChange={(e) => onChange(key, Number(e.target.value))}
                 className="h-7 w-24 rounded border bg-background px-2 font-mono text-xs"
@@ -163,6 +166,7 @@ function PropsEditor({
               <input
                 id={`prop-${key}`}
                 type="text"
+                aria-label={key}
                 value={String(value)}
                 onChange={(e) => onChange(key, e.target.value)}
                 className="h-7 flex-1 rounded border bg-background px-2 font-mono text-xs"
@@ -203,6 +207,32 @@ interface StoryData {
   initialArgs: Record<string, unknown>;
   argTypes: Record<string, ArgType>;
   otherStories: OtherStory[];
+}
+
+type StoryViewState = {
+  storyData: StoryData | null;
+  args: Record<string, unknown>;
+  error: string | null;
+};
+
+type StoryViewAction =
+  | { type: "loaded"; storyData: StoryData; args: Record<string, unknown> }
+  | { type: "setArg"; key: string; value: unknown }
+  | { type: "error"; error: string };
+
+function storyViewReducer(state: StoryViewState, action: StoryViewAction): StoryViewState {
+  switch (action.type) {
+    case "loaded":
+      return { storyData: action.storyData, args: action.args, error: null };
+    case "setArg":
+      return state.storyData
+        ? { ...state, args: { ...state.args, [action.key]: action.value } }
+        : state;
+    case "error":
+      return { storyData: null, args: {}, error: action.error };
+    default:
+      return state;
+  }
 }
 
 function formatStoryName(exportName: string): string {
@@ -287,9 +317,13 @@ function StoryRenderer({
   showOtherStories?: boolean | string;
 }) {
   const includeOtherStories = shouldShowOtherStories(showOtherStories);
-  const [storyData, setStoryData] = React.useState<StoryData | null>(null);
-  const [args, setArgs] = React.useState<Record<string, unknown>>({});
-  const [error, setError] = React.useState<string | null>(null);
+
+  const [storyState, dispatchStory] = React.useReducer(storyViewReducer, {
+    storyData: null,
+    args: {},
+    error: null,
+  });
+  const { storyData, args, error } = storyState;
 
   React.useEffect(() => {
     const path = storyIdToPath(name);
@@ -300,25 +334,24 @@ function StoryRenderer({
       .then((mod) => {
         const result = loadStoryModule(mod, exportName, includeOtherStories);
         if (typeof result === "string") {
-          setError(result);
+          dispatchStory({ type: "error", error: result });
           return;
         }
-        setArgs(result.initialArgs);
-        setStoryData(result);
+        dispatchStory({ type: "loaded", storyData: result, args: result.initialArgs });
       })
       .catch((err) => {
         console.error(`Failed to load story ${path}:`, err);
-        setError(`Failed to load: ${path}`);
+        dispatchStory({ type: "error", error: `Failed to load: ${path}` });
       });
   }, [name, includeOtherStories]);
 
   const handleChange = React.useCallback((key: string, value: unknown) => {
-    setArgs((prev) => ({ ...prev, [key]: value }));
+    dispatchStory({ type: "setArg", key, value });
   }, []);
 
   const handleReset = React.useCallback(() => {
     if (storyData) {
-      setArgs(storyData.initialArgs);
+      dispatchStory({ type: "loaded", storyData, args: storyData.initialArgs });
     }
   }, [storyData]);
 

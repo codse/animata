@@ -1,23 +1,25 @@
-/* Demo typography for preset previews — globals + text-animator.tsx + text-animator-list-demo.tsx */
-.text-animator-demo .text-animation-stage,
-[data-text-animator-demo] .text-animation-stage {
-  padding: clamp(1rem, 5cqi, 1.5rem);
-  perspective: 900px;
-  font-size: clamp(1rem, 10cqi, 2rem);
-  font-weight: 500;
-  line-height: 1.1;
-}
+@layer components {
+  /* Demo typography for preset previews — loaded via styles/globals.css */
+  .text-animator-demo .text-animation-stage,
+  [data-text-animator-demo] .text-animation-stage {
+    padding: clamp(1rem, 5cqi, 1.5rem);
+    font-size: clamp(1rem, 10cqi, 2rem);
+    perspective: 900px;
+    font-weight: 500;
+    line-height: 1.1;
+  }
 
-.text-animator-demo .text-animation-title,
-.text-animator-demo .text-animation-kinetic-word,
-[data-text-animator-demo] .text-animation-title,
-[data-text-animator-demo] .text-animation-kinetic-word {
-  text-align: center;
-  letter-spacing: -0.025em;
-}
+  .text-animator-demo .text-animation-title,
+  .text-animator-demo .text-animation-kinetic-word,
+  [data-text-animator-demo] .text-animation-title,
+  [data-text-animator-demo] .text-animation-kinetic-word {
+    text-align: center;
+    letter-spacing: -0.025em;
+  }
 
-.text-animator-demo .text-animation-title,
-[data-text-animator-demo] .text-animation-title {
-  text-wrap: balance;
-  font-variant-numeric: tabular-nums;
+  .text-animator-demo .text-animation-title,
+  [data-text-animator-demo] .text-animation-title {
+    text-wrap: balance;
+    font-variant-numeric: tabular-nums;
+  }
 }

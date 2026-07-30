@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useId, useState } from "react";
 
 interface IToggleSwitchProps {
   onChange?: (value: boolean) => void;
@@ -7,6 +7,7 @@ interface IToggleSwitchProps {
 }
 
 const ToggleSwitch = ({ onChange, defaultChecked }: IToggleSwitchProps) => {
+  const id = useId();
   const [isChecked, setIsChecked] = useState<boolean>(defaultChecked ?? false);
   const handleCheckboxChange = () => {
     const newCheckedState = !isChecked;
@@ -15,12 +16,14 @@ const ToggleSwitch = ({ onChange, defaultChecked }: IToggleSwitchProps) => {
   };
 
   return (
-    <label className="flex cursor-pointer select-none items-center">
+    <label htmlFor={id} className="flex cursor-pointer select-none items-center">
       <div className="relative">
         <input
+          id={id}
           type="checkbox"
           checked={isChecked}
           onChange={handleCheckboxChange}
+          aria-label="Toggle switch"
           className="sr-only"
         />
         <div className={`box block h-8 w-14 rounded-full ${isChecked ? "bg-muted" : "bg-muted"}`} />

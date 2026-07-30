@@ -15,7 +15,7 @@ interface GibberishTextProps {
 }
 
 const Letter = ({ letter, className }: { letter: string; className?: string }) => {
-  const [code, setCode] = useState(letter.toUpperCase().charCodeAt(0));
+  const [code, setCode] = useState(() => letter.toUpperCase().charCodeAt(0));
 
   useEffect(() => {
     let count = Math.floor(Math.random() * 10) + 5;

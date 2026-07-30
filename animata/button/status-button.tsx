@@ -24,6 +24,7 @@ export default function StatusButton() {
 
   return (
     <button
+      type="button"
       onClick={changeStatus}
       disabled={!isEnabled}
       className="group/status relative h-10 min-w-40 overflow-hidden rounded-md bg-teal-500 px-6 text-sm font-semibold text-white transition-colors duration-300 hover:bg-teal-600"

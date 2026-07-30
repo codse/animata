@@ -58,8 +58,13 @@ export default function SwapText({
 
   return (
     <div {...props} className={cn("relative overflow-hidden text-foreground", className)}>
-      <div
-        className={cn("group/swap cursor-pointer select-none text-3xl font-bold", textClassName)}
+      <button
+        type="button"
+        disabled={disableClick}
+        className={cn(
+          "group/swap w-full cursor-pointer select-none border-0 bg-transparent p-0 text-left text-3xl font-bold text-inherit",
+          textClassName,
+        )}
         onClick={() => !disableClick && setActive((current) => !current)}
       >
         <span
@@ -83,7 +88,7 @@ export default function SwapText({
         >
           {finalText}
         </span>
-      </div>
+      </button>
     </div>
   );
 }
