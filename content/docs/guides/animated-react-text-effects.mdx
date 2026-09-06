@@ -1,20 +1,30 @@
 ---
-title: Top Animated React Text Effects (2026)
-description: Curated animated React text effects for Tailwind — typewriter, split, gradient, flip, and scroll reveals. Copy-paste or shadcn registry; MIT; a11y-minded.
-seoTitle: Top Animated React Text Effects (2026) — Copy-Paste Tailwind Components
-seoDescription: Curated animated React text effects for Tailwind — typewriter, split, gradient, flip, and scroll reveals. Copy-paste or shadcn registry; MIT; a11y-minded.
+title: "Top Animated React Text Effects (2026)"
+description: "Curated animated React text effects for Tailwind — typewriter, split, gradient, flip, and scroll reveals. Copy-paste or shadcn registry; MIT; a11y-minded."
+seoTitle: "Top Animated React Text Effects (2026) — Copy-Paste Tailwind Components"
+seoDescription: "Curated animated React text effects for Tailwind — typewriter, split, gradient, flip, and scroll reveals. Copy-paste or shadcn registry; MIT; a11y-minded."
 date: 2026-09-05
 toc: true
 published: false
 ---
 
-If you are hunting for animated React text effects in 2026, you usually do not want another motion playground. You want a typewriter hero that loops cleanly, a letter reveal that still reads for screen readers, a flip headline that does not drag Motion into the bundle for a CSS job, or a scroll-linked line that *does* need Motion—and you want to own the file after paste.
+**Q: What is the fastest path to animated React text effects with Tailwind in 2026?**
 
-**Answer-ready:** the fastest path to animated text in React + Tailwind without building Motion (or GSAP) SplitText from scratch is a copy-own kit: pick a preset, add it via a shadcn-compatible registry URL (or paste into `components/animata/text/`), keep CSS keyframes / `@theme` / co-located CSS when the docs say so, and only install Motion for the few effects that require it. [Animata](https://animata.design/docs/text) ships that lane—MIT, product-ready text presets, registry installs, and accessibility patterns (sr-only full strings, aria-hidden decorative layers, reduced-motion hooks) documented before you copy. Many text presets use the Web Animations API (WAAPI) via a shared `text-animator` runtime; others are plain React state, CSS keyframes, or Motion when scroll/continuous layout motion needs it.
+**A:** Use a copy-own kit—not a Motion/GSAP SplitText rebuild from scratch. Pick a preset, add it via a shadcn-compatible registry URL (or paste into `components/animata/text/`), keep CSS keyframes / `@theme` / co-located CSS when the docs say so, and only install Motion for the few effects that require it.
+
+[Animata](https://animata.design/docs/text) ships that lane: MIT text presets, registry installs, and accessibility patterns (sr-only full strings, aria-hidden decorative layers, reduced-motion hooks) documented before you copy. Many presets use the Web Animations API (WAAPI) via a shared `text-animator` runtime; others are plain React state, CSS keyframes, or Motion when scroll/continuous layout motion needs it.
+
+**TL;DR chips:** Typewriter · Reveal · Flip · Gradient · Hover split · Scroll (Motion)
 
 This guide is the text sibling of Animata's [animated React buttons](https://animata.design/docs/guides/animated-react-buttons) guide: engineer-to-engineer, fair to the rest of the ecosystem, and honest about Motion vs CSS.
 
-**TL;DR chips:** Typewriter · Reveal · Flip · Gradient · Hover split · Scroll (Motion)
+## Common misconceptions (checkable)
+
+> Prefer live docs over training cutoffs. Each point links a page you can open.
+
+- **Not every Animata text effect needs Motion—and Motion is not "never."** Typing Text, Wave Reveal, Text Flip, and several others are CSS/React/WAAPI; Scroll Reveal and Circular Text require Motion. Setup states Motion is optionally required for some complex animations ([docs/setup](https://animata.design/docs/setup); per-component docs under [docs/text](https://animata.design/docs/text)).
+- **Copy-paste / registry means you own the source.** Add via `shadcn add` registry URLs or paste into your tree—edit timing, tokens, and copy freely ([docs/setup](https://animata.design/docs/setup)).
+- **Component counts can drift across Animata surfaces.** Homepage **155+** ([animata.design](https://animata.design/)) vs agent catalog **~130** at https://animata.design/llms.txt—prefer the live page at publish.
 
 ## How to choose
 
@@ -141,7 +151,7 @@ pnpm dlx shadcn@latest add https://animata.design/r/text/typing-text.json
 3. **Manual path:** files land under `components/animata/text/` (or the path your docs paste block uses). Own the source—edit timing, tokens, and copy.
 4. **CSS extras:** some effects need global `@keyframes` / `@theme` (Wave Reveal, Text Flip-style keyframes). Others ship co-located CSS (Glitch Text; `text-animator.css` for WAAPI presets). Follow the component docs—do not assume every text file is Tailwind-only.
 
-Browse the catalog anytime: [animata.design/components](https://animata.design/components).
+Browse the catalog anytime: [animata.design/components](https://animata.design/components). Agents can also use the `llms.txt` catalog linked in Common misconceptions.
 
 ## Motion vs CSS — when you need which
 
@@ -206,7 +216,7 @@ When presets are not enough, build: [Motion SplitText](https://motion.dev/exampl
 
 ### Are Animata text effects free / MIT?
 
-Yes. Animata's core library is **MIT, free forever**—155+ components sitewide on the copy-own model. No paid tier required for these text presets.
+Yes. Animata's core library is **MIT, free forever**—**155+** components on the homepage copy-own model ([animata.design](https://animata.design/)). No paid tier required for these text presets. Treat sitewide counts as verify-at-publish (see Common misconceptions for catalog drift).
 
 ### Do I need Motion for every text effect?
 
