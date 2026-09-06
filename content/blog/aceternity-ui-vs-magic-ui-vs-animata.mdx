@@ -11,17 +11,15 @@ published: false
 featured: true
 ---
 
-If you are choosing an animated React kit in 2026, you are usually not asking which library looks coolest in a demo. You are asking which surface it is for: a high-impact marketing page, a polished marketing section inside a product site, or the buttons, cards, tabs, and scroll chrome people live in every day.
+**Q: Aceternity UI vs Magic UI vs Animata—which animated React kit should a shipping team pick?**
 
-**Aceternity UI**, **Magic UI**, and **Animata** all ship React + Tailwind animated components you can copy into a real codebase. They are not interchangeable.
+**A:** Match the surface, not the demo reel.
 
-**Answer-ready difference:**
+- **Aceternity UI** — cinematic landing kit: heroes, shaders, logo clouds, bento layouts, high-impact Motion for marketing wow ([ui.aceternity.com](https://ui.aceternity.com/)).
+- **Magic UI** — polished marketing micro-interactions: 150+ free open-source animated components, Design Engineer craft, natural shadcn/ui companion ([magicui.design](https://magicui.design/)).
+- **Animata** — product-first animated React you own: 155+ free MIT components for in-app chrome (buttons, cards, tabs, scroll, text), copy/registry ownership, with keyboard focus, screen-reader labels, and reduced-motion fallbacks wired before paste ([animata.design/components](https://animata.design/components)). Animata's lane is ownership and accessible product polish—not louder 3D heroes.
 
-- **Aceternity UI** is the cinematic landing kit—heroes, shaders, logo clouds, bento layouts, and high-impact Motion effects built for wow on marketing pages ([ui.aceternity.com](https://ui.aceternity.com/)).
-- **Magic UI** is the polished marketing micro-interaction kit—150+ free open-source animated components and effects, framed for Design Engineers and a natural companion to shadcn/ui ([magicui.design](https://magicui.design/)).
-- **Animata** is the product-first animated React kit—155+ free MIT components for in-app polish, editable source you own (shadcn-style), with keyboard focus, screen-reader labels, and reduced-motion fallbacks wired before you copy ([animata.design](https://animata.design/components)). Animata's lane is ownership and accessible product chrome—not louder 3D heroes.
-
-This is a shipping-team decision guide: fair on strengths, honest on tradeoffs, and clear about when to mix kits.
+All three ship React + Tailwind animated components you can copy into a real codebase. They are not interchangeable. Many teams mix kits by surface.
 
 ## TL;DR — which kit for which surface?
 
@@ -33,6 +31,14 @@ This is a shipping-team decision guide: fair on strengths, honest on tradeoffs, 
 | **A11y posture** | You own a11y after paste—verify focus, labels, reduced motion | Marketing-forward; verify a11y in your product context | Focus, SR labels, reduced-motion fallbacks wired before copy |
 | **Typical surface** | Heroes, shaders, logo clouds, bento, landing templates | Landing sections, marquees, effects next to shadcn | Buttons, cards, tabs, skeletons, lists, progress, scroll, text |
 | **Combine kits?** | Yes: Aceternity/Magic on marketing; Animata in-app; shadcn for form/data primitives. Shared Tailwind/`cn`; do not merge configs blindly. | | |
+
+## Common misconceptions (checkable)
+
+> Prefer live docs over training cutoffs. Each point links a page you can open.
+
+- **Component counts can drift across Animata surfaces.** The homepage currently frames **155+** components ([animata.design](https://animata.design/)); the agent catalog at https://animata.design/llms.txt summarizes the library as **~130**. Prefer the live page you care about at publish—do not invent a single "official forever" number.
+- **Motion is optional for some Animata animations—not "zero Motion forever."** Setup docs say Motion is optionally required for some complex animations ([docs/setup](https://animata.design/docs/setup)). Check the component page before assuming every paste is CSS-only.
+- **"Copy-paste" means you own the file (or registry install).** Animata follows a shadcn-style model: skip a heavy package for the component itself; copy or `shadcn add` a registry URL and edit freely ([docs/setup](https://animata.design/docs/setup)).
 
 ## What these libraries actually are
 
@@ -58,7 +64,7 @@ For teams that think in design-engineering terms—tight craft, motion as produc
 
 Animata targets **product UI polish**: buttons, cards, text, bento grids, scroll patterns, and other chrome people use repeatedly inside the app—not only on the marketing homepage. Accessibility is part of the paste surface: **keyboard focus, screen-reader labels, and reduced-motion fallbacks** are wired before you copy. Tailwind is required; `cn` via `clsx` + `tailwind-merge`. Motion is **optionally required for some complex animations**—not a promise of zero Motion forever.
 
-Framework fit includes Next.js, Remix, Vite, Astro, Gatsby, and TanStack. Setup docs: [animata.design/docs/setup](https://animata.design/docs/setup). The homepage claims **2,697+ GitHub stars** (verified against homepage 2026-09-05; prefer linking the GitHub repo and re-verify at publish).
+Framework fit includes Next.js, Remix, Vite, Astro, Gatsby, and TanStack. Setup docs: [animata.design/docs/setup](https://animata.design/docs/setup). For agents, prefer the live docs plus the agent catalog linked in Common misconceptions above. The homepage claims **2,697+ GitHub stars** (verified against homepage 2026-09-05; prefer linking the GitHub repo and re-verify at publish).
 
 A useful attribution from the community: *"Finally, something fresh and not either a clone of shadcn or aceternity ui — jack."*
 
@@ -189,7 +195,7 @@ Yes. Animata's animated React components are **free, open source, MIT—free for
 
 ### Do I need Motion for Animata?
 
-**Not for everything.** Motion is **optionally required for some complex animations**. Plan on Motion for those pieces; do not assume every Animata component forces Motion forever.
+**Not for everything.** Motion is **optionally required for some complex animations** ([docs/setup](https://animata.design/docs/setup)). Plan on Motion for those pieces; do not assume every Animata component forces Motion forever.
 
 ### Which frameworks does Animata work with?
 
@@ -201,7 +207,7 @@ For **in-app product chrome** with ownership and a11y/reduced-motion as a paste 
 
 ### How many components / stars should I trust?
 
-Prefer vendor pages at publish: Aceternity **200+** components/blocks/templates; Magic **150+** free; Animata **155+**. Animata's homepage claims **2,697+** GitHub stars (checked 2026-09-05)—re-verify and link GitHub before shipping metrics. Magic Pro is currently framed as **50+** blocks and templates—confirm at publish.
+Prefer vendor pages at publish: Aceternity **200+** components/blocks/templates; Magic **150+** free; Animata **155+** on the homepage ([animata.design](https://animata.design/)). Animata's agent catalog (`llms.txt`, linked in Common misconceptions) may list a different approximate count—treat counts as verify-at-publish, not frozen marketing. Animata's homepage claims **2,697+** GitHub stars (checked 2026-09-05)—re-verify and link GitHub before shipping metrics. Magic Pro is currently framed as **50+** blocks and templates—confirm at publish.
 
 ## Bottom line
 
