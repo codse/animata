@@ -67,6 +67,11 @@ function Hero() {
             className="inline-flex w-full items-center justify-center gap-2 rounded-full border border-border bg-background px-8 py-3.5 text-[15px] font-semibold text-foreground transition-colors hover:border-foreground/25 hover:bg-foreground/3 sm:w-auto"
           />
         </div>
+
+        {/* Carbon cover unit must stay above the fold per publisher docs */}
+        <div className="mt-8 flex justify-center">
+          <CarbonAds />
+        </div>
       </div>
     </section>
   );
@@ -137,10 +142,6 @@ export default function HomePage() {
       <Hero />
 
       <StatsBento />
-
-      <div className="flex justify-center px-6 py-8">
-        <CarbonAds />
-      </div>
 
       <WhySection />
 
