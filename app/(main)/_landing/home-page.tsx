@@ -50,12 +50,9 @@ function Hero() {
           <br />
           Look better.
         </h1>
-        <p className="mx-auto mt-3 max-w-lg text-balance text-[15px] font-medium tracking-tight text-foreground sm:text-[16px]">
-          Copy-paste animated React components — free forever.
-        </p>
-        <p className="mx-auto mt-4 max-w-md text-balance text-[clamp(15px,2vw,18px)] leading-[1.6] text-[hsl(var(--text-secondary))]">
-          {siteStats.componentsFormatted} hand-crafted effects for Next.js, Vite, and beyond. Own
-          the code — no npm lock-in.
+        <p className="mx-auto mt-6 max-w-md text-balance text-[clamp(15px,2vw,18px)] leading-[1.6] text-[hsl(var(--text-secondary))]">
+          {siteStats.componentsFormatted} animated React components you can copy into any project.
+          Free, open source, and ready to use.
         </p>
 
         <div className="mt-8 flex w-full max-w-md flex-col gap-3 sm:mx-auto sm:mt-10 sm:max-w-none sm:flex-row sm:justify-center">
@@ -70,11 +67,6 @@ function Hero() {
             className="inline-flex w-full items-center justify-center gap-2 rounded-full border border-border bg-background px-8 py-3.5 text-[15px] font-semibold text-foreground transition-colors hover:border-foreground/25 hover:bg-foreground/3 sm:w-auto"
           />
         </div>
-
-        <p className="mt-5 text-center text-[13px] text-muted-foreground">
-          <span className="mr-1.5 inline-block h-1.5 w-1.5 rounded-full bg-emerald-500" />
-          Free forever · Trusted by shipping teams
-        </p>
       </div>
     </section>
   );
