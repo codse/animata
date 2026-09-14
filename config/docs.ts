@@ -59,12 +59,18 @@ const sidebarNav: SidebarNavItem[] = [
             href: "/docs/guides/animated-react-buttons",
             items: [],
           },
+          {
+            title: "Animated React Text Effects",
+            href: "/docs/guides/animated-react-text-effects",
+            items: [],
+          },
         ],
       },
       {
         title: "Changelog",
         href: "/docs/changelog",
         items: [
+          { title: "September 2026", href: "/docs/changelog/2026-09", items: [] },
           { title: "June 2026", href: "/docs/changelog/2026-06", items: [] },
           { title: "May 2026", href: "/docs/changelog/2026-05", items: [] },
           { title: "April 2026", href: "/docs/changelog/2026-04", items: [] },

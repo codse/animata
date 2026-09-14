@@ -6,9 +6,8 @@ import { useEffect, useRef, useState } from "react";
 
 import GibberishText from "@/animata/text/gibberish-text";
 import ComponentLinkWrapper from "@/components/component-link-wrapper";
-import { Icons } from "@/components/icons";
+import { GitHubStarLink } from "@/components/github-star-link";
 import RemountOnMouseIn from "@/components/remount-on-mouse-in";
-import { siteConfig } from "@/config/site";
 
 export default function CallToActionSection() {
   const headerRef = useRef<HTMLHeadingElement>(null);
@@ -40,22 +39,17 @@ export default function CallToActionSection() {
           weeks of work.
         </p>
 
-        <div className="mt-8 flex flex-col items-center gap-4 sm:flex-row">
+        <div className="mt-8 flex w-full max-w-md flex-col gap-3 sm:max-w-none sm:flex-row sm:items-center sm:justify-center">
           <Link
             href="/docs"
-            className="inline-flex items-center justify-center rounded-full bg-[hsl(var(--accent))] px-8 py-3.5 text-[16px] font-semibold text-white transition-opacity hover:opacity-90"
+            className="inline-flex w-full items-center justify-center rounded-full bg-[hsl(var(--accent))] px-8 py-3.5 text-[16px] font-semibold text-white transition-opacity hover:opacity-90 sm:w-auto"
           >
             Get started now
           </Link>
-          <Link
-            href={siteConfig.links.github}
-            target="_blank"
-            rel="noreferrer"
-            className="inline-flex items-center gap-2 text-[15px] font-medium text-muted-foreground transition-colors hover:text-foreground"
-          >
-            <Icons.gitHub className="size-4" />
-            View on GitHub
-          </Link>
+          <GitHubStarLink
+            source="cta"
+            className="inline-flex w-full items-center justify-center gap-2 rounded-full border border-border bg-background px-8 py-3.5 text-[15px] font-semibold text-foreground transition-colors hover:border-foreground/25 hover:bg-foreground/3 sm:w-auto"
+          />
         </div>
       </div>
     </section>
