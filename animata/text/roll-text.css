@@ -19,12 +19,16 @@
     white-space: pre;
   }
 
-  /* inline-grid + overflow:hidden keeps the text baseline (from the sizer in
-     row 1) while clipping the translated stack. */
+  /* inline-grid + clip keeps the text baseline (from the sizer in row 1)
+     while clipping the translated stack. Prefer clip-path/contain over plain
+     overflow:hidden — sticky headers with backdrop-filter promote compositing
+     layers that can let transformed children paint outside overflow:hidden. */
   .roll-unit {
     position: relative;
     display: inline-grid;
-    overflow: hidden;
+    overflow: clip;
+    clip-path: inset(0);
+    contain: paint;
     vertical-align: baseline;
     font-kerning: none;
     line-height: inherit;

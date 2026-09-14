@@ -1,0 +1,15 @@
+---
+title: September 2026
+description: Homepage conversion fixes for GitHub stars and newsletter subscribe.
+date: 2026-09-01
+---
+
+Tightened the homepage conversion path for GitHub stars and email subscribe: clearer asks, equal hero CTAs, an earlier newsletter block, a header star badge, and tracked subscribe/star events in PostHog.
+
+## Site
+
+Rewrote star CTAs to lead with why (“Star to follow releases”), made the hero star control a full-size button on mobile, and replaced the icon-only header GitHub link with a visible Star · count pill.
+
+Moved the featured newsletter up (after open source), added a “Just starred?” bridge to email, and made footer/exit-intent subscribe controls use a visible Subscribe button with risk-reversal copy. Made exit intent email-first and added mobile scroll-depth and time-on-page triggers.
+
+Hardened the stars ticker so it shows the real count on first paint instead of a `0,000+` flash. Added `newsletter_subscribe` and `github_star_click` PostHog events so conversion can be measured against home sessions.
