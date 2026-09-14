@@ -241,20 +241,35 @@ function buildBreadcrumbJsonLd(doc: PublishedDoc) {
 }
 
 function buildGuideItemListJsonLd(doc: PublishedDoc, description: string) {
-  if (doc.slugAsParams !== "guides/animated-react-buttons") {
+  const guideLists: Record<string, Array<{ name: string; url: string }>> = {
+    "guides/animated-react-buttons": [
+      { name: "AI Button", url: "/docs/button/ai-button" },
+      { name: "Duolingo Button", url: "/docs/button/duolingo" },
+      { name: "Ripple Button", url: "/docs/button/ripple-button" },
+      { name: "Shining Button", url: "/docs/button/shining-button" },
+      { name: "Swipe Button", url: "/docs/button/swipe-button" },
+      { name: "Status Button", url: "/docs/button/status-button" },
+      { name: "Animated Follow Button", url: "/docs/button/animated-follow-button" },
+      { name: "Get Started Button", url: "/docs/button/get-started-button" },
+    ],
+    "guides/animated-react-text-effects": [
+      { name: "Typing Text", url: "/docs/text/typing-text" },
+      { name: "Wave Reveal", url: "/docs/text/wave-reveal" },
+      { name: "Text Flip", url: "/docs/text/text-flip" },
+      { name: "Animated Gradient Text", url: "/docs/text/animated-gradient-text" },
+      { name: "Split Text", url: "/docs/text/split-text" },
+      { name: "Scroll Reveal", url: "/docs/text/scroll-reveal" },
+      { name: "Circular Text", url: "/docs/text/circular-text" },
+      { name: "Glitch Text", url: "/docs/text/glitch-text" },
+      { name: "Gibberish Text", url: "/docs/text/gibberish-text" },
+      { name: "Shimmer Sweep", url: "/docs/text/shimmer-sweep" },
+    ],
+  };
+
+  const items = guideLists[doc.slugAsParams];
+  if (!items) {
     return null;
   }
-
-  const items = [
-    { name: "AI Button", url: "/docs/button/ai-button" },
-    { name: "Duolingo Button", url: "/docs/button/duolingo" },
-    { name: "Ripple Button", url: "/docs/button/ripple-button" },
-    { name: "Shining Button", url: "/docs/button/shining-button" },
-    { name: "Swipe Button", url: "/docs/button/swipe-button" },
-    { name: "Status Button", url: "/docs/button/status-button" },
-    { name: "Animated Follow Button", url: "/docs/button/animated-follow-button" },
-    { name: "Get Started Button", url: "/docs/button/get-started-button" },
-  ];
 
   return {
     "@context": "https://schema.org",
@@ -351,8 +366,81 @@ export function buildBlogMetadata(blog: PublishedBlog): Metadata {
     description,
     path: blog.slug,
     type: "article",
-    keywords: [blog.title, ...(blog.labels ?? [])],
+    keywords: [
+      blog.title,
+      ...(blog.labels ?? []),
+      "animated React components",
+      "Tailwind CSS",
+    ],
   });
+}
+
+function buildBlogAuthorJsonLd(blog: PublishedBlog) {
+  if (!blog.author || blog.author === "AnimataDesign") {
+    return {
+      "@type": "Organization",
+      name: BRAND_SUFFIX,
+      url: siteConfig.url,
+    };
+  }
+
+  return {
+    "@type": "Person",
+    name: blog.author,
+    url: `https://twitter.com/${blog.author}`,
+  };
+}
+
+function buildBlogFaqJsonLd(blog: PublishedBlog) {
+  if (blog.slugAsParams !== "aceternity-ui-vs-magic-ui-vs-animata") {
+    return null;
+  }
+
+  const faqs = [
+    {
+      question: "What is the difference between Aceternity UI, Magic UI, and Animata?",
+      answer:
+        "Aceternity UI is strongest for cinematic landing pages. Magic UI is strongest for polished marketing micro-interactions next to shadcn/ui. Animata is strongest for product UI polish you own under MIT, with accessibility and reduced-motion patterns included before paste.",
+    },
+    {
+      question: "Is Animata a free open-source Aceternity alternative?",
+      answer:
+        "For product UI animated components you own, yes—Animata is free MIT open source. It is not a 1:1 substitute for Aceternity's cinematic landing catalog. Many teams use both.",
+    },
+    {
+      question: "When should I use Aceternity UI, Magic UI, or Animata?",
+      answer:
+        "Use Aceternity for marketing heroes and high-impact landing sections. Use Magic for marketing micro-interactions beside shadcn. Use Animata for buttons, cards, tabs, scroll, and text inside the product.",
+    },
+    {
+      question: "Is Animata free forever?",
+      answer:
+        "Yes. Animata's animated React components are free, open source, and MIT-licensed for the core library.",
+    },
+    {
+      question: "Do I need Motion for Animata?",
+      answer:
+        "Not for everything. Motion is optionally required for some complex animations. Check each component's docs before assuming Motion is required.",
+    },
+    {
+      question: "Magic UI vs Animata for app UI?",
+      answer:
+        "For in-app product chrome with ownership and accessibility defaults, prefer Animata. For marketing sections and Design Engineer micro-interactions beside shadcn, prefer Magic. They can coexist.",
+    },
+  ];
+
+  return {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqs.map((faq) => ({
+      "@type": "Question",
+      name: faq.question,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: faq.answer,
+      },
+    })),
+  };
 }
 
 export function buildBlogJsonLd(blog: PublishedBlog, description: string) {
@@ -369,17 +457,7 @@ export function buildBlogJsonLd(blog: PublishedBlog, description: string) {
     datePublished: blog.date,
     dateModified: blog.dateModified ?? blog.date,
     image: siteConfig.ogImage,
-    author: blog.author
-      ? {
-          "@type": "Person",
-          name: blog.author,
-          url: `https://twitter.com/${blog.author}`,
-        }
-      : {
-          "@type": "Organization",
-          name: BRAND_SUFFIX,
-          url: siteConfig.url,
-        },
+    author: buildBlogAuthorJsonLd(blog),
     publisher: {
       "@type": "Organization",
       name: BRAND_SUFFIX,
@@ -388,6 +466,11 @@ export function buildBlogJsonLd(blog: PublishedBlog, description: string) {
         "@type": "ImageObject",
         url: siteConfig.ogImage,
       },
+    },
+    isAccessibleForFree: true,
+    mainEntityOfPage: {
+      "@type": "WebPage",
+      "@id": absoluteUrl(blog.slug),
     },
   };
 
@@ -401,7 +484,8 @@ export function buildBlogJsonLd(blog: PublishedBlog, description: string) {
     ],
   };
 
-  return [article, breadcrumb];
+  const faq = buildBlogFaqJsonLd(blog);
+  return faq ? [article, breadcrumb, faq] : [article, breadcrumb];
 }
 
 export const homePageMetadata = createPageMetadata({

@@ -74,6 +74,12 @@ function buildIndex(byCategory) {
     "",
     `Install any component with: \`pnpm dlx shadcn@latest add ${SITE_URL}/r/{category}/{component}.json\``,
     "",
+    "## Guides & comparisons",
+    "",
+    `- [Top Animated React Buttons (2026)](${SITE_URL}/docs/guides/animated-react-buttons)`,
+    `- [Top Animated React Text Effects (2026)](${SITE_URL}/docs/guides/animated-react-text-effects)`,
+    `- [Aceternity UI vs Magic UI vs Animata](${SITE_URL}/blog/aceternity-ui-vs-magic-ui-vs-animata)`,
+    "",
   ];
 
   for (const { slug, title } of CATEGORY_ORDER) {
