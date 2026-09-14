@@ -59,6 +59,11 @@ const sidebarNav: SidebarNavItem[] = [
             href: "/docs/guides/animated-react-buttons",
             items: [],
           },
+          {
+            title: "Animated React Text Effects",
+            href: "/docs/guides/animated-react-text-effects",
+            items: [],
+          },
         ],
       },
       {
