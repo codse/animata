@@ -1,10 +1,12 @@
 "use client";
 import { useState } from "react";
 
+import { trackEvent } from "@/lib/events";
+
 const plunkApiUrl = "https://api.useplunk.com/v1/track";
 const plunkApiKey = process.env.NEXT_PUBLIC_PLUNK_API_KEY;
 
-export default function useNewsletterSubscription() {
+export default function useNewsletterSubscription(source = "unknown") {
   const initialState = {
     email: "",
     isLoading: false,
@@ -42,6 +44,7 @@ export default function useNewsletterSubscription() {
         subscribed: true,
         data: {
           project_id: "animata",
+          source,
         },
       }),
     };
@@ -50,7 +53,10 @@ export default function useNewsletterSubscription() {
       const response = await fetch(plunkApiUrl, options);
 
       if (response.status >= 200 && response.status < 300) {
-        // Email added successfully
+        trackEvent({
+          name: "newsletter_subscribe",
+          properties: { source },
+        });
         setState({
           ...initialState,
           isLoading: false,
@@ -60,7 +66,6 @@ export default function useNewsletterSubscription() {
       }
 
       if (response.status === 409) {
-        // Already subscribed
         setState({
           ...initialState,
           error: "You are already subscribed!",
@@ -68,7 +73,6 @@ export default function useNewsletterSubscription() {
         return;
       }
 
-      // Other errors
       const errorData = await response.json();
       setState({
         ...initialState,
