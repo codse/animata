@@ -21,10 +21,11 @@ export default function useExitIntent() {
   }, []);
 
   useEffect(() => {
+    let desktopReady = false;
     const isMobile = () => window.matchMedia(MOBILE_MQ).matches;
 
     const onMouseLeave = (e: MouseEvent) => {
-      if (isMobile()) return;
+      if (!desktopReady || isMobile()) return;
       if (e.clientY <= 0) show();
     };
 
@@ -36,15 +37,16 @@ export default function useExitIntent() {
       if (window.scrollY / scrollable >= MOBILE_SCROLL_RATIO) show();
     };
 
+    document.addEventListener("mouseleave", onMouseLeave);
+    window.addEventListener("scroll", onScroll, { passive: true });
+
     const desktopTimer = setTimeout(() => {
-      document.addEventListener("mouseleave", onMouseLeave);
+      desktopReady = true;
     }, DESKTOP_DELAY_MS);
 
     const mobileTimer = setTimeout(() => {
       if (isMobile()) show();
     }, MOBILE_TIME_MS);
-
-    window.addEventListener("scroll", onScroll, { passive: true });
 
     return () => {
       clearTimeout(desktopTimer);

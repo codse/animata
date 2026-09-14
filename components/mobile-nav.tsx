@@ -82,19 +82,18 @@ export function MobileNav() {
         <ScrollArea className="min-h-0 flex-1">
           <div className="px-5 pb-6 pt-4">
             <div className="flex flex-col">
-              {docsConfig.mainNav?.map(
-                (item) =>
-                  item.href && (
-                    <MobileLink
-                      key={item.href}
-                      href={item.href}
-                      onOpenChange={setOpen}
-                      className="block px-2 py-[6px] touch-manipulation text-sm font-medium [-webkit-tap-highlight-color:transparent]"
-                    >
-                      {item.title}
-                    </MobileLink>
-                  ),
-              )}
+              {docsConfig.mainNav
+                ?.filter((item) => item.href && item.href !== "/")
+                .map((item) => (
+                  <MobileLink
+                    key={item.href}
+                    href={item.href as string}
+                    onOpenChange={setOpen}
+                    className="block px-2 py-[6px] touch-manipulation text-sm font-medium [-webkit-tap-highlight-color:transparent]"
+                  >
+                    {item.title}
+                  </MobileLink>
+                ))}
             </div>
 
             <CategoryNavAccordion

@@ -170,12 +170,18 @@ function Type({
   const words = useMemo(() => text.split(/\s+/), [text]);
   const total = smooth ? words.length : text.length;
   const stepMs = Math.max(1, delay ?? 32);
-  const isComplete = index === total && !repeat;
-  const atEnd = index >= total;
-  const atStart = index <= 0;
+  const caret = Math.min(Math.max(index, 0), total);
+  const isComplete = caret === total && !repeat;
+  const atEnd = caret >= total;
+  const atStart = caret <= 0;
   const paused =
     (atEnd && direction === TypingDirection.Forward) ||
     (atStart && direction === TypingDirection.Backward);
+
+  useEffect(() => {
+    if (index === caret) return;
+    setIndex(caret);
+  }, [index, caret]);
 
   // Advance the caret. Pure updater only — no timer side effects in setState.
   useEffect(() => {
@@ -219,7 +225,7 @@ function Type({
     }
   }, [atEnd, atStart, direction, repeat, waitTime]);
 
-  const waitingNextCycle = index === total || index === 0;
+  const waitingNextCycle = caret === total || caret === 0;
 
   return (
     <div className={cn("relative font-mono", className)}>
@@ -230,9 +236,9 @@ function Type({
         })}
       >
         {smooth ? (
-          <SmoothEffect words={words} index={index} alwaysVisibleCount={alwaysVisibleCount ?? 1} />
+          <SmoothEffect words={words} index={caret} alwaysVisibleCount={alwaysVisibleCount ?? 1} />
         ) : (
-          <NormalEffect text={text} index={index} alwaysVisibleCount={alwaysVisibleCount ?? 1} />
+          <NormalEffect text={text} index={caret} alwaysVisibleCount={alwaysVisibleCount ?? 1} />
         )}
         <CursorWrapper
           waiting={waitingNextCycle}
