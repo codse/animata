@@ -138,7 +138,7 @@ function useTypingInterval(
   direction: TypingDirection,
   total: number,
   stepMs: number,
-  setIndex: React.Dispatch<React.SetStateAction<number>>,
+  setIndex: Dispatch<SetStateAction<number>>,
 ) {
   useEffect(() => {
     if (paused) return;
@@ -161,9 +161,9 @@ function useTypingEndpoint(
   direction: TypingDirection,
   repeat: boolean | undefined,
   waitTime: number,
-  setDirection: React.Dispatch<React.SetStateAction<TypingDirection>>,
-  onCompleteRef: React.MutableRefObject<(() => void) | undefined>,
-  completedRef: React.MutableRefObject<boolean>,
+  setDirection: Dispatch<SetStateAction<TypingDirection>>,
+  onCompleteRef: MutableRefObject<(() => void) | undefined>,
+  completedRef: MutableRefObject<boolean>,
 ) {
   useEffect(() => {
     if (!atEnd && !atStart) return;
