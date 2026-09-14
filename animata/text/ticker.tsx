@@ -1,8 +1,7 @@
 "use client";
 
 import { motion, useInView, useMotionValue, useSpring } from "motion/react";
-
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useLayoutEffect, useRef } from "react";
 
 import { cn } from "@/lib/utils";
 
@@ -32,29 +31,38 @@ function Number({
 
   const isRaw = String(+value) !== value;
 
-  useEffect(() => {
-    if (!isInView || isRaw || !numberRef.current) {
-      return;
-    }
+  useLayoutEffect(() => {
+    if (!isInView || isRaw) return;
 
-    const update = () => {
-      const height = getHeight();
-      springValue.set(-height * +value);
-      // Add a delay to prevent the spring from firing too early.
-    };
+    const height = getHeight();
+    if (!height) return;
 
+    const target = -height * +value;
+
+    // Correct digit on first paint — avoid the "0,000+" trust flash.
     if (!delay) {
-      update();
+      motionValue.jump(target);
       return;
     }
 
-    const timer = setTimeout(update, (total - index) * Math.floor(Math.random() * delay));
+    motionValue.jump(0);
+    const timer = setTimeout(
+      () => {
+        springValue.set(target);
+      },
+      (total - index) * Math.floor(Math.random() * delay),
+    );
 
     return () => clearTimeout(timer);
-  }, [value, isRaw, isInView, springValue, getHeight, index, total, delay]);
+  }, [value, isRaw, isInView, springValue, motionValue, getHeight, index, total, delay]);
 
   if (isRaw) {
     return <span>{value}</span>;
+  }
+
+  // Static digit until in view so overflow strip never shows a wall of 0–9.
+  if (!isInView) {
+    return <span className={className}>{value}</span>;
   }
 
   return (

@@ -159,12 +159,10 @@ export default function StatsBento() {
             </span>
             <div className="mt-3">
               <strong className="font-(family-name:--font-mono) text-2xl font-bold tabular-nums text-foreground sm:text-3xl lg:text-4xl">
-                <RemountOnMouseIn>
-                  <Ticker
-                    value={siteStats.githubStarsFormatted}
-                    className="font-(family-name:--font-mono) font-bold tabular-nums"
-                  />
-                </RemountOnMouseIn>
+                <Ticker
+                  value={siteStats.githubStarsFormatted}
+                  className="font-(family-name:--font-mono) font-bold tabular-nums"
+                />
               </strong>
               <p className="mt-1 text-[12px] font-medium text-muted-foreground sm:text-[13px]">
                 GitHub stars

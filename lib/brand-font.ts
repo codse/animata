@@ -8,6 +8,4 @@ export const brandFont = Outfit({
   display: "swap",
 });
 
-/** Crisp geometric wordmark beside the logo mark */
-export const brandLabelClassName =
-  "font-(family-name:--font-brand) text-[1em] font-semibold lowercase tracking-[-0.045em]";
+export { brandLabelClassName } from "@/lib/brand-label";

@@ -4,7 +4,14 @@ import { z } from "zod";
 import { config } from "@/config";
 
 const eventSchema = z.object({
-  name: z.enum(["copy_npm_command", "copy_touch_command", "copy_usage_code", "copy_source_code"]),
+  name: z.enum([
+    "copy_npm_command",
+    "copy_touch_command",
+    "copy_usage_code",
+    "copy_source_code",
+    "newsletter_subscribe",
+    "github_star_click",
+  ]),
   properties: z.record(z.union([z.string(), z.number(), z.boolean(), z.null()])).optional(),
 });
 
