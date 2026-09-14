@@ -8,15 +8,15 @@ toc: true
 published: false
 ---
 
-This sprint: pick one text preset, registry-install or paste it, verify reduced-motion, ship. Do not start by rebuilding SplitText in Motion or GSAP unless the brief actually needs a custom letter timeline.
+Start by picking one text preset, installing it via registry or paste, verifying reduced-motion behavior, then shipping. Rebuild SplitText in Motion or GSAP only when the brief needs a custom letter timeline.
 
-[Animata](https://animata.design/docs/text) is the copy-own lane for that: MIT text presets, registry installs, and accessibility patterns (sr-only full strings, aria-hidden decorative layers, reduced-motion hooks) documented before you copy. Many presets use the Web Animations API (WAAPI) via a shared `text-animator` runtime; others are plain React state, CSS keyframes, or Motion when scroll/continuous layout motion needs it. This guide is the text sibling of Animata's [animated React buttons](https://animata.design/docs/guides/animated-react-buttons) guide—engineer-to-engineer, fair to the rest of the ecosystem, and honest about Motion vs CSS.
+[Animata](https://animata.design/docs/text) is the copy-own lane for that: MIT text presets, registry installs, and accessibility patterns (sr-only full strings, aria-hidden decorative layers, reduced-motion hooks) documented before you copy. Many presets use the Web Animations API (WAAPI) via a shared `text-animator` runtime; others are plain React state, CSS keyframes, or Motion when scroll or continuous layout motion needs it. This guide is the text sibling of Animata's [animated React buttons](https://animata.design/docs/guides/animated-react-buttons) guide—practical, fair to the rest of the ecosystem, and clear about Motion versus CSS.
 
-Worth knowing up front: not every Animata text effect needs Motion, and Motion is not "never." Typing Text, Wave Reveal, Text Flip, and several others are CSS/React/WAAPI; Scroll Reveal and Circular Text require Motion. Setup states Motion is optionally required for some complex animations ([docs/setup](https://animata.design/docs/setup); per-component docs under [docs/text](https://animata.design/docs/text)). Component counts can also drift—homepage **155+** ([animata.design](https://animata.design/)) vs agent catalog **~130** at [llms.txt](https://animata.design/llms.txt)—prefer the live page at publish. And "copy-paste" / registry means you own the source: edit timing, tokens, and copy freely.
+Worth knowing up front: not every Animata text effect needs Motion, and Motion is not ruled out either. Typing Text, Wave Reveal, Text Flip, and several others are CSS/React/WAAPI; Scroll Reveal and Circular Text require Motion. Setup states Motion is optionally required for some complex animations ([docs/setup](https://animata.design/docs/setup); per-component docs under [docs/text](https://animata.design/docs/text)). Component counts can also drift—homepage **155+** ([animata.design](https://animata.design/)) versus agent catalog **~130** at [llms.txt](https://animata.design/llms.txt)—prefer the live page at publish. And "copy-paste" / registry means you own the source: edit timing, tokens, and copy freely.
 
 ## How to choose
 
-Match the job to the stack before you paste. Fancy demos fail when you pick a hover-only split for a mobile hero, or pull Motion for a gradient clip that CSS already handles.
+Match the job to the stack before you paste. Effects fail when the interaction model does not match the surface—for example, a hover-only split on a mobile hero, or Motion for a gradient clip that CSS already handles.
 
 | Job | Pick | Avoid when |
 | --- | --- | --- |
@@ -27,7 +27,7 @@ Match the job to the stack before you paste. Fancy demos fail when you pick a ho
 | Hover split / letter drama | [Split Text](https://animata.design/docs/text/split-text) | Touch-first surfaces with no hover—plan a static fallback |
 | Scroll-linked opacity on copy | [Scroll Reveal](https://animata.design/docs/text/scroll-reveal) | You want zero Motion dependency |
 | Rotating circular path lockups | [Circular Text](https://animata.design/docs/text/circular-text) | Continuous loops without a reduced-motion plan |
-| RGB glitch / cyberpunk display type | [Glitch Text](https://animata.design/docs/text/glitch-text) | Body-scale copy (the effect is for display type) |
+| RGB glitch / high-contrast display type | [Glitch Text](https://animata.design/docs/text/glitch-text) | Body-scale copy (the effect is for display type) |
 | Decode / "AI reveal" from noise | [Gibberish Text](https://animata.design/docs/text/gibberish-text) | You need scroll-driven choreography |
 | Continuous marketing shimmer / WAAPI preset | [Shimmer Sweep](https://animata.design/docs/text/shimmer-sweep) | You cannot accept the shared `text-animator` runtime (or looping motion without a fallback) |
 
@@ -47,9 +47,9 @@ pnpm dlx shadcn@latest add https://animata.design/r/text/typing-text.json
 
 ### 2. Wave Reveal
 
-Letter- or word-by-word entrance with an optional WWDC-style blur. Animation is CSS (`reveal-up` / `reveal-down` / `content-blur`); the component also ships an `sr-only` copy of the full string so assistive tech gets the message once while glyphs animate visually. Paste the `@keyframes` / `@theme` block from the docs—skip that and the entrance never runs.
+Letter- or word-by-word entrance with an optional blur. Animation is CSS (`reveal-up` / `reveal-down` / `content-blur`); the component also ships an `sr-only` copy of the full string so assistive tech gets the message once while glyphs animate visually. Paste the `@keyframes` / `@theme` block from the docs—skip that and the entrance never runs.
 
-Strong on section titles, feature intros, and premiere-style headlines. [Wave Reveal docs](https://animata.design/docs/text/wave-reveal).
+Strong on section titles, feature intros, and headline entrances. [Wave Reveal docs](https://animata.design/docs/text/wave-reveal).
 
 ```bash
 pnpm dlx shadcn@latest add https://animata.design/r/text/wave-reveal.json
@@ -107,7 +107,7 @@ pnpm dlx shadcn@latest add https://animata.design/r/text/circular-text.json
 
 ### 8. Glitch Text
 
-RGB-split glitch: magenta/cyan ghosts jitter while the base label stays sharp and readable. Ghosts are `aria-hidden`; co-located CSS includes `@media (prefers-reduced-motion: reduce)` so ghosts stop and fade. The CLI installs the TSX component and co-located CSS together. Keep it on display type—404s, cyberpunk marketing, error/status labels—not body copy.
+RGB-split glitch: magenta/cyan ghosts jitter while the base label stays sharp and readable. Ghosts are `aria-hidden`; co-located CSS includes `@media (prefers-reduced-motion: reduce)` so ghosts stop and fade. The CLI installs the TSX component and co-located CSS together. Keep it on display type—404s, high-contrast marketing, error/status labels—not body copy.
 
 [Glitch Text docs](https://animata.design/docs/text/glitch-text)
 
@@ -117,7 +117,7 @@ pnpm dlx shadcn@latest add https://animata.design/r/text/glitch-text.json
 
 ### 9. Gibberish Text
 
-Decode from gibberish into real copy—playful "AI reveal" energy for demos, generative UIs, and launch teasers. Implemented with React intervals, not a Motion timeline. Fast to own; easy to overuse. One moment per screen is usually enough.
+Decode from gibberish into real copy—useful for demos, generative UIs, and launch teasers. Implemented with React intervals, not a Motion timeline. Fast to own; easy to overuse. One moment per screen is usually enough.
 
 [Gibberish Text docs](https://animata.design/docs/text/gibberish-text)
 
@@ -137,7 +137,7 @@ pnpm dlx shadcn@latest add https://animata.design/r/text/shimmer-sweep.json
 
 Want more than these ten? The full text hub has the broader preset set (kinetic builds, shared-axis slides, underlines, counters, and more): **[Browse all text effects →](https://animata.design/docs/text)**
 
-## Install in 60 seconds
+## Install
 
 1. **Setup once:** [animata.design/docs/setup](https://animata.design/docs/setup) — Tailwind, `cn` (`clsx` + `tailwind-merge`), Motion optional when a component needs it.
 2. **Registry (example):**
@@ -157,11 +157,11 @@ Pick the lightest stack that does the job.
 
 CSS keyframes and Tailwind transitions are enough for flips, gradient clips, many reveals, glitch layers, and hover splits. Prefer them when the effect is decorative, local, and does not need scroll progress or layout measurement.
 
-WAAPI (`text-animator`) powers a family of Animata text presets—shared runtime, compositor-friendly loops, no Motion package. Great for marketing cycles; still treat infinite loops as a reduced-motion concern.
+WAAPI (`text-animator`) powers a family of Animata text presets—shared runtime, compositor-friendly loops, no Motion package. Useful for marketing cycles; still treat infinite loops as a reduced-motion concern.
 
 Reach for Motion (`motion/react`) when you need scroll-linked values, continuous path motion, or sequenced layout that CSS cannot express cleanly. Scroll Reveal and Circular Text are the clear examples in this list.
 
-Motion or GSAP for custom SplitText remains gold when you are authoring bespoke letter timelines, scrubbed pin scenes, or Club-level SplitText pipelines. Kits give you product-ready presets; they do not replace a custom Motion or GSAP SplitText build when that is the actual job. See [Motion's React Split Text example](https://motion.dev/examples/react-split-text) when you outgrow presets.
+Motion or GSAP for custom SplitText remains the right tool when you are authoring bespoke letter timelines, scrubbed pin scenes, or Club-level SplitText pipelines. Kits give you product-ready presets; they do not replace a custom Motion or GSAP SplitText build when that is the actual job. See [Motion's React Split Text example](https://motion.dev/examples/react-split-text) when you outgrow presets.
 
 Animata's posture matches the rest of the product kit: Motion optional for complex pieces—not "zero Motion forever," and not Motion for every label.
 
@@ -169,7 +169,7 @@ Animata's posture matches the rest of the product kit: Motion optional for compl
 
 Animated text fails quietly when decorative layers steal the accessible name, hover is the only affordance, or loops ignore `prefers-reduced-motion`.
 
-Wave Reveal keeps a full `sr-only` string beside animated glyphs—screen readers get the sentence once. Split Text marks decorative letter wrappers `aria-hidden` and uses an invisible sizing layer; still plan a non-hover static state for touch. Glitch Text exposes the base layer to AT, hides RGB ghosts with `aria-hidden`, and disables ghost animation under `prefers-reduced-motion: reduce`.
+Wave Reveal keeps a full `sr-only` string beside animated glyphs—screen readers get the sentence once. Split Text marks decorative letter wrappers `aria-hidden` and uses an invisible sizing layer; still plan a non-hover static state for touch. Glitch Text exposes the base layer to assistive tech, hides RGB ghosts with `aria-hidden`, and disables ghost animation under `prefers-reduced-motion: reduce`.
 
 Hover-only effects (Split Text and similar) fail on touch—do not ship them as the only presentation of critical copy. Continuous loops (Circular Text, Shimmer Sweep, cycling flips) need reduced-motion fallbacks: pause, static first phrase, or CSS `animation: none` / Motion `useReducedMotion` in your shell.
 
@@ -177,15 +177,15 @@ Accessibility is part of the paste surface—not a later ticket.
 
 ## How this compares
 
-Fair short takes. These kits are strong; pick by surface.
+Short takes. These kits are strong; pick by surface.
 
 ### Aceternity — cinematic text
 
-[Aceternity UI](https://ui.aceternity.com/components) remains the cinematic landing kit: heroes, shaders, and high-impact Motion text like [Text Generate Effect](https://ui.aceternity.com/components/text-generate-effect). Reach for it when the job is first-impression wow—Animata text is not competing for that surface. After paste, a11y and bundle weight are yours to audit—same as any marketing kit.
+[Aceternity UI](https://ui.aceternity.com/components) remains a strong cinematic landing kit: heroes, shaders, and high-impact Motion text like [Text Generate Effect](https://ui.aceternity.com/components/text-generate-effect). Reach for it when the job is first-impression marketing motion—Animata text is aimed at a different surface. After paste, accessibility and bundle weight are yours to audit—same as any marketing kit.
 
 ### Magic UI — TextAnimate
 
-[Magic UI TextAnimate](https://magicui.design/docs/components/text-animate) is polished Design Engineer marketing motion next to shadcn—blur/slide/scale presets, custom Motion variants, and an `accessible` screen-reader label option. Excellent for landing micro-interactions; still verify reduced-motion and product-chrome fit the same way you would for any Motion-forward marketing component.
+[Magic UI TextAnimate](https://magicui.design/docs/components/text-animate) is polished Design Engineer marketing motion next to shadcn—blur/slide/scale presets, custom Motion variants, and an `accessible` screen-reader label option. Strong for landing micro-interactions; still verify reduced-motion and product-chrome fit the same way you would for any Motion-forward marketing component.
 
 ### React Bits — kinetic gallery
 
@@ -197,7 +197,7 @@ Fair short takes. These kits are strong; pick by surface.
 
 ### Cult UI + Motiq
 
-[Cult UI](https://cult-ui.com) sits in adjacent design-system craft. [Motiq](https://motiq.dev) belongs in the a11y / reduced-motion conversation for motion-minded teams. Neither replaces a full text-preset catalog, but both are fair neighbors on a shortlist.
+[Cult UI](https://cult-ui.com) sits in adjacent design-system craft. [Motiq](https://motiq.dev) belongs in the accessibility / reduced-motion conversation for motion-minded teams. Neither replaces a full text-preset catalog, but both are fair neighbors on a shortlist.
 
 ### Motion / GSAP — build your own
 
@@ -205,15 +205,15 @@ When presets are not enough, build: [Motion SplitText](https://motion.dev/exampl
 
 ## When not to use these Animata picks
 
-You need Aceternity-scale cinematic heroes / shaders? Use Aceternity (and friends) for that surface; Animata text is product-ready polish, not loudest landing page. You specifically want Magic's TextAnimate catalog next to shadcn marketing? Use Magic for that Design Engineer marketing lane; mix kits by surface if needed.
+You need Aceternity-scale cinematic heroes / shaders? Use Aceternity (and similar kits) for that surface; Animata text is product-ready polish, not a full cinematic landing catalog. You specifically want Magic's TextAnimate catalog next to shadcn marketing? Use Magic for that Design Engineer marketing lane; mix kits by surface if needed.
 
-Every effect must be zero-Motion and zero-WAAPI? Scroll Reveal, Circular Text, and WAAPI presets will not fit that constraint—pick CSS-only entries or hand-roll. Critical copy depends on hover? Split-style drama is decorative; keep readable static text for touch and AT. You need a full form/data primitive system? Start with [shadcn/ui](https://ui.shadcn.com/), then layer text motion where it helps.
+Every effect must be zero-Motion and zero-WAAPI? Scroll Reveal, Circular Text, and WAAPI presets will not fit that constraint—pick CSS-only entries or hand-roll. Critical copy depends on hover? Split-style drama is decorative; keep readable static text for touch and assistive tech. You need a full form/data primitive system? Start with [shadcn/ui](https://ui.shadcn.com/), then layer text motion where it helps.
 
 ## FAQ
 
 ### Are Animata text effects free / MIT?
 
-Yes. Animata's core library is **MIT, free forever**—**155+** components on the homepage copy-own model ([animata.design](https://animata.design/)). No paid tier required for these text presets. Treat sitewide counts as verify-at-publish (homepage vs agent-catalog drift noted above).
+Yes. Animata's core library is **MIT, free forever**—**155+** components on the homepage copy-own model ([animata.design](https://animata.design/)). No paid tier required for these text presets. Treat sitewide counts as verify-at-publish (homepage versus agent-catalog drift noted above).
 
 ### Do I need Motion for every text effect?
 
@@ -229,7 +229,7 @@ Yes—and that is exactly [Typing Text](https://animata.design/docs/text/typing-
 
 ### Split text without GSAP Club—GSAP vs Motion vs a kit component?
 
-**Kit component:** Animata [Split Text](https://animata.design/docs/text/split-text) for hover split drama you own (pointer-dependent; a11y pattern documented). **Motion:** use [Motion's Split Text example](https://motion.dev/examples/react-split-text) when you need custom letter timelines without GSAP Club. **GSAP SplitText:** still excellent for scrubbed, Club-level letter pipelines—reach for it when the creative brief needs that engine, not when a kit preset already covers the job.
+**Kit component:** Animata [Split Text](https://animata.design/docs/text/split-text) for hover split drama you own (pointer-dependent; accessibility pattern documented). **Motion:** use [Motion's SplitText example](https://motion.dev/examples/react-split-text) when you need custom letter timelines without GSAP Club. **GSAP SplitText:** still excellent for scrubbed, Club-level letter pipelines—reach for it when the creative brief needs that engine, not when a kit preset already covers the job.
 
 ### How should I handle reduced motion?
 
@@ -243,4 +243,4 @@ Honor `prefers-reduced-motion`. Prefer components that already wire fallbacks (G
 4. [Browse all components](https://animata.design/components) — buttons, cards, scroll, text, and more.
 5. Once published, read the comparison guide: [Aceternity UI vs Magic UI vs Animata](/blog/aceternity-ui-vs-magic-ui-vs-animata).
 
-Ship one high-traffic headline first, verify reduced-motion and AT, then expand. Own the files—that is the point.
+Ship one high-traffic headline first, verify reduced-motion and assistive tech, then expand. Own the files after install.
