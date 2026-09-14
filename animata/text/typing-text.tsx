@@ -162,63 +162,62 @@ function Type({
   hideCursorOnComplete,
 }: TypingTextProps) {
   const [index, setIndex] = useState(0);
-  const directionRef = useRef(TypingDirection.Forward);
+  const [direction, setDirection] = useState<TypingDirection>(TypingDirection.Forward);
   const onCompleteRef = useRef(onComplete);
   const completedRef = useRef(false);
   onCompleteRef.current = onComplete;
 
   const words = useMemo(() => text.split(/\s+/), [text]);
   const total = smooth ? words.length : text.length;
+  const stepMs = Math.max(1, delay ?? 32);
   const isComplete = index === total && !repeat;
+  const atEnd = index >= total;
+  const atStart = index <= 0;
+  const paused =
+    (atEnd && direction === TypingDirection.Forward) ||
+    (atStart && direction === TypingDirection.Backward);
 
+  // Advance the caret. Pure updater only — no timer side effects in setState.
   useEffect(() => {
-    let interval: ReturnType<typeof setInterval> | undefined;
-    let timeout: ReturnType<typeof setTimeout> | undefined;
+    if (paused) return;
 
-    const startInterval = () => {
-      interval = setInterval(() => {
-        setIndex((current) => {
-          const direction = directionRef.current;
-          const next = current + direction;
+    const interval = setInterval(() => {
+      setIndex((current) => {
+        const next = current + direction;
+        if (direction === TypingDirection.Forward) return Math.min(next, total);
+        return Math.max(next, 0);
+      });
+    }, stepMs);
 
-          if (direction === TypingDirection.Forward && next >= total) {
-            if (!repeat) {
-              if (!completedRef.current) {
-                completedRef.current = true;
-                onCompleteRef.current?.();
-              }
-              if (interval) clearInterval(interval);
-              return total;
-            }
-            if (interval) clearInterval(interval);
-            timeout = setTimeout(() => {
-              directionRef.current = TypingDirection.Backward;
-              startInterval();
-            }, waitTime);
-            return total;
-          }
+    return () => clearInterval(interval);
+  }, [direction, stepMs, total, paused]);
 
-          if (direction === TypingDirection.Backward && next <= 0) {
-            if (interval) clearInterval(interval);
-            timeout = setTimeout(() => {
-              directionRef.current = TypingDirection.Forward;
-              startInterval();
-            }, waitTime);
-            return 0;
-          }
+  // Pause at the ends, then reverse (or fire onComplete once).
+  useEffect(() => {
+    if (!atEnd && !atStart) return;
 
-          return next;
-        });
-      }, delay);
-    };
+    if (atEnd && direction === TypingDirection.Forward) {
+      if (!repeat) {
+        if (!completedRef.current) {
+          completedRef.current = true;
+          onCompleteRef.current?.();
+        }
+        return;
+      }
 
-    startInterval();
+      const timeout = setTimeout(() => {
+        setDirection(TypingDirection.Backward);
+      }, waitTime);
+      return () => clearTimeout(timeout);
+    }
 
-    return () => {
-      if (interval) clearInterval(interval);
-      if (timeout) clearTimeout(timeout);
-    };
-  }, [total, delay, repeat, waitTime]);
+    if (atStart && direction === TypingDirection.Backward && repeat) {
+      const timeout = setTimeout(() => {
+        setDirection(TypingDirection.Forward);
+      }, waitTime);
+      return () => clearTimeout(timeout);
+    }
+  }, [atEnd, atStart, direction, repeat, waitTime]);
 
   const waitingNextCycle = index === total || index === 0;
 

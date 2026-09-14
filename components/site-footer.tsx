@@ -10,7 +10,7 @@ import { FooterCategoryGrid } from "@/components/footer-category-grid";
 import { Icons } from "@/components/icons";
 import { docsConfig } from "@/config/docs";
 import { siteConfig } from "@/config/site";
-import { brandLabelClassName } from "@/lib/brand-font";
+import { brandLabelClassName } from "@/lib/brand-label";
 import { getFooterCategories } from "@/lib/docs";
 import {
   footerColBrandClassName,

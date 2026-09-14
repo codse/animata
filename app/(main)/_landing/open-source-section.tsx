@@ -2,6 +2,7 @@
 
 import Marquee from "@/animata/container/marquee";
 import Counter, { Formatter } from "@/animata/text/counter";
+import { GitHubStarLink } from "@/components/github-star-link";
 import { siteStats } from "@/config/site-stats";
 
 // All 44 contributors
@@ -125,9 +126,16 @@ export default function OpenSourceSection() {
       {/* Stats */}
       <div className="mx-auto grid max-w-3xl grid-cols-2 gap-8 px-6 py-10 sm:grid-cols-4 sm:py-12">
         <Stat value={siteStats.githubStars} label="Stars" delay={0} />
-        <Stat value={196} label="Forks" delay={100} />
+        <Stat value={234} label="Forks" delay={100} />
         <Stat value={44} label="Contributors" delay={200} />
         <Stat value={siteStats.componentCount} label="Components" delay={300} />
+      </div>
+
+      <div className="flex justify-center px-6 pb-10 sm:pb-12">
+        <GitHubStarLink
+          source="open_source"
+          className="inline-flex items-center justify-center gap-2 rounded-full bg-[hsl(var(--accent))] px-8 py-3.5 text-[15px] font-semibold text-white transition-opacity hover:opacity-90"
+        />
       </div>
 
       {/* Marquee row 2 — all contributors, reversed order + direction */}

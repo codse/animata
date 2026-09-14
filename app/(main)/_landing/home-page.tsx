@@ -4,13 +4,13 @@ import Link from "next/link";
 import React, { Suspense } from "react";
 
 import CarbonAds from "@/components/ads";
-import { Icons } from "@/components/icons";
+import { GitHubStarLink } from "@/components/github-star-link";
 import { docsConfig } from "@/config/docs";
-import { siteConfig } from "@/config/site";
 import { siteStats } from "@/config/site-stats";
 import { cn } from "@/lib/utils";
 
 import ExitIntentModal from "./exit-intent-modal";
+import NewsletterSection from "./newsletter";
 import OpenSourceSection from "./open-source-section";
 import StatsBento from "./stats-bento";
 
@@ -62,25 +62,16 @@ function Hero() {
           >
             Explore components
           </Link>
-          <Link
-            href={siteConfig.links.github}
-            target="_blank"
-            rel="noreferrer"
+          <GitHubStarLink
+            source="hero"
             className="inline-flex items-center justify-center gap-2 text-[14px] font-medium text-muted-foreground transition-colors hover:text-foreground sm:rounded-full sm:border sm:border-border sm:px-6 sm:py-3.5 sm:text-[15px] sm:text-foreground/70"
-          >
-            <Icons.gitHub className="h-4 w-4" />
-            Star on GitHub
-          </Link>
+          />
         </div>
 
         <p className="mt-5 text-center text-[13px] text-muted-foreground">
           <span className="mr-1.5 inline-block h-1.5 w-1.5 rounded-full bg-emerald-500" />
-          {siteStats.githubStarsFormatted} stars · Trusted by shipping teams
+          Free forever · Trusted by shipping teams
         </p>
-
-        <div className="mt-8 flex justify-center">
-          <CarbonAds />
-        </div>
       </div>
     </section>
   );
@@ -152,13 +143,19 @@ export default function HomePage() {
 
       <StatsBento />
 
+      <div className="flex justify-center px-6 py-8">
+        <CarbonAds />
+      </div>
+
       <WhySection />
 
       <OpenSourceSection />
 
       <LazySection component={Testimonials} className="min-h-96" />
 
-      <div className="border-y border-border bg-[hsl(var(--surface-alt))] py-16 text-center sm:py-20">
+      <NewsletterSection featured />
+
+      <div className="border-y border-border py-16 text-center sm:py-20">
         <p className="text-[15px] text-muted-foreground">
           Ready to make your interfaces stand out?
         </p>

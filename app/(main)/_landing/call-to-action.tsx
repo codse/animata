@@ -6,9 +6,8 @@ import { useEffect, useRef, useState } from "react";
 
 import GibberishText from "@/animata/text/gibberish-text";
 import ComponentLinkWrapper from "@/components/component-link-wrapper";
-import { Icons } from "@/components/icons";
+import { GitHubStarLink } from "@/components/github-star-link";
 import RemountOnMouseIn from "@/components/remount-on-mouse-in";
-import { siteConfig } from "@/config/site";
 
 export default function CallToActionSection() {
   const headerRef = useRef<HTMLHeadingElement>(null);
@@ -47,15 +46,10 @@ export default function CallToActionSection() {
           >
             Get started now
           </Link>
-          <Link
-            href={siteConfig.links.github}
-            target="_blank"
-            rel="noreferrer"
+          <GitHubStarLink
+            source="cta"
             className="inline-flex items-center gap-2 text-[15px] font-medium text-muted-foreground transition-colors hover:text-foreground"
-          >
-            <Icons.gitHub className="size-4" />
-            View on GitHub
-          </Link>
+          />
         </div>
       </div>
     </section>

@@ -1,3 +1,5 @@
+"use client";
+
 import { Loader2, Mail } from "lucide-react";
 import type React from "react";
 
@@ -11,11 +13,14 @@ import { cn } from "@/lib/utils";
 function NewsletterInput({
   compact = false,
   brand = false,
+  source = "newsletter",
 }: {
   compact?: boolean;
   brand?: boolean;
+  source?: string;
 }) {
-  const { isLoading, error, success, addSubscriber, setEmail, email } = useNewsletterSubscription();
+  const { isLoading, error, success, addSubscriber, setEmail, email } =
+    useNewsletterSubscription(source);
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
@@ -46,11 +51,9 @@ function NewsletterInput({
       >
         <Input
           type="email"
-          placeholder="Enter your email"
-          className={cn(
-            "min-w-0 flex-1 border-border bg-background",
-            compact && "h-9 rounded-none",
-          )}
+          placeholder="you@company.com"
+          autoComplete="email"
+          className={cn("min-w-0 flex-1 border-border bg-background", compact && "h-10 rounded-md")}
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
@@ -59,20 +62,20 @@ function NewsletterInput({
           disabled={isLoading}
           className={cn(
             "shrink-0 bg-[hsl(var(--accent))] text-white shadow-none hover:bg-[hsl(var(--accent))]/90! hover:text-white!",
-            compact ? "h-9 rounded-none px-4" : "w-full sm:w-auto",
+            compact ? "h-10 rounded-md px-5" : "w-full sm:w-auto",
           )}
         >
           {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-          {isLoading ? "Please wait" : "Join now"}
+          {isLoading ? "Please wait" : "Subscribe"}
         </Button>
       </form>
       <p className={cn("text-xs text-muted-foreground", compact ? "mt-2" : "mt-4 text-center")}>
         {success ? (
-          <span className="text-green-500">Thank you for subscribing!</span>
+          <span className="text-green-500">Subscribed. New components when they ship.</span>
         ) : error ? (
           <span className="text-red-500">{error}</span>
         ) : (
-          "100% free. No spam. No noise. Unsubscribe at any time."
+          "No spam. Unsubscribe anytime."
         )}
       </p>
     </>
@@ -82,22 +85,48 @@ function NewsletterInput({
 type NewsletterSectionProps = {
   compact?: boolean;
   brand?: boolean;
+  /** Full-width homepage block (not the card or footer variant). */
+  featured?: boolean;
+  source?: string;
 };
 
 export default function NewsletterSection({
   compact = false,
   brand = false,
+  featured = false,
+  source,
 }: NewsletterSectionProps) {
   if (brand) {
     return (
-      <div id="join" className="w-full md:max-w-none">
-        <p className="max-w-md text-[13px] font-light leading-snug tracking-[-0.02em] md:max-w-sm">
-          Sign up for updates on new components and releases.
+      <div className="w-full md:max-w-none">
+        <p className="max-w-md text-[13px] font-medium leading-snug tracking-[-0.02em] text-foreground md:max-w-sm">
+          New components when they ship.
         </p>
         <div className="mt-2">
-          <NewsletterInput brand />
+          <NewsletterInput brand source={source ?? "footer"} />
         </div>
       </div>
+    );
+  }
+
+  if (featured) {
+    return (
+      <section
+        id="join"
+        className="border-t border-border bg-[hsl(var(--surface-alt))] py-16 sm:py-20"
+      >
+        <div className="mx-auto max-w-lg px-6 text-center">
+          <h2 className="font-(family-name:--font-display) text-[clamp(22px,4vw,32px)] font-semibold tracking-tight text-foreground">
+            New components when they ship.
+          </h2>
+          <p className="mt-3 text-[15px] leading-relaxed text-muted-foreground">
+            One short email per release. No spam.
+          </p>
+          <div className="mt-6 text-left sm:text-center">
+            <NewsletterInput source={source ?? "home"} />
+          </div>
+        </div>
+      </section>
     );
   }
 
@@ -122,16 +151,16 @@ export default function NewsletterSection({
           )}
         >
           <Mail className={cn(compact ? "mr-1.5 h-3.5 w-3.5" : "mr-2 h-5 w-5")} />
-          Stay in the loop
+          New components when they ship
         </CardTitle>
         <CardDescription
           className={cn("text-muted-foreground", compact ? "text-xs leading-snug" : "text-center")}
         >
-          New components, tips, and updates. No spam.
+          One short email per release. No spam.
         </CardDescription>
       </CardHeader>
       <CardContent className={cn("mx-4 mb-1 mt-6", compact && "mx-0 mb-0 mt-0 px-4 py-3")}>
-        <NewsletterInput compact={compact} />
+        <NewsletterInput compact={compact} source={source ?? "card"} />
       </CardContent>
     </Card>
   );

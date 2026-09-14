@@ -3,7 +3,7 @@ import type { docs as allDocs } from "#site/content";
 import { getPublishedDocs } from "@/lib/published-docs";
 
 /** Updated manually when marketing copy needs to reflect GitHub stars. */
-const GITHUB_STARS = 2697;
+const GITHUB_STARS = 2802;
 
 const NON_COMPONENT_SECTIONS = new Set(["contributing", "changelog"]);
 
@@ -24,9 +24,18 @@ function formatStatPlus(value: number) {
   return `${value.toLocaleString("en-US")}+`;
 }
 
+function formatStarsCompact(value: number) {
+  if (value >= 1000) {
+    const compact = (value / 1000).toFixed(value >= 10_000 ? 0 : 1).replace(/\.0$/, "");
+    return `${compact}k`;
+  }
+  return value.toLocaleString("en-US");
+}
+
 export const siteStats = {
   githubStars: GITHUB_STARS,
   githubStarsFormatted: formatStatPlus(GITHUB_STARS),
+  githubStarsCompact: formatStarsCompact(GITHUB_STARS),
   componentCount: publishedComponentCount,
   componentsFormatted: formatStatPlus(publishedComponentCount),
 } as const;

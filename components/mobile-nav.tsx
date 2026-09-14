@@ -11,7 +11,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { docsConfig } from "@/config/docs";
 import { siteConfig } from "@/config/site";
-import { brandLabelClassName } from "@/lib/brand-font";
+import { brandLabelClassName } from "@/lib/brand-label";
 import { getFooterCategories } from "@/lib/docs";
 import { cn } from "@/lib/utils";
 
