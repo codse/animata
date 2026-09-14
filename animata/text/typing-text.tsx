@@ -1,4 +1,13 @@
-import { type ReactNode, useEffect, useMemo, useRef, useState } from "react";
+import {
+  type Dispatch,
+  type MutableRefObject,
+  type ReactNode,
+  type SetStateAction,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 
 import { cn } from "@/lib/utils";
 
@@ -124,6 +133,65 @@ enum TypingDirection {
   Backward = -1,
 }
 
+function useTypingInterval(
+  paused: boolean,
+  direction: TypingDirection,
+  total: number,
+  stepMs: number,
+  setIndex: React.Dispatch<React.SetStateAction<number>>,
+) {
+  useEffect(() => {
+    if (paused) return;
+
+    const interval = setInterval(() => {
+      setIndex((current) => {
+        const next = current + direction;
+        if (direction === TypingDirection.Forward) return Math.min(next, total);
+        return Math.max(next, 0);
+      });
+    }, stepMs);
+
+    return () => clearInterval(interval);
+  }, [direction, stepMs, total, paused, setIndex]);
+}
+
+function useTypingEndpoint(
+  atEnd: boolean,
+  atStart: boolean,
+  direction: TypingDirection,
+  repeat: boolean | undefined,
+  waitTime: number,
+  setDirection: React.Dispatch<React.SetStateAction<TypingDirection>>,
+  onCompleteRef: React.MutableRefObject<(() => void) | undefined>,
+  completedRef: React.MutableRefObject<boolean>,
+) {
+  useEffect(() => {
+    if (!atEnd && !atStart) return;
+
+    if (atEnd && direction === TypingDirection.Forward) {
+      if (!repeat) {
+        if (!completedRef.current) {
+          completedRef.current = true;
+          onCompleteRef.current?.();
+        }
+        return;
+      }
+
+      const timeout = setTimeout(() => {
+        setDirection(TypingDirection.Backward);
+      }, waitTime);
+      return () => clearTimeout(timeout);
+    }
+
+    if (atStart && direction === TypingDirection.Backward && repeat) {
+      const timeout = setTimeout(() => {
+        setDirection(TypingDirection.Forward);
+      }, waitTime);
+      return () => clearTimeout(timeout);
+    }
+  }, [atEnd, atStart, direction, repeat, waitTime, setDirection, onCompleteRef, completedRef]);
+}
+
 function CursorWrapper({
   visible,
   children,
@@ -181,47 +249,17 @@ function Type({
     (atEnd && direction === TypingDirection.Forward) ||
     (atStart && direction === TypingDirection.Backward);
 
-  // Advance the caret. Pure updater only — no timer side effects in setState.
-  useEffect(() => {
-    if (paused) return;
-
-    const interval = setInterval(() => {
-      setIndex((current) => {
-        const next = current + direction;
-        if (direction === TypingDirection.Forward) return Math.min(next, total);
-        return Math.max(next, 0);
-      });
-    }, stepMs);
-
-    return () => clearInterval(interval);
-  }, [direction, stepMs, total, paused]);
-
-  // Pause at the ends, then reverse (or fire onComplete once).
-  useEffect(() => {
-    if (!atEnd && !atStart) return;
-
-    if (atEnd && direction === TypingDirection.Forward) {
-      if (!repeat) {
-        if (!completedRef.current) {
-          completedRef.current = true;
-          onCompleteRef.current?.();
-        }
-        return;
-      }
-
-      const timeout = setTimeout(() => {
-        setDirection(TypingDirection.Backward);
-      }, waitTime);
-      return () => clearTimeout(timeout);
-    }
-
-    if (atStart && direction === TypingDirection.Backward && repeat) {
-      const timeout = setTimeout(() => {
-        setDirection(TypingDirection.Forward);
-      }, waitTime);
-      return () => clearTimeout(timeout);
-    }
-  }, [atEnd, atStart, direction, repeat, waitTime]);
+  useTypingInterval(paused, direction, total, stepMs, setIndex);
+  useTypingEndpoint(
+    atEnd,
+    atStart,
+    direction,
+    repeat,
+    waitTime,
+    setDirection,
+    onCompleteRef,
+    completedRef,
+  );
 
   const waitingNextCycle = caret === total || caret === 0;
 
