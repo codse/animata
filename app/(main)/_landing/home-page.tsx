@@ -50,12 +50,15 @@ function Hero() {
           <br />
           Look better.
         </h1>
-        <p className="mx-auto mt-6 max-w-md text-balance text-[clamp(15px,2vw,18px)] leading-[1.6] text-[hsl(var(--text-secondary))]">
-          {siteStats.componentsFormatted} animated React components you can copy into any project.
-          Free, open source, and ready to use.
+        <p className="mx-auto mt-3 max-w-lg text-balance text-[15px] font-medium tracking-tight text-foreground sm:text-[16px]">
+          Copy-paste animated React components — free forever.
+        </p>
+        <p className="mx-auto mt-4 max-w-md text-balance text-[clamp(15px,2vw,18px)] leading-[1.6] text-[hsl(var(--text-secondary))]">
+          {siteStats.componentsFormatted} hand-crafted effects for Next.js, Vite, and beyond. Own
+          the code — no npm lock-in.
         </p>
 
-        <div className="mt-8 flex flex-col items-center gap-3 sm:mt-10 sm:flex-row sm:justify-center">
+        <div className="mt-8 flex w-full max-w-md flex-col gap-3 sm:mx-auto sm:mt-10 sm:max-w-none sm:flex-row sm:justify-center">
           <Link
             href={componentsHref}
             className="inline-flex w-full items-center justify-center rounded-full bg-[hsl(var(--accent))] px-8 py-3.5 text-[15px] font-semibold text-white transition-opacity hover:opacity-90 sm:w-auto"
@@ -64,7 +67,7 @@ function Hero() {
           </Link>
           <GitHubStarLink
             source="hero"
-            className="inline-flex items-center justify-center gap-2 text-[14px] font-medium text-muted-foreground transition-colors hover:text-foreground sm:rounded-full sm:border sm:border-border sm:px-6 sm:py-3.5 sm:text-[15px] sm:text-foreground/70"
+            className="inline-flex w-full items-center justify-center gap-2 rounded-full border border-border bg-background px-8 py-3.5 text-[15px] font-semibold text-foreground transition-colors hover:border-foreground/25 hover:bg-foreground/3 sm:w-auto"
           />
         </div>
 
@@ -151,9 +154,9 @@ export default function HomePage() {
 
       <OpenSourceSection />
 
-      <LazySection component={Testimonials} className="min-h-96" />
-
       <NewsletterSection featured />
+
+      <LazySection component={Testimonials} className="min-h-96" />
 
       <div className="border-y border-border py-16 text-center sm:py-20">
         <p className="text-[15px] text-muted-foreground">

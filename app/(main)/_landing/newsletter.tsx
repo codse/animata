@@ -120,7 +120,7 @@ export default function NewsletterSection({
             New components when they ship.
           </h2>
           <p className="mt-3 text-[15px] leading-relaxed text-muted-foreground">
-            One short email per release. No spam.
+            Starred the repo? Get one short email per release. No spam.
           </p>
           <div className="mt-6 text-left sm:text-center">
             <NewsletterInput source={source ?? "home"} />

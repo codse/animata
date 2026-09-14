@@ -115,7 +115,7 @@ export function SiteHeader() {
               className="inline-flex h-8 items-center gap-1.5 rounded-full border border-border bg-background/60 px-2.5 text-[12px] font-medium tabular-nums text-foreground/80 transition-colors hover:border-foreground/20 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >
               <Icons.gitHub className="size-3.5 opacity-80" />
-              <span className="hidden sm:inline">Star</span>
+              <span>Star</span>
               <span className="text-muted-foreground">{siteStats.githubStarsCompact}</span>
               <span className="sr-only">
                 Star on GitHub, {siteStats.githubStarsFormatted} stars

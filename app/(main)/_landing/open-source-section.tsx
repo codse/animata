@@ -131,11 +131,17 @@ export default function OpenSourceSection() {
         <Stat value={siteStats.componentCount} label="Components" delay={300} />
       </div>
 
-      <div className="flex justify-center px-6 pb-10 sm:pb-12">
+      <div className="flex flex-col items-center gap-3 px-6 pb-10 sm:pb-12">
         <GitHubStarLink
           source="open_source"
           className="inline-flex items-center justify-center gap-2 rounded-full bg-[hsl(var(--accent))] px-8 py-3.5 text-[15px] font-semibold text-white transition-opacity hover:opacity-90"
         />
+        <a
+          href="#join"
+          className="text-[14px] font-medium text-muted-foreground transition-colors hover:text-foreground"
+        >
+          Just starred? Get new components by email →
+        </a>
       </div>
 
       {/* Marquee row 2 — all contributors, reversed order + direction */}
