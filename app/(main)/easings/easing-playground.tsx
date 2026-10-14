@@ -174,7 +174,7 @@ export function EasingPlayground() {
 
   /** One segmented-control look for every switch on the page. */
   const segment = cn(
-    "h-7 rounded-[8px] px-3 text-xs font-medium text-muted-foreground hover:text-foreground",
+    "h-7 rounded-[6px] px-3 text-xs font-medium text-muted-foreground hover:text-foreground",
     "aria-checked:bg-background aria-checked:text-foreground aria-checked:shadow-[0_1px_2px_rgb(0_0_0/0.08)]",
     "aria-pressed:bg-background aria-pressed:text-foreground aria-pressed:shadow-[0_1px_2px_rgb(0_0_0/0.08)]",
     press,
@@ -220,12 +220,12 @@ export function EasingPlayground() {
           aria-label="Curve"
           className="scroll-mt-20 lg:sticky lg:top-[calc(var(--site-header-height,50px)+16px)] lg:max-h-[calc(100svh-var(--site-header-height,50px)-32px)] lg:overflow-y-auto lg:[scrollbar-width:thin]"
         >
-          <div className="grid gap-4 rounded-2xl border border-border bg-background p-4 shadow-[0_1px_2px_rgb(0_0_0/0.04),0_16px_40px_-24px_rgb(0_0_0/0.16)]">
+          <div className="grid gap-4 rounded-[12px] border border-border bg-background p-4 shadow-[0_1px_2px_rgb(0_0_0/0.03),0_12px_32px_-24px_rgb(0_0_0/0.14)]">
             <div className="flex items-center justify-between gap-3">
               <div className="grid min-w-0 gap-1">
-                <p className="m-0 truncate font-mono text-[15px] leading-tight font-medium">
+                <h2 className="m-0 truncate font-(family-name:--font-display) text-lg leading-tight font-semibold tracking-[-0.015em]">
                   {name}
-                </p>
+                </h2>
                 <p className="m-0 truncate font-mono text-xs leading-tight text-muted-foreground tabular-nums">
                   cubic-bezier({formatBezier(bezier)})
                 </p>
@@ -279,7 +279,7 @@ export function EasingPlayground() {
                 <div
                   role="radiogroup"
                   aria-label="Code format"
-                  className="grid flex-1 grid-cols-4 rounded-[10px] bg-muted p-0.5"
+                  className="grid flex-1 grid-cols-4 rounded-[8px] bg-muted p-0.5"
                 >
                   {CODE_FORMATS.map((item) => (
                     <button
@@ -322,7 +322,7 @@ export function EasingPlayground() {
                   <CurveFields bezier={bezier} onChange={setCurve} />
                   <pre
                     data-lenis-prevent
-                    className="m-0 max-h-56 overflow-auto rounded-[8px] bg-muted p-3 font-mono text-[11px]/relaxed"
+                    className="m-0 max-h-56 overflow-auto rounded-[6px] bg-muted p-3 font-mono text-[11px]/relaxed"
                   >
                     <code>{code}</code>
                   </pre>
@@ -337,7 +337,7 @@ export function EasingPlayground() {
             <div
               role="group"
               aria-label="Transition type"
-              className="flex max-w-full rounded-[10px] bg-muted p-0.5"
+              className="flex max-w-full rounded-[8px] bg-muted p-0.5"
             >
               {(["all", ...Object.keys(CATEGORY_LABELS)] as (SceneCategory | "all")[]).map((id) => (
                 <button
@@ -394,7 +394,7 @@ export function EasingPlayground() {
                       setPlayKey((key) => key + 1);
                     }}
                     className={cn(
-                      "relative block aspect-4/3 w-full overflow-hidden rounded-2xl border border-border bg-muted text-left text-foreground",
+                      "relative block aspect-4/3 w-full overflow-hidden rounded-[12px] border border-border bg-muted/60 text-left text-foreground",
                       "transition-[scale] duration-150 ease-out active:scale-[0.985]",
                       wide && "sm:aspect-[2/1]",
                     )}
@@ -404,7 +404,7 @@ export function EasingPlayground() {
                     </span>
                   </button>
                   <figcaption className="flex items-baseline justify-between gap-3 px-0.5">
-                    <span className="text-[13px] font-medium">{scene.title}</span>
+                    <span className="text-sm font-medium">{scene.title}</span>
                     <span className="truncate text-xs text-muted-foreground">{scene.hint}</span>
                   </figcaption>
                 </figure>
@@ -415,12 +415,12 @@ export function EasingPlayground() {
       </div>
 
       {/* Phones: the panel scrolls away, so the current curve stays reachable here. */}
-      <div className="fixed inset-x-3 bottom-[max(12px,env(safe-area-inset-bottom))] z-40 flex items-center gap-1 rounded-2xl border border-border bg-background/90 p-1.5 shadow-[0_16px_48px_-20px_rgb(0_0_0/0.4)] backdrop-blur-xl lg:hidden">
+      <div className="fixed inset-x-3 bottom-[max(12px,env(safe-area-inset-bottom))] z-40 flex items-center gap-1 rounded-[14px] border border-border bg-background/90 p-1.5 shadow-[0_16px_48px_-20px_rgb(0_0_0/0.4)] backdrop-blur-xl lg:hidden">
         <button
           type="button"
           aria-label="Previous curve"
           onClick={() => step(-1)}
-          className={cn(iconButton, "size-10 rounded-xl")}
+          className={cn(iconButton, "size-10")}
         >
           <ChevronLeft aria-hidden="true" className="size-4" />
         </button>
@@ -439,7 +439,7 @@ export function EasingPlayground() {
           type="button"
           aria-label="Next curve"
           onClick={() => step(1)}
-          className={cn(iconButton, "size-10 rounded-xl")}
+          className={cn(iconButton, "size-10")}
         >
           <ChevronRight aria-hidden="true" className="size-4" />
         </button>
@@ -447,7 +447,7 @@ export function EasingPlayground() {
           type="button"
           onClick={showWorkbench}
           className={cn(
-            "inline-flex h-10 items-center gap-1.5 rounded-xl bg-foreground px-3.5 text-xs font-medium text-background",
+            "inline-flex h-10 items-center gap-1.5 rounded-[8px] bg-foreground px-3.5 text-xs font-medium text-background",
             press,
           )}
         >

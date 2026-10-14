@@ -244,7 +244,7 @@ export function CurveEditor({
           y={PAD_TOP}
           width={WIDTH}
           height={height}
-          rx={10}
+          rx={8}
           className="fill-muted/50"
         />
         <rect
@@ -252,7 +252,7 @@ export function CurveEditor({
           y={toY(1)}
           width={WIDTH}
           height={unit}
-          rx={8}
+          rx={6}
           className="fill-muted stroke-border"
         />
         {GRID.map((g) => (
@@ -291,12 +291,15 @@ export function CurveEditor({
             y2={toY(hy) + (stretch?.handle === handle ? stretch.dy : 0)}
             className={cn(
               "stroke-[1.5] transition-[stroke] duration-150",
-              active === handle ? "stroke-accent" : "stroke-foreground/30",
+              active === handle ? "stroke-accent" : "stroke-accent/45",
             )}
           />
         ))}
 
-        <path d={path} className="fill-none stroke-foreground stroke-[3] [stroke-linecap:round]" />
+        <path
+          d={path}
+          className="fill-none stroke-foreground stroke-[2.5] [stroke-linecap:round]"
+        />
         <circle cx={toX(0)} cy={toY(0)} r={3.5} className="fill-foreground" />
         <circle ref={dotRef} cx={toX(1)} cy={toY(1)} r={6} className="fill-accent" />
 
@@ -342,7 +345,7 @@ export function CurveEditor({
                 "stroke-[2.5] transition-[fill,stroke] duration-150",
                 active === handle
                   ? "fill-accent stroke-background"
-                  : "fill-background stroke-foreground",
+                  : "fill-background stroke-accent",
               )}
             />
           </g>
@@ -443,7 +446,7 @@ function ControlField({ label, value, min, max, onCommit }: ControlFieldProps) {
         autoComplete="off"
         spellCheck={false}
         value={draft ?? String(value)}
-        className="h-8 w-full rounded-[8px] border border-border bg-background pr-2 pl-7 text-right font-mono text-xs text-foreground tabular-nums outline-none transition-colors focus-visible:border-foreground"
+        className="h-8 w-full rounded-[6px] border border-border bg-background pr-2 pl-7 text-right font-mono text-xs text-foreground tabular-nums outline-none transition-colors focus-visible:border-foreground"
         onChange={(event) => {
           const raw = event.target.value.trim();
           setDraft(raw);

@@ -50,19 +50,19 @@ export function DurationControl({ value, onChange, onCommit, suggested }: Durati
         style={{ "--fill": `${percent(value)}%` } as CSSProperties}
       >
         <div className="absolute inset-x-0 top-1/2 h-1 -translate-y-1/2 rounded-full bg-border">
-          <div className={cn("h-full w-(--fill) rounded-full bg-foreground", glide)} />
+          <div className={cn("h-full w-(--fill) rounded-full bg-accent", glide)} />
         </div>
         {suggested !== undefined ? (
           <span
             title={`Suggested ${suggested}ms`}
-            className="absolute top-1/2 size-1.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-accent"
+            className="absolute top-1/2 h-2.5 w-0.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-foreground/40"
             style={{ left: `${percent(suggested)}%` }}
           />
         ) : null}
         <span
           aria-hidden="true"
           className={cn(
-            "pointer-events-none absolute top-1/2 left-(--fill) size-4 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-foreground bg-background shadow-[0_1px_3px_rgb(0_0_0/0.18)]",
+            "pointer-events-none absolute top-1/2 left-(--fill) size-4 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-accent bg-background shadow-[0_1px_3px_rgb(0_0_0/0.18)]",
             "transition-[scale] duration-150 ease-out group-has-[:active]/track:scale-110 group-has-[:focus-visible]/track:ring-2 group-has-[:focus-visible]/track:ring-accent group-has-[:focus-visible]/track:ring-offset-2 group-has-[:focus-visible]/track:ring-offset-background",
             glide && "transition-[scale,left] duration-300",
           )}
@@ -91,7 +91,7 @@ export function DurationControl({ value, onChange, onCommit, suggested }: Durati
       <div
         role="group"
         aria-label="Duration presets"
-        className="grid grid-cols-5 rounded-[10px] bg-muted p-0.5"
+        className="grid grid-cols-5 rounded-[8px] bg-muted p-0.5"
       >
         {QUICK.map((item) => (
           <button
@@ -104,7 +104,7 @@ export function DurationControl({ value, onChange, onCommit, suggested }: Durati
               onCommit();
             }}
             className={cn(
-              "h-7 rounded-[8px] text-xs font-medium text-muted-foreground transition-[background-color,color,box-shadow,scale] duration-150 ease-out hover:text-foreground active:scale-[0.97]",
+              "h-7 rounded-[6px] text-xs font-medium text-muted-foreground transition-[background-color,color,box-shadow,scale] duration-150 ease-out hover:text-foreground active:scale-[0.97]",
               "aria-pressed:bg-background aria-pressed:text-foreground aria-pressed:shadow-[0_1px_2px_rgb(0_0_0/0.08)]",
             )}
           >

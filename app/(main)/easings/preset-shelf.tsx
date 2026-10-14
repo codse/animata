@@ -78,9 +78,7 @@ export function PresetShelf({ selected, onSelect }: PresetShelfProps) {
           aria-label={GROUP_LABELS[group]}
           className="grid shrink-0 gap-2.5"
         >
-          <span className="px-0.5 text-xs font-medium text-muted-foreground">
-            {GROUP_LABELS[group]}
-          </span>
+          <span className="px-0.5 text-xs font-medium text-foreground">{GROUP_LABELS[group]}</span>
           <div className="flex gap-2">
             {PRESETS.filter((preset) => preset.group === group).map((preset) => (
               <button
@@ -91,11 +89,11 @@ export function PresetShelf({ selected, onSelect }: PresetShelfProps) {
                 aria-label={`${preset.name}, ${preset.duration} milliseconds. ${preset.use}`}
                 onClick={() => onSelect(preset)}
                 className={cn(
-                  "grid w-32 snap-start gap-3 rounded-2xl border border-border bg-background p-3 text-left text-foreground",
-                  "transition-[border-color,background-color,color,scale,box-shadow] duration-200 ease-out active:scale-[0.97]",
-                  "hover:border-foreground/20 hover:shadow-[0_8px_24px_-14px_rgb(0_0_0/0.25)]",
+                  "group/card grid w-32 snap-start gap-3 rounded-[12px] border border-border bg-background p-3 text-left text-muted-foreground",
+                  "transition-[border-color,color,scale,box-shadow] duration-200 ease-out active:scale-[0.97]",
+                  "hover:border-foreground/25 hover:text-foreground",
                   group === "baseline" && "border-dashed",
-                  "aria-pressed:border-foreground aria-pressed:bg-foreground aria-pressed:text-background aria-pressed:shadow-[0_12px_32px_-16px_rgb(0_0_0/0.45)]",
+                  "aria-pressed:border-foreground aria-pressed:text-foreground aria-pressed:shadow-[0_0_0_1px_var(--color-foreground),0_10px_28px_-18px_rgb(0_0_0/0.35)]",
                 )}
               >
                 <CurvePreview bezier={preset.bezier} />
