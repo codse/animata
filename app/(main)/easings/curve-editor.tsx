@@ -17,7 +17,7 @@ export const Y_MAX = 1.6;
 
 /** Plot units: the 0–1 box is WIDTH wide and WIDTH * Y_SCALE tall. */
 const WIDTH = 320;
-const Y_SCALE = 0.55;
+const Y_SCALE = 0.45;
 const PAD_X = 14;
 const PAD_TOP = 10;
 const PAD_BOTTOM = 10;
@@ -260,14 +260,14 @@ export function CurveEditor({
             className="stroke-foreground/15"
           />
         ))}
-        <text x={toX(0) + 10} y={toY(0) + 18} className="fill-muted-foreground text-[12px]">
+        <text x={toX(0) + 10} y={toY(0) + 18} className="fill-muted-foreground text-[10px]">
           Start
         </text>
         <text
           x={toX(1) - 10}
           y={toY(1) - 9}
           textAnchor="end"
-          className="fill-muted-foreground text-[12px]"
+          className="fill-muted-foreground text-[10px]"
         >
           End
         </text>

@@ -1,5 +1,6 @@
 "use client";
 
+import { motion } from "motion/react";
 import { useEffect, useRef } from "react";
 
 import { type CubicBezier, toCssBezier } from "@/lib/motion";
@@ -129,6 +130,88 @@ export function PresetShelf({ selected, onSelect }: PresetShelfProps) {
                 </button>
               ))}
             </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+/** A curve at icon size, for dense rows. */
+export function MiniCurve({ bezier, className }: { bezier: CubicBezier; className?: string }) {
+  const [x1, y1, x2, y2] = bezier;
+  // 0–1 mapped into a 24×24 box with headroom for overshoot.
+  const px = (x: number) => 2 + x * 20;
+  const py = (y: number) => 19 - y * 14;
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      aria-hidden="true"
+      className={cn("size-6 shrink-0 overflow-visible", className)}
+    >
+      <path
+        d={`M ${px(0)} ${py(0)} C ${px(x1)} ${py(y1)}, ${px(x2)} ${py(y2)}, ${px(1)} ${py(1)}`}
+        className="fill-none stroke-current stroke-[1.6] [stroke-linecap:round]"
+      />
+    </svg>
+  );
+}
+
+/**
+ * Every preset as one row of an index: curve, name, duration. The highlight glides to the
+ * chosen row, so moving through the list reads as one continuous object.
+ */
+export function PresetIndex({
+  selected,
+  onSelect,
+  reducedMotion,
+}: PresetShelfProps & { reducedMotion: boolean }) {
+  const groups = Object.keys(GROUP_LABELS) as EasingGroup[];
+  return (
+    <div className="grid gap-6">
+      {groups.map((group) => {
+        const items = PRESETS.filter((preset) => preset.group === group);
+        return (
+          <div key={group} role="group" aria-label={GROUP_LABELS[group]} className="grid gap-px">
+            <span className="mb-2 flex items-baseline justify-between px-2.5 text-xs">
+              <span className="font-medium text-foreground">{GROUP_LABELS[group]}</span>
+              <span className="text-[11px] text-muted-foreground tabular-nums">{items.length}</span>
+            </span>
+            {items.map((preset) => {
+              const active = preset === selected;
+              return (
+                <button
+                  key={preset.id}
+                  type="button"
+                  data-preset={preset.id}
+                  aria-pressed={active}
+                  aria-label={`${preset.name}, ${preset.duration} milliseconds. ${preset.use}`}
+                  onClick={() => onSelect(preset)}
+                  className={cn(
+                    "relative flex h-8 items-center gap-2.5 rounded-[8px] px-2.5 text-left text-[13px] text-muted-foreground",
+                    "transition-[color,scale] duration-150 ease-out hover:text-foreground active:scale-[0.98] aria-pressed:text-foreground",
+                  )}
+                >
+                  {active ? (
+                    <motion.span
+                      layoutId="preset-index"
+                      aria-hidden="true"
+                      transition={
+                        reducedMotion
+                          ? { duration: 0 }
+                          : { type: "spring", bounce: 0, duration: 0.4 }
+                      }
+                      className="absolute inset-0 rounded-[8px] bg-muted shadow-[inset_0_0_0_1px_var(--color-border)]"
+                    />
+                  ) : null}
+                  <MiniCurve bezier={preset.bezier} className="relative size-5" />
+                  <span className="relative flex-1 truncate font-medium">{preset.name}</span>
+                  <span className="relative text-[11px] tabular-nums opacity-60">
+                    {preset.duration}
+                  </span>
+                </button>
+              );
+            })}
           </div>
         );
       })}
