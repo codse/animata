@@ -13,7 +13,7 @@
 @font-face {
   font-family: "Knile";
   src:
-    url("https://assets.animata.design/fonts/atipo/knile-bold.v1.woff2") format("woff2"),
+    url("https://assets.animata.design/fonts/atipo/knile-bold.v2.woff2") format("woff2"),
     url("/fonts/atipo/knile-bold.woff2") format("woff2");
   font-weight: 700;
   font-style: normal;
@@ -23,7 +23,7 @@
 @font-face {
   font-family: "Alcyone";
   src:
-    url("https://assets.animata.design/fonts/atipo/alcyone-regular.v1.woff2") format("woff2"),
+    url("https://assets.animata.design/fonts/atipo/alcyone-regular.v2.woff2") format("woff2"),
     url("/fonts/atipo/alcyone-regular.woff2") format("woff2");
   font-weight: 400;
   font-style: normal;
@@ -33,7 +33,7 @@
 @font-face {
   font-family: "Alcyone";
   src:
-    url("https://assets.animata.design/fonts/atipo/alcyone-medium.v1.woff2") format("woff2"),
+    url("https://assets.animata.design/fonts/atipo/alcyone-medium.v2.woff2") format("woff2"),
     url("/fonts/atipo/alcyone-medium.woff2") format("woff2");
   font-weight: 500;
   font-style: normal;
@@ -43,7 +43,7 @@
 @font-face {
   font-family: "Alcyone";
   src:
-    url("https://assets.animata.design/fonts/atipo/alcyone-semibold.v1.woff2") format("woff2"),
+    url("https://assets.animata.design/fonts/atipo/alcyone-semibold.v2.woff2") format("woff2"),
     url("/fonts/atipo/alcyone-semibold.woff2") format("woff2");
   font-weight: 600;
   font-style: normal;
@@ -53,7 +53,7 @@
 @font-face {
   font-family: "Alcyone";
   src:
-    url("https://assets.animata.design/fonts/atipo/alcyone-bold.v1.woff2") format("woff2"),
+    url("https://assets.animata.design/fonts/atipo/alcyone-bold.v2.woff2") format("woff2"),
     url("/fonts/atipo/alcyone-bold.woff2") format("woff2");
   font-weight: 700;
   font-style: normal;
@@ -63,7 +63,7 @@
 @font-face {
   font-family: "Alcyone";
   src:
-    url("https://assets.animata.design/fonts/atipo/alcyone-regular-italic.v1.woff2") format("woff2"),
+    url("https://assets.animata.design/fonts/atipo/alcyone-regular-italic.v2.woff2") format("woff2"),
     url("/fonts/atipo/alcyone-regular-italic.woff2") format("woff2");
   font-weight: 400;
   font-style: italic;
@@ -73,7 +73,7 @@
 @font-face {
   font-family: "Alcyone";
   src:
-    url("https://assets.animata.design/fonts/atipo/alcyone-bold-italic.v1.woff2") format("woff2"),
+    url("https://assets.animata.design/fonts/atipo/alcyone-bold-italic.v2.woff2") format("woff2"),
     url("/fonts/atipo/alcyone-bold-italic.woff2") format("woff2");
   font-weight: 700;
   font-style: italic;
