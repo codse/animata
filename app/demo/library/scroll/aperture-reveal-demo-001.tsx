@@ -57,9 +57,12 @@ export default function ApertureRevealDemo001() {
           >
             One route, walked slowly enough to watch the light arrive.
           </h2>
-          <dl className="mt-16 grid gap-px overflow-hidden rounded-sm bg-white/10 sm:grid-cols-3">
+          <dl className="mt-16 grid divide-y divide-white/10 sm:grid-cols-3 sm:divide-x sm:divide-y-0">
             {route.map((item) => (
-              <div key={item.label} className="flex flex-col gap-3 bg-[#0d0e12] p-6 sm:p-8">
+              <div
+                key={item.label}
+                className="flex flex-col gap-3 py-6 max-sm:first:pt-0 max-sm:last:pb-0 sm:px-8 sm:py-1 sm:first:pl-0"
+              >
                 <dt className="order-2 text-sm leading-snug text-[#e9e7e1]/60">{item.label}</dt>
                 <dd className="order-1 m-0 text-[clamp(2.25rem,5vw,3.75rem)] font-semibold leading-none tracking-[-0.04em] tabular-nums">
                   {item.value}

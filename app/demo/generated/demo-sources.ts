@@ -4627,9 +4627,12 @@ export default function ApertureRevealDemo001() {
           >
             One route, walked slowly enough to watch the light arrive.
           </h2>
-          <dl className="mt-16 grid gap-px overflow-hidden rounded-sm bg-white/10 sm:grid-cols-3">
+          <dl className="mt-16 grid divide-y divide-white/10 sm:grid-cols-3 sm:divide-x sm:divide-y-0">
             {route.map((item) => (
-              <div key={item.label} className="flex flex-col gap-3 bg-[#0d0e12] p-6 sm:p-8">
+              <div
+                key={item.label}
+                className="flex flex-col gap-3 py-6 max-sm:first:pt-0 max-sm:last:pb-0 sm:px-8 sm:py-1 sm:first:pl-0"
+              >
                 <dt className="order-2 text-sm leading-snug text-[#e9e7e1]/60">{item.label}</dt>
                 <dd className="order-1 m-0 text-[clamp(2.25rem,5vw,3.75rem)] font-semibold leading-none tracking-[-0.04em] tabular-nums">
                   {item.value}
@@ -4732,9 +4735,12 @@ export default function ApertureRevealDemo001() {
 <span class="line"><span style="color:#24292E">          ></span></span>
 <span class="line"><span style="color:#24292E">            One route, walked slowly enough to watch the light arrive.</span></span>
 <span class="line"><span style="color:#24292E">          &#x3C;/</span><span style="color:#22863A">h2</span><span style="color:#24292E">></span></span>
-<span class="line"><span style="color:#24292E">          &#x3C;</span><span style="color:#22863A">dl</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"mt-16 grid gap-px overflow-hidden rounded-sm bg-white/10 sm:grid-cols-3"</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">          &#x3C;</span><span style="color:#22863A">dl</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"mt-16 grid divide-y divide-white/10 sm:grid-cols-3 sm:divide-x sm:divide-y-0"</span><span style="color:#24292E">></span></span>
 <span class="line"><span style="color:#24292E">            {route.</span><span style="color:#6F42C1">map</span><span style="color:#24292E">((</span><span style="color:#E36209">item</span><span style="color:#24292E">) </span><span style="color:#D73A49">=></span><span style="color:#24292E"> (</span></span>
-<span class="line"><span style="color:#24292E">              &#x3C;</span><span style="color:#22863A">div</span><span style="color:#6F42C1"> key</span><span style="color:#D73A49">=</span><span style="color:#24292E">{item.label} </span><span style="color:#6F42C1">className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"flex flex-col gap-3 bg-[#0d0e12] p-6 sm:p-8"</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">              &#x3C;</span><span style="color:#22863A">div</span></span>
+<span class="line"><span style="color:#6F42C1">                key</span><span style="color:#D73A49">=</span><span style="color:#24292E">{item.label}</span></span>
+<span class="line"><span style="color:#6F42C1">                className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"flex flex-col gap-3 py-6 max-sm:first:pt-0 max-sm:last:pb-0 sm:px-8 sm:py-1 sm:first:pl-0"</span></span>
+<span class="line"><span style="color:#24292E">              ></span></span>
 <span class="line"><span style="color:#24292E">                &#x3C;</span><span style="color:#22863A">dt</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"order-2 text-sm leading-snug text-[#e9e7e1]/60"</span><span style="color:#24292E">>{item.label}&#x3C;/</span><span style="color:#22863A">dt</span><span style="color:#24292E">></span></span>
 <span class="line"><span style="color:#24292E">                &#x3C;</span><span style="color:#22863A">dd</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"order-1 m-0 text-[clamp(2.25rem,5vw,3.75rem)] font-semibold leading-none tracking-[-0.04em] tabular-nums"</span><span style="color:#24292E">></span></span>
 <span class="line"><span style="color:#24292E">                  {item.value}</span></span>
@@ -4837,9 +4843,12 @@ export default function ApertureRevealDemo001() {
 <span class="line"><span style="color:#E1E4E8">          ></span></span>
 <span class="line"><span style="color:#E1E4E8">            One route, walked slowly enough to watch the light arrive.</span></span>
 <span class="line"><span style="color:#E1E4E8">          &#x3C;/</span><span style="color:#85E89D">h2</span><span style="color:#E1E4E8">></span></span>
-<span class="line"><span style="color:#E1E4E8">          &#x3C;</span><span style="color:#85E89D">dl</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"mt-16 grid gap-px overflow-hidden rounded-sm bg-white/10 sm:grid-cols-3"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">          &#x3C;</span><span style="color:#85E89D">dl</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"mt-16 grid divide-y divide-white/10 sm:grid-cols-3 sm:divide-x sm:divide-y-0"</span><span style="color:#E1E4E8">></span></span>
 <span class="line"><span style="color:#E1E4E8">            {route.</span><span style="color:#B392F0">map</span><span style="color:#E1E4E8">((</span><span style="color:#FFAB70">item</span><span style="color:#E1E4E8">) </span><span style="color:#F97583">=></span><span style="color:#E1E4E8"> (</span></span>
-<span class="line"><span style="color:#E1E4E8">              &#x3C;</span><span style="color:#85E89D">div</span><span style="color:#B392F0"> key</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{item.label} </span><span style="color:#B392F0">className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"flex flex-col gap-3 bg-[#0d0e12] p-6 sm:p-8"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">              &#x3C;</span><span style="color:#85E89D">div</span></span>
+<span class="line"><span style="color:#B392F0">                key</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{item.label}</span></span>
+<span class="line"><span style="color:#B392F0">                className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"flex flex-col gap-3 py-6 max-sm:first:pt-0 max-sm:last:pb-0 sm:px-8 sm:py-1 sm:first:pl-0"</span></span>
+<span class="line"><span style="color:#E1E4E8">              ></span></span>
 <span class="line"><span style="color:#E1E4E8">                &#x3C;</span><span style="color:#85E89D">dt</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"order-2 text-sm leading-snug text-[#e9e7e1]/60"</span><span style="color:#E1E4E8">>{item.label}&#x3C;/</span><span style="color:#85E89D">dt</span><span style="color:#E1E4E8">></span></span>
 <span class="line"><span style="color:#E1E4E8">                &#x3C;</span><span style="color:#85E89D">dd</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"order-1 m-0 text-[clamp(2.25rem,5vw,3.75rem)] font-semibold leading-none tracking-[-0.04em] tabular-nums"</span><span style="color:#E1E4E8">></span></span>
 <span class="line"><span style="color:#E1E4E8">                  {item.value}</span></span>
