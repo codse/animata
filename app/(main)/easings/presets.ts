@@ -5,6 +5,8 @@ export type EasingGroup = "animata" | "classic" | "baseline";
 export type EasingPreset = {
   id: string;
   name: string;
+  /** Fits a small tile. */
+  short: string;
   group: EasingGroup;
   bezier: CubicBezier;
   /** Suggested duration in milliseconds. */
@@ -20,7 +22,8 @@ const ms = (seconds: number) => Math.round(seconds * 1000);
 export const PRESETS: EasingPreset[] = [
   {
     id: "out",
-    name: "Out",
+    name: "ease-out",
+    short: "out",
     group: "animata",
     bezier: ease.out,
     duration: ms(duration.base),
@@ -29,7 +32,8 @@ export const PRESETS: EasingPreset[] = [
   },
   {
     id: "snap",
-    name: "Snap",
+    name: "ease-snap",
+    short: "snap",
     group: "animata",
     bezier: ease.snap,
     duration: ms(duration.fast),
@@ -38,7 +42,8 @@ export const PRESETS: EasingPreset[] = [
   },
   {
     id: "in-out",
-    name: "In-out",
+    name: "ease-in-out",
+    short: "in-out",
     group: "animata",
     bezier: ease.inOut,
     duration: 420,
@@ -47,7 +52,8 @@ export const PRESETS: EasingPreset[] = [
   },
   {
     id: "glide",
-    name: "Glide",
+    name: "ease-glide",
+    short: "glide",
     group: "animata",
     bezier: ease.glide,
     duration: 800,
@@ -56,7 +62,8 @@ export const PRESETS: EasingPreset[] = [
   },
   {
     id: "overshoot",
-    name: "Overshoot",
+    name: "ease-overshoot",
+    short: "overshoot",
     group: "animata",
     bezier: ease.overshoot,
     duration: 480,
@@ -66,6 +73,7 @@ export const PRESETS: EasingPreset[] = [
   {
     id: "quart-out",
     name: "Quart out",
+    short: "quart",
     group: "classic",
     bezier: [0.25, 1, 0.5, 1],
     duration: 400,
@@ -75,6 +83,7 @@ export const PRESETS: EasingPreset[] = [
   {
     id: "circ-out",
     name: "Circ out",
+    short: "circ",
     group: "classic",
     bezier: [0, 0.55, 0.45, 1],
     duration: 400,
@@ -84,6 +93,7 @@ export const PRESETS: EasingPreset[] = [
   {
     id: "sheet",
     name: "Sheet",
+    short: "sheet",
     group: "classic",
     bezier: [0.32, 0.72, 0, 1],
     duration: 500,
@@ -93,6 +103,7 @@ export const PRESETS: EasingPreset[] = [
   {
     id: "emphasized",
     name: "Emphasized",
+    short: "emphasized",
     group: "classic",
     bezier: [0.05, 0.7, 0.1, 1],
     duration: 450,
@@ -102,15 +113,17 @@ export const PRESETS: EasingPreset[] = [
   {
     id: "css-ease",
     name: "CSS ease",
+    short: "ease",
     group: "baseline",
     bezier: [0.25, 0.1, 0.25, 1],
     duration: 300,
-    use: "Browser default",
-    note: "What `transition` uses when you don't choose. Compare it with Out to see the difference.",
+    use: "Browser default for transition",
+    note: "What `transition` uses when you don't choose one. Compare it with ease-out to feel the difference.",
   },
   {
     id: "css-ease-in-out",
     name: "CSS ease-in-out",
+    short: "ease-in-out",
     group: "baseline",
     bezier: [0.42, 0, 0.58, 1],
     duration: 300,
@@ -120,6 +133,7 @@ export const PRESETS: EasingPreset[] = [
   {
     id: "linear",
     name: "Linear",
+    short: "linear",
     group: "baseline",
     bezier: [0, 0, 1, 1],
     duration: 300,
@@ -130,8 +144,8 @@ export const PRESETS: EasingPreset[] = [
 
 export const GROUP_LABELS: Record<EasingGroup, string> = {
   animata: "Animata",
-  classic: "Classics",
-  baseline: "Baselines",
+  classic: "Classic",
+  baseline: "Browser default",
 };
 
 export function findPreset(id: string | null | undefined) {

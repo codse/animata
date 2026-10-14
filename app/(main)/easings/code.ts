@@ -18,12 +18,14 @@ export function formatBezier(bezier: CubicBezier) {
   return bezier.map(round).join(", ");
 }
 
+/** "ease-glide" -> "glide", "Quart out" -> "quart-out"; used as --ease-{slug}. */
 function slug(name: string) {
   return (
     name
       .toLowerCase()
       .replace(/[^a-z0-9]+/g, "-")
-      .replace(/^-|-$/g, "") || "custom"
+      .replace(/^-|-$/g, "")
+      .replace(/^ease-/, "") || "custom"
   );
 }
 

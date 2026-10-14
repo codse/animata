@@ -7,17 +7,22 @@ import { cn } from "@/lib/utils";
 
 import { round } from "./code";
 
-const SIZE = 200;
-const PAD = 16;
-/** Y bounds of the plot. Numeric input and shared links clamp to the same range. */
+/** Y limits for control points. Numeric input and shared links clamp to the same range. */
 export const Y_MIN = -0.6;
 export const Y_MAX = 1.7;
-const HEIGHT = SIZE * (Y_MAX - Y_MIN);
 
-const toX = (x: number) => PAD + x * SIZE;
-const toY = (y: number) => PAD + ((Y_MAX - y) / (Y_MAX - Y_MIN)) * HEIGHT;
+const SIZE = 200;
+const PAD = 14;
 
 const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value));
+
+/** Plot only as much vertical range as the curve needs, with a little air. */
+function plotRange([, y1, , y2]: CubicBezier) {
+  return {
+    min: Math.max(Y_MIN, Math.min(-0.15, y1 - 0.15, y2 - 0.15)),
+    max: Math.min(Y_MAX, Math.max(1.15, y1 + 0.15, y2 + 0.15)),
+  };
+}
 
 /** Progress at time `x` (0–1) for a cubic bezier, solved with Newton's method then bisection. */
 export function sampleBezier([x1, y1, x2, y2]: CubicBezier, x: number) {
@@ -74,7 +79,19 @@ export function CurveEditor({
   const dragging = useRef<0 | 1 | null>(null);
   const [x1, y1, x2, y2] = bezier;
 
+  // The range follows the curve, but holds still while a handle is dragged so the handle
+  // stays under the pointer.
+  const [range, setRange] = useState(() => plotRange(bezier));
+  useEffect(() => {
+    if (dragging.current === null) setRange(plotRange(bezier));
+  }, [bezier]);
+
+  const height = SIZE * (range.max - range.min);
+  const toX = (x: number) => PAD + x * SIZE;
+  const toY = (y: number) => PAD + ((range.max - y) / (range.max - range.min)) * height;
+
   // Trace the curve over the real duration each time the scenes play.
+  // biome-ignore lint/correctness/useExhaustiveDependencies: toY derives from range
   useEffect(() => {
     const dot = dotRef.current;
     if (!dot || playKey === 0) return;
@@ -88,15 +105,14 @@ export function CurveEditor({
     };
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
-  }, [playKey, durationMs, bezier]);
+  }, [playKey, durationMs, bezier, range]);
 
   const pointFromEvent = (event: PointerEvent<SVGSVGElement>) => {
-    const svg = svgRef.current;
-    const matrix = svg?.getScreenCTM()?.inverse();
-    if (!svg || !matrix) return null;
+    const matrix = svgRef.current?.getScreenCTM()?.inverse();
+    if (!matrix) return null;
     const point = new DOMPoint(event.clientX, event.clientY).matrixTransform(matrix);
     const x = clamp((point.x - PAD) / SIZE, 0, 1);
-    const y = clamp(Y_MAX - ((point.y - PAD) / HEIGHT) * (Y_MAX - Y_MIN), Y_MIN, Y_MAX);
+    const y = clamp(range.max - ((point.y - PAD) / height) * (range.max - range.min), Y_MIN, Y_MAX);
     return [round(x), round(y)] as const;
   };
 
@@ -119,6 +135,7 @@ export function CurveEditor({
 
   const onPointerUp = (event: PointerEvent<SVGSVGElement>) => {
     dragging.current = null;
+    setRange(plotRange(bezier));
     if (svgRef.current?.hasPointerCapture(event.pointerId)) {
       svgRef.current.releasePointerCapture(event.pointerId);
     }
@@ -139,20 +156,14 @@ export function CurveEditor({
     move(handle, round(clamp(hx + delta[0], 0, 1)), round(clamp(hy + delta[1], Y_MIN, Y_MAX)));
   };
 
-  const setValue = (index: number, value: number) => {
-    const next = [...bezier] as [number, number, number, number];
-    next[index] = value;
-    onChange(next);
-  };
-
   const path = `M ${toX(0)} ${toY(0)} C ${toX(x1)} ${toY(y1)}, ${toX(x2)} ${toY(y2)}, ${toX(1)} ${toY(1)}`;
 
   return (
-    <div className={cn("easing-editor", className)}>
+    <div className={cn("grid gap-3", className)}>
       <svg
         ref={svgRef}
-        viewBox={`0 0 ${SIZE + PAD * 2} ${HEIGHT + PAD * 2}`}
-        className="easing-editor__plot"
+        viewBox={`0 0 ${SIZE + PAD * 2} ${height + PAD * 2}`}
+        className="max-h-48 w-full touch-none overflow-visible select-none"
         onPointerMove={onPointerMove}
         onPointerUp={onPointerUp}
         onPointerCancel={onPointerUp}
@@ -164,13 +175,35 @@ export function CurveEditor({
           y={toY(1)}
           width={SIZE}
           height={toY(0) - toY(1)}
-          className="easing-editor__frame"
+          rx={6}
+          className="fill-muted stroke-border"
         />
-        <line x1={toX(0)} y1={toY(0)} x2={toX(1)} y2={toY(1)} className="easing-editor__diagonal" />
-        <line x1={toX(0)} y1={toY(0)} x2={toX(x1)} y2={toY(y1)} className="easing-editor__arm" />
-        <line x1={toX(1)} y1={toY(1)} x2={toX(x2)} y2={toY(y2)} className="easing-editor__arm" />
-        <path d={path} className="easing-editor__curve" />
-        <circle ref={dotRef} cx={toX(1)} cy={toY(1)} r={5} className="easing-editor__dot" />
+        <line
+          x1={toX(0)}
+          y1={toY(0)}
+          x2={toX(1)}
+          y2={toY(1)}
+          className="stroke-border [stroke-dasharray:3_4]"
+        />
+        <line
+          x1={toX(0)}
+          y1={toY(0)}
+          x2={toX(x1)}
+          y2={toY(y1)}
+          className="stroke-muted-foreground/60"
+        />
+        <line
+          x1={toX(1)}
+          y1={toY(1)}
+          x2={toX(x2)}
+          y2={toY(y2)}
+          className="stroke-muted-foreground/60"
+        />
+        <path
+          d={path}
+          className="fill-none stroke-foreground stroke-[2.5] [stroke-linecap:round]"
+        />
+        <circle ref={dotRef} cx={toX(1)} cy={toY(1)} r={5} className="fill-accent" />
         {(
           [
             [0, x1, y1],
@@ -181,29 +214,46 @@ export function CurveEditor({
             key={handle}
             cx={toX(hx)}
             cy={toY(hy)}
-            r={9}
+            r={8}
             tabIndex={0}
             role="button"
             aria-label={`Control point ${handle + 1}: x ${hx}, y ${hy}. Arrow keys move it; hold Shift for larger steps.`}
-            className="easing-editor__handle"
+            className="cursor-grab fill-background stroke-foreground stroke-2 outline-none focus-visible:stroke-accent focus-visible:stroke-[3] active:cursor-grabbing"
             onPointerDown={onPointerDown(handle)}
             onKeyDown={onKeyDown(handle)}
           />
         ))}
       </svg>
+    </div>
+  );
+}
 
-      <div className="easing-editor__inputs">
-        {(["x1", "y1", "x2", "y2"] as const).map((label, index) => (
-          <ControlField
-            key={label}
-            label={label}
-            value={bezier[index]}
-            min={index % 2 === 0 ? 0 : Y_MIN}
-            max={index % 2 === 0 ? 1 : Y_MAX}
-            onCommit={(value) => setValue(index, value)}
-          />
-        ))}
-      </div>
+/** Exact control-point values, editable as text. */
+export function CurveFields({
+  bezier,
+  onChange,
+}: {
+  bezier: CubicBezier;
+  onChange: (bezier: CubicBezier) => void;
+}) {
+  const setValue = (index: number, value: number) => {
+    const next = [...bezier] as [number, number, number, number];
+    next[index] = value;
+    onChange(next);
+  };
+
+  return (
+    <div className="grid grid-cols-4 gap-1.5">
+      {(["x1", "y1", "x2", "y2"] as const).map((label, index) => (
+        <ControlField
+          key={label}
+          label={label}
+          value={bezier[index]}
+          min={index % 2 === 0 ? 0 : Y_MIN}
+          max={index % 2 === 0 ? 1 : Y_MAX}
+          onCommit={(value) => setValue(index, value)}
+        />
+      ))}
     </div>
   );
 }
@@ -230,14 +280,17 @@ function ControlField({ label, value, min, max, onCommit }: ControlFieldProps) {
   const commit = (next: number) => onCommit(round(clamp(next, min, max)));
 
   return (
-    <label className="easing-editor__field">
-      <span>{label}</span>
+    <label className="relative block">
+      <span className="pointer-events-none absolute top-1/2 left-2 -translate-y-1/2 font-mono text-[10px] text-muted-foreground">
+        {label}
+      </span>
       <input
         type="text"
         inputMode="decimal"
         autoComplete="off"
         spellCheck={false}
         value={draft ?? String(value)}
+        className="h-8 w-full rounded-lg border border-border bg-background pr-2 pl-7 text-right font-mono text-xs tabular-nums text-foreground outline-none transition-colors focus-visible:border-foreground"
         onChange={(event) => {
           const raw = event.target.value.trim();
           setDraft(raw);
