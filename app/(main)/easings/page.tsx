@@ -7,7 +7,7 @@ import { EasingPlayground } from "./easing-playground";
 export const metadata = createPageMetadata({
   title: "Easing Playground | Animata",
   description:
-    "Try easing curves on real interface transitions: dropdowns, dialogs, drawers, tabs, page transitions, and more. Tune the curve and duration, then copy CSS, Tailwind, Motion, or GSAP code.",
+    "Find the timing that feels right for a dropdown, dialog, drawer, or page transition. Try suggested curves, compare two side by side, and copy CSS, Tailwind, Motion, or GSAP code.",
   path: "/easings",
   keywords: [
     "easing",

@@ -1,18 +1,9 @@
 "use client";
 
-import {
-  Check,
-  ChevronLeft,
-  ChevronRight,
-  Copy,
-  Pause,
-  Play,
-  RotateCcw,
-  SlidersHorizontal,
-} from "lucide-react";
+import { Check, Columns2, Copy, RotateCcw } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { parseAsInteger, parseAsString, useQueryStates } from "nuqs";
-import { type CSSProperties, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { type CSSProperties, useCallback, useEffect, useRef, useState } from "react";
 
 import { usePrefersReducedMotion } from "@/hooks/use-prefers-reduced-motion";
 import { type CubicBezier, stagger, toCssBezier } from "@/lib/motion";
@@ -21,17 +12,32 @@ import { cn } from "@/lib/utils";
 import { CODE_FORMATS, type CodeFormat, codeFor, formatBezier } from "./code";
 import { CurveEditor, CurveFields, Y_MAX, Y_MIN } from "./curve-editor";
 import { DurationControl, MAX_DURATION, MIN_DURATION } from "./duration-control";
-import { MiniCurve, PresetIndex, PresetShelf } from "./preset-shelf";
+import { findMoment, MOMENTS, type Moment } from "./moments";
 import { type EasingPreset, findPreset, PRESETS, sameBezier } from "./presets";
-import { CATEGORY_LABELS, SCENES, type SceneCategory } from "./scenes";
 
-const DEFAULT_PRESET = PRESETS[0];
-/** How long each state is held before the gallery plays the other direction. */
-const HOLD_MS = 1100;
+/** How long each state is held before the stage plays the other direction. */
+const HOLD_MS = 1000;
+const SPEEDS = [
+  { value: 1, label: "1×", name: "Normal speed" },
+  { value: 0.5, label: "½×", name: "Half speed" },
+  { value: 0.25, label: "¼×", name: "Quarter speed" },
+] as const;
 
 /** Press feedback shared by every button on the page. */
 const press =
-  "transition-[scale,background-color,border-color,color] duration-150 ease-out active:scale-[0.97]";
+  "transition-[scale,background-color,color,box-shadow] duration-150 ease-out active:scale-[0.97]";
+const raised =
+  "shadow-[0_0_0_1px_var(--color-border),0_1px_2px_rgb(0_0_0/0.05),0_12px_32px_-14px_rgb(0_0_0/0.18)]";
+
+type Slot = { preset: EasingPreset | null; bezier: CubicBezier; durationMs: number };
+
+const clampDuration = (ms: number) => Math.min(MAX_DURATION, Math.max(MIN_DURATION, ms));
+const presetOf = (id: string) => findPreset(id) ?? PRESETS[0];
+const slotFrom = (preset: EasingPreset, durationMs: number): Slot => ({
+  preset,
+  bezier: preset.bezier,
+  durationMs,
+});
 
 function parseCurve(value: string | null): CubicBezier | null {
   if (!value) return null;
@@ -44,127 +50,116 @@ function parseCurve(value: string | null): CubicBezier | null {
   return [x1, y(y1), x2, y(y2)];
 }
 
+function MiniCurve({ bezier, className }: { bezier: CubicBezier; className?: string }) {
+  const [x1, y1, x2, y2] = bezier;
+  const px = (x: number) => 2 + x * 16;
+  const py = (y: number) => 12 - y * 9;
+  return (
+    <svg
+      viewBox="0 0 20 14"
+      aria-hidden="true"
+      className={cn("h-3.5 w-5 shrink-0 overflow-visible", className)}
+    >
+      <path
+        d={`M ${px(0)} ${py(0)} C ${px(x1)} ${py(y1)}, ${px(x2)} ${py(y2)}, ${px(1)} ${py(1)}`}
+        className="fill-none stroke-current stroke-[1.7] [stroke-linecap:round]"
+      />
+    </svg>
+  );
+}
+
 export function EasingPlayground() {
   const reducedMotion = usePrefersReducedMotion();
   const [query, setQuery] = useQueryStates(
-    { p: parseAsString, c: parseAsString, d: parseAsInteger },
+    { m: parseAsString, p: parseAsString, c: parseAsString, d: parseAsInteger },
     { history: "replace", throttleMs: 250 },
   );
 
-  const urlPreset = findPreset(query.p);
-  const customCurve = parseCurve(query.c);
-  const preset: EasingPreset | null = customCurve ? null : (urlPreset ?? DEFAULT_PRESET);
-  const bezier: CubicBezier = customCurve ?? (preset ?? DEFAULT_PRESET).bezier;
-  const durationMs = Math.min(
-    MAX_DURATION,
-    Math.max(MIN_DURATION, query.d ?? preset?.duration ?? DEFAULT_PRESET.duration),
-  );
-  const name = preset?.name ?? "Custom";
-  const presetIndex = preset ? PRESETS.indexOf(preset) : -1;
+  // The moment and its first curve live in the URL, so a link shares exactly this view.
+  const moment = findMoment(query.m) ?? MOMENTS[1];
+  const customA = parseCurve(query.c);
+  const presetA = customA ? null : (findPreset(query.p) ?? presetOf(moment.suggest[0]));
+  const a: Slot = {
+    preset: presetA,
+    bezier: customA ?? (presetA ?? PRESETS[0]).bezier,
+    durationMs: clampDuration(query.d ?? (query.p && presetA ? presetA.duration : moment.duration)),
+  };
+  const [b, setB] = useState<Slot>(() => slotFrom(presetOf(moment.suggest[1]), moment.duration));
 
-  const [category, setCategory] = useState<SceneCategory | "all">("all");
-  const [playing, setPlaying] = useState(true);
+  const [compare, setCompare] = useState(false);
+  const [editing, setEditing] = useState<"a" | "b">("a");
+  const [speed, setSpeed] = useState<number>(1);
   const [open, setOpen] = useState(false);
-  const [overrides, setOverrides] = useState<Record<string, boolean>>({});
   const [playKey, setPlayKey] = useState(0);
+  /** Bumped by Replay and by every change, so the cycle restarts from a fresh open. */
+  const [cycle, setCycle] = useState(0);
+  const [showAll, setShowAll] = useState(false);
   const [format, setFormat] = useState<CodeFormat>("css");
   const [copied, setCopied] = useState(false);
-  /** Which way the curve name slides: next moves left, previous moves right. */
-  const [direction, setDirection] = useState<1 | -1>(1);
-  /** The preset an edited curve came from, so Reset can return to it. */
-  const [base, setBase] = useState<EasingPreset | null>(preset);
-  useEffect(() => {
-    if (preset) setBase(preset);
-  }, [preset]);
-  const edited = base !== null && (preset === null || durationMs !== base.duration);
-  const galleryRef = useRef<HTMLDivElement>(null);
-  const workbenchRef = useRef<HTMLElement>(null);
-  const [galleryVisible, setGalleryVisible] = useState(true);
-  /** The dock only appears once the instrument has scrolled out of view. */
-  const [instrumentVisible, setInstrumentVisible] = useState(true);
+  const stageRef = useRef<HTMLDivElement>(null);
+  const [stageVisible, setStageVisible] = useState(true);
 
-  const autoplay = playing && !reducedMotion && galleryVisible;
+  const editingB = compare && editing === "b";
+  const active = editingB ? b : a;
+  const autoplay = !reducedMotion && stageVisible;
+  const longest = Math.max(a.durationMs, compare ? b.durationMs : 0) / speed;
 
   const replay = useCallback(() => {
-    setOverrides({});
-    setOpen((value) => !value);
+    setOpen(true);
     setPlayKey((key) => key + 1);
+    setCycle((value) => value + 1);
   }, []);
 
-  // One shared cycle keeps every scene in step, so they are easy to compare.
+  // One clock for every pane, so a comparison is fair: open, hold, close, hold.
+  // biome-ignore lint/correctness/useExhaustiveDependencies: cycle restarts the clock on purpose
   useEffect(() => {
     if (!autoplay) return;
     const id = window.setInterval(() => {
-      if (document.visibilityState === "visible") replay();
-    }, durationMs + HOLD_MS);
+      if (document.visibilityState !== "visible") return;
+      setOpen((value) => !value);
+      setPlayKey((key) => key + 1);
+    }, longest + HOLD_MS);
     return () => window.clearInterval(id);
-  }, [autoplay, durationMs, replay]);
+  }, [autoplay, longest, cycle]);
 
   useEffect(() => {
-    const node = galleryRef.current;
+    const node = stageRef.current;
     if (!node) return;
-    const observer = new IntersectionObserver(([entry]) => setGalleryVisible(entry.isIntersecting));
+    const observer = new IntersectionObserver(([entry]) => setStageVisible(entry.isIntersecting));
     observer.observe(node);
     return () => observer.disconnect();
   }, []);
 
-  useEffect(() => {
-    const node = workbenchRef.current;
-    if (!node) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => setInstrumentVisible(entry.isIntersecting),
-      { threshold: 0.15 },
-    );
-    observer.observe(node);
-    return () => observer.disconnect();
-  }, []);
+  const pickMoment = (next: Moment) => {
+    setQuery({ m: next.id, p: next.suggest[0], c: null, d: next.duration });
+    setB(slotFrom(presetOf(next.suggest[1]), next.duration));
+    setEditing("a");
+    setOpen(false);
+    setCycle((value) => value + 1);
+  };
 
-  const choosePreset = (next: EasingPreset, towards?: 1 | -1) => {
-    const from = PRESETS.indexOf(preset ?? base ?? DEFAULT_PRESET);
-    setDirection(towards ?? (PRESETS.indexOf(next) >= from ? 1 : -1));
-    setQuery({ p: next.id, c: null, d: null });
+  const pickPreset = (preset: EasingPreset) => {
+    if (editingB) setB(slotFrom(preset, preset.duration));
+    else setQuery({ p: preset.id, c: null, d: preset.duration });
     replay();
   };
 
-  const step = (towards: 1 | -1) => {
-    const from = presetIndex === -1 ? PRESETS.indexOf(base ?? DEFAULT_PRESET) : presetIndex;
-    choosePreset(PRESETS[(from + towards + PRESETS.length) % PRESETS.length], towards);
-  };
-
-  /** Forgiving editing: one press returns an edited curve to the preset it came from. */
-  const reset = () => {
-    if (!base) return;
-    setQuery({ p: base.id, c: null, d: null });
-    replay();
-  };
-
-  const setCurve = (next: CubicBezier) => {
-    const match = PRESETS.find((item) => sameBezier(item.bezier, next));
-    if (match) {
-      setQuery({ p: match.id, c: null, d: durationMs === match.duration ? null : durationMs });
-    } else {
-      setQuery({ p: null, c: formatBezier(next).replaceAll(" ", ""), d: durationMs });
-    }
+  const setCurve = (bezier: CubicBezier) => {
+    const match = PRESETS.find((item) => sameBezier(item.bezier, bezier)) ?? null;
+    if (editingB) setB((slot) => ({ ...slot, preset: match, bezier }));
+    else
+      setQuery(
+        match ? { p: match.id, c: null } : { p: null, c: formatBezier(bezier).replaceAll(" ", "") },
+      );
   };
 
   const setDuration = (ms: number) => {
-    setQuery({ d: ms === preset?.duration ? null : ms });
+    if (editingB) setB((slot) => ({ ...slot, durationMs: ms }));
+    else setQuery({ d: ms });
   };
 
-  /** Jump to the chosen curve in whichever list is showing: the index or the shelf. */
-  const showCurves = () => {
-    const current = [
-      ...document.querySelectorAll<HTMLElement>("[data-preset][aria-pressed='true']"),
-    ].find((node) => node.offsetParent !== null);
-    current?.scrollIntoView({ block: "center", inline: "nearest" });
-    current?.focus({ preventScroll: true });
-  };
-
-  const showWorkbench = () => {
-    workbenchRef.current?.scrollIntoView({ block: "start" });
-  };
-
-  const code = codeFor(format, bezier, durationMs, name);
+  const name = active.preset?.name ?? "Custom";
+  const code = codeFor(format, active.bezier, active.durationMs, name);
   const copy = async () => {
     try {
       await navigator.clipboard.writeText(code);
@@ -175,193 +170,303 @@ export function EasingPlayground() {
     }
   };
 
-  const scenes = useMemo(
-    () => SCENES.filter((scene) => category === "all" || scene.category === category),
-    [category],
-  );
-
-  const vars = {
-    "--ez-ease": toCssBezier(bezier),
-    "--ez-dur": `${durationMs}ms`,
-    "--ez-stagger": `${stagger.base * 1000}ms`,
-  } as CSSProperties;
-
-  /** One segmented-control look for every switch on the page. */
-  const segment = cn(
-    "h-7 rounded-[6px] px-3 text-xs font-medium text-muted-foreground hover:text-foreground",
-    "aria-checked:bg-background aria-checked:text-foreground aria-checked:shadow-[0_1px_2px_rgb(0_0_0/0.08)]",
-    "aria-pressed:bg-background aria-pressed:text-foreground aria-pressed:shadow-[0_1px_2px_rgb(0_0_0/0.08)]",
-    press,
-  );
-  const iconButton = cn(
-    "grid size-8 shrink-0 place-items-center rounded-[8px] text-muted-foreground hover:bg-muted hover:text-foreground",
-    press,
-  );
-
-  const nameMorph = (offset: number, blur: number) => ({
-    initial: reducedMotion
-      ? (false as const)
-      : { x: direction * offset, opacity: 0, filter: `blur(${blur}px)` },
-    animate: { x: 0, opacity: 1, filter: "blur(0px)" },
-    exit: reducedMotion
-      ? { opacity: 0, transition: { duration: 0 } }
-      : { x: direction * -offset, opacity: 0, filter: `blur(${blur}px)` },
-  });
+  const chips = showAll ? PRESETS : moment.suggest.map(presetOf);
+  const panes = compare ? [a, b] : [a];
 
   return (
-    <div
-      className="mx-auto w-full max-w-[1360px] px-4 pt-[clamp(40px,6vw,72px)] pb-32 sm:px-6 lg:px-8"
-      style={vars}
-    >
-      <header className="grid items-end gap-x-12 gap-y-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,22rem)]">
-        <h1 className="m-0 font-(family-name:--font-display) text-[clamp(2.25rem,4.2vw,3.5rem)] leading-[1.04] font-semibold tracking-[-0.035em] text-balance">
-          See how{" "}
-          <button
-            type="button"
-            onClick={showCurves}
-            aria-label={`${name}, choose another curve`}
-            className={cn(
-              "relative inline-grid overflow-hidden rounded-[0.24em] bg-muted px-[0.22em] pb-[0.02em] align-baseline font-mono text-[0.84em] font-medium tracking-[-0.045em] shadow-[inset_0_0_0_1px_var(--color-border)] hover:bg-border/60",
-              press,
-            )}
-          >
-            {/* The name swaps with the selected curve itself, so the heading demonstrates it. */}
-            <AnimatePresence initial={false} mode="popLayout">
-              <motion.span
-                key={name}
-                className="col-start-1 row-start-1 inline-block"
-                initial={
-                  reducedMotion
-                    ? false
-                    : { x: `${direction * 0.5}em`, opacity: 0, filter: "blur(6px)" }
-                }
-                animate={{ x: 0, opacity: 1, filter: "blur(0px)" }}
-                exit={
-                  reducedMotion
-                    ? { opacity: 0, transition: { duration: 0 } }
-                    : { x: `${direction * -0.5}em`, opacity: 0, filter: "blur(6px)" }
-                }
-                transition={{ duration: Math.min(durationMs, 700) / 1000, ease: [...bezier] }}
-              >
-                {name}
-              </motion.span>
-            </AnimatePresence>
-          </button>{" "}
-          moves real interfaces
+    <div className="mx-auto w-full max-w-[1240px] px-4 pt-[clamp(28px,5vw,48px)] pb-24 sm:px-6 lg:px-8">
+      <header className="grid items-end gap-x-12 gap-y-3 lg:grid-cols-[auto_minmax(0,26rem)] lg:justify-between">
+        <h1 className="m-0 font-(family-name:--font-display) text-[clamp(2.125rem,3.7vw,3.125rem)] leading-none font-bold tracking-[-0.04em] text-balance lg:whitespace-nowrap">
+          Find the timing that feels right
         </h1>
-        <p className="m-0 max-w-[36rem] text-[15px]/[1.55] text-pretty text-muted-foreground lg:pb-1.5">
-          Pick a curve or drag your own, set the duration, and watch twelve everyday transitions use
-          it. Copy the result as CSS, Tailwind, Motion, or GSAP.
+        <p className="m-0 text-[15px]/[1.55] text-pretty text-muted-foreground lg:pb-1">
+          Pick the moment you're building and watch it move. Try the curves made for it, compare
+          two, and copy the one that feels right.
         </p>
       </header>
 
-      {/* Below desktop the index becomes a scrolling shelf. */}
-      <section aria-label="Curves" className="mt-10 lg:hidden">
-        <PresetShelf selected={preset} onSelect={choosePreset} />
-      </section>
-
-      {/* One workspace: pick a curve on the left, watch it in the middle, tune it on the
-          right. Both side panes stay in view while the scenes scroll. */}
-      <div className="mt-6 grid items-start gap-x-6 gap-y-10 md:grid-cols-[minmax(0,1fr)_19.5rem] lg:mt-12 lg:grid-cols-[12.5rem_minmax(0,1fr)_20rem] lg:gap-x-8 xl:gap-x-10">
+      <div className="mt-7 grid gap-5 lg:mt-8 lg:grid-cols-[12.5rem_minmax(0,1fr)] lg:gap-10">
+        {/* Moments: a list on desktop with one gliding highlight, a scrolling row below. */}
         <nav
-          aria-label="Curves"
-          className="sticky top-[calc(var(--site-header-height,50px)+24px)] hidden lg:block"
+          aria-label="Moments"
+          className="-mx-4 flex gap-1.5 overflow-x-auto px-4 pb-1 [scrollbar-width:none] sm:-mx-6 sm:px-6 lg:sticky lg:top-[calc(var(--site-header-height,56px)+24px)] lg:mx-0 lg:grid lg:gap-0.5 lg:self-start lg:overflow-visible lg:px-0 lg:pt-14 lg:pb-0 [&::-webkit-scrollbar]:hidden"
         >
-          <PresetIndex selected={preset} onSelect={choosePreset} reducedMotion={reducedMotion} />
+          {MOMENTS.map((item) => {
+            const current = item.id === moment.id;
+            return (
+              <button
+                key={item.id}
+                type="button"
+                aria-pressed={current}
+                onClick={() => pickMoment(item)}
+                className={cn(
+                  "relative flex h-9 shrink-0 items-center justify-between gap-3 rounded-[11px] px-3.5 text-[15px] font-medium tracking-[-0.01em] text-muted-foreground hover:text-foreground lg:h-10",
+                  "shadow-[inset_0_0_0_1px_var(--color-border)] aria-pressed:bg-foreground aria-pressed:text-background",
+                  "lg:shadow-none lg:aria-pressed:bg-transparent lg:aria-pressed:text-foreground",
+                  press,
+                )}
+              >
+                {current ? (
+                  <motion.span
+                    layoutId="moment-highlight"
+                    aria-hidden="true"
+                    transition={
+                      reducedMotion
+                        ? { duration: 0 }
+                        : { type: "spring", bounce: 0, duration: 0.45 }
+                    }
+                    className={cn(
+                      "absolute inset-0 hidden rounded-[11px] bg-background lg:block",
+                      raised,
+                    )}
+                  />
+                ) : null}
+                <span className="relative">{item.name}</span>
+                <span className="relative hidden font-mono text-[11px] text-muted-foreground tabular-nums lg:inline">
+                  {item.duration}
+                </span>
+              </button>
+            );
+          })}
         </nav>
 
-        <aside
-          ref={workbenchRef}
-          aria-label="Curve"
-          className="scroll-mt-20 md:sticky md:top-[calc(var(--site-header-height,50px)+16px)] md:col-start-2 md:row-start-1 md:max-h-[calc(100svh-var(--site-header-height,50px)-32px)] md:overflow-y-auto md:[scrollbar-width:thin] lg:col-start-3"
-        >
-          <div className="grid grid-cols-[minmax(0,1fr)] gap-5 rounded-[14px] border border-border bg-background p-4 shadow-[0_1px_2px_rgb(0_0_0/0.03),0_16px_40px_-28px_rgb(0_0_0/0.18)]">
-            <div className="flex items-start justify-between gap-3">
-              <div className="grid min-w-0 gap-1.5">
-                <h2 className="m-0 grid overflow-hidden font-(family-name:--font-display) text-[1.375rem] leading-none font-semibold tracking-[-0.025em]">
-                  <AnimatePresence initial={false} mode="popLayout">
-                    <motion.span
-                      key={name}
-                      className="col-start-1 row-start-1 truncate pb-0.5"
-                      {...nameMorph(20, 4)}
-                      transition={{ type: "spring", bounce: 0, duration: 0.35 }}
-                    >
-                      {name}
-                    </motion.span>
-                  </AnimatePresence>
-                </h2>
-                <p className="m-0 truncate font-mono text-xs leading-tight text-muted-foreground tabular-nums">
-                  {edited && base ? (
-                    <span className="font-sans">Edited from {base.name}</span>
-                  ) : (
-                    `cubic-bezier(${formatBezier(bezier)})`
+        <section aria-label="Studio" className="grid min-w-0 grid-cols-[minmax(0,1fr)] gap-4">
+          <div className="flex flex-wrap items-center gap-3">
+            <h2 className="m-0 mr-auto font-(family-name:--font-display) text-[1.75rem] leading-none font-bold tracking-[-0.03em]">
+              {moment.name}
+            </h2>
+            <div
+              className={cn(
+                "flex items-center gap-0.5 rounded-[12px] bg-background p-[3px]",
+                raised,
+              )}
+            >
+              {SPEEDS.map((item) => (
+                <button
+                  key={item.value}
+                  type="button"
+                  aria-pressed={speed === item.value}
+                  aria-label={item.name}
+                  onClick={() => {
+                    setSpeed(item.value);
+                    replay();
+                  }}
+                  className={cn(
+                    "h-[30px] min-w-9 rounded-[9px] px-2.5 text-[13px] font-medium text-muted-foreground hover:bg-muted hover:text-foreground",
+                    "aria-pressed:bg-foreground aria-pressed:text-background",
+                    press,
                   )}
-                </p>
-              </div>
-              <div className="flex gap-1">
-                {edited ? (
+                >
+                  {item.label}
+                </button>
+              ))}
+              <span aria-hidden="true" className="mx-1 h-[18px] w-px bg-border" />
+              <button
+                type="button"
+                aria-pressed={compare}
+                onClick={() => {
+                  setCompare((value) => !value);
+                  setEditing("a");
+                  replay();
+                }}
+                className={cn(
+                  "inline-flex h-[30px] items-center gap-1.5 rounded-[9px] px-2.5 text-[13px] font-medium text-muted-foreground hover:bg-muted hover:text-foreground",
+                  "aria-pressed:bg-foreground aria-pressed:text-background",
+                  press,
+                )}
+              >
+                <Columns2 aria-hidden="true" className="size-[15px]" />
+                Compare
+              </button>
+              <button
+                type="button"
+                aria-label="Replay"
+                onClick={replay}
+                className={cn(
+                  "grid size-[30px] place-items-center rounded-[9px] text-muted-foreground hover:bg-muted hover:text-foreground",
+                  press,
+                )}
+              >
+                <RotateCcw aria-hidden="true" className="size-[15px]" />
+              </button>
+            </div>
+          </div>
+
+          <div ref={stageRef} className={cn("grid gap-3.5", compare && "sm:grid-cols-2")}>
+            {panes.map((slot, index) => {
+              const key = index === 0 ? "a" : "b";
+              const selected = compare && editing === key;
+              const ms = Math.round(slot.durationMs / speed);
+              return (
+                <figure key={key} className="m-0 grid gap-3">
                   <button
                     type="button"
-                    onClick={reset}
+                    aria-label={
+                      compare && !selected
+                        ? `Edit ${key.toUpperCase()}`
+                        : `Replay ${moment.name.toLowerCase()}`
+                    }
+                    onClick={() => (compare && !selected ? setEditing(key) : replay())}
                     className={cn(
-                      "inline-flex h-8 items-center gap-1.5 rounded-[8px] px-2.5 text-xs font-medium text-muted-foreground hover:bg-muted hover:text-foreground",
-                      press,
+                      "relative block w-full overflow-hidden rounded-[24px] text-left text-foreground outline-none",
+                      "bg-[radial-gradient(130%_100%_at_50%_0%,var(--color-background)_0%,color-mix(in_oklab,var(--color-muted)_55%,var(--color-background))_55%,var(--color-muted)_100%)]",
+                      "shadow-[inset_0_0_0_1px_var(--color-border)] transition-shadow duration-200 focus-visible:shadow-[inset_0_0_0_1px_var(--color-border),0_0_0_2px_var(--color-foreground)]",
+                      selected &&
+                        "shadow-[inset_0_0_0_1px_var(--color-border),0_0_0_2px_var(--color-foreground)]",
+                      compare
+                        ? "aspect-[1.15/1] lg:aspect-[1.6/1]"
+                        : "aspect-[1.15/1] sm:aspect-[2/1] lg:aspect-[3/1]",
                     )}
+                    style={
+                      {
+                        "--ez-ease": toCssBezier(slot.bezier),
+                        "--ez-dur": `${ms}ms`,
+                        "--ez-stagger": `${(stagger.base * 1000) / speed}ms`,
+                      } as CSSProperties
+                    }
                   >
-                    <RotateCcw aria-hidden="true" className="size-3.5" />
-                    Reset
+                    <span aria-hidden="true" inert className="absolute inset-0 block">
+                      {moment.render(open)}
+                    </span>
+                    {/* The timeline: a playhead crosses it at the pane's own pace. */}
+                    <span
+                      aria-hidden="true"
+                      className="absolute inset-x-7 bottom-4 z-[2] flex items-center gap-2.5 font-mono text-[10.5px] text-muted-foreground tabular-nums"
+                    >
+                      0
+                      <span className="relative h-0.5 flex-1 rounded-full bg-foreground/[0.14]">
+                        <span
+                          className={cn(
+                            "absolute inset-0 transition-transform ease-linear",
+                            open && "translate-x-full",
+                          )}
+                          style={{ transitionDuration: `${ms}ms` }}
+                        >
+                          <span className="absolute top-1/2 left-0 size-2 -translate-1/2 rounded-full bg-foreground" />
+                        </span>
+                      </span>
+                      {slot.durationMs}ms
+                    </span>
                   </button>
-                ) : null}
-                <button
-                  type="button"
-                  aria-label="Previous curve"
-                  onClick={() => step(-1)}
-                  className={iconButton}
-                >
-                  <ChevronLeft aria-hidden="true" className="size-4" />
-                </button>
-                <button
-                  type="button"
-                  aria-label="Next curve"
-                  onClick={() => step(1)}
-                  className={iconButton}
-                >
-                  <ChevronRight aria-hidden="true" className="size-4" />
-                </button>
+                  {compare ? (
+                    <figcaption className="flex items-baseline gap-2.5 px-1">
+                      <span className="font-(family-name:--font-display) text-[1.375rem] leading-none font-bold tracking-[-0.03em]">
+                        {key.toUpperCase()}
+                      </span>
+                      <span className="font-medium">{slot.preset?.name ?? "Custom"}</span>
+                      <span className="font-mono text-xs text-muted-foreground tabular-nums">
+                        {slot.durationMs}ms
+                      </span>
+                      <button
+                        type="button"
+                        aria-pressed={selected}
+                        onClick={() => setEditing(key)}
+                        className="ml-auto text-[13px] font-medium text-muted-foreground hover:text-foreground aria-pressed:text-foreground"
+                      >
+                        {selected ? "Editing" : "Edit"}
+                      </button>
+                    </figcaption>
+                  ) : null}
+                </figure>
+              );
+            })}
+          </div>
+
+          {/* Tuning sits right under the stage: no panel, three columns under one hairline. */}
+          <div className="grid grid-cols-[minmax(0,1fr)] gap-x-8 gap-y-6 border-t border-border pt-5 md:grid-cols-[10rem_minmax(0,1fr)] lg:grid-cols-[10rem_minmax(0,1.15fr)_minmax(0,1fr)]">
+            <div className="order-last grid content-start gap-2.5 md:order-none">
+              <span className="text-xs text-muted-foreground">Curve</span>
+              <div
+                className={cn(
+                  "mx-auto w-full max-w-[16rem] rounded-[14px] bg-background p-1.5",
+                  raised,
+                )}
+              >
+                <CurveEditor
+                  bezier={active.bezier}
+                  onChange={setCurve}
+                  playKey={playKey}
+                  durationMs={active.durationMs / speed}
+                />
               </div>
+              <details className="group/values">
+                <summary className="flex h-6 cursor-pointer list-none items-center gap-1.5 text-xs font-medium text-muted-foreground hover:text-foreground [&::-webkit-details-marker]:hidden">
+                  <span
+                    aria-hidden="true"
+                    className="transition-[rotate] duration-200 ease-out group-open/values:rotate-90"
+                  >
+                    ›
+                  </span>
+                  Exact values
+                </summary>
+                <div className="mt-2.5">
+                  <CurveFields bezier={active.bezier} onChange={setCurve} />
+                </div>
+              </details>
             </div>
 
-            <div className="mx-auto w-full max-w-[26rem]">
-              <CurveEditor
-                bezier={bezier}
-                onChange={setCurve}
-                playKey={playKey}
-                durationMs={durationMs}
+            <div className="grid content-start gap-5">
+              <div className="grid gap-2.5">
+                <div className="flex items-baseline justify-between gap-3 text-xs text-muted-foreground">
+                  <span>
+                    {showAll ? "All curves" : `Made for ${moment.plural}`}
+                    {compare ? ` · editing ${editing.toUpperCase()}` : ""}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => setShowAll((value) => !value)}
+                    className="font-medium hover:text-foreground"
+                  >
+                    {showAll ? "Suggested only" : "All curves"}
+                  </button>
+                </div>
+                <div className="flex flex-wrap gap-1.5">
+                  {chips.map((preset) => (
+                    <button
+                      key={preset.id}
+                      type="button"
+                      aria-pressed={active.preset?.id === preset.id}
+                      aria-label={`${preset.name}, ${preset.duration} milliseconds. ${preset.use}`}
+                      onClick={() => pickPreset(preset)}
+                      className={cn(
+                        "inline-flex h-9 items-center gap-2 rounded-[11px] bg-background pr-3 pl-2.5 text-[13px] font-medium text-muted-foreground shadow-[0_0_0_1px_var(--color-border)] hover:text-foreground",
+                        "aria-pressed:bg-foreground aria-pressed:text-background aria-pressed:shadow-[0_0_0_1px_var(--color-foreground),0_8px_20px_-10px_rgb(0_0_0/0.4)]",
+                        press,
+                      )}
+                    >
+                      <MiniCurve bezier={preset.bezier} />
+                      {preset.short}
+                      <span className="font-mono text-[11px] tabular-nums opacity-60">
+                        {preset.duration}
+                      </span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+              <DurationControl
+                value={active.durationMs}
+                onChange={setDuration}
+                onCommit={replay}
+                suggested={active.preset?.duration}
               />
             </div>
 
-            <DurationControl
-              value={durationMs}
-              onChange={setDuration}
-              onCommit={replay}
-              suggested={preset?.duration}
-            />
-
-            <p className="m-0 min-h-[3lh] text-[13px]/relaxed text-muted-foreground">
-              {preset ? (
-                <>
-                  <span className="font-medium text-foreground">{preset.use}.</span> {preset.note}
-                </>
-              ) : (
-                "Your own curve. The address bar keeps it, so you can share the link."
-              )}
-            </p>
-
-            <div className="grid grid-cols-[minmax(0,1fr)] gap-3 border-t border-border pt-5">
-              {/* A small code window: format tabs and Copy in its bar, the snippet below. A
-                fixed height keeps the column still when the format changes. */}
-              <div className="overflow-hidden rounded-[10px] border border-border bg-muted/40">
-                <div className="flex h-10 items-center justify-between gap-1 border-b border-border px-1">
+            <div className="grid content-start gap-3 md:col-span-2 lg:col-span-1">
+              <p className="m-0 min-h-[3lh] text-sm/[1.55] text-pretty text-muted-foreground">
+                {active.preset ? (
+                  <>
+                    <span className="font-medium text-foreground">{active.preset.use}.</span>{" "}
+                    {active.preset.note}
+                  </>
+                ) : (
+                  <>
+                    <span className="font-medium text-foreground">Your own curve.</span> The address
+                    bar keeps it, so you can share the link.
+                  </>
+                )}
+              </p>
+              <div className={cn("overflow-hidden rounded-[14px] bg-background", raised)}>
+                <div className="flex items-center gap-0.5 border-b border-border p-1.5">
                   <div role="radiogroup" aria-label="Code format" className="flex gap-0.5">
                     {CODE_FORMATS.map((item) => (
                       <button
@@ -371,8 +476,8 @@ export function EasingPlayground() {
                         aria-checked={format === item.id}
                         onClick={() => setFormat(item.id)}
                         className={cn(
-                          "h-7 rounded-[6px] px-1.5 text-xs font-medium text-muted-foreground hover:text-foreground",
-                          "aria-checked:bg-background aria-checked:text-foreground aria-checked:shadow-[0_0_0_1px_var(--color-border),0_1px_2px_rgb(0_0_0/0.06)]",
+                          "h-[26px] rounded-[7px] px-2 text-xs font-medium text-muted-foreground hover:text-foreground",
+                          "aria-checked:bg-muted aria-checked:text-foreground",
                           press,
                         )}
                       >
@@ -385,7 +490,7 @@ export function EasingPlayground() {
                     onClick={copy}
                     aria-label={copied ? "Copied" : `Copy ${format} code`}
                     className={cn(
-                      "inline-flex h-7 shrink-0 items-center rounded-[6px] bg-foreground px-2.5 text-xs font-medium text-background hover:bg-foreground/85",
+                      "ml-auto inline-flex h-7 items-center rounded-[8px] bg-foreground px-2.5 text-xs font-medium text-background hover:bg-foreground/85",
                       press,
                     )}
                   >
@@ -419,186 +524,14 @@ export function EasingPlayground() {
                 </div>
                 <pre
                   data-lenis-prevent
-                  className="m-0 h-36 overflow-auto p-3 font-mono text-[11px]/relaxed text-foreground/85 [scrollbar-width:thin]"
+                  className="m-0 h-[5.75rem] overflow-auto px-4 py-3 font-mono text-xs/[1.65] text-muted-foreground [scrollbar-width:thin]"
                 >
                   <code>{code}</code>
                 </pre>
               </div>
-              <details className="group/code">
-                <summary className="flex h-6 cursor-pointer list-none items-center gap-1.5 text-xs font-medium text-muted-foreground hover:text-foreground [&::-webkit-details-marker]:hidden">
-                  <ChevronRight
-                    aria-hidden="true"
-                    className="size-3.5 transition-[rotate] duration-200 ease-out group-open/code:rotate-90"
-                  />
-                  Exact values
-                </summary>
-                <div className="mt-3">
-                  <CurveFields bezier={bezier} onChange={setCurve} />
-                </div>
-              </details>
             </div>
-          </div>
-        </aside>
-
-        <section
-          aria-label="Transitions"
-          className="min-w-0 md:col-start-1 md:row-start-1 lg:col-start-2"
-        >
-          <div className="flex w-full flex-wrap items-center justify-between gap-2">
-            <div
-              role="group"
-              aria-label="Transition type"
-              className="flex max-w-full rounded-[8px] bg-muted p-0.5"
-            >
-              {(["all", ...Object.keys(CATEGORY_LABELS)] as (SceneCategory | "all")[]).map((id) => (
-                <button
-                  key={id}
-                  type="button"
-                  aria-pressed={category === id}
-                  onClick={() => setCategory(id)}
-                  className={cn(segment, "shrink-0 px-2.5 sm:px-3")}
-                >
-                  {id === "all" ? "All" : CATEGORY_LABELS[id]}
-                </button>
-              ))}
-            </div>
-            {reducedMotion ? (
-              <span className="text-xs text-muted-foreground">
-                Reduced motion is on. Press a scene to play it.
-              </span>
-            ) : (
-              <button
-                type="button"
-                onClick={() => setPlaying((value) => !value)}
-                aria-pressed={!playing}
-                className={cn(
-                  "inline-flex h-8 items-center gap-1.5 rounded-[8px] px-3 text-xs font-medium text-muted-foreground hover:bg-muted hover:text-foreground",
-                  press,
-                )}
-              >
-                {playing ? (
-                  <Pause aria-hidden="true" className="size-3.5" />
-                ) : (
-                  <Play aria-hidden="true" className="size-3.5" />
-                )}
-                {playing ? "Pause" : "Play"}
-              </button>
-            )}
-          </div>
-
-          <div
-            ref={galleryRef}
-            className="mt-4 grid grid-flow-dense grid-cols-1 gap-4 sm:grid-cols-2"
-          >
-            {scenes.map((scene, index) => {
-              const isOpen = overrides[scene.id] ?? open;
-              // Wide cards keep every row full: two in the full gallery, the first of three
-              // in a filtered one.
-              const wide = category === "all" ? scene.wide : index === 0;
-              return (
-                <figure
-                  key={scene.id}
-                  className={cn(
-                    "m-0 grid rounded-[14px] border border-border bg-background p-1.5",
-                    "transition-[border-color,box-shadow] duration-200 ease-out hover:border-foreground/15 hover:shadow-[0_14px_36px_-24px_rgb(0_0_0/0.28)]",
-                    wide && "sm:col-span-2",
-                  )}
-                >
-                  <button
-                    type="button"
-                    aria-label={`Play ${scene.title}`}
-                    onClick={() => {
-                      setOverrides((current) => ({ ...current, [scene.id]: !isOpen }));
-                      setPlayKey((key) => key + 1);
-                    }}
-                    className={cn(
-                      "group/scene relative block aspect-4/3 w-full overflow-hidden rounded-[8px] bg-muted/60 text-left text-foreground outline-none",
-                      "transition-[scale] duration-200 ease-out active:scale-[0.985] focus-visible:ring-2 focus-visible:ring-foreground/30",
-                      wide && "sm:aspect-[2/1]",
-                    )}
-                  >
-                    <span aria-hidden="true" className="absolute inset-0 block" inert>
-                      {scene.render(isOpen)}
-                    </span>
-                    <span
-                      aria-hidden="true"
-                      className="pointer-events-none absolute top-2 right-2 grid size-7 scale-90 place-items-center rounded-[8px] bg-background/90 text-muted-foreground opacity-0 shadow-[0_0_0_1px_var(--color-border),0_4px_12px_-6px_rgb(0_0_0/0.2)] backdrop-blur transition-[opacity,scale] duration-200 ease-out group-hover/scene:scale-100 group-hover/scene:opacity-100 group-focus-visible/scene:scale-100 group-focus-visible/scene:opacity-100"
-                    >
-                      <RotateCcw className="size-3.5" />
-                    </span>
-                  </button>
-                  <figcaption className="grid gap-2.5 px-2 pt-3 pb-1.5">
-                    <span className="flex items-baseline justify-between gap-3">
-                      <span className="text-[13px] font-medium">{scene.title}</span>
-                      <span className="truncate text-xs text-muted-foreground">{scene.hint}</span>
-                    </span>
-                    {/* A timing bar runs on the same curve and duration as the scene. */}
-                    <span
-                      aria-hidden="true"
-                      className="relative block h-0.5 overflow-hidden rounded-full bg-border"
-                    >
-                      <span
-                        className={cn(
-                          "absolute inset-0 origin-left rounded-full bg-foreground/60 transition-transform duration-(--ez-dur) ease-(--ez-ease)",
-                          isOpen ? "scale-x-100" : "scale-x-0",
-                        )}
-                      />
-                    </span>
-                  </figcaption>
-                </figure>
-              );
-            })}
           </div>
         </section>
-      </div>
-
-      {/* On phones the editor scrolls away; the current curve stays in reach here. */}
-      <div
-        inert={instrumentVisible}
-        className={cn(
-          "fixed bottom-[max(12px,env(safe-area-inset-bottom))] left-1/2 z-40 flex md:hidden w-[min(calc(100%-24px),26rem)] -translate-x-1/2 items-center gap-1 rounded-[14px] border border-border bg-background/90 p-1.5 shadow-[0_16px_48px_-20px_rgb(0_0_0/0.4)] backdrop-blur-xl",
-          "transition-[translate,opacity] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]",
-          instrumentVisible && "pointer-events-none translate-y-[calc(100%+24px)] opacity-0",
-        )}
-      >
-        <button
-          type="button"
-          aria-label="Previous curve"
-          onClick={() => step(-1)}
-          className={cn(iconButton, "size-10")}
-        >
-          <ChevronLeft aria-hidden="true" className="size-4" />
-        </button>
-        <div className="flex min-w-0 flex-1 items-center gap-2.5 px-1">
-          <MiniCurve bezier={bezier} />
-          <span className="grid min-w-0 gap-1">
-            <strong className="truncate font-mono text-[13px] leading-none font-medium">
-              {name}
-            </strong>
-            <span className="text-[11px] leading-none text-muted-foreground tabular-nums">
-              {durationMs}ms
-            </span>
-          </span>
-        </div>
-        <button
-          type="button"
-          aria-label="Next curve"
-          onClick={() => step(1)}
-          className={cn(iconButton, "size-10")}
-        >
-          <ChevronRight aria-hidden="true" className="size-4" />
-        </button>
-        <button
-          type="button"
-          onClick={showWorkbench}
-          className={cn(
-            "inline-flex h-10 items-center gap-1.5 rounded-[8px] bg-foreground px-3.5 text-xs font-medium text-background",
-            press,
-          )}
-        >
-          <SlidersHorizontal aria-hidden="true" className="size-4" />
-          Edit
-        </button>
       </div>
     </div>
   );
