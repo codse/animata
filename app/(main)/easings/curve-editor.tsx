@@ -20,8 +20,7 @@ const WIDTH = 320;
 const Y_SCALE = 0.55;
 const PAD_X = 14;
 const PAD_TOP = 10;
-/** Room under the box for the axis caption. */
-const PAD_BOTTOM = 24;
+const PAD_BOTTOM = 10;
 const HANDLE_HIT = 22;
 const GRID = [0.25, 0.5, 0.75];
 
@@ -235,29 +234,43 @@ export function CurveEditor({
         role="group"
         aria-label="Easing curve. Drag a control point, press anywhere to pull the nearest one, or use arrow keys on a focused point."
       >
-        {/* Headroom outside 0–1 is visible but quieter than the box itself. */}
+        {/* One surface for the whole range. Hairlines at 0 and 1 mark the start and end
+            values; the room beyond them is where curves overshoot or anticipate. */}
         <rect
           x={toX(0)}
           y={PAD_TOP}
           width={WIDTH}
           height={height}
-          rx={8}
-          className="fill-muted/50"
-        />
-        <rect
-          x={toX(0)}
-          y={toY(1)}
-          width={WIDTH}
-          height={unit}
-          rx={6}
-          className="fill-muted stroke-border"
+          rx={10}
+          className="fill-muted/60"
         />
         {GRID.map((g) => (
-          <g key={g} className="stroke-foreground/[0.06]">
+          <g key={g} className="stroke-foreground/[0.05]">
             <line x1={toX(g)} y1={toY(0)} x2={toX(g)} y2={toY(1)} />
             <line x1={toX(0)} y1={toY(g)} x2={toX(1)} y2={toY(g)} />
           </g>
         ))}
+        {[0, 1].map((y) => (
+          <line
+            key={y}
+            x1={toX(0)}
+            y1={toY(y)}
+            x2={toX(1)}
+            y2={toY(y)}
+            className="stroke-foreground/15"
+          />
+        ))}
+        <text x={toX(0) + 10} y={toY(0) + 18} className="fill-muted-foreground text-[12px]">
+          Start
+        </text>
+        <text
+          x={toX(1) - 10}
+          y={toY(1) - 9}
+          textAnchor="end"
+          className="fill-muted-foreground text-[12px]"
+        >
+          End
+        </text>
         <line
           x1={toX(0)}
           y1={toY(0)}
@@ -265,10 +278,6 @@ export function CurveEditor({
           y2={toY(1)}
           className="stroke-foreground/15 [stroke-dasharray:2_5]"
         />
-
-        <text x={toX(0)} y={viewHeight - 8} className="fill-muted-foreground font-mono text-[11px]">
-          time →
-        </text>
 
         <line
           ref={playheadRef}

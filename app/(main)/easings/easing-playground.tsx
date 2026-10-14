@@ -24,7 +24,6 @@ import { DurationControl, MAX_DURATION, MIN_DURATION } from "./duration-control"
 import { PresetShelf } from "./preset-shelf";
 import { type EasingPreset, findPreset, PRESETS, sameBezier } from "./presets";
 import { CATEGORY_LABELS, SCENES, type SceneCategory } from "./scenes";
-import { SpacingComb } from "./spacing-comb";
 
 const DEFAULT_PRESET = PRESETS[0];
 /** How long each state is held before the gallery plays the other direction. */
@@ -206,11 +205,11 @@ export function EasingPlayground() {
 
   return (
     <div
-      className="mx-auto w-full max-w-[1240px] px-4 pt-[clamp(48px,8vw,104px)] pb-32 sm:px-6 lg:px-8 lg:pb-24"
+      className="mx-auto w-full max-w-[1240px] px-4 pt-[clamp(40px,6vw,72px)] pb-32 sm:px-6 lg:px-8 lg:pb-24"
       style={vars}
     >
-      <header className="max-w-4xl">
-        <h1 className="m-0 font-(family-name:--font-display) text-[clamp(2.25rem,5vw,4.25rem)] leading-[1.04] font-semibold tracking-[-0.035em] text-balance">
+      <header className="grid items-end gap-x-12 gap-y-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,22rem)]">
+        <h1 className="m-0 font-(family-name:--font-display) text-[clamp(2.25rem,4.2vw,3.5rem)] leading-[1.04] font-semibold tracking-[-0.035em] text-balance">
           See how{" "}
           <button
             type="button"
@@ -246,25 +245,13 @@ export function EasingPlayground() {
           </button>{" "}
           moves real interfaces
         </h1>
-        <p className="m-0 mt-6 max-w-[36rem] text-[17px]/[1.6] text-pretty text-muted-foreground">
+        <p className="m-0 max-w-[36rem] text-[15px]/[1.55] text-pretty text-muted-foreground lg:pb-1.5">
           Pick a curve or drag your own, set the duration, and watch twelve everyday transitions use
           it. Copy the result as CSS, Tailwind, Motion, or GSAP.
         </p>
       </header>
 
-      <SpacingComb
-        className="mt-12 lg:mt-16"
-        bezier={bezier}
-        durationMs={durationMs}
-        open={open}
-        reducedMotion={reducedMotion}
-      />
-
-      <section ref={shelfRef} aria-label="Curves" className="mt-14 scroll-mt-24 lg:mt-20">
-        <PresetShelf selected={preset} onSelect={choosePreset} />
-      </section>
-
-      <div className="mt-8 grid items-start gap-6 lg:grid-cols-[minmax(0,352px)_minmax(0,1fr)] lg:gap-8">
+      <div className="mt-10 grid lg:mt-12 items-start gap-6 lg:grid-cols-[minmax(0,352px)_minmax(0,1fr)] lg:gap-8">
         <aside
           ref={workbenchRef}
           aria-label="Curve"
@@ -436,93 +423,107 @@ export function EasingPlayground() {
           </div>
         </aside>
 
-        <section aria-label="Transitions" className="min-w-0">
-          <div className="flex flex-wrap items-center justify-between gap-3">
-            <div
-              role="group"
-              aria-label="Transition type"
-              className="flex max-w-full rounded-[8px] bg-muted p-0.5"
-            >
-              {(["all", ...Object.keys(CATEGORY_LABELS)] as (SceneCategory | "all")[]).map((id) => (
-                <button
-                  key={id}
-                  type="button"
-                  aria-pressed={category === id}
-                  onClick={() => setCategory(id)}
-                  className={cn(segment, "shrink-0 px-2.5 sm:px-3")}
-                >
-                  {id === "all" ? "All" : CATEGORY_LABELS[id]}
-                </button>
-              ))}
-            </div>
-            {reducedMotion ? (
-              <span className="text-xs text-muted-foreground">
-                Reduced motion is on. Press a scene to play it.
-              </span>
-            ) : (
-              <button
-                type="button"
-                onClick={() => setPlaying((value) => !value)}
-                aria-pressed={!playing}
-                className={cn(
-                  "inline-flex h-8 items-center gap-1.5 rounded-[8px] px-3 text-xs font-medium text-muted-foreground hover:bg-muted hover:text-foreground",
-                  press,
-                )}
-              >
-                {playing ? (
-                  <Pause aria-hidden="true" className="size-3.5" />
-                ) : (
-                  <Play aria-hidden="true" className="size-3.5" />
-                )}
-                {playing ? "Pause" : "Play"}
-              </button>
-            )}
-          </div>
+        <div className="grid min-w-0 gap-8">
+          {/* Curves sit right above the scenes they drive, level with the editor. */}
+          <section ref={shelfRef} aria-label="Curves" className="min-w-0 scroll-mt-24">
+            <PresetShelf selected={preset} onSelect={choosePreset} />
+          </section>
 
-          <div
-            ref={galleryRef}
-            className="mt-4 grid grid-flow-dense grid-cols-1 gap-x-4 gap-y-5 sm:grid-cols-2"
-          >
-            {scenes.map((scene, index) => {
-              const isOpen = overrides[scene.id] ?? open;
-              // Wide cards keep every row full: two in the full gallery, the first of three
-              // in a filtered one.
-              const wide = category === "all" ? scene.wide : index === 0;
-              return (
-                <figure key={scene.id} className={cn("m-0 grid gap-2.5", wide && "sm:col-span-2")}>
-                  <button
-                    type="button"
-                    aria-label={`Play ${scene.title}`}
-                    onClick={() => {
-                      setOverrides((current) => ({ ...current, [scene.id]: !isOpen }));
-                      setPlayKey((key) => key + 1);
-                    }}
-                    className={cn(
-                      "group/scene relative block aspect-4/3 w-full overflow-hidden rounded-[12px] border border-border bg-muted/50 text-left text-foreground",
-                      "transition-[scale,border-color,box-shadow] duration-200 ease-out active:scale-[0.985]",
-                      "hover:border-foreground/20 hover:shadow-[0_12px_32px_-22px_rgb(0_0_0/0.3)] focus-visible:border-foreground/30",
-                      wide && "sm:aspect-[2/1]",
-                    )}
-                  >
-                    <span aria-hidden="true" className="absolute inset-0 block" inert>
-                      {scene.render(isOpen)}
-                    </span>
-                    <span
-                      aria-hidden="true"
-                      className="pointer-events-none absolute top-2.5 right-2.5 grid size-7 place-items-center rounded-[8px] bg-background/90 text-muted-foreground opacity-0 shadow-[0_0_0_1px_var(--color-border),0_4px_12px_-6px_rgb(0_0_0/0.2)] backdrop-blur transition-[opacity,scale] duration-200 ease-out group-hover/scene:opacity-100 group-focus-visible/scene:opacity-100 scale-90 group-hover/scene:scale-100 group-focus-visible/scene:scale-100"
+          <section aria-label="Transitions" className="min-w-0">
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <div
+                role="group"
+                aria-label="Transition type"
+                className="flex max-w-full rounded-[8px] bg-muted p-0.5"
+              >
+                {(["all", ...Object.keys(CATEGORY_LABELS)] as (SceneCategory | "all")[]).map(
+                  (id) => (
+                    <button
+                      key={id}
+                      type="button"
+                      aria-pressed={category === id}
+                      onClick={() => setCategory(id)}
+                      className={cn(segment, "shrink-0 px-2.5 sm:px-3")}
                     >
-                      <RotateCcw className="size-3.5" />
-                    </span>
-                  </button>
-                  <figcaption className="grid gap-0.5 px-0.5">
-                    <span className="text-sm font-medium">{scene.title}</span>
-                    <span className="truncate text-[13px] text-muted-foreground">{scene.hint}</span>
-                  </figcaption>
-                </figure>
-              );
-            })}
-          </div>
-        </section>
+                      {id === "all" ? "All" : CATEGORY_LABELS[id]}
+                    </button>
+                  ),
+                )}
+              </div>
+              {reducedMotion ? (
+                <span className="text-xs text-muted-foreground">
+                  Reduced motion is on. Press a scene to play it.
+                </span>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => setPlaying((value) => !value)}
+                  aria-pressed={!playing}
+                  className={cn(
+                    "inline-flex h-8 items-center gap-1.5 rounded-[8px] px-3 text-xs font-medium text-muted-foreground hover:bg-muted hover:text-foreground",
+                    press,
+                  )}
+                >
+                  {playing ? (
+                    <Pause aria-hidden="true" className="size-3.5" />
+                  ) : (
+                    <Play aria-hidden="true" className="size-3.5" />
+                  )}
+                  {playing ? "Pause" : "Play"}
+                </button>
+              )}
+            </div>
+
+            <div
+              ref={galleryRef}
+              className="mt-4 grid grid-flow-dense grid-cols-1 gap-x-4 gap-y-5 sm:grid-cols-2"
+            >
+              {scenes.map((scene, index) => {
+                const isOpen = overrides[scene.id] ?? open;
+                // Wide cards keep every row full: two in the full gallery, the first of three
+                // in a filtered one.
+                const wide = category === "all" ? scene.wide : index === 0;
+                return (
+                  <figure
+                    key={scene.id}
+                    className={cn("m-0 grid gap-2.5", wide && "sm:col-span-2")}
+                  >
+                    <button
+                      type="button"
+                      aria-label={`Play ${scene.title}`}
+                      onClick={() => {
+                        setOverrides((current) => ({ ...current, [scene.id]: !isOpen }));
+                        setPlayKey((key) => key + 1);
+                      }}
+                      className={cn(
+                        "group/scene relative block aspect-4/3 w-full overflow-hidden rounded-[12px] border border-border bg-muted/50 text-left text-foreground",
+                        "transition-[scale,border-color,box-shadow] duration-200 ease-out active:scale-[0.985]",
+                        "hover:border-foreground/20 hover:shadow-[0_12px_32px_-22px_rgb(0_0_0/0.3)] focus-visible:border-foreground/30",
+                        wide && "sm:aspect-[2/1]",
+                      )}
+                    >
+                      <span aria-hidden="true" className="absolute inset-0 block" inert>
+                        {scene.render(isOpen)}
+                      </span>
+                      <span
+                        aria-hidden="true"
+                        className="pointer-events-none absolute top-2.5 right-2.5 grid size-7 place-items-center rounded-[8px] bg-background/90 text-muted-foreground opacity-0 shadow-[0_0_0_1px_var(--color-border),0_4px_12px_-6px_rgb(0_0_0/0.2)] backdrop-blur transition-[opacity,scale] duration-200 ease-out group-hover/scene:opacity-100 group-focus-visible/scene:opacity-100 scale-90 group-hover/scene:scale-100 group-focus-visible/scene:scale-100"
+                      >
+                        <RotateCcw className="size-3.5" />
+                      </span>
+                    </button>
+                    <figcaption className="grid gap-0.5 px-0.5">
+                      <span className="text-sm font-medium">{scene.title}</span>
+                      <span className="truncate text-[13px] text-muted-foreground">
+                        {scene.hint}
+                      </span>
+                    </figcaption>
+                  </figure>
+                );
+              })}
+            </div>
+          </section>
+        </div>
       </div>
 
       {/* Phones: the panel scrolls away, so the current curve stays reachable here. */}

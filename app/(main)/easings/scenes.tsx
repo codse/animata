@@ -68,71 +68,15 @@ function Fake({ icon: Icon, children }: { icon?: LucideIcon; children?: ReactNod
   );
 }
 
-/** Initials on a tint. Color comes from people and things, not from chrome. */
-const TINTS = {
-  amber: "bg-[oklch(0.86_0.11_80)]",
-  rose: "bg-[oklch(0.82_0.09_15)]",
-  sky: "bg-[oklch(0.84_0.07_235)]",
-  sage: "bg-[oklch(0.85_0.07_150)]",
-  lilac: "bg-[oklch(0.83_0.07_295)]",
-} as const;
-
-function Avatar({ name, tint }: { name: string; tint: keyof typeof TINTS }) {
-  const initials = name
-    .split(" ")
-    .map((part) => part[0])
-    .join("")
-    .slice(0, 2);
+function Line({ w, strong }: { w: string; strong?: boolean }) {
   return (
     <span
       className={cn(
-        "grid size-6 shrink-0 place-items-center rounded-full text-[10px] font-semibold text-black/70",
-        TINTS[tint],
+        "block h-[7px] rounded bg-border",
+        strong && "mb-1 h-2.5 bg-muted-foreground/35",
       )}
-    >
-      {initials}
-    </span>
-  );
-}
-
-/** A row of a list: leading slot, two lines of text, trailing slot. */
-function Row({
-  lead,
-  title,
-  detail,
-  trail,
-  className,
-}: {
-  lead?: ReactNode;
-  title: ReactNode;
-  detail?: ReactNode;
-  trail?: ReactNode;
-  className?: string;
-}) {
-  return (
-    <span className={cn("flex min-w-0 items-center gap-2.5", className)}>
-      {lead}
-      <span className="grid min-w-0 flex-1">
-        <span className="truncate font-medium">{title}</span>
-        {detail ? <span className="truncate text-muted-foreground">{detail}</span> : null}
-      </span>
-      {trail ? <span className="shrink-0 text-muted-foreground tabular-nums">{trail}</span> : null}
-    </span>
-  );
-}
-
-function Status({ tone, children }: { tone: "done" | "open"; children: ReactNode }) {
-  return (
-    <span
-      className={cn(
-        "inline-flex h-5 items-center rounded-full px-2 text-[11px] font-medium",
-        tone === "done"
-          ? "bg-[oklch(0.94_0.05_150)] text-[oklch(0.42_0.1_150)] dark:bg-[oklch(0.32_0.06_150)] dark:text-[oklch(0.88_0.08_150)]"
-          : "bg-muted text-muted-foreground",
-      )}
-    >
-      {children}
-    </span>
+      style={{ width: w }}
+    />
   );
 }
 
@@ -140,7 +84,7 @@ function Page({ className, children }: { className?: string; children: ReactNode
   return (
     <div
       className={cn(
-        "absolute inset-[18px] flex flex-col gap-3 overflow-hidden rounded-[10px] border border-border bg-background p-3.5",
+        "absolute inset-[18px] flex flex-col gap-[9px] rounded-[10px] border border-border bg-background p-4",
         className,
       )}
     >
@@ -160,28 +104,6 @@ function Scrim() {
   );
 }
 
-const PRODUCTS = [
-  { name: "Arc lamp", price: "$148", swatch: "bg-[oklch(0.86_0.11_80)]" },
-  { name: "Dome", price: "$96", swatch: "bg-[oklch(0.82_0.09_15)]" },
-  { name: "Halo", price: "$212", swatch: "bg-[oklch(0.84_0.07_235)]" },
-  { name: "Pebble", price: "$64", swatch: "bg-[oklch(0.85_0.07_150)]" },
-];
-
-const MAIL = [
-  { from: "Mara Lin", subject: "Re: Launch plan", time: "9:41", tint: "rose" },
-  { from: "Theo Park", subject: "Pricing page review", time: "8:15", tint: "sky" },
-  { from: "Ines Roy", subject: "Offsite photos", time: "Mon", tint: "sage" },
-  { from: "Sam Okafor", subject: "Contract, signed copy", time: "Mon", tint: "amber" },
-  { from: "Lena Brandt", subject: "Q3 numbers", time: "Sun", tint: "lilac" },
-] as const;
-
-const AGENDA = [
-  { title: "Design review", time: "9:30", tint: "lilac" },
-  { title: "Ship billing fixes", time: "11:00", tint: "amber" },
-  { title: "Interview: Platform", time: "14:00", tint: "sky" },
-  { title: "Quarterly planning", time: "16:30", tint: "sage" },
-] as const;
-
 export const SCENES: Scene[] = [
   {
     id: "dropdown",
@@ -189,45 +111,30 @@ export const SCENES: Scene[] = [
     hint: "Opens from its trigger",
     category: "overlays",
     render: (open) => (
-      <Stage open={open}>
-        <Page>
-          <span className="flex items-center justify-between">
-            <strong className="text-[13px]">Projects</strong>
-            <Fake icon={ArrowUpDown}>Sort by</Fake>
-          </span>
-          <Row
-            lead={<Avatar name="Northwind" tint="amber" />}
-            title="Northwind site"
-            detail="Edited 2h ago"
-          />
-          <Row
-            lead={<Avatar name="Field Notes" tint="sage" />}
-            title="Field notes"
-            detail="Edited yesterday"
-          />
-          <Row lead={<Avatar name="Orbit" tint="sky" />} title="Orbit app" detail="Edited Monday" />
-        </Page>
-        {/* Anchored under the trigger's right edge, and grows from there. */}
+      <Stage open={open} className="p-[22px]">
+        <Fake icon={ArrowUpDown}>Sort by</Fake>
         <div
           className={cn(
-            "absolute top-[66px] right-8 grid w-[min(184px,calc(100%-64px))] origin-top-right rounded-[10px] border border-border bg-background p-[5px] shadow-[0_12px_32px_-12px_rgb(0_0_0/0.25)]",
+            "absolute top-[58px] left-[22px] grid w-[min(200px,calc(100%-44px))] origin-top-left rounded-[10px] border border-border bg-background p-[5px] shadow-[0_12px_32px_-12px_rgb(0_0_0/0.25)]",
             "-translate-y-1.5 scale-96 opacity-0 transition-[opacity,translate,scale] will-change-[translate,scale,opacity] backface-hidden",
             "group-data-open/s:translate-y-0 group-data-open/s:scale-100 group-data-open/s:opacity-100",
             move,
           )}
         >
-          {["Last edited", "Name", "Created", "Owner"].map((item, index) => (
-            <span
-              key={item}
-              className={cn(
-                "flex h-7 items-center justify-between rounded-md px-2",
-                index === 0 && "bg-muted font-medium",
-              )}
-            >
-              {item}
-              {index === 0 ? <Check aria-hidden="true" className="size-3.5" /> : null}
-            </span>
-          ))}
+          {["Newest", "Most popular", "Price, low to high", "Price, high to low"].map(
+            (item, index) => (
+              <span
+                key={item}
+                className={cn(
+                  "flex h-7 items-center justify-between rounded-md px-2",
+                  index === 1 && "bg-muted font-medium",
+                )}
+              >
+                {item}
+                {index === 1 ? <Check aria-hidden="true" className="size-3.5" /> : null}
+              </span>
+            ),
+          )}
         </div>
       </Stage>
     ),
@@ -240,17 +147,10 @@ export const SCENES: Scene[] = [
     render: (open) => (
       <Stage open={open}>
         <Page>
-          <span className="grid">
-            <strong className="text-[13px]">Northwind site</strong>
-            <span className="text-muted-foreground">24 files · 6 people</span>
-          </span>
-          <span className="h-px bg-border" />
-          <Row title="Visibility" detail="Anyone at the company" />
-          <Row
-            title="Danger zone"
-            detail="Delete this project and its files"
-            trail={<Fake>Delete</Fake>}
-          />
+          <Line w="40%" strong />
+          <Line w="85%" />
+          <Line w="70%" />
+          <Line w="78%" />
         </Page>
         <Scrim />
         <div
@@ -261,7 +161,7 @@ export const SCENES: Scene[] = [
             move,
           )}
         >
-          <strong>Delete Northwind site?</strong>
+          <strong>Delete project?</strong>
           <span className="text-muted-foreground">
             This removes 24 files for everyone on the team.
           </span>
@@ -283,25 +183,9 @@ export const SCENES: Scene[] = [
     render: (open) => (
       <Stage open={open}>
         <Page>
-          <strong className="text-[13px]">Invoices</strong>
-          <Row
-            lead={<Avatar name="Mara Lin" tint="rose" />}
-            title="Mara Lin"
-            detail="#1042 · $1,200"
-            trail={<Status tone={open ? "done" : "open"}>{open ? "Sent" : "Draft"}</Status>}
-          />
-          <Row
-            lead={<Avatar name="Theo Park" tint="sky" />}
-            title="Theo Park"
-            detail="#1041 · $860"
-            trail={<Status tone="done">Sent</Status>}
-          />
-          <Row
-            lead={<Avatar name="Ines Roy" tint="lilac" />}
-            title="Ines Roy"
-            detail="#1040 · $2,400"
-            trail={<Status tone="done">Paid</Status>}
-          />
+          <Line w="55%" strong />
+          <Line w="90%" />
+          <Line w="65%" />
         </Page>
         <div
           className={cn(
@@ -331,26 +215,10 @@ export const SCENES: Scene[] = [
     render: (open) => (
       <Stage open={open}>
         <Page>
-          <span className="flex items-center justify-between">
-            <strong className="text-[13px]">Lighting · 48</strong>
-            <Fake>Filters</Fake>
-          </span>
-          <div className="grid min-h-0 flex-1 grid-cols-2 gap-2.5 sm:grid-cols-4">
-            {PRODUCTS.map((product) => (
-              <span key={product.name} className="grid min-h-0 grid-rows-[1fr_auto] gap-1.5">
-                {/* A product shot: the object on a neutral sweep. */}
-                <span className="grid min-h-8 place-items-center rounded-[8px] bg-muted">
-                  <span
-                    className={cn("aspect-square h-[46%] max-h-14 rounded-full", product.swatch)}
-                  />
-                </span>
-                <span className="flex justify-between gap-1">
-                  <span className="truncate font-medium">{product.name}</span>
-                  <span className="text-muted-foreground tabular-nums">{product.price}</span>
-                </span>
-              </span>
-            ))}
-          </div>
+          <Line w="35%" strong />
+          <Line w="80%" />
+          <Line w="72%" />
+          <Line w="60%" />
         </Page>
         <Scrim />
         <div
@@ -368,20 +236,13 @@ export const SCENES: Scene[] = [
             <span key={item} className="flex items-center gap-2">
               <span
                 className={cn(
-                  "grid size-3.5 place-items-center rounded border border-border",
-                  index !== 1 && "border-foreground bg-foreground text-background",
+                  "size-3.5 rounded border border-border",
+                  index !== 1 && "border-foreground bg-foreground",
                 )}
-              >
-                {index !== 1 ? (
-                  <Check aria-hidden="true" className="size-2.5" strokeWidth={3} />
-                ) : null}
-              </span>
+              />
               {item}
             </span>
           ))}
-          <span className="mt-auto inline-flex h-8 items-center justify-center rounded-lg bg-foreground font-medium text-background">
-            Show 12 results
-          </span>
         </div>
       </Stage>
     ),
@@ -414,28 +275,9 @@ export const SCENES: Scene[] = [
             </span>
           ))}
         </div>
-        {/* Both panels share one cell and cross over in the direction of travel. */}
-        <div className="mx-[18px] mt-3 grid overflow-hidden rounded-[10px] border border-border bg-background p-3.5">
-          <span
-            className={cn(
-              "col-start-1 row-start-1 grid gap-2.5 transition-[opacity,translate]",
-              "group-data-open/s:-translate-x-6 group-data-open/s:opacity-0",
-              move,
-            )}
-          >
-            <Row title="12 deploys this week" detail="Last one 18 minutes ago" />
-            <Row title="99.98% uptime" detail="Across 3 regions" />
-          </span>
-          <span
-            className={cn(
-              "col-start-1 row-start-1 grid gap-2.5 translate-x-6 opacity-0 transition-[opacity,translate]",
-              "group-data-open/s:translate-x-0 group-data-open/s:opacity-100",
-              move,
-            )}
-          >
-            <Row title="Project name" detail="Northwind site" />
-            <Row title="Default branch" detail="main" />
-          </span>
+        <div className="mx-[18px] mt-3 flex flex-col gap-[9px] rounded-[10px] border border-border bg-background p-4">
+          <Line w="60%" strong />
+          <Line w="88%" />
         </div>
       </Stage>
     ),
@@ -457,19 +299,12 @@ export const SCENES: Scene[] = [
             move,
           )}
         >
-          <span className="flex items-center gap-1.5 text-[13px] font-semibold">
+          <span className="mb-1 flex items-center gap-1.5 font-semibold">
             <Inbox aria-hidden="true" className="size-3.5 shrink-0" /> Inbox
           </span>
-          {MAIL.map((mail, index) => (
-            <Row
-              key={mail.from}
-              lead={<Avatar name={mail.from} tint={mail.tint} />}
-              title={mail.from}
-              detail={mail.subject}
-              trail={mail.time}
-              className={cn(index === 0 && "-mx-1.5 rounded-[8px] bg-muted px-1.5 py-1")}
-            />
-          ))}
+          <Line w="80%" />
+          <Line w="64%" />
+          <Line w="72%" />
         </Page>
         <Page
           className={cn(
@@ -477,20 +312,10 @@ export const SCENES: Scene[] = [
             move,
           )}
         >
-          <strong className="text-[13px]">Re: Launch plan</strong>
-          <Row
-            lead={<Avatar name="Mara Lin" tint="rose" />}
-            title="Mara Lin"
-            detail="to the launch team"
-            trail="9:41"
-          />
-          <span className="text-pretty text-muted-foreground">
-            Copy is final and the pricing page ships Thursday. Can you take one more pass at the
-            hero motion before then?
-          </span>
-          <span className="mt-auto flex h-8 items-center rounded-lg border border-border px-2.5 text-muted-foreground">
-            Reply to Mara
-          </span>
+          <span className="mb-1 font-semibold">Re: Launch plan</span>
+          <span className="block h-[46px] rounded-lg bg-linear-to-br from-orange-500 to-pink-600" />
+          <Line w="86%" />
+          <Line w="58%" />
         </Page>
       </Stage>
     ),
@@ -615,26 +440,26 @@ export const SCENES: Scene[] = [
     category: "content",
     render: (open) => (
       <Stage open={open} className="grid content-center gap-1.5 px-[22px]">
-        <span className="mb-1 flex items-baseline justify-between px-0.5">
-          <strong className="text-[13px]">Today</strong>
-          <span className="text-muted-foreground">4 events</span>
-        </span>
-        {AGENDA.map((item, index) => (
-          <span
-            key={item.title}
-            className={cn(
-              "flex h-[34px] items-center gap-2.5 rounded-[9px] border border-border bg-background px-3 font-medium",
-              "translate-y-2.5 opacity-0 transition-[opacity,translate] group-data-open/s:translate-y-0 group-data-open/s:opacity-100",
-              move,
-              staggered,
-            )}
-            style={{ "--i": index } as CSSProperties}
-          >
-            <span className={cn("h-3.5 w-1 rounded-full", TINTS[item.tint])} />
-            {item.title}
-            <span className="ml-auto text-muted-foreground tabular-nums">{item.time}</span>
-          </span>
-        ))}
+        {["Design review", "Ship billing fixes", "Interview: Platform", "Quarterly planning"].map(
+          (item, index) => (
+            <span
+              key={item}
+              className={cn(
+                "flex h-[34px] items-center gap-2.5 rounded-[9px] border border-border bg-background px-3 font-medium",
+                "translate-y-2.5 opacity-0 transition-[opacity,translate] group-data-open/s:translate-y-0 group-data-open/s:opacity-100",
+                move,
+                staggered,
+              )}
+              style={{ "--i": index } as CSSProperties}
+            >
+              <span className="size-[7px] rounded-full bg-accent" />
+              {item}
+              <span className="ml-auto font-mono text-[11px] text-muted-foreground">
+                {["9:30", "11:00", "14:00", "16:30"][index]}
+              </span>
+            </span>
+          ),
+        )}
       </Stage>
     ),
   },
