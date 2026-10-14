@@ -4563,4 +4563,323 @@ export default function StackedSectionsDemo001() {
 <span class="line"></span></code></pre>`,
     },
   ],
+  "scroll/aperture-reveal-demo-001": [
+    {
+      name: "aperture-reveal-demo-001.tsx",
+      path: "app/demo/library/scroll/aperture-reveal-demo-001.tsx",
+      language: "tsx",
+      code: `"use client";
+
+import type { CSSProperties } from "react";
+
+import ApertureReveal from "@/animata/scroll/aperture-reveal";
+
+import { ApertureRevealDemo001Notes } from "./aperture-reveal-demo-001-notes";
+
+const NIGHT = {
+  "--aperture-ground": "#0d0e12",
+  "--aperture-ink": "#e9e7e1",
+  "--aperture-opening": "#1d1f26",
+} as CSSProperties;
+
+const route = [
+  { value: "6.2 km", label: "Trailhead to lookout" },
+  { value: "840 m", label: "Climbing, mostly in the first hour" },
+  { value: "2 h 40", label: "At an easy, talking pace" },
+];
+
+export default function ApertureRevealDemo001() {
+  return (
+    <>
+      <div className="bg-[#0d0e12]">
+        <ApertureReveal length={2.6} style={NIGHT}>
+          <ApertureReveal.Media>
+            <img
+              src="https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=2400&q=80"
+              alt="Snow-covered mountain under a clear night sky full of stars"
+              decoding="async"
+            />
+          </ApertureReveal.Media>
+          <ApertureReveal.Headline as="h1">
+            <ApertureReveal.Lead>Start in the dark,</ApertureReveal.Lead>
+            <ApertureReveal.Opening />
+            <ApertureReveal.Trail>under the ridge</ApertureReveal.Trail>
+          </ApertureReveal.Headline>
+          <ApertureReveal.Caption className="pb-[calc(var(--demo-chrome-reserve,5rem)+1.5rem)]">
+            <ApertureReveal.Text>
+              Headlamps on at ten past four. The first hour climbs through pine on a wide path, so
+              you can walk it half awake while the stars are still out.
+            </ApertureReveal.Text>
+          </ApertureReveal.Caption>
+          <ApertureReveal.Hint className="bottom-[calc(var(--demo-chrome-reserve,5rem)+0.5rem)]">
+            Scroll
+          </ApertureReveal.Hint>
+        </ApertureReveal>
+
+        <section
+          aria-labelledby="route-title"
+          className="mx-auto w-full max-w-6xl px-6 py-28 text-[#e9e7e1] sm:px-10 md:py-40"
+        >
+          <h2
+            id="route-title"
+            className="max-w-[18ch] text-[clamp(1.75rem,4vw,3rem)] font-semibold leading-[1.02] tracking-[-0.035em]"
+          >
+            One route, walked slowly enough to watch the light arrive.
+          </h2>
+          <dl className="mt-16 grid gap-px overflow-hidden rounded-sm bg-white/10 sm:grid-cols-3">
+            {route.map((item) => (
+              <div key={item.label} className="flex flex-col gap-3 bg-[#0d0e12] p-6 sm:p-8">
+                <dt className="order-2 text-sm leading-snug text-[#e9e7e1]/60">{item.label}</dt>
+                <dd className="order-1 m-0 text-[clamp(2.25rem,5vw,3.75rem)] font-semibold leading-none tracking-[-0.04em] tabular-nums">
+                  {item.value}
+                </dd>
+              </div>
+            ))}
+          </dl>
+        </section>
+      </div>
+
+      <ApertureReveal length={3}>
+        <ApertureReveal.Media>
+          <img
+            src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=2400&q=80"
+            alt="Snow-capped mountains above a forested valley and a braided river"
+            decoding="async"
+          />
+        </ApertureReveal.Media>
+        <ApertureReveal.Headline>
+          <ApertureReveal.Lead>Leave early,</ApertureReveal.Lead>
+          <ApertureReveal.Opening />
+          <ApertureReveal.Trail>arrive at first light</ApertureReveal.Trail>
+        </ApertureReveal.Headline>
+        <ApertureReveal.Caption className="pb-[calc(var(--demo-chrome-reserve,5rem)+1.5rem)]">
+          <ApertureReveal.Text>
+            Reach the lookout as the valley fills with light, stop for breakfast at the hut, and be
+            back at the trailhead before the afternoon heat.
+          </ApertureReveal.Text>
+          <ApertureReveal.Action>
+            <a href="/docs/scroll/aperture-reveal">Build this section</a>
+          </ApertureReveal.Action>
+        </ApertureReveal.Caption>
+      </ApertureReveal>
+
+      <footer className="flex min-h-[min(24svh,200px)] items-center justify-center bg-[#ebe9e4] px-6 pt-10 pb-[var(--demo-chrome-reserve,5rem)] text-sm text-[#141413]/50">
+        End of route
+      </footer>
+
+      <ApertureRevealDemo001Notes />
+    </>
+  );
+}
+`,
+      htmlLight: `<pre class="shiki github-light" tabindex="0"><code><span class="line"><span style="color:#032F62">"use client"</span><span style="color:#24292E">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49">import</span><span style="color:#D73A49"> type</span><span style="color:#24292E"> { CSSProperties } </span><span style="color:#D73A49">from</span><span style="color:#032F62"> "react"</span><span style="color:#24292E">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49">import</span><span style="color:#24292E"> ApertureReveal </span><span style="color:#D73A49">from</span><span style="color:#032F62"> "@/animata/scroll/aperture-reveal"</span><span style="color:#24292E">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49">import</span><span style="color:#24292E"> { ApertureRevealDemo001Notes } </span><span style="color:#D73A49">from</span><span style="color:#032F62"> "./aperture-reveal-demo-001-notes"</span><span style="color:#24292E">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49">const</span><span style="color:#005CC5"> NIGHT</span><span style="color:#D73A49"> =</span><span style="color:#24292E"> {</span></span>
+<span class="line"><span style="color:#032F62">  "--aperture-ground"</span><span style="color:#24292E">: </span><span style="color:#032F62">"#0d0e12"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#032F62">  "--aperture-ink"</span><span style="color:#24292E">: </span><span style="color:#032F62">"#e9e7e1"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#032F62">  "--aperture-opening"</span><span style="color:#24292E">: </span><span style="color:#032F62">"#1d1f26"</span><span style="color:#24292E">,</span></span>
+<span class="line"><span style="color:#24292E">} </span><span style="color:#D73A49">as</span><span style="color:#6F42C1"> CSSProperties</span><span style="color:#24292E">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49">const</span><span style="color:#005CC5"> route</span><span style="color:#D73A49"> =</span><span style="color:#24292E"> [</span></span>
+<span class="line"><span style="color:#24292E">  { value: </span><span style="color:#032F62">"6.2 km"</span><span style="color:#24292E">, label: </span><span style="color:#032F62">"Trailhead to lookout"</span><span style="color:#24292E"> },</span></span>
+<span class="line"><span style="color:#24292E">  { value: </span><span style="color:#032F62">"840 m"</span><span style="color:#24292E">, label: </span><span style="color:#032F62">"Climbing, mostly in the first hour"</span><span style="color:#24292E"> },</span></span>
+<span class="line"><span style="color:#24292E">  { value: </span><span style="color:#032F62">"2 h 40"</span><span style="color:#24292E">, label: </span><span style="color:#032F62">"At an easy, talking pace"</span><span style="color:#24292E"> },</span></span>
+<span class="line"><span style="color:#24292E">];</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49">export</span><span style="color:#D73A49"> default</span><span style="color:#D73A49"> function</span><span style="color:#6F42C1"> ApertureRevealDemo001</span><span style="color:#24292E">() {</span></span>
+<span class="line"><span style="color:#D73A49">  return</span><span style="color:#24292E"> (</span></span>
+<span class="line"><span style="color:#24292E">    &#x3C;></span></span>
+<span class="line"><span style="color:#24292E">      &#x3C;</span><span style="color:#22863A">div</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"bg-[#0d0e12]"</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">        &#x3C;</span><span style="color:#005CC5">ApertureReveal</span><span style="color:#6F42C1"> length</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#005CC5">2.6</span><span style="color:#24292E">} </span><span style="color:#6F42C1">style</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#005CC5">NIGHT</span><span style="color:#24292E">}></span></span>
+<span class="line"><span style="color:#24292E">          &#x3C;</span><span style="color:#005CC5">ApertureReveal.Media</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">            &#x3C;</span><span style="color:#22863A">img</span></span>
+<span class="line"><span style="color:#6F42C1">              src</span><span style="color:#D73A49">=</span><span style="color:#032F62">"https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&#x26;fit=crop&#x26;w=2400&#x26;q=80"</span></span>
+<span class="line"><span style="color:#6F42C1">              alt</span><span style="color:#D73A49">=</span><span style="color:#032F62">"Snow-covered mountain under a clear night sky full of stars"</span></span>
+<span class="line"><span style="color:#6F42C1">              decoding</span><span style="color:#D73A49">=</span><span style="color:#032F62">"async"</span></span>
+<span class="line"><span style="color:#24292E">            /></span></span>
+<span class="line"><span style="color:#24292E">          &#x3C;/</span><span style="color:#005CC5">ApertureReveal.Media</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">          &#x3C;</span><span style="color:#005CC5">ApertureReveal.Headline</span><span style="color:#6F42C1"> as</span><span style="color:#D73A49">=</span><span style="color:#032F62">"h1"</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">            &#x3C;</span><span style="color:#005CC5">ApertureReveal.Lead</span><span style="color:#24292E">>Start in the dark,&#x3C;/</span><span style="color:#005CC5">ApertureReveal.Lead</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">            &#x3C;</span><span style="color:#005CC5">ApertureReveal.Opening</span><span style="color:#24292E"> /></span></span>
+<span class="line"><span style="color:#24292E">            &#x3C;</span><span style="color:#005CC5">ApertureReveal.Trail</span><span style="color:#24292E">>under the ridge&#x3C;/</span><span style="color:#005CC5">ApertureReveal.Trail</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">          &#x3C;/</span><span style="color:#005CC5">ApertureReveal.Headline</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">          &#x3C;</span><span style="color:#005CC5">ApertureReveal.Caption</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"pb-[calc(var(--demo-chrome-reserve,5rem)+1.5rem)]"</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">            &#x3C;</span><span style="color:#005CC5">ApertureReveal.Text</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">              Headlamps on at ten past four. The first hour climbs through pine on a wide path, so</span></span>
+<span class="line"><span style="color:#24292E">              you can walk it half awake while the stars are still out.</span></span>
+<span class="line"><span style="color:#24292E">            &#x3C;/</span><span style="color:#005CC5">ApertureReveal.Text</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">          &#x3C;/</span><span style="color:#005CC5">ApertureReveal.Caption</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">          &#x3C;</span><span style="color:#005CC5">ApertureReveal.Hint</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"bottom-[calc(var(--demo-chrome-reserve,5rem)+0.5rem)]"</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">            Scroll</span></span>
+<span class="line"><span style="color:#24292E">          &#x3C;/</span><span style="color:#005CC5">ApertureReveal.Hint</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">        &#x3C;/</span><span style="color:#005CC5">ApertureReveal</span><span style="color:#24292E">></span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#24292E">        &#x3C;</span><span style="color:#22863A">section</span></span>
+<span class="line"><span style="color:#6F42C1">          aria-labelledby</span><span style="color:#D73A49">=</span><span style="color:#032F62">"route-title"</span></span>
+<span class="line"><span style="color:#6F42C1">          className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"mx-auto w-full max-w-6xl px-6 py-28 text-[#e9e7e1] sm:px-10 md:py-40"</span></span>
+<span class="line"><span style="color:#24292E">        ></span></span>
+<span class="line"><span style="color:#24292E">          &#x3C;</span><span style="color:#22863A">h2</span></span>
+<span class="line"><span style="color:#6F42C1">            id</span><span style="color:#D73A49">=</span><span style="color:#032F62">"route-title"</span></span>
+<span class="line"><span style="color:#6F42C1">            className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"max-w-[18ch] text-[clamp(1.75rem,4vw,3rem)] font-semibold leading-[1.02] tracking-[-0.035em]"</span></span>
+<span class="line"><span style="color:#24292E">          ></span></span>
+<span class="line"><span style="color:#24292E">            One route, walked slowly enough to watch the light arrive.</span></span>
+<span class="line"><span style="color:#24292E">          &#x3C;/</span><span style="color:#22863A">h2</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">          &#x3C;</span><span style="color:#22863A">dl</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"mt-16 grid gap-px overflow-hidden rounded-sm bg-white/10 sm:grid-cols-3"</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">            {route.</span><span style="color:#6F42C1">map</span><span style="color:#24292E">((</span><span style="color:#E36209">item</span><span style="color:#24292E">) </span><span style="color:#D73A49">=></span><span style="color:#24292E"> (</span></span>
+<span class="line"><span style="color:#24292E">              &#x3C;</span><span style="color:#22863A">div</span><span style="color:#6F42C1"> key</span><span style="color:#D73A49">=</span><span style="color:#24292E">{item.label} </span><span style="color:#6F42C1">className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"flex flex-col gap-3 bg-[#0d0e12] p-6 sm:p-8"</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">                &#x3C;</span><span style="color:#22863A">dt</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"order-2 text-sm leading-snug text-[#e9e7e1]/60"</span><span style="color:#24292E">>{item.label}&#x3C;/</span><span style="color:#22863A">dt</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">                &#x3C;</span><span style="color:#22863A">dd</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"order-1 m-0 text-[clamp(2.25rem,5vw,3.75rem)] font-semibold leading-none tracking-[-0.04em] tabular-nums"</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">                  {item.value}</span></span>
+<span class="line"><span style="color:#24292E">                &#x3C;/</span><span style="color:#22863A">dd</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">              &#x3C;/</span><span style="color:#22863A">div</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">            ))}</span></span>
+<span class="line"><span style="color:#24292E">          &#x3C;/</span><span style="color:#22863A">dl</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">        &#x3C;/</span><span style="color:#22863A">section</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">      &#x3C;/</span><span style="color:#22863A">div</span><span style="color:#24292E">></span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#24292E">      &#x3C;</span><span style="color:#005CC5">ApertureReveal</span><span style="color:#6F42C1"> length</span><span style="color:#D73A49">=</span><span style="color:#24292E">{</span><span style="color:#005CC5">3</span><span style="color:#24292E">}></span></span>
+<span class="line"><span style="color:#24292E">        &#x3C;</span><span style="color:#005CC5">ApertureReveal.Media</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">          &#x3C;</span><span style="color:#22863A">img</span></span>
+<span class="line"><span style="color:#6F42C1">            src</span><span style="color:#D73A49">=</span><span style="color:#032F62">"https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&#x26;fit=crop&#x26;w=2400&#x26;q=80"</span></span>
+<span class="line"><span style="color:#6F42C1">            alt</span><span style="color:#D73A49">=</span><span style="color:#032F62">"Snow-capped mountains above a forested valley and a braided river"</span></span>
+<span class="line"><span style="color:#6F42C1">            decoding</span><span style="color:#D73A49">=</span><span style="color:#032F62">"async"</span></span>
+<span class="line"><span style="color:#24292E">          /></span></span>
+<span class="line"><span style="color:#24292E">        &#x3C;/</span><span style="color:#005CC5">ApertureReveal.Media</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">        &#x3C;</span><span style="color:#005CC5">ApertureReveal.Headline</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">          &#x3C;</span><span style="color:#005CC5">ApertureReveal.Lead</span><span style="color:#24292E">>Leave early,&#x3C;/</span><span style="color:#005CC5">ApertureReveal.Lead</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">          &#x3C;</span><span style="color:#005CC5">ApertureReveal.Opening</span><span style="color:#24292E"> /></span></span>
+<span class="line"><span style="color:#24292E">          &#x3C;</span><span style="color:#005CC5">ApertureReveal.Trail</span><span style="color:#24292E">>arrive at first light&#x3C;/</span><span style="color:#005CC5">ApertureReveal.Trail</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">        &#x3C;/</span><span style="color:#005CC5">ApertureReveal.Headline</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">        &#x3C;</span><span style="color:#005CC5">ApertureReveal.Caption</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"pb-[calc(var(--demo-chrome-reserve,5rem)+1.5rem)]"</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">          &#x3C;</span><span style="color:#005CC5">ApertureReveal.Text</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">            Reach the lookout as the valley fills with light, stop for breakfast at the hut, and be</span></span>
+<span class="line"><span style="color:#24292E">            back at the trailhead before the afternoon heat.</span></span>
+<span class="line"><span style="color:#24292E">          &#x3C;/</span><span style="color:#005CC5">ApertureReveal.Text</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">          &#x3C;</span><span style="color:#005CC5">ApertureReveal.Action</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">            &#x3C;</span><span style="color:#22863A">a</span><span style="color:#6F42C1"> href</span><span style="color:#D73A49">=</span><span style="color:#032F62">"/docs/scroll/aperture-reveal"</span><span style="color:#24292E">>Build this section&#x3C;/</span><span style="color:#22863A">a</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">          &#x3C;/</span><span style="color:#005CC5">ApertureReveal.Action</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">        &#x3C;/</span><span style="color:#005CC5">ApertureReveal.Caption</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">      &#x3C;/</span><span style="color:#005CC5">ApertureReveal</span><span style="color:#24292E">></span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#24292E">      &#x3C;</span><span style="color:#22863A">footer</span><span style="color:#6F42C1"> className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"flex min-h-[min(24svh,200px)] items-center justify-center bg-[#ebe9e4] px-6 pt-10 pb-[var(--demo-chrome-reserve,5rem)] text-sm text-[#141413]/50"</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">        End of route</span></span>
+<span class="line"><span style="color:#24292E">      &#x3C;/</span><span style="color:#22863A">footer</span><span style="color:#24292E">></span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#24292E">      &#x3C;</span><span style="color:#005CC5">ApertureRevealDemo001Notes</span><span style="color:#24292E"> /></span></span>
+<span class="line"><span style="color:#24292E">    &#x3C;/></span></span>
+<span class="line"><span style="color:#24292E">  );</span></span>
+<span class="line"><span style="color:#24292E">}</span></span>
+<span class="line"></span></code></pre>`,
+      htmlDark: `<pre class="shiki github-dark" tabindex="0"><code><span class="line"><span style="color:#9ECBFF">"use client"</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">import</span><span style="color:#F97583"> type</span><span style="color:#E1E4E8"> { CSSProperties } </span><span style="color:#F97583">from</span><span style="color:#9ECBFF"> "react"</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">import</span><span style="color:#E1E4E8"> ApertureReveal </span><span style="color:#F97583">from</span><span style="color:#9ECBFF"> "@/animata/scroll/aperture-reveal"</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">import</span><span style="color:#E1E4E8"> { ApertureRevealDemo001Notes } </span><span style="color:#F97583">from</span><span style="color:#9ECBFF"> "./aperture-reveal-demo-001-notes"</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">const</span><span style="color:#79B8FF"> NIGHT</span><span style="color:#F97583"> =</span><span style="color:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#9ECBFF">  "--aperture-ground"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"#0d0e12"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#9ECBFF">  "--aperture-ink"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"#e9e7e1"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#9ECBFF">  "--aperture-opening"</span><span style="color:#E1E4E8">: </span><span style="color:#9ECBFF">"#1d1f26"</span><span style="color:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#E1E4E8">} </span><span style="color:#F97583">as</span><span style="color:#B392F0"> CSSProperties</span><span style="color:#E1E4E8">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">const</span><span style="color:#79B8FF"> route</span><span style="color:#F97583"> =</span><span style="color:#E1E4E8"> [</span></span>
+<span class="line"><span style="color:#E1E4E8">  { value: </span><span style="color:#9ECBFF">"6.2 km"</span><span style="color:#E1E4E8">, label: </span><span style="color:#9ECBFF">"Trailhead to lookout"</span><span style="color:#E1E4E8"> },</span></span>
+<span class="line"><span style="color:#E1E4E8">  { value: </span><span style="color:#9ECBFF">"840 m"</span><span style="color:#E1E4E8">, label: </span><span style="color:#9ECBFF">"Climbing, mostly in the first hour"</span><span style="color:#E1E4E8"> },</span></span>
+<span class="line"><span style="color:#E1E4E8">  { value: </span><span style="color:#9ECBFF">"2 h 40"</span><span style="color:#E1E4E8">, label: </span><span style="color:#9ECBFF">"At an easy, talking pace"</span><span style="color:#E1E4E8"> },</span></span>
+<span class="line"><span style="color:#E1E4E8">];</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">export</span><span style="color:#F97583"> default</span><span style="color:#F97583"> function</span><span style="color:#B392F0"> ApertureRevealDemo001</span><span style="color:#E1E4E8">() {</span></span>
+<span class="line"><span style="color:#F97583">  return</span><span style="color:#E1E4E8"> (</span></span>
+<span class="line"><span style="color:#E1E4E8">    &#x3C;></span></span>
+<span class="line"><span style="color:#E1E4E8">      &#x3C;</span><span style="color:#85E89D">div</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"bg-[#0d0e12]"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">        &#x3C;</span><span style="color:#79B8FF">ApertureReveal</span><span style="color:#B392F0"> length</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#79B8FF">2.6</span><span style="color:#E1E4E8">} </span><span style="color:#B392F0">style</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#79B8FF">NIGHT</span><span style="color:#E1E4E8">}></span></span>
+<span class="line"><span style="color:#E1E4E8">          &#x3C;</span><span style="color:#79B8FF">ApertureReveal.Media</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">            &#x3C;</span><span style="color:#85E89D">img</span></span>
+<span class="line"><span style="color:#B392F0">              src</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&#x26;fit=crop&#x26;w=2400&#x26;q=80"</span></span>
+<span class="line"><span style="color:#B392F0">              alt</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"Snow-covered mountain under a clear night sky full of stars"</span></span>
+<span class="line"><span style="color:#B392F0">              decoding</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"async"</span></span>
+<span class="line"><span style="color:#E1E4E8">            /></span></span>
+<span class="line"><span style="color:#E1E4E8">          &#x3C;/</span><span style="color:#79B8FF">ApertureReveal.Media</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">          &#x3C;</span><span style="color:#79B8FF">ApertureReveal.Headline</span><span style="color:#B392F0"> as</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"h1"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">            &#x3C;</span><span style="color:#79B8FF">ApertureReveal.Lead</span><span style="color:#E1E4E8">>Start in the dark,&#x3C;/</span><span style="color:#79B8FF">ApertureReveal.Lead</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">            &#x3C;</span><span style="color:#79B8FF">ApertureReveal.Opening</span><span style="color:#E1E4E8"> /></span></span>
+<span class="line"><span style="color:#E1E4E8">            &#x3C;</span><span style="color:#79B8FF">ApertureReveal.Trail</span><span style="color:#E1E4E8">>under the ridge&#x3C;/</span><span style="color:#79B8FF">ApertureReveal.Trail</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">          &#x3C;/</span><span style="color:#79B8FF">ApertureReveal.Headline</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">          &#x3C;</span><span style="color:#79B8FF">ApertureReveal.Caption</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"pb-[calc(var(--demo-chrome-reserve,5rem)+1.5rem)]"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">            &#x3C;</span><span style="color:#79B8FF">ApertureReveal.Text</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">              Headlamps on at ten past four. The first hour climbs through pine on a wide path, so</span></span>
+<span class="line"><span style="color:#E1E4E8">              you can walk it half awake while the stars are still out.</span></span>
+<span class="line"><span style="color:#E1E4E8">            &#x3C;/</span><span style="color:#79B8FF">ApertureReveal.Text</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">          &#x3C;/</span><span style="color:#79B8FF">ApertureReveal.Caption</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">          &#x3C;</span><span style="color:#79B8FF">ApertureReveal.Hint</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"bottom-[calc(var(--demo-chrome-reserve,5rem)+0.5rem)]"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">            Scroll</span></span>
+<span class="line"><span style="color:#E1E4E8">          &#x3C;/</span><span style="color:#79B8FF">ApertureReveal.Hint</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">        &#x3C;/</span><span style="color:#79B8FF">ApertureReveal</span><span style="color:#E1E4E8">></span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">        &#x3C;</span><span style="color:#85E89D">section</span></span>
+<span class="line"><span style="color:#B392F0">          aria-labelledby</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"route-title"</span></span>
+<span class="line"><span style="color:#B392F0">          className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"mx-auto w-full max-w-6xl px-6 py-28 text-[#e9e7e1] sm:px-10 md:py-40"</span></span>
+<span class="line"><span style="color:#E1E4E8">        ></span></span>
+<span class="line"><span style="color:#E1E4E8">          &#x3C;</span><span style="color:#85E89D">h2</span></span>
+<span class="line"><span style="color:#B392F0">            id</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"route-title"</span></span>
+<span class="line"><span style="color:#B392F0">            className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"max-w-[18ch] text-[clamp(1.75rem,4vw,3rem)] font-semibold leading-[1.02] tracking-[-0.035em]"</span></span>
+<span class="line"><span style="color:#E1E4E8">          ></span></span>
+<span class="line"><span style="color:#E1E4E8">            One route, walked slowly enough to watch the light arrive.</span></span>
+<span class="line"><span style="color:#E1E4E8">          &#x3C;/</span><span style="color:#85E89D">h2</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">          &#x3C;</span><span style="color:#85E89D">dl</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"mt-16 grid gap-px overflow-hidden rounded-sm bg-white/10 sm:grid-cols-3"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">            {route.</span><span style="color:#B392F0">map</span><span style="color:#E1E4E8">((</span><span style="color:#FFAB70">item</span><span style="color:#E1E4E8">) </span><span style="color:#F97583">=></span><span style="color:#E1E4E8"> (</span></span>
+<span class="line"><span style="color:#E1E4E8">              &#x3C;</span><span style="color:#85E89D">div</span><span style="color:#B392F0"> key</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{item.label} </span><span style="color:#B392F0">className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"flex flex-col gap-3 bg-[#0d0e12] p-6 sm:p-8"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">                &#x3C;</span><span style="color:#85E89D">dt</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"order-2 text-sm leading-snug text-[#e9e7e1]/60"</span><span style="color:#E1E4E8">>{item.label}&#x3C;/</span><span style="color:#85E89D">dt</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">                &#x3C;</span><span style="color:#85E89D">dd</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"order-1 m-0 text-[clamp(2.25rem,5vw,3.75rem)] font-semibold leading-none tracking-[-0.04em] tabular-nums"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">                  {item.value}</span></span>
+<span class="line"><span style="color:#E1E4E8">                &#x3C;/</span><span style="color:#85E89D">dd</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">              &#x3C;/</span><span style="color:#85E89D">div</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">            ))}</span></span>
+<span class="line"><span style="color:#E1E4E8">          &#x3C;/</span><span style="color:#85E89D">dl</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">        &#x3C;/</span><span style="color:#85E89D">section</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">      &#x3C;/</span><span style="color:#85E89D">div</span><span style="color:#E1E4E8">></span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">      &#x3C;</span><span style="color:#79B8FF">ApertureReveal</span><span style="color:#B392F0"> length</span><span style="color:#F97583">=</span><span style="color:#E1E4E8">{</span><span style="color:#79B8FF">3</span><span style="color:#E1E4E8">}></span></span>
+<span class="line"><span style="color:#E1E4E8">        &#x3C;</span><span style="color:#79B8FF">ApertureReveal.Media</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">          &#x3C;</span><span style="color:#85E89D">img</span></span>
+<span class="line"><span style="color:#B392F0">            src</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&#x26;fit=crop&#x26;w=2400&#x26;q=80"</span></span>
+<span class="line"><span style="color:#B392F0">            alt</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"Snow-capped mountains above a forested valley and a braided river"</span></span>
+<span class="line"><span style="color:#B392F0">            decoding</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"async"</span></span>
+<span class="line"><span style="color:#E1E4E8">          /></span></span>
+<span class="line"><span style="color:#E1E4E8">        &#x3C;/</span><span style="color:#79B8FF">ApertureReveal.Media</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">        &#x3C;</span><span style="color:#79B8FF">ApertureReveal.Headline</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">          &#x3C;</span><span style="color:#79B8FF">ApertureReveal.Lead</span><span style="color:#E1E4E8">>Leave early,&#x3C;/</span><span style="color:#79B8FF">ApertureReveal.Lead</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">          &#x3C;</span><span style="color:#79B8FF">ApertureReveal.Opening</span><span style="color:#E1E4E8"> /></span></span>
+<span class="line"><span style="color:#E1E4E8">          &#x3C;</span><span style="color:#79B8FF">ApertureReveal.Trail</span><span style="color:#E1E4E8">>arrive at first light&#x3C;/</span><span style="color:#79B8FF">ApertureReveal.Trail</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">        &#x3C;/</span><span style="color:#79B8FF">ApertureReveal.Headline</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">        &#x3C;</span><span style="color:#79B8FF">ApertureReveal.Caption</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"pb-[calc(var(--demo-chrome-reserve,5rem)+1.5rem)]"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">          &#x3C;</span><span style="color:#79B8FF">ApertureReveal.Text</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">            Reach the lookout as the valley fills with light, stop for breakfast at the hut, and be</span></span>
+<span class="line"><span style="color:#E1E4E8">            back at the trailhead before the afternoon heat.</span></span>
+<span class="line"><span style="color:#E1E4E8">          &#x3C;/</span><span style="color:#79B8FF">ApertureReveal.Text</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">          &#x3C;</span><span style="color:#79B8FF">ApertureReveal.Action</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">            &#x3C;</span><span style="color:#85E89D">a</span><span style="color:#B392F0"> href</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"/docs/scroll/aperture-reveal"</span><span style="color:#E1E4E8">>Build this section&#x3C;/</span><span style="color:#85E89D">a</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">          &#x3C;/</span><span style="color:#79B8FF">ApertureReveal.Action</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">        &#x3C;/</span><span style="color:#79B8FF">ApertureReveal.Caption</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">      &#x3C;/</span><span style="color:#79B8FF">ApertureReveal</span><span style="color:#E1E4E8">></span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">      &#x3C;</span><span style="color:#85E89D">footer</span><span style="color:#B392F0"> className</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"flex min-h-[min(24svh,200px)] items-center justify-center bg-[#ebe9e4] px-6 pt-10 pb-[var(--demo-chrome-reserve,5rem)] text-sm text-[#141413]/50"</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">        End of route</span></span>
+<span class="line"><span style="color:#E1E4E8">      &#x3C;/</span><span style="color:#85E89D">footer</span><span style="color:#E1E4E8">></span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#E1E4E8">      &#x3C;</span><span style="color:#79B8FF">ApertureRevealDemo001Notes</span><span style="color:#E1E4E8"> /></span></span>
+<span class="line"><span style="color:#E1E4E8">    &#x3C;/></span></span>
+<span class="line"><span style="color:#E1E4E8">  );</span></span>
+<span class="line"><span style="color:#E1E4E8">}</span></span>
+<span class="line"></span></code></pre>`,
+    },
+  ],
 };
