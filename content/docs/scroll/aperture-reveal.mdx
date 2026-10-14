@@ -1,0 +1,183 @@
+---
+title: Aperture Reveal
+description: A photograph opens out of a pill-shaped gap in the headline. The words part, the image fills the stage, and the caption is read in word by word as you scroll.
+labels: ["new", "scroll", "requires interaction"]
+---
+
+<ComponentPreview name="scroll-aperture-reveal--primary" />
+
+See it with page scroll in the [dawn climb demo](/demo/scroll/aperture-reveal-demo-001).
+
+## Installation
+
+### CLI
+
+<RegistryInstall category="scroll" name="aperture-reveal" />
+
+### Manual
+
+<Steps>
+
+<Step>Install dependencies</Step>
+
+```bash
+npm install motion
+```
+
+<Step>Add the reduced-motion hook</Step>
+
+Skip this step if you already have `hooks/use-prefers-reduced-motion.ts` from another component.
+
+```tsx file=<rootDir>/hooks/use-prefers-reduced-motion.ts
+
+```
+
+<Step>Create the files</Step>
+
+```bash
+mkdir -p components/animata/scroll && touch components/animata/scroll/aperture-reveal.tsx components/animata/scroll/aperture-reveal.css
+```
+
+<Step>Paste the code</Step>
+
+```css file=<rootDir>/animata/scroll/aperture-reveal.css
+
+```
+
+```tsx file=<rootDir>/animata/scroll/aperture-reveal.tsx
+
+```
+
+</Steps>
+
+## Usage
+
+```tsx
+import Image from "next/image";
+import Link from "next/link";
+import ApertureReveal from "@/components/animata/scroll/aperture-reveal";
+
+<ApertureReveal>
+  <ApertureReveal.Media>
+    <Image
+      src="/images/ridge.jpg"
+      alt="Snow-capped mountains above a forested valley and a braided river"
+      fill
+      sizes="100vw"
+    />
+  </ApertureReveal.Media>
+  <ApertureReveal.Headline>
+    <ApertureReveal.Lead>Leave early,</ApertureReveal.Lead>
+    <ApertureReveal.Opening />
+    <ApertureReveal.Trail>arrive at first light</ApertureReveal.Trail>
+  </ApertureReveal.Headline>
+  <ApertureReveal.Caption>
+    <ApertureReveal.Text>
+      The ridge trail opens two hours before sunrise. Start with a guide, reach the lookout as
+      the valley fills with light, and be back down before the heat.
+    </ApertureReveal.Text>
+    <ApertureReveal.Action>
+      <Link href="/climbs">Plan the climb</Link>
+    </ApertureReveal.Action>
+  </ApertureReveal.Caption>
+  <ApertureReveal.Hint>Scroll</ApertureReveal.Hint>
+</ApertureReveal>
+```
+
+The parts are composed, so you choose what goes in each one. `Media` takes an `img`, a Next `Image` with `fill`, or a muted `video`. `Action` wraps your own link or button, including a router `Link`. Leave out `Action` or `Hint` if you don't need them. Each part accepts the props of its element, such as `className` and `style`.
+
+By default the section follows page scroll. It is `length` stage heights tall, and the stage stays pinned while you scroll through it. Pass `viewportHeight` to make it a scroll box of its own, for example inside a modal. The preview above uses `viewportHeight={640}`.
+
+Pinning uses `position: sticky`. An ancestor with `overflow: hidden`, `overflow: auto`, or a `transform` stops sticky from working. Use `overflow: clip` on the ancestor instead, or use `viewportHeight`.
+
+### Colors
+
+Colors are CSS variables on the root: `--aperture-ground`, `--aperture-ink`, `--aperture-opening`, `--aperture-accent`, and `--aperture-accent-ink`. Dark values apply under a `.dark` ancestor. Set them with `style` or a class for a one-off palette:
+
+```tsx
+<ApertureReveal
+  style={{ "--aperture-ground": "#0d0e12", "--aperture-ink": "#e9e7e1" } as React.CSSProperties}
+>
+```
+
+The headline uses `--aperture-font`, which falls back to `--font-display`.
+
+## How it works
+
+One photograph sits behind the headline, clipped to the opening's rectangle. Scroll progress releases the clip until the photograph fills the stage.
+
+```text
+section.aperture                 ← tall track: length × stage height
+  div.aperture__stage            ← position: sticky; sets --e (opening) and --q (caption)
+    Media                        ← clip-path: inset(opening rect × (1 - --e))
+    Headline  Lead | Opening | Trail
+    Caption   Text, Action       ← fades in with --q
+    Hint
+```
+
+Layout, color, spacing, and type are Tailwind classes on each part, so a `className` on any part overrides them. `aperture-reveal.css` holds only what Tailwind can't express: the scroll-driven `calc()` values, the hint's animation, and a container height query.
+
+One scroll progress value drives everything through those two CSS variables, so scrolling never re-renders React. The clip, the image scale, the wash, the headline's movement, and each caption word's opacity are all `calc()` expressions of `--e` and `--q`.
+
+- The first 55% of the scroll opens the photograph with an ease-in-out curve. The image starts at 1.32× and settles to 1× as it widens, so it feels like a lens opening rather than a box stretching.
+- The caption runs from 60% to 92%. Each word fades from 16% to full opacity, overlapping its neighbors by four words.
+- The opening's rectangle is measured from layout. It is measured again when the stage resizes, when the words beside it rewrap, and after web fonts load. Measurements are corrected for scaled ancestors, so the clip also lines up inside scaled previews.
+- Stages narrower than 640px stack the headline and move the words vertically. Short, wide stages, such as a phone in landscape, use a smaller headline and hide the hint. Both are container queries, so they respond to the section's size, not the window's.
+
+## When to use
+
+- Moving from a headline into a photograph or video without a hard cut, such as a product launch, a travel or property story, or an editorial feature.
+- One strong image per section. Two or three sections on a page work well; the [demo](/demo/scroll/aperture-reveal-demo-001) uses two.
+
+## When not to use
+
+- Content people need to reach quickly, like pricing, forms, or navigation. The sequence takes a few screens of scrolling.
+- Images where the center crop doesn't work. The opening shows the middle of the photograph first.
+- Inside a container you can't give `overflow: clip` or a fixed height. Use a plain image instead.
+
+## Parts
+
+<PropsTable>
+  <PropsTable.Row prop="ApertureReveal" type="section">
+    Root. `length` (number, default 3, minimum 1.5) is the scroll distance in stage heights. `viewportHeight` (number) turns the section into its own scroll box of that many pixels. The section is labelled by the headline.
+  </PropsTable.Row>
+  <PropsTable.Row prop="Media" type="div">
+    Holds the photograph or video. Its child is stretched to cover the stage. Give an image real `alt` text.
+  </PropsTable.Row>
+  <PropsTable.Row prop="Headline" type="h2">
+    The headline. Use `as="h1"` or `as="h3"` to fit your page outline.
+  </PropsTable.Row>
+  <PropsTable.Row prop="Lead" type="span">
+    Words before the opening. They move left, or up on narrow stages.
+  </PropsTable.Row>
+  <PropsTable.Row prop="Opening" type="span">
+    The decorative gap the photograph grows from. With reduced motion it is hidden unless you give it children, such as a small copy of the image.
+  </PropsTable.Row>
+  <PropsTable.Row prop="Trail" type="span">
+    Words after the opening. They move right, or down on narrow stages.
+  </PropsTable.Row>
+  <PropsTable.Row prop="Caption" type="div">
+    Overlay for the text and action at the end of the sequence.
+  </PropsTable.Row>
+  <PropsTable.Row prop="Text" type="p">
+    Plain text, read in word by word.
+  </PropsTable.Row>
+  <PropsTable.Row prop="Action" type="div">
+    Wraps one link or button and styles it. It appears after the text.
+  </PropsTable.Row>
+  <PropsTable.Row prop="Hint" type="span">
+    Small decorative cue at the bottom of the stage. It fades as soon as the opening starts to widen.
+  </PropsTable.Row>
+</PropsTable>
+
+## Accessibility
+
+- The section is labelled by its headline. Lead and trail read as one sentence; the opening is hidden from screen readers.
+- `Text` gives screen readers the whole sentence at once. The animated words are hidden from them.
+- `Action` stays in the tab order. If it gets focus before it has appeared, the section scrolls to the end so the action is shown with its text.
+- With `viewportHeight`, the section is focusable, so keyboard users can scroll it with the arrow keys and Space.
+- With `prefers-reduced-motion`, the same parts render in reading order: the headline, then the full photograph with its caption and action. Nothing is pinned or scrubbed, and the hint is hidden.
+
+## Changelog
+
+- **2026-10-14** — Added. Composable parts, clip-path opening driven by a single scroll value, word-by-word caption with a single accessible sentence, contained keyboard-scrollable mode, container-query layouts for narrow and short stages, and a static reduced-motion version. Added the [dawn climb demo](/demo/scroll/aperture-reveal-demo-001).

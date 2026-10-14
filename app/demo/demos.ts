@@ -93,7 +93,8 @@ export const DEMO_GROUPS: DemoGroup[] = [
     slug: "scroll",
     label: "Scroll",
     title: "Scroll layouts",
-    phrase: "Product release scroll — chapters pin and stack like a quarterly ship note.",
+    phrase:
+      "Scroll-driven chapters — panes that pin and stack, and photographs that open out of a headline.",
     themeColor: "#e8eaef",
     items: [
       {
@@ -101,6 +102,12 @@ export const DEMO_GROUPS: DemoGroup[] = [
         label: "Plane · spring release",
         themeColor: "#e8eaef",
         ...lazyDemo(() => import("./library/scroll/stacked-sections-demo-001")),
+      },
+      {
+        slug: "aperture-reveal-demo-001",
+        label: "Dawn climb · two chapters",
+        themeColor: "#0d0e12",
+        ...lazyDemo(() => import("./library/scroll/aperture-reveal-demo-001")),
       },
     ],
   },
