@@ -39,6 +39,15 @@ const move = "duration-(--ez-dur) ease-(--ez-ease)";
 /** Staggered children wait --i steps. */
 const staggered = "delay-[calc(var(--i)*var(--ez-stagger))]";
 
+/**
+ * Two surfaces. The page behind a transition is a flat sheet edged by a hairline; whatever
+ * moves floats above it on a soft, layered shadow. The moving element stays sharp and
+ * real, and the context around it stays quiet.
+ */
+const sheet = "bg-background shadow-[0_0_0_1px_var(--color-border),0_1px_2px_rgb(0_0_0/0.04)]";
+const float =
+  "bg-background shadow-[0_0_0_1px_var(--color-border),0_2px_4px_rgb(0_0_0/0.04),0_14px_32px_-10px_rgb(0_0_0/0.22)]";
+
 function Stage({
   open,
   className,
@@ -61,22 +70,38 @@ function Stage({
 /** Decorative stand-ins for real controls. The scene card itself is the button. */
 function Fake({ icon: Icon, children }: { icon?: LucideIcon; children?: ReactNode }) {
   return (
-    <span className="inline-flex h-7 items-center gap-1.5 rounded-lg border border-border bg-background px-2.5 font-medium">
+    <span
+      className={cn("inline-flex h-7 items-center gap-1.5 rounded-[7px] px-2.5 font-medium", sheet)}
+    >
       {Icon ? <Icon aria-hidden="true" className="size-3.5" /> : null}
       {children}
     </span>
   );
 }
 
+/** A line of placeholder text. `strong` reads as a heading. */
 function Line({ w, strong }: { w: string; strong?: boolean }) {
   return (
     <span
       className={cn(
-        "block h-[7px] rounded bg-border",
-        strong && "mb-1 h-2.5 bg-muted-foreground/35",
+        "block h-1.5 shrink-0 rounded-full bg-foreground/[0.08]",
+        strong && "h-2 bg-foreground/[0.16]",
       )}
       style={{ width: w }}
     />
+  );
+}
+
+/** A placeholder list row: a round avatar and two lines. */
+function Row({ w = "62%", className }: { w?: string; className?: string }) {
+  return (
+    <span className={cn("flex items-center gap-2.5", className)}>
+      <span className="size-5 shrink-0 rounded-full bg-foreground/[0.09]" />
+      <span className="grid flex-1 gap-1.5">
+        <Line w={w} strong />
+        <Line w="88%" />
+      </span>
+    </span>
   );
 }
 
@@ -84,7 +109,8 @@ function Page({ className, children }: { className?: string; children: ReactNode
   return (
     <div
       className={cn(
-        "absolute inset-[18px] flex flex-col gap-[9px] rounded-[10px] border border-border bg-background p-4",
+        "absolute inset-4 flex flex-col gap-3.5 overflow-hidden rounded-[10px] p-4",
+        sheet,
         className,
       )}
     >
@@ -97,10 +123,24 @@ function Scrim() {
   return (
     <div
       className={cn(
-        "absolute inset-0 bg-black/30 opacity-0 transition-opacity group-data-open/s:opacity-100",
+        "absolute inset-0 bg-black/20 opacity-0 transition-opacity group-data-open/s:opacity-100 dark:bg-black/50",
         move,
       )}
     />
+  );
+}
+
+/** Monochrome primary button. */
+function Solid({ children, className }: { children: ReactNode; className?: string }) {
+  return (
+    <span
+      className={cn(
+        "inline-flex h-7 items-center justify-center rounded-[7px] bg-foreground px-2.5 font-medium text-background",
+        className,
+      )}
+    >
+      {children}
+    </span>
   );
 }
 
@@ -111,11 +151,21 @@ export const SCENES: Scene[] = [
     hint: "Opens from its trigger",
     category: "overlays",
     render: (open) => (
-      <Stage open={open} className="p-[22px]">
-        <Fake icon={ArrowUpDown}>Sort by</Fake>
+      <Stage open={open}>
+        <Page>
+          <span className="flex items-center justify-between">
+            <Line w="34%" strong />
+            <Fake icon={ArrowUpDown}>Sort by</Fake>
+          </span>
+          <Row w="48%" />
+          <Row w="64%" />
+          <Row w="40%" />
+        </Page>
+        {/* Anchored under the trigger's right edge, and grows from there. */}
         <div
           className={cn(
-            "absolute top-[58px] left-[22px] grid w-[min(200px,calc(100%-44px))] origin-top-left rounded-[10px] border border-border bg-background p-[5px] shadow-[0_12px_32px_-12px_rgb(0_0_0/0.25)]",
+            "absolute top-[62px] right-6 grid w-[min(176px,calc(100%-48px))] origin-top-right rounded-[10px] p-1",
+            float,
             "-translate-y-1.5 scale-96 opacity-0 transition-[opacity,translate,scale] will-change-[translate,scale,opacity] backface-hidden",
             "group-data-open/s:translate-y-0 group-data-open/s:scale-100 group-data-open/s:opacity-100",
             move,
@@ -126,8 +176,8 @@ export const SCENES: Scene[] = [
               <span
                 key={item}
                 className={cn(
-                  "flex h-7 items-center justify-between rounded-md px-2",
-                  index === 1 && "bg-muted font-medium",
+                  "flex h-7 items-center justify-between rounded-[6px] px-2 text-muted-foreground",
+                  index === 1 && "bg-muted font-medium text-foreground",
                 )}
               >
                 {item}
@@ -147,29 +197,28 @@ export const SCENES: Scene[] = [
     render: (open) => (
       <Stage open={open}>
         <Page>
-          <Line w="40%" strong />
-          <Line w="85%" />
-          <Line w="70%" />
-          <Line w="78%" />
+          <Line w="38%" strong />
+          <Row w="52%" />
+          <Row w="44%" />
+          <Row w="60%" />
         </Page>
         <Scrim />
         <div
           className={cn(
-            "absolute top-1/2 left-1/2 grid w-[min(230px,calc(100%-32px))] -translate-x-1/2 gap-1.5 rounded-xl bg-background p-4 shadow-[0_24px_48px_-16px_rgb(0_0_0/0.35)]",
+            "absolute top-1/2 left-1/2 grid w-[min(228px,calc(100%-32px))] -translate-x-1/2 gap-1.5 rounded-[12px] p-4",
+            float,
             "-translate-y-[calc(50%-16px)] scale-97 opacity-0 transition-[opacity,translate,scale] will-change-[translate,scale,opacity] backface-hidden",
             "group-data-open/s:-translate-y-1/2 group-data-open/s:scale-100 group-data-open/s:opacity-100",
             move,
           )}
         >
-          <strong>Delete project?</strong>
+          <strong className="text-[13px]">Delete project?</strong>
           <span className="text-muted-foreground">
             This removes 24 files for everyone on the team.
           </span>
-          <div className="mt-1.5 flex justify-end gap-1.5">
+          <div className="mt-2 flex justify-end gap-1.5">
             <Fake>Cancel</Fake>
-            <span className="inline-flex h-7 items-center rounded-lg bg-destructive px-2.5 font-medium text-white">
-              Delete
-            </span>
+            <Solid>Delete</Solid>
           </div>
         </div>
       </Stage>
@@ -183,20 +232,22 @@ export const SCENES: Scene[] = [
     render: (open) => (
       <Stage open={open}>
         <Page>
-          <Line w="55%" strong />
-          <Line w="90%" />
-          <Line w="65%" />
+          <Line w="30%" strong />
+          <Row w="58%" />
+          <Row w="42%" />
+          <Row w="50%" />
         </Page>
         <div
           className={cn(
-            "absolute right-3.5 bottom-3.5 flex max-w-[calc(100%-28px)] items-center gap-2.5 rounded-xl border border-border bg-background py-2.5 pr-3.5 pl-2.5 shadow-[0_16px_32px_-16px_rgb(0_0_0/0.3)]",
-            "translate-y-[calc(100%+18px)] opacity-0 transition-[opacity,translate]",
+            "absolute right-3 bottom-3 flex max-w-[calc(100%-24px)] items-center gap-2.5 rounded-[12px] py-2.5 pr-3.5 pl-2.5",
+            float,
+            "translate-y-[calc(100%+16px)] opacity-0 transition-[opacity,translate]",
             "group-data-open/s:translate-y-0 group-data-open/s:opacity-100",
             move,
           )}
         >
-          <span className="grid size-6 shrink-0 place-items-center rounded-full bg-green-600 text-white">
-            <Check aria-hidden="true" className="size-3.5" />
+          <span className="grid size-6 shrink-0 place-items-center rounded-full bg-foreground text-background">
+            <Check aria-hidden="true" className="size-3.5" strokeWidth={2.5} />
           </span>
           <span className="grid min-w-0">
             <strong>Invoice sent</strong>
@@ -215,34 +266,48 @@ export const SCENES: Scene[] = [
     render: (open) => (
       <Stage open={open}>
         <Page>
-          <Line w="35%" strong />
-          <Line w="80%" />
-          <Line w="72%" />
-          <Line w="60%" />
+          <span className="flex items-center justify-between">
+            <Line w="22%" strong />
+            <Fake>Filters</Fake>
+          </span>
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+            {["70%", "52%", "64%", "46%"].map((w) => (
+              <span key={w} className="grid gap-1.5">
+                <span className="aspect-4/3 rounded-[7px] bg-foreground/[0.06]" />
+                <Line w={w} strong />
+                <Line w="34%" />
+              </span>
+            ))}
+          </div>
         </Page>
         <Scrim />
         <div
           className={cn(
-            "absolute inset-y-0 right-0 flex w-[min(58%,260px)] flex-col gap-3 bg-background p-4 shadow-[-16px_0_40px_-20px_rgb(0_0_0/0.35)]",
+            "absolute inset-y-0 right-0 flex w-[min(58%,248px)] flex-col gap-3 bg-background p-4 shadow-[-1px_0_0_var(--color-border),-16px_0_40px_-20px_rgb(0_0_0/0.35)]",
             "translate-x-[105%] transition-[translate] group-data-open/s:translate-x-0",
             move,
           )}
         >
           <div className="mb-1 flex items-center justify-between">
-            <strong>Filters</strong>
-            <X aria-hidden="true" className="size-3.5" />
+            <strong className="text-[13px]">Filters</strong>
+            <X aria-hidden="true" className="size-3.5 text-muted-foreground" />
           </div>
           {["In stock", "Free delivery", "On sale"].map((item, index) => (
             <span key={item} className="flex items-center gap-2">
               <span
                 className={cn(
-                  "size-3.5 rounded border border-border",
-                  index !== 1 && "border-foreground bg-foreground",
+                  "grid size-3.5 place-items-center rounded-[4px] shadow-[inset_0_0_0_1px_var(--color-border)]",
+                  index !== 1 && "bg-foreground text-background shadow-none",
                 )}
-              />
+              >
+                {index !== 1 ? (
+                  <Check aria-hidden="true" className="size-2.5" strokeWidth={3} />
+                ) : null}
+              </span>
               {item}
             </span>
           ))}
+          <Solid className="mt-auto h-8">Show 12 results</Solid>
         </div>
       </Stage>
     ),
@@ -253,11 +318,12 @@ export const SCENES: Scene[] = [
     hint: "Indicator moves between tabs",
     category: "navigation",
     render: (open) => (
-      <Stage open={open} className="pt-[22px]">
-        <div className="relative mx-[18px] grid grid-cols-3 rounded-[10px] bg-border/70 p-1">
+      <Stage open={open} className="grid content-start gap-3 p-4">
+        <div className="relative grid grid-cols-3 rounded-[10px] bg-foreground/[0.06] p-1">
           <span
             className={cn(
-              "absolute inset-y-1 left-1 w-[calc((100%-8px)/3)] rounded-[7px] bg-background shadow-sm",
+              "absolute inset-y-1 left-1 w-[calc((100%-8px)/3)] rounded-[7px]",
+              float,
               "transition-[translate] group-data-open/s:translate-x-[200%]",
               move,
             )}
@@ -275,9 +341,35 @@ export const SCENES: Scene[] = [
             </span>
           ))}
         </div>
-        <div className="mx-[18px] mt-3 flex flex-col gap-[9px] rounded-[10px] border border-border bg-background p-4">
-          <Line w="60%" strong />
-          <Line w="88%" />
+        {/* Both panels share one cell and cross over in the direction of travel. */}
+        <div className={cn("grid overflow-hidden rounded-[10px] p-4", sheet)}>
+          <span
+            className={cn(
+              "col-start-1 row-start-1 grid gap-3.5 transition-[opacity,translate]",
+              "group-data-open/s:-translate-x-6 group-data-open/s:opacity-0",
+              move,
+            )}
+          >
+            <Row w="54%" />
+            <Row w="40%" />
+          </span>
+          <span
+            className={cn(
+              "col-start-1 row-start-1 grid translate-x-6 gap-3 opacity-0 transition-[opacity,translate]",
+              "group-data-open/s:translate-x-0 group-data-open/s:opacity-100",
+              move,
+            )}
+          >
+            {["44%", "58%"].map((w) => (
+              <span key={w} className="flex items-center justify-between gap-3">
+                <span className="grid flex-1 gap-1.5">
+                  <Line w={w} strong />
+                  <Line w="70%" />
+                </span>
+                <span className="h-4 w-7 shrink-0 rounded-full bg-foreground/[0.12]" />
+              </span>
+            ))}
+          </span>
         </div>
       </Stage>
     ),
@@ -299,12 +391,14 @@ export const SCENES: Scene[] = [
             move,
           )}
         >
-          <span className="mb-1 flex items-center gap-1.5 font-semibold">
+          <span className="flex items-center gap-1.5 text-[13px] font-semibold">
             <Inbox aria-hidden="true" className="size-3.5 shrink-0" /> Inbox
           </span>
-          <Line w="80%" />
-          <Line w="64%" />
-          <Line w="72%" />
+          <Row w="46%" className="-mx-2 rounded-[8px] bg-foreground/[0.04] px-2 py-1.5" />
+          <Row w="58%" />
+          <Row w="38%" />
+          <Row w="52%" />
+          <Row w="44%" />
         </Page>
         <Page
           className={cn(
@@ -312,10 +406,12 @@ export const SCENES: Scene[] = [
             move,
           )}
         >
-          <span className="mb-1 font-semibold">Re: Launch plan</span>
-          <span className="block h-[46px] rounded-lg bg-linear-to-br from-orange-500 to-pink-600" />
-          <Line w="86%" />
-          <Line w="58%" />
+          <strong className="text-[13px]">Re: Launch plan</strong>
+          <Row w="30%" />
+          <span className="block h-14 shrink-0 rounded-[8px] bg-[linear-gradient(135deg,color-mix(in_oklab,var(--color-foreground)_12%,transparent),color-mix(in_oklab,var(--color-foreground)_4%,transparent))]" />
+          <Line w="92%" />
+          <Line w="84%" />
+          <Line w="60%" />
         </Page>
       </Stage>
     ),
@@ -326,7 +422,7 @@ export const SCENES: Scene[] = [
     hint: "Thumb and track change together",
     category: "controls",
     render: (open) => (
-      <Stage open={open} className="grid content-center gap-2.5 px-[22px]">
+      <Stage open={open} className="grid content-center gap-2 px-5">
         {[
           { icon: Bell, label: "Notifications", live: true },
           { icon: Settings, label: "Weekly digest", live: false },
@@ -334,22 +430,23 @@ export const SCENES: Scene[] = [
           <span
             key={label}
             className={cn(
-              "flex items-center gap-2.5 rounded-[10px] border border-border bg-background px-3.5 py-3 font-medium",
-              !live && "opacity-55",
+              "flex items-center gap-2.5 rounded-[10px] px-3.5 py-3 font-medium",
+              sheet,
+              !live && "text-muted-foreground",
             )}
           >
             <Icon aria-hidden="true" className="size-4" />
             {label}
             <span
               className={cn(
-                "relative ml-auto h-5 w-[34px] rounded-full bg-border transition-colors",
-                live && "group-data-open/s:bg-accent",
+                "relative ml-auto h-5 w-[34px] rounded-full bg-foreground/15 transition-colors",
+                live && "group-data-open/s:bg-foreground",
                 move,
               )}
             >
               <span
                 className={cn(
-                  "absolute top-0.5 left-0.5 size-4 rounded-full bg-white shadow-[0_1px_2px_rgb(0_0_0/0.25)] transition-[translate]",
+                  "absolute top-0.5 left-0.5 size-4 rounded-full bg-background shadow-[0_1px_2px_rgb(0_0_0/0.25)] transition-[translate]",
                   live && "group-data-open/s:translate-x-3.5",
                   move,
                 )}
@@ -366,13 +463,16 @@ export const SCENES: Scene[] = [
     hint: "Opens to its content height",
     category: "controls",
     render: (open) => (
-      <Stage open={open} className="grid content-start gap-2 p-[22px]">
-        <div className="rounded-[10px] border border-border bg-background">
+      <Stage open={open} className="grid content-start gap-2 p-4">
+        <div className={cn("rounded-[10px]", sheet)}>
           <span className="flex items-center justify-between px-3 py-[11px] font-medium">
             Can I change plans later?
             <ChevronDown
               aria-hidden="true"
-              className={cn("size-3.5 transition-[rotate] group-data-open/s:rotate-180", move)}
+              className={cn(
+                "size-3.5 text-muted-foreground transition-[rotate] group-data-open/s:rotate-180",
+                move,
+              )}
             />
           </span>
           <div
@@ -389,12 +489,14 @@ export const SCENES: Scene[] = [
             </div>
           </div>
         </div>
-        <div className="rounded-[10px] border border-border bg-background">
-          <span className="flex items-center justify-between px-3 py-[11px] font-medium">
-            Do you offer refunds?
-            <ChevronDown aria-hidden="true" className="size-3.5" />
-          </span>
-        </div>
+        {["Do you offer refunds?", "Is there a team plan?"].map((question) => (
+          <div key={question} className={cn("rounded-[10px]", sheet)}>
+            <span className="flex items-center justify-between px-3 py-[11px] font-medium">
+              {question}
+              <ChevronDown aria-hidden="true" className="size-3.5 text-muted-foreground" />
+            </span>
+          </div>
+        ))}
       </Stage>
     ),
   },
@@ -404,11 +506,12 @@ export const SCENES: Scene[] = [
     hint: "Expands from its icon",
     category: "controls",
     render: (open) => (
-      <Stage open={open} className="grid place-items-center px-[22px]">
+      <Stage open={open} className="grid content-start gap-2.5 px-5 pt-6">
         <div
           className={cn(
-            "flex h-10 w-full items-center gap-2 rounded-full border border-border bg-background px-[13px]",
-            "[clip-path:inset(0_calc(100%-40px)_0_0_round_999px)] transition-[clip-path] group-data-open/s:[clip-path:inset(0_0_0_0_round_999px)]",
+            "flex h-10 w-full items-center gap-2 rounded-full px-[13px]",
+            sheet,
+            "[clip-path:inset(-2px_calc(100%-42px)_-2px_-2px_round_999px)] transition-[clip-path] group-data-open/s:[clip-path:inset(-2px_-2px_-2px_-2px_round_999px)]",
             move,
           )}
         >
@@ -423,13 +526,29 @@ export const SCENES: Scene[] = [
           </span>
           <span
             className={cn(
-              "ml-auto rounded-[5px] border border-border px-1.5 py-px text-[11px] text-muted-foreground opacity-0 transition-opacity group-data-open/s:opacity-100",
+              "ml-auto rounded-[5px] px-1.5 py-px text-[11px] text-muted-foreground opacity-0 shadow-[inset_0_0_0_1px_var(--color-border)] transition-opacity group-data-open/s:opacity-100",
               move,
             )}
           >
             ⌘K
           </span>
         </div>
+        {/* Recent searches follow the field in, one after another. */}
+        {["58%", "44%", "66%"].map((w, index) => (
+          <span
+            key={w}
+            className={cn(
+              "flex items-center gap-2.5 px-3",
+              "-translate-y-1 opacity-0 transition-[opacity,translate] group-data-open/s:translate-y-0 group-data-open/s:opacity-100",
+              move,
+              staggered,
+            )}
+            style={{ "--i": index + 1 } as CSSProperties}
+          >
+            <Search aria-hidden="true" className="size-3 shrink-0 text-muted-foreground/60" />
+            <Line w={w} />
+          </span>
+        ))}
       </Stage>
     ),
   },
@@ -439,22 +558,23 @@ export const SCENES: Scene[] = [
     hint: "Rows arrive one after another",
     category: "content",
     render: (open) => (
-      <Stage open={open} className="grid content-center gap-1.5 px-[22px]">
+      <Stage open={open} className="grid content-center gap-1.5 px-5">
         {["Design review", "Ship billing fixes", "Interview: Platform", "Quarterly planning"].map(
           (item, index) => (
             <span
               key={item}
               className={cn(
-                "flex h-[34px] items-center gap-2.5 rounded-[9px] border border-border bg-background px-3 font-medium",
+                "flex h-[34px] items-center gap-2.5 rounded-[9px] px-3 font-medium",
+                sheet,
                 "translate-y-2.5 opacity-0 transition-[opacity,translate] group-data-open/s:translate-y-0 group-data-open/s:opacity-100",
                 move,
                 staggered,
               )}
               style={{ "--i": index } as CSSProperties}
             >
-              <span className="size-[7px] rounded-full bg-accent" />
+              <span className="h-3.5 w-[3px] rounded-full bg-foreground/25" />
               {item}
-              <span className="ml-auto font-mono text-[11px] text-muted-foreground">
+              <span className="ml-auto text-muted-foreground tabular-nums">
                 {["9:30", "11:00", "14:00", "16:30"][index]}
               </span>
             </span>
@@ -472,7 +592,8 @@ export const SCENES: Scene[] = [
       <Stage open={open} className="grid place-items-center">
         <div
           className={cn(
-            "relative w-[58%] max-w-[220px] overflow-hidden rounded-xl border border-border bg-background",
+            "relative w-[58%] max-w-[210px] overflow-hidden rounded-[12px]",
+            sheet,
             "transition-[translate] group-data-open/s:-translate-y-1.5",
             "after:pointer-events-none after:absolute after:inset-0 after:rounded-[inherit] after:opacity-0 after:shadow-[0_22px_40px_-18px_rgb(0_0_0/0.4)] after:transition-opacity after:duration-(--ez-dur) after:ease-(--ez-ease) group-data-open/s:after:opacity-100",
             move,
@@ -480,18 +601,21 @@ export const SCENES: Scene[] = [
         >
           <div
             className={cn(
-              "aspect-4/3 bg-[radial-gradient(circle_at_60%_35%,#fde68a_0_14%,transparent_15%),linear-gradient(160deg,#a5b4fc,#6366f1_60%,#312e81)]",
+              "relative aspect-4/3 bg-[linear-gradient(160deg,color-mix(in_oklab,var(--color-foreground)_16%,transparent),color-mix(in_oklab,var(--color-foreground)_5%,transparent))]",
               "transition-[scale] group-data-open/s:scale-107",
               move,
             )}
-          />
+          >
+            <span className="absolute top-[30%] left-[58%] size-[22%] rounded-full bg-background/70" />
+          </div>
           <div className="relative flex justify-between bg-background px-3 py-2.5">
             <strong>Studio lamp</strong>
-            <span>$148</span>
+            <span className="text-muted-foreground tabular-nums">$148</span>
           </div>
           <span
             className={cn(
-              "absolute top-2 right-2 grid size-[26px] place-items-center rounded-full bg-white text-neutral-900",
+              "absolute top-2 right-2 grid size-[26px] place-items-center rounded-full",
+              float,
               "scale-60 opacity-0 transition-[opacity,scale] group-data-open/s:scale-100 group-data-open/s:opacity-100",
               move,
             )}
@@ -508,7 +632,7 @@ export const SCENES: Scene[] = [
     hint: "Digits roll to a new value",
     category: "content",
     render: (open) => (
-      <Stage open={open} className="grid content-center gap-1 px-[26px]">
+      <Stage open={open} className="grid content-center gap-1 px-6">
         <span className="text-muted-foreground">Revenue this month</span>
         <span
           className="flex text-[40px] leading-[1.1] font-semibold tracking-[-0.03em] tabular-nums"
@@ -536,11 +660,11 @@ export const SCENES: Scene[] = [
         </span>
         <span
           className={cn(
-            "text-green-600 opacity-0 transition-opacity group-data-open/s:opacity-100",
+            "text-muted-foreground opacity-0 transition-opacity group-data-open/s:opacity-100",
             move,
           )}
         >
-          +52% from last month
+          <span className="font-medium text-foreground">+52%</span> from last month
         </span>
       </Stage>
     ),
