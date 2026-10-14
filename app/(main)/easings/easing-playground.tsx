@@ -210,7 +210,7 @@ export function EasingPlayground() {
 
   return (
     <div
-      className="mx-auto w-full max-w-[1240px] px-4 pt-[clamp(40px,6vw,72px)] pb-32 sm:px-6 lg:px-8"
+      className="mx-auto w-full max-w-[1360px] px-4 pt-[clamp(40px,6vw,72px)] pb-32 sm:px-6 lg:px-8"
       style={vars}
     >
       <header className="grid items-end gap-x-12 gap-y-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,22rem)]">
@@ -255,203 +255,196 @@ export function EasingPlayground() {
         </p>
       </header>
 
-      {/* Below desktop the index becomes a scrolling shelf above the instrument. */}
+      {/* Below desktop the index becomes a scrolling shelf. */}
       <section aria-label="Curves" className="mt-10 lg:hidden">
         <PresetShelf selected={preset} onSelect={choosePreset} />
       </section>
 
-      {/* The instrument: index, plot, and controls on one strip, divided by hairlines. */}
-      <section
-        ref={workbenchRef}
-        aria-label="Curve"
-        className="mt-6 grid scroll-mt-20 border-y border-border md:grid-cols-[minmax(0,1fr)_minmax(0,20.5rem)] lg:mt-12 lg:grid-cols-[13.5rem_minmax(0,1fr)_20.5rem]"
-      >
-        <nav aria-label="Curves" className="hidden py-7 pr-6 lg:block">
+      {/* One workspace: pick a curve on the left, watch it in the middle, tune it on the
+          right. Both side panes stay in view while the scenes scroll. */}
+      <div className="mt-6 grid items-start gap-x-6 gap-y-10 md:grid-cols-[minmax(0,1fr)_19.5rem] lg:mt-12 lg:grid-cols-[12.5rem_minmax(0,1fr)_20rem] lg:gap-x-8 xl:gap-x-10">
+        <nav
+          aria-label="Curves"
+          className="sticky top-[calc(var(--site-header-height,50px)+24px)] hidden lg:block"
+        >
           <PresetIndex selected={preset} onSelect={choosePreset} reducedMotion={reducedMotion} />
         </nav>
 
-        <div className="grid min-w-0 content-start gap-6 py-7 md:pr-8 lg:border-x lg:border-border lg:px-8">
-          <div className="flex items-start justify-between gap-3">
-            <div className="grid min-w-0 gap-1.5">
-              <h2 className="m-0 grid overflow-hidden font-(family-name:--font-display) text-[1.625rem] leading-none font-semibold tracking-[-0.025em]">
-                <AnimatePresence initial={false} mode="popLayout">
-                  <motion.span
-                    key={name}
-                    className="col-start-1 row-start-1 truncate pb-0.5"
-                    {...nameMorph(20, 4)}
-                    transition={{ type: "spring", bounce: 0, duration: 0.35 }}
-                  >
-                    {name}
-                  </motion.span>
-                </AnimatePresence>
-              </h2>
-              <p className="m-0 truncate font-mono text-xs leading-tight text-muted-foreground tabular-nums">
-                {edited && base ? (
-                  <span className="font-sans">Edited from {base.name}</span>
-                ) : (
-                  `cubic-bezier(${formatBezier(bezier)})`
-                )}
-              </p>
-            </div>
-            <div className="flex gap-1">
-              {edited ? (
-                <button
-                  type="button"
-                  onClick={reset}
-                  className={cn(
-                    "inline-flex h-8 items-center gap-1.5 rounded-[8px] px-2.5 text-xs font-medium text-muted-foreground hover:bg-muted hover:text-foreground",
-                    press,
-                  )}
-                >
-                  <RotateCcw aria-hidden="true" className="size-3.5" />
-                  Reset
-                </button>
-              ) : null}
-              <button
-                type="button"
-                aria-label="Previous curve"
-                onClick={() => step(-1)}
-                className={iconButton}
-              >
-                <ChevronLeft aria-hidden="true" className="size-4" />
-              </button>
-              <button
-                type="button"
-                aria-label="Next curve"
-                onClick={() => step(1)}
-                className={iconButton}
-              >
-                <ChevronRight aria-hidden="true" className="size-4" />
-              </button>
-            </div>
-          </div>
-
-          <div className="mx-auto w-full max-w-[29rem]">
-            <CurveEditor
-              bezier={bezier}
-              onChange={setCurve}
-              playKey={playKey}
-              durationMs={durationMs}
-            />
-          </div>
-        </div>
-
-        <div className="grid min-w-0 grid-cols-[minmax(0,1fr)] content-start gap-6 border-t border-border py-7 md:border-t-0 md:border-l md:pl-8 lg:border-l-0">
-          <DurationControl
-            value={durationMs}
-            onChange={setDuration}
-            onCommit={replay}
-            suggested={preset?.duration}
-          />
-
-          <p className="m-0 min-h-[4lh] text-[13px]/relaxed text-muted-foreground">
-            {preset ? (
-              <>
-                <span className="font-medium text-foreground">{preset.use}.</span> {preset.note}
-              </>
-            ) : (
-              "Your own curve. The address bar keeps it, so you can share the link."
-            )}
-          </p>
-
-          <div className="grid grid-cols-[minmax(0,1fr)] gap-3 border-t border-border pt-6">
-            {/* A small code window: format tabs and Copy in its bar, the snippet below. A
-                fixed height keeps the column still when the format changes. */}
-            <div className="overflow-hidden rounded-[10px] border border-border bg-muted/40">
-              <div className="flex h-10 items-center justify-between gap-2 border-b border-border px-1.5">
-                <div role="radiogroup" aria-label="Code format" className="flex gap-0.5">
-                  {CODE_FORMATS.map((item) => (
-                    <button
-                      key={item.id}
-                      type="button"
-                      role="radio"
-                      aria-checked={format === item.id}
-                      onClick={() => setFormat(item.id)}
-                      className={cn(
-                        "h-7 rounded-[6px] px-2 text-xs font-medium text-muted-foreground hover:text-foreground",
-                        "aria-checked:bg-background aria-checked:text-foreground aria-checked:shadow-[0_0_0_1px_var(--color-border),0_1px_2px_rgb(0_0_0/0.06)]",
-                        press,
-                      )}
+        <aside
+          ref={workbenchRef}
+          aria-label="Curve"
+          className="scroll-mt-20 md:sticky md:top-[calc(var(--site-header-height,50px)+16px)] md:col-start-2 md:row-start-1 md:max-h-[calc(100svh-var(--site-header-height,50px)-32px)] md:overflow-y-auto md:[scrollbar-width:thin] lg:col-start-3"
+        >
+          <div className="grid grid-cols-[minmax(0,1fr)] gap-5 rounded-[14px] border border-border bg-background p-4 shadow-[0_1px_2px_rgb(0_0_0/0.03),0_16px_40px_-28px_rgb(0_0_0/0.18)]">
+            <div className="flex items-start justify-between gap-3">
+              <div className="grid min-w-0 gap-1.5">
+                <h2 className="m-0 grid overflow-hidden font-(family-name:--font-display) text-[1.375rem] leading-none font-semibold tracking-[-0.025em]">
+                  <AnimatePresence initial={false} mode="popLayout">
+                    <motion.span
+                      key={name}
+                      className="col-start-1 row-start-1 truncate pb-0.5"
+                      {...nameMorph(20, 4)}
+                      transition={{ type: "spring", bounce: 0, duration: 0.35 }}
                     >
-                      {item.label}
-                    </button>
-                  ))}
-                </div>
+                      {name}
+                    </motion.span>
+                  </AnimatePresence>
+                </h2>
+                <p className="m-0 truncate font-mono text-xs leading-tight text-muted-foreground tabular-nums">
+                  {edited && base ? (
+                    <span className="font-sans">Edited from {base.name}</span>
+                  ) : (
+                    `cubic-bezier(${formatBezier(bezier)})`
+                  )}
+                </p>
+              </div>
+              <div className="flex gap-1">
+                {edited ? (
+                  <button
+                    type="button"
+                    onClick={reset}
+                    className={cn(
+                      "inline-flex h-8 items-center gap-1.5 rounded-[8px] px-2.5 text-xs font-medium text-muted-foreground hover:bg-muted hover:text-foreground",
+                      press,
+                    )}
+                  >
+                    <RotateCcw aria-hidden="true" className="size-3.5" />
+                    Reset
+                  </button>
+                ) : null}
                 <button
                   type="button"
-                  onClick={copy}
-                  aria-label={copied ? "Copied" : `Copy ${format} code`}
-                  className={cn(
-                    "inline-flex h-7 shrink-0 items-center rounded-[6px] bg-foreground px-2.5 text-xs font-medium text-background hover:bg-foreground/85",
-                    press,
-                  )}
+                  aria-label="Previous curve"
+                  onClick={() => step(-1)}
+                  className={iconButton}
                 >
-                  {/* The label morphs instead of snapping, so the confirmation reads as a change. */}
-                  <span className="grid overflow-hidden">
-                    <AnimatePresence initial={false} mode="popLayout">
-                      <motion.span
-                        key={copied ? "copied" : "copy"}
-                        className="col-start-1 row-start-1 inline-flex items-center gap-1.5"
-                        initial={reducedMotion ? false : { y: 10, opacity: 0, filter: "blur(3px)" }}
-                        animate={{ y: 0, opacity: 1, filter: "blur(0px)" }}
-                        exit={
-                          reducedMotion
-                            ? { opacity: 0, transition: { duration: 0 } }
-                            : { y: -10, opacity: 0, filter: "blur(3px)" }
-                        }
-                        transition={{ type: "spring", bounce: 0, duration: 0.3 }}
-                      >
-                        {copied ? (
-                          <Check aria-hidden="true" className="size-3.5" />
-                        ) : (
-                          <Copy aria-hidden="true" className="size-3.5" />
-                        )}
-                        {copied ? "Copied" : "Copy"}
-                      </motion.span>
-                    </AnimatePresence>
-                  </span>
+                  <ChevronLeft aria-hidden="true" className="size-4" />
+                </button>
+                <button
+                  type="button"
+                  aria-label="Next curve"
+                  onClick={() => step(1)}
+                  className={iconButton}
+                >
+                  <ChevronRight aria-hidden="true" className="size-4" />
                 </button>
               </div>
-              <pre
-                data-lenis-prevent
-                className="m-0 h-44 overflow-auto p-3 font-mono text-[11px]/relaxed text-foreground/85 [scrollbar-width:thin]"
-              >
-                <code>{code}</code>
-              </pre>
             </div>
-            <details className="group/code">
-              <summary className="flex h-6 cursor-pointer list-none items-center gap-1.5 text-xs font-medium text-muted-foreground hover:text-foreground [&::-webkit-details-marker]:hidden">
-                <ChevronRight
-                  aria-hidden="true"
-                  className="size-3.5 transition-[rotate] duration-200 ease-out group-open/code:rotate-90"
-                />
-                Exact values
-              </summary>
-              <div className="mt-3">
-                <CurveFields bezier={bezier} onChange={setCurve} />
-              </div>
-            </details>
-          </div>
-        </div>
-      </section>
 
-      <section aria-labelledby="transitions-title" className="mt-20 lg:mt-28">
-        <div className="flex flex-wrap items-end justify-between gap-x-8 gap-y-5">
-          <div className="grid gap-2">
-            <h2
-              id="transitions-title"
-              className="m-0 font-(family-name:--font-display) text-[clamp(1.625rem,2.6vw,2.25rem)] leading-[1.05] font-semibold tracking-[-0.03em]"
-            >
-              Twelve transitions, one curve
-            </h2>
-            <p className="m-0 text-[15px]/[1.55] text-muted-foreground">
-              Every scene below plays{" "}
-              <span className="font-mono text-[0.92em] text-foreground">{name}</span> at{" "}
-              <span className="text-foreground tabular-nums">{durationMs}ms</span>. Press one to
-              replay it.
+            <div className="mx-auto w-full max-w-[26rem]">
+              <CurveEditor
+                bezier={bezier}
+                onChange={setCurve}
+                playKey={playKey}
+                durationMs={durationMs}
+              />
+            </div>
+
+            <DurationControl
+              value={durationMs}
+              onChange={setDuration}
+              onCommit={replay}
+              suggested={preset?.duration}
+            />
+
+            <p className="m-0 min-h-[3lh] text-[13px]/relaxed text-muted-foreground">
+              {preset ? (
+                <>
+                  <span className="font-medium text-foreground">{preset.use}.</span> {preset.note}
+                </>
+              ) : (
+                "Your own curve. The address bar keeps it, so you can share the link."
+              )}
             </p>
+
+            <div className="grid grid-cols-[minmax(0,1fr)] gap-3 border-t border-border pt-5">
+              {/* A small code window: format tabs and Copy in its bar, the snippet below. A
+                fixed height keeps the column still when the format changes. */}
+              <div className="overflow-hidden rounded-[10px] border border-border bg-muted/40">
+                <div className="flex h-10 items-center justify-between gap-1 border-b border-border px-1">
+                  <div role="radiogroup" aria-label="Code format" className="flex gap-0.5">
+                    {CODE_FORMATS.map((item) => (
+                      <button
+                        key={item.id}
+                        type="button"
+                        role="radio"
+                        aria-checked={format === item.id}
+                        onClick={() => setFormat(item.id)}
+                        className={cn(
+                          "h-7 rounded-[6px] px-1.5 text-xs font-medium text-muted-foreground hover:text-foreground",
+                          "aria-checked:bg-background aria-checked:text-foreground aria-checked:shadow-[0_0_0_1px_var(--color-border),0_1px_2px_rgb(0_0_0/0.06)]",
+                          press,
+                        )}
+                      >
+                        {item.label}
+                      </button>
+                    ))}
+                  </div>
+                  <button
+                    type="button"
+                    onClick={copy}
+                    aria-label={copied ? "Copied" : `Copy ${format} code`}
+                    className={cn(
+                      "inline-flex h-7 shrink-0 items-center rounded-[6px] bg-foreground px-2.5 text-xs font-medium text-background hover:bg-foreground/85",
+                      press,
+                    )}
+                  >
+                    {/* The label morphs instead of snapping, so the confirmation reads as a change. */}
+                    <span className="grid overflow-hidden">
+                      <AnimatePresence initial={false} mode="popLayout">
+                        <motion.span
+                          key={copied ? "copied" : "copy"}
+                          className="col-start-1 row-start-1 inline-flex items-center gap-1.5"
+                          initial={
+                            reducedMotion ? false : { y: 10, opacity: 0, filter: "blur(3px)" }
+                          }
+                          animate={{ y: 0, opacity: 1, filter: "blur(0px)" }}
+                          exit={
+                            reducedMotion
+                              ? { opacity: 0, transition: { duration: 0 } }
+                              : { y: -10, opacity: 0, filter: "blur(3px)" }
+                          }
+                          transition={{ type: "spring", bounce: 0, duration: 0.3 }}
+                        >
+                          {copied ? (
+                            <Check aria-hidden="true" className="size-3.5" />
+                          ) : (
+                            <Copy aria-hidden="true" className="size-3.5" />
+                          )}
+                          {copied ? "Copied" : "Copy"}
+                        </motion.span>
+                      </AnimatePresence>
+                    </span>
+                  </button>
+                </div>
+                <pre
+                  data-lenis-prevent
+                  className="m-0 h-36 overflow-auto p-3 font-mono text-[11px]/relaxed text-foreground/85 [scrollbar-width:thin]"
+                >
+                  <code>{code}</code>
+                </pre>
+              </div>
+              <details className="group/code">
+                <summary className="flex h-6 cursor-pointer list-none items-center gap-1.5 text-xs font-medium text-muted-foreground hover:text-foreground [&::-webkit-details-marker]:hidden">
+                  <ChevronRight
+                    aria-hidden="true"
+                    className="size-3.5 transition-[rotate] duration-200 ease-out group-open/code:rotate-90"
+                  />
+                  Exact values
+                </summary>
+                <div className="mt-3">
+                  <CurveFields bezier={bezier} onChange={setCurve} />
+                </div>
+              </details>
+            </div>
           </div>
-          <div className="flex flex-wrap items-center gap-2">
+        </aside>
+
+        <section
+          aria-label="Transitions"
+          className="min-w-0 md:col-start-1 md:row-start-1 lg:col-start-2"
+        >
+          <div className="flex w-full flex-wrap items-center justify-between gap-2">
             <div
               role="group"
               aria-label="Transition type"
@@ -492,61 +485,78 @@ export function EasingPlayground() {
               </button>
             )}
           </div>
-        </div>
 
-        <div
-          ref={galleryRef}
-          className="mt-8 grid grid-flow-dense grid-cols-1 gap-x-5 gap-y-7 sm:grid-cols-2 lg:grid-cols-3"
-        >
-          {scenes.map((scene, index) => {
-            const isOpen = overrides[scene.id] ?? open;
-            // Two columns: wide cards keep every row full (two in the full gallery, the first
-            // of three in a filtered one). Three columns fill evenly without them.
-            const wide = category === "all" ? scene.wide : index === 0;
-            return (
-              <figure
-                key={scene.id}
-                className={cn("m-0 grid gap-3", wide && "sm:col-span-2 lg:col-span-1")}
-              >
-                <button
-                  type="button"
-                  aria-label={`Play ${scene.title}`}
-                  onClick={() => {
-                    setOverrides((current) => ({ ...current, [scene.id]: !isOpen }));
-                    setPlayKey((key) => key + 1);
-                  }}
+          <div
+            ref={galleryRef}
+            className="mt-4 grid grid-flow-dense grid-cols-1 gap-4 sm:grid-cols-2"
+          >
+            {scenes.map((scene, index) => {
+              const isOpen = overrides[scene.id] ?? open;
+              // Wide cards keep every row full: two in the full gallery, the first of three
+              // in a filtered one.
+              const wide = category === "all" ? scene.wide : index === 0;
+              return (
+                <figure
+                  key={scene.id}
                   className={cn(
-                    "group/scene relative block aspect-4/3 w-full overflow-hidden rounded-[12px] border border-border bg-muted/50 text-left text-foreground",
-                    "transition-[scale,border-color,box-shadow] duration-200 ease-out active:scale-[0.985]",
-                    "hover:border-foreground/20 hover:shadow-[0_12px_32px_-22px_rgb(0_0_0/0.3)] focus-visible:border-foreground/30",
-                    wide && "sm:aspect-[2/1] lg:aspect-4/3",
+                    "m-0 grid rounded-[14px] border border-border bg-background p-1.5",
+                    "transition-[border-color,box-shadow] duration-200 ease-out hover:border-foreground/15 hover:shadow-[0_14px_36px_-24px_rgb(0_0_0/0.28)]",
+                    wide && "sm:col-span-2",
                   )}
                 >
-                  <span aria-hidden="true" className="absolute inset-0 block" inert>
-                    {scene.render(isOpen)}
-                  </span>
-                  <span
-                    aria-hidden="true"
-                    className="pointer-events-none absolute top-2.5 right-2.5 grid size-7 scale-90 place-items-center rounded-[8px] bg-background/90 text-muted-foreground opacity-0 shadow-[0_0_0_1px_var(--color-border),0_4px_12px_-6px_rgb(0_0_0/0.2)] backdrop-blur transition-[opacity,scale] duration-200 ease-out group-hover/scene:scale-100 group-hover/scene:opacity-100 group-focus-visible/scene:scale-100 group-focus-visible/scene:opacity-100"
+                  <button
+                    type="button"
+                    aria-label={`Play ${scene.title}`}
+                    onClick={() => {
+                      setOverrides((current) => ({ ...current, [scene.id]: !isOpen }));
+                      setPlayKey((key) => key + 1);
+                    }}
+                    className={cn(
+                      "group/scene relative block aspect-4/3 w-full overflow-hidden rounded-[8px] bg-muted/60 text-left text-foreground outline-none",
+                      "transition-[scale] duration-200 ease-out active:scale-[0.985] focus-visible:ring-2 focus-visible:ring-foreground/30",
+                      wide && "sm:aspect-[2/1]",
+                    )}
                   >
-                    <RotateCcw className="size-3.5" />
-                  </span>
-                </button>
-                <figcaption className="flex items-baseline justify-between gap-3 px-0.5">
-                  <span className="text-sm font-medium">{scene.title}</span>
-                  <span className="truncate text-[13px] text-muted-foreground">{scene.hint}</span>
-                </figcaption>
-              </figure>
-            );
-          })}
-        </div>
-      </section>
+                    <span aria-hidden="true" className="absolute inset-0 block" inert>
+                      {scene.render(isOpen)}
+                    </span>
+                    <span
+                      aria-hidden="true"
+                      className="pointer-events-none absolute top-2 right-2 grid size-7 scale-90 place-items-center rounded-[8px] bg-background/90 text-muted-foreground opacity-0 shadow-[0_0_0_1px_var(--color-border),0_4px_12px_-6px_rgb(0_0_0/0.2)] backdrop-blur transition-[opacity,scale] duration-200 ease-out group-hover/scene:scale-100 group-hover/scene:opacity-100 group-focus-visible/scene:scale-100 group-focus-visible/scene:opacity-100"
+                    >
+                      <RotateCcw className="size-3.5" />
+                    </span>
+                  </button>
+                  <figcaption className="grid gap-2.5 px-2 pt-3 pb-1.5">
+                    <span className="flex items-baseline justify-between gap-3">
+                      <span className="text-[13px] font-medium">{scene.title}</span>
+                      <span className="truncate text-xs text-muted-foreground">{scene.hint}</span>
+                    </span>
+                    {/* A timing bar runs on the same curve and duration as the scene. */}
+                    <span
+                      aria-hidden="true"
+                      className="relative block h-0.5 overflow-hidden rounded-full bg-border"
+                    >
+                      <span
+                        className={cn(
+                          "absolute inset-0 origin-left rounded-full bg-foreground/60 transition-transform duration-(--ez-dur) ease-(--ez-ease)",
+                          isOpen ? "scale-x-100" : "scale-x-0",
+                        )}
+                      />
+                    </span>
+                  </figcaption>
+                </figure>
+              );
+            })}
+          </div>
+        </section>
+      </div>
 
-      {/* Once the instrument scrolls away, the current curve stays in reach here. */}
+      {/* On phones the editor scrolls away; the current curve stays in reach here. */}
       <div
         inert={instrumentVisible}
         className={cn(
-          "fixed bottom-[max(12px,env(safe-area-inset-bottom))] left-1/2 z-40 flex w-[min(calc(100%-24px),26rem)] -translate-x-1/2 items-center gap-1 rounded-[14px] border border-border bg-background/90 p-1.5 shadow-[0_16px_48px_-20px_rgb(0_0_0/0.4)] backdrop-blur-xl",
+          "fixed bottom-[max(12px,env(safe-area-inset-bottom))] left-1/2 z-40 flex md:hidden w-[min(calc(100%-24px),26rem)] -translate-x-1/2 items-center gap-1 rounded-[14px] border border-border bg-background/90 p-1.5 shadow-[0_16px_48px_-20px_rgb(0_0_0/0.4)] backdrop-blur-xl",
           "transition-[translate,opacity] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]",
           instrumentVisible && "pointer-events-none translate-y-[calc(100%+24px)] opacity-0",
         )}
