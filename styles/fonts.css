@@ -13,7 +13,7 @@
 @font-face {
   font-family: "Knile";
   src:
-    url("https://assets.animata.design/fonts/atipo/knile-bold.v2.woff2") format("woff2"),
+    url("https://assets.animata.design/fonts/atipo/knile-bold.v2.woff2?r=1") format("woff2"),
     url("/fonts/atipo/knile-bold.woff2") format("woff2");
   font-weight: 700;
   font-style: normal;
