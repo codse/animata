@@ -116,7 +116,7 @@ export const SCENES: Scene[] = [
         <div
           className={cn(
             "absolute top-[58px] left-[22px] grid w-[min(200px,calc(100%-44px))] origin-top-left rounded-[10px] border border-border bg-background p-[5px] shadow-[0_12px_32px_-12px_rgb(0_0_0/0.25)]",
-            "-translate-y-1.5 scale-96 opacity-0 transition-[opacity,translate,scale]",
+            "-translate-y-1.5 scale-96 opacity-0 transition-[opacity,translate,scale] will-change-[translate,scale,opacity] backface-hidden",
             "group-data-open/s:translate-y-0 group-data-open/s:scale-100 group-data-open/s:opacity-100",
             move,
           )}
@@ -156,7 +156,7 @@ export const SCENES: Scene[] = [
         <div
           className={cn(
             "absolute top-1/2 left-1/2 grid w-[min(230px,calc(100%-32px))] -translate-x-1/2 gap-1.5 rounded-xl bg-background p-4 shadow-[0_24px_48px_-16px_rgb(0_0_0/0.35)]",
-            "-translate-y-[calc(50%-16px)] scale-97 opacity-0 transition-[opacity,translate,scale]",
+            "-translate-y-[calc(50%-16px)] scale-97 opacity-0 transition-[opacity,translate,scale] will-change-[translate,scale,opacity] backface-hidden",
             "group-data-open/s:-translate-y-1/2 group-data-open/s:scale-100 group-data-open/s:opacity-100",
             move,
           )}
@@ -292,13 +292,15 @@ export const SCENES: Scene[] = [
       <Stage open={open}>
         <Page
           className={cn(
-            "transition-[opacity,translate,scale]",
+            // Own layer: rasterized once and moved as a bitmap, so text and icons don't
+            // shimmer while the page scales by sub-pixel amounts.
+            "transition-[opacity,translate,scale] will-change-[translate,scale,opacity] backface-hidden",
             "group-data-open/s:-translate-x-[24%] group-data-open/s:scale-96 group-data-open/s:opacity-40",
             move,
           )}
         >
           <span className="mb-1 flex items-center gap-1.5 font-semibold">
-            <Inbox aria-hidden="true" className="size-3.5" /> Inbox
+            <Inbox aria-hidden="true" className="size-3.5 shrink-0" /> Inbox
           </span>
           <Line w="80%" />
           <Line w="64%" />
@@ -306,7 +308,7 @@ export const SCENES: Scene[] = [
         </Page>
         <Page
           className={cn(
-            "translate-x-[calc(100%+28px)] transition-[translate] group-data-open/s:translate-x-0",
+            "translate-x-[calc(100%+28px)] transition-[translate] will-change-[translate] backface-hidden group-data-open/s:translate-x-0",
             move,
           )}
         >

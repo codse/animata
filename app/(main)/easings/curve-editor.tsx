@@ -11,16 +11,23 @@ import { round } from "./code";
 export const Y_MIN = -0.6;
 export const Y_MAX = 1.7;
 
-const SIZE = 200;
-const PAD = 14;
+/** Plot units: the 0–1 box is WIDTH wide and WIDTH * Y_SCALE tall. */
+const WIDTH = 320;
+const Y_SCALE = 0.78;
+const PAD_X = 14;
+const PAD_TOP = 14;
+/** Room under the box for the axis caption. */
+const PAD_BOTTOM = 26;
+const HANDLE_HIT = 22;
+const GRID = [0.25, 0.5, 0.75];
 
 const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value));
 
 /** Plot only as much vertical range as the curve needs, with a little air. */
 function plotRange([, y1, , y2]: CubicBezier) {
   return {
-    min: Math.max(Y_MIN, Math.min(-0.15, y1 - 0.15, y2 - 0.15)),
-    max: Math.min(Y_MAX, Math.max(1.15, y1 + 0.15, y2 + 0.15)),
+    min: Math.max(Y_MIN, Math.min(-0.12, y1 - 0.14, y2 - 0.14)),
+    max: Math.min(Y_MAX, Math.max(1.12, y1 + 0.14, y2 + 0.14)),
   };
 }
 
@@ -61,7 +68,7 @@ export function sampleBezier([x1, y1, x2, y2]: CubicBezier, x: number) {
 type CurveEditorProps = {
   bezier: CubicBezier;
   onChange: (bezier: CubicBezier) => void;
-  /** Changes whenever the scenes play, so the dot traces the curve in real time. */
+  /** Changes whenever the scenes play, so the playhead sweeps in real time. */
   playKey: number;
   durationMs: number;
   className?: string;
@@ -76,7 +83,9 @@ export function CurveEditor({
 }: CurveEditorProps) {
   const svgRef = useRef<SVGSVGElement>(null);
   const dotRef = useRef<SVGCircleElement>(null);
+  const playheadRef = useRef<SVGLineElement>(null);
   const dragging = useRef<0 | 1 | null>(null);
+  const [active, setActive] = useState<0 | 1 | null>(null);
   const [x1, y1, x2, y2] = bezier;
 
   // The range follows the curve, but holds still while a handle is dragged so the handle
@@ -86,62 +95,86 @@ export function CurveEditor({
     if (dragging.current === null) setRange(plotRange(bezier));
   }, [bezier]);
 
-  const height = SIZE * (range.max - range.min);
-  const toX = (x: number) => PAD + x * SIZE;
-  const toY = (y: number) => PAD + ((range.max - y) / (range.max - range.min)) * height;
+  const unit = WIDTH * Y_SCALE;
+  const height = (range.max - range.min) * unit;
+  const viewWidth = WIDTH + PAD_X * 2;
+  const viewHeight = height + PAD_TOP + PAD_BOTTOM;
+  const toX = (x: number) => PAD_X + x * WIDTH;
+  const toY = (y: number) => PAD_TOP + (range.max - y) * unit;
 
-  // Trace the curve over the real duration each time the scenes play.
-  // biome-ignore lint/correctness/useExhaustiveDependencies: toY derives from range
+  // A playhead sweeps across time while the dot rides the curve, at the real duration.
+  // biome-ignore lint/correctness/useExhaustiveDependencies: toX and toY derive from range
   useEffect(() => {
     const dot = dotRef.current;
-    if (!dot || playKey === 0) return;
+    const playhead = playheadRef.current;
+    if (!dot || !playhead || playKey === 0) return;
     let raf = 0;
     const start = performance.now();
     const tick = (now: number) => {
       const x = Math.min(1, (now - start) / durationMs);
-      dot.setAttribute("cx", String(toX(x)));
+      const px = String(toX(x));
+      dot.setAttribute("cx", px);
       dot.setAttribute("cy", String(toY(sampleBezier(bezier, x))));
+      playhead.setAttribute("x1", px);
+      playhead.setAttribute("x2", px);
+      playhead.style.opacity = x < 1 ? "1" : "0";
       if (x < 1) raf = requestAnimationFrame(tick);
     };
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
   }, [playKey, durationMs, bezier, range]);
 
-  const pointFromEvent = (event: PointerEvent<SVGSVGElement>) => {
+  const toPlot = (event: PointerEvent<SVGSVGElement>) => {
     const matrix = svgRef.current?.getScreenCTM()?.inverse();
     if (!matrix) return null;
     const point = new DOMPoint(event.clientX, event.clientY).matrixTransform(matrix);
-    const x = clamp((point.x - PAD) / SIZE, 0, 1);
-    const y = clamp(range.max - ((point.y - PAD) / height) * (range.max - range.min), Y_MIN, Y_MAX);
-    return [round(x), round(y)] as const;
+    return {
+      x: round(clamp((point.x - PAD_X) / WIDTH, 0, 1)),
+      y: round(clamp(range.max - (point.y - PAD_TOP) / unit, Y_MIN, Y_MAX)),
+    };
   };
 
   const move = (handle: 0 | 1, x: number, y: number) => {
     onChange(handle === 0 ? [x, y, x2, y2] : [x1, y1, x, y]);
   };
 
-  const onPointerDown = (handle: 0 | 1) => (event: PointerEvent<SVGCircleElement>) => {
-    event.preventDefault();
+  const startDrag = (handle: 0 | 1, event: PointerEvent<SVGSVGElement>) => {
     dragging.current = handle;
+    setActive(handle);
     svgRef.current?.setPointerCapture(event.pointerId);
-    (event.currentTarget as SVGCircleElement).focus();
+  };
+
+  // Pressing anywhere on the plot grabs the nearest handle, so the whole plot is a target.
+  const onPointerDown = (event: PointerEvent<SVGSVGElement>) => {
+    if (event.button !== 0) return;
+    const point = toPlot(event);
+    if (!point) return;
+    event.preventDefault();
+    const distance = (hx: number, hy: number) =>
+      Math.hypot((point.x - hx) * WIDTH, (point.y - hy) * unit);
+    const handle = distance(x1, y1) <= distance(x2, y2) ? 0 : 1;
+    const target = event.target as Element;
+    startDrag(handle, event);
+    // A press on the handle itself shouldn't jump it to the pointer's exact position.
+    if (!target.closest("[data-handle]")) move(handle, point.x, point.y);
   };
 
   const onPointerMove = (event: PointerEvent<SVGSVGElement>) => {
     if (dragging.current === null) return;
-    const point = pointFromEvent(event);
-    if (point) move(dragging.current, point[0], point[1]);
+    const point = toPlot(event);
+    if (point) move(dragging.current, point.x, point.y);
   };
 
   const onPointerUp = (event: PointerEvent<SVGSVGElement>) => {
     dragging.current = null;
+    setActive(null);
     setRange(plotRange(bezier));
     if (svgRef.current?.hasPointerCapture(event.pointerId)) {
       svgRef.current.releasePointerCapture(event.pointerId);
     }
   };
 
-  const onKeyDown = (handle: 0 | 1) => (event: KeyboardEvent<SVGCircleElement>) => {
+  const onKeyDown = (handle: 0 | 1) => (event: KeyboardEvent<SVGGElement>) => {
     const step = event.shiftKey ? 0.1 : 0.01;
     const [hx, hy] = handle === 0 ? [x1, y1] : [x2, y2];
     const moves: Record<string, [number, number]> = {
@@ -157,74 +190,163 @@ export function CurveEditor({
   };
 
   const path = `M ${toX(0)} ${toY(0)} C ${toX(x1)} ${toY(y1)}, ${toX(x2)} ${toY(y2)}, ${toX(1)} ${toY(1)}`;
+  const handles = [
+    [0, x1, y1],
+    [1, x2, y2],
+  ] as const;
 
   return (
-    <div className={cn("grid gap-3", className)}>
+    <div className={cn("relative", className)}>
       <svg
         ref={svgRef}
-        viewBox={`0 0 ${SIZE + PAD * 2} ${height + PAD * 2}`}
-        className="max-h-48 w-full touch-none overflow-visible select-none"
+        viewBox={`0 0 ${viewWidth} ${viewHeight}`}
+        className={cn(
+          "block w-full touch-none select-none overflow-visible",
+          active === null ? "cursor-crosshair" : "cursor-grabbing",
+        )}
+        onPointerDown={onPointerDown}
         onPointerMove={onPointerMove}
         onPointerUp={onPointerUp}
         onPointerCancel={onPointerUp}
         role="group"
-        aria-label="Easing curve. Drag or use arrow keys on the two control points."
+        aria-label="Easing curve. Drag a control point, press anywhere to pull the nearest one, or use arrow keys on a focused point."
       >
+        {/* Headroom outside 0–1 is visible but quieter than the box itself. */}
+        <rect
+          x={toX(0)}
+          y={PAD_TOP}
+          width={WIDTH}
+          height={height}
+          rx={10}
+          className="fill-muted/50"
+        />
         <rect
           x={toX(0)}
           y={toY(1)}
-          width={SIZE}
-          height={toY(0) - toY(1)}
-          rx={6}
+          width={WIDTH}
+          height={unit}
+          rx={8}
           className="fill-muted stroke-border"
         />
+        {GRID.map((g) => (
+          <g key={g} className="stroke-foreground/[0.06]">
+            <line x1={toX(g)} y1={toY(0)} x2={toX(g)} y2={toY(1)} />
+            <line x1={toX(0)} y1={toY(g)} x2={toX(1)} y2={toY(g)} />
+          </g>
+        ))}
         <line
           x1={toX(0)}
           y1={toY(0)}
           x2={toX(1)}
           y2={toY(1)}
-          className="stroke-border [stroke-dasharray:3_4]"
+          className="stroke-foreground/15 [stroke-dasharray:2_5]"
         />
+
+        <text x={toX(0)} y={viewHeight - 8} className="fill-muted-foreground font-mono text-[10px]">
+          time →
+        </text>
+        <text
+          x={toX(0) + 8}
+          y={toY(1) + 16}
+          className="fill-muted-foreground font-mono text-[10px]"
+        >
+          progress
+        </text>
+
         <line
+          ref={playheadRef}
           x1={toX(0)}
-          y1={toY(0)}
-          x2={toX(x1)}
-          y2={toY(y1)}
-          className="stroke-muted-foreground/60"
+          y1={PAD_TOP}
+          x2={toX(0)}
+          y2={PAD_TOP + height}
+          className="stroke-accent/50 opacity-0"
         />
-        <line
-          x1={toX(1)}
-          y1={toY(1)}
-          x2={toX(x2)}
-          y2={toY(y2)}
-          className="stroke-muted-foreground/60"
-        />
-        <path
-          d={path}
-          className="fill-none stroke-foreground stroke-[2.5] [stroke-linecap:round]"
-        />
-        <circle ref={dotRef} cx={toX(1)} cy={toY(1)} r={5} className="fill-accent" />
-        {(
-          [
-            [0, x1, y1],
-            [1, x2, y2],
-          ] as const
-        ).map(([handle, hx, hy]) => (
-          <circle
+
+        {handles.map(([handle, hx, hy]) => (
+          <line
             key={handle}
-            cx={toX(hx)}
-            cy={toY(hy)}
-            r={8}
+            x1={toX(handle)}
+            y1={toY(handle)}
+            x2={toX(hx)}
+            y2={toY(hy)}
+            className={cn(
+              "stroke-[1.5] transition-[stroke] duration-150",
+              active === handle ? "stroke-accent" : "stroke-foreground/30",
+            )}
+          />
+        ))}
+
+        <path d={path} className="fill-none stroke-foreground stroke-[3] [stroke-linecap:round]" />
+        <circle cx={toX(0)} cy={toY(0)} r={3.5} className="fill-foreground" />
+        <circle ref={dotRef} cx={toX(1)} cy={toY(1)} r={6} className="fill-accent" />
+
+        {handles.map(([handle, hx, hy]) => (
+          <g
+            key={handle}
+            data-handle=""
             tabIndex={0}
             role="button"
             aria-label={`Control point ${handle + 1}: x ${hx}, y ${hy}. Arrow keys move it; hold Shift for larger steps.`}
-            className="cursor-grab fill-background stroke-foreground stroke-2 outline-none focus-visible:stroke-accent focus-visible:stroke-[3] active:cursor-grabbing"
-            onPointerDown={onPointerDown(handle)}
             onKeyDown={onKeyDown(handle)}
-          />
+            onFocus={() => setActive(handle)}
+            onBlur={() => dragging.current === null && setActive(null)}
+            className="group/handle cursor-grab outline-none"
+          >
+            {/* Generous invisible hit area around a small visible point. */}
+            <circle cx={toX(hx)} cy={toY(hy)} r={HANDLE_HIT} className="fill-transparent" />
+            <circle
+              cx={toX(hx)}
+              cy={toY(hy)}
+              r={13}
+              className={cn(
+                "fill-accent/15 transition-opacity duration-150",
+                active === handle ? "opacity-100" : "opacity-0 group-hover/handle:opacity-100",
+              )}
+            />
+            <circle
+              cx={toX(hx)}
+              cy={toY(hy)}
+              r={7}
+              className={cn(
+                "stroke-[2.5] transition-[fill,stroke] duration-150",
+                active === handle
+                  ? "fill-accent stroke-background"
+                  : "fill-background stroke-foreground",
+              )}
+            />
+          </g>
         ))}
+
+        {active !== null ? (
+          <HandleLabel
+            x={toX(handles[active][1])}
+            y={toY(handles[active][2])}
+            text={`${handles[active][1].toFixed(2)}, ${handles[active][2].toFixed(2)}`}
+            maxX={viewWidth}
+          />
+        ) : null}
       </svg>
     </div>
+  );
+}
+
+/** Coordinates shown beside the active handle; flips below the point near the top edge. */
+function HandleLabel({ x, y, text, maxX }: { x: number; y: number; text: string; maxX: number }) {
+  const width = 76;
+  const left = clamp(x - width / 2, 0, maxX - width);
+  const top = y - 40 < 0 ? y + 18 : y - 40;
+  return (
+    <g className="pointer-events-none">
+      <rect x={left} y={top} width={width} height={22} rx={6} className="fill-foreground" />
+      <text
+        x={left + width / 2}
+        y={top + 15}
+        textAnchor="middle"
+        className="fill-background font-mono text-[11px] tabular-nums"
+      >
+        {text}
+      </text>
+    </g>
   );
 }
 
@@ -290,7 +412,7 @@ function ControlField({ label, value, min, max, onCommit }: ControlFieldProps) {
         autoComplete="off"
         spellCheck={false}
         value={draft ?? String(value)}
-        className="h-8 w-full rounded-lg border border-border bg-background pr-2 pl-7 text-right font-mono text-xs tabular-nums text-foreground outline-none transition-colors focus-visible:border-foreground"
+        className="h-8 w-full rounded-lg border border-border bg-background pr-2 pl-7 text-right font-mono text-xs text-foreground tabular-nums outline-none transition-colors focus-visible:border-foreground"
         onChange={(event) => {
           const raw = event.target.value.trim();
           setDraft(raw);

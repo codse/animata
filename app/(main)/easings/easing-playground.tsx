@@ -18,12 +18,12 @@ import { cn } from "@/lib/utils";
 
 import { CODE_FORMATS, type CodeFormat, codeFor, formatBezier } from "./code";
 import { CurveEditor, CurveFields, Y_MAX, Y_MIN } from "./curve-editor";
+import { DurationControl, MAX_DURATION, MIN_DURATION } from "./duration-control";
+import { PresetShelf } from "./preset-shelf";
 import { type EasingPreset, findPreset, GROUP_LABELS, PRESETS, sameBezier } from "./presets";
 import { CATEGORY_LABELS, SCENES, type SceneCategory } from "./scenes";
 
 const DEFAULT_PRESET = PRESETS[0];
-const MIN_DURATION = 80;
-const MAX_DURATION = 1600;
 /** How long each state is held before the gallery plays the other direction. */
 const HOLD_MS = 1100;
 
@@ -58,29 +58,6 @@ function MiniCurve({ bezier, className }: { bezier: CubicBezier; className?: str
         className="fill-none stroke-current stroke-[1.6] [stroke-linecap:round]"
       />
     </svg>
-  );
-}
-
-/** The chosen curve races a faint constant-speed dot across one rail. */
-function Rail({ open }: { open: boolean }) {
-  const runner =
-    "absolute inset-y-0.5 left-0.5 w-[calc(100%-20px)] transition-[translate] duration-(--ez-dur) group-data-open/rail:translate-x-full";
-  return (
-    <div
-      className="group/rail flex items-center gap-3"
-      data-open={open || undefined}
-      aria-hidden="true"
-    >
-      <div className="relative h-5 flex-1 rounded-full bg-muted">
-        <div className={cn(runner, "ease-linear")}>
-          <span className="block size-4 rounded-full bg-muted-foreground/30" />
-        </div>
-        <div className={cn(runner, "ease-(--ez-ease)")}>
-          <span className="block size-4 rounded-full bg-accent shadow-[0_1px_4px_rgb(0_0_0/0.2)]" />
-        </div>
-      </div>
-      <span className="shrink-0 text-[11px] text-muted-foreground">vs linear</span>
-    </div>
   );
 }
 
@@ -196,7 +173,7 @@ export function EasingPlayground() {
       style={vars}
     >
       <header className="max-w-5xl">
-        <h1 className="m-0 text-[clamp(2.5rem,5.2vw,4.5rem)] leading-[1.02] font-semibold tracking-[-0.045em] text-balance">
+        <h1 className="m-0 text-[clamp(2.125rem,5.2vw,4.5rem)] leading-[1.02] font-semibold tracking-[-0.045em] text-balance">
           See how{" "}
           <button
             type="button"
@@ -226,8 +203,8 @@ export function EasingPlayground() {
             <div className="flex items-start justify-between gap-3">
               <div className="min-w-0">
                 <p className="m-0 truncate font-mono text-[15px] font-medium">{name}</p>
-                <p className="m-0 mt-0.5 text-[13px] text-muted-foreground">
-                  {preset ? `${GROUP_LABELS[preset.group]} · ${preset.use}` : "Custom curve"}
+                <p className="m-0 mt-1 truncate font-mono text-[11px] text-muted-foreground tabular-nums">
+                  cubic-bezier({formatBezier(bezier)})
                 </p>
               </div>
               <div className="flex shrink-0 gap-1">
@@ -261,58 +238,26 @@ export function EasingPlayground() {
               durationMs={durationMs}
             />
 
-            <div className="mt-3">
-              <Rail open={open} />
-            </div>
-
-            <label className="mt-4 grid gap-2 text-[13px]">
-              <span className="flex justify-between">
-                Duration
-                <output className="font-mono tabular-nums">{durationMs}ms</output>
-              </span>
-              <input
-                type="range"
-                min={MIN_DURATION}
-                max={MAX_DURATION}
-                step={10}
+            <div className="mt-5">
+              <DurationControl
                 value={durationMs}
-                onChange={(event) => setDuration(Number(event.target.value))}
-                onPointerUp={replay}
-                onKeyUp={replay}
-                className="w-full accent-foreground"
+                onChange={setDuration}
+                onCommit={replay}
+                suggested={preset?.duration}
               />
-            </label>
-
-            <div
-              role="group"
-              aria-label="Curves"
-              className="mt-4 grid grid-cols-2 gap-1 sm:grid-cols-3"
-            >
-              {PRESETS.map((item) => (
-                <button
-                  key={item.id}
-                  type="button"
-                  title={`${item.name}, ${item.duration}ms`}
-                  aria-pressed={item === preset}
-                  onClick={() => choosePreset(item)}
-                  className={cn(
-                    "flex h-8 min-w-0 items-center gap-1.5 rounded-lg border border-border px-1.5 text-left text-muted-foreground",
-                    "hover:border-foreground/25 hover:text-foreground",
-                    item.group === "baseline" && "border-dashed",
-                    "aria-pressed:border-foreground aria-pressed:bg-foreground aria-pressed:text-background",
-                    press,
-                  )}
-                >
-                  <MiniCurve bezier={item.bezier} className="size-5" />
-                  <span className="truncate text-xs leading-none">{item.short}</span>
-                </button>
-              ))}
             </div>
 
-            <p className="m-0 mt-3 min-h-[2lh] text-[13px]/snug text-muted-foreground">
-              {preset
-                ? preset.note
-                : "Your own curve. The address bar keeps it, so you can share the link."}
+            <p className="m-0 mt-4 min-h-[3lh] text-[13px]/snug text-muted-foreground">
+              {preset ? (
+                <>
+                  <span className="font-medium text-foreground">
+                    {GROUP_LABELS[preset.group]} · {preset.use}.
+                  </span>{" "}
+                  {preset.note}
+                </>
+              ) : (
+                "Your own curve. The address bar keeps it, so you can share the link."
+              )}
             </p>
 
             <div className="mt-4 border-t border-border pt-4">
@@ -376,7 +321,9 @@ export function EasingPlayground() {
         </aside>
 
         <section aria-label="Transitions" className="min-w-0">
-          <div className="flex flex-wrap items-center justify-between gap-3">
+          <PresetShelf selected={preset} onSelect={choosePreset} />
+
+          <div className="mt-6 flex flex-wrap items-center justify-between gap-3">
             <div
               role="group"
               aria-label="Transition type"
