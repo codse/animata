@@ -13,7 +13,7 @@ export const Y_MAX = 1.7;
 
 /** Plot units: the 0–1 box is WIDTH wide and WIDTH * Y_SCALE tall. */
 const WIDTH = 320;
-const Y_SCALE = 0.78;
+const Y_SCALE = 0.72;
 const PAD_X = 14;
 const PAD_TOP = 14;
 /** Room under the box for the axis caption. */
@@ -22,6 +22,15 @@ const HANDLE_HIT = 22;
 const GRID = [0.25, 0.5, 0.75];
 
 const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value));
+
+/** Past a limit the handle keeps following, with growing resistance, up to `limit` px. */
+const RUBBER_LIMIT = 28;
+function rubberband(distance: number, limit = RUBBER_LIMIT) {
+  if (distance === 0) return 0;
+  return Math.sign(distance) * limit * (1 - 1 / ((Math.abs(distance) * 0.55) / limit + 1));
+}
+
+type Stretch = { handle: 0 | 1; dx: number; dy: number } | null;
 
 /** Plot only as much vertical range as the curve needs, with a little air. */
 function plotRange([, y1, , y2]: CubicBezier) {
@@ -85,7 +94,10 @@ export function CurveEditor({
   const dotRef = useRef<SVGCircleElement>(null);
   const playheadRef = useRef<SVGLineElement>(null);
   const dragging = useRef<0 | 1 | null>(null);
+  /** Pointer-to-handle distance at grab time, in plot units, so the handle never jumps. */
+  const grabOffset = useRef({ x: 0, y: 0 });
   const [active, setActive] = useState<0 | 1 | null>(null);
+  const [stretch, setStretch] = useState<Stretch>(null);
   const [x1, y1, x2, y2] = bezier;
 
   // The range follows the curve, but holds still while a handle is dragged so the handle
@@ -124,14 +136,12 @@ export function CurveEditor({
     return () => cancelAnimationFrame(raf);
   }, [playKey, durationMs, bezier, range]);
 
+  /** Pointer position in plot units, unclamped. */
   const toPlot = (event: PointerEvent<SVGSVGElement>) => {
     const matrix = svgRef.current?.getScreenCTM()?.inverse();
     if (!matrix) return null;
     const point = new DOMPoint(event.clientX, event.clientY).matrixTransform(matrix);
-    return {
-      x: round(clamp((point.x - PAD_X) / WIDTH, 0, 1)),
-      y: round(clamp(range.max - (point.y - PAD_TOP) / unit, Y_MIN, Y_MAX)),
-    };
+    return { x: (point.x - PAD_X) / WIDTH, y: range.max - (point.y - PAD_TOP) / unit };
   };
 
   const move = (handle: 0 | 1, x: number, y: number) => {
@@ -153,21 +163,38 @@ export function CurveEditor({
     const distance = (hx: number, hy: number) =>
       Math.hypot((point.x - hx) * WIDTH, (point.y - hy) * unit);
     const handle = distance(x1, y1) <= distance(x2, y2) ? 0 : 1;
-    const target = event.target as Element;
+    const [hx, hy] = handle === 0 ? [x1, y1] : [x2, y2];
     startDrag(handle, event);
-    // A press on the handle itself shouldn't jump it to the pointer's exact position.
-    if (!target.closest("[data-handle]")) move(handle, point.x, point.y);
+    if ((event.target as Element).closest("[data-handle]")) {
+      // Grabbed the handle: keep the offset so it moves with the pointer, not to it.
+      grabOffset.current = { x: hx - point.x, y: hy - point.y };
+    } else {
+      // Pressed the plot: pull the nearest handle to the pointer, then track 1:1.
+      grabOffset.current = { x: 0, y: 0 };
+      move(handle, round(clamp(point.x, 0, 1)), round(clamp(point.y, Y_MIN, Y_MAX)));
+    }
   };
 
   const onPointerMove = (event: PointerEvent<SVGSVGElement>) => {
-    if (dragging.current === null) return;
+    const handle = dragging.current;
+    if (handle === null) return;
     const point = toPlot(event);
-    if (point) move(dragging.current, point.x, point.y);
+    if (!point) return;
+    const x = point.x + grabOffset.current.x;
+    const y = point.y + grabOffset.current.y;
+    const cx = clamp(x, 0, 1);
+    const cy = clamp(y, Y_MIN, Y_MAX);
+    move(handle, round(cx), round(cy));
+    // Past a limit, show the pull rather than stopping dead.
+    const dx = rubberband((x - cx) * WIDTH);
+    const dy = rubberband(-(y - cy) * unit);
+    setStretch(dx || dy ? { handle, dx, dy } : null);
   };
 
   const onPointerUp = (event: PointerEvent<SVGSVGElement>) => {
     dragging.current = null;
     setActive(null);
+    setStretch(null);
     setRange(plotRange(bezier));
     if (svgRef.current?.hasPointerCapture(event.pointerId)) {
       svgRef.current.releasePointerCapture(event.pointerId);
@@ -242,15 +269,8 @@ export function CurveEditor({
           className="stroke-foreground/15 [stroke-dasharray:2_5]"
         />
 
-        <text x={toX(0)} y={viewHeight - 8} className="fill-muted-foreground font-mono text-[10px]">
+        <text x={toX(0)} y={viewHeight - 8} className="fill-muted-foreground font-mono text-[11px]">
           time →
-        </text>
-        <text
-          x={toX(0) + 8}
-          y={toY(1) + 16}
-          className="fill-muted-foreground font-mono text-[10px]"
-        >
-          progress
         </text>
 
         <line
@@ -267,8 +287,8 @@ export function CurveEditor({
             key={handle}
             x1={toX(handle)}
             y1={toY(handle)}
-            x2={toX(hx)}
-            y2={toY(hy)}
+            x2={toX(hx) + (stretch?.handle === handle ? stretch.dx : 0)}
+            y2={toY(hy) + (stretch?.handle === handle ? stretch.dy : 0)}
             className={cn(
               "stroke-[1.5] transition-[stroke] duration-150",
               active === handle ? "stroke-accent" : "stroke-foreground/30",
@@ -290,7 +310,18 @@ export function CurveEditor({
             onKeyDown={onKeyDown(handle)}
             onFocus={() => setActive(handle)}
             onBlur={() => dragging.current === null && setActive(null)}
-            className="group/handle cursor-grab outline-none"
+            className={cn(
+              "group/handle cursor-grab outline-none",
+              // Springs back from a rubber-band pull; tracks the pointer 1:1 while dragging.
+              stretch?.handle !== handle &&
+                "transition-transform duration-300 ease-[cubic-bezier(0.34,1.4,0.64,1)]",
+            )}
+            style={{
+              transform:
+                stretch?.handle === handle
+                  ? `translate(${stretch.dx}px, ${stretch.dy}px)`
+                  : "translate(0px, 0px)",
+            }}
           >
             {/* Generous invisible hit area around a small visible point. */}
             <circle cx={toX(hx)} cy={toY(hy)} r={HANDLE_HIT} className="fill-transparent" />
@@ -403,7 +434,7 @@ function ControlField({ label, value, min, max, onCommit }: ControlFieldProps) {
 
   return (
     <label className="relative block">
-      <span className="pointer-events-none absolute top-1/2 left-2 -translate-y-1/2 font-mono text-[10px] text-muted-foreground">
+      <span className="pointer-events-none absolute top-1/2 left-2 -translate-y-1/2 font-mono text-[11px] text-muted-foreground">
         {label}
       </span>
       <input
@@ -412,7 +443,7 @@ function ControlField({ label, value, min, max, onCommit }: ControlFieldProps) {
         autoComplete="off"
         spellCheck={false}
         value={draft ?? String(value)}
-        className="h-8 w-full rounded-lg border border-border bg-background pr-2 pl-7 text-right font-mono text-xs text-foreground tabular-nums outline-none transition-colors focus-visible:border-foreground"
+        className="h-8 w-full rounded-[8px] border border-border bg-background pr-2 pl-7 text-right font-mono text-xs text-foreground tabular-nums outline-none transition-colors focus-visible:border-foreground"
         onChange={(event) => {
           const raw = event.target.value.trim();
           setDraft(raw);
