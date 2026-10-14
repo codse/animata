@@ -24,6 +24,7 @@ import { DurationControl, MAX_DURATION, MIN_DURATION } from "./duration-control"
 import { PresetShelf } from "./preset-shelf";
 import { type EasingPreset, findPreset, PRESETS, sameBezier } from "./presets";
 import { CATEGORY_LABELS, SCENES, type SceneCategory } from "./scenes";
+import { SpacingComb } from "./spacing-comb";
 
 const DEFAULT_PRESET = PRESETS[0];
 /** How long each state is held before the gallery plays the other direction. */
@@ -251,7 +252,15 @@ export function EasingPlayground() {
         </p>
       </header>
 
-      <section ref={shelfRef} aria-label="Curves" className="mt-12 scroll-mt-24 lg:mt-14">
+      <SpacingComb
+        className="mt-12 lg:mt-16"
+        bezier={bezier}
+        durationMs={durationMs}
+        open={open}
+        reducedMotion={reducedMotion}
+      />
+
+      <section ref={shelfRef} aria-label="Curves" className="mt-14 scroll-mt-24 lg:mt-20">
         <PresetShelf selected={preset} onSelect={choosePreset} />
       </section>
 
@@ -490,8 +499,6 @@ export function EasingPlayground() {
                     }}
                     className={cn(
                       "group/scene relative block aspect-4/3 w-full overflow-hidden rounded-[12px] border border-border bg-muted/50 text-left text-foreground",
-                      // A faint dotted canvas, like a design tool's stage.
-                      "bg-[radial-gradient(var(--color-border)_1px,transparent_1.2px)] bg-size-[14px_14px] bg-center",
                       "transition-[scale,border-color,box-shadow] duration-200 ease-out active:scale-[0.985]",
                       "hover:border-foreground/20 hover:shadow-[0_12px_32px_-22px_rgb(0_0_0/0.3)] focus-visible:border-foreground/30",
                       wide && "sm:aspect-[2/1]",
@@ -534,7 +541,7 @@ export function EasingPlayground() {
             <strong className="truncate font-mono text-[13px] leading-none font-medium">
               {name}
             </strong>
-            <span className="font-mono text-[11px] leading-none text-muted-foreground">
+            <span className="text-[11px] leading-none text-muted-foreground tabular-nums">
               {durationMs}ms
             </span>
           </span>

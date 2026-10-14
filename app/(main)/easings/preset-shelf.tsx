@@ -67,7 +67,7 @@ export function PresetShelf({ selected, onSelect }: PresetShelfProps) {
   return (
     <div
       ref={scrollerRef}
-      className="-mx-4 flex snap-x scroll-px-4 overflow-x-auto px-4 pt-1 pb-2 [mask-image:linear-gradient(to_right,black_calc(100%-48px),transparent)] [scrollbar-width:none] sm:-mx-6 sm:scroll-px-6 sm:px-6 lg:mx-0 lg:scroll-px-0 lg:px-0 [&::-webkit-scrollbar]:hidden pr-12 sm:pr-12 lg:pr-12"
+      className="-mx-4 flex snap-x scroll-px-4 overflow-x-auto pt-1 pr-12 pb-2 pl-4 [mask-image:linear-gradient(to_right,black_calc(100%-48px),transparent)] [scrollbar-width:none] sm:-mx-6 sm:scroll-px-6 sm:pl-6 lg:mx-0 lg:scroll-px-0 lg:pl-0 [&::-webkit-scrollbar]:hidden"
     >
       {groups.map((group, groupIndex) => {
         const items = PRESETS.filter((preset) => preset.group === group);
@@ -83,7 +83,7 @@ export function PresetShelf({ selected, onSelect }: PresetShelfProps) {
           >
             <span className="flex items-baseline gap-2 px-0.5 text-xs">
               <span className="font-medium text-foreground">{GROUP_LABELS[group]}</span>
-              <span className="font-mono text-[11px] text-muted-foreground">{items.length}</span>
+              <span className="text-[11px] text-muted-foreground tabular-nums">{items.length}</span>
             </span>
             <div className="flex gap-2.5">
               {items.map((preset) => (
@@ -102,8 +102,7 @@ export function PresetShelf({ selected, onSelect }: PresetShelfProps) {
                     "aria-pressed:border-foreground aria-pressed:text-foreground aria-pressed:shadow-[0_0_0_1px_var(--color-foreground),0_10px_28px_-18px_rgb(0_0_0/0.35)]",
                   )}
                 >
-                  {/* The curve sits on a faint grid tile, like a small chart. */}
-                  <span className="grid gap-2 rounded-[8px] bg-muted/60 bg-[linear-gradient(var(--color-border)_1px,transparent_1px),linear-gradient(90deg,var(--color-border)_1px,transparent_1px)] bg-size-[24px_14px] bg-center px-2.5 pt-3 pb-2.5">
+                  <span className="grid gap-2 rounded-[8px] bg-muted/60 px-2.5 pt-3 pb-2.5">
                     <CurvePreview bezier={preset.bezier} />
                     {/* Hover or focus sends a dot across at this preset's own timing. */}
                     <span
@@ -121,9 +120,11 @@ export function PresetShelf({ selected, onSelect }: PresetShelfProps) {
                       </span>
                     </span>
                   </span>
-                  <span className="flex items-baseline justify-between gap-2 px-1.5 font-mono">
+                  <span className="flex items-baseline justify-between gap-2 px-1.5">
                     <span className="truncate text-xs font-medium">{preset.short}</span>
-                    <span className="shrink-0 text-[11px] opacity-60">{preset.duration}ms</span>
+                    <span className="shrink-0 text-[11px] tabular-nums opacity-60">
+                      {preset.duration}ms
+                    </span>
                   </span>
                 </button>
               ))}
