@@ -115,6 +115,8 @@ section.aperture                 ← tall track: length × stage height
     Hint
 ```
 
+Layout, color, spacing, and type are Tailwind classes on each part, so a `className` on any part overrides them. `aperture-reveal.css` holds only what Tailwind can't express: the scroll-driven `calc()` values, the hint's animation, and a container height query.
+
 One scroll progress value drives everything through those two CSS variables, so scrolling never re-renders React. The clip, the image scale, the wash, the headline's movement, and each caption word's opacity are all `calc()` expressions of `--e` and `--q`.
 
 - The first 55% of the scroll opens the photograph with an ease-in-out curve. The image starts at 1.32× and settles to 1× as it widens, so it feels like a lens opening rather than a box stretching.

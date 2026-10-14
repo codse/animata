@@ -1,87 +1,24 @@
-/* Layered so Tailwind utilities passed as className on any part can override these. */
+/*
+ * Layout, color, spacing, and type live in Tailwind classes on each part.
+ * This file holds what Tailwind can't express cleanly: values computed every frame from
+ * two scroll variables, the hint's pseudo-element animation, and a height container query.
+ *
+ *   --e  0 → 1  the opening widens until the photograph fills the stage
+ *   --q  0 → 1  the caption is read in, word by word
+ */
 @layer components {
-  .aperture {
-    --aperture-ground: #ebe9e4;
-    --aperture-ink: #141413;
-    --aperture-opening: #d6d3cc;
-    --aperture-accent: #ffcc00;
-    --aperture-accent-ink: #141413;
-    --aperture-viewport: 100svh;
-    --aperture-font: var(--font-display, var(--font-sans, ui-sans-serif, system-ui, sans-serif));
-    position: relative;
-    width: 100%;
-    background: var(--aperture-ground);
-    color: var(--aperture-ink);
-    font-family: var(--aperture-font);
-  }
-
-  :where(.dark) .aperture {
-    --aperture-ground: #111112;
-    --aperture-ink: #ebe9e4;
-    --aperture-opening: #26262a;
-  }
-
-  .aperture *,
-  .aperture *::before,
-  .aperture *::after {
-    box-sizing: border-box;
-  }
-
-  .aperture[data-contained] {
-    height: var(--aperture-viewport);
-    overflow-y: auto;
-    scrollbar-width: none;
-  }
-
-  .aperture[data-contained]::-webkit-scrollbar {
-    display: none;
-  }
-
-  .aperture[data-contained]:focus-visible {
-    outline: 2px solid var(--aperture-ink);
-    outline-offset: -2px;
-  }
-
-  .aperture__track {
-    position: relative;
-    height: calc(var(--aperture-length) * var(--aperture-viewport));
-  }
-
   .aperture__stage {
     --e: 0;
     --q: 0;
+    /* The opening's rectangle, measured in JS. 50% hides the photograph until measured. */
     --aperture-top: 50%;
     --aperture-right: 50%;
     --aperture-bottom: 50%;
     --aperture-left: 50%;
     --aperture-radius: 0px;
-    position: sticky;
-    top: 0;
-    height: var(--aperture-viewport);
-    overflow: hidden;
-    container: aperture-stage / size;
   }
-
-  .aperture__sr-only {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    margin: -1px;
-    padding: 0;
-    overflow: hidden;
-    clip-path: inset(50%);
-    white-space: nowrap;
-    border: 0;
-  }
-
-  /* Media: one photograph, clipped from the opening to the full stage. */
 
   .aperture__media {
-    position: absolute;
-    inset: 0;
-    z-index: 1;
-    overflow: hidden;
-    background: var(--aperture-opening);
     clip-path: inset(
       calc(var(--aperture-top) * (1 - var(--e))) calc(var(--aperture-right) * (1 - var(--e)))
         calc(var(--aperture-bottom) * (1 - var(--e))) calc(var(--aperture-left) * (1 - var(--e)))
@@ -90,6 +27,7 @@
     will-change: clip-path;
   }
 
+  /* Whatever the consumer passes (img, video, Next Image) covers the stage. */
   .aperture__media > :not(.aperture__wash) {
     position: absolute;
     inset: 0;
@@ -102,107 +40,47 @@
   }
 
   .aperture__wash {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(
-      to top,
-      rgb(10 10 11 / 0.82) 0%,
-      rgb(10 10 11 / 0.35) 55%,
-      rgb(10 10 11 / 0.1) 100%
-    );
     opacity: var(--q);
-  }
-
-  /* Headline: the opening sits in the middle column so it stays centered whatever the words. */
-
-  .aperture__headline {
-    position: absolute;
-    inset: 0;
-    z-index: 2;
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
-    align-items: center;
-    column-gap: 0.22em;
-    margin: 0;
-    padding: 0 clamp(16px, 4cqw, 56px);
-    font-size: clamp(2.25rem, 6.4cqw, 6.25rem);
-    font-weight: 600;
-    line-height: 0.95;
-    letter-spacing: -0.04em;
-    text-wrap: balance;
-    overflow-wrap: break-word;
-    pointer-events: none;
   }
 
   .aperture__lead,
   .aperture__trail {
-    min-width: 0;
     opacity: calc(1 - var(--e) * 1.6);
     will-change: transform, opacity;
   }
 
   .aperture__lead {
-    justify-self: end;
-    text-align: right;
     transform: translateX(calc(var(--e) * -42cqw));
   }
 
   .aperture__trail {
-    justify-self: start;
-    text-align: left;
     transform: translateX(calc(var(--e) * 42cqw));
   }
 
-  .aperture__opening {
-    display: block;
-    width: 2.1em;
-    height: 0.86em;
-    border-radius: 999px;
-    overflow: hidden;
+  /* Narrow stages stack the headline, so the words part vertically. */
+  @container stage (width < 640px) {
+    .aperture__lead {
+      transform: translateY(calc(var(--e) * -44cqh));
+    }
+
+    .aperture__trail {
+      transform: translateY(calc(var(--e) * 44cqh));
+    }
   }
 
-  /* Caption: read word by word once the photograph fills the stage. */
-
   .aperture__caption {
-    position: absolute;
-    inset: auto 0 0;
-    z-index: 3;
-    display: flex;
-    flex-wrap: wrap;
-    align-items: flex-end;
-    justify-content: space-between;
-    gap: 24px 48px;
-    padding: clamp(20px, 5cqw, 64px);
-    color: #f4f2ed;
     opacity: clamp(0, var(--q) * 12, 1);
   }
 
-  .aperture__text {
-    max-width: 30em;
-    margin: 0;
-    font-size: clamp(1.125rem, 2.7cqw, 2.25rem);
-    font-weight: 500;
-    line-height: 1.2;
-    letter-spacing: -0.02em;
-    text-wrap: pretty;
-  }
-
+  /* Each word fades over a window of four words: --i is its index, --n the word count. */
   .aperture__word {
     --w: clamp(0, (var(--q) * (var(--n) + 4) - var(--i)) / 4, 1);
     opacity: calc(0.16 + 0.84 * var(--w));
   }
 
-  /* Action: styles a direct link or button child; any router link works. */
-
   .aperture__action {
     opacity: clamp(0, (var(--q) - 0.8) * 5, 1);
     transform: translateY(calc((1 - clamp(0, (var(--q) - 0.8) * 5, 1)) * 12px));
-    pointer-events: none;
-  }
-
-  .aperture__action[data-ready],
-  .aperture__action:focus-within {
-    pointer-events: auto;
   }
 
   .aperture__action:focus-within {
@@ -210,50 +88,8 @@
     transform: none;
   }
 
-  .aperture__action > :is(a, button) {
-    display: inline-flex;
-    align-items: center;
-    min-height: 48px;
-    padding: 0 24px;
-    border: 0;
-    border-radius: 999px;
-    background: var(--aperture-accent);
-    color: var(--aperture-accent-ink);
-    font: inherit;
-    font-size: 15px;
-    font-weight: 600;
-    letter-spacing: -0.005em;
-    text-decoration: none;
-    white-space: nowrap;
-    cursor: pointer;
-    transition: background-color 200ms ease;
-  }
-
-  .aperture__action > :is(a, button):hover {
-    background: color-mix(in srgb, var(--aperture-accent) 86%, white);
-  }
-
-  .aperture__action > :is(a, button):focus-visible {
-    outline: 2px solid #f4f2ed;
-    outline-offset: 3px;
-  }
-
   .aperture__hint {
-    position: absolute;
-    bottom: clamp(16px, 4cqh, 32px);
-    left: 50%;
-    z-index: 2;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-    font-family: var(--font-mono, ui-monospace, monospace);
-    font-size: 11px;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
     opacity: calc(0.6 - var(--e) * 4);
-    transform: translateX(-50%);
-    pointer-events: none;
   }
 
   .aperture__hint::after {
@@ -289,147 +125,47 @@
     }
   }
 
-  /* Narrow stages stack the headline; the words part vertically instead. */
-
-  @container aperture-stage (max-width: 639px) {
-    .aperture__headline {
-      grid-template-columns: minmax(0, 1fr);
-      grid-template-rows: auto auto auto;
-      align-content: center;
-      justify-items: center;
-      row-gap: 0.14em;
-      font-size: clamp(2.25rem, 12cqw, 4.5rem);
-      text-align: center;
-    }
-
-    .aperture__lead,
-    .aperture__trail {
-      justify-self: center;
-      text-align: center;
-    }
-
-    .aperture__lead {
-      transform: translateY(calc(var(--e) * -44cqh));
-    }
-
-    .aperture__trail {
-      transform: translateY(calc(var(--e) * 44cqh));
-    }
-
-    .aperture__opening {
-      width: 2.6em;
-      height: 1.1em;
-    }
-
-    .aperture__caption {
-      flex-direction: column;
-      align-items: flex-start;
-    }
-  }
-
-  /* Short, wide stages (phones in landscape): keep the headline clear of the hint. */
-
-  @container aperture-stage (max-height: 480px) and (min-width: 640px) {
-    .aperture__headline {
-      font-size: clamp(1.75rem, 11cqh, 4rem);
-    }
-
-    .aperture__caption {
-      padding-block: 16px;
-    }
-
-    .aperture__text {
-      font-size: clamp(1rem, 4.5cqh, 1.5rem);
-    }
-
-    .aperture__hint {
-      display: none;
-    }
-  }
-
-  /* Reduced motion: the same parts in reading order. Nothing is pinned or scrubbed. */
-
-  .aperture[data-static] .aperture__track {
-    height: auto;
-  }
-
-  .aperture[data-static] .aperture__stage {
-    position: relative;
-    display: grid;
-    grid-template-areas: "headline" "media";
-    height: auto;
-    container-type: inline-size;
-  }
-
-  .aperture[data-static] .aperture__headline {
-    position: static;
-    grid-area: headline;
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: center;
-    gap: 0.08em 0.22em;
-    padding-block: clamp(64px, 12cqw, 160px);
-    text-align: center;
-  }
-
-  .aperture[data-static] :is(.aperture__lead, .aperture__trail) {
-    opacity: 1;
-    transform: none;
-    text-align: center;
-  }
-
-  .aperture[data-static] .aperture__opening {
-    display: none;
-  }
-
-  .aperture[data-static] .aperture__opening[data-filled] {
-    display: block;
-    position: relative;
-    background: var(--aperture-opening);
-  }
-
-  .aperture[data-static] .aperture__opening > * {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-
+  /* Reduced motion: release every scroll-driven value. Layout comes from Tailwind. */
   .aperture[data-static] .aperture__media {
-    position: relative;
-    grid-area: media;
-    min-height: 420px;
-    aspect-ratio: 16 / 10;
-    max-height: 100svh;
     clip-path: none;
   }
 
-  .aperture[data-static] .aperture__media > :not(.aperture__wash) {
+  .aperture[data-static] .aperture__media > :not(.aperture__wash),
+  .aperture[data-static] :is(.aperture__lead, .aperture__trail, .aperture__action) {
     transform: none;
   }
 
-  .aperture[data-static] .aperture__wash {
+  .aperture[data-static]
+    :is(
+      .aperture__wash,
+      .aperture__lead,
+      .aperture__trail,
+      .aperture__caption,
+      .aperture__word,
+      .aperture__action
+    ) {
     opacity: 1;
   }
+}
 
-  .aperture[data-static] .aperture__caption {
-    position: relative;
-    grid-area: media;
-    align-self: end;
-    opacity: 1;
+/*
+ * Short, wide stages (a phone in landscape). Tailwind has no container height variant, and
+ * these must beat the Tailwind sizes on the same parts, so they stay outside the layer.
+ */
+@container stage (height < 480px) and (width >= 640px) {
+  .aperture__headline {
+    font-size: clamp(1.75rem, 11cqh, 4rem);
   }
 
-  .aperture[data-static] .aperture__word {
-    opacity: 1;
+  .aperture__caption {
+    padding-top: 16px;
   }
 
-  .aperture[data-static] .aperture__action {
-    opacity: 1;
-    transform: none;
-    pointer-events: auto;
+  .aperture__text {
+    font-size: clamp(1rem, 4.5cqh, 1.5rem);
   }
 
-  .aperture[data-static] .aperture__hint {
+  .aperture__hint {
     display: none;
   }
 }

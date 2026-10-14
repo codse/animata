@@ -156,17 +156,32 @@ function ApertureRevealRoot({
         ref={setRootRef}
         aria-labelledby={headlineId}
         {...props}
-        className={cn("aperture", className)}
+        className={cn(
+          // `aperture` scopes the scroll-driven CSS; tokens are overridable with style or class.
+          "aperture group/aperture relative w-full bg-(--aperture-ground) font-(family-name:--aperture-font) text-(--aperture-ink)",
+          "[--aperture-accent-ink:#141413] [--aperture-accent:#ffcc00] [--aperture-ground:#ebe9e4] [--aperture-ink:#141413] [--aperture-opening:#d6d3cc] [--aperture-viewport:100svh]",
+          "[--aperture-font:var(--font-display,var(--font-sans,ui-sans-serif,system-ui,sans-serif))]",
+          "dark:[--aperture-ground:#111112] dark:[--aperture-ink:#ebe9e4] dark:[--aperture-opening:#26262a]",
+          "data-contained:h-(--aperture-viewport) data-contained:overflow-y-auto data-contained:[scrollbar-width:none] data-contained:[&::-webkit-scrollbar]:hidden",
+          "focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-(--aperture-ink)",
+          className,
+        )}
         data-static={isStatic ? "" : undefined}
         data-contained={contained ? "" : undefined}
         // A scroll box must be reachable by keyboard to be scrollable without a pointer.
         tabIndex={contained ? 0 : props.tabIndex}
         style={rootStyle}
       >
-        <div ref={trackRef} className="aperture__track">
+        <div
+          ref={trackRef}
+          className="relative h-[calc(var(--aperture-length)*var(--aperture-viewport))] group-data-static/aperture:h-auto"
+        >
           <motion.div
             ref={stageRef}
-            className="aperture__stage"
+            className={cn(
+              "aperture__stage sticky top-0 h-(--aperture-viewport) overflow-hidden [container:stage/size]",
+              "group-data-static/aperture:relative group-data-static/aperture:grid group-data-static/aperture:h-auto group-data-static/aperture:[container:stage/inline-size] group-data-static/aperture:[grid-template-areas:'headline'_'media']",
+            )}
             style={isStatic ? undefined : ({ "--e": expand, "--q": read } as MotionStyle)}
           >
             {children}
@@ -181,9 +196,19 @@ function ApertureRevealRoot({
 function ApertureMedia({ className, children, ...props }: ComponentProps<"div">) {
   useAperture("Media");
   return (
-    <div className={cn("aperture__media", className)} {...props}>
+    <div
+      className={cn(
+        "aperture__media absolute inset-0 z-1 overflow-hidden bg-(--aperture-opening)",
+        "group-data-static/aperture:relative group-data-static/aperture:aspect-[16/10] group-data-static/aperture:max-h-svh group-data-static/aperture:min-h-[420px] group-data-static/aperture:[grid-area:media]",
+        className,
+      )}
+      {...props}
+    >
       {children}
-      <div className="aperture__wash" aria-hidden="true" />
+      <div
+        className="aperture__wash absolute inset-0 bg-linear-to-t from-[rgb(10_10_11/0.82)] via-[rgb(10_10_11/0.35)] via-55% to-[rgb(10_10_11/0.1)]"
+        aria-hidden="true"
+      />
     </div>
   );
 }
@@ -195,14 +220,31 @@ type ApertureHeadlineProps = Omit<ComponentProps<"h2">, "id"> & {
 function ApertureHeadline({ as: Heading = "h2", className, ...props }: ApertureHeadlineProps) {
   const { headlineId } = useAperture("Headline");
   // The id is set last: the section's aria-labelledby depends on it.
-  return <Heading {...props} className={cn("aperture__headline", className)} id={headlineId} />;
+  return (
+    <Heading
+      {...props}
+      className={cn(
+        "aperture__headline pointer-events-none absolute inset-0 z-2 m-0 grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-x-[0.22em] px-[clamp(16px,4cqw,56px)] font-semibold text-[clamp(2.25rem,6.4cqw,6.25rem)] leading-[0.95] tracking-[-0.04em] text-balance wrap-break-word",
+        "@max-[640px]/stage:grid-cols-1 @max-[640px]/stage:grid-rows-[auto_auto_auto] @max-[640px]/stage:content-center @max-[640px]/stage:justify-items-center @max-[640px]/stage:gap-y-[0.14em] @max-[640px]/stage:text-center @max-[640px]/stage:text-[clamp(2.25rem,12cqw,4.5rem)]",
+        "group-data-static/aperture:static group-data-static/aperture:flex group-data-static/aperture:flex-wrap group-data-static/aperture:justify-center group-data-static/aperture:gap-x-[0.22em] group-data-static/aperture:gap-y-[0.08em] group-data-static/aperture:py-[clamp(64px,12cqw,160px)] group-data-static/aperture:text-center group-data-static/aperture:[grid-area:headline]",
+        className,
+      )}
+      id={headlineId}
+    />
+  );
 }
 
 /** Words before the opening. They part left, or up on narrow stages. */
 function ApertureLead({ className, children, ...props }: ComponentProps<"span">) {
   useAperture("Lead");
   return (
-    <span className={cn("aperture__lead", className)} {...props}>
+    <span
+      className={cn(
+        "aperture__lead min-w-0 justify-self-end text-right @max-[640px]/stage:justify-self-center @max-[640px]/stage:text-center group-data-static/aperture:text-center",
+        className,
+      )}
+      {...props}
+    >
       {children}
       {/* Keeps the heading's accessible name "lead trail", not "leadtrail". */}{" "}
     </span>
@@ -212,7 +254,15 @@ function ApertureLead({ className, children, ...props }: ComponentProps<"span">)
 /** Words after the opening. They part right, or down on narrow stages. */
 function ApertureTrail({ className, ...props }: ComponentProps<"span">) {
   useAperture("Trail");
-  return <span className={cn("aperture__trail", className)} {...props} />;
+  return (
+    <span
+      className={cn(
+        "aperture__trail min-w-0 justify-self-start text-left @max-[640px]/stage:justify-self-center @max-[640px]/stage:text-center group-data-static/aperture:text-center",
+        className,
+      )}
+      {...props}
+    />
+  );
 }
 
 /**
@@ -226,7 +276,11 @@ function ApertureOpening({ className, children, ref, ...props }: ComponentProps<
     <span
       ref={setRef}
       aria-hidden="true"
-      className={cn("aperture__opening", className)}
+      className={cn(
+        "block h-[0.86em] w-[2.1em] overflow-hidden rounded-full @max-[640px]/stage:h-[1.1em] @max-[640px]/stage:w-[2.6em]",
+        "group-data-static/aperture:hidden group-data-static/aperture:data-filled:relative group-data-static/aperture:data-filled:block group-data-static/aperture:data-filled:bg-(--aperture-opening) group-data-static/aperture:*:size-full group-data-static/aperture:*:object-cover",
+        className,
+      )}
       data-filled={children ? "" : undefined}
       {...props}
     >
@@ -238,7 +292,17 @@ function ApertureOpening({ className, children, ref, ...props }: ComponentProps<
 /** Overlay for the text and action shown once the photograph fills the stage. */
 function ApertureCaption({ className, ...props }: ComponentProps<"div">) {
   useAperture("Caption");
-  return <div className={cn("aperture__caption", className)} {...props} />;
+  return (
+    <div
+      className={cn(
+        "aperture__caption absolute inset-x-0 bottom-0 z-3 flex flex-wrap items-end justify-between gap-x-12 gap-y-6 p-[clamp(20px,5cqw,64px)] text-[#f4f2ed]",
+        "@max-[640px]/stage:flex-col @max-[640px]/stage:items-start",
+        "group-data-static/aperture:relative group-data-static/aperture:self-end group-data-static/aperture:[grid-area:media]",
+        className,
+      )}
+      {...props}
+    />
+  );
 }
 
 type ApertureTextProps = Omit<ComponentProps<"p">, "children"> & {
@@ -250,8 +314,14 @@ function ApertureText({ children, className, ...props }: ApertureTextProps) {
   useAperture("Text");
   const words = children.split(WHITESPACE).filter(Boolean);
   return (
-    <p className={cn("aperture__text", className)} {...props}>
-      <span className="aperture__sr-only">{children}</span>
+    <p
+      className={cn(
+        "aperture__text m-0 max-w-[30em] font-medium text-[clamp(1.125rem,2.7cqw,2.25rem)] leading-[1.2] tracking-[-0.02em] text-pretty",
+        className,
+      )}
+      {...props}
+    >
+      <span className="sr-only">{children}</span>
       <span aria-hidden="true" style={{ "--n": words.length } as CSSProperties}>
         {words.map((word, index) => (
           <span
@@ -299,7 +369,13 @@ function ApertureAction({
     <div
       {...props}
       ref={setRef}
-      className={cn("aperture__action", className)}
+      className={cn(
+        "aperture__action pointer-events-none focus-within:pointer-events-auto data-ready:pointer-events-auto group-data-static/aperture:pointer-events-auto",
+        // Styles the link or button passed in, whatever component renders it.
+        "*:inline-flex *:min-h-12 *:cursor-pointer *:items-center *:whitespace-nowrap *:rounded-full *:border-0 *:bg-(--aperture-accent) *:px-6 *:font-semibold *:text-(--aperture-accent-ink) *:text-[15px] *:tracking-[-0.005em] *:no-underline *:transition-colors *:duration-200",
+        "*:hover:bg-[color-mix(in_srgb,var(--aperture-accent)_86%,white)] *:focus-visible:outline-2 *:focus-visible:outline-[#f4f2ed] *:focus-visible:outline-offset-3",
+        className,
+      )}
       onFocus={handleFocus}
     />
   );
@@ -308,7 +384,16 @@ function ApertureAction({
 /** Small cue at the bottom of the stage. Fades as soon as the opening starts to widen. */
 function ApertureHint({ className, ...props }: ComponentProps<"span">) {
   useAperture("Hint");
-  return <span aria-hidden="true" className={cn("aperture__hint", className)} {...props} />;
+  return (
+    <span
+      aria-hidden="true"
+      className={cn(
+        "aperture__hint pointer-events-none absolute bottom-[clamp(16px,4cqh,32px)] left-1/2 z-2 flex -translate-x-1/2 flex-col items-center gap-2.5 font-mono text-[11px] uppercase tracking-[0.08em] group-data-static/aperture:hidden",
+        className,
+      )}
+      {...props}
+    />
+  );
 }
 
 const ApertureReveal = Object.assign(ApertureRevealRoot, {
