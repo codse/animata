@@ -19,6 +19,20 @@ Animata is a free, open-source library of animated React components built with N
 - All new components must be theme-responsive (light + dark)
 - **New component category?** Add a category glyph for `/components` — read `content/docs/contributing/category-glyphs.mdx` (three-shade tokens, stroke tiers, `cg-motion` hover). Full repo spec: `content/docs/contributing/category-glyphs-spec.md`. Do not put spec markdown under `animata/` (webpack lazy-loads that tree).
 
+## Public text stays public-safe
+
+This repo is open source. Everything that leaves the machine is public: PR titles and descriptions, PR, review, and issue comments, commit messages, branch names, code comments, docs, changelogs, demo copy, and Storybook stories. Public text describes the work on its own terms — what changed and why it helps people using Animata. Nothing else.
+
+Keep out of public text:
+
+- **Internal context** — the private discussion behind a change, how a decision was reached, reactions to the work, and opinions about the codebase or the people on it.
+- **References and research** — other products, sites, studios, or people used as inspiration, comparison, or benchmarks, and anything measured or copied from them.
+- **Business and plans** — unreleased features, roadmap timing, pricing, commercial direction, clients, partners, and internal tools or repos.
+- **People and access** — personal names (except authors and public credits), emails, accounts, credentials, tokens, private URLs, and local file paths.
+- **Process** — prompts, AI tools or skills used, and agent workflow. The co-author trailer is the only exception.
+
+Before any push, PR, or comment: reread every public string against this list. If something is unclear, leave it out and ask.
+
 ## Changelog rule — ALWAYS update this
 
 Release notes use **four tiers**. Full process, examples, and checklist: [contributing changelog](/docs/contributing/changelog).
