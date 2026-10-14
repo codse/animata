@@ -244,7 +244,7 @@ const components = {
       <>
         <pre
           className={cn(
-            "mb-4 mt-6 max-h-[650px] overflow-x-auto rounded-lg bg-zinc-800 py-4",
+            "mb-4 mt-6 max-h-[650px] overflow-x-auto rounded-lg bg-neutral-800 py-4",
             inlineCodePreResetClasses,
             "[&_code]:font-mono [&_code]:text-sm",
             className,

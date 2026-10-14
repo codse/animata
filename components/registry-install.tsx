@@ -26,13 +26,13 @@ export function RegistryInstall({ category, name, className }: RegistryInstallPr
   return (
     <pre
       className={cn(
-        "w-full grid grid-cols-[1fr_auto] mt-4 rounded-lg bg-zinc-800 p-4 [&_code]:bg-transparent",
+        "w-full grid grid-cols-[1fr_auto] mt-4 rounded-lg bg-neutral-800 p-4 [&_code]:bg-transparent",
         className,
       )}
     >
       <code
         className={cn(
-          "relative rounded max-w-full overflow-x-auto bg-zinc-800 px-2 py-[0.2rem] font-mono text-sm text-white",
+          "relative rounded max-w-full overflow-x-auto bg-neutral-800 px-2 py-[0.2rem] font-mono text-sm text-white",
           className,
         )}
       >
