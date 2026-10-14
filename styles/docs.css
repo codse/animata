@@ -1,11 +1,11 @@
 @reference "./globals.css";
 
 .docs-shell {
-  font-family: var(--font-display);
+  font-family: var(--font-sans);
   font-optical-sizing: auto;
 }
 
-.docs-shell .font-heading {
+.docs-shell :is(h1, .font-heading) {
   font-family: var(--font-display);
 }
 

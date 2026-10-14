@@ -23,6 +23,8 @@ Added [Dawn climb · two chapters](/demo/scroll/aperture-reveal-demo-001) to the
 
 Added smooth wheel scrolling with [Lenis](https://github.com/darkroomengineering/lenis) across the docs, landing page, and demos. Wheel input is interpolated, so scroll-driven components like [Stacked Sections](/docs/scroll/stacked-sections) and [Aperture Reveal](/docs/scroll/aperture-reveal) move continuously instead of in wheel-notch steps. Touch and keyboard keep native scrolling, inner scroll areas keep their own scrolling, and reduced motion turns smoothing off.
 
+Updated site typography. Headings use Knile, interface and body text use Alcyone, and code uses [Paper Mono](https://github.com/paper-design/paper-mono), which replaces Lilex. Faux bold is turned off so text only renders in real weights.
+
 Added house motion tokens. `ease-out`, `ease-in`, and `ease-in-out` now use stronger curves with longer settles, and there are new `ease-glide`, `ease-snap`, and `ease-overshoot` curves. Plain `transition` classes default to the house `ease-out` at 200ms. `lib/motion.ts` exposes the same curves for Motion.
 
 Fixed easing classes that were silently ignored. The site defined its custom curves under Tailwind v3's `--transition-timing-function-*` names, which Tailwind v4 doesn't read, so `ease-slow` fell back to the default curve in previews for [Swap Text](/docs/text/swap-text), [Mirror Text](/docs/text/mirror-text), [Tilted Cover](/docs/image/tilted-cover), and [Disclose Image](/docs/image/disclose-image). Installed copies were unaffected; their docs already used the correct names.

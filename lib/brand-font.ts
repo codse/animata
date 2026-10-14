@@ -4,7 +4,7 @@ import { Outfit } from "next/font/google";
 export const brandFont = Outfit({
   subsets: ["latin"],
   weight: ["400", "600"],
-  variable: "--font-brand",
+  variable: "--font-outfit",
   display: "swap",
 });
 

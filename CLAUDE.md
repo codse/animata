@@ -12,7 +12,7 @@ Animata is a free, open-source library of animated React components built with N
 - Co-located `<name>.css` imported from the TSX for keyframes, pseudo-elements, and selectors Tailwind cannot express (see `roll-text.tsx`, `metis-text.tsx`)
 - No inline `<style>` blocks — use co-located `<name>.css` imported from the TSX (see `marquee.tsx`, `roll-text.tsx`)
 - No CSS modules, no styled-components
-- Fonts: `--font-display` = Instrument Sans (headings/display), `--font-sans` = IBM Plex Sans (body), `--font-mono` = Lilex
+- Fonts (`styles/fonts.css`): `--font-display` = Knile, `--font-sans` = Alcyone, `--font-mono` = Paper Mono (OFL, committed). Knile/Alcyone are licensed for animata.design only: served from `assets.animata.design/fonts/atipo/` (CORS limited to the site's origins), never committed; local copies under `public/fonts/atipo/` are gitignored; Instrument Sans / IBM Plex Sans / Outfit are the fallbacks
 - Brand yellow: `#ffcc00` (from logo) — use for highlights and badges
 - shadcn registry URL format: `https://animata.design/r/{category}/{name}.json` — always use this in docs/changelog, never bare `npx shadcn add component-name`
 - Theme accent: `hsl(var(--accent))` = purple/violet
