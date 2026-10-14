@@ -1,6 +1,6 @@
 "use client";
 
-import { type KeyboardEvent, type PointerEvent, useEffect, useRef } from "react";
+import { type KeyboardEvent, type PointerEvent, useEffect, useRef, useState } from "react";
 
 import type { CubicBezier } from "@/lib/motion";
 import { cn } from "@/lib/utils";
@@ -9,8 +9,9 @@ import { round } from "./code";
 
 const SIZE = 200;
 const PAD = 16;
-const Y_MIN = -0.6;
-const Y_MAX = 1.7;
+/** Y bounds of the plot. Numeric input and shared links clamp to the same range. */
+export const Y_MIN = -0.6;
+export const Y_MAX = 1.7;
 const HEIGHT = SIZE * (Y_MAX - Y_MIN);
 
 const toX = (x: number) => PAD + x * SIZE;
@@ -138,11 +139,9 @@ export function CurveEditor({
     move(handle, round(clamp(hx + delta[0], 0, 1)), round(clamp(hy + delta[1], Y_MIN, Y_MAX)));
   };
 
-  const setValue = (index: number, raw: string) => {
-    const value = Number(raw);
-    if (!Number.isFinite(value)) return;
+  const setValue = (index: number, value: number) => {
     const next = [...bezier] as [number, number, number, number];
-    next[index] = index % 2 === 0 ? clamp(value, 0, 1) : clamp(value, -1, 2);
+    next[index] = value;
     onChange(next);
   };
 
@@ -195,20 +194,64 @@ export function CurveEditor({
 
       <div className="easing-editor__inputs">
         {(["x1", "y1", "x2", "y2"] as const).map((label, index) => (
-          <label key={label} className="easing-editor__field">
-            <span>{label}</span>
-            <input
-              type="number"
-              inputMode="decimal"
-              step={0.01}
-              min={index % 2 === 0 ? 0 : -1}
-              max={index % 2 === 0 ? 1 : 2}
-              value={bezier[index]}
-              onChange={(event) => setValue(index, event.target.value)}
-            />
-          </label>
+          <ControlField
+            key={label}
+            label={label}
+            value={bezier[index]}
+            min={index % 2 === 0 ? 0 : Y_MIN}
+            max={index % 2 === 0 ? 1 : Y_MAX}
+            onCommit={(value) => setValue(index, value)}
+          />
         ))}
       </div>
     </div>
+  );
+}
+
+/** A complete number: rejects in-progress text such as "", "-", "0.", or ".". */
+const COMPLETE_NUMBER = /^-?(\d+\.?\d*|\.\d+)$/;
+
+type ControlFieldProps = {
+  label: string;
+  value: number;
+  min: number;
+  max: number;
+  onCommit: (value: number) => void;
+};
+
+/**
+ * Keeps the typed text while it is incomplete, so clearing the field or starting a
+ * decimal or negative number doesn't snap to 0. Complete numbers commit, clamped; blur
+ * shows the committed value again.
+ */
+function ControlField({ label, value, min, max, onCommit }: ControlFieldProps) {
+  const [draft, setDraft] = useState<string | null>(null);
+
+  const commit = (next: number) => onCommit(round(clamp(next, min, max)));
+
+  return (
+    <label className="easing-editor__field">
+      <span>{label}</span>
+      <input
+        type="text"
+        inputMode="decimal"
+        autoComplete="off"
+        spellCheck={false}
+        value={draft ?? String(value)}
+        onChange={(event) => {
+          const raw = event.target.value.trim();
+          setDraft(raw);
+          if (COMPLETE_NUMBER.test(raw) && !raw.endsWith(".")) commit(Number(raw));
+        }}
+        onBlur={() => setDraft(null)}
+        onKeyDown={(event) => {
+          if (event.key !== "ArrowUp" && event.key !== "ArrowDown") return;
+          event.preventDefault();
+          const step = (event.shiftKey ? 0.1 : 0.01) * (event.key === "ArrowUp" ? 1 : -1);
+          setDraft(null);
+          commit(value + step);
+        }}
+      />
+    </label>
   );
 }

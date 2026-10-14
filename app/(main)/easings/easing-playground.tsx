@@ -18,7 +18,7 @@ import { type CubicBezier, stagger, toCssBezier } from "@/lib/motion";
 import { cn } from "@/lib/utils";
 
 import { CODE_FORMATS, type CodeFormat, codeFor, formatBezier } from "./code";
-import { CurveEditor } from "./curve-editor";
+import { CurveEditor, Y_MAX, Y_MIN } from "./curve-editor";
 import { type EasingPreset, findPreset, GROUP_LABELS, PRESETS, sameBezier } from "./presets";
 import { CATEGORY_LABELS, SCENES, type SceneCategory } from "./scenes";
 
@@ -36,7 +36,9 @@ function parseCurve(value: string | null): CubicBezier | null {
   if (parts.length !== 4 || parts.some((part) => !Number.isFinite(part))) return null;
   const [x1, y1, x2, y2] = parts;
   if (x1 < 0 || x1 > 1 || x2 < 0 || x2 > 1) return null;
-  return [x1, y1, x2, y2];
+  // Keep shared links inside the editor's plot so both handles stay reachable.
+  const y = (value: number) => Math.min(Y_MAX, Math.max(Y_MIN, value));
+  return [x1, y(y1), x2, y(y2)];
 }
 
 function MiniCurve({ bezier, className }: { bezier: CubicBezier; className?: string }) {
