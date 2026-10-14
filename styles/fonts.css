@@ -80,6 +80,7 @@
   --font-brand: "Alcyone", var(--font-outfit), ui-sans-serif, system-ui, sans-serif;
 }
 
+/* No faux bold; faux italic stays on for fallback families that ship upright faces only. */
 body {
-  font-synthesis: none;
+  font-synthesis: style;
 }
