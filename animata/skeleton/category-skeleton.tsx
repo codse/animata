@@ -18,7 +18,7 @@ export default function CategorySkeleton({ variant, className }: CategorySkeleto
     <svg
       viewBox={`0 0 ${CARD_W} ${CARD_H}`}
       className={cn(
-        "[--cg-darkest:#76756f] [--cg-lightest:#e3e3e3] [--cg-ink:var(--ink,var(--cg-darkest))] [--cg-faint:var(--ink-faint,var(--cg-lightest))] [--cg-soft:color-mix(in_oklab,var(--cg-ink)_50%,transparent)] dark:[--cg-ink:var(--ink,var(--cg-lightest))] dark:[--cg-faint:var(--ink-faint,var(--cg-darkest))]",
+        "[--cg-darkest:#737373] [--cg-lightest:#e3e3e3] [--cg-ink:var(--ink,var(--cg-darkest))] [--cg-faint:var(--ink-faint,var(--cg-lightest))] [--cg-soft:color-mix(in_oklab,var(--cg-ink)_50%,transparent)] dark:[--cg-ink:var(--ink,var(--cg-lightest))] dark:[--cg-faint:var(--ink-faint,var(--cg-darkest))]",
         "w-full overflow-visible rounded-2xl text-foreground motion-safe:transition-[scale,transform] motion-safe:duration-300 motion-safe:ease-out",
         className,
       )}

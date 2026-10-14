@@ -295,6 +295,10 @@ export const docsConfig: DocsConfig = {
       href: defaultDemoHref,
     },
     {
+      title: "Easings",
+      href: "/easings",
+    },
+    {
       title: "Changelog",
       href: "/docs/changelog",
     },

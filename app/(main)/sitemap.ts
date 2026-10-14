@@ -14,6 +14,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${domain}/resources`, lastModified: now },
     { url: `${domain}/credits`, lastModified: now },
     { url: `${domain}/text-animations`, lastModified: now },
+    { url: `${domain}/easings`, lastModified: now },
     { url: `${domain}/blog`, lastModified: now },
   ];
 
