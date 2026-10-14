@@ -89,7 +89,9 @@ export default function RootLayout({ children }: RootLayoutProps) {
       suppressHydrationWarning
       className={`${ibmPlex.variable} ${brandFont.variable}`}
     >
-      <head />
+      <head>
+        <link rel="preconnect" href="https://assets.animata.design" crossOrigin="anonymous" />
+      </head>
       <body className={"min-h-screen bg-background font-sans antialiased"}>
         <SmoothScroll />
         <NuqsAdapter>
