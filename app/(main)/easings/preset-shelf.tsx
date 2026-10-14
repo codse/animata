@@ -40,21 +40,30 @@ export function PresetShelf({ selected, onSelect }: PresetShelfProps) {
   const groups = Object.keys(GROUP_LABELS) as EasingGroup[];
   const scrollerRef = useRef<HTMLDivElement>(null);
 
-  // Whatever changes the curve (shelf, arrows, links), keep its card in view.
+  // Whatever changes the curve (shelf, arrows, links), keep its card in view. Also
+  // re-check when the shelf resizes: a layout change can re-snap it to another card.
   useEffect(() => {
-    if (!selected) return;
     const scroller = scrollerRef.current;
-    const card = scroller?.querySelector<HTMLElement>(`[data-preset="${selected.id}"]`);
-    if (!scroller || !card) return;
-    const { left, right } = card.getBoundingClientRect();
-    const bounds = scroller.getBoundingClientRect();
-    // The fade covers the last 48px, so treat it as outside the view.
-    if (left < bounds.left || right > bounds.right - 48) {
+    if (!selected || !scroller) return;
+
+    const reveal = (behavior: ScrollBehavior) => {
+      const card = scroller.querySelector<HTMLElement>(`[data-preset="${selected.id}"]`);
+      if (!card) return;
+      const { left, right } = card.getBoundingClientRect();
+      const bounds = scroller.getBoundingClientRect();
+      const inset = Number.parseFloat(getComputedStyle(scroller).paddingLeft) || 0;
+      // The fade covers the last 48px, so treat it as outside the view.
+      if (left >= bounds.left + inset - 1 && right <= bounds.right - 48) return;
       scroller.scrollTo({
         left: scroller.scrollLeft + left - bounds.left - (bounds.width - card.offsetWidth) / 2,
-        behavior: "smooth",
+        behavior,
       });
-    }
+    };
+
+    reveal("smooth");
+    const observer = new ResizeObserver(() => reveal("auto"));
+    observer.observe(scroller);
+    return () => observer.disconnect();
   }, [selected]);
 
   return (
