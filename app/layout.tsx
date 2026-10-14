@@ -3,6 +3,7 @@ import { IBM_Plex_Sans } from "next/font/google";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 
 import { ThemeProvider } from "@/components/providers";
+import { SmoothScroll } from "@/components/smooth-scroll";
 import { siteConfig } from "@/config/site";
 import { brandFont } from "@/lib/brand-font";
 import { cn } from "@/lib/utils";
@@ -92,6 +93,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
     >
       <head />
       <body className={cn("min-h-screen bg-background antialiased", ibmPlex.className)}>
+        <SmoothScroll />
         <NuqsAdapter>
           <ThemeProvider
             attribute="class"
