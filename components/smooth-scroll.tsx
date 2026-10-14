@@ -22,6 +22,9 @@ export function SmoothScroll() {
       // Sidebars, code blocks, menus, and contained previews keep their own scrolling.
       allowNestedScroll: true,
       prevent: (node) => node.closest("[data-lenis-prevent], [role='dialog']") !== null,
+      // Same-page hash links scroll through Lenis, so an in-flight wheel glide can't pull
+      // the page back from the heading. Targets honor scroll-margin like a native jump.
+      anchors: true,
       stopInertiaOnNavigate: true,
     });
 
@@ -33,14 +36,24 @@ export function SmoothScroll() {
     const update = ({ timestamp }: { timestamp: number }) => lenis.raf(timestamp);
     frame.update(update, true);
 
-    // Radix dialogs and menus lock body scroll with `data-scroll-locked`; Lenis must not
-    // keep scrolling the page underneath them.
+    // Lenis must not keep scrolling the page under a scroll lock. Radix dialogs and menus
+    // set `data-scroll-locked`; useLockBody (SplitReveal) sets inline overflow and position.
+    const html = document.documentElement;
+    const body = document.body;
+    const isLocked = () =>
+      body.hasAttribute("data-scroll-locked") ||
+      body.style.position === "fixed" ||
+      body.style.overflow === "hidden" ||
+      html.style.overflow === "hidden";
     const syncLock = () => {
-      if (document.body.hasAttribute("data-scroll-locked")) lenis.stop();
-      else lenis.start();
+      const locked = isLocked();
+      if (locked && !lenis.isStopped) lenis.stop();
+      else if (!locked && lenis.isStopped) lenis.start();
     };
     const observer = new MutationObserver(syncLock);
-    observer.observe(document.body, { attributes: true, attributeFilter: ["data-scroll-locked"] });
+    observer.observe(body, { attributes: true, attributeFilter: ["data-scroll-locked", "style"] });
+    observer.observe(html, { attributes: true, attributeFilter: ["style"] });
+    syncLock();
 
     return () => {
       observer.disconnect();
