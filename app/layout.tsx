@@ -6,16 +6,14 @@ import { ThemeProvider } from "@/components/providers";
 import { SmoothScroll } from "@/components/smooth-scroll";
 import { siteConfig } from "@/config/site";
 import { brandFont } from "@/lib/brand-font";
-import { cn } from "@/lib/utils";
 
-import "@fontsource-variable/lilex";
 import "@/styles/fonts.css";
 import "@/styles/globals.css";
 
 const ibmPlex = IBM_Plex_Sans({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
-  variable: "--font-sans",
+  variable: "--font-ibm-plex",
 });
 
 export const metadata: Metadata = {
@@ -92,7 +90,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
       className={`${ibmPlex.variable} ${brandFont.variable}`}
     >
       <head />
-      <body className={cn("min-h-screen bg-background antialiased", ibmPlex.className)}>
+      <body className={"min-h-screen bg-background font-sans antialiased"}>
         <SmoothScroll />
         <NuqsAdapter>
           <ThemeProvider

@@ -14,9 +14,6 @@ importers:
       '@fontsource-variable/instrument-sans':
         specifier: ^5.2.8
         version: 5.2.8
-      '@fontsource-variable/lilex':
-        specifier: ^5.2.1
-        version: 5.2.1
       '@phosphor-icons/react':
         specifier: ^2.1.10
         version: 2.1.10(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
@@ -1496,9 +1493,6 @@ packages:
 
   '@fontsource-variable/instrument-sans@5.2.8':
     resolution: {integrity: sha512-mTCaukbdIjjoipj2E3Q5XoZM3ZxJWdzyHevf/LG/0PHlfF9Q85pxOM7B7A9MerFyxmRzz5kVlumgIvgDSG4CPg==}
-
-  '@fontsource-variable/lilex@5.2.1':
-    resolution: {integrity: sha512-l+cYywL7TTDffmiaZEPG98Er8eIJhqImV9ZSwOqxE3dC+oS8G/erBvIkQO6T87J+i7+9HJwr7gSVfcq7deMuAw==}
 
   '@fontsource/ibm-plex-sans@5.2.8':
     resolution: {integrity: sha512-eztSXjDhPhcpxNIiGTgMebdLP9qS4rWkysuE1V7c+DjOR0qiezaiDaTwQE7bTnG5HxAY/8M43XKDvs3cYq6ZYQ==}
@@ -7325,8 +7319,6 @@ snapshots:
   '@floating-ui/utils@0.2.11': {}
 
   '@fontsource-variable/instrument-sans@5.2.8': {}
-
-  '@fontsource-variable/lilex@5.2.1': {}
 
   '@fontsource/ibm-plex-sans@5.2.8': {}
 
