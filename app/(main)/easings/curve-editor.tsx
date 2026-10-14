@@ -7,17 +7,21 @@ import { cn } from "@/lib/utils";
 
 import { round } from "./code";
 
-/** Y limits for control points. Numeric input and shared links clamp to the same range. */
-export const Y_MIN = -0.6;
-export const Y_MAX = 1.7;
+/**
+ * Y limits for control points, and the plot's fixed vertical range. Every preset fits,
+ * including a 1.56 overshoot, so the editor never changes size while you work.
+ * Numeric input and shared links clamp to the same range.
+ */
+export const Y_MIN = -0.3;
+export const Y_MAX = 1.6;
 
 /** Plot units: the 0–1 box is WIDTH wide and WIDTH * Y_SCALE tall. */
 const WIDTH = 320;
-const Y_SCALE = 0.72;
+const Y_SCALE = 0.55;
 const PAD_X = 14;
-const PAD_TOP = 14;
+const PAD_TOP = 10;
 /** Room under the box for the axis caption. */
-const PAD_BOTTOM = 26;
+const PAD_BOTTOM = 24;
 const HANDLE_HIT = 22;
 const GRID = [0.25, 0.5, 0.75];
 
@@ -32,13 +36,8 @@ function rubberband(distance: number, limit = RUBBER_LIMIT) {
 
 type Stretch = { handle: 0 | 1; dx: number; dy: number } | null;
 
-/** Plot only as much vertical range as the curve needs, with a little air. */
-function plotRange([, y1, , y2]: CubicBezier) {
-  return {
-    min: Math.max(Y_MIN, Math.min(-0.12, y1 - 0.14, y2 - 0.14)),
-    max: Math.min(Y_MAX, Math.max(1.12, y1 + 0.14, y2 + 0.14)),
-  };
-}
+/** The plot always shows the full allowed range. */
+const RANGE = { min: Y_MIN, max: Y_MAX };
 
 /** Progress at time `x` (0–1) for a cubic bezier, solved with Newton's method then bisection. */
 export function sampleBezier([x1, y1, x2, y2]: CubicBezier, x: number) {
@@ -100,13 +99,7 @@ export function CurveEditor({
   const [stretch, setStretch] = useState<Stretch>(null);
   const [x1, y1, x2, y2] = bezier;
 
-  // The range follows the curve, but holds still while a handle is dragged so the handle
-  // stays under the pointer.
-  const [range, setRange] = useState(() => plotRange(bezier));
-  useEffect(() => {
-    if (dragging.current === null) setRange(plotRange(bezier));
-  }, [bezier]);
-
+  const range = RANGE;
   const unit = WIDTH * Y_SCALE;
   const height = (range.max - range.min) * unit;
   const viewWidth = WIDTH + PAD_X * 2;
@@ -115,7 +108,7 @@ export function CurveEditor({
   const toY = (y: number) => PAD_TOP + (range.max - y) * unit;
 
   // A playhead sweeps across time while the dot rides the curve, at the real duration.
-  // biome-ignore lint/correctness/useExhaustiveDependencies: toX and toY derive from range
+  // biome-ignore lint/correctness/useExhaustiveDependencies: toX and toY are pure helpers of constants
   useEffect(() => {
     const dot = dotRef.current;
     const playhead = playheadRef.current;
@@ -134,7 +127,7 @@ export function CurveEditor({
     };
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
-  }, [playKey, durationMs, bezier, range]);
+  }, [playKey, durationMs, bezier]);
 
   /** Pointer position in plot units, unclamped. */
   const toPlot = (event: PointerEvent<SVGSVGElement>) => {
@@ -151,7 +144,12 @@ export function CurveEditor({
   const startDrag = (handle: 0 | 1, event: PointerEvent<SVGSVGElement>) => {
     dragging.current = handle;
     setActive(handle);
-    svgRef.current?.setPointerCapture(event.pointerId);
+    try {
+      svgRef.current?.setPointerCapture(event.pointerId);
+    } catch {
+      // The pointer can already be gone (for example a cancelled touch); dragging still
+      // works while it stays over the plot.
+    }
   };
 
   // Pressing anywhere on the plot grabs the nearest handle, so the whole plot is a target.
@@ -195,7 +193,6 @@ export function CurveEditor({
     dragging.current = null;
     setActive(null);
     setStretch(null);
-    setRange(plotRange(bezier));
     if (svgRef.current?.hasPointerCapture(event.pointerId)) {
       svgRef.current.releasePointerCapture(event.pointerId);
     }
