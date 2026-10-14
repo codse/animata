@@ -38,9 +38,9 @@ Defined on the tile SVG in `category-skeleton.tsx` via Tailwind arbitrary proper
 
 | Token | CSS var | Light mode | Dark mode | Use for |
 |-------|---------|------------|-----------|---------|
-| **INK** | `--cg-ink` | `#76756f` | `#e3e3e3` | Focal / active / interactive — primary strokes, CTAs, featured tier |
+| **INK** | `--cg-ink` | `#737373` | `#e3e3e3` | Focal / active / interactive — primary strokes, CTAs, featured tier |
 | **SOFT** | `--cg-soft` | `color-mix(in oklab, ink 50%, transparent)` | same formula | Supporting content — secondary bars, inactive labels, mid stack layers |
-| **FAINT** | `--cg-faint` | `#e3e3e3` | `#76756f` | Surfaces, tracks, distant layers, **knockouts on INK fills** |
+| **FAINT** | `--cg-faint` | `#e3e3e3` | `#737373` | Surfaces, tracks, distant layers, **knockouts on INK fills** |
 
 In TSX use the constants:
 

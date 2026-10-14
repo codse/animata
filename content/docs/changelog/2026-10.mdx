@@ -1,6 +1,6 @@
 ---
 title: October 2026
-description: Aperture Reveal, a scroll-driven section where a photograph opens out of the headline, a two-chapter demo, the Easing Playground, smooth wheel scrolling across the site, and house motion tokens.
+description: Aperture Reveal, a scroll-driven section where a photograph opens out of the headline, a two-chapter demo, the Easing Playground, smooth wheel scrolling across the site, house motion tokens, and refined neutral colors.
 date: 2026-10-01
 ---
 
@@ -26,6 +26,8 @@ Added smooth wheel scrolling with [Lenis](https://github.com/darkroomengineering
 Added house motion tokens. `ease-out`, `ease-in`, and `ease-in-out` now use stronger curves with longer settles, and there are new `ease-glide`, `ease-snap`, and `ease-overshoot` curves. Plain `transition` classes default to the house `ease-out` at 200ms. `lib/motion.ts` exposes the same curves for Motion.
 
 Fixed easing classes that were silently ignored. The site defined its custom curves under Tailwind v3's `--transition-timing-function-*` names, which Tailwind v4 doesn't read, so `ease-slow` fell back to the default curve in previews for [Swap Text](/docs/text/swap-text), [Mirror Text](/docs/text/mirror-text), [Tilted Cover](/docs/image/tilted-cover), and [Disclose Image](/docs/image/disclose-image). Installed copies were unaffected; their docs already used the correct names.
+
+Refined the site's neutral colors. Dark mode now sits on an off-black base with stepped surfaces above it, body text is a soft white, and secondary text has more contrast in both themes. Borders are the text color at low opacity, so they sit evenly on every surface. The ink for category glyphs and callouts is now a true neutral gray, matching the rest of the scale.
 
 ## Tools
 
