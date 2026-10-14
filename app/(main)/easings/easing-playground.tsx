@@ -7,8 +7,10 @@ import {
   Copy,
   Pause,
   Play,
+  RotateCcw,
   SlidersHorizontal,
 } from "lucide-react";
+import { AnimatePresence, motion } from "motion/react";
 import { parseAsInteger, parseAsString, useQueryStates } from "nuqs";
 import { type CSSProperties, useCallback, useEffect, useMemo, useRef, useState } from "react";
 
@@ -195,16 +197,33 @@ export function EasingPlayground() {
           <button
             type="button"
             onClick={showCurves}
+            aria-label={`${name}, choose another curve`}
             className={cn(
-              "inline rounded-[0.22em] bg-muted px-[0.2em] font-mono text-[0.84em] font-medium tracking-[-0.04em] hover:bg-border",
+              "relative inline-grid overflow-hidden rounded-[0.24em] bg-muted px-[0.22em] pb-[0.02em] align-baseline font-mono text-[0.84em] font-medium tracking-[-0.045em] shadow-[inset_0_0_0_1px_var(--color-border)] hover:bg-border/60",
               press,
             )}
           >
-            {name}
+            {/* The name swaps with the selected curve itself, so the heading demonstrates it. */}
+            <AnimatePresence initial={false} mode="popLayout">
+              <motion.span
+                key={name}
+                className="col-start-1 row-start-1 inline-block"
+                initial={reducedMotion ? false : { y: "0.55em", opacity: 0, filter: "blur(6px)" }}
+                animate={{ y: 0, opacity: 1, filter: "blur(0px)" }}
+                exit={
+                  reducedMotion
+                    ? { opacity: 0, transition: { duration: 0 } }
+                    : { y: "-0.55em", opacity: 0, filter: "blur(6px)" }
+                }
+                transition={{ duration: Math.min(durationMs, 700) / 1000, ease: [...bezier] }}
+              >
+                {name}
+              </motion.span>
+            </AnimatePresence>
           </button>{" "}
           moves real interfaces
         </h1>
-        <p className="m-0 mt-5 max-w-[34rem] text-[15px]/relaxed text-muted-foreground">
+        <p className="m-0 mt-6 max-w-[36rem] text-[17px]/[1.6] text-pretty text-muted-foreground">
           Pick a curve or drag your own, set the duration, and watch twelve everyday transitions use
           it. Copy the result as CSS, Tailwind, Motion, or GSAP.
         </p>
@@ -394,18 +413,27 @@ export function EasingPlayground() {
                       setPlayKey((key) => key + 1);
                     }}
                     className={cn(
-                      "relative block aspect-4/3 w-full overflow-hidden rounded-[12px] border border-border bg-muted/60 text-left text-foreground",
-                      "transition-[scale] duration-150 ease-out active:scale-[0.985]",
+                      "group/scene relative block aspect-4/3 w-full overflow-hidden rounded-[12px] border border-border bg-muted/50 text-left text-foreground",
+                      // A faint dotted canvas, like a design tool's stage.
+                      "bg-[radial-gradient(var(--color-border)_1px,transparent_1.2px)] bg-size-[14px_14px] bg-center",
+                      "transition-[scale,border-color,box-shadow] duration-200 ease-out active:scale-[0.985]",
+                      "hover:border-foreground/20 hover:shadow-[0_12px_32px_-22px_rgb(0_0_0/0.3)] focus-visible:border-foreground/30",
                       wide && "sm:aspect-[2/1]",
                     )}
                   >
                     <span aria-hidden="true" className="absolute inset-0 block" inert>
                       {scene.render(isOpen)}
                     </span>
+                    <span
+                      aria-hidden="true"
+                      className="pointer-events-none absolute top-2.5 right-2.5 grid size-7 place-items-center rounded-[8px] bg-background/90 text-muted-foreground opacity-0 shadow-[0_0_0_1px_var(--color-border),0_4px_12px_-6px_rgb(0_0_0/0.2)] backdrop-blur transition-[opacity,scale] duration-200 ease-out group-hover/scene:opacity-100 group-focus-visible/scene:opacity-100 scale-90 group-hover/scene:scale-100 group-focus-visible/scene:scale-100"
+                    >
+                      <RotateCcw className="size-3.5" />
+                    </span>
                   </button>
-                  <figcaption className="flex items-baseline justify-between gap-3 px-0.5">
+                  <figcaption className="grid gap-0.5 px-0.5">
                     <span className="text-sm font-medium">{scene.title}</span>
-                    <span className="truncate text-xs text-muted-foreground">{scene.hint}</span>
+                    <span className="truncate text-[13px] text-muted-foreground">{scene.hint}</span>
                   </figcaption>
                 </figure>
               );

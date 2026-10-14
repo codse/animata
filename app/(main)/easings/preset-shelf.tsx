@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react";
 
-import type { CubicBezier } from "@/lib/motion";
+import { type CubicBezier, toCssBezier } from "@/lib/motion";
 import { cn } from "@/lib/utils";
 
 import { type EasingGroup, type EasingPreset, GROUP_LABELS, PRESETS } from "./presets";
@@ -15,17 +15,12 @@ function CurvePreview({ bezier }: { bezier: CubicBezier }) {
   const py = (y: number) => 46 - y * 36;
   return (
     <svg viewBox="0 0 96 56" aria-hidden="true" className="h-14 w-full overflow-visible">
-      <line
-        x1={px(0)}
-        y1={py(0)}
-        x2={px(1)}
-        y2={py(1)}
-        className="stroke-current opacity-15 [stroke-dasharray:2_4]"
-      />
       <path
         d={`M ${px(0)} ${py(0)} C ${px(x1)} ${py(y1)}, ${px(x2)} ${py(y2)}, ${px(1)} ${py(1)}`}
         className="fill-none stroke-current stroke-2 [stroke-linecap:round]"
       />
+      <circle cx={px(0)} cy={py(0)} r={2} className="fill-current opacity-40" />
+      <circle cx={px(1)} cy={py(1)} r={2.5} className="fill-current" />
     </svg>
   );
 }
@@ -39,6 +34,8 @@ type PresetShelfProps = {
 export function PresetShelf({ selected, onSelect }: PresetShelfProps) {
   const groups = Object.keys(GROUP_LABELS) as EasingGroup[];
   const scrollerRef = useRef<HTMLDivElement>(null);
+  /** The first reveal lands instantly; later changes glide. */
+  const revealed = useRef(false);
 
   // Whatever changes the curve (shelf, arrows, links), keep its card in view. Also
   // re-check when the shelf resizes: a layout change can re-snap it to another card.
@@ -60,7 +57,8 @@ export function PresetShelf({ selected, onSelect }: PresetShelfProps) {
       });
     };
 
-    reveal("smooth");
+    reveal(revealed.current ? "smooth" : "auto");
+    revealed.current = true;
     const observer = new ResizeObserver(() => reveal("auto"));
     observer.observe(scroller);
     return () => observer.disconnect();
@@ -69,43 +67,70 @@ export function PresetShelf({ selected, onSelect }: PresetShelfProps) {
   return (
     <div
       ref={scrollerRef}
-      className="-mx-4 flex snap-x scroll-px-4 gap-6 overflow-x-auto px-4 pb-1 [mask-image:linear-gradient(to_right,black_calc(100%-48px),transparent)] [scrollbar-width:none] sm:-mx-6 sm:scroll-px-6 sm:px-6 lg:mx-0 lg:scroll-px-0 lg:px-0 [&::-webkit-scrollbar]:hidden"
+      className="-mx-4 flex snap-x scroll-px-4 overflow-x-auto px-4 pt-1 pb-2 [mask-image:linear-gradient(to_right,black_calc(100%-48px),transparent)] [scrollbar-width:none] sm:-mx-6 sm:scroll-px-6 sm:px-6 lg:mx-0 lg:scroll-px-0 lg:px-0 [&::-webkit-scrollbar]:hidden pr-12 sm:pr-12 lg:pr-12"
     >
-      {groups.map((group) => (
-        <div
-          key={group}
-          role="group"
-          aria-label={GROUP_LABELS[group]}
-          className="grid shrink-0 gap-2.5"
-        >
-          <span className="px-0.5 text-xs font-medium text-foreground">{GROUP_LABELS[group]}</span>
-          <div className="flex gap-2">
-            {PRESETS.filter((preset) => preset.group === group).map((preset) => (
-              <button
-                key={preset.id}
-                type="button"
-                data-preset={preset.id}
-                aria-pressed={preset === selected}
-                aria-label={`${preset.name}, ${preset.duration} milliseconds. ${preset.use}`}
-                onClick={() => onSelect(preset)}
-                className={cn(
-                  "group/card grid w-32 snap-start gap-3 rounded-[12px] border border-border bg-background p-3 text-left text-muted-foreground",
-                  "transition-[border-color,color,scale,box-shadow] duration-200 ease-out active:scale-[0.97]",
-                  "hover:border-foreground/25 hover:text-foreground",
-                  group === "baseline" && "border-dashed",
-                  "aria-pressed:border-foreground aria-pressed:text-foreground aria-pressed:shadow-[0_0_0_1px_var(--color-foreground),0_10px_28px_-18px_rgb(0_0_0/0.35)]",
-                )}
-              >
-                <CurvePreview bezier={preset.bezier} />
-                <span className="flex items-baseline justify-between gap-2 font-mono">
-                  <span className="truncate text-xs font-medium">{preset.short}</span>
-                  <span className="shrink-0 text-[11px] opacity-60">{preset.duration}</span>
-                </span>
-              </button>
-            ))}
+      {groups.map((group, groupIndex) => {
+        const items = PRESETS.filter((preset) => preset.group === group);
+        return (
+          <div
+            key={group}
+            role="group"
+            aria-label={GROUP_LABELS[group]}
+            className={cn(
+              "grid shrink-0 gap-3",
+              groupIndex > 0 && "ml-6 border-l border-border pl-6",
+            )}
+          >
+            <span className="flex items-baseline gap-2 px-0.5 text-xs">
+              <span className="font-medium text-foreground">{GROUP_LABELS[group]}</span>
+              <span className="font-mono text-[11px] text-muted-foreground">{items.length}</span>
+            </span>
+            <div className="flex gap-2.5">
+              {items.map((preset) => (
+                <button
+                  key={preset.id}
+                  type="button"
+                  data-preset={preset.id}
+                  aria-pressed={preset === selected}
+                  aria-label={`${preset.name}, ${preset.duration} milliseconds. ${preset.use}`}
+                  onClick={() => onSelect(preset)}
+                  className={cn(
+                    "group/card grid w-36 snap-start gap-2.5 rounded-[12px] border border-border bg-background p-1.5 pb-3 text-left text-muted-foreground",
+                    "transition-[border-color,color,scale,box-shadow] duration-200 ease-out active:scale-[0.97]",
+                    "hover:border-foreground/25 hover:text-foreground focus-visible:text-foreground",
+                    group === "baseline" && "border-dashed",
+                    "aria-pressed:border-foreground aria-pressed:text-foreground aria-pressed:shadow-[0_0_0_1px_var(--color-foreground),0_10px_28px_-18px_rgb(0_0_0/0.35)]",
+                  )}
+                >
+                  {/* The curve sits on a faint grid tile, like a small chart. */}
+                  <span className="grid gap-2 rounded-[8px] bg-muted/60 bg-[linear-gradient(var(--color-border)_1px,transparent_1px),linear-gradient(90deg,var(--color-border)_1px,transparent_1px)] bg-size-[24px_14px] bg-center px-2.5 pt-3 pb-2.5">
+                    <CurvePreview bezier={preset.bezier} />
+                    {/* Hover or focus sends a dot across at this preset's own timing. */}
+                    <span
+                      aria-hidden="true"
+                      className="relative block h-1.5 rounded-full bg-border"
+                    >
+                      <span
+                        className="absolute inset-y-0 left-0 block w-[calc(100%-6px)] transition-transform group-hover/card:translate-x-full group-focus-visible/card:translate-x-full"
+                        style={{
+                          transitionTimingFunction: toCssBezier(preset.bezier),
+                          transitionDuration: `${preset.duration}ms`,
+                        }}
+                      >
+                        <span className="block size-1.5 rounded-full bg-current" />
+                      </span>
+                    </span>
+                  </span>
+                  <span className="flex items-baseline justify-between gap-2 px-1.5 font-mono">
+                    <span className="truncate text-xs font-medium">{preset.short}</span>
+                    <span className="shrink-0 text-[11px] opacity-60">{preset.duration}ms</span>
+                  </span>
+                </button>
+              ))}
+            </div>
           </div>
-        </div>
-      ))}
+        );
+      })}
     </div>
   );
 }
