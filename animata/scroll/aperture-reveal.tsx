@@ -14,6 +14,7 @@ import {
   createContext,
   type FocusEvent,
   type ReactNode,
+  type Ref,
   type RefObject,
   use,
   useId,
@@ -34,6 +35,16 @@ const ACTION_READY = 0.85;
 const WHITESPACE = /\s+/;
 
 const clamp01 = (value: number) => Math.min(1, Math.max(0, value));
+
+/** Lets a consumer's ref and the component's own ref point at the same element. */
+function mergeRefs<T>(...refs: (Ref<T> | undefined)[]) {
+  return (node: T | null) => {
+    for (const ref of refs) {
+      if (typeof ref === "function") ref(node);
+      else if (ref) (ref as RefObject<T | null>).current = node;
+    }
+  };
+}
 const easeInOutCubic = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - (-2 * t + 2) ** 3 / 2);
 
 type ApertureContextValue = {
@@ -72,11 +83,13 @@ function ApertureRevealRoot({
   viewportHeight,
   className,
   style,
+  ref,
   ...props
 }: ApertureRevealProps) {
   const isStatic = usePrefersReducedMotion();
   const headlineId = useId();
   const rootRef = useRef<HTMLElement>(null);
+  const setRootRef = useMemo(() => mergeRefs(rootRef, ref), [ref]);
   const trackRef = useRef<HTMLDivElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
   const openingRef = useRef<HTMLSpanElement>(null);
@@ -140,7 +153,7 @@ function ApertureRevealRoot({
   return (
     <ApertureContext value={context}>
       <section
-        ref={rootRef}
+        ref={setRootRef}
         aria-labelledby={headlineId}
         {...props}
         className={cn("aperture", className)}
@@ -175,13 +188,14 @@ function ApertureMedia({ className, children, ...props }: ComponentProps<"div">)
   );
 }
 
-type ApertureHeadlineProps = ComponentProps<"h2"> & {
+type ApertureHeadlineProps = Omit<ComponentProps<"h2">, "id"> & {
   as?: "h1" | "h2" | "h3";
 };
 
 function ApertureHeadline({ as: Heading = "h2", className, ...props }: ApertureHeadlineProps) {
   const { headlineId } = useAperture("Headline");
-  return <Heading id={headlineId} className={cn("aperture__headline", className)} {...props} />;
+  // The id is set last: the section's aria-labelledby depends on it.
+  return <Heading {...props} className={cn("aperture__headline", className)} id={headlineId} />;
 }
 
 /** Words before the opening. They part left, or up on narrow stages. */
@@ -205,11 +219,12 @@ function ApertureTrail({ className, ...props }: ComponentProps<"span">) {
  * The gap in the headline the photograph grows from. Decorative. With reduced motion it is
  * hidden unless given children, such as a small copy of the photograph.
  */
-function ApertureOpening({ className, children, ...props }: ComponentProps<"span">) {
+function ApertureOpening({ className, children, ref, ...props }: ComponentProps<"span">) {
   const { openingRef } = useAperture("Opening");
+  const setRef = useMemo(() => mergeRefs(openingRef, ref), [openingRef, ref]);
   return (
     <span
-      ref={openingRef}
+      ref={setRef}
       aria-hidden="true"
       className={cn("aperture__opening", className)}
       data-filled={children ? "" : undefined}
@@ -257,9 +272,15 @@ function ApertureText({ children, className, ...props }: ApertureTextProps) {
  * Wraps a link or button, such as `<a>` or Next `<Link>`. It appears after the text has been
  * read. Focusing it early scrolls to the end of the sequence so its context is visible.
  */
-function ApertureAction({ className, onFocus, ...props }: ComponentProps<"div">) {
+function ApertureAction({
+  className,
+  onFocus,
+  ref: forwardedRef,
+  ...props
+}: ComponentProps<"div">) {
   const { isStatic, read, trackRef } = useAperture("Action");
   const ref = useRef<HTMLDivElement>(null);
+  const setRef = useMemo(() => mergeRefs(ref, forwardedRef), [forwardedRef]);
 
   useMotionValueEvent(read, "change", (value) => {
     ref.current?.toggleAttribute("data-ready", value > ACTION_READY);
@@ -275,7 +296,12 @@ function ApertureAction({ className, onFocus, ...props }: ComponentProps<"div">)
   return (
     // Focus bubbles from the link or button inside; the wrapper itself is not interactive.
     // biome-ignore lint/a11y/noStaticElementInteractions: delegated focus listener only
-    <div ref={ref} className={cn("aperture__action", className)} onFocus={handleFocus} {...props} />
+    <div
+      {...props}
+      ref={setRef}
+      className={cn("aperture__action", className)}
+      onFocus={handleFocus}
+    />
   );
 }
 

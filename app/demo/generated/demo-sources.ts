@@ -4570,6 +4570,7 @@ export default function StackedSectionsDemo001() {
       language: "tsx",
       code: `"use client";
 
+import Link from "next/link";
 import type { CSSProperties } from "react";
 
 import ApertureReveal from "@/animata/scroll/aperture-reveal";
@@ -4658,7 +4659,7 @@ export default function ApertureRevealDemo001() {
             back at the trailhead before the afternoon heat.
           </ApertureReveal.Text>
           <ApertureReveal.Action>
-            <a href="/docs/scroll/aperture-reveal">Build this section</a>
+            <Link href="/docs/scroll/aperture-reveal">Build this section</Link>
           </ApertureReveal.Action>
         </ApertureReveal.Caption>
       </ApertureReveal>
@@ -4674,6 +4675,7 @@ export default function ApertureRevealDemo001() {
 `,
       htmlLight: `<pre class="shiki github-light" tabindex="0"><code><span class="line"><span style="color:#032F62">"use client"</span><span style="color:#24292E">;</span></span>
 <span class="line"></span>
+<span class="line"><span style="color:#D73A49">import</span><span style="color:#24292E"> Link </span><span style="color:#D73A49">from</span><span style="color:#032F62"> "next/link"</span><span style="color:#24292E">;</span></span>
 <span class="line"><span style="color:#D73A49">import</span><span style="color:#D73A49"> type</span><span style="color:#24292E"> { CSSProperties } </span><span style="color:#D73A49">from</span><span style="color:#032F62"> "react"</span><span style="color:#24292E">;</span></span>
 <span class="line"></span>
 <span class="line"><span style="color:#D73A49">import</span><span style="color:#24292E"> ApertureReveal </span><span style="color:#D73A49">from</span><span style="color:#032F62"> "@/animata/scroll/aperture-reveal"</span><span style="color:#24292E">;</span></span>
@@ -4762,7 +4764,7 @@ export default function ApertureRevealDemo001() {
 <span class="line"><span style="color:#24292E">            back at the trailhead before the afternoon heat.</span></span>
 <span class="line"><span style="color:#24292E">          &#x3C;/</span><span style="color:#005CC5">ApertureReveal.Text</span><span style="color:#24292E">></span></span>
 <span class="line"><span style="color:#24292E">          &#x3C;</span><span style="color:#005CC5">ApertureReveal.Action</span><span style="color:#24292E">></span></span>
-<span class="line"><span style="color:#24292E">            &#x3C;</span><span style="color:#22863A">a</span><span style="color:#6F42C1"> href</span><span style="color:#D73A49">=</span><span style="color:#032F62">"/docs/scroll/aperture-reveal"</span><span style="color:#24292E">>Build this section&#x3C;/</span><span style="color:#22863A">a</span><span style="color:#24292E">></span></span>
+<span class="line"><span style="color:#24292E">            &#x3C;</span><span style="color:#005CC5">Link</span><span style="color:#6F42C1"> href</span><span style="color:#D73A49">=</span><span style="color:#032F62">"/docs/scroll/aperture-reveal"</span><span style="color:#24292E">>Build this section&#x3C;/</span><span style="color:#005CC5">Link</span><span style="color:#24292E">></span></span>
 <span class="line"><span style="color:#24292E">          &#x3C;/</span><span style="color:#005CC5">ApertureReveal.Action</span><span style="color:#24292E">></span></span>
 <span class="line"><span style="color:#24292E">        &#x3C;/</span><span style="color:#005CC5">ApertureReveal.Caption</span><span style="color:#24292E">></span></span>
 <span class="line"><span style="color:#24292E">      &#x3C;/</span><span style="color:#005CC5">ApertureReveal</span><span style="color:#24292E">></span></span>
@@ -4778,6 +4780,7 @@ export default function ApertureRevealDemo001() {
 <span class="line"></span></code></pre>`,
       htmlDark: `<pre class="shiki github-dark" tabindex="0"><code><span class="line"><span style="color:#9ECBFF">"use client"</span><span style="color:#E1E4E8">;</span></span>
 <span class="line"></span>
+<span class="line"><span style="color:#F97583">import</span><span style="color:#E1E4E8"> Link </span><span style="color:#F97583">from</span><span style="color:#9ECBFF"> "next/link"</span><span style="color:#E1E4E8">;</span></span>
 <span class="line"><span style="color:#F97583">import</span><span style="color:#F97583"> type</span><span style="color:#E1E4E8"> { CSSProperties } </span><span style="color:#F97583">from</span><span style="color:#9ECBFF"> "react"</span><span style="color:#E1E4E8">;</span></span>
 <span class="line"></span>
 <span class="line"><span style="color:#F97583">import</span><span style="color:#E1E4E8"> ApertureReveal </span><span style="color:#F97583">from</span><span style="color:#9ECBFF"> "@/animata/scroll/aperture-reveal"</span><span style="color:#E1E4E8">;</span></span>
@@ -4866,7 +4869,7 @@ export default function ApertureRevealDemo001() {
 <span class="line"><span style="color:#E1E4E8">            back at the trailhead before the afternoon heat.</span></span>
 <span class="line"><span style="color:#E1E4E8">          &#x3C;/</span><span style="color:#79B8FF">ApertureReveal.Text</span><span style="color:#E1E4E8">></span></span>
 <span class="line"><span style="color:#E1E4E8">          &#x3C;</span><span style="color:#79B8FF">ApertureReveal.Action</span><span style="color:#E1E4E8">></span></span>
-<span class="line"><span style="color:#E1E4E8">            &#x3C;</span><span style="color:#85E89D">a</span><span style="color:#B392F0"> href</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"/docs/scroll/aperture-reveal"</span><span style="color:#E1E4E8">>Build this section&#x3C;/</span><span style="color:#85E89D">a</span><span style="color:#E1E4E8">></span></span>
+<span class="line"><span style="color:#E1E4E8">            &#x3C;</span><span style="color:#79B8FF">Link</span><span style="color:#B392F0"> href</span><span style="color:#F97583">=</span><span style="color:#9ECBFF">"/docs/scroll/aperture-reveal"</span><span style="color:#E1E4E8">>Build this section&#x3C;/</span><span style="color:#79B8FF">Link</span><span style="color:#E1E4E8">></span></span>
 <span class="line"><span style="color:#E1E4E8">          &#x3C;/</span><span style="color:#79B8FF">ApertureReveal.Action</span><span style="color:#E1E4E8">></span></span>
 <span class="line"><span style="color:#E1E4E8">        &#x3C;/</span><span style="color:#79B8FF">ApertureReveal.Caption</span><span style="color:#E1E4E8">></span></span>
 <span class="line"><span style="color:#E1E4E8">      &#x3C;/</span><span style="color:#79B8FF">ApertureReveal</span><span style="color:#E1E4E8">></span></span>

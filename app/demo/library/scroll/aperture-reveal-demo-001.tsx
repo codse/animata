@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import type { CSSProperties } from "react";
 
 import ApertureReveal from "@/animata/scroll/aperture-reveal";
@@ -88,7 +89,7 @@ export default function ApertureRevealDemo001() {
             back at the trailhead before the afternoon heat.
           </ApertureReveal.Text>
           <ApertureReveal.Action>
-            <a href="/docs/scroll/aperture-reveal">Build this section</a>
+            <Link href="/docs/scroll/aperture-reveal">Build this section</Link>
           </ApertureReveal.Action>
         </ApertureReveal.Caption>
       </ApertureReveal>

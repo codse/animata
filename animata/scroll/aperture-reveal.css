@@ -264,6 +264,13 @@
     animation: aperture-hint 1.8s cubic-bezier(0.65, 0, 0.35, 1) infinite;
   }
 
+  /* Before hydration the static layout isn't applied yet; never loop for reduced motion. */
+  @media (prefers-reduced-motion: reduce) {
+    .aperture__hint::after {
+      animation: none;
+    }
+  }
+
   @keyframes aperture-hint {
     0% {
       transform: scaleY(0);
