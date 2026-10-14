@@ -26,10 +26,10 @@ This repo is open source. Everything that leaves the machine is public: PR title
 Keep out of public text:
 
 - **Internal context** — the private discussion behind a change, how a decision was reached, reactions to the work, and opinions about the codebase or the people on it.
-- **References and research** — other products, sites, studios, or people used as inspiration, comparison, or benchmarks, and anything measured or copied from them.
+- **References and research** — other products, sites, studios, or people used as inspiration, comparison, or benchmarks, and anything measured or copied from them. Exception: attributions and licence credits that the [contributing guidelines](content/docs/contributing/guidelines.mdx) require, such as credits for copied SVG icons.
 - **Business and plans** — unreleased features, roadmap timing, pricing, commercial direction, clients, partners, and internal tools or repos.
-- **People and access** — personal names (except authors and public credits), emails, accounts, credentials, tokens, private URLs, and local file paths.
-- **Process** — prompts, AI tools or skills used, and agent workflow. The co-author trailer is the only exception.
+- **People and access** — personal names (except authors and public credits), private email addresses, accounts, credentials, tokens, private URLs, and local file paths.
+- **Process** — prompts, AI tools or skills used, and agent workflow. The only exceptions are the `Co-Authored-By` commit trailer, which may use a public or no-reply email address, and the "Generated with Claude Code" line at the end of a PR description.
 
 Before any push, PR, or comment: reread every public string against this list. If something is unclear, leave it out and ask.
 
