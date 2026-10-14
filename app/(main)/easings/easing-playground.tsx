@@ -88,6 +88,14 @@ export function EasingPlayground() {
   const [playKey, setPlayKey] = useState(0);
   const [format, setFormat] = useState<CodeFormat>("css");
   const [copied, setCopied] = useState(false);
+  /** Which way the curve name slides: next moves left, previous moves right. */
+  const [direction, setDirection] = useState<1 | -1>(1);
+  /** The preset an edited curve came from, so Reset can return to it. */
+  const [base, setBase] = useState<EasingPreset | null>(preset);
+  useEffect(() => {
+    if (preset) setBase(preset);
+  }, [preset]);
+  const edited = base !== null && (preset === null || durationMs !== base.duration);
   const galleryRef = useRef<HTMLDivElement>(null);
   const workbenchRef = useRef<HTMLElement>(null);
   const shelfRef = useRef<HTMLElement>(null);
@@ -118,14 +126,23 @@ export function EasingPlayground() {
     return () => observer.disconnect();
   }, []);
 
-  const choosePreset = (next: EasingPreset) => {
+  const choosePreset = (next: EasingPreset, towards?: 1 | -1) => {
+    const from = PRESETS.indexOf(preset ?? base ?? DEFAULT_PRESET);
+    setDirection(towards ?? (PRESETS.indexOf(next) >= from ? 1 : -1));
     setQuery({ p: next.id, c: null, d: null });
     replay();
   };
 
-  const step = (direction: 1 | -1) => {
-    const from = presetIndex === -1 ? 0 : presetIndex;
-    choosePreset(PRESETS[(from + direction + PRESETS.length) % PRESETS.length]);
+  const step = (towards: 1 | -1) => {
+    const from = presetIndex === -1 ? PRESETS.indexOf(base ?? DEFAULT_PRESET) : presetIndex;
+    choosePreset(PRESETS[(from + towards + PRESETS.length) % PRESETS.length], towards);
+  };
+
+  /** Forgiving editing: one press returns an edited curve to the preset it came from. */
+  const reset = () => {
+    if (!base) return;
+    setQuery({ p: base.id, c: null, d: null });
+    replay();
   };
 
   const setCurve = (next: CubicBezier) => {
@@ -208,12 +225,17 @@ export function EasingPlayground() {
               <motion.span
                 key={name}
                 className="col-start-1 row-start-1 inline-block"
-                initial={reducedMotion ? false : { y: "0.55em", opacity: 0, filter: "blur(6px)" }}
-                animate={{ y: 0, opacity: 1, filter: "blur(0px)" }}
+                custom={direction}
+                initial={
+                  reducedMotion
+                    ? false
+                    : { x: `${direction * 0.5}em`, opacity: 0, filter: "blur(6px)" }
+                }
+                animate={{ x: 0, opacity: 1, filter: "blur(0px)" }}
                 exit={
                   reducedMotion
                     ? { opacity: 0, transition: { duration: 0 } }
-                    : { y: "-0.55em", opacity: 0, filter: "blur(6px)" }
+                    : { x: `${direction * -0.5}em`, opacity: 0, filter: "blur(6px)" }
                 }
                 transition={{ duration: Math.min(durationMs, 700) / 1000, ease: [...bezier] }}
               >
@@ -242,14 +264,50 @@ export function EasingPlayground() {
           <div className="grid gap-4 rounded-[12px] border border-border bg-background p-4 shadow-[0_1px_2px_rgb(0_0_0/0.03),0_12px_32px_-24px_rgb(0_0_0/0.14)]">
             <div className="flex items-center justify-between gap-3">
               <div className="grid min-w-0 gap-1">
-                <h2 className="m-0 truncate font-(family-name:--font-display) text-lg leading-tight font-semibold tracking-[-0.015em]">
-                  {name}
+                <h2 className="m-0 grid overflow-hidden font-(family-name:--font-display) text-lg leading-tight font-semibold tracking-[-0.015em]">
+                  <AnimatePresence initial={false} mode="popLayout">
+                    <motion.span
+                      key={name}
+                      className="col-start-1 row-start-1 truncate"
+                      initial={
+                        reducedMotion
+                          ? false
+                          : { x: direction * 16, opacity: 0, filter: "blur(4px)" }
+                      }
+                      animate={{ x: 0, opacity: 1, filter: "blur(0px)" }}
+                      exit={
+                        reducedMotion
+                          ? { opacity: 0, transition: { duration: 0 } }
+                          : { x: direction * -16, opacity: 0, filter: "blur(4px)" }
+                      }
+                      transition={{ type: "spring", bounce: 0, duration: 0.35 }}
+                    >
+                      {name}
+                    </motion.span>
+                  </AnimatePresence>
                 </h2>
                 <p className="m-0 truncate font-mono text-xs leading-tight text-muted-foreground tabular-nums">
-                  cubic-bezier({formatBezier(bezier)})
+                  {edited && base ? (
+                    <span className="font-sans">Edited from {base.name}</span>
+                  ) : (
+                    `cubic-bezier(${formatBezier(bezier)})`
+                  )}
                 </p>
               </div>
               <div className="flex gap-1">
+                {edited ? (
+                  <button
+                    type="button"
+                    onClick={reset}
+                    className={cn(
+                      "inline-flex h-8 items-center gap-1.5 rounded-[8px] px-2.5 text-xs font-medium text-muted-foreground hover:bg-muted hover:text-foreground",
+                      press,
+                    )}
+                  >
+                    <RotateCcw aria-hidden="true" className="size-3.5" />
+                    Reset
+                  </button>
+                ) : null}
                 <button
                   type="button"
                   aria-label="Previous curve"
@@ -321,12 +379,30 @@ export function EasingPlayground() {
                     press,
                   )}
                 >
-                  {copied ? (
-                    <Check aria-hidden="true" className="size-3.5" />
-                  ) : (
-                    <Copy aria-hidden="true" className="size-3.5" />
-                  )}
-                  <span className="w-11 text-left">{copied ? "Copied" : "Copy"}</span>
+                  {/* The label morphs instead of snapping, so the confirmation reads as a change. */}
+                  <span className="grid w-[4.25rem] overflow-hidden">
+                    <AnimatePresence initial={false} mode="popLayout">
+                      <motion.span
+                        key={copied ? "copied" : "copy"}
+                        className="col-start-1 row-start-1 inline-flex items-center gap-1.5"
+                        initial={reducedMotion ? false : { y: 10, opacity: 0, filter: "blur(3px)" }}
+                        animate={{ y: 0, opacity: 1, filter: "blur(0px)" }}
+                        exit={
+                          reducedMotion
+                            ? { opacity: 0, transition: { duration: 0 } }
+                            : { y: -10, opacity: 0, filter: "blur(3px)" }
+                        }
+                        transition={{ type: "spring", bounce: 0, duration: 0.3 }}
+                      >
+                        {copied ? (
+                          <Check aria-hidden="true" className="size-3.5" />
+                        ) : (
+                          <Copy aria-hidden="true" className="size-3.5" />
+                        )}
+                        {copied ? "Copied" : "Copy"}
+                      </motion.span>
+                    </AnimatePresence>
+                  </span>
                 </button>
               </div>
               <details className="group/code">
