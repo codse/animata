@@ -46,16 +46,17 @@ jobs:
           NEXT_PUBLIC_POSTHOG_HOST: ${{ vars.NEXT_PUBLIC_POSTHOG_HOST }}
           NEXT_PUBLIC_PLUNK_API_KEY: ${{ vars.NEXT_PUBLIC_PLUNK_API_KEY }}
         run: pnpm build
-      - name: Deploy to Cloudflare Pages
+      - name: Deploy to Cloudflare Workers
         id: deploy
-        uses: cloudflare/wrangler-action@v3
+        uses: cloudflare/wrangler-action@v4
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy out --project-name=animata --branch=dev-${{ github.event.pull_request.head.ref }}
+          wranglerVersion: "4.151.2"
+          command: preview --name pr-${{ github.event.pull_request.number }}
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
       - name: Comment Deployment URL
-        uses: actions/github-script@v6
+        uses: actions/github-script@v9
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |

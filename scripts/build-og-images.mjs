@@ -480,6 +480,7 @@ async function uploadToR2(key, buf, contentType) {
       "r2",
       "object",
       "put",
+      "--remote",
       `${BUCKET}/${key}`,
       "-f",
       tmp,

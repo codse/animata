@@ -41,6 +41,7 @@ async function uploadOne(file) {
       "r2",
       "object",
       "put",
+      "--remote",
       `${BUCKET}/${key}`,
       "-f",
       file,

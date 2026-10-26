@@ -137,3 +137,7 @@ Heartfelt gratitude goes to each of you for your amazing contributions to this p
 ## License
 
 This project is licensed under the MIT License. see the [LICENSE](https://github.com/codse/animata/blob/main/LICENSE.md) file for details.
+
+## Deployment
+
+See [DEPLOYMENT.md](DEPLOYMENT.md) for Workers Static Assets, branch Previews and the Pages cutover checklist.

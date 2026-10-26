@@ -22,7 +22,9 @@
     "animata:new": "node ./scripts/create-new.js",
     "registry:build": "node ./scripts/build-registry.js && node ./scripts/build-docs-markdown.js && node ./scripts/build-llms-txt.js",
     "shadcn:add": "npx shadcn@latest add",
-    "prepare": "husky"
+    "prepare": "husky",
+    "deploy": "pnpm build && wrangler deploy",
+    "deploy:preview": "pnpm build && wrangler preview"
   },
   "dependencies": {
     "@emotion/is-prop-valid": "^1.2.2",
@@ -106,12 +108,15 @@
     "typescript": "^5",
     "unist-util-visit": "^5.1.0",
     "vfile": "^6.0.3",
-    "wrangler": "^3.114.17"
+    "wrangler": "^4.151.0"
   },
   "packageManager": "pnpm@11.5.0",
   "lint-staged": {
     "**/*.{js,jsx,ts,tsx,json,css,md,mdx}": [
       "biome check --fix --no-errors-on-unmatched"
     ]
+  },
+  "engines": {
+    "node": ">=22.0.0"
   }
 }
