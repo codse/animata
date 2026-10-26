@@ -286,6 +286,15 @@ function CardStackRoot<T extends CardStackItem>({
     onItemsChangeRef.current?.(itemList as T[]);
   }, [itemList]);
 
+  useEffect(() => {
+    if (skipItemsChangeNotifyRef.current) {
+      skipItemsChangeNotifyRef.current = false;
+      return;
+    }
+    if (!hasUserRotatedRef.current) return;
+    onItemsChangeRef.current?.(itemList as T[]);
+  }, [itemList]);
+
   const rotateOne = useCallback(() => {
     hasUserRotatedRef.current = true;
     setItemList((current) => {
