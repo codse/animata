@@ -3,18 +3,17 @@ import { IBM_Plex_Sans } from "next/font/google";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 
 import { ThemeProvider } from "@/components/providers";
+import { SmoothScroll } from "@/components/smooth-scroll";
 import { siteConfig } from "@/config/site";
 import { brandFont } from "@/lib/brand-font";
-import { cn } from "@/lib/utils";
 
-import "@fontsource-variable/lilex";
 import "@/styles/fonts.css";
 import "@/styles/globals.css";
 
 const ibmPlex = IBM_Plex_Sans({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
-  variable: "--font-sans",
+  variable: "--font-ibm-plex",
 });
 
 export const metadata: Metadata = {
@@ -90,8 +89,11 @@ export default function RootLayout({ children }: RootLayoutProps) {
       suppressHydrationWarning
       className={`${ibmPlex.variable} ${brandFont.variable}`}
     >
-      <head />
-      <body className={cn("min-h-screen bg-background antialiased", ibmPlex.className)}>
+      <head>
+        <link rel="preconnect" href="https://assets.animata.design" crossOrigin="anonymous" />
+      </head>
+      <body className={"min-h-screen bg-background font-sans antialiased"}>
+        <SmoothScroll />
         <NuqsAdapter>
           <ThemeProvider
             attribute="class"

@@ -48,6 +48,34 @@ mkdir -p components/animata/scroll && touch components/animata/scroll/stacked-se
 </StackedSections>
 ```
 
+### Smooth scrolling
+
+Scroll-driven sections feel best with smooth wheel scrolling. A mouse wheel moves the page in steps of about 100px, so anything tied to scroll position also moves in steps. [Lenis](https://github.com/darkroomengineering/lenis) interpolates between them. This site uses it:
+
+```tsx
+"use client";
+
+import Lenis from "lenis";
+import { cancelFrame, frame } from "motion/react";
+import { useEffect } from "react";
+import "lenis/dist/lenis.css";
+
+export function SmoothScroll() {
+  useEffect(() => {
+    const lenis = new Lenis({ lerp: 0.14, allowNestedScroll: true });
+    const update = ({ timestamp }: { timestamp: number }) => lenis.raf(timestamp);
+    frame.update(update, true); // one clock for scroll and Motion
+    return () => {
+      cancelFrame(update);
+      lenis.destroy();
+    };
+  }, []);
+  return null;
+}
+```
+
+Render it once in your root layout. Touch and keyboard keep native scrolling, and Lenis turns smoothing off for `prefers-reduced-motion`.
+
 ## How it works
 
 This mirrors the [CSS stacking-cards demo](https://scroll-driven-animations.style/demos/stacking-cards/css/):

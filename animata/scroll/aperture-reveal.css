@@ -1,0 +1,171 @@
+/*
+ * Layout, color, spacing, and type live in Tailwind classes on each part.
+ * This file holds what Tailwind can't express cleanly: values computed every frame from
+ * two scroll variables, the hint's pseudo-element animation, and a height container query.
+ *
+ *   --e  0 → 1  the opening widens until the photograph fills the stage
+ *   --q  0 → 1  the caption is read in, word by word
+ */
+@layer components {
+  .aperture__stage {
+    --e: 0;
+    --q: 0;
+    /* The opening's rectangle, measured in JS. 50% hides the photograph until measured. */
+    --aperture-top: 50%;
+    --aperture-right: 50%;
+    --aperture-bottom: 50%;
+    --aperture-left: 50%;
+    --aperture-radius: 0px;
+  }
+
+  .aperture__media {
+    clip-path: inset(
+      calc(var(--aperture-top) * (1 - var(--e))) calc(var(--aperture-right) * (1 - var(--e)))
+        calc(var(--aperture-bottom) * (1 - var(--e))) calc(var(--aperture-left) * (1 - var(--e)))
+        round calc(var(--aperture-radius) * (1 - var(--e)))
+    );
+    will-change: clip-path;
+  }
+
+  /* Whatever the consumer passes (img, video, Next Image) covers the stage. */
+  .aperture__media > :not(.aperture__wash) {
+    position: absolute;
+    inset: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform: scale(calc(1.32 - 0.32 * var(--e)));
+    will-change: transform;
+  }
+
+  .aperture__wash {
+    opacity: var(--q);
+  }
+
+  .aperture__lead,
+  .aperture__trail {
+    opacity: calc(1 - var(--e) * 1.6);
+    will-change: transform, opacity;
+  }
+
+  .aperture__lead {
+    transform: translateX(calc(var(--e) * -42cqw));
+  }
+
+  .aperture__trail {
+    transform: translateX(calc(var(--e) * 42cqw));
+  }
+
+  /* Narrow stages stack the headline, so the words part vertically. */
+  @container stage (width < 640px) {
+    .aperture__lead {
+      transform: translateY(calc(var(--e) * -44cqh));
+    }
+
+    .aperture__trail {
+      transform: translateY(calc(var(--e) * 44cqh));
+    }
+  }
+
+  .aperture__caption {
+    opacity: clamp(0, var(--q) * 12, 1);
+  }
+
+  /* Each word fades over a window of four words: --i is its index, --n the word count. */
+  .aperture__word {
+    --w: clamp(0, (var(--q) * (var(--n) + 4) - var(--i)) / 4, 1);
+    opacity: calc(0.16 + 0.84 * var(--w));
+  }
+
+  .aperture__action {
+    opacity: clamp(0, (var(--q) - 0.8) * 5, 1);
+    transform: translateY(calc((1 - clamp(0, (var(--q) - 0.8) * 5, 1)) * 12px));
+  }
+
+  .aperture__action:focus-within {
+    opacity: 1;
+    transform: none;
+  }
+
+  .aperture__hint {
+    opacity: calc(0.6 - var(--e) * 4);
+  }
+
+  .aperture__hint::after {
+    content: "";
+    width: 1px;
+    height: 28px;
+    background: currentColor;
+    animation: aperture-hint 1.8s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+  }
+
+  /* Before hydration the static layout isn't applied yet; never loop for reduced motion. */
+  @media (prefers-reduced-motion: reduce) {
+    .aperture__hint::after {
+      animation: none;
+    }
+  }
+
+  @keyframes aperture-hint {
+    0% {
+      transform: scaleY(0);
+      transform-origin: top;
+    }
+    50% {
+      transform: scaleY(1);
+      transform-origin: top;
+    }
+    51% {
+      transform-origin: bottom;
+    }
+    100% {
+      transform: scaleY(0);
+      transform-origin: bottom;
+    }
+  }
+
+  /* Reduced motion: release every scroll-driven value. Layout comes from Tailwind. */
+  .aperture[data-static] .aperture__media {
+    clip-path: none;
+  }
+
+  .aperture[data-static] .aperture__media > :not(.aperture__wash),
+  .aperture[data-static] :is(.aperture__lead, .aperture__trail, .aperture__action) {
+    transform: none;
+  }
+
+  .aperture[data-static]
+    :is(
+      .aperture__wash,
+      .aperture__lead,
+      .aperture__trail,
+      .aperture__caption,
+      .aperture__word,
+      .aperture__action
+    ) {
+    opacity: 1;
+  }
+}
+
+/*
+ * Short, wide stages (a phone in landscape). Tailwind has no container height variant, and
+ * these must beat the Tailwind sizes on the same parts, so they stay outside the layer.
+ */
+@container stage (height < 480px) and (width >= 640px) {
+  .aperture__headline {
+    font-size: clamp(1.75rem, 11cqh, 4rem);
+  }
+
+  .aperture__caption {
+    padding-top: 16px;
+  }
+
+  .aperture__text {
+    font-size: clamp(1rem, 4.5cqh, 1.5rem);
+  }
+
+  .aperture__hint {
+    display: none;
+  }
+}

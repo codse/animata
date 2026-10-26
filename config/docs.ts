@@ -70,6 +70,7 @@ const sidebarNav: SidebarNavItem[] = [
         title: "Changelog",
         href: "/docs/changelog",
         items: [
+          { title: "October 2026", href: "/docs/changelog/2026-10", items: [] },
           { title: "September 2026", href: "/docs/changelog/2026-09", items: [] },
           { title: "June 2026", href: "/docs/changelog/2026-06", items: [] },
           { title: "May 2026", href: "/docs/changelog/2026-05", items: [] },

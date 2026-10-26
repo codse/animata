@@ -82,6 +82,21 @@ export const DEMO_REGISTRY = [
     ],
   },
   {
+    key: "scroll/aperture-reveal-demo-001",
+    groupSlug: "scroll",
+    itemSlug: "aperture-reveal-demo-001",
+    label: "Dawn climb · two chapters",
+    components: [
+      {
+        docSlug: "scroll/aperture-reveal",
+        category: "Scroll",
+        name: "Aperture Reveal",
+        description:
+          "Two page-scroll chapters, night then first light. Each photograph opens out of a gap in its headline.",
+      },
+    ],
+  },
+  {
     key: "hero/photographer-portfolio",
     groupSlug: "hero",
     itemSlug: "photographer-portfolio",

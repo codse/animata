@@ -1,0 +1,31 @@
+---
+title: October 2026
+description: Aperture Reveal, a scroll-driven section where a photograph opens out of the headline, a two-chapter demo, smooth wheel scrolling across the site, and house motion tokens.
+date: 2026-10-01
+---
+
+Added [Aperture Reveal](/docs/scroll/aperture-reveal), a scroll-driven section built from composable parts. A photograph starts inside a pill-shaped gap in the headline, opens to fill the stage as the words part, and then carries a caption that reads in word by word. A new [dawn climb demo](/demo/scroll/aperture-reveal-demo-001) uses two of them with page scroll.
+
+## New components
+
+<ChangeLogComponents>
+  <ChangeLogEntry href="/docs/scroll/aperture-reveal">
+    <h3>Aperture Reveal</h3>
+    <p>One photograph clipped from a gap in the headline to full bleed, with a word-by-word caption, a contained scroll mode, and a static reduced-motion version.</p>
+  </ChangeLogEntry>
+</ChangeLogComponents>
+
+## Demos
+
+Added [Dawn climb · two chapters](/demo/scroll/aperture-reveal-demo-001) to the Scroll group: a dark night chapter, a route-details band, and a light sunrise chapter, all on page scroll.
+
+## Site
+
+Added smooth wheel scrolling with [Lenis](https://github.com/darkroomengineering/lenis) across the docs, landing page, and demos. Wheel input is interpolated, so scroll-driven components like [Stacked Sections](/docs/scroll/stacked-sections) and [Aperture Reveal](/docs/scroll/aperture-reveal) move continuously instead of in wheel-notch steps. Touch and keyboard keep native scrolling, inner scroll areas keep their own scrolling, and reduced motion turns smoothing off.
+
+Updated site typography. Headings use Knile, interface and body text use Alcyone, and code uses [Paper Mono](https://github.com/paper-design/paper-mono), which replaces Lilex. Faux bold is turned off so text only renders in real weights.
+
+Added house motion tokens. `ease-out`, `ease-in`, and `ease-in-out` now use stronger curves with longer settles, and there are new `ease-glide`, `ease-snap`, and `ease-overshoot` curves. Plain `transition` classes default to the house `ease-out` at 200ms. `lib/motion.ts` exposes the same curves for Motion.
+
+Fixed easing classes that were silently ignored. The site defined its custom curves under Tailwind v3's `--transition-timing-function-*` names, which Tailwind v4 doesn't read, so `ease-slow` fell back to the default curve in previews for [Swap Text](/docs/text/swap-text), [Mirror Text](/docs/text/mirror-text), [Tilted Cover](/docs/image/tilted-cover), and [Disclose Image](/docs/image/disclose-image). Installed copies were unaffected; their docs already used the correct names.
+

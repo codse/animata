@@ -5,7 +5,7 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-  --font-mono: "Lilex Variable", ui-monospace, monospace;
+  --font-mono: "Paper Mono", ui-monospace, monospace;
 }
 
 @utility container {
@@ -81,9 +81,30 @@
     transparent 100%
   );
 
-  --transition-timing-function-slow: cubic-bezier(0.405, 0, 0.025, 1);
-  --transition-timing-function-minor-spring: cubic-bezier(0.76, 0.34, 0.38, 1.64);
-  --transition-timing-function-apple: cubic-bezier(0.4, 0, 0.6, 1);
+  /*
+   * Motion tokens. Tailwind v4 reads easing classes from --ease-*, so these power
+   * ease-out, ease-in-out, ease-glide, and the rest. Keep in sync with lib/motion.ts.
+   *
+   * ease-out      UI responses: hover, press, menus, toasts. Fast start, long settle.
+   * ease-in       Exits only, kept short.
+   * ease-in-out   On-screen moves between two states: tabs, drawers, layout shifts.
+   * ease-glide    Large, expressive moves: page transitions, hero reveals (600ms+).
+   * ease-snap     Micro feedback that should feel instant (100–200ms).
+   * ease-overshoot  Playful arrivals with a small overshoot.
+   */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in: cubic-bezier(0.64, 0, 0.78, 0);
+  --ease-in-out: cubic-bezier(0.4, 0, 0, 1);
+  --ease-glide: cubic-bezier(0.65, 0, 0.05, 1);
+  --ease-snap: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-overshoot: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-slow: cubic-bezier(0.405, 0, 0.025, 1);
+  --ease-minor-spring: cubic-bezier(0.18, 0.89, 0.82, 1.04);
+  --ease-apple: cubic-bezier(0.4, 0, 0.6, 1);
+
+  /* `transition` with no ease or duration class uses these. */
+  --default-transition-timing-function: var(--ease-out);
+  --default-transition-duration: 200ms;
 
   --radius-card: 18px;
   --radius-section: 28px;
@@ -397,7 +418,7 @@
     }
   }
 
-  --animate-section-reveal: section-reveal 0.6s var(--transition-timing-function-apple) both;
+  --animate-section-reveal: section-reveal 0.6s var(--ease-apple) both;
 
   @keyframes section-reveal {
     from {

@@ -14,9 +14,6 @@ importers:
       '@fontsource-variable/instrument-sans':
         specifier: ^5.2.8
         version: 5.2.8
-      '@fontsource-variable/lilex':
-        specifier: ^5.2.1
-        version: 5.2.1
       '@phosphor-icons/react':
         specifier: ^2.1.10
         version: 2.1.10(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
@@ -80,6 +77,9 @@ importers:
       cmdk:
         specifier: ^1.1.1
         version: 1.1.1(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+      lenis:
+        specifier: ^1.3.26
+        version: 1.3.26(react@19.2.5)
       lodash.camelcase:
         specifier: ^4.3.0
         version: 4.3.0
@@ -1493,9 +1493,6 @@ packages:
 
   '@fontsource-variable/instrument-sans@5.2.8':
     resolution: {integrity: sha512-mTCaukbdIjjoipj2E3Q5XoZM3ZxJWdzyHevf/LG/0PHlfF9Q85pxOM7B7A9MerFyxmRzz5kVlumgIvgDSG4CPg==}
-
-  '@fontsource-variable/lilex@5.2.1':
-    resolution: {integrity: sha512-l+cYywL7TTDffmiaZEPG98Er8eIJhqImV9ZSwOqxE3dC+oS8G/erBvIkQO6T87J+i7+9HJwr7gSVfcq7deMuAw==}
 
   '@fontsource/ibm-plex-sans@5.2.8':
     resolution: {integrity: sha512-eztSXjDhPhcpxNIiGTgMebdLP9qS4rWkysuE1V7c+DjOR0qiezaiDaTwQE7bTnG5HxAY/8M43XKDvs3cYq6ZYQ==}
@@ -4013,7 +4010,7 @@ packages:
   git-raw-commits@4.0.0:
     resolution: {integrity: sha512-ICsMM1Wk8xSGMowkOmPrzo2Fgmfo4bMHLNX6ytHjajRJUqvHOw/TFapQ+QG75c3X/tTDDhOSRPGC52dDbNM8FQ==}
     engines: {node: '>=16'}
-    deprecated: This package is no longer maintained. For the JavaScript API, please use @conventional-changelog/git-client instead.
+    deprecated: Deprecated and no longer maintained. Use @conventional-changelog/git-client instead.
     hasBin: true
 
   github-slugger@2.0.0:
@@ -4351,6 +4348,20 @@ packages:
   kleur@3.0.3:
     resolution: {integrity: sha512-eTIzlVOSUR+JxdDFepEYcBMtZ9Qqdef+rnzWdRZuMbOywu5tO2w2N7rqjoANZ5k9vywhL6Br1VRjUIgTQx4E8w==}
     engines: {node: '>=6'}
+
+  lenis@1.3.26:
+    resolution: {integrity: sha512-s/xTCZCxTFvHbAN1OzuhNaN5YPJH2ail0XAkctKW1b+RUAG4nUL5UHLXwNko1h8aEeT2jspBXegMgPJd8zcuag==}
+    peerDependencies:
+      '@nuxt/kit': '>=3.0.0'
+      react: '>=17.0.0'
+      vue: '>=3.0.0'
+    peerDependenciesMeta:
+      '@nuxt/kit':
+        optional: true
+      react:
+        optional: true
+      vue:
+        optional: true
 
   lightningcss-android-arm64@1.32.0:
     resolution: {integrity: sha512-YK7/ClTt4kAK0vo6w3X+Pnm0D2cf2vPHbhOXdoNti1Ga0al1P4TBZhwjATvjNwLEBCnKvjJc2jQgHXH0NEwlAg==}
@@ -7308,8 +7319,6 @@ snapshots:
   '@floating-ui/utils@0.2.11': {}
 
   '@fontsource-variable/instrument-sans@5.2.8': {}
-
-  '@fontsource-variable/lilex@5.2.1': {}
 
   '@fontsource/ibm-plex-sans@5.2.8': {}
 
@@ -10341,6 +10350,10 @@ snapshots:
       json-buffer: 3.0.1
 
   kleur@3.0.3: {}
+
+  lenis@1.3.26(react@19.2.5):
+    optionalDependencies:
+      react: 19.2.5
 
   lightningcss-android-arm64@1.32.0:
     optional: true
