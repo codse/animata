@@ -48,5 +48,5 @@ jobs:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           wranglerVersion: "4.151.2"
-          command: deploy --name animata-v3
+          command: deploy --name animata-v3 --assets out --compatibility-date 2026-10-19
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
