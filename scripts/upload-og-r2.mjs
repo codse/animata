@@ -27,6 +27,7 @@ function walk(dir, files = []) {
   return files;
 }
 
+/** Upload a staged OG image to remote R2, or report its key in dry-run mode. */
 async function uploadOne(file) {
   const key = relative(STAGING_DIR, file);
   const contentType = key.endsWith(".gif") ? "image/gif" : "image/png";
