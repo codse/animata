@@ -6,6 +6,10 @@ on:
       - main
     types: [opened, synchronize, reopened, closed]
 
+concurrency:
+  group: ${{ github.workflow }}-pr-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
 
@@ -102,14 +106,8 @@ jobs:
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
-            const { validatePreviewUrl } = await import(`${process.env.GITHUB_WORKSPACE}/deployment/scripts/preview-comment.mjs`);
-            const url = validatePreviewUrl(process.env.PREVIEW_URL);
-            await github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: `🚀 Preview deployed to: ${url}`
-            })
+            const { upsertPreviewComment } = await import(`${process.env.GITHUB_WORKSPACE}/deployment/scripts/preview-comment.mjs`);
+            await upsertPreviewComment(github, context, process.env.PREVIEW_URL);
 
   cleanup-preview:
     if: github.event.action == 'closed'
