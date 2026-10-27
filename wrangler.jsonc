@@ -1,7 +1,7 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "animata",
-  "compatibility_date": "2026-10-26",
+  "compatibility_date": "2026-10-19",
   "workers_dev": true,
   "preview_urls": true,
   "previews": {},
