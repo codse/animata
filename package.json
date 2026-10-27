@@ -23,7 +23,7 @@
     "registry:build": "node ./scripts/build-registry.js && node ./scripts/build-docs-markdown.js && node ./scripts/build-llms-txt.js",
     "shadcn:add": "npx shadcn@latest add",
     "prepare": "husky",
-    "deploy": "pnpm build && wrangler deploy",
+    "deploy:prod": "pnpm build && wrangler deploy",
     "deploy:preview": "pnpm build && wrangler preview"
   },
   "dependencies": {

@@ -13,7 +13,7 @@ pnpm exec wrangler deploy
 
 The Next.js static export remains in `out/`, including the prebuilt Storybook previews. Workers serves these files directly, applies `public/_headers`, and serves the exported 404 page for unknown URLs. No SSR adapter or server entry point is needed.
 
-`pnpm deploy` builds and deploys production. `pnpm deploy:preview` builds and creates a Worker Preview for the current Git branch; `pnpm exec wrangler preview --name pr-123` targets a specific Preview after a build. The pull request workflow uses `pr-<number>` and the Wrangler action's `deployment-url` output. Remove a closed Preview with `pnpm exec wrangler preview delete --name pr-123 --skip-confirmation`.
+`pnpm deploy:prod` builds and deploys production. `pnpm deploy:preview` builds and creates a Worker Preview for the current Git branch; `pnpm exec wrangler preview --name pr-123` targets a specific Preview after a build. The pull request workflow uses `pr-<number>` and the Wrangler action's `deployment-url` output. Remove a closed Preview with `pnpm exec wrangler preview delete --name pr-123 --skip-confirmation`.
 
 The v3 workflow deploys its export as the separate `animata-v3` Worker. Apply the matching configuration and dependency changes on that branch before running its updated workflow.
 
