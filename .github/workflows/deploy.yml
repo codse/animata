@@ -4,14 +4,14 @@ on:
   pull_request_target:
     branches:
       - main
-    types: [opened, synchronize, reopened]
+    types: [opened, synchronize, reopened, closed]
 
 permissions:
   contents: read
 
 jobs:
   build-preview:
-    if: github.event.pull_request.head.repo.full_name != github.repository
+    if: github.event.action != 'closed' && github.event.pull_request.head.repo.full_name != github.repository
     runs-on: ubuntu-latest
     environment: preview-deployment
     outputs:
@@ -102,3 +102,30 @@ jobs:
               repo: context.repo.repo,
               body: `🚀 Preview deployed to: ${{ steps.deploy.outputs.deployment-url }}`
             })
+
+  cleanup-preview:
+    if: github.event.action == 'closed'
+    runs-on: ubuntu-latest
+    environment: preview-deployment
+    steps:
+      - name: Checkout trusted Workers configuration
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+          persist-credentials: false
+          sparse-checkout: /wrangler.jsonc
+          sparse-checkout-cone-mode: false
+          path: deployment
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Delete closed pull request Preview
+        uses: cloudflare/wrangler-action@v4
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          workingDirectory: deployment
+          packageManager: npm
+          wranglerVersion: "4.151.2"
+          command: preview delete --config wrangler.jsonc --name pr-${{ github.event.pull_request.number }} --skip-confirmation
