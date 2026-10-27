@@ -29,3 +29,6 @@ Added house motion tokens. `ease-out`, `ease-in`, and `ease-in-out` now use stro
 
 Fixed easing classes that were silently ignored. The site defined its custom curves under Tailwind v3's `--transition-timing-function-*` names, which Tailwind v4 doesn't read, so `ease-slow` fell back to the default curve in previews for [Swap Text](/docs/text/swap-text), [Mirror Text](/docs/text/mirror-text), [Tilted Cover](/docs/image/tilted-cover), and [Disclose Image](/docs/image/disclose-image). Installed copies were unaffected; their docs already used the correct names.
 
+## Deployment
+
+Moved the static site and pull request previews from Cloudflare Pages to Workers Static Assets. Upgraded deployment tooling to Wrangler 4 and kept R2 image uploads explicitly remote.

@@ -53,3 +53,6 @@ react-doctor-report.json
 
 # Purchased site webfonts (Knile, Alcyone); not redistributable. Fallback: open fonts.
 /public/fonts/atipo/
+
+# Wrangler local state
+.wrangler/

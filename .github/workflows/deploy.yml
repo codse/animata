@@ -4,18 +4,29 @@ on:
   pull_request_target:
     branches:
       - main
-    types: [opened, synchronize, reopened]
+    types: [opened, synchronize, reopened, closed]
+
+concurrency:
+  group: ${{ github.workflow }}-pr-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
 
 jobs:
-  deploy-preview:
-    if: github.event.pull_request.head.repo.full_name != github.repository
+  build-preview:
+    if: github.event.action != 'closed'
     runs-on: ubuntu-latest
     environment: preview-deployment
+    outputs:
+      artifact-id: ${{ steps.artifact.outputs.artifact-id }}
     steps:
-      - name: Checkout
+      - name: Checkout pull request
         uses: actions/checkout@v4
         with:
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
           ref: ${{ github.event.pull_request.head.sha }}
+          persist-credentials: false
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
         with:
@@ -24,19 +35,10 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "22"
-          cache: "pnpm"
-      - name: Restore cache
-        uses: actions/cache@v4
-        with:
-          path: |
-            .next/cache
-          key: ${{ runner.os }}-nextjs-${{ hashFiles('**/pnpm-lock.yaml') }}-${{ hashFiles('**.[jt]s', '**.[jt]sx') }}
-          restore-keys: |
-            ${{ runner.os }}-nextjs-${{ hashFiles('**/pnpm-lock.yaml') }}-
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
-      - name: Build component previews
-        run: pnpm storybook:build
+      - name: Test Preview comment handling
+        run: node --test scripts/preview-comment.test.mjs
       - name: Build with Next.js
         env:
           NEXT_PUBLIC_APP_URL: ${{ vars.NEXT_PUBLIC_APP_URL }}
@@ -46,22 +48,90 @@ jobs:
           NEXT_PUBLIC_POSTHOG_HOST: ${{ vars.NEXT_PUBLIC_POSTHOG_HOST }}
           NEXT_PUBLIC_PLUNK_API_KEY: ${{ vars.NEXT_PUBLIC_PLUNK_API_KEY }}
         run: pnpm build
-      - name: Deploy to Cloudflare Pages
+      - name: Upload static export
+        id: artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: preview-site-${{ github.run_id }}-${{ github.run_attempt }}
+          path: out/
+          include-hidden-files: true
+          if-no-files-found: error
+          retention-days: 1
+
+  deploy-preview:
+    needs: build-preview
+    runs-on: ubuntu-latest
+    environment: preview-deployment
+    permissions:
+      contents: read
+      deployments: write
+      issues: write
+    steps:
+      # Only the base commit supplies configuration in this job.
+      - name: Checkout trusted Workers configuration
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+          persist-credentials: false
+          sparse-checkout: |
+            /wrangler.jsonc
+            /scripts/preview-comment.mjs
+          sparse-checkout-cone-mode: false
+          path: deployment
+      - name: Download static export by immutable artifact ID
+        uses: actions/download-artifact@v4
+        with:
+          artifact-ids: ${{ needs.build-preview.outputs.artifact-id }}
+          path: deployment/out
+          merge-multiple: true
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Deploy to Cloudflare Workers
         id: deploy
-        uses: cloudflare/wrangler-action@v3
+        uses: cloudflare/wrangler-action@v4
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy out --project-name=animata --branch=dev-${{ github.event.pull_request.head.ref }}
+          workingDirectory: deployment
+          packageManager: npm
+          wranglerVersion: "4.151.2"
+          command: preview --config wrangler.jsonc --name pr-${{ github.event.pull_request.number }}
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
       - name: Comment Deployment URL
-        uses: actions/github-script@v6
+        uses: actions/github-script@v9
+        env:
+          PREVIEW_URL: ${{ steps.deploy.outputs.preview-url }}
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
-            await github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: `🚀 Preview deployed to: ${{ steps.deploy.outputs.deployment-url }}`
-            })
+            const { upsertPreviewComment } = await import(`${process.env.GITHUB_WORKSPACE}/deployment/scripts/preview-comment.mjs`);
+            await upsertPreviewComment(github, context, process.env.PREVIEW_URL);
+
+  cleanup-preview:
+    if: github.event.action == 'closed'
+    runs-on: ubuntu-latest
+    environment: preview-deployment
+    steps:
+      - name: Checkout trusted Workers configuration
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+          persist-credentials: false
+          sparse-checkout: /wrangler.jsonc
+          sparse-checkout-cone-mode: false
+          path: deployment
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Delete closed pull request Preview
+        uses: cloudflare/wrangler-action@v4
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          workingDirectory: deployment
+          packageManager: npm
+          wranglerVersion: "4.151.2"
+          command: preview delete --config wrangler.jsonc --name pr-${{ github.event.pull_request.number }} --skip-confirmation

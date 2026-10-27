@@ -470,7 +470,7 @@ async function renderItem(page, item, port) {
   }
 }
 
-// Upload an object to R2 via wrangler (uses your wrangler auth; the token needs R2 write).
+/** Upload image bytes to remote R2 with Wrangler auth (requires R2 write). */
 async function uploadToR2(key, buf, contentType) {
   const dir = mkdtempSync(join(tmpdir(), "og-"));
   const tmp = join(dir, "asset");
@@ -480,6 +480,7 @@ async function uploadToR2(key, buf, contentType) {
       "r2",
       "object",
       "put",
+      "--remote",
       `${BUCKET}/${key}`,
       "-f",
       tmp,

@@ -31,8 +31,6 @@ jobs:
             ${{ runner.os }}-nextjs-${{ hashFiles('**/pnpm-lock.yaml') }}-
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
-      - name: Build component previews
-        run: pnpm storybook:build
       - name: Build with Next.js
         env:
           NEXT_PUBLIC_APP_URL: ${{ vars.NEXT_PUBLIC_APP_URL }}
@@ -42,10 +40,11 @@ jobs:
           NEXT_PUBLIC_POSTHOG_HOST: ${{ vars.NEXT_PUBLIC_POSTHOG_HOST }}
           NEXT_PUBLIC_PLUNK_API_KEY: ${{ vars.NEXT_PUBLIC_PLUNK_API_KEY }}
         run: pnpm build
-      - name: Deploy to Cloudflare Pages
-        uses: cloudflare/wrangler-action@v3
+      - name: Deploy to Cloudflare Workers
+        uses: cloudflare/wrangler-action@v4
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy out --project-name=animata-v3 --branch=main
+          wranglerVersion: "4.151.2"
+          command: deploy --name animata-v3 --assets out --compatibility-date 2026-10-19
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
