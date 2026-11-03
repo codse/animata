@@ -1,7 +1,102 @@
 @import "@fontsource-variable/instrument-sans";
 
+/*
+ * Site typography.
+ *   --font-display = Knile (headings/display)
+ *   --font-sans    = Alcyone (interface/body)
+ *   --font-mono    = Paper Mono (OFL, self-hosted)
+ * Knile and Alcyone are licensed webfonts for animata.design only. They are served from the
+ * assets CDN, which only allows the site's own origins; local copies in public/fonts/atipo/
+ * (gitignored) are the second source. Without either, the site falls back to Instrument Sans,
+ * IBM Plex Sans, and Outfit.
+ */
+@font-face {
+  font-family: "Knile";
+  src:
+    url("https://assets.animata.design/fonts/atipo/knile-bold.v2.woff2?r=1") format("woff2"),
+    url("/fonts/atipo/knile-bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Alcyone";
+  src:
+    url("https://assets.animata.design/fonts/atipo/alcyone-regular.v2.woff2") format("woff2"),
+    url("/fonts/atipo/alcyone-regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Alcyone";
+  src:
+    url("https://assets.animata.design/fonts/atipo/alcyone-medium.v2.woff2") format("woff2"),
+    url("/fonts/atipo/alcyone-medium.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Alcyone";
+  src:
+    url("https://assets.animata.design/fonts/atipo/alcyone-semibold.v2.woff2") format("woff2"),
+    url("/fonts/atipo/alcyone-semibold.woff2") format("woff2");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Alcyone";
+  src:
+    url("https://assets.animata.design/fonts/atipo/alcyone-bold.v2.woff2") format("woff2"),
+    url("/fonts/atipo/alcyone-bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Alcyone";
+  src:
+    url("https://assets.animata.design/fonts/atipo/alcyone-regular-italic.v2.woff2") format("woff2"),
+    url("/fonts/atipo/alcyone-regular-italic.woff2") format("woff2");
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Alcyone";
+  src:
+    url("https://assets.animata.design/fonts/atipo/alcyone-bold-italic.v2.woff2") format("woff2"),
+    url("/fonts/atipo/alcyone-bold-italic.woff2") format("woff2");
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Paper Mono";
+  src: url("/fonts/paper-mono/paper-mono-variable.woff2") format("woff2");
+  font-weight: 100 800;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
+  --font-sans: "Alcyone", var(--font-ibm-plex), ui-sans-serif, system-ui, sans-serif;
   --font-display:
-    "Instrument Sans Variable", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
+    "Knile", "Instrument Sans Variable", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
     "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --font-brand: "Alcyone", var(--font-outfit), ui-sans-serif, system-ui, sans-serif;
+}
+
+/* No faux bold; faux italic stays on for fallback families that ship upright faces only. */
+body {
+  font-synthesis: style;
 }

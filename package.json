@@ -27,7 +27,6 @@
   "dependencies": {
     "@emotion/is-prop-valid": "^1.2.2",
     "@fontsource-variable/instrument-sans": "^5.2.8",
-    "@fontsource-variable/lilex": "^5.2.1",
     "@phosphor-icons/react": "^2.1.10",
     "@radix-ui/react-accordion": "^1.2.12",
     "@radix-ui/react-alert-dialog": "^1.1.6",

@@ -12,12 +12,26 @@ Animata is a free, open-source library of animated React components built with N
 - Co-located `<name>.css` imported from the TSX for keyframes, pseudo-elements, and selectors Tailwind cannot express (see `roll-text.tsx`, `metis-text.tsx`)
 - No inline `<style>` blocks — use co-located `<name>.css` imported from the TSX (see `marquee.tsx`, `roll-text.tsx`)
 - No CSS modules, no styled-components
-- Fonts: `--font-display` = Instrument Sans (headings/display), `--font-sans` = IBM Plex Sans (body), `--font-mono` = Lilex
+- Fonts (`styles/fonts.css`): `--font-display` = Knile, `--font-sans` = Alcyone, `--font-mono` = Paper Mono (OFL, committed). Knile/Alcyone are licensed for animata.design only: served from `assets.animata.design/fonts/atipo/` (CORS limited to the site's origins), never committed; local copies under `public/fonts/atipo/` are gitignored; Instrument Sans / IBM Plex Sans / Outfit are the fallbacks
 - Brand yellow: `#ffcc00` (from logo) — use for highlights and badges
 - shadcn registry URL format: `https://animata.design/r/{category}/{name}.json` — always use this in docs/changelog, never bare `npx shadcn add component-name`
 - Theme accent: `hsl(var(--accent))` = purple/violet
 - All new components must be theme-responsive (light + dark)
 - **New component category?** Add a category glyph for `/components` — read `content/docs/contributing/category-glyphs.mdx` (three-shade tokens, stroke tiers, `cg-motion` hover). Full repo spec: `content/docs/contributing/category-glyphs-spec.md`. Do not put spec markdown under `animata/` (webpack lazy-loads that tree).
+
+## Public text stays public-safe
+
+This repo is open source. Everything that leaves the machine is public: PR titles and descriptions, PR, review, and issue comments, commit messages, branch names, code comments, docs, changelogs, demo copy, and Storybook stories. Public text describes the work on its own terms — what changed and why it helps people using Animata. Nothing else.
+
+Keep out of public text:
+
+- **Internal context** — the private discussion behind a change, how a decision was reached, reactions to the work, and opinions about the codebase or the people on it.
+- **References and research** — other products, sites, studios, or people used as inspiration, comparison, or benchmarks, and anything measured or copied from them. Exception: attributions and licence credits that the [contributing guidelines](content/docs/contributing/guidelines.mdx) require, such as credits for copied SVG icons.
+- **Business and plans** — unreleased features, roadmap timing, pricing, commercial direction, clients, partners, and internal tools or repos.
+- **People and access** — personal names (except authors and public credits), private email addresses, accounts, credentials, tokens, private URLs, and local file paths.
+- **Process** — prompts, AI tools or skills used, and agent workflow. The only exceptions are the `Co-Authored-By` commit trailer, which may use a public or no-reply email address, and the "Generated with Claude Code" line at the end of a PR description.
+
+Before any push, PR, or comment: reread every public string against this list. If something is unclear, leave it out and ask.
 
 ## Changelog rule — ALWAYS update this
 
