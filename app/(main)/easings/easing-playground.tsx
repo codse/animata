@@ -11,9 +11,11 @@ import { cn } from "@/lib/utils";
 
 import { CODE_FORMATS, type CodeFormat, codeFor, formatBezier } from "./code";
 import { CurveEditor, CurveFields, Y_MAX, Y_MIN } from "./curve-editor";
+import { CurveGallery } from "./curve-gallery";
 import { DurationControl, MAX_DURATION, MIN_DURATION } from "./duration-control";
 import { findMoment, MOMENTS, type Moment } from "./moments";
 import { type EasingPreset, findPreset, PRESETS, sameBezier } from "./presets";
+import { press, raised } from "./ui";
 
 /** How long each state is held before the stage plays the other direction. */
 const HOLD_MS = 1000;
@@ -22,12 +24,6 @@ const SPEEDS = [
   { value: 0.5, label: "½×", name: "Half speed" },
   { value: 0.25, label: "¼×", name: "Quarter speed" },
 ] as const;
-
-/** Press feedback shared by every button on the page. */
-const press =
-  "transition-[scale,background-color,color,box-shadow] duration-150 ease-out active:scale-[0.97]";
-const raised =
-  "shadow-[0_0_0_1px_var(--color-border),0_1px_2px_rgb(0_0_0/0.05),0_12px_32px_-14px_rgb(0_0_0/0.18)]";
 
 type Slot = { preset: EasingPreset | null; bezier: CubicBezier; durationMs: number };
 
@@ -48,24 +44,6 @@ function parseCurve(value: string | null): CubicBezier | null {
   // Keep shared links inside the editor's range so both handles stay reachable.
   const y = (value: number) => Math.min(Y_MAX, Math.max(Y_MIN, value));
   return [x1, y(y1), x2, y(y2)];
-}
-
-function MiniCurve({ bezier, className }: { bezier: CubicBezier; className?: string }) {
-  const [x1, y1, x2, y2] = bezier;
-  const px = (x: number) => 2 + x * 16;
-  const py = (y: number) => 12 - y * 9;
-  return (
-    <svg
-      viewBox="0 0 20 14"
-      aria-hidden="true"
-      className={cn("h-3.5 w-5 shrink-0 overflow-visible", className)}
-    >
-      <path
-        d={`M ${px(0)} ${py(0)} C ${px(x1)} ${py(y1)}, ${px(x2)} ${py(y2)}, ${px(1)} ${py(1)}`}
-        className="fill-none stroke-current stroke-[1.7] [stroke-linecap:round]"
-      />
-    </svg>
-  );
 }
 
 export function EasingPlayground() {
@@ -93,7 +71,6 @@ export function EasingPlayground() {
   const [playKey, setPlayKey] = useState(0);
   /** Bumped by Replay and by every change, so the cycle restarts from a fresh open. */
   const [cycle, setCycle] = useState(0);
-  const [showAll, setShowAll] = useState(false);
   const [format, setFormat] = useState<CodeFormat>("css");
   const [copied, setCopied] = useState(false);
   const stageRef = useRef<HTMLDivElement>(null);
@@ -170,7 +147,6 @@ export function EasingPlayground() {
     }
   };
 
-  const chips = showAll ? PRESETS : moment.suggest.map(presetOf);
   const panes = compare ? [a, b] : [a];
 
   return (
@@ -372,7 +348,18 @@ export function EasingPlayground() {
             })}
           </div>
 
-          {/* Tuning sits right under the stage: no panel, three columns under one hairline. */}
+          <CurveGallery
+            moment={moment}
+            slots={{ a, b }}
+            editing={compare ? editing : "a"}
+            compare={compare}
+            open={open}
+            playMs={Math.round(active.durationMs / speed)}
+            reducedMotion={reducedMotion}
+            onPick={pickPreset}
+          />
+
+          {/* Tuning sits under the gallery: no panel, three columns under one hairline. */}
           <div className="grid grid-cols-[minmax(0,1fr)] gap-x-8 gap-y-6 border-t border-border pt-5 md:grid-cols-[10rem_minmax(0,1fr)] lg:grid-cols-[10rem_minmax(0,1.15fr)_minmax(0,1fr)]">
             <div className="order-last grid content-start gap-2.5 md:order-none">
               <span className="text-xs text-muted-foreground">Curve</span>
@@ -406,53 +393,13 @@ export function EasingPlayground() {
             </div>
 
             <div className="grid content-start gap-5">
-              <div className="grid gap-2.5">
-                <div className="flex items-baseline justify-between gap-3 text-xs text-muted-foreground">
-                  <span>
-                    {showAll ? "All curves" : `Made for ${moment.plural}`}
-                    {compare ? ` · editing ${editing.toUpperCase()}` : ""}
-                  </span>
-                  <button
-                    type="button"
-                    onClick={() => setShowAll((value) => !value)}
-                    className="font-medium hover:text-foreground"
-                  >
-                    {showAll ? "Suggested only" : "All curves"}
-                  </button>
-                </div>
-                <div className="flex flex-wrap gap-1.5">
-                  {chips.map((preset) => (
-                    <button
-                      key={preset.id}
-                      type="button"
-                      aria-pressed={active.preset?.id === preset.id}
-                      aria-label={`${preset.name}, ${preset.duration} milliseconds. ${preset.use}`}
-                      onClick={() => pickPreset(preset)}
-                      className={cn(
-                        "inline-flex h-9 items-center gap-2 rounded-[11px] bg-background pr-3 pl-2.5 text-[13px] font-medium text-muted-foreground shadow-[0_0_0_1px_var(--color-border)] hover:text-foreground",
-                        "aria-pressed:bg-foreground aria-pressed:text-background aria-pressed:shadow-[0_0_0_1px_var(--color-foreground),0_8px_20px_-10px_rgb(0_0_0/0.4)]",
-                        press,
-                      )}
-                    >
-                      <MiniCurve bezier={preset.bezier} />
-                      {preset.short}
-                      <span className="font-mono text-[11px] tabular-nums opacity-60">
-                        {preset.duration}
-                      </span>
-                    </button>
-                  ))}
-                </div>
-              </div>
               <DurationControl
                 value={active.durationMs}
                 onChange={setDuration}
                 onCommit={replay}
                 suggested={active.preset?.duration}
               />
-            </div>
-
-            <div className="grid content-start gap-3 md:col-span-2 lg:col-span-1">
-              <p className="m-0 min-h-[3lh] text-sm/[1.55] text-pretty text-muted-foreground">
+              <p className="m-0 min-h-[4lh] text-sm/[1.55] text-pretty text-muted-foreground">
                 {active.preset ? (
                   <>
                     <span className="font-medium text-foreground">{active.preset.use}.</span>{" "}
@@ -465,6 +412,9 @@ export function EasingPlayground() {
                   </>
                 )}
               </p>
+            </div>
+
+            <div className="grid content-start gap-3 md:col-span-2 lg:col-span-1">
               <div className={cn("overflow-hidden rounded-[14px] bg-background", raised)}>
                 <div className="flex items-center gap-0.5 border-b border-border p-1.5">
                   <div role="radiogroup" aria-label="Code format" className="flex gap-0.5">
