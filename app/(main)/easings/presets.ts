@@ -117,8 +117,8 @@ export const PRESETS: EasingPreset[] = [
     group: "baseline",
     bezier: [0.25, 0.1, 0.25, 1],
     duration: 300,
-    use: "Browser default for transition",
-    note: "What `transition` uses when you don't choose one. Compare it with ease-out to feel the difference.",
+    use: "The browser default",
+    note: "What a CSS transition uses when you don't choose one. Compare it with ease-out to feel the difference.",
   },
   {
     id: "css-ease-in-out",

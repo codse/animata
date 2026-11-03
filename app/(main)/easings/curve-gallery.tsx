@@ -127,11 +127,14 @@ function Card({
       role="radio"
       aria-checked={selected}
       tabIndex={focusable ? 0 : -1}
-      aria-label={
+      aria-label={[
         preset
           ? `${preset.name}. ${preset.use}. ${preset.duration} milliseconds.`
-          : "Your own curve"
-      }
+          : "Your own curve.",
+        marker ? `Chosen for ${marker.label}.` : "",
+      ]
+        .join(" ")
+        .trim()}
       onClick={onSelect}
       onKeyDown={onKeyDown}
       className={cn(
@@ -207,7 +210,7 @@ function Card({
           ) : null}
         </span>
         <span className="line-clamp-2 min-h-[2lh] text-xs/[1.4] text-muted-foreground">
-          {preset ? preset.use : "Drag the handles to shape it."}
+          {preset ? preset.use : "Kept in the link, so you can share it."}
         </span>
       </span>
 
@@ -350,7 +353,7 @@ export function CurveGallery({
                 <span className="font-semibold text-foreground">{editing.toUpperCase()}</span>
               </>
             ) : (
-              "Pick one and watch it play"
+              `Pick one to try it on the ${moment.name.toLowerCase()}`
             )}
           </span>
         </div>

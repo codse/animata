@@ -157,7 +157,7 @@ export function EasingPlayground() {
         </h1>
         <p className="m-0 text-[15px]/[1.55] text-pretty text-muted-foreground lg:pb-1">
           Pick the moment you're building and watch it move. Try the curves made for it, compare
-          two, and copy the one that feels right.
+          two, and copy the code.
         </p>
       </header>
 
@@ -362,7 +362,7 @@ export function EasingPlayground() {
           {/* Tuning sits under the gallery: no panel, three columns under one hairline. */}
           <div className="grid grid-cols-[minmax(0,1fr)] gap-x-8 gap-y-6 border-t border-border pt-5 md:grid-cols-[10rem_minmax(0,1fr)] lg:grid-cols-[10rem_minmax(0,1.15fr)_minmax(0,1fr)]">
             <div className="order-last grid content-start gap-2.5 md:order-none">
-              <span className="text-xs text-muted-foreground">Curve</span>
+              <span className="text-xs text-muted-foreground">Edit curve</span>
               <div
                 className={cn(
                   "mx-auto w-full max-w-[16rem] rounded-[14px] bg-background p-1.5",
@@ -438,7 +438,11 @@ export function EasingPlayground() {
                   <button
                     type="button"
                     onClick={copy}
-                    aria-label={copied ? "Copied" : `Copy ${format} code`}
+                    aria-label={
+                      copied
+                        ? "Copied"
+                        : `Copy ${CODE_FORMATS.find((item) => item.id === format)?.label} code`
+                    }
                     className={cn(
                       "ml-auto inline-flex h-7 items-center rounded-[8px] bg-foreground px-2.5 text-xs font-medium text-background hover:bg-foreground/85",
                       press,
