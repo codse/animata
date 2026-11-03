@@ -482,37 +482,42 @@
 
   /* ─── LIGHT — Apple Podcasts inspired ─── */
   :root {
+    /*
+     * Neutral scale. Text is a near-black ink, not pure black; borders are that ink at low
+     * opacity so they sit naturally on any surface. Surfaces step from white in small,
+     * even increments.
+     */
     --background: 0 0% 100%;
-    --foreground: 0 0% 11%;
+    --foreground: 0 0% 7%;
     --card: 0 0% 100%;
-    --card-foreground: 0 0% 11%;
+    --card-foreground: 0 0% 7%;
     --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 11%;
-    --primary: 0 0% 11%;
+    --popover-foreground: 0 0% 7%;
+    --primary: 0 0% 7%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 0 0% 96%;
-    --secondary-foreground: 0 0% 11%;
-    --muted: 0 0% 96%;
-    --muted-foreground: 0 0% 43%;
+    --secondary: 0 0% 95.5%;
+    --secondary-foreground: 0 0% 7%;
+    --muted: 0 0% 97.3%;
+    --muted-foreground: 0 0% 38%;
     --accent: 262 83% 58%;
     --accent-foreground: 0 0% 100%;
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 90%;
-    --input: 0 0% 90%;
+    --border: 0 0% 7% / 0.09;
+    --input: 0 0% 7% / 0.13;
     --ring: 262 83% 58%;
     --radius: 0.75rem;
 
     /* Surfaces */
-    --surface-alt: 0 0% 96%;
+    --surface-alt: 0 0% 97.3%;
     --surface-card: 0 0% 100%;
     --surface-dark: 0 0% 7%;
 
     /* Text */
-    --text-secondary: 0 0% 43%;
+    --text-secondary: 0 0% 38%;
 
     /* Ink — shared by docs callouts, category glyphs, etc. */
-    --ink: #76756f;
+    --ink: #737373;
     --ink-faint: #e3e3e3;
 
     /* Links */
@@ -537,34 +542,38 @@
 
   /* ─── DARK — Opal inspired: pure black, minimal, precise ─── */
   .dark {
-    --background: 0 0% 0%;
-    --foreground: 0 0% 96%;
-    --card: 0 0% 4%;
-    --card-foreground: 0 0% 96%;
-    --popover: 0 0% 4%;
-    --popover-foreground: 0 0% 96%;
-    --primary: 0 0% 96%;
-    --primary-foreground: 0 0% 0%;
-    --secondary: 0 0% 10%;
-    --secondary-foreground: 0 0% 96%;
-    --muted: 0 0% 10%;
-    --muted-foreground: 0 0% 45%;
+    /*
+     * Off-black base with stepped surfaces above it. Body text is a soft white rather
+     * than pure white, and secondary text keeps comfortable contrast.
+     */
+    --background: 0 0% 5%;
+    --foreground: 0 0% 92%;
+    --card: 0 0% 7.5%;
+    --card-foreground: 0 0% 92%;
+    --popover: 0 0% 8.5%;
+    --popover-foreground: 0 0% 92%;
+    --primary: 0 0% 92%;
+    --primary-foreground: 0 0% 5%;
+    --secondary: 0 0% 11%;
+    --secondary-foreground: 0 0% 92%;
+    --muted: 0 0% 9.5%;
+    --muted-foreground: 0 0% 62%;
     --accent: 262 83% 65%;
     --accent-foreground: 0 0% 100%;
     --destructive: 0 62% 30%;
     --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 12%;
-    --input: 0 0% 12%;
+    --border: 0 0% 100% / 0.09;
+    --input: 0 0% 100% / 0.13;
     --ring: 262 83% 65%;
 
     /* Surfaces */
-    --surface-alt: 0 0% 4%;
-    --surface-card: 0 0% 6%;
-    --surface-dark: 0 0% 2%;
-    --text-secondary: 0 0% 55%;
+    --surface-alt: 0 0% 7%;
+    --surface-card: 0 0% 9%;
+    --surface-dark: 0 0% 3.5%;
+    --text-secondary: 0 0% 62%;
 
     --ink: #e3e3e3;
-    --ink-faint: #76756f;
+    --ink-faint: #737373;
 
     /* Links */
     --link: 262 80% 70%;

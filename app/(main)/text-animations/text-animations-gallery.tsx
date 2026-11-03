@@ -185,7 +185,7 @@ function LazyTile({ preset }: { preset: Preset }) {
 
   return (
     <article ref={ref} className="flex flex-col gap-3">
-      <div className="relative aspect-video overflow-hidden rounded-lg border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-950">
+      <div className="relative aspect-video overflow-hidden rounded-lg border border-border bg-background">
         {visible ? <Component className="absolute inset-0" /> : null}
       </div>
       <div>

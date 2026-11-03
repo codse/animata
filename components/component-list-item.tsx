@@ -32,7 +32,7 @@ function Name({ name, href }: { name: string; href?: string }) {
         <Link
           href={href}
           className={cn(
-            "text-zinc-600 pe-2 origin-bottom-left transition-all hover:scale-125 hover:text-zinc-900 dark:text-white",
+            "text-neutral-600 pe-2 origin-bottom-left transition-all hover:scale-125 hover:text-neutral-900 dark:text-white",
           )}
           aria-label="Open component page"
         >
@@ -56,13 +56,13 @@ function Actions({
     <div className="inline-flex w-full justify-end p-2">
       {!href?.length && (
         <CopyButton
-          className="bg-white text-zinc-600 shadow-none dark:bg-zinc-950 dark:text-white"
+          className="bg-background text-muted-foreground shadow-none dark:text-foreground"
           proxyId={`source-${copyId}`}
           value=""
         />
       )}
       <ReloadButton
-        className="bg-white text-zinc-600 shadow-none dark:bg-zinc-950 dark:text-white"
+        className="bg-background text-muted-foreground shadow-none dark:text-foreground"
         onClick={onRefresh}
       />
     </div>

@@ -10,7 +10,7 @@ export function ReloadButton({ className, variant = "secondary", ...props }: But
     <Button
       size="icon"
       variant={variant}
-      className={cn("relative z-10 h-6 w-6 active:bg-zinc-200 [&_svg]:size-3", className)}
+      className={cn("relative z-10 h-6 w-6 active:bg-neutral-200 [&_svg]:size-3", className)}
       {...props}
     >
       <span className="sr-only">Reload</span>
