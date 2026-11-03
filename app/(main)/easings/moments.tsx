@@ -40,7 +40,7 @@ function Scene({
 }) {
   return (
     <div
-      className={cn("group/s absolute inset-x-0 top-0 bottom-9 text-[13px]/[1.45]", className)}
+      className={cn("group/s absolute inset-0 text-[13px]/[1.45]", className)}
       data-open={open || undefined}
     >
       {children}
@@ -53,7 +53,7 @@ function Window({ className, children }: { className?: string; children: ReactNo
   return (
     <div
       className={cn(
-        "absolute inset-x-[max(18px,16%)] inset-y-5 flex flex-col gap-4 overflow-hidden rounded-[14px] px-5 py-5 sm:px-6",
+        "absolute inset-x-[max(18px,16%)] top-7 -bottom-6 flex flex-col gap-4 overflow-hidden rounded-[14px] px-5 py-5 sm:px-6",
         win,
         className,
       )}
@@ -106,7 +106,7 @@ function Scrim() {
   return (
     <div
       className={cn(
-        "absolute inset-x-0 top-0 -bottom-9 bg-black/[0.16] opacity-0 transition-opacity group-data-open/s:opacity-100 dark:bg-black/50",
+        "absolute inset-0 bg-black/[0.16] opacity-0 transition-opacity group-data-open/s:opacity-100 dark:bg-black/50",
         move,
       )}
     />
@@ -130,12 +130,12 @@ export const MOMENTS: Moment[] = [
               <ChevronDown aria-hidden="true" className="size-3.5 text-muted-foreground" />
             </Fake>
           </span>
-          <Rows widths={["46%", "62%", "38%"]} />
+          <Rows widths={["46%", "62%", "38%", "54%", "42%"]} />
         </Window>
         {/* Hangs from the trigger's right edge and grows from there. */}
         <div
           className={cn(
-            "absolute top-[72px] right-[calc(max(18px,16%)+16px)] grid w-[196px] origin-top-right rounded-[14px] p-1.5",
+            "absolute top-[80px] right-[calc(max(18px,16%)+16px)] grid w-[196px] origin-top-right rounded-[14px] p-1.5",
             pop,
             "-translate-y-1.5 scale-96 opacity-0 transition-[opacity,translate,scale] will-change-[translate,scale,opacity] backface-hidden",
             "group-data-open/s:translate-y-0 group-data-open/s:scale-100 group-data-open/s:opacity-100",
@@ -170,7 +170,7 @@ export const MOMENTS: Moment[] = [
       <Scene open={open}>
         <Window>
           <Line w="30%" strong />
-          <Rows widths={["46%", "62%", "38%"]} />
+          <Rows widths={["46%", "62%", "38%", "54%", "42%"]} />
         </Window>
         <Scrim />
         <div
@@ -204,7 +204,7 @@ export const MOMENTS: Moment[] = [
       <Scene open={open}>
         <Window>
           <Line w="26%" strong />
-          <Rows widths={["46%", "62%", "38%"]} />
+          <Rows widths={["46%", "62%", "38%", "54%", "42%"]} />
         </Window>
         <div
           className={cn(
@@ -240,8 +240,8 @@ export const MOMENTS: Moment[] = [
             <Fake>Filters</Fake>
           </span>
           <span className="grid grid-cols-2 gap-3.5 sm:grid-cols-3">
-            {["64%", "48%", "58%"].map((w, index) => (
-              <span key={w} className={cn("grid gap-2", index === 2 && "max-sm:hidden")}>
+            {["64%", "48%", "58%", "52%", "70%", "44%"].map((w, index) => (
+              <span key={w} className={cn("grid gap-2", index % 3 === 2 && "max-sm:hidden")}>
                 <span className="aspect-4/3 rounded-[10px] bg-foreground/[0.07]" />
                 <Line w={w} strong />
                 <Line w="30%" />
@@ -252,7 +252,7 @@ export const MOMENTS: Moment[] = [
         <Scrim />
         <div
           className={cn(
-            "absolute top-0 right-0 -bottom-9 z-[1] flex w-[clamp(176px,40%,280px)] flex-col gap-3.5 bg-background p-6 shadow-[-1px_0_0_var(--color-border),-24px_0_48px_-24px_rgb(0_0_0/0.35)]",
+            "absolute inset-y-0 right-0 z-[1] flex w-[clamp(176px,40%,280px)] flex-col gap-3.5 bg-background p-6 shadow-[-1px_0_0_var(--color-border),-24px_0_48px_-24px_rgb(0_0_0/0.35)]",
             "translate-x-[105%] transition-[translate] group-data-open/s:translate-x-0",
             move,
           )}
@@ -273,7 +273,7 @@ export const MOMENTS: Moment[] = [
               {item}
             </span>
           ))}
-          <span className="mt-auto mb-9 grid">
+          <span className="mt-auto grid">
             <Fake solid>
               <span className="mx-auto">Show 12 results</span>
             </Fake>
@@ -290,7 +290,7 @@ export const MOMENTS: Moment[] = [
     duration: 300,
     render: (open) => (
       <Scene open={open}>
-        <div className="absolute inset-x-[max(18px,16%)] inset-y-5 grid content-start gap-3.5">
+        <div className="absolute inset-x-[max(18px,16%)] top-7 -bottom-6 grid grid-rows-[auto_minmax(0,1fr)] gap-3.5">
           <div className="relative grid grid-cols-3 rounded-[12px] bg-foreground/[0.06] p-1">
             <span
               className={cn(
@@ -322,7 +322,7 @@ export const MOMENTS: Moment[] = [
                 move,
               )}
             >
-              <Rows widths={["46%", "62%"]} />
+              <Rows widths={["46%", "62%", "38%", "54%"]} />
             </span>
             <span
               className={cn(
@@ -331,7 +331,7 @@ export const MOMENTS: Moment[] = [
                 move,
               )}
             >
-              {["40%", "56%"].map((w) => (
+              {["40%", "56%", "34%", "48%"].map((w) => (
                 <span key={w} className="flex items-center justify-between gap-3">
                   <span className="grid flex-1 gap-[7px]">
                     <Line w={w} strong />
@@ -364,7 +364,7 @@ export const MOMENTS: Moment[] = [
           )}
         >
           <strong className="font-semibold">Inbox</strong>
-          <Rows widths={["46%", "62%", "38%"]} />
+          <Rows widths={["46%", "62%", "38%", "54%", "42%"]} />
         </Window>
         <Window
           className={cn(
@@ -389,39 +389,43 @@ export const MOMENTS: Moment[] = [
     duration: 280,
     render: (open) => (
       <Scene open={open}>
-        <div className="absolute inset-x-[max(18px,16%)] inset-y-5 grid content-start gap-2">
-          {["Can I change plans later?", "Do you offer refunds?", "Is there a team plan?"].map(
-            (question, index) => (
-              <div key={question} className={cn("rounded-[12px]", win)}>
-                <span className="flex items-center justify-between px-4 py-3 font-medium">
-                  {question}
-                  <ChevronDown
-                    aria-hidden="true"
-                    className={cn(
-                      "size-4 text-muted-foreground",
-                      index === 0 && "transition-[rotate] group-data-open/s:rotate-180",
-                      index === 0 && move,
-                    )}
-                  />
-                </span>
-                {index === 0 ? (
-                  <div
-                    className={cn(
-                      "grid grid-rows-[0fr] transition-[grid-template-rows] group-data-open/s:grid-rows-[1fr]",
-                      move,
-                    )}
-                  >
-                    <div className="overflow-hidden">
-                      <span className="block px-4 pb-3.5 text-muted-foreground">
-                        Yes. Switch any time from Billing, and the difference is prorated on your
-                        next invoice.
-                      </span>
-                    </div>
+        <div className="absolute inset-x-[max(18px,16%)] top-[9%] bottom-5 grid content-start gap-2">
+          {[
+            "Can I change plans later?",
+            "Do you offer refunds?",
+            "Is there a team plan?",
+            "Can I export my data?",
+            "How do invoices work?",
+          ].map((question, index) => (
+            <div key={question} className={cn("rounded-[12px]", win)}>
+              <span className="flex items-center justify-between px-4 py-3 font-medium">
+                {question}
+                <ChevronDown
+                  aria-hidden="true"
+                  className={cn(
+                    "size-4 text-muted-foreground",
+                    index === 0 && "transition-[rotate] group-data-open/s:rotate-180",
+                    index === 0 && move,
+                  )}
+                />
+              </span>
+              {index === 0 ? (
+                <div
+                  className={cn(
+                    "grid grid-rows-[0fr] transition-[grid-template-rows] group-data-open/s:grid-rows-[1fr]",
+                    move,
+                  )}
+                >
+                  <div className="overflow-hidden">
+                    <span className="block px-4 pb-3.5 text-muted-foreground">
+                      Yes. Switch any time from Billing, and the difference is prorated on your next
+                      invoice.
+                    </span>
                   </div>
-                ) : null}
-              </div>
-            ),
-          )}
+                </div>
+              ) : null}
+            </div>
+          ))}
         </div>
       </Scene>
     ),
