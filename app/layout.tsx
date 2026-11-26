@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import localFont from "next/font/local";
+import { IBM_Plex_Sans } from "next/font/google";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 
 import { ThemeProvider } from "@/components/providers";
@@ -10,24 +10,9 @@ import { brandFont } from "@/lib/brand-font";
 import "@/styles/fonts.css";
 import "@/styles/globals.css";
 
-const ibmPlex = localFont({
-  src: [
-    {
-      path: "../public/og-fonts/ibm-plex-sans-latin-400-normal.woff2",
-      weight: "400",
-      style: "normal",
-    },
-    {
-      path: "../public/og-fonts/ibm-plex-sans-latin-500-normal.woff2",
-      weight: "500",
-      style: "normal",
-    },
-    {
-      path: "../public/og-fonts/ibm-plex-sans-latin-600-normal.woff2",
-      weight: "600",
-      style: "normal",
-    },
-  ],
+const ibmPlex = IBM_Plex_Sans({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
   variable: "--font-ibm-plex",
 });
 
