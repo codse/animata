@@ -3,7 +3,7 @@ import { useState } from "react";
 
 import { trackEvent } from "@/lib/events";
 
-const plunkApiUrl = "https://api.useplunk.com/v1/track";
+const plunkApiUrl = "https://next-api.useplunk.com/v1/track";
 const plunkApiKey = process.env.NEXT_PUBLIC_PLUNK_API_KEY;
 
 export default function useNewsletterSubscription(source = "unknown") {
@@ -76,7 +76,10 @@ export default function useNewsletterSubscription(source = "unknown") {
       const errorData = await response.json();
       setState({
         ...initialState,
-        error: errorData.message || "An unknown error occurred",
+        error:
+          errorData.error?.message ||
+          errorData.message ||
+          "An unknown error occurred",
       });
     } catch (error) {
       setState({
