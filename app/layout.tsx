@@ -10,10 +10,18 @@ import { brandFont } from "@/lib/brand-font";
 import "@/styles/fonts.css";
 import "@/styles/globals.css";
 
+const PRELOAD_FONTS = [
+  "https://assets.animata.design/fonts/atipo/alcyone-regular.v2.woff2",
+  "https://assets.animata.design/fonts/atipo/alcyone-medium.v2.woff2",
+  "https://assets.animata.design/fonts/atipo/knile-bold.v2.woff2?r=1",
+];
+
 const ibmPlex = IBM_Plex_Sans({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
   variable: "--font-ibm-plex",
+  // Fallback behind Alcyone; preloading it would compete with the fonts that render.
+  preload: false,
 });
 
 export const metadata: Metadata = {
@@ -91,6 +99,17 @@ export default function RootLayout({ children }: RootLayoutProps) {
     >
       <head>
         <link rel="preconnect" href="https://assets.animata.design" crossOrigin="anonymous" />
+        {/* Fonts used above the fold. URLs must match styles/fonts.css exactly. */}
+        {PRELOAD_FONTS.map((href) => (
+          <link
+            key={href}
+            rel="preload"
+            href={href}
+            as="font"
+            type="font/woff2"
+            crossOrigin="anonymous"
+          />
+        ))}
       </head>
       <body className={"min-h-screen bg-background font-sans antialiased"}>
         <SmoothScroll />
