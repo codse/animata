@@ -3,7 +3,7 @@ import type { docs as allDocs } from "#site/content";
 import { getPublishedDocs } from "@/lib/published-docs";
 
 /** Updated manually when marketing copy needs to reflect GitHub stars. */
-const GITHUB_STARS = 2802;
+const GITHUB_STARS = 3025;
 
 const NON_COMPONENT_SECTIONS = new Set(["contributing", "changelog"]);
 
