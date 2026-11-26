@@ -88,12 +88,51 @@
   font-display: swap;
 }
 
+/*
+ * Metric-matched fallbacks. Arial scaled to Alcyone's and Knile's width and line metrics, so
+ * text keeps its size and line breaks when the web font swaps in. Regenerate the values if a
+ * font file changes: size-adjust = font avg char width / Arial avg char width, and the
+ * overrides are the font's ascent/descent/line gap divided by size-adjust.
+ */
+@font-face {
+  font-family: "Alcyone Fallback";
+  src: local("Arial"), local("ArialMT");
+  font-weight: 100 500;
+  size-adjust: 115.06%;
+  ascent-override: 82.57%;
+  descent-override: 21.73%;
+  line-gap-override: 0%;
+}
+
+@font-face {
+  font-family: "Alcyone Fallback";
+  src: local("Arial Bold"), local("Arial-BoldMT");
+  font-weight: 600 900;
+  size-adjust: 107.37%;
+  ascent-override: 88.48%;
+  descent-override: 23.28%;
+  line-gap-override: 0%;
+}
+
+/* Knile ships one bold face, used at every weight, so its fallback is bold at every weight. */
+@font-face {
+  font-family: "Knile Fallback";
+  src: local("Arial Bold"), local("Arial-BoldMT");
+  font-weight: 100 900;
+  size-adjust: 113.15%;
+  ascent-override: 87.68%;
+  descent-override: 27.36%;
+  line-gap-override: 0%;
+}
+
 :root {
-  --font-sans: "Alcyone", var(--font-ibm-plex), ui-sans-serif, system-ui, sans-serif;
+  --font-sans:
+    "Alcyone", "Alcyone Fallback", var(--font-ibm-plex), ui-sans-serif, system-ui, sans-serif;
   --font-display:
-    "Knile", "Instrument Sans Variable", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
-    "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-  --font-brand: "Alcyone", var(--font-outfit), ui-sans-serif, system-ui, sans-serif;
+    "Knile", "Knile Fallback", "Instrument Sans Variable", ui-sans-serif, system-ui, sans-serif,
+    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --font-brand:
+    "Alcyone", "Alcyone Fallback", var(--font-outfit), ui-sans-serif, system-ui, sans-serif;
 }
 
 /* No faux bold; faux italic stays on for fallback families that ship upright faces only. */
