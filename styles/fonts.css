@@ -93,10 +93,16 @@
  * text keeps its size and line breaks when the web font swaps in. Regenerate the values if a
  * font file changes: size-adjust = font avg char width / Arial avg char width, and the
  * overrides are the font's ascent/descent/line gap divided by size-adjust.
+ *
+ * Arimo and Liberation Sans (Linux, ChromeOS) share Arial's metrics exactly, so the same values
+ * apply. Roboto (Android) is within 0.2% of Arial's average width at regular weight; there is
+ * no measured bold equivalent, so it is only listed for regular weights.
  */
 @font-face {
   font-family: "Alcyone Fallback";
-  src: local("Arial"), local("ArialMT");
+  src:
+    local("Arial"), local("ArialMT"), local("Arimo"), local("Liberation Sans"),
+    local("LiberationSans"), local("Roboto"), local("Roboto-Regular");
   font-weight: 100 500;
   size-adjust: 115.06%;
   ascent-override: 82.57%;
@@ -106,7 +112,9 @@
 
 @font-face {
   font-family: "Alcyone Fallback";
-  src: local("Arial Bold"), local("Arial-BoldMT");
+  src:
+    local("Arial Bold"), local("Arial-BoldMT"), local("Arimo Bold"), local("Arimo-Bold"),
+    local("Liberation Sans Bold"), local("LiberationSans-Bold");
   font-weight: 600 900;
   size-adjust: 107.37%;
   ascent-override: 88.48%;
@@ -117,7 +125,9 @@
 /* Knile ships one bold face, used at every weight, so its fallback is bold at every weight. */
 @font-face {
   font-family: "Knile Fallback";
-  src: local("Arial Bold"), local("Arial-BoldMT");
+  src:
+    local("Arial Bold"), local("Arial-BoldMT"), local("Arimo Bold"), local("Arimo-Bold"),
+    local("Liberation Sans Bold"), local("LiberationSans-Bold");
   font-weight: 100 900;
   size-adjust: 113.15%;
   ascent-override: 87.68%;
